@@ -18,10 +18,10 @@ type Props = WithPartiesProps & {
   loggedUser?: User;
 };
 
-const welfareProduct: ProductEntity = {
+const pagoPAProduct: ProductEntity = {
   // TODO check if correct
-  id: 'prod-welfare',
-  title: 'Welfare',
+  id: 'prod-pagopa',
+  title: 'piattaforma pagoPA',
   productUrl: CONFIG.HEADER.LINK.PRODUCTURL,
   linkType: 'internal',
 };
@@ -36,13 +36,13 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
     () =>
       [
         {
-          id: welfareProduct.id,
-          title: welfareProduct.title,
-          publicUrl: welfareProduct.productUrl,
+          id: pagoPAProduct.id,
+          title: pagoPAProduct.title,
+          publicUrl: pagoPAProduct.productUrl,
         } as unknown as Product,
       ].concat(
         products?.filter(
-          (p) => p.id !== welfareProduct.id && p.status === 'ACTIVE' && p.authorized
+          (p) => p.id !== pagoPAProduct.id && p.status === 'ACTIVE' && p.authorized
         ) ?? []
       ),
     [products]
@@ -53,7 +53,7 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
       onExit={onExit}
       withSecondHeader={true}
       selectedPartyId={selectedParty?.partyId}
-      selectedProductId={welfareProduct.id}
+      selectedProductId={pagoPAProduct.id}
       addSelfcareProduct={true} // TODO verify if returned from API
       productsList={activeProducts.map((p) => ({
         id: p.id,

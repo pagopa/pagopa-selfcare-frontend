@@ -1,7 +1,7 @@
 {
-  "name": "idpay-portal-welfare-frontend",
+  "name": "pagopa-mvp-frontend",
   "version": "1.0.0",
-  "homepage": "portale-enti",
+  "homepage": "pagopa-mvp",
   "private": true,
   "dependencies": {
     "@mui/icons-material": "^5.8.2",

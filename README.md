@@ -1,4 +1,4 @@
-# idpay-portal-welfare-frontend
+# pagopa-mvp-frontend
 
 ## To configure the workspace execute the following commands
 - yarn install

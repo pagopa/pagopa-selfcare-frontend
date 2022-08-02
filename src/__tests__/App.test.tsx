@@ -62,5 +62,5 @@ test('Test rendering dashboard parties loaded', () => {
 
 test('Test routing ', async () => {
   const { history } = renderApp();
-  await waitFor(() => expect(history.location.pathname).toBe('/portale-enti'));
+  await waitFor(() => expect(history.location.pathname).toBe('/pagopa-mvp'));
 });

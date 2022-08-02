@@ -1,6 +1,6 @@
 import * as env from 'env-var';
 
-const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/portale-enti';
+const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/pagopa-mvp';
 export const ENV = {
   ENV: env.get('REACT_APP_ENV').required().asString(),
   PUBLIC_URL: PUBLIC_URL_INNER,

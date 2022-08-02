@@ -1,0 +1,20 @@
+.CustomLabelStyle {
+  font-size: 14px !important;
+  color: #5c6f82 !important;
+}
+
+.CustomInfoStyle {
+  color: #000000 !important;
+}
+
+.CustomDisabledLabel {
+  color: #a2adb8 !important;
+}
+
+/* for the correct use of ShowDots insert width inside the speciphic tag */
+.ShowDots {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}

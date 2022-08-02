@@ -1,0 +1,4 @@
+# see https://help.github.com/en/articles/about-code-owners#example-of-a-codeowners-file
+
+# TODO fix contributors team
+* @pagopa/selfcare-contributors @antonioT90 @dariopelliccioli @StefanoTerragni @cmartoneNTT @loremedda @esignore

@@ -1,4 +1,4 @@
-# pagopa-mvp-frontend
+# pagopa-selfcare-frontend
 
 ## To configure the workspace execute the following commands
 - yarn install

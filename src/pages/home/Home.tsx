@@ -1,51 +1,61 @@
 import { useState } from 'react';
-import { Box, Button, Card, CardContent, CardHeader, Stack, ToggleButton } from '@mui/material';
+import { Box, Button, Typography, Link } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useTranslation, Trans } from 'react-i18next';
+
+import HomePageCard from './HomePageCard';
 
 const Home = () => {
-  const [selected, setSelected] = useState(false);
+  const [generatePrimaryKey, setGeneratePrimaryKey] = useState<boolean>(false);
+  const [generateSecondaryKey, setGenerateSecondaryKey] = useState<boolean>(false);
+  const { t } = useTranslation();
+  const [apiKeyPresent, setapiKeyPresent] = useState<boolean>(true);
 
   return (
-    <Box width="100%" px={2}>
-      <TitleBox
-        title="HOME"
-        subTitle=""
-        mbTitle={0}
-        mtTitle={4}
-        mbSubTitle={6}
-        variantTitle="h4"
-        variantSubTitle="body1"
-      />
+    <>
+      <Box width="100%" px={2}>
+        <TitleBox
+          title={t('homepage.title')}
+          subTitle={t('homepage.subtitle')}
+          mbTitle={2}
+          mtTitle={4}
+          mbSubTitle={6}
+          variantTitle="h4"
+          variantSubTitle="body1"
+        />
+        <Typography variant="h6" mb={4}>
+          {t('homepage.decription')}
+        </Typography>
+        {!apiKeyPresent ? (
+          <Box
+            p={2}
+            display="flex"
+            justifyContent="center"
+            sx={{ backgroundColor: 'background.paper' }}
+          >
+            <Trans i18nKey="homepage.apiNotPresentDescription">
+              Non è stata ancora generata nessuna chiave API per questo ente. &nbsp;
+              <Link
+                sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
+                onClick={() => console.log('TODO: remove')}
+              >
+                <strong> Genera chiave API</strong>
+              </Link>
+            </Trans>
+          </Box>
+        ) : (
+          <HomePageCard
+            generatePrimaryKey={generatePrimaryKey}
+            generateSecondaryKey={generateSecondaryKey}
+          />
+        )}
+      </Box>
 
-      <br />
-      <Card variant="outlined">
-        <CardHeader
-          disableTypography={true}
-          title={
-            <>
-              Ente <strong>Intesa San Paolo</strong>
-            </>
-          }
-        ></CardHeader>
-        <CardContent sx={{ bgcolor: '#edf1f5' }}>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Box>Chiave primaria: XXXXXXXXXXXXXXXXXXX</Box>
-            <ToggleButton
-              value="check"
-              selected={selected}
-              onChange={() => {
-                setSelected(!selected);
-              }}
-            >
-              <VisibilityIcon />
-            </ToggleButton>
-            <Button variant="outlined">Rigenera</Button>
-            <Button variant="contained">Usa questa chiave</Button>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Box>
+      {/* TODO: remove these buttons */}
+      <Button onClick={() => setapiKeyPresent(!apiKeyPresent)}>API KEY PRESENTE/ASSENTE</Button>
+      <Button onClick={() => setGeneratePrimaryKey(true)}>GENERA CHIAVE PRIMARIA</Button>
+      <Button onClick={() => setGenerateSecondaryKey(true)}>GENERA CHIAVE SECONDARIA</Button>
+    </>
   );
 };
 

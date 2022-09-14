@@ -1,16 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Typography, Link } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import HomePageCard from './HomePageCard';
+import { getInstitutionApiKeys } from './../../services/tokenService';
 
 const Home = () => {
   const [generatePrimaryKey, setGeneratePrimaryKey] = useState<boolean>(false);
   const [generateSecondaryKey, setGenerateSecondaryKey] = useState<boolean>(false);
   const { t } = useTranslation();
+
   const [apiKeyPresent, setapiKeyPresent] = useState<boolean>(true);
 
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  useEffect(() => {
+    if (selectedParty) {
+      void getInstitutionApiKeys(selectedParty.partyId).then((data) => {
+        if (data) {
+          setapiKeyPresent(true);
+        }
+      });
+      // .catch(() => {
+      //   throw new Error(`Cannot find institutionId ${institutionId}`);
+      // });
+    }
+  }, []);
   return (
     <>
       <Box width="100%" px={2}>

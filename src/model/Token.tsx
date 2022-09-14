@@ -1,11 +1,15 @@
-import { ApiKeysResource } from '../api/generated/portal/ApiKeysResource';
+export default function Token() {
+  return <div>Token</div>;
+}
 
-export type ProductKeys = {
-  primaryKey: string;
-  secondaryKey: string;
-};
+// import { ApiKeysResource } from '../api/generated/portal/ApiKeysResource';
 
-export const apiKeysResource2ProductKeys = (apiKeysResource: ApiKeysResource): ProductKeys => ({
-  primaryKey: apiKeysResource.primaryKey,
-  secondaryKey: apiKeysResource.secondaryKey,
-});
+// export type ProductKeys = {
+//   primaryKey: string;
+//   secondaryKey: string;
+// };
+
+// export const apiKeysResource2ProductKeys = (apiKeysResource: ApiKeysResource): ProductKeys => ({
+//   primaryKey: apiKeysResource.primaryKey,
+//   secondaryKey: apiKeysResource.secondaryKey,
+// });

@@ -84,15 +84,13 @@ export const PortalApi = {
     const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
-
-  regeneratePrimaryKey: async (institutionId: string): Promise<string> => {
-    const result = await apiClient.regeneratePrimaryKeyUsingPOST({ institutionId });
-    return extractResponse(result, 204, onRedirectToLogin);
-  },
-
   createInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
     const result = await apiClient.createInstitutionApiKeysUsingPOST({ institutionId });
     return extractResponse(result, 201, onRedirectToLogin);
+  },
+  regeneratePrimaryKey: async (institutionId: string): Promise<string> => {
+    const result = await apiClient.regeneratePrimaryKeyUsingPOST({ institutionId });
+    return extractResponse(result, 204, onRedirectToLogin);
   },
 
   regenerateSecondaryKey: async (institutionId: string): Promise<string> => {

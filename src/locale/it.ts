@@ -16,7 +16,10 @@ export default {
     subtitle:
       'Qui puoi generare e gestire le chiavi API da utilizzare per spiegare a cosa servono.',
     decription: 'API Key generate',
-    apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente. <1><0> Genera chiave API</0></1>`,
+    apiNotPresent: {
+      apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente. <1><0> Genera chiave API</0></1>`,
+      buttonLabel: 'Genera chiave API',
+    },
     apiPresent: {
       primaryApiKey: 'Codice chiave API primaria',
       secondaryApiKey: 'Codice chiave API secondaria',

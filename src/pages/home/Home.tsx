@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { Box, Button, Typography, Link } from '@mui/material';
+import { Box, Button, Typography, Link, useTheme } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
-
+import AddIcon from '@mui/icons-material/Add';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import HomePageCard from './HomePageCard';
 // import { useAppSelector } from '../../redux/hooks';
 // import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import HomePageCard from './HomePageCard';
 // import { getInstitutionApiKeys } from './../../services/tokenService';
 
 const Home = () => {
   const [generatePrimaryKey, setGeneratePrimaryKey] = useState<boolean>(false);
   const [generateSecondaryKey, setGenerateSecondaryKey] = useState<boolean>(false);
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const [apiKeyPresent, setapiKeyPresent] = useState<boolean>(true);
 
@@ -38,9 +40,32 @@ const Home = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <Typography variant="h6" mb={4}>
-          {t('homepage.decription')}
-        </Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+          <Box>
+            <Typography variant="h6">{t('homepage.decription')}</Typography>
+          </Box>
+          {!apiKeyPresent && (
+            <Box>
+              <ButtonNaked
+                component="button"
+                onClick={() => console.log('TODO: update when the API is ready')}
+                startIcon={<AddIcon />}
+                color="primary"
+                sx={{
+                  border: `2px solid ${theme.palette.primary.main}`,
+                  borderRadius: theme.spacing(0.5),
+                  px: 2,
+                  py: 1.5,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+                weight="default"
+              >
+                {t('homepage.apiNotPresent.buttonLabel')}
+              </ButtonNaked>
+            </Box>
+          )}
+        </Box>
         {!apiKeyPresent ? (
           <Box
             p={2}
@@ -48,8 +73,8 @@ const Home = () => {
             justifyContent="center"
             sx={{ backgroundColor: 'background.paper' }}
           >
-            <Trans i18nKey="homepage.apiNotPresentDescription">
-              Non è stata ancora generata nessuna chiave API per questo ente. &nbsp;
+            <Trans i18nKey="homepage.apiNotPresent.apiNotPresentDescription">
+              Non è stata ancora generata nessuna chiave API per questo ente.
               <Link
                 sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
                 onClick={() => console.log('TODO: remove')}

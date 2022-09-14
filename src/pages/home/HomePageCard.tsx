@@ -21,6 +21,11 @@ export default function HomePageCard({ generatePrimaryKey, generateSecondaryKey 
   const secondaryKey = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
   const secondaryKeyVisible = '000000234000001123400000007778';
 
+  const boxStyle = {
+    border: '1px solid #BDBDBD',
+    borderRadius: theme.spacing(0.5),
+    minWidth: '380px',
+  };
   return (
     <Card variant="outlined" sx={{ p: 3 }}>
       <Box mb={4}>
@@ -28,7 +33,7 @@ export default function HomePageCard({ generatePrimaryKey, generateSecondaryKey 
           {t('homepage.apiPresent.primaryApiKey')}
         </Typography>
         <Stack direction="row" alignItems="center" spacing={3} py={1}>
-          <Box p={1} sx={{ border: '1px solid #BDBDBD', borderRadius: theme.spacing(0.5) }}>
+          <Box p={1} sx={boxStyle}>
             <Typography>{showPrimaryKey ? primaryKey : primaryKeyVisible}</Typography>
           </Box>
           <ToggleButton
@@ -59,7 +64,7 @@ export default function HomePageCard({ generatePrimaryKey, generateSecondaryKey 
           {t('homepage.apiPresent.secondaryApiKey')}
         </Typography>
         <Stack direction="row" alignItems="center" spacing={3} py={1}>
-          <Box p={1} sx={{ border: '1px solid #BDBDBD', borderRadius: theme.spacing(0.5) }}>
+          <Box p={1} sx={boxStyle}>
             <Typography>{showSecondaryKey ? secondaryKey : secondaryKeyVisible}</Typography>
           </Box>
           <ToggleButton

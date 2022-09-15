@@ -1,22 +1,20 @@
 import { useState } from 'react';
-import { Box, Button, Typography, Link, useTheme } from '@mui/material';
+import { Box, Typography, Link, useTheme } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import HomePageCard from './HomePageCard';
-// import { useAppSelector } from '../../redux/hooks';
-// import { partiesSelectors } from '../../redux/slices/partiesSlice';
-// import { getInstitutionApiKeys } from './../../services/tokenService';
 
 const Home = () => {
-  const [generatePrimaryKey, setGeneratePrimaryKey] = useState<boolean>(false);
-  const [generateSecondaryKey, setGenerateSecondaryKey] = useState<boolean>(false);
+  const [generatePrimaryKey, _setGeneratePrimaryKey] = useState<boolean>(false);
+  const [generateSecondaryKey, _setGenerateSecondaryKey] = useState<boolean>(false);
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [apiKeyPresent, setapiKeyPresent] = useState<boolean>(true);
+  const [apiKeyPresent, _setapiKeyPresent] = useState<boolean>(true);
 
+  // TODO: implement with SELC-1538
   // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   // useEffect(() => {
@@ -48,7 +46,7 @@ const Home = () => {
             <Box>
               <ButtonNaked
                 component="button"
-                onClick={() => console.log('TODO: update when the API is ready')}
+                // onClick={} TODO: add onclick with SELC-1538
                 startIcon={<AddIcon />}
                 color="primary"
                 sx={{
@@ -77,7 +75,7 @@ const Home = () => {
               Non è stata ancora generata nessuna chiave API per questo ente.
               <Link
                 sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
-                onClick={() => console.log('TODO: remove')}
+                // onClick={} TODO: add onclick with SELC-1538
               >
                 <strong> Genera chiave API</strong>
               </Link>
@@ -90,11 +88,6 @@ const Home = () => {
           />
         )}
       </Box>
-
-      {/* TODO: remove these buttons */}
-      <Button onClick={() => setapiKeyPresent(!apiKeyPresent)}>API KEY PRESENTE/ASSENTE</Button>
-      <Button onClick={() => setGeneratePrimaryKey(true)}>GENERA CHIAVE PRIMARIA</Button>
-      <Button onClick={() => setGenerateSecondaryKey(true)}>GENERA CHIAVE SECONDARIA</Button>
     </>
   );
 };

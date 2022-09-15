@@ -2,6 +2,7 @@ export default function Token() {
   return <div>Token</div>;
 }
 
+// TODO: implement with SELC-1538
 // import { ApiKeysResource } from '../api/generated/portal/ApiKeysResource';
 
 // export type ProductKeys = {

@@ -84,6 +84,7 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  // TODO: implement with SELC-1538
   // getInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
   //   const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
   //   return extractResponse(result, 200, onRedirectToLogin);

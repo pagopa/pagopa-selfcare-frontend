@@ -25,6 +25,10 @@ export default {
       secondaryApiKey: 'Codice chiave API secondaria',
       regeneratesBtn: 'Rigenera',
       useKeyBtn: 'Usa questa chiave',
+      copyPrimaryKeyLabel: 'Chiave primaria copiata correttamente',
+      errorCopyPrimaryKeyLabel: 'Errore durante la copia della chiave primaria',
+      copySecondaryKeyLabel: 'Chiave secondaria copiata correttamente',
+      errorCopySecondaryKeyLabel: 'Errore durante la copia della chiave secondaria',
     },
   },
   sideMenu: {

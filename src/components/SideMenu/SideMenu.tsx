@@ -2,7 +2,7 @@ import { List, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useUnloadEventOnExit } from '@pagopa/selfcare-common-frontend/hooks/useUnloadEventInterceptor';
 import { useTranslation } from 'react-i18next';
-import DashboardCustomize from '@mui/icons-material/DashboardCustomize';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { useState } from 'react';
 import ROUTES from '../../routes';
 import SidenavItem from './SidenavItem';
@@ -30,7 +30,7 @@ export default function SideMenu() {
             title={t('sideMenu.home.title')}
             handleClick={() => onExit(() => history.push(ROUTES.HOME))}
             isSelected={pathname === ROUTES.HOME}
-            icon={DashboardCustomize}
+            icon={VpnKeyIcon}
           />
           {/* <SidenavItem
             title={t('sideMenu.wizard.title')}

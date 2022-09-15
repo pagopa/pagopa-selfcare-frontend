@@ -5,6 +5,7 @@ import { buildFetchApi, extractResponse } from '@pagopa/selfcare-common-frontend
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
+// import { ProductKeys } from '../model/Token';
 import { createClient, WithDefaultsT } from './generated/portal/client';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
@@ -82,4 +83,23 @@ export const PortalApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  // TODO: implement with SELC-1538
+  // getInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
+  //   const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
+  //   return extractResponse(result, 200, onRedirectToLogin);
+  // },
+  // createInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
+  //   const result = await apiClient.createInstitutionApiKeysUsingPOST({ institutionId });
+  //   return extractResponse(result, 201, onRedirectToLogin);
+  // },
+  // regeneratePrimaryKey: async (institutionId: string): Promise<string> => {
+  //   const result = await apiClient.regeneratePrimaryKeyUsingPOST({ institutionId });
+  //   return extractResponse(result, 204, onRedirectToLogin);
+  // },
+
+  // regenerateSecondaryKey: async (institutionId: string): Promise<string> => {
+  //   const result = await apiClient.regenerateSecondaryKeyUsingPOST({ institutionId });
+  //   return extractResponse(result, 201, onRedirectToLogin);
+  // },
 };

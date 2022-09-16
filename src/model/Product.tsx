@@ -1,5 +1,5 @@
 import { ProductsResource } from '../api/generated/portal/ProductsResource';
-import { PartyRole, SelfcareRole, UserRole } from './Party';
+import { PartyRole, SelfcareRole } from './Party';
 
 export type ProductStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING';
 
@@ -12,13 +12,16 @@ export type Product = {
   urlBO: string;
   urlPublic?: string;
   selfcareRole?: SelfcareRole;
-  roles: Array<UserRole>;
-  authorized?: boolean;
-  status: ProductStatus;
-  imageUrl: string;
-  subProducts: Array<SubProduct>;
+  roles: Array<UserProductRole>;
+  // authorized?: boolean;
+  // status: ProductStatus;
+  // imageUrl: string;
+  // subProducts: Array<SubProduct>;
 };
 
+type UserProductRole = {
+  partyRole: PartyRole;
+};
 export type SubProduct = {
   id: string;
   title: string;
@@ -27,10 +30,10 @@ export type SubProduct = {
 export type ProductsMap = { [id: string]: Product };
 
 export const productResource2Product = (resource: ProductsResource): Product => ({
-  activationDateTime: resource.activatedAt,
+  // activationDateTime: resource.activatedAt,
   description: resource.description,
   id: resource.id,
-  logo: resource.logo,
+  // logo: resource.logo,
   title: resource.title,
   urlBO: resource.urlBO,
   urlPublic: resource.urlPublic,
@@ -38,11 +41,11 @@ export const productResource2Product = (resource: ProductsResource): Product => 
   roles: [
     {
       partyRole: (resource as any).partyRole as PartyRole, // TODO maybe it will be added to the API?
-      roleKey: resource.userRole as string,
+      // roleKey: resource.userRole as string,
     },
   ],
-  authorized: resource.authorized,
-  status: resource.status,
-  imageUrl: resource.imageUrl,
-  subProducts: resource.children?.slice() ?? [],
+  // authorized: resource.authorized,
+  // status: resource.status,
+  // imageUrl: resource.imageUrl,
+  // subProducts: resource.children?.slice() ?? [],
 });

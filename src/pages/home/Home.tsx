@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography, Link, useTheme } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { ProductKeys } from '../../model/Token';
 import HomePageCard from './HomePageCard';
+import { getInstitutionApiKeys } from './../../services/tokenService';
+import {
+  regeneratePrimaryKey,
+  regenerateSecondaryKey,
+  createInstitutionApiKeys,
+} from './../../services/tokenService';
 
 const Home = () => {
   const [generatePrimaryKey, _setGeneratePrimaryKey] = useState<boolean>(false);
@@ -12,20 +21,44 @@ const Home = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [apiKeyPresent, _setapiKeyPresent] = useState<boolean>(true);
+  const [apiKeyPresent, setapiKeyPresent] = useState<ProductKeys>();
+  const [primaryKey, setPrimaryKey] = useState<string>('');
+  const [secondaryKey, setSecondaryKey] = useState<string>('');
 
-  // TODO: implement with SELC-1538
-  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  // useEffect(() => {
-  //   if (selectedParty) {
-  //     void getInstitutionApiKeys(selectedParty.partyId).then((data) => {
-  //       if (data) {
-  //         setapiKeyPresent(true);
-  //       }
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (selectedParty) {
+      void getInstitutionApiKeys(selectedParty.partyId).then((data) => {
+        setPrimaryKey(data.primaryKey);
+        setSecondaryKey(data.secondaryKey);
+        if (data) {
+          setapiKeyPresent(data);
+        }
+      });
+    }
+  }, [selectedParty]);
+
+  const createKeys = () => {
+    if (selectedParty) {
+      void createInstitutionApiKeys(selectedParty.partyId).then((data) => {
+        setPrimaryKey(data.primaryKey);
+        setSecondaryKey(data.secondaryKey);
+      });
+    }
+  };
+
+  const regenPrimaryKey = () => {
+    if (selectedParty) {
+      void regeneratePrimaryKey(selectedParty.partyId).then((data) => setPrimaryKey(data));
+    }
+  };
+  const regenSecondaryKey = () => {
+    if (selectedParty) {
+      void regenerateSecondaryKey(selectedParty.partyId).then((data) => setSecondaryKey(data));
+    }
+  };
+
   return (
     <>
       <Box width="100%" px={2}>
@@ -46,7 +79,7 @@ const Home = () => {
             <Box>
               <ButtonNaked
                 component="button"
-                // onClick={} TODO: add onclick with SELC-1538
+                onClick={createKeys}
                 startIcon={<AddIcon />}
                 color="primary"
                 sx={{
@@ -75,7 +108,7 @@ const Home = () => {
               Non è stata ancora generata nessuna chiave API per questo ente.
               <Link
                 sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
-                // onClick={} TODO: add onclick with SELC-1538
+                onClick={createKeys}
               >
                 <strong> Genera chiave API</strong>
               </Link>
@@ -85,6 +118,11 @@ const Home = () => {
           <HomePageCard
             generatePrimaryKey={generatePrimaryKey}
             generateSecondaryKey={generateSecondaryKey}
+            selectedParty={selectedParty}
+            primaryKey={primaryKey}
+            secondaryKey={secondaryKey}
+            regenPrimaryKey={regenPrimaryKey}
+            regenSecondaryKey={regenSecondaryKey}
           />
         )}
       </Box>

@@ -1,8 +1,8 @@
 import { ProductKeys } from '../../model/Token';
 
 export const mockedKeys: ProductKeys = {
-  primaryKey: '000000234000001123400000007744',
-  secondaryKey: '0000005690000011234000000077155',
+  primaryKey: '',
+  secondaryKey: '',
 };
 export const createMockedKeys: ProductKeys = {
   primaryKey: '000000234000001123400000007788',

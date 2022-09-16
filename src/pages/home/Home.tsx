@@ -6,7 +6,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { ProductKeys } from '../../model/Token';
 import HomePageCard from './HomePageCard';
 import { getInstitutionApiKeys } from './../../services/tokenService';
 import {
@@ -21,19 +20,22 @@ const Home = () => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [apiKeyPresent, setapiKeyPresent] = useState<ProductKeys>();
+  const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(false);
   const [primaryKey, setPrimaryKey] = useState<string>('');
   const [secondaryKey, setSecondaryKey] = useState<string>('');
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
+  console.log('apiKeyPresent', apiKeyPresent);
   useEffect(() => {
     if (selectedParty) {
       void getInstitutionApiKeys(selectedParty.partyId).then((data) => {
         setPrimaryKey(data.primaryKey);
         setSecondaryKey(data.secondaryKey);
-        if (data) {
-          setapiKeyPresent(data);
+        if (data.primaryKey !== '' && data.secondaryKey !== '') {
+          setApiKeyPresent(true);
+        } else {
+          setApiKeyPresent(false);
         }
       });
     }
@@ -44,6 +46,7 @@ const Home = () => {
       void createInstitutionApiKeys(selectedParty.partyId).then((data) => {
         setPrimaryKey(data.primaryKey);
         setSecondaryKey(data.secondaryKey);
+        setApiKeyPresent(true);
       });
     }
   };

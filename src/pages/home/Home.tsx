@@ -15,8 +15,6 @@ import {
 } from './../../services/tokenService';
 
 const Home = () => {
-  const [generatePrimaryKey, _setGeneratePrimaryKey] = useState<boolean>(false);
-  const [generateSecondaryKey, _setGenerateSecondaryKey] = useState<boolean>(false);
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -119,8 +117,6 @@ const Home = () => {
           </Box>
         ) : (
           <HomePageCard
-            generatePrimaryKey={generatePrimaryKey}
-            generateSecondaryKey={generateSecondaryKey}
             selectedParty={selectedParty}
             primaryKey={primaryKey}
             secondaryKey={secondaryKey}

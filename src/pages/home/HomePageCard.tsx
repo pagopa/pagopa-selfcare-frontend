@@ -8,8 +8,6 @@ import { useErrorDispatcher, useUserNotify } from '@pagopa/selfcare-common-front
 import { Party } from '../../model/Party';
 
 type Props = {
-  generatePrimaryKey: boolean;
-  generateSecondaryKey: boolean;
   selectedParty?: Party;
   primaryKey: string;
   secondaryKey: string;
@@ -17,8 +15,6 @@ type Props = {
   regenSecondaryKey: () => void;
 };
 export default function HomePageCard({
-  generatePrimaryKey,
-  generateSecondaryKey,
   primaryKey,
   secondaryKey,
   regenPrimaryKey,
@@ -114,11 +110,9 @@ export default function HomePageCard({
           <Button variant="contained" onClick={copyPrimaryKey}>
             {t('homepage.apiPresent.useKeyBtn')}
           </Button>
-          {!generatePrimaryKey && (
-            <Button variant="outlined" onClick={regenPrimaryKey}>
-              {t('homepage.apiPresent.regeneratesBtn')}
-            </Button>
-          )}
+          <Button variant="outlined" onClick={regenPrimaryKey}>
+            {t('homepage.apiPresent.regeneratesBtn')}
+          </Button>
         </Stack>
       </Box>
       <Box>
@@ -146,11 +140,10 @@ export default function HomePageCard({
           <Button variant="contained" onClick={copySecondaryKey}>
             {t('homepage.apiPresent.useKeyBtn')}
           </Button>
-          {!generateSecondaryKey && (
-            <Button variant="outlined" onClick={regenSecondaryKey}>
-              {t('homepage.apiPresent.regeneratesBtn')}
-            </Button>
-          )}
+
+          <Button variant="outlined" onClick={regenSecondaryKey}>
+            {t('homepage.apiPresent.regeneratesBtn')}
+          </Button>
         </Stack>
       </Box>
     </Card>

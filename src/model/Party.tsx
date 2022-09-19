@@ -43,10 +43,10 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     roles: [
       {
         partyRole: (institutionResource as any).partyRole, // TODO maybe it will be added
-        roleKey: institutionResource.userRole,
+        roleKey: institutionResource.userProductRoles?.join(','), // [...institutionResource.userProductRoles],
       },
     ],
-    category: institutionResource.category,
+    // category: institutionResource.category,
     urlLogo,
     fiscalCode: institutionResource.fiscalCode,
     registeredOffice: institutionResource.address,

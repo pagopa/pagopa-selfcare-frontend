@@ -40,11 +40,7 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
           title: pagoPAProduct.title,
           publicUrl: pagoPAProduct.productUrl,
         } as unknown as Product,
-      ].concat(
-        products?.filter(
-          (p) => p.id !== pagoPAProduct.id && p.status === 'ACTIVE' && p.authorized
-        ) ?? []
-      ),
+      ].concat(products ?? []),
     [products]
   );
 
@@ -70,11 +66,11 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
       loggedUser={
         loggedUser
           ? {
-            id: loggedUser ? loggedUser.uid : '',
-            name: loggedUser?.name,
-            surname: loggedUser?.surname,
-            email: loggedUser?.email,
-          }
+              id: loggedUser ? loggedUser.uid : '',
+              name: loggedUser?.name,
+              surname: loggedUser?.surname,
+              email: loggedUser?.email,
+            }
           : false
       }
       assistanceEmail={ENV.ASSISTANCE.EMAIL}

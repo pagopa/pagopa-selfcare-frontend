@@ -28,7 +28,6 @@ const Home = () => {
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  console.log('apiKeyPresent', apiKeyPresent);
   useEffect(() => {
     if (selectedParty) {
       void getInstitutionApiKeys(selectedParty.partyId).then((data) => {

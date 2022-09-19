@@ -4,6 +4,7 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useUserNotify } from '@pagopa/selfcare-common-frontend';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import HomePageCard from './HomePageCard';
@@ -21,6 +22,9 @@ const Home = () => {
   const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(false);
   const [primaryKey, setPrimaryKey] = useState<string>('');
   const [secondaryKey, setSecondaryKey] = useState<string>('');
+
+  const addNotify = useUserNotify();
+  const addError = useErrorDispatcher();
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
@@ -51,12 +55,56 @@ const Home = () => {
 
   const regenPrimaryKey = () => {
     if (selectedParty) {
-      void regeneratePrimaryKey(selectedParty.partyId).then((data) => setPrimaryKey(data));
+      regeneratePrimaryKey(selectedParty.partyId).then(
+        (data) => {
+          setPrimaryKey(data);
+          addNotify({
+            id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+            title: t('homepage.apiPresent.regeneratePrimaryKey'),
+            message: undefined,
+            component: 'Toast',
+          });
+        },
+        (reason) => {
+          addError({
+            component: 'Toast',
+            id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+            displayableTitle: t('homepage.apiPresent.errorRegeneratePrimaryKey'),
+            techDescription: `C'è stato un errore durante la rigenerazione della chiave primaria`,
+            blocking: false,
+            error: reason,
+            toNotify: true,
+            displayableDescription: '',
+          });
+        }
+      );
     }
   };
   const regenSecondaryKey = () => {
     if (selectedParty) {
-      void regenerateSecondaryKey(selectedParty.partyId).then((data) => setSecondaryKey(data));
+      regenerateSecondaryKey(selectedParty.partyId).then(
+        (data) => {
+          setSecondaryKey(data);
+          addNotify({
+            id: 'ACTION_ON_REGENERATE_SECONDARY_KEY',
+            title: t('homepage.apiPresent.regenerateSecondaryKey'),
+            message: undefined,
+            component: 'Toast',
+          });
+        },
+        (reason) => {
+          addError({
+            component: 'Toast',
+            id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+            displayableTitle: t('homepage.apiPresent.errorRegenerateSecondaryKey'),
+            techDescription: `C'è stato un errore durante la rigenerazione della chiave secondaria`,
+            blocking: false,
+            error: reason,
+            toNotify: true,
+            displayableDescription: '',
+          });
+        }
+      );
     }
   };
 

@@ -60,8 +60,8 @@ const Home = () => {
           setPrimaryKey(data);
           addNotify({
             id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
-            title: t('homepage.apiPresent.regeneratePrimaryKey'),
-            message: undefined,
+            title: '',
+            message: t('homepage.apiPresent.regeneratePrimaryKey'),
             component: 'Toast',
           });
         },
@@ -87,8 +87,8 @@ const Home = () => {
           setSecondaryKey(data);
           addNotify({
             id: 'ACTION_ON_REGENERATE_SECONDARY_KEY',
-            title: t('homepage.apiPresent.regenerateSecondaryKey'),
-            message: undefined,
+            title: '',
+            message: t('homepage.apiPresent.regenerateSecondaryKey'),
             component: 'Toast',
           });
         },

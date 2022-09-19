@@ -34,8 +34,8 @@ export default function HomePageCard({
       () => {
         addNotify({
           id: 'ACTION_ON_COPY_PRIMARY_KEY',
-          title: t('homepage.apiPresent.copyPrimaryKeyLabel'),
-          message: undefined,
+          title: '',
+          message: t('homepage.apiPresent.copyPrimaryKeyLabel'),
           component: 'Toast',
         });
       },
@@ -57,8 +57,8 @@ export default function HomePageCard({
       () => {
         addNotify({
           id: 'ACTION_ON_COPY_SECONDARY_KEY',
-          title: t('homepage.apiPresent.copySecondaryKeyLabel'),
-          message: undefined,
+          title: '',
+          message: t('homepage.apiPresent.copySecondaryKeyLabel'),
           component: 'Toast',
         });
       },

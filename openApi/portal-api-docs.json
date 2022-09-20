@@ -122,7 +122,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InstitutionResource"
+                  "$ref": "#/components/schemas/InstitutionDetailResource"
                 }
               }
             }
@@ -532,6 +532,92 @@
           "secondaryKey": {
             "type": "string",
             "description": "Institution's secondary Api Key"
+          }
+        }
+      },
+      "AttributeResource": {
+        "title": "AttributeResource",
+        "required": ["code", "description", "origin"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Institution's code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's name"
+          },
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
+          }
+        }
+      },
+      "InstitutionDetailResource": {
+        "title": "InstitutionDetailResource",
+        "required": [
+          "address",
+          "attributes",
+          "description",
+          "digitalAddress",
+          "externalId",
+          "id",
+          "institutionType",
+          "origin",
+          "originId",
+          "taxCode",
+          "zipCode"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Institution's physical address"
+          },
+          "attributes": {
+            "type": "array",
+            "description": "Institution's attributes",
+            "items": {
+              "$ref": "#/components/schemas/AttributeResource"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's name"
+          },
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "Institution's unique external identifier"
+          },
+          "id": {
+            "type": "string",
+            "description": "Institution's unique internal identifier"
+          },
+          "institutionType": {
+            "type": "string",
+            "description": "Institution's type",
+            "enum": ["GSP", "PA", "PT", "SCP"]
+          },
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
+          },
+          "originId": {
+            "type": "string",
+            "description": "Institution's details origin Id"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's taxCode"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
           }
         }
       },

@@ -8,7 +8,13 @@ parameters:
       - major
       - minor
       - patch
-    default: minor
+      - prerelease
+      - skip
+    default: skip
+  - name: TEST
+    displayName: Run tests
+    type: boolean
+    default: false
 
 variables:
   NODE_VERSION: '16.10.0'
@@ -17,6 +23,14 @@ variables:
   vmImageNameDefault: 'ubuntu-latest'
 
   basePath: pagopa-selfcare-frontend
+
+  # Image Repository Name
+  imageRepository: '$(IMAGE_REPOSITORY)'
+  nameSpace: '$(K8S_NAMESPACE)'
+
+  title: ""
+  sha: ""
+  tag: ""
 
   # global variables
   react_app_pagopa_help_email: '$(REACT_APP_ASSISTANCE_EMAIL)'
@@ -44,7 +58,11 @@ variables:
     react_app_analytics_mocked: '$(UAT_ANALYTICS_MOCKED)'
     react_app_mixpanel_token: '$(UAT_MIXPANEL_TOKEN)'
     react_app_onetrust_domain_id: '$(UAT_ONETRUST_DOMAIN_ID)'
-
+    
+    dockerRegistryServiceConnection: $(UAT_CONTAINER_REGISTRY)
+    kubernetesServiceConnection: '$(UAT_KUBERNETES_SERVICE_CONN)'
+    poolImage: 'pagopa-uat-linux'
+    SEMVER: "uat"
   ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     environment: 'PROD'
     azure_subscription: $(PROD_AZURE_SUBSCRIPTION)
@@ -69,6 +87,10 @@ variables:
     react_app_mixpanel_token: '$(PROD_MIXPANEL_TOKEN)'
     react_app_onetrust_domain_id: '$(PROD_ONETRUST_DOMAIN_ID)'
 
+    dockerRegistryServiceConnection: $(PROD_CONTAINER_REGISTRY)
+    kubernetesServiceConnection: '$(PROD_KUBERNETES_SERVICE_CONN)'
+    poolImage: 'pagopa-prod-linux'
+    SEMVER: "prod"
   # every branch different from past will be considered as DEV
   #  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release-dev') }}:
   ${{ else }}:
@@ -95,14 +117,19 @@ variables:
     react_app_mixpanel_token: '$(DEV_MIXPANEL_TOKEN)'
     react_app_onetrust_domain_id: '$(DEV_ONETRUST_DOMAIN_ID)'
 
+    dockerRegistryServiceConnection: $(DEV_CONTAINER_REGISTRY)
+    kubernetesServiceConnection: '$(DEV_KUBERNETES_SERVICE_CONN)'
+    poolImage: 'pagopa-dev-linux'
+    SEMVER: "dev"
+
+  ${{ if eq(variables['Build.SourceBranchName'], 'merge') }}:
+    SOURCE_BRANCH: "main" # force to main branch
+  ${{ if ne(variables['Build.SourceBranchName'], 'merge') }}:
+    SOURCE_BRANCH: ${{ variables['Build.SourceBranchName'] }}
 # Automatically triggered on PR
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema#pr-trigger
-trigger:
-  branches:
-    include:
-      - main
-      - release-*
-
+# Only manual triggers
+trigger: none
 pr: none
 
 resources:
@@ -110,7 +137,7 @@ resources:
     - repository: pagopaCommons
       type: github
       name: pagopa/azure-pipeline-templates
-      ref: refs/tags/v18
+      ref: refs/tags/v2.2.2
       endpoint: 'io-azure-devops-github-ro'
     - repository: selfcareCommon
       type: github
@@ -129,11 +156,27 @@ stages:
   - stage: Release
     condition: or(
       startsWith(variables['Build.SourceBranch'], 'refs/heads/release-uat')
+      , startsWith(variables['Build.SourceBranch'], 'refs/heads/release-dev')
       , startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix')
       , eq(variables['Build.SourceBranch'], 'refs/heads/main')
       )
     pool:
       vmImage: 'ubuntu-latest'
+    jobs:
+      - job: releaseService
+        steps:
+          - template: templates/node-job-setup/template.yaml@pagopaCommons
+            parameters:
+              persistCredentials: true
+              gitReference: $(SOURCE_BRANCH)
+
+          - template: templates/node-github-release/template.yaml@pagopaCommons
+            parameters:
+              semver: ${SEMVER}
+              release_branch: $(SOURCE_BRANCH)
+              gitEmail: $(GIT_EMAIL)
+              gitUsername: $(GIT_USERNAME)
+              gitHubConnection: $(GITHUB_CONNECTION)
 #    jobs:
 #      - job: make_release
 #        condition: eq(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
@@ -158,7 +201,9 @@ stages:
 
   # Prepare Artifact with application bundle
   - stage: Prepare_artifact
-    condition: or(eq(variables['environment'], 'DEV'), succeeded())
+    condition: not(failed('release_service'))
+    pool:
+      vmImage: '$(vmImageNameDefault)'
     jobs:
       - job: 'make_build'
         steps:
@@ -166,6 +211,9 @@ stages:
           - template: templates/node-job-setup/template.yaml@pagopaCommons
             parameters:
               nodeVersion: $(NODE_VERSION)
+              persistCredentials: true
+              gitReference: $(SOURCE_BRANCH)
+
           - bash: |
               yarn generate
               yarn build

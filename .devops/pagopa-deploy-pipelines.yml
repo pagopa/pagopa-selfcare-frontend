@@ -86,7 +86,7 @@ variables:
     cdn_endpoint: '$(DEV_CDN_ENDPOINT)'
     cdn_profile: '$(DEV_CDN_PROFILE)'
     resource_group: '$(DEV_RESOURCE_GROUP_AZURE)'
-    storage_account: '$(DEV_STORAGE_ACCOUNT_NAME)'
+    storage_account: 'pagopadweuselcselcsa'
 
     react_app_url_cdn: '$(DEV_SELC_API_HOST)'
 
@@ -231,7 +231,7 @@ stages:
 
           # # to check why azurefilecopy@4 https://github.com/microsoft/azure-pipelines-tasks/issues/13159
           # - task: AzureFileCopy@3
-          #   displayName: 'Deploy to container blob'
+          #   displayName: 'Deploy to contai  ner blob'
           #   inputs:
           #     sourcePath: '$(Pipeline.Workspace)/Bundle'
           #     azureSubscription: '$(azure_subscription)'
@@ -242,7 +242,7 @@ stages:
           - task: AzureCLI@1
             displayName: 'Sync checkout storage'
             inputs:
-              azureSubscription: '$(azure_subscription)'
+              azureSubscription: '$(AZURE_SUBSCRIPTION)'
               scriptLocation: inlineScript
               inlineScript: |
                 az storage blob sync --container '$(blob_container_name)' --account-name $(storage_account) -s "$(Pipeline.Workspace)/Bundle" --destination '$(basePath)/'
@@ -250,7 +250,7 @@ stages:
           - task: AzureCLI@1
             displayName: 'Purge CDN endpoint'
             inputs:
-              azureSubscription: '$(AZURE_SUBSCRIPTION)'
+              azureSubscription: '$(azure_subscription)'
               scriptLocation: inlineScript
               inlineScript: |
                 az cdn endpoint purge -g $(resource_group) -n $(cdn_endpoint) --profile-name $(cdn_profile) --content-paths "/$(basePath)" "/$(basePath)/*" "/"

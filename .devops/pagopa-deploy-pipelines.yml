@@ -136,7 +136,7 @@ stages:
   # - is on branch $(DEFAULT_BRANCH)
   # - is a tag in the form v{version}-RELEASE
   - stage: release_service
-    condition: ne('${{ parameters.SEMVER }}', 'skip')
+    condition: ne(''${{ parameters.SEMVER }}'', 'skip')
     pool:
       vmImage: 'ubuntu-latest'
     jobs:

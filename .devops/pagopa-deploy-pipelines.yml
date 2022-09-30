@@ -90,14 +90,14 @@ variables:
 
     react_app_url_cdn: '$(DEV_SELC_API_HOST)'
 
-    #react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)'
-    #react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)'
-    #react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_auth: 'https://dev.selfcare.pagopa.it/auth' #'$(DEV_REACT_APP_URL_FE_LOGIN)'
+    react_app_url_fe_landing: 'https://dev.selfcare.pagopa.it/auth/logout' # '$(DEV_REACT_APP_URL_FE_LANDING)'
+    react_app_url_fe_assistance: 'https://dev.selfcare.pagopa.it/assistenza' #'$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
 
-    #react_app_url_api_portal: '$(DEV_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_portal: 'https://api.dev.platform.pagopa.it/selc/pagopa/v1/' #'$(DEV_REACT_APP_URL_API_PORTAL)'
 
-    #react_app_url_storage: '$(DEV_REACT_APP_URL_STORAGE)'
-
+    react_app_url_storage: 'https://pagopadweuselcselcsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)'
+    
     react_app_one_trust_base_url: '$(DEV_SELC_API_HOST)/ot/test'
     react_app_analytics_enabled: 'true'
     react_app_analytics_mocked: 'false'

@@ -83,10 +83,10 @@ variables:
   ${{ if eq(parameters['ENV'], 'dev') }}:
     environment: 'DEV'
     azure_subscription: $(DEV_AZURE_SUBSCRIPTION)
-    cdn_endpoint: '$(DEV_CDN_ENDPOINT)'
-    cdn_profile: '$(DEV_CDN_PROFILE)'
-    resource_group: '$(DEV_RESOURCE_GROUP_AZURE)'
-    storage_account: 'pagopadweuselcselcsa'
+    cdn_endpoint: 'pagopa-d-weu-selc-selc-cdn-endpoint' #$(DEV_ENDPOINT_AZURE)
+    cdn_profile: 'pagopa-d-weu-selc-selc-cdn-profile' #$(DEV_PROFILE_NAME_CDN_AZURE)
+    resource_group: 'pagopa-d-weu-selc-selc-fe-rg' #$(DEV_RESOURCE_GROUP_AZURE)
+    storage_account: 'pagopadweuselcselcsa' # DEV_STORAGE_ACCOUNT_NAME
 
     react_app_url_cdn: '$(DEV_SELC_API_HOST)'
 
@@ -250,7 +250,7 @@ stages:
           - task: AzureCLI@1
             displayName: 'Purge CDN endpoint'
             inputs:
-              azureSubscription: '$(azure_subscription)'
+              azureSubscription: '$(AZURE_SUBSCRIPTION)'
               scriptLocation: inlineScript
               inlineScript: |
                 az cdn endpoint purge -g $(resource_group) -n $(cdn_endpoint) --profile-name $(cdn_profile) --content-paths "/$(basePath)" "/$(basePath)/*" "/"

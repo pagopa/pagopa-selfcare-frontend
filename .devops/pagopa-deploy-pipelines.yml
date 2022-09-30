@@ -229,23 +229,23 @@ stages:
           - download: current
             artifact: Bundle
 
-          # to check why azurefilecopy@4 https://github.com/microsoft/azure-pipelines-tasks/issues/13159
-          - task: AzureFileCopy@3
-            displayName: 'Deploy to container blob'
-            inputs:
-              sourcePath: '$(Pipeline.Workspace)/Bundle'
-              azureSubscription: '$(azure_subscription)'
-              destination: 'azureBlob'
-              storage: '$(storage_account)'
-              containerName: '$(blob_container_name)'
-          
-          # - task: AzureCLI@1
-          #   displayName: 'Sync checkout storage'
+          # # to check why azurefilecopy@4 https://github.com/microsoft/azure-pipelines-tasks/issues/13159
+          # - task: AzureFileCopy@3
+          #   displayName: 'Deploy to container blob'
           #   inputs:
-          #     azureSubscription: '$(AZURE_SUBSCRIPTION)'
-          #     scriptLocation: inlineScript
-          #     inlineScript: |
-          #       az storage blob sync --container '$(blob_container_name)' --account-name $(storage_account) -s "$(Pipeline.Workspace)/Bundle" --destination '$(basePath)/'
+          #     sourcePath: '$(Pipeline.Workspace)/Bundle'
+          #     azureSubscription: '$(azure_subscription)'
+          #     destination: 'azureBlob'
+          #     storage: '$(storage_account)'
+          #     containerName: '$(blob_container_name)'
+          
+          - task: AzureCLI@1
+            displayName: 'Sync checkout storage'
+            inputs:
+              azureSubscription: '$(azure_subscription)'
+              scriptLocation: inlineScript
+              inlineScript: |
+                az storage blob sync --container '$(blob_container_name)' --account-name $(storage_account) -s "$(Pipeline.Workspace)/Bundle" --destination '$(basePath)/'
 
           - task: AzureCLI@1
             displayName: 'Purge CDN endpoint'

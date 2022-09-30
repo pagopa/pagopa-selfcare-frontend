@@ -1,7 +1,7 @@
 # Azure DevOps pipeline to release a new version and deploy to production.
 
 parameters:
-  - name: 'RELEASE_SEMVER'
+  - name: 'SEMVER'
     displayName: 'When packing a release, define the version bump to apply'
     type: string
     values:

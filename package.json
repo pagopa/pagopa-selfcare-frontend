@@ -1,7 +1,7 @@
 {
   "name": "pagopa-selfcare-frontend",
   "version": "1.0.0",
-  "homepage": "pagopa-mvp",
+  "homepage": "ui",
   "private": true,
   "dependencies": {
     "@mui/icons-material": "^5.8.2",

@@ -25,7 +25,7 @@ variables:
   # Execute agents (jobs) on latest Ubuntu version.
   vmImageNameDefault: 'ubuntu-latest'
 
-  basePath: pagopa-mvp
+  basePath: ui
 
   # global variables
   react_app_pagopa_help_email: '$(REACT_APP_ASSISTANCE_EMAIL)'
@@ -93,16 +93,14 @@ variables:
     react_app_url_fe_auth: 'https://dev.selfcare.pagopa.it/auth' #'$(DEV_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: 'https://dev.selfcare.pagopa.it/auth/logout' # '$(DEV_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: 'https://dev.selfcare.pagopa.it/assistenza' #'$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
-
     react_app_url_api_portal: 'https://api.dev.platform.pagopa.it/selc/pagopa/v1/' #'$(DEV_REACT_APP_URL_API_PORTAL)'
-
     react_app_url_storage: 'https://pagopadweuselcselcsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)'
     
     react_app_one_trust_base_url: '$(DEV_SELC_API_HOST)/ot/test'
-    react_app_analytics_enabled: 'true'
-    react_app_analytics_mocked: 'false'
-    react_app_mixpanel_token: '16e1290bdda5885981a2f443f37444f0f23' #$(DEV_MIXPANEL_TOKEN)
-    react_app_onetrust_domain_id: 'a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test' #$(DEV_ONETRUST_DOMAIN_ID)
+    react_app_analytics_enabled: 'true' # $(DEV_REACT_APP_ANALYTICS_ENABLED)
+    react_app_analytics_mocked: 'false' # $(DEV_REACT_APP_ANALYTICS_MOCKED)
+    react_app_mixpanel_token: '16e1290bdda5885981a2f443f37444f0f23' #$(DEV_REACT_APP_MIXPANEL_TOKEN)
+    react_app_onetrust_domain_id: 'a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test' #$(DEV_REACT_APP_ONETRUST_DOMAIN_ID)
 
   ${{ if eq(variables['Build.SourceBranchName'], 'merge') }}:
     SOURCE_BRANCH: "main" # force to main branch

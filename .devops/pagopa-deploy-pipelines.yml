@@ -87,8 +87,8 @@ variables:
     cdn_profile: 'pagopa-d-weu-selc-selc-cdn-profile' #$(DEV_PROFILE_NAME_CDN_AZURE)
     resource_group: 'pagopa-d-weu-selc-selc-fe-rg' #$(DEV_RESOURCE_GROUP_AZURE)
     storage_account: 'pagopadweuselcselcsa' # DEV_STORAGE_ACCOUNT_NAME
-
-    react_app_url_cdn: '$(DEV_SELC_API_HOST)'
+    
+    react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELC_API_HOST)
 
     react_app_url_fe_auth: 'https://dev.selfcare.pagopa.it/auth' #'$(DEV_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: 'https://dev.selfcare.pagopa.it/auth/logout' # '$(DEV_REACT_APP_URL_FE_LANDING)'

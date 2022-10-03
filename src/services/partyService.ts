@@ -7,7 +7,7 @@ export const fetchParties = (): Promise<Array<Party>> => {
   if (process.env.REACT_APP_API_MOCK_PARTIES === 'true') {
     return new Promise((resolve) => resolve(mockedParties));
   } else {
-    return PortalApi.getInstitutions().then((institutionResources) =>
+    return PortalApi.getInstitutions('prod-pagopa').then((institutionResources) =>
       institutionResources ? institutionResources.map(institutionResource2Party) : []
     );
   }
@@ -45,6 +45,9 @@ const retrieveParty = (
 };
 
 const retrieveParty_fetch = (partyId: string): Promise<Party | null> =>
-  PortalApi.getInstitution(partyId).then((institutionResource) =>
-    institutionResource ? institutionResource2Party(institutionResource) : null
-  );
+  PortalApi.getInstitutions('prod-pagopa').then((institutionResources) => {
+    console.log(partyId);
+    return institutionResources.filter((iR) => iR.id === partyId)
+      ? institutionResource2Party(institutionResources.filter((iR) => iR.id === partyId)[0])
+      : null;
+  });

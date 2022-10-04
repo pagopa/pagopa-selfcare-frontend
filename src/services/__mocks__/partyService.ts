@@ -182,23 +182,18 @@ export const mockedParties: Array<Party> = [
   },
 ];
 
-export const mockedPartyDetail: PartyDetail = 
-  {
-    partyId: '7784b9d3-e834-4342-a6ef-d0566b058af2',
-    externalId: '00441340122',
-    originId: 'c_l682',
-    origin: 'IPA',
-    institutionType: 'PA',
-    description: 'Comune di Varese',
-    fiscalCode: '00441340122',
-    digitalAddress: 'protocollo@comune.varese.legalmail.it',
-    address: 'Piazza della Scala, 2 - 20121 Milano',
-    zipCode: '000123',
-  };
-
-
-
-
+export const mockedPartyDetail: PartyDetail = {
+  partyId: '7784b9d3-e834-4342-a6ef-d0566b058af2',
+  externalId: '00441340122',
+  originId: 'c_l682',
+  origin: 'IPA',
+  institutionType: 'PA',
+  description: 'Comune di Varese',
+  fiscalCode: '00441340122',
+  digitalAddress: 'protocollo@comune.varese.legalmail.it',
+  address: 'Piazza della Scala, 2 - 20121 Milano',
+  zipCode: '000123',
+};
 
 export const verifyFetchPartiesMockExecution = (parties: Array<Party>) => {
   expect(parties).toStrictEqual(mockedParties);

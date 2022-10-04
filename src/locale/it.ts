@@ -29,6 +29,10 @@ export default {
       errorCopyPrimaryKeyLabel: 'Errore durante la copia della chiave primaria',
       copySecondaryKeyLabel: 'Chiave secondaria copiata correttamente',
       errorCopySecondaryKeyLabel: 'Errore durante la copia della chiave secondaria',
+      regeneratePrimaryKey: 'Chiave primaria rigenerata correttamente',
+      errorRegeneratePrimaryKey: 'Errore durante la rigenerazione della chiave primaria',
+      regenerateSecondaryKey: 'Chiave secondaria rigenerata correttamente',
+      errorRegenerateSecondariKey: 'Errore durante la rigenerazione della chiave secondaria',
     },
   },
   sideMenu: {

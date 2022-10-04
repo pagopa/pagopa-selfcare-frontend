@@ -45,9 +45,8 @@ const retrieveParty = (
 };
 
 const retrieveParty_fetch = (partyId: string): Promise<Party | null> =>
-  PortalApi.getInstitutions('prod-pagopa').then((institutionResources) => {
-    console.log(partyId);
-    return institutionResources.filter((iR) => iR.id === partyId)
+  PortalApi.getInstitutions('prod-pagopa').then((institutionResources) =>
+    institutionResources.filter((iR) => iR.id === partyId)
       ? institutionResource2Party(institutionResources.filter((iR) => iR.id === partyId)[0])
-      : null;
-  });
+      : null
+  );

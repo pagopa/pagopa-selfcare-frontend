@@ -1,22 +1,23 @@
-// import { EmailString } from '@pagopa/ts-commons/lib/strings';
-import { InstitutionResource } from '../generated/portal/InstitutionResource';
+import { InstitutionResource, InstitutionTypeEnum } from '../generated/portal/InstitutionResource';
+
 import { ProductsResource } from '../generated/portal/ProductsResource';
 
 export const mockedInstitutionResources: Array<InstitutionResource> = [
   {
-    address: 'Piazza della Scala, 2 - 20121 Milano',
-    externalId: 'externalId1',
-    fiscalCode: 'fiscalCode',
-    id: '1',
-    mailAddress: 'address',
     name: 'Comune di Bari',
-    origin: 'IPA',
-    originId: 'originId1',
     status: 'ACTIVE',
-    userProductRoles: ['ADMIN', 'USER'],
+    id: '1',
+    externalId: 'externalId1',
+    originId: 'originId1',
+    origin: 'IPA',
+    mailAddress: 'address',
+    fiscalCode: 'fiscalCode',
+    // userRole: 'LIMITED',
+    institutionType: InstitutionTypeEnum.PA,
+    address: 'Piazza della Scala, 2 - 20121 Milano',
+    userProductRoles: ['security', 'api'],
   },
   {
-    address: 'Piazza della Scala, 2 - 20121 Milano',
     name: 'Comune di Milano',
     status: 'PENDING',
     id: '2',
@@ -25,7 +26,10 @@ export const mockedInstitutionResources: Array<InstitutionResource> = [
     origin: 'IPA',
     mailAddress: 'address',
     fiscalCode: 'fiscalCode',
-    userProductRoles: ['ADMIN'],
+    // userRole: 'ADMIN',
+    institutionType: InstitutionTypeEnum.PA,
+    address: 'Piazza della Scala, 2 - 20121 Milano',
+    userProductRoles: ['security', 'api'],
   },
 ];
 
@@ -44,144 +48,39 @@ export const mockedProductResources: Array<ProductsResource> = [
     urlBO: 'http://notifiche/bo?token=<IdentityToken>',
     urlPublic: 'http://notifiche/public',
   },
-];
-
-/*
-export const mockedInstitutionUserResource: Array<InstitutionUserResource> = [
   {
-    id: '1',
-    name: 'Name',
-    surname: 'Surname',
-    status: 'PENDING',
-    role: 'LIMITED' as RoleEnum,
-    email: 'address' as EmailString,
-    products: [
-      {
-        id: 'productId',
-        title: 'productTitle',
-        roleInfos: [
-          {
-            relationshipId: 'relId',
-            role: 'incaricato-ente-creditore',
-            selcRole: SelcRoleEnum.ADMIN,
-            status: 'ACTIVE',
-          },
-        ],
-      },
-    ],
+    id: '3',
+    title: 'Pagamenti pagoPA',
+    description: 'Pagamenti pagoPA description',
+
+    urlBO: 'http://pagopa/bo#token=<IdentityToken>',
+    urlPublic: 'http://pagopa/public',
   },
   {
-    id: '2',
-    name: 'Name2',
-    surname: 'Surname2',
-    status: 'ACTIVE',
-    role: 'ADMIN' as RoleEnum,
-    email: 'address' as EmailString,
-    products: [
-      {
-        id: 'productId2',
-        title: 'productTitle2',
-        roleInfos: [
-          {
-            relationshipId: 'relId',
-            role: 'incaricato-ente-creditore',
-            selcRole: SelcRoleEnum.ADMIN,
-            status: 'ACTIVE',
-          },
-        ],
-      },
-    ],
+    title: 'Check-IBAN',
+    description: "Verifica l'abbinamento di un IBAN ad un CF di un cittadino o di un'impresa.",
+    id: '4',
+
+    urlPublic: 'http://www.google.it',
+    urlBO: 'http://checkiban/bo#token=<IdentityToken>',
+  },
+  {
+    id: '5',
+    title: 'Carta Giovani',
+    description: 'Richiedi la convenzione e gestisci i dati e le agevolazioni da offrire.',
+
+    urlPublic: undefined,
+    urlBO: 'http://cgn/bo#token=<IdentityToken>',
+  },
+  {
+    id: '6',
+    title: 'PDND',
+    description: 'Condividi dati con altri Enti in maniera semplice, sicura ed economica.',
+
+    urlPublic: undefined,
+    urlBO: 'http://PDND/bo#token=<IdentityToken>',
   },
 ];
-*/
-
-/*
-export const mockedProductUserResource: Array<ProductUserResource> = [
-  {
-    id: '1',
-    name: 'Name',
-    surname: 'Surname',
-    status: 'PENDING',
-    role: 'LIMITED' as RoleEnum,
-    email: 'address' as EmailString,
-    product: {
-      id: 'prod-io',
-      title: 'App IO',
-      roleInfos: [
-        {
-          relationshipId: 'relationshipId',
-          role: 'incaricato-ente-creditore',
-          selcRole: SelcRoleEnum.ADMIN,
-          status: 'ACTIVE',
-        },
-      ],
-    },
-  },
-  {
-    id: '2',
-    name: 'Name2',
-    surname: 'Surname2',
-    status: 'ACTIVE',
-    role: 'ADMIN' as RoleEnum,
-    email: 'address2' as EmailString,
-    product: {
-      id: 'prod-io',
-      title: 'App IO',
-      roleInfos: [
-        {
-          relationshipId: 'relationshipId2',
-          role: 'incaricato-ente-creditore',
-          selcRole: SelcRoleEnum.ADMIN,
-          status: 'ACTIVE',
-        },
-      ],
-    },
-  },
-];
-*/
-
-/*
-export const mockedProductRoles: Array<ProductRoleMappingsResource> = [
-  {
-    partyRole: PartyRoleEnum.SUB_DELEGATE,
-    selcRole: SelcRoleEnum.ADMIN,
-    multiroleAllowed: false,
-    productRoles: [
-      {
-        code: 'incaricato-ente-creditore',
-        description: 'Descrizione incaricato-ente-creditore',
-        label: 'Incaricato Ente Creditore',
-      },
-    ],
-  },
-  {
-    partyRole: PartyRoleEnum.OPERATOR,
-    selcRole: SelcRoleEnum.LIMITED,
-    multiroleAllowed: true,
-    productRoles: [
-      {
-        code: 'referente-dei-pagamenti',
-        description: 'Descrizione referente-dei-pagamenti',
-        label: 'Referente dei Pagamenti',
-      },
-      {
-        code: 'referente-tecnico',
-        description: 'Descrizione referente-tecnico',
-        label: 'Referente Tecnico',
-      },
-    ],
-  },
-];
-*/
-
-/* 
-export const mockedUserResource: PlainUserResource = {
-  id: 'id1',
-  fiscalCode: 'AAAAAA11A11A123K',
-  name: { certified: true, value: 'Gigi' },
-  familyName: { certified: true, value: 'Verdi' },
-  email: { certified: true, value: 'gigi.v@email.com' },
-}; */
 
 export const PortalApi = {
   getInstitutions: async (): Promise<Array<InstitutionResource>> =>
@@ -192,10 +91,4 @@ export const PortalApi = {
 
   getProducts: async (): Promise<Array<ProductsResource>> =>
     new Promise((resolve) => resolve(mockedProductResources)),
-
-  /* getTokenExchange: async (_partyId: string, _productId: string): Promise<IdentityTokenResource> =>
-    new Promise((resolve) => resolve({ token: 'DUMMYTOKEN' })),
-
-  getProductRoles: async (_productId: string): Promise<Array<ProductRoleMappingsResource>> =>
-    new Promise((resolve) => resolve(mockedProductRoles)), */
 };

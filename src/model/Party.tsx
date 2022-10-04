@@ -40,7 +40,9 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     description: institutionResource.name,
     digitalAddress: institutionResource.mailAddress,
     status: institutionResource.status as 'ACTIVE' | 'PENDING',
-    roles: [], // TODO: institutionResource.userProductRoles,
+    roles: institutionResource.userProductRoles.map(
+      (u) => ({ partyRole: u, roleKey: u } as UserRole)
+    ),
     urlLogo,
     fiscalCode: institutionResource.fiscalCode,
     registeredOffice: institutionResource.address,

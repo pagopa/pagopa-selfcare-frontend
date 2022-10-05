@@ -18,6 +18,7 @@ export const ENV = {
 
   URL_API: {
     PORTAL: env.get('REACT_APP_URL_API_PORTAL').required().asString(),
+    TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
   },
 
   API_TIMEOUT_MS: {

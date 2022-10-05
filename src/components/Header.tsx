@@ -5,7 +5,6 @@ import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { WithPartiesProps } from '../decorators/withParties';
 import { Product } from '../model/Product';
 import { useAppSelector } from '../redux/hooks';
@@ -27,7 +26,6 @@ const pagoPAProduct: ProductEntity = {
 };
 
 const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
-  const { t } = useTranslation();
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const parties2Show = [selectedParty as Party];
@@ -64,17 +62,18 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole: party.roles.map((r) => t(`roles.${r.roleKey}`)).join(','),
+        productRole:
+          party.roles[0].roleKey.charAt(0).toUpperCase() + party.roles[0].roleKey.slice(1),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={
         loggedUser
           ? {
-            id: loggedUser ? loggedUser.uid : '',
-            name: loggedUser?.name,
-            surname: loggedUser?.surname,
-            email: loggedUser?.email,
-          }
+              id: loggedUser ? loggedUser.uid : '',
+              name: loggedUser?.name,
+              surname: loggedUser?.surname,
+              email: loggedUser?.email,
+            }
           : false
       }
       assistanceEmail={ENV.ASSISTANCE.EMAIL}

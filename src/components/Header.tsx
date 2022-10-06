@@ -43,7 +43,6 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
 
-  console.log(parties);
   const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   // const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   const activeProducts: Array<Product> = useMemo(

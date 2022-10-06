@@ -33,8 +33,7 @@ const Layout = ({ children }: Props) => {
       minHeight="100vh"
     >
       <Box gridArea="header">
-        <Header onExit={onExit} loggedUser={loggedUser} parties={[]} />
-        {/* <Header onExit={onExit} loggedUser={loggedUser} parties={parties} /> */}
+        <Header onExit={onExit} loggedUser={loggedUser} />
       </Box>
       <Box gridArea="body" display="grid" gridTemplateColumns="minmax(200px, 2fr) 10fr">
         <Box gridColumn="auto" sx={{ backgroundColor: 'background.paper' }}>

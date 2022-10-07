@@ -1,16 +1,15 @@
 import { ProductEntity } from '@pagopa/mui-italia';
 import { PartySwitchItem } from '@pagopa/mui-italia/dist/components/PartySwitch';
 import { Header as CommonHeader } from '@pagopa/selfcare-common-frontend';
+import { useTranslation } from 'react-i18next';
 import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { WithPartiesProps } from '../decorators/withParties';
+import withParties, { WithPartiesProps } from '../decorators/withParties';
 import { Product } from '../model/Product';
 import { useAppSelector } from '../redux/hooks';
 import { partiesSelectors } from '../redux/slices/partiesSlice';
-import { Party } from '../model/Party';
 import { ENV } from './../utils/env';
 
 type Props = WithPartiesProps & {
@@ -26,11 +25,27 @@ const pagoPAProduct: ProductEntity = {
   linkType: 'internal',
 };
 
-const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
+const selfcareProduct: Product = {
+  authorized: true,
+  description: '',
+  id: 'prod-selfcare',
+  imageUrl: '',
+  roles: [],
+  selfcareRole: undefined,
+  status: 'ACTIVE',
+  subProducts: [],
+  title: 'Area Riservata',
+  urlBO: ENV.URL_FE.SELFCARE,
+  urlPublic: ENV.URL_FE.SELFCARE,
+};
+
+const Header = ({ onExit, loggedUser, parties }: Props) => {
   const { t } = useTranslation();
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const parties2Show = [selectedParty as Party];
+  // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
+
+  const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   // const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   const activeProducts: Array<Product> = useMemo(
     () =>
@@ -40,6 +55,7 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
           title: pagoPAProduct.title,
           publicUrl: pagoPAProduct.productUrl,
         } as unknown as Product,
+        selfcareProduct,
       ].concat(
         products?.filter(
           (p) => p.id !== pagoPAProduct.id && p.status === 'ACTIVE' && p.authorized
@@ -54,7 +70,7 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
       withSecondHeader={true}
       selectedPartyId={selectedParty?.partyId}
       selectedProductId={pagoPAProduct.id}
-      addSelfcareProduct={true} // TODO verify if returned from API
+      addSelfcareProduct={false} // TODO verify if returned from API
       productsList={activeProducts.map((p) => ({
         id: p.id,
         title: p.title,
@@ -64,23 +80,29 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole: party.roles.map((r) => t(`roles.${r.roleKey}`)).join(','),
+        productRole: t(`roles.${party.roles[0].roleKey}`),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={
         loggedUser
           ? {
-            id: loggedUser ? loggedUser.uid : '',
-            name: loggedUser?.name,
-            surname: loggedUser?.surname,
-            email: loggedUser?.email,
-          }
+              id: loggedUser ? loggedUser.uid : '',
+              name: loggedUser?.name,
+              surname: loggedUser?.surname,
+              email: loggedUser?.email,
+            }
           : false
       }
       assistanceEmail={ENV.ASSISTANCE.EMAIL}
       enableLogin={true}
       onSelectedProduct={(p) =>
-        onExit(() => console.log(`TODO: perform token exchange to change Product and set ${p}`))
+        onExit(() =>
+          p.id === 'prod-selfcare'
+            ? window.location.assign(`${p.productUrl}${selectedParty?.partyId}`)
+            : window.location.assign(
+                `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty?.partyId}&productId=${p.id}`
+              )
+        )
       }
       onSelectedParty={(selectedParty: PartySwitchItem) => {
         if (selectedParty) {
@@ -88,11 +110,13 @@ const Header = ({ onExit, loggedUser /* , parties */ }: Props) => {
             party_id: selectedParty.id,
           });
           onExit(() =>
-            console.log(`TODO: perform token exchange to change Party and set ${selectedParty}`)
+            window.location.assign(
+              `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`
+            )
           );
         }
       }}
     />
   );
 };
-export default Header;
+export default withParties(Header);

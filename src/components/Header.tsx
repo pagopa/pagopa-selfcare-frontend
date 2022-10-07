@@ -1,6 +1,7 @@
 import { ProductEntity } from '@pagopa/mui-italia';
 import { PartySwitchItem } from '@pagopa/mui-italia/dist/components/PartySwitch';
 import { Header as CommonHeader } from '@pagopa/selfcare-common-frontend';
+import { useTranslation } from 'react-i18next';
 import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
@@ -39,6 +40,7 @@ const selfcareProduct: Product = {
 };
 
 const Header = ({ onExit, loggedUser, parties }: Props) => {
+  const { t } = useTranslation();
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
@@ -78,8 +80,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole:
-          party.roles[0].roleKey.charAt(0).toUpperCase() + party.roles[0].roleKey.slice(1),
+        productRole: t(`roles.${party.roles[0].roleKey}`),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={

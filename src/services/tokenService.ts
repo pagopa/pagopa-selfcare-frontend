@@ -33,7 +33,6 @@ export const regeneratePrimaryKey = (institutionId: string): Promise<string> => 
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
     return regeneratePrimaryKeyMocked(institutionId);
-    // getInstitutionApiKeysMocked(institutionId);
   } else {
     return PortalApi.regeneratePrimaryKey(institutionId).then((resource) => resource);
   }
@@ -43,7 +42,6 @@ export const regenerateSecondaryKey = (institutionId: string): Promise<string> =
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
     return regenerateSecondaryKeyMocked(institutionId);
-    // getInstitutionApiKeysMocked(institutionId);
   } else {
     return PortalApi.regenerateSecondaryKey(institutionId).then((resources) => resources);
   }

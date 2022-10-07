@@ -1,14 +1,23 @@
 # Azure DevOps pipeline to release a new version and deploy to production.
 
 parameters:
-  - name: 'RELEASE_SEMVER'
+  - name: 'SEMVER'
     displayName: 'When packing a release, define the version bump to apply'
     type: string
     values:
       - major
       - minor
       - patch
-    default: minor
+      - skip
+    default: patch
+  - name: ENV
+    displayName: Target Environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - uat
+      - prod
 
 variables:
   NODE_VERSION: '16.10.0'
@@ -16,12 +25,12 @@ variables:
   # Execute agents (jobs) on latest Ubuntu version.
   vmImageNameDefault: 'ubuntu-latest'
 
-  basePath: pagopa-selfcare-frontend
+  basePath: ui
 
   # global variables
   react_app_pagopa_help_email: '$(REACT_APP_ASSISTANCE_EMAIL)'
 
-  ${{ if or(startsWith(variables['Build.SourceBranch'], 'refs/heads/release-uat'), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix')) }}:
+  ${{ if eq(parameters['ENV'], 'uat') }}:
     environment: 'UAT'
     azure_subscription: $(UAT_AZURE_SUBSCRIPTION)
     cdn_endpoint: '$(UAT_CDN_ENDPOINT)'
@@ -34,8 +43,11 @@ variables:
     react_app_url_fe_auth: '$(UAT_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: '$(UAT_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(UAT_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_selfcare: '$(UAT_REACT_APP_URL_FE_SELFCARE)'
+    react_app_url_fe_token_exchange: '$(UAT_REACT_APP_URL_FE_TOKEN_EXCHANGE)'    
 
     react_app_url_api_portal: '$(UAT_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_token: '$(UAT_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
@@ -45,7 +57,7 @@ variables:
     react_app_mixpanel_token: '$(UAT_MIXPANEL_TOKEN)'
     react_app_onetrust_domain_id: '$(UAT_ONETRUST_DOMAIN_ID)'
 
-  ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  ${{ if eq(parameters['ENV'], 'prod') }}:
     environment: 'PROD'
     azure_subscription: $(PROD_AZURE_SUBSCRIPTION)
     cdn_endpoint: '$(PROD_CDN_ENDPOINT)'
@@ -58,8 +70,11 @@ variables:
     react_app_url_fe_auth: '$(PROD_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: '$(PROD_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(PROD_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_selfcare: '$(PROD_REACT_APP_URL_FE_SELFCARE)'
+    react_app_url_fe_token_exchange: '$(PROD_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
     react_app_url_api_portal: '$(PROD_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_token: '$(PROD_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
 
@@ -71,38 +86,39 @@ variables:
 
   # every branch different from past will be considered as DEV
   #  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release-dev') }}:
-  ${{ else }}:
+  ${{ if eq(parameters['ENV'], 'dev') }}:
     environment: 'DEV'
     azure_subscription: $(DEV_AZURE_SUBSCRIPTION)
-    cdn_endpoint: '$(DEV_CDN_ENDPOINT)'
-    cdn_profile: '$(DEV_CDN_PROFILE)'
-    resource_group: '$(DEV_RESOURCE_GROUP)'
-    storage_account: '$(DEV_STORAGE_ACCOUNT)'
+    cdn_endpoint: 'pagopa-d-weu-selc-selc-cdn-endpoint' #$(DEV_ENDPOINT_AZURE)
+    cdn_profile: 'pagopa-d-weu-selc-selc-cdn-profile' #$(DEV_PROFILE_NAME_CDN_AZURE)
+    resource_group: 'pagopa-d-weu-selc-selc-fe-rg' #$(DEV_RESOURCE_GROUP_AZURE)
+    storage_account: 'pagopadweuselcselcsa' # DEV_STORAGE_ACCOUNT_NAME
+    
+    react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELC_API_HOST)
 
-    react_app_url_cdn: '$(DEV_REACT_APP_URL_CDN)'
+    react_app_url_fe_auth: 'https://dev.selfcare.pagopa.it/auth' #'$(DEV_REACT_APP_URL_FE_LOGIN)'
+    react_app_url_fe_landing: 'https://dev.selfcare.pagopa.it/auth/logout' # '$(DEV_REACT_APP_URL_FE_LANDING)'
+    react_app_url_fe_assistance: 'https://dev.selfcare.pagopa.it/assistenza' #'$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_selfcare: 'https://dev.selfcare.pagopa.it/dashboard/' #'$(DEV_REACT_APP_URL_FE_SELFCARE)'
+    react_app_url_fe_token_exchange: 'https://dev.selfcare.pagopa.it/token-exchange' #'$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
+    react_app_url_api_portal: 'https://api.dev.platform.pagopa.it/selc/pagopa/v1' #'$(DEV_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_token: 'https://api.dev.platform.pagopa.it/api/token/token' #'$(DEV_REACT_APP_URL_API_TOKEN)'
+    react_app_url_storage: 'https://pagopadweuselcselcsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)'
+    
+    react_app_one_trust_base_url: '$(DEV_SELC_API_HOST)/ot/test'
+    react_app_analytics_enabled: 'true' # $(DEV_REACT_APP_ANALYTICS_ENABLED)
+    react_app_analytics_mocked: 'false' # $(DEV_REACT_APP_ANALYTICS_MOCKED)
+    react_app_mixpanel_token: '16e1290bdda5885981a2f443f37444f0f23' #$(DEV_REACT_APP_MIXPANEL_TOKEN)
+    react_app_onetrust_domain_id: 'a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test' #$(DEV_REACT_APP_ONETRUST_DOMAIN_ID)
 
-    react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)'
-    react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)'
-    react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
-
-    react_app_url_api_portal: '$(DEV_REACT_APP_URL_API_PORTAL)'
-
-    react_app_url_storage: '$(DEV_REACT_APP_URL_STORAGE)'
-
-    react_app_one_trust_base_url: '$(DEV_REACT_APP_URL_CDN)/ot/test'
-    react_app_analytics_enabled: '$(DEV_ANALYTICS_ENABLED)'
-    react_app_analytics_mocked: '$(DEV_ANALYTICS_MOCKED)'
-    react_app_mixpanel_token: '$(DEV_MIXPANEL_TOKEN)'
-    react_app_onetrust_domain_id: '$(DEV_ONETRUST_DOMAIN_ID)'
-
+  ${{ if eq(variables['Build.SourceBranchName'], 'merge') }}:
+    SOURCE_BRANCH: "main" # force to main branch
+  ${{ if ne(variables['Build.SourceBranchName'], 'merge') }}:
+    SOURCE_BRANCH: ${{ variables['Build.SourceBranchName'] }}
 # Automatically triggered on PR
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema#pr-trigger
-trigger:
-  branches:
-    include:
-      - main
-      - release-*
-
+# Only manual triggers
+trigger: none
 pr: none
 
 resources:
@@ -126,14 +142,25 @@ stages:
   # Activated when ONE OF these are met:
   # - is on branch $(DEFAULT_BRANCH)
   # - is a tag in the form v{version}-RELEASE
-  - stage: Release
-    condition: or(
-      startsWith(variables['Build.SourceBranch'], 'refs/heads/release-uat')
-      , startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix')
-      , eq(variables['Build.SourceBranch'], 'refs/heads/main')
-      )
+  - stage: release_service
+    condition: ne('${{ parameters.SEMVER }}', 'skip')
     pool:
       vmImage: 'ubuntu-latest'
+    jobs:
+      - job: release_service
+        steps:
+          - template: templates/node-job-setup/template.yaml@pagopaCommons
+            parameters:
+              persistCredentials: true
+              gitReference: $(SOURCE_BRANCH)
+
+          # - template: azure-templates/node-versioning.yml
+          #   parameters:
+          #     semver: '${{ parameters.SEMVER }}'
+          #     release_branch: $(SOURCE_BRANCH)
+          #     gitEmail: $(GIT_EMAIL)
+          #     gitUsername: $(GIT_USERNAME)
+          #     gitHubConnection: $(GITHUB_CONNECTION)
 #    jobs:
 #      - job: make_release
 #        condition: eq(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
@@ -158,7 +185,7 @@ stages:
 
   # Prepare Artifact with application bundle
   - stage: Prepare_artifact
-    condition: or(eq(variables['environment'], 'DEV'), succeeded())
+    condition: not(failed('release_service'))
     jobs:
       - job: 'make_build'
         steps:
@@ -178,8 +205,11 @@ stages:
               REACT_APP_URL_FE_LOGOUT: '$(react_app_url_fe_auth)/logout'
               REACT_APP_URL_FE_LANDING: '$(react_app_url_fe_landing)'
               REACT_APP_URL_FE_ASSISTANCE: '$(react_app_url_fe_assistance)'
+              REACT_APP_URL_FE_SELFCARE: '$(react_app_url_fe_selfcare)'
+              REACT_APP_URL_FE_TOKEN_EXCHANGE: '$(react_app_url_fe_token_exchange)'
 
               REACT_APP_URL_API_PORTAL: '$(react_app_url_api_portal)'
+              REACT_APP_URL_API_TOKEN: '$(react_app_url_api_token)'
 
               REACT_APP_PAGOPA_HELP_EMAIL: '$(react_app_pagopa_help_email)'
 
@@ -209,6 +239,16 @@ stages:
           - download: current
             artifact: Bundle
 
+          # # to check why azurefilecopy@4 https://github.com/microsoft/azure-pipelines-tasks/issues/13159
+          # - task: AzureFileCopy@3
+          #   displayName: 'Deploy to contai  ner blob'
+          #   inputs:
+          #     sourcePath: '$(Pipeline.Workspace)/Bundle'
+          #     azureSubscription: '$(azure_subscription)'
+          #     destination: 'azureBlob'
+          #     storage: '$(storage_account)'
+          #     containerName: '$(blob_container_name)'
+          
           - task: AzureCLI@1
             displayName: 'Sync checkout storage'
             inputs:

@@ -1,6 +1,6 @@
 import * as env from 'env-var';
 
-const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/pagopa-mvp';
+const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/ui';
 export const ENV = {
   ENV: env.get('REACT_APP_ENV').required().asString(),
   PUBLIC_URL: PUBLIC_URL_INNER,
@@ -14,10 +14,13 @@ export const ENV = {
     LOGOUT: env.get('REACT_APP_URL_FE_LOGOUT').required().asString(),
     LANDING: env.get('REACT_APP_URL_FE_LANDING').required().asString(),
     ASSISTANCE: env.get('REACT_APP_URL_FE_ASSISTANCE').required().asString(),
+    SELFCARE: env.get('REACT_APP_URL_FE_SELFCARE').required().asString(),
+    TOKEN_EXCHANGE: env.get('REACT_APP_URL_FE_TOKEN_EXCHANGE').required().asString(),
   },
 
   URL_API: {
     PORTAL: env.get('REACT_APP_URL_API_PORTAL').required().asString(),
+    TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
   },
 
   API_TIMEOUT_MS: {

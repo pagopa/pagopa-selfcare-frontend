@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.1-SNAPSHOT"
+    "version": "0.0.16"
   },
   "servers": [
     {
@@ -24,18 +24,6 @@
         "summary": "getInstitutions",
         "description": "Retrieves all the onboarded institutions related to the logged user",
         "operationId": "getInstitutionsUsingGET",
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "query",
-            "description": "productId",
-            "required": false,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -122,7 +110,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InstitutionResource"
+                  "$ref": "#/components/schemas/InstitutionDetailResource"
                 }
               }
             }
@@ -535,6 +523,92 @@
           }
         }
       },
+      "AttributeResource": {
+        "title": "AttributeResource",
+        "required": ["code", "description", "origin"],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Institution's code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's name"
+          },
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
+          }
+        }
+      },
+      "InstitutionDetailResource": {
+        "title": "InstitutionDetailResource",
+        "required": [
+          "address",
+          "attributes",
+          "description",
+          "digitalAddress",
+          "externalId",
+          "id",
+          "institutionType",
+          "origin",
+          "originId",
+          "taxCode",
+          "zipCode"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Institution's physical address"
+          },
+          "attributes": {
+            "type": "array",
+            "description": "Institution's attributes",
+            "items": {
+              "$ref": "#/components/schemas/AttributeResource"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "Institution's name"
+          },
+          "digitalAddress": {
+            "type": "string",
+            "description": "Institution's digitalAddress"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "Institution's unique external identifier"
+          },
+          "id": {
+            "type": "string",
+            "description": "Institution's unique internal identifier"
+          },
+          "institutionType": {
+            "type": "string",
+            "description": "Institution's type",
+            "enum": ["GSP", "PA", "PT", "SCP"]
+          },
+          "origin": {
+            "type": "string",
+            "description": "Institution data origin"
+          },
+          "originId": {
+            "type": "string",
+            "description": "Institution's details origin Id"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "Institution's taxCode"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Institution's zipCode"
+          }
+        }
+      },
       "InstitutionResource": {
         "title": "InstitutionResource",
         "required": [
@@ -547,8 +621,7 @@
           "origin",
           "originId",
           "status",
-          "userProductRoles",
-          "userRole"
+          "userProductRoles"
         ],
         "type": "object",
         "properties": {
@@ -599,10 +672,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "userRole": {
-            "type": "string",
-            "description": "Logged user's role"
           }
         }
       },

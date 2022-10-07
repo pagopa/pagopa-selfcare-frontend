@@ -7,9 +7,8 @@ export default {
   },
   roles: {
     // TODO put product roles keys and their description here
-    'incaricato-ente-creditore': 'Incaricato Ente Creditore',
-    'referente-legale': 'Referente Legale',
-    'referente-dei-pagamenti': 'Referente Dei Pagamenti',
+    admin: 'Amministratore',
+    operator: 'Referente Tecnico',
   },
   homepage: {
     title: 'API Key',

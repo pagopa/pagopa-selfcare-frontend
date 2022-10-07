@@ -1,7 +1,7 @@
 import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
-import { Party, PartyRole } from '../model/Party';
+import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
 import { fetchPartyDetails } from '../services/partyService';
@@ -12,27 +12,21 @@ import { JWTUser } from '../model/JwtUser';
 
 export type PartyJwtConfig = {
   partyId: string;
-  roles: Array<{
+  /* roles: Array<{
     partyRole: PartyRole;
     roleKey: string;
-  }>;
+  }>; */
 };
 
 export const retrieveSelectedPartyIdConfig = (): PartyJwtConfig | null => {
-  const organization = (parseJwt(storageTokenOps.read()) as JWTUser)?.organization;
-  if (
-    organization &&
-    organization.id &&
-    organization.roles &&
-    organization.roles.length &&
-    organization.roles.length > 0
-  ) {
+  const organizationId = (parseJwt(storageTokenOps.read()) as JWTUser)?.org_id;
+  if (organizationId) {
     return {
-      partyId: organization.id,
-      roles: organization.roles.map((r) => ({
+      partyId: organizationId,
+      /* roles: organization.roles.map((r) => ({
         partyRole: r.partyRole,
         roleKey: r.role,
-      })),
+      })), */
     };
   } else {
     return null;
@@ -56,11 +50,11 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
         }
         const partyToSave = {
           ...party,
-          roles:
+          /* roles:
             partyJwtConfig?.roles.map((r) => ({
               partyRole: r.partyRole,
               roleKey: r.roleKey,
-            })) ?? [],
+            })) ?? [], */
         };
         setParty(partyToSave);
         return partyToSave;

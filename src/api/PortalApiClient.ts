@@ -7,10 +7,10 @@ import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/Token';
 import { createClient, WithDefaultsT } from './generated/portal/client';
+
 import { InstitutionResource } from './generated/portal/InstitutionResource';
+import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
-// import { IdentityTokenResource } from './generated/portal/IdentityTokenResource';
-// import { ProductRoleMappingsResource } from './generated/portal/ProductRoleMappingsResource';
 
 const withBearerAndPartyId: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -41,12 +41,14 @@ const onRedirectToLogin = () =>
   );
 
 export const PortalApi = {
-  getInstitutions: async (): Promise<Array<InstitutionResource>> => {
-    const result = await apiClient.getInstitutionsUsingGET({});
+  getInstitutions: async (productId: string): Promise<Array<InstitutionResource>> => {
+    const result = await apiClient.getInstitutionsUsingGET({
+      productId,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getInstitution: async (institutionId: string): Promise<InstitutionResource> => {
+  getInstitution: async (institutionId: string): Promise<InstitutionDetailResource> => {
     const result = await apiClient.getInstitutionUsingGET({
       institutionId,
     });
@@ -73,6 +75,6 @@ export const PortalApi = {
 
   regenerateSecondaryKey: async (institutionId: string): Promise<string> => {
     const result = await apiClient.regenerateSecondaryKeyUsingPOST({ institutionId });
-    return extractResponse(result, 201, onRedirectToLogin);
+    return extractResponse(result, 204, onRedirectToLogin);
   },
 };

@@ -5,11 +5,11 @@ import {
   createInstitutionApiKeys as createInstitutionApiKeysMocked,
   regeneratePrimaryKey as regeneratePrimaryKeyMocked,
   regenerateSecondaryKey as regenerateSecondaryKeyMocked,
-} from './__mocks__/tokenService';
+} from './__mocks__/apiKeyService';
 
 export const getInstitutionApiKeys = (institutionId: string): Promise<ProductKeys> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getInstitutionApiKeysMocked(institutionId);
   } else {
     return PortalApi.getInstitutionApiKeys(institutionId).then(
@@ -20,7 +20,7 @@ export const getInstitutionApiKeys = (institutionId: string): Promise<ProductKey
 
 export const createInstitutionApiKeys = (institutionId: string): Promise<ProductKeys> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createInstitutionApiKeysMocked(institutionId);
   } else {
     return PortalApi.createInstitutionApiKeys(institutionId).then(
@@ -31,7 +31,7 @@ export const createInstitutionApiKeys = (institutionId: string): Promise<Product
 
 export const regeneratePrimaryKey = (institutionId: string): Promise<string> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return regeneratePrimaryKeyMocked(institutionId);
   } else {
     return PortalApi.regeneratePrimaryKey(institutionId).then((resource) => resource);
@@ -40,7 +40,7 @@ export const regeneratePrimaryKey = (institutionId: string): Promise<string> => 
 
 export const regenerateSecondaryKey = (institutionId: string): Promise<string> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return regenerateSecondaryKeyMocked(institutionId);
   } else {
     return PortalApi.regenerateSecondaryKey(institutionId).then((resources) => resources);

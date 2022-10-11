@@ -6,7 +6,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'admin', // TODO use real product role
       },
     ],
     description: 'Comune di Bari',
@@ -28,7 +28,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     description: 'Comune di Milano',
@@ -49,7 +49,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     description: 'Comune di Roma',
@@ -70,7 +70,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'OPERATOR',
-        roleKey: 'referente-dei-pagamenti', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     description: 'Comune di Napoli',
@@ -93,7 +93,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'MANAGER',
-        roleKey: 'referente-legale', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     description: 'AGENCY ONBOARDED',
@@ -114,7 +114,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     description: `Commissario straordinario per la realizzazione di
@@ -147,7 +147,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     status: 'ACTIVE',
@@ -170,7 +170,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
-        roleKey: 'incaricato-ente-creditore', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     status: 'ACTIVE',

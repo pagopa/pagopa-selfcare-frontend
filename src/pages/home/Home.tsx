@@ -1,31 +1,131 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography, Link, useTheme } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
+import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useUserNotify } from '@pagopa/selfcare-common-frontend';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
 import HomePageCard from './HomePageCard';
+import {
+  getInstitutionApiKeys,
+  regeneratePrimaryKey,
+  regenerateSecondaryKey,
+  createInstitutionApiKeys,
+} from './../../services/tokenService';
 
 const Home = () => {
-  const [generatePrimaryKey, _setGeneratePrimaryKey] = useState<boolean>(false);
-  const [generateSecondaryKey, _setGenerateSecondaryKey] = useState<boolean>(false);
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [apiKeyPresent, _setapiKeyPresent] = useState<boolean>(true);
+  const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(false);
+  const [primaryKey, setPrimaryKey] = useState<string>('');
+  const [secondaryKey, setSecondaryKey] = useState<string>('');
 
-  // TODO: implement with SELC-1538
-  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const addNotify = useUserNotify();
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
 
-  // useEffect(() => {
-  //   if (selectedParty) {
-  //     void getInstitutionApiKeys(selectedParty.partyId).then((data) => {
-  //       if (data) {
-  //         setapiKeyPresent(true);
-  //       }
-  //     });
-  //   }
-  // }, []);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  useEffect(() => {
+    if (selectedParty) {
+      setLoading(true);
+      void getInstitutionApiKeys(selectedParty.partyId)
+        .then((data) => {
+          setPrimaryKey(data.primaryKey);
+          setSecondaryKey(data.secondaryKey);
+          if (data.primaryKey !== '' && data.secondaryKey !== '') {
+            setApiKeyPresent(true);
+          } else {
+            setApiKeyPresent(false);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [selectedParty]);
+
+  const createKeys = () => {
+    if (selectedParty) {
+      setLoading(true);
+      void createInstitutionApiKeys(selectedParty.partyId)
+        .then((data) => {
+          setPrimaryKey(data.primaryKey);
+          setSecondaryKey(data.secondaryKey);
+          setApiKeyPresent(true);
+        })
+        .finally(() => setLoading(false));
+    }
+  };
+
+  const regenPrimaryKey = () => {
+    if (selectedParty) {
+      setLoading(true);
+      regeneratePrimaryKey(selectedParty.partyId)
+        .then(
+          () => {
+            void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
+              setPrimaryKey(data.primaryKey)
+            );
+            addNotify({
+              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+              title: '',
+              message: t('homepage.apiPresent.regeneratePrimaryKey'),
+              component: 'Toast',
+            });
+          },
+          (reason) => {
+            addError({
+              component: 'Toast',
+              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+              displayableTitle: t('homepage.apiPresent.errorRegeneratePrimaryKey'),
+              techDescription: `C'è stato un errore durante la rigenerazione della chiave primaria`,
+              blocking: false,
+              error: reason,
+              toNotify: true,
+              displayableDescription: '',
+            });
+          }
+        )
+        .finally(() => setLoading(false));
+    }
+  };
+  const regenSecondaryKey = () => {
+    if (selectedParty) {
+      setLoading(true);
+      regenerateSecondaryKey(selectedParty.partyId)
+        .then(
+          () => {
+            void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
+              setSecondaryKey(data.secondaryKey)
+            );
+            addNotify({
+              id: 'ACTION_ON_REGENERATE_SECONDARY_KEY',
+              title: '',
+              message: t('homepage.apiPresent.regenerateSecondaryKey'),
+              component: 'Toast',
+            });
+          },
+          (reason) => {
+            addError({
+              component: 'Toast',
+              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
+              displayableTitle: t('homepage.apiPresent.errorRegenerateSecondaryKey'),
+              techDescription: `C'è stato un errore durante la rigenerazione della chiave secondaria`,
+              blocking: false,
+              error: reason,
+              toNotify: true,
+              displayableDescription: '',
+            });
+          }
+        )
+        .finally(() => setLoading(false));
+    }
+  };
+
   return (
     <>
       <Box width="100%" px={2}>
@@ -46,7 +146,7 @@ const Home = () => {
             <Box>
               <ButtonNaked
                 component="button"
-                // onClick={} TODO: add onclick with SELC-1538
+                onClick={createKeys}
                 startIcon={<AddIcon />}
                 color="primary"
                 sx={{
@@ -75,7 +175,7 @@ const Home = () => {
               Non è stata ancora generata nessuna chiave API per questo ente.
               <Link
                 sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
-                // onClick={} TODO: add onclick with SELC-1538
+                onClick={createKeys}
               >
                 <strong> Genera chiave API</strong>
               </Link>
@@ -83,8 +183,11 @@ const Home = () => {
           </Box>
         ) : (
           <HomePageCard
-            generatePrimaryKey={generatePrimaryKey}
-            generateSecondaryKey={generateSecondaryKey}
+            selectedParty={selectedParty}
+            primaryKey={primaryKey}
+            secondaryKey={secondaryKey}
+            regenPrimaryKey={regenPrimaryKey}
+            regenSecondaryKey={regenSecondaryKey}
           />
         )}
       </Box>

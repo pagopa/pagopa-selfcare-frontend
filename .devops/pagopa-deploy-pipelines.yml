@@ -43,8 +43,11 @@ variables:
     react_app_url_fe_auth: '$(UAT_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: '$(UAT_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(UAT_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_selfcare: '$(UAT_REACT_APP_URL_FE_SELFCARE)'
+    react_app_url_fe_token_exchange: '$(UAT_REACT_APP_URL_FE_TOKEN_EXCHANGE)'    
 
     react_app_url_api_portal: '$(UAT_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_token: '$(UAT_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
@@ -67,8 +70,11 @@ variables:
     react_app_url_fe_auth: '$(PROD_REACT_APP_URL_FE_LOGIN)'
     react_app_url_fe_landing: '$(PROD_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(PROD_REACT_APP_URL_FE_ASSISTANCE)'
+    react_app_url_fe_selfcare: '$(PROD_REACT_APP_URL_FE_SELFCARE)'
+    react_app_url_fe_token_exchange: '$(PROD_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
     react_app_url_api_portal: '$(PROD_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_token: '$(PROD_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
 
@@ -89,13 +95,14 @@ variables:
     storage_account: $(DEV_STORAGE_ACCOUNT_NAME) #'pagopadweuselcselcsa' # 
     
     react_app_url_cdn: $(DEV_SELC_API_HOST) #'https://dev.selfcare.pagopa.it' # 
-
     react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)' # 'https://dev.selfcare.pagopa.it/auth' #
     react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)' #'https://dev.selfcare.pagopa.it/auth/logout' # 
     react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)' #'https://dev.selfcare.pagopa.it/assistenza' #
     react_app_url_api_portal: '$(DEV_REACT_APP_URL_API_PORTAL)' #'https://api.dev.platform.pagopa.it/selc/pagopa/v1/' #
     react_app_url_storage: '$(DEV_REACT_APP_URL_STORAGE)' #'https://pagopadweuselcselcsa.z6.web.core.windows.net/' #
-    
+    react_app_url_fe_selfcare: '$(DEV_REACT_APP_URL_FE_SELFCARE)' #'https://dev.selfcare.pagopa.it/dashboard/' #
+    react_app_url_fe_token_exchange: '$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)' # 'https://dev.selfcare.pagopa.it/token-exchange' #
+    react_app_url_api_token: '$(DEV_REACT_APP_URL_API_TOKEN)' # 'https://api.dev.platform.pagopa.it/api/token/token' #
     react_app_one_trust_base_url: '$(DEV_SELC_API_HOST)/ot/test'
     react_app_analytics_enabled: 'true' # $(DEV_REACT_APP_ANALYTICS_ENABLED)
     react_app_analytics_mocked: 'false' # $(DEV_REACT_APP_ANALYTICS_MOCKED)
@@ -196,8 +203,11 @@ stages:
               REACT_APP_URL_FE_LOGOUT: '$(react_app_url_fe_auth)/logout'
               REACT_APP_URL_FE_LANDING: '$(react_app_url_fe_landing)'
               REACT_APP_URL_FE_ASSISTANCE: '$(react_app_url_fe_assistance)'
+              REACT_APP_URL_FE_SELFCARE: '$(react_app_url_fe_selfcare)'
+              REACT_APP_URL_FE_TOKEN_EXCHANGE: '$(react_app_url_fe_token_exchange)'
 
               REACT_APP_URL_API_PORTAL: '$(react_app_url_api_portal)'
+              REACT_APP_URL_API_TOKEN: '$(react_app_url_api_token)'
 
               REACT_APP_PAGOPA_HELP_EMAIL: '$(react_app_pagopa_help_email)'
 

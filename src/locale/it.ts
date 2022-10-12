@@ -7,9 +7,8 @@ export default {
   },
   roles: {
     // TODO put product roles keys and their description here
-    'incaricato-ente-creditore': 'Incaricato Ente Creditore',
-    'referente-legale': 'Referente Legale',
-    'referente-dei-pagamenti': 'Referente Dei Pagamenti',
+    admin: 'Amministratore',
+    operator: 'Referente Tecnico',
   },
   homepage: {
     title: 'API Key',
@@ -29,6 +28,10 @@ export default {
       errorCopyPrimaryKeyLabel: 'Errore durante la copia della chiave primaria',
       copySecondaryKeyLabel: 'Chiave secondaria copiata correttamente',
       errorCopySecondaryKeyLabel: 'Errore durante la copia della chiave secondaria',
+      regeneratePrimaryKey: 'Chiave primaria rigenerata correttamente',
+      errorRegeneratePrimaryKey: 'Errore durante la rigenerazione della chiave primaria',
+      regenerateSecondaryKey: 'Chiave secondaria rigenerata correttamente',
+      errorRegenerateSecondariKey: 'Errore durante la rigenerazione della chiave secondaria',
     },
   },
   sideMenu: {

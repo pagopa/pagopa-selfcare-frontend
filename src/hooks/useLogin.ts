@@ -7,6 +7,7 @@ import { userActions } from '@pagopa/selfcare-common-frontend/redux/slices/userS
 import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { parseJwt } from '../utils/jwt-utils';
 import { JWTUser } from '../model/JwtUser';
+import { ENV } from '../utils/env';
 
 const mockedUser = {
   uid: '0',
@@ -34,8 +35,8 @@ export const useLogin = () => {
   const setUser = (user: User) => dispatch(userActions.setLoggedUser(user));
 
   const couldSetTokenFromSelfCareIdentityToken = async (identity_token: string) => {
-    // Use Self Care identity token to obtain an Interop session token
-    const resp = await fetch('https://api.dev.platform.pagopa.it/api/token/token', {
+    // Use Self Care identity token to obtain a PagoPA session token
+    const resp = await fetch(ENV.URL_API.TOKEN, {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -58,10 +59,8 @@ export const useLogin = () => {
   };
 
   const attemptSilentLogin = async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     // 1. Check if there is a mock token: only used for dev purposes
-    if (!CONFIG.MOCKS.MOCK_USER) {
+    if (CONFIG.MOCKS.MOCK_USER && process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
       setUser(mockedUser);
       storageTokenOps.write(CONFIG.TEST.JWT);
       storageUserOps.write(mockedUser);

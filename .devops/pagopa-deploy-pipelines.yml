@@ -89,8 +89,8 @@ variables:
   ${{ if eq(parameters['ENV'], 'dev') }}:
     environment: 'DEV'
     azure_subscription: $(DEV_AZURE_SUBSCRIPTION)
-    cdn_endpoint: 'pagopa-d-selfcare-cdn-profile' # $(DEV_ENDPOINT_AZURE) #'pagopa-d-weu-selc-selc-cdn-endpoint' #
-    cdn_profile: 'pagopa-d-selfcare-cdn-endpoint' # $(DEV_PROFILE_NAME_CDN_AZURE) #'pagopa-d-weu-selc-selc-cdn-profile' #
+    cdn_endpoint: 'pagopa-d-selfcare-cdn-endpoint' # $(DEV_ENDPOINT_AZURE) #'pagopa-d-weu-selc-selc-cdn-endpoint' #
+    cdn_profile: 'pagopa-d-selfcare-cdn-profile' # $(DEV_PROFILE_NAME_CDN_AZURE) #'pagopa-d-weu-selc-selc-cdn-profile' #
     resource_group: 'pagopa-d-fe-rg' # $(DEV_RESOURCE_GROUP_AZURE) #'pagopa-d-weu-selc-selc-fe-rg' #
     storage_account: 'pagopadselfcaresa' # $(DEV_STORAGE_ACCOUNT_NAME) #'pagopadweuselcselcsa' # 
     

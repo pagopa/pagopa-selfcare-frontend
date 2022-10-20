@@ -92,7 +92,7 @@ variables:
     cdn_endpoint: 'pagopa-d-selfcare-cdn-endpoint'
     cdn_profile: 'pagopa-d-selfcare-cdn-profile'
     resource_group: 'pagopa-d-fe-rg' # $(DEV_RESOURCE_GROUP_AZURE) 
-    storage_account: 'pagopadweuselfcareselfcaresa' # $(DEV_STORAGE_ACCOUNT_NAME)
+    storage_account: 'pagopadselfcaresa' # $(DEV_STORAGE_ACCOUNT_NAME)
     
     react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELFCARE_HOST) 
     react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)' 

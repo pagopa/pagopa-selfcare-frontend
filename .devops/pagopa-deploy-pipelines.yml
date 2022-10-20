@@ -94,7 +94,7 @@ variables:
     resource_group: 'pagopa-d-fe-rg' # $(DEV_RESOURCE_GROUP_AZURE) #'pagopa-d-weu-selc-selc-fe-rg' #
     storage_account: 'pagopadselfcaresa' # $(DEV_STORAGE_ACCOUNT_NAME) #'pagopadweuselcselcsa' # 
     
-    react_app_url_cdn: $(DEV_SELC_API_HOST) #'https://dev.selfcare.pagopa.it' # 
+    react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELFCARE_HOST) 
     react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)' # 'https://dev.selfcare.pagopa.it/auth' #
     react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)' #'https://dev.selfcare.pagopa.it/auth/logout' # 
     react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)' #'https://dev.selfcare.pagopa.it/assistenza' #
@@ -103,7 +103,7 @@ variables:
     react_app_url_fe_selfcare: '$(DEV_REACT_APP_URL_FE_SELFCARE)' #'https://dev.selfcare.pagopa.it/dashboard/' #
     react_app_url_fe_token_exchange: '$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)' # 'https://dev.selfcare.pagopa.it/token-exchange' #
     react_app_url_api_token: '$(DEV_REACT_APP_URL_API_TOKEN)' # 'https://api.dev.platform.pagopa.it/api/token/token' #
-    react_app_one_trust_base_url: '$(DEV_SELC_API_HOST)/ot/test'
+    react_app_one_trust_base_url: 'https://dev.selfcare.pagopa.it/ot/test' # '$(DEV_SELFCARE_HOST)/ot/test'
     react_app_analytics_enabled: 'true' # $(DEV_REACT_APP_ANALYTICS_ENABLED)
     react_app_analytics_mocked: 'false' # $(DEV_REACT_APP_ANALYTICS_MOCKED)
     react_app_mixpanel_token: $(DEV_REACT_APP_MIXPANEL_TOKEN) #'16e1290bdda5885981a2f443f37444f0f23' #

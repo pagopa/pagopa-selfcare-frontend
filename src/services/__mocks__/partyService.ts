@@ -3,25 +3,42 @@ import { PartyDetail } from '../../model/PartyDetail';
 
 export const mockedParties: Array<Party> = [
   {
+    partyId: '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239',
+    externalId: '15376371009',
+    originId: 'PAGOPASPA',
+    origin: 'static',
+    institutionType: 'PA',
+    description: 'PagoPA S.p.A.',
+    category: 'Gestori di Pubblici Servizi',
+    fiscalCode: '15376371009',
+    digitalAddress: 'selfcare@pec.pagopa.it',
+    status: 'ACTIVE',
+    registeredOffice: 'Piazza Colonna, 370',
+    typology: 'Pubblica Amministrazione',
     roles: [
       {
         partyRole: 'SUB_DELEGATE',
         roleKey: 'admin', // TODO use real product role
       },
     ],
-    description: 'Comune di Bari',
-    urlLogo: 'image',
-    status: 'ACTIVE',
-    partyId: '1',
-    digitalAddress: 'comune.bari@pec.it',
-    fiscalCode: 'fiscalCodeBari',
-    category: 'Comuni e loro Consorzi e Associazioni',
-    registeredOffice: 'Piazza della Scala, 2 - 20121 Milano',
-    typology: 'Pubblica Amministrazione',
-    externalId: 'externalId1',
-    originId: 'originId1',
+  },
+  {
+    partyId: 'e162ca3b-fe5a-4bfd-a0b7-1ca1586d079e',
+    externalId: '00104330493',
+    originId: 'c_e625',
     origin: 'IPA',
-    institutionType: 'PA',
+    description: 'Comune di Livorno',
+    fiscalCode: '00104330493',
+    digitalAddress: 'comune.livorno@postacert.toscana.it',
+    status: 'ACTIVE',
+    typology: 'Pubblica Amministrazione',
+    registeredOffice: 'Piazza Del Municipio, 1',
+    roles: [
+      {
+        partyRole: 'SUB_DELEGATE',
+        roleKey: 'admin', // TODO use real product role
+      },
+    ],
   },
   // useCase for PENDING party
   {
@@ -179,6 +196,27 @@ export const mockedParties: Array<Party> = [
       'https://selcdcheckoutsa.z6.web.core.windows.net/institutions/7784b9d3-e834-4342-a6ef-d0566b058af2/logo.png',
     registeredOffice: 'Piazza della Scala, 2 - 20121 Milano',
     typology: 'Pubblica Amministrazione',
+  },
+  {
+    roles: [
+      {
+        partyRole: 'SUB_DELEGATE',
+        roleKey: 'admin', // TODO use real product role
+      },
+    ],
+    description: 'Comune di Bari',
+    urlLogo: 'image',
+    status: 'ACTIVE',
+    partyId: '1',
+    digitalAddress: 'comune.bari@pec.it',
+    fiscalCode: 'fiscalCodeBari',
+    category: 'Comuni e loro Consorzi e Associazioni',
+    registeredOffice: 'Piazza della Scala, 2 - 20121 Milano',
+    typology: 'Pubblica Amministrazione',
+    externalId: 'externalId1',
+    originId: 'originId1',
+    origin: 'IPA',
+    institutionType: 'PA',
   },
 ];
 

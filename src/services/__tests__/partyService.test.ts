@@ -38,9 +38,9 @@ describe('Test fetchPartyDetails', () => {
   };
 
   const checkPortalApiInvocation = (expectedCallsNumber: number) => {
-    expect(PortalApi.getInstitution).toBeCalledTimes(expectedCallsNumber);
+    expect(PortalApi.getInstitutions).toBeCalledTimes(expectedCallsNumber);
     if (expectedCallsNumber > 0) {
-      expect(PortalApi.getInstitution).toBeCalledWith(expectedPartyId);
+      expect(PortalApi.getInstitutions).toBeCalledWith('prod-pagopa');
     }
   };
 

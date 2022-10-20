@@ -15,7 +15,7 @@ import '../locale';
 jest.mock('../decorators/withLogin');
 jest.mock('../decorators/withParties');
 jest.mock('../decorators/withSelectedParty');
-
+jest.mock('../decorators/withSelectedPartyProducts');
 jest.setTimeout(10000);
 
 const renderApp = (
@@ -36,24 +36,14 @@ const renderApp = (
   return { store, history };
 };
 
-test.skip('Test rendering', () => {
+test('Test rendering', () => {
   const { store } = renderApp();
   verifyLoginMockExecution(store.getState());
   verifyPartiesMockExecution(store.getState());
   verifySelectedPartyProductsMockExecution(store.getState());
 });
 
-test.skip('Test rendering dashboard parties loaded', () => {
-  const history = createMemoryHistory();
-  history.push('/dashboard/6');
-
-  const { store } = renderApp(undefined, history);
-
-  verifyLoginMockExecution(store.getState());
-  expect(store.getState().parties.list).toBe(mockedParties); // the new UI is always fetching parties list
-});
-
-test.skip('Test routing ', async () => {
+test('Test routing ', async () => {
   const { history } = renderApp();
   await waitFor(() => expect(history.location.pathname).toBe('/ui'));
 });

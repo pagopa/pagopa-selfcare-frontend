@@ -26,11 +26,10 @@ test('test login success', () => {
 
   const user: User = storageUserOps.read();
   expect(user).not.toBeNull();
-  expect(user.uid).toBe('b9b89ef9-4dcb-4e27-8192-d972efef614e');
-  expect(user.taxCode).toBe('LNGMLE85P19C826J');
-  expect(user.name).toBe('Emilia');
-  expect(user.surname).toBe('Longo');
-  expect(user.email).toBe('dmartino@live.com');
+  expect(user.uid).toBe('5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8');
+  expect(user.name).toBe('Anselmo');
+  expect(user.surname).toBe('Sartori');
+  expect(user.email).toBe('furiovitale@martino.it');
 
   expect(global.window.location.assign).toBeCalledWith(ROUTES.HOME);
 });

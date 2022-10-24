@@ -10,7 +10,7 @@ import withSelectedPartyProducts from '../withSelectedPartyProducts';
 jest.mock('../../services/partyService');
 jest.mock('../../services/productService');
 
-const expectedPartyId: string = 'onboarded';
+const expectedPartyId: string = '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239';
 
 let fetchPartyDetailsSpy: jest.SpyInstance;
 let fetchPartyProductsSpy: jest.SpyInstance;

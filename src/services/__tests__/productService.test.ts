@@ -7,7 +7,7 @@ jest.mock('../../api/PortalApiClient');
 
 beforeEach(() => {
   jest.spyOn(PortalApi, 'getProducts');
-  jest.spyOn(PortalApi, 'getProductRoles');
+  //jest.spyOn(PortalApi, 'getProductRoles');
 });
 
 test('Test fetchProducts', async () => {

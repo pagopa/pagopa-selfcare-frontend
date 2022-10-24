@@ -6,40 +6,34 @@ import { institutionResource2Party } from '../Party';
 
 test('Test institutionResource2Party', () => {
   const institutionResource: InstitutionResource = {
-    name: 'Comune di Bari',
-    status: 'PENDING',
-    id: '1',
-    externalId: 'externalId1',
-    originId: 'originId1',
-    origin: 'IPA',
-    category: 'Ente locale',
-    mailAddress: 'address',
-    fiscalCode: 'fiscalCode',
-    userRole: 'LIMITED',
+    id: '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239',
+    externalId: '15376371009',
+    originId: 'PAGOPASPA',
+    origin: 'static',
     institutionType: InstitutionTypeEnum.PA,
-    address: 'address',
+    name: 'PagoPA S.p.A.',
+    fiscalCode: '15376371009',
+    mailAddress: 'selfcare@pec.pagopa.it',
+    status: 'ACTIVE',
+    address: 'Piazza Colonna, 370',
+    userProductRoles: ['admin'],
   };
 
   const party = institutionResource2Party(institutionResource);
+
   expect(party).toStrictEqual({
-    roles: [
-      {
-        partyRole: undefined,
-        roleKey: 'LIMITED',
-      },
-    ],
-    description: 'Comune di Bari',
-    status: 'PENDING',
-    partyId: '1',
-    fiscalCode: 'fiscalCode',
-    digitalAddress: 'address',
-    category: 'Ente locale',
-    urlLogo: 'http://checkout.selfcare/institutions/1/logo.png',
-    externalId: 'externalId1',
-    originId: 'originId1',
-    origin: 'IPA',
-    institutionType: 'PA',
-    registeredOffice: 'address',
+    partyId: '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239',
+    externalId: '15376371009',
+    originId: 'PAGOPASPA',
+    origin: 'static',
+    description: 'PagoPA S.p.A.',
+    digitalAddress: 'selfcare@pec.pagopa.it',
+    status: 'ACTIVE',
+    roles: [{ partyRole: 'admin', roleKey: 'admin' }],
+    urlLogo: 'http://checkout.selfcare/institutions/46ef5b6b-7ee4-4dab-b8bc-fb5e30111239/logo.png',
+    fiscalCode: '15376371009',
+    registeredOffice: 'Piazza Colonna, 370',
     typology: 'TODO',
+    institutionType: 'PA',
   });
 });

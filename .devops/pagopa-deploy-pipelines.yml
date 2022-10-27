@@ -63,7 +63,7 @@ variables:
     cdn_endpoint: '$(PROD_CDN_ENDPOINT)'
     cdn_profile: '$(PROD_CDN_PROFILE)'
     resource_group: '$(PROD_RESOURCE_GROUP)'
-    storage_account: '$(PROD_STORAGE_ACCOUNT)'
+    storage_account: '$(PROD_STORAGE_ACCOUNT_NAME)'
 
     react_app_url_cdn: '$(PROD_REACT_APP_URL_CDN)'
 

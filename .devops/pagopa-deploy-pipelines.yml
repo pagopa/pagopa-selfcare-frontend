@@ -60,9 +60,9 @@ variables:
   ${{ if eq(parameters['ENV'], 'prod') }}:
     environment: 'PROD'
     azure_subscription: $(PROD_AZURE_SUBSCRIPTION)
-    cdn_endpoint: '$(PROD_CDN_ENDPOINT)'
-    cdn_profile: '$(PROD_CDN_PROFILE)'
-    resource_group: '$(PROD_RESOURCE_GROUP)'
+    cdn_endpoint: '$(PROD_ENDPOINT_AZURE)'
+    cdn_profile: '$(PROD_PROFILE_NAME_CDN_AZURE)'
+    resource_group: '$(PROD_RESOURCE_GROUP_AZURE)'
     storage_account: '$(PROD_STORAGE_ACCOUNT_NAME)'
 
     react_app_url_cdn: '$(PROD_REACT_APP_URL_CDN)'

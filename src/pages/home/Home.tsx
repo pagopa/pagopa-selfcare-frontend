@@ -9,13 +9,13 @@ import { useErrorDispatcher, useUserNotify } from '@pagopa/selfcare-common-front
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
-import HomePageCard from './HomePageCard';
 import {
   getInstitutionApiKeys,
   regeneratePrimaryKey,
   regenerateSecondaryKey,
   createInstitutionApiKeys,
-} from './../../services/tokenService';
+} from '../../services/apiKeyService';
+import HomePageCard from './HomePageCard';
 
 const Home = () => {
   const { t } = useTranslation();

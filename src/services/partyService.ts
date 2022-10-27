@@ -4,7 +4,7 @@ import { mockedParties } from './__mocks__/partyService';
 
 export const fetchParties = (): Promise<Array<Party>> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PARTIES === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return new Promise((resolve) => resolve(mockedParties));
   } else {
     return PortalApi.getInstitutions('prod-pagopa').then((institutionResources) =>
@@ -18,7 +18,7 @@ export const fetchPartyDetails = (
   parties?: Array<Party>
 ): Promise<Party | null> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PARTIES === 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return new Promise((resolve) =>
       resolve(mockedParties.find((p) => p.partyId === partyId) ?? null)
     );

@@ -7,7 +7,7 @@ import { userActions } from '@pagopa/selfcare-common-frontend/redux/slices/userS
 import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { parseJwt } from '../utils/jwt-utils';
 import { JWTUser } from '../model/JwtUser';
-import { ENV } from '../utils/env';
+import { fetchPagoPAToken } from '../services/tokenExchangeService';
 
 const mockedUser = {
   uid: '0',
@@ -36,14 +36,7 @@ export const useLogin = () => {
 
   const couldSetTokenFromSelfCareIdentityToken = async (identity_token: string) => {
     // Use Self Care identity token to obtain a PagoPA session token
-    const resp = await fetch(ENV.URL_API.TOKEN, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        accept: 'application/json',
-        IdentityToken: identity_token,
-      },
-    });
+    const resp = await fetchPagoPAToken(identity_token);
 
     // If there is an error in fetching the token, go back to login page
     if (resp.status !== 200) {

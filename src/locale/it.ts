@@ -76,7 +76,7 @@ export default {
     },
   },
   tos: {
-    title: 'PagoPA',
+    title: 'pagoPA',
     description:
       'Prima di entrare, leggi e accetta l’Informativa Privacy e i Termini e condizioni d’uso. Potrai consultarli di nuovo quando vuoi: li trovi sempre in fondo alla pagina.',
     termsDescription:

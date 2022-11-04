@@ -1,33 +1,38 @@
 import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { useCallback, useEffect, useState } from 'react';
+import tosJson from '../data/tos.json';
 import { userFromJwtToken } from './useLogin';
 
-export function useTOSAgreementLocalStorage(localStorageKey = 'acceptTOS') {
-  const getLocalStorageTOS = useCallback(() => {
-    localStorage.getItem(localStorageKey);
-  }, [localStorageKey]);
-
-  const [tosAcceptedId, setTOSAcceptedId] = useState<any>(localStorage.getItem(localStorageKey)); // getLocalStorageTOS()
-  console.log(localStorageKey);
+const useTOSAgreementLocalStorage = (localStorageKey = 'acceptTOS') => {
   const jwt = storageTokenOps.read();
   const user: User = userFromJwtToken(jwt);
 
-  useEffect(() => {
-    function listenForStorage() {
-      setTOSAcceptedId(getLocalStorageTOS());
-    }
-    window.addEventListener('storage', listenForStorage);
-    return () => {
-      window.removeEventListener('storage', listenForStorage);
-    };
-  }, [getLocalStorageTOS]);
+  const getLocalStorageTOS = () => localStorage.getItem(localStorageKey);
 
-  const acceptTOS = useCallback(() => {
+  const removeLocalStorageTOS = useCallback(() => {
+    localStorage.removeItem(localStorageKey);
+  }, [localStorageKey]);
+
+  const acceptTOS = () => {
     const id = JSON.stringify({ id: user?.uid, timestamp: new Date().toISOString() });
-    setTOSAcceptedId(id);
     localStorage.setItem(localStorageKey, id);
-  }, [localStorageKey, user?.uid]);
+    setAcceptedTOS(localStorage.getItem(localStorageKey));
+  };
 
-  return { isTOSAccepted: !!tosAcceptedId, acceptTOS, tosAcceptedId };
-}
+  const [acceptedTOS, setAcceptedTOS] = useState<string | null>(getLocalStorageTOS());
+
+  useEffect(() => {
+    if (acceptedTOS) {
+      const acceptedTOSTimestamp = JSON.parse(acceptedTOS).timestamp;
+      if (new Date(tosJson.date) > new Date(acceptedTOSTimestamp)) {
+        removeLocalStorageTOS();
+        setAcceptedTOS('');
+      }
+    }
+  }, [acceptedTOS]);
+
+  return { isTOSAccepted: !!acceptedTOS, acceptTOS, acceptedTOS };
+};
+
+export default useTOSAgreementLocalStorage;

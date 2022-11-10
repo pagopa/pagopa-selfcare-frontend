@@ -33,8 +33,8 @@ variables:
   ${{ if eq(parameters['ENV'], 'uat') }}:
     environment: 'UAT'
     azure_subscription: $(UAT_AZURE_SUBSCRIPTION)
-    cdn_endpoint: '$(UAT_CDN_ENDPOINT)'
-    cdn_profile: '$(UAT_CDN_PROFILE)'
+    cdn_endpoint: '$(UAT_ENDPOINT_AZURE)'
+    cdn_profile: '$(UAT_PROFILE_NAME_CDN_AZURE)'
     resource_group: '$(UAT_RESOURCE_GROUP)'
     storage_account: '$(UAT_STORAGE_ACCOUNT)'
 
@@ -44,7 +44,7 @@ variables:
     react_app_url_fe_landing: '$(UAT_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(UAT_REACT_APP_URL_FE_ASSISTANCE)'
     react_app_url_fe_selfcare: '$(UAT_REACT_APP_URL_FE_SELFCARE)'
-    react_app_url_fe_token_exchange: '$(UAT_REACT_APP_URL_FE_TOKEN_EXCHANGE)'    
+    react_app_url_fe_token_exchange: '$(UAT_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
     react_app_url_api_portal: '$(UAT_REACT_APP_URL_API_PORTAL)'
     react_app_url_api_token: '$(UAT_REACT_APP_URL_API_TOKEN)'
@@ -52,18 +52,18 @@ variables:
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
     react_app_one_trust_base_url: '$(UAT_REACT_APP_URL_CDN)/ot'
-    react_app_analytics_enabled: '$(UAT_ANALYTICS_ENABLED)'
-    react_app_analytics_mocked: '$(UAT_ANALYTICS_MOCKED)'
-    react_app_mixpanel_token: '$(UAT_MIXPANEL_TOKEN)'
-    react_app_onetrust_domain_id: '$(UAT_ONETRUST_DOMAIN_ID)'
+    react_app_analytics_enabled: '$(UAT_REACT_APP_ANALYTICS_ENABLED)'
+    react_app_analytics_mocked: '$(UAT_REACT_APP_ANALYTICS_MOCKED)'
+    react_app_mixpanel_token: '$(UAT_REACT_APP_MIXPANEL_TOKEN)'
+    react_app_onetrust_domain_id: '$(UAT_REACT_APP_ONETRUST_DOMAIN_ID)'
 
   ${{ if eq(parameters['ENV'], 'prod') }}:
     environment: 'PROD'
     azure_subscription: $(PROD_AZURE_SUBSCRIPTION)
-    cdn_endpoint: '$(PROD_CDN_ENDPOINT)'
-    cdn_profile: '$(PROD_CDN_PROFILE)'
-    resource_group: '$(PROD_RESOURCE_GROUP)'
-    storage_account: '$(PROD_STORAGE_ACCOUNT)'
+    cdn_endpoint: '$(PROD_ENDPOINT_AZURE)'
+    cdn_profile: '$(PROD_PROFILE_NAME_CDN_AZURE)'
+    resource_group: '$(PROD_RESOURCE_GROUP_AZURE)'
+    storage_account: '$(PROD_STORAGE_ACCOUNT_NAME)'
 
     react_app_url_cdn: '$(PROD_REACT_APP_URL_CDN)'
 

@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { render, waitFor, screen } from '@testing-library/react';
 import App from '../App';
 import { Provider } from 'react-redux';
 import { createStore } from '../redux/store';
@@ -6,16 +7,25 @@ import { verifyMockExecution as verifyLoginMockExecution } from '../decorators/_
 import { verifyMockExecution as verifyPartiesMockExecution } from '../decorators/__mocks__/withParties';
 import { verifyMockExecution as verifySelectedPartyProductsMockExecution } from '../decorators/__mocks__/withSelectedPartyProducts';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router';
-import { mockedParties } from '../services/__mocks__/partyService';
+// import { mockedParties } from '../services/__mocks__/partyService';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../locale';
+import { BrowserRouter } from 'react-router-dom';
+
+const mockSignOutFn = jest.fn();
+
+jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+  isTOSAccepted: true,
+  acceptTOS: mockSignOutFn,
+  acceptedTOS: '',
+}));
 
 jest.mock('../decorators/withLogin');
 jest.mock('../decorators/withParties');
 jest.mock('../decorators/withSelectedParty');
 jest.mock('../decorators/withSelectedPartyProducts');
+
 jest.setTimeout(10000);
 
 const renderApp = (
@@ -25,19 +35,20 @@ const renderApp = (
   const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
-    <ThemeProvider theme={theme}>
-      <Router history={history}>
-        <Provider store={store}>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
           <App />
-        </Provider>
-      </Router>
-    </ThemeProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   );
   return { store, history };
 };
 
 test('Test rendering', () => {
   const { store } = renderApp();
+
   verifyLoginMockExecution(store.getState());
   verifyPartiesMockExecution(store.getState());
   verifySelectedPartyProductsMockExecution(store.getState());
@@ -45,5 +56,6 @@ test('Test rendering', () => {
 
 test('Test routing ', async () => {
   const { history } = renderApp();
-  await waitFor(() => expect(history.location.pathname).toBe('/ui'));
+  expect(screen.getByText(/API Key generate/i)).toBeInTheDocument();
+  await waitFor(() => expect(window.location.pathname).toBe('/ui'));
 });

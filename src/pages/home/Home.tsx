@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Link, useTheme } from '@mui/material';
+import { Box, Grid, Typography, Link, useTheme } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
@@ -15,6 +15,7 @@ import {
   regenerateSecondaryKey,
   createInstitutionApiKeys,
 } from '../../services/apiKeyService';
+import SideMenu from '../../components/SideMenu/SideMenu';
 import HomePageCard from './HomePageCard';
 
 const Home = () => {
@@ -127,71 +128,85 @@ const Home = () => {
   };
 
   return (
-    <>
-      <Box width="100%" px={2}>
-        <TitleBox
-          title={t('homepage.title')}
-          subTitle={t('homepage.subtitle')}
-          mbTitle={2}
-          mtTitle={4}
-          mbSubTitle={6}
-          variantTitle="h4"
-          variantSubTitle="body1"
-        />
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-          <Box>
-            <Typography variant="h6">{t('homepage.decription')}</Typography>
-          </Box>
-          {!apiKeyPresent && (
+    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
+      <Grid item xs={2}>
+        <Box>
+          <SideMenu />
+        </Box>
+      </Grid>
+      <Grid
+        item
+        xs={10}
+        sx={{ backgroundColor: '#F5F6F7' }}
+        display="flex"
+        justifyContent="center"
+        pb={8}
+      >
+        <Box width="100%" px={2}>
+          <TitleBox
+            title={t('homepage.title')}
+            subTitle={t('homepage.subtitle')}
+            mbTitle={2}
+            mtTitle={4}
+            mbSubTitle={6}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
             <Box>
-              <ButtonNaked
-                component="button"
-                onClick={createKeys}
-                startIcon={<AddIcon />}
-                color="primary"
-                sx={{
-                  border: `2px solid ${theme.palette.primary.main}`,
-                  borderRadius: theme.spacing(0.5),
-                  px: 2,
-                  py: 1.5,
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-                weight="default"
-              >
-                {t('homepage.apiNotPresent.buttonLabel')}
-              </ButtonNaked>
+              <Typography variant="h6">{t('homepage.decription')}</Typography>
             </Box>
+            {!apiKeyPresent && (
+              <Box>
+                <ButtonNaked
+                  component="button"
+                  onClick={createKeys}
+                  startIcon={<AddIcon />}
+                  color="primary"
+                  sx={{
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    borderRadius: theme.spacing(0.5),
+                    px: 2,
+                    py: 1.5,
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                  weight="default"
+                >
+                  {t('homepage.apiNotPresent.buttonLabel')}
+                </ButtonNaked>
+              </Box>
+            )}
+          </Box>
+          {!apiKeyPresent ? (
+            <Box
+              p={2}
+              display="flex"
+              justifyContent="center"
+              sx={{ backgroundColor: 'background.paper' }}
+            >
+              <Trans i18nKey="homepage.apiNotPresent.apiNotPresentDescription">
+                Non è stata ancora generata nessuna chiave API per questo ente.
+                <Link
+                  sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
+                  onClick={createKeys}
+                >
+                  <strong> Genera chiave API</strong>
+                </Link>
+              </Trans>
+            </Box>
+          ) : (
+            <HomePageCard
+              selectedParty={selectedParty}
+              primaryKey={primaryKey}
+              secondaryKey={secondaryKey}
+              regenPrimaryKey={regenPrimaryKey}
+              regenSecondaryKey={regenSecondaryKey}
+            />
           )}
         </Box>
-        {!apiKeyPresent ? (
-          <Box
-            p={2}
-            display="flex"
-            justifyContent="center"
-            sx={{ backgroundColor: 'background.paper' }}
-          >
-            <Trans i18nKey="homepage.apiNotPresent.apiNotPresentDescription">
-              Non è stata ancora generata nessuna chiave API per questo ente.
-              <Link
-                sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
-                onClick={createKeys}
-              >
-                <strong> Genera chiave API</strong>
-              </Link>
-            </Trans>
-          </Box>
-        ) : (
-          <HomePageCard
-            selectedParty={selectedParty}
-            primaryKey={primaryKey}
-            secondaryKey={secondaryKey}
-            regenPrimaryKey={regenPrimaryKey}
-            regenSecondaryKey={regenSecondaryKey}
-          />
-        )}
-      </Box>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 

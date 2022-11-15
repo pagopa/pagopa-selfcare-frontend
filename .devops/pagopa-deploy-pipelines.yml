@@ -35,7 +35,7 @@ variables:
     azure_subscription: $(UAT_AZURE_SUBSCRIPTION)
     cdn_endpoint: '$(UAT_ENDPOINT_AZURE)'
     cdn_profile: '$(UAT_PROFILE_NAME_CDN_AZURE)'
-    resource_group: '$(UAT_RESOURCE_GROUP)'
+    resource_group: '$(UAT_RESOURCE_GROUP_AZURE)'
     storage_account: '$(UAT_STORAGE_ACCOUNT_NAME)'
 
     react_app_url_cdn: '$(UAT_REACT_APP_URL_CDN)'

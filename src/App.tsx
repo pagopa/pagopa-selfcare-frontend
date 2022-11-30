@@ -4,31 +4,48 @@ import {
   UnloadEventHandler,
   UserNotifyHandle,
 } from '@pagopa/selfcare-common-frontend';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+
 import withLogin from './decorators/withLogin';
 import Layout from './components/Layout/Layout';
 import routes from './routes';
 import Home from './pages/home/Home';
 import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
 import Auth from './pages/auth/Auth';
-// import Wizard from './components/Wizard/Wizard';
+import { TOS } from './pages/tos/TOS';
+
+import TOSWall from './components/TOS/TOSWall';
+import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 
 const SecuredRoutes = withLogin(
-  withSelectedPartyProducts(() => (
-    <Layout>
-      <Switch>
-        <Route path={routes.HOME} exact={true}>
-          <Home />
-        </Route>
-        {/* <Route path={routes.WIZARD} exact={true}>
-          <Wizard />
-        </Route> */}
-        <Route path="*">
-          <Redirect to={routes.HOME} />
-        </Route>
-      </Switch>
-    </Layout>
-  ))
+  withSelectedPartyProducts(() => {
+    const location = useLocation();
+    const { isTOSAccepted, acceptTOS } = useTOSAgreementLocalStorage();
+
+    if (!isTOSAccepted && location.pathname !== routes.TOS) {
+      return (
+        <Layout>
+          <TOSWall acceptTOS={acceptTOS} detailRoute={routes.TOS} />
+        </Layout>
+      );
+    }
+
+    return (
+      <Layout>
+        <Switch>
+          <Route path={routes.HOME} exact={true}>
+            <Home />
+          </Route>
+          <Route path={routes.TOS} exact={true}>
+            <TOS />
+          </Route>
+          <Route path="*">
+            <Redirect to={routes.HOME} />
+          </Route>
+        </Switch>
+      </Layout>
+    );
+  })
 );
 
 const App = () => (

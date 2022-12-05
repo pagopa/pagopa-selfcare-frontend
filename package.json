@@ -67,7 +67,7 @@
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "^14.0.4",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/parser": "^5.45.0",
     "api-spec-converter": "^2.12.0",
     "craco-module-federation": "^1.1.0",
     "eslint": "^8.18.0",

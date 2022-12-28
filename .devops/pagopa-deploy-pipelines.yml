@@ -214,7 +214,7 @@ stages:
               REACT_APP_URL_INSTITUTION_LOGO_PREFIX: '$(react_app_url_storage)/institutions/'
 
               REACT_APP_ANALYTICS_ENABLE: '$(react_app_analytics_enabled)'
-              REACT_APP_ANALYTICS_MOCK: '$(react_app_analytics_mocked)'
+              REACT_APP_ANALYTICS_MOCK: 'true' #$(react_app_analytics_mocked)
               REACT_APP_MIXPANEL_TOKEN: '$(react_app_mixpanel_token)'
               REACT_APP_ONE_TRUST_BASE_URL: '$(react_app_one_trust_base_url)'
               REACT_APP_ONETRUST_DOMAIN_ID: '$(react_app_onetrust_domain_id)'

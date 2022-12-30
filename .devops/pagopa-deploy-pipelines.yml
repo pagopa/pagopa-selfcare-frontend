@@ -73,7 +73,7 @@ variables:
     react_app_url_fe_selfcare: '$(PROD_REACT_APP_URL_FE_SELFCARE)'
     react_app_url_fe_token_exchange: '$(PROD_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
-    react_app_url_api_portal: '$(PROD_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_portal: 'https://api.platform.pagopa.it/selfcare/pagopa/v1' #'$(PROD_REACT_APP_URL_API_PORTAL)'
     react_app_url_api_token: '$(PROD_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'

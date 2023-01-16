@@ -11,7 +11,7 @@
     "@mui/x-data-grid": "^5.17.14",
     "@mui/x-data-grid-generator": "^5.0.1",
     "@pagopa/mui-italia": "0.8.1",
-    "@pagopa/selfcare-common-frontend": "^1.11.8",
+    "@pagopa/selfcare-common-frontend": "^1.13.7",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-router-hash-link": "^2.4.5",
     "axios": "^0.23.0",

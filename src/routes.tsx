@@ -8,6 +8,7 @@ const ROUTES = {
   HOME: `${BASE_ROUTE}`,
   WIZARD: `${BASE_ROUTE}/wizard`,
   TOS: `${BASE_ROUTE}/terms-of-service`,
+  CREATE_APIKEY: `${BASE_ROUTE}/add-apikey`,
   /* TOS: {
     PATH: '/terms-of-service',
     LABEL: { it: 'Termini di servizio', en: 'Terms of service' },

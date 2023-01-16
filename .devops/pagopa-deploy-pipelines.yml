@@ -73,13 +73,13 @@ variables:
     react_app_url_fe_selfcare: '$(PROD_REACT_APP_URL_FE_SELFCARE)'
     react_app_url_fe_token_exchange: '$(PROD_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
-    react_app_url_api_portal: '$(PROD_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_portal: 'https://api.platform.pagopa.it/selfcare/pagopa/v1' #'$(PROD_REACT_APP_URL_API_PORTAL)'
     react_app_url_api_token: '$(PROD_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
 
     react_app_one_trust_base_url: '$(PROD_REACT_APP_URL_CDN)/ot'
-    react_app_analytics_enabled: '$(PROD_ANALYTICS_ENABLED)'
+    react_app_analytics_enabled: 'false'
     react_app_analytics_mocked: '$(PROD_ANALYTICS_MOCKED)'
     react_app_mixpanel_token: '$(PROD_MIXPANEL_TOKEN)'
     react_app_onetrust_domain_id: '$(PROD_ONETRUST_DOMAIN_ID)'
@@ -214,7 +214,7 @@ stages:
               REACT_APP_URL_INSTITUTION_LOGO_PREFIX: '$(react_app_url_storage)/institutions/'
 
               REACT_APP_ANALYTICS_ENABLE: '$(react_app_analytics_enabled)'
-              REACT_APP_ANALYTICS_MOCK: '$(react_app_analytics_mocked)'
+              REACT_APP_ANALYTICS_MOCK: 'true' #$(react_app_analytics_mocked)
               REACT_APP_MIXPANEL_TOKEN: '$(react_app_mixpanel_token)'
               REACT_APP_ONE_TRUST_BASE_URL: '$(react_app_one_trust_base_url)'
               REACT_APP_ONETRUST_DOMAIN_ID: '$(react_app_onetrust_domain_id)'

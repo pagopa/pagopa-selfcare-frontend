@@ -1,48 +1,49 @@
 import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Link, useTheme } from '@mui/material';
+import { Box, Grid, Typography, Link, useTheme, Alert } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import AddIcon from '@mui/icons-material/Add';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useUserNotify } from '@pagopa/selfcare-common-frontend';
+import { useHistory } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
-import {
-  getInstitutionApiKeys,
-  regeneratePrimaryKey,
-  regenerateSecondaryKey,
-  createInstitutionApiKeys,
-} from '../../services/apiKeyService';
+import { getInstitutionApiKeys } from '../../services/apiKeyService';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import HomePageCard from './HomePageCard';
+import { ProductKeys } from '../../model/ApiKey';
+import ROUTES from '../../routes';
+import ApiKeysCard from './ApiKeysCard';
 
 const Home = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const history = useHistory();
 
-  const [apiKeyPresent, setApiKeyPresent] = useState<boolean>(false);
-  const [primaryKey, setPrimaryKey] = useState<string>('');
-  const [secondaryKey, setSecondaryKey] = useState<string>('');
+  const [apiKeys, setApiKey] = useState<Array<ProductKeys>>([]);
 
-  const addNotify = useUserNotify();
-  const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', clearLocationState);
+    return () => {
+      window.removeEventListener('beforeunload', clearLocationState);
+    };
+  }, []);
+
+  const clearLocationState = () => {
+    window.history.replaceState({}, document.title);
+  };
 
   useEffect(() => {
     if (selectedParty) {
       setLoading(true);
       void getInstitutionApiKeys(selectedParty.partyId)
         .then((data) => {
-          setPrimaryKey(data.primaryKey);
-          setSecondaryKey(data.secondaryKey);
-          if (data.primaryKey !== '' && data.secondaryKey !== '') {
-            setApiKeyPresent(true);
-          } else {
-            setApiKeyPresent(false);
+          if (data) {
+            setApiKey(data);
           }
         })
         .finally(() => setLoading(false));
@@ -50,81 +51,7 @@ const Home = () => {
   }, [selectedParty]);
 
   const createKeys = () => {
-    if (selectedParty) {
-      setLoading(true);
-      void createInstitutionApiKeys(selectedParty.partyId)
-        .then((data) => {
-          setPrimaryKey(data.primaryKey);
-          setSecondaryKey(data.secondaryKey);
-          setApiKeyPresent(true);
-        })
-        .finally(() => setLoading(false));
-    }
-  };
-
-  const regenPrimaryKey = () => {
-    if (selectedParty) {
-      setLoading(true);
-      regeneratePrimaryKey(selectedParty.partyId)
-        .then(
-          () => {
-            void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
-              setPrimaryKey(data.primaryKey)
-            );
-            addNotify({
-              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
-              title: '',
-              message: t('homepage.apiPresent.regeneratePrimaryKey'),
-              component: 'Toast',
-            });
-          },
-          (reason) => {
-            addError({
-              component: 'Toast',
-              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
-              displayableTitle: t('homepage.apiPresent.errorRegeneratePrimaryKey'),
-              techDescription: `C'è stato un errore durante la rigenerazione della chiave primaria`,
-              blocking: false,
-              error: reason,
-              toNotify: true,
-              displayableDescription: '',
-            });
-          }
-        )
-        .finally(() => setLoading(false));
-    }
-  };
-  const regenSecondaryKey = () => {
-    if (selectedParty) {
-      setLoading(true);
-      regenerateSecondaryKey(selectedParty.partyId)
-        .then(
-          () => {
-            void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
-              setSecondaryKey(data.secondaryKey)
-            );
-            addNotify({
-              id: 'ACTION_ON_REGENERATE_SECONDARY_KEY',
-              title: '',
-              message: t('homepage.apiPresent.regenerateSecondaryKey'),
-              component: 'Toast',
-            });
-          },
-          (reason) => {
-            addError({
-              component: 'Toast',
-              id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
-              displayableTitle: t('homepage.apiPresent.errorRegenerateSecondaryKey'),
-              techDescription: `C'è stato un errore durante la rigenerazione della chiave secondaria`,
-              blocking: false,
-              error: reason,
-              toNotify: true,
-              displayableDescription: '',
-            });
-          }
-        )
-        .finally(() => setLoading(false));
-    }
+    history.push(ROUTES.CREATE_APIKEY);
   };
 
   return (
@@ -144,19 +71,24 @@ const Home = () => {
       >
         <Box width="100%" px={2}>
           <TitleBox
-            title={t('homepage.title')}
-            subTitle={t('homepage.subtitle')}
+            title={t('apiKeysPage.title')}
+            subTitle={t('apiKeysPage.subtitle')}
             mbTitle={2}
             mtTitle={4}
-            mbSubTitle={6}
+            mbSubTitle={3}
             variantTitle="h4"
             variantSubTitle="body1"
           />
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+          {history.location.state && (history.location.state as any).alertSuccessMessage && (
+            <Alert severity="success" variant="outlined">
+              {(history.location.state as any).alertSuccessMessage}
+            </Alert>
+          )}
+          <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} mb={4}>
             <Box>
-              <Typography variant="h6">{t('homepage.decription')}</Typography>
+              <Typography variant="h6">{t('apiKeysPage.decription')}</Typography>
             </Box>
-            {!apiKeyPresent && (
+            {apiKeys && (
               <Box>
                 <ButtonNaked
                   component="button"
@@ -173,36 +105,37 @@ const Home = () => {
                   }}
                   weight="default"
                 >
-                  {t('homepage.apiNotPresent.buttonLabel')}
+                  {t('apiKeysPage.apiNotPresent.buttonLabel')}
                 </ButtonNaked>
               </Box>
             )}
           </Box>
-          {!apiKeyPresent ? (
+          {apiKeys.length <= 0 ? (
             <Box
               p={2}
               display="flex"
               justifyContent="center"
               sx={{ backgroundColor: 'background.paper' }}
             >
-              <Trans i18nKey="homepage.apiNotPresent.apiNotPresentDescription">
+              <Trans i18nKey="apiKeysPage.apiNotPresent.apiNotPresentDescription">
                 Non è stata ancora generata nessuna chiave API per questo ente.
                 <Link
-                  sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
+                  sx={{
+                    color: 'primary.main',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    whiteSpace: 'pre',
+                  }}
                   onClick={createKeys}
                 >
-                  <strong> Genera chiave API</strong>
+                  <strong> Genera API Key</strong>
                 </Link>
               </Trans>
             </Box>
           ) : (
-            <HomePageCard
-              selectedParty={selectedParty}
-              primaryKey={primaryKey}
-              secondaryKey={secondaryKey}
-              regenPrimaryKey={regenPrimaryKey}
-              regenSecondaryKey={regenSecondaryKey}
-            />
+            apiKeys.map((ak: ProductKeys) => (
+              <ApiKeysCard selectedParty={selectedParty} apiKey={ak} key={ak.id}></ApiKeysCard>
+            ))
           )}
         </Box>
       </Grid>

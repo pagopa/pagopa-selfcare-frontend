@@ -5,7 +5,7 @@ import { buildFetchApi, extractResponse } from '@pagopa/selfcare-common-frontend
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
-import { ProductKeys } from '../model/Token';
+import { ProductKeys } from '../model/ApiKey';
 import { createClient, WithDefaultsT } from './generated/portal/client';
 
 import { InstitutionResource } from './generated/portal/InstitutionResource';
@@ -60,21 +60,27 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
+  getInstitutionApiKeys: async (institutionId: string): Promise<Array<ProductKeys>> => {
     const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
-  createInstitutionApiKeys: async (institutionId: string): Promise<ProductKeys> => {
-    const result = await apiClient.createInstitutionApiKeysUsingPOST({ institutionId });
+  createInstitutionApiKeys: async (
+    institutionId: string,
+    subscriptionCode: string
+  ): Promise<Array<ProductKeys>> => {
+    const result = await apiClient.createInstitutionApiKeysUsingPOST({
+      institutionId,
+      subscriptionCode,
+    });
     return extractResponse(result, 201, onRedirectToLogin);
   },
-  regeneratePrimaryKey: async (institutionId: string): Promise<string> => {
-    const result = await apiClient.regeneratePrimaryKeyUsingPOST({ institutionId });
+  regeneratePrimaryKey: async (subscriptionid: string): Promise<string> => {
+    const result = await apiClient.regeneratePrimaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 
-  regenerateSecondaryKey: async (institutionId: string): Promise<string> => {
-    const result = await apiClient.regenerateSecondaryKeyUsingPOST({ institutionId });
+  regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
+    const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 };

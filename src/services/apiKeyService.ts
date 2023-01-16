@@ -1,5 +1,5 @@
 import { PortalApi } from '../api/PortalApiClient';
-import { apiKeysResource2ProductKeys, ProductKeys } from '../model/Token';
+import { ProductKeys } from '../model/ApiKey';
 import {
   getInstitutionApiKeys as getInstitutionApiKeysMocked,
   createInstitutionApiKeys as createInstitutionApiKeysMocked,
@@ -7,24 +7,25 @@ import {
   regenerateSecondaryKey as regenerateSecondaryKeyMocked,
 } from './__mocks__/apiKeyService';
 
-export const getInstitutionApiKeys = (institutionId: string): Promise<ProductKeys> => {
+export const getInstitutionApiKeys = (institutionId: string): Promise<Array<ProductKeys>> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getInstitutionApiKeysMocked(institutionId);
   } else {
-    return PortalApi.getInstitutionApiKeys(institutionId).then(
-      (resources) => resources && apiKeysResource2ProductKeys(resources)
-    );
+    return PortalApi.getInstitutionApiKeys(institutionId).then((resources) => resources);
   }
 };
 
-export const createInstitutionApiKeys = (institutionId: string): Promise<ProductKeys> => {
+export const createInstitutionApiKeys = (
+  institutionId: string,
+  subscriptionCode: string
+): Promise<Array<ProductKeys>> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createInstitutionApiKeysMocked(institutionId);
+    return createInstitutionApiKeysMocked(institutionId, subscriptionCode);
   } else {
-    return PortalApi.createInstitutionApiKeys(institutionId).then(
-      (resources) => resources && apiKeysResource2ProductKeys(resources)
+    return PortalApi.createInstitutionApiKeys(institutionId, subscriptionCode).then(
+      (resources) => resources
     );
   }
 };

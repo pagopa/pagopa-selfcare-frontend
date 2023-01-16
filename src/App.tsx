@@ -16,6 +16,7 @@ import { TOS } from './pages/tos/TOS';
 
 import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
+import AddApiKeyPage from './pages/apikey/AddApiKeyPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -35,6 +36,9 @@ const SecuredRoutes = withLogin(
         <Switch>
           <Route path={routes.HOME} exact={true}>
             <Home />
+          </Route>
+          <Route path={routes.CREATE_APIKEY} exact={true}>
+            <AddApiKeyPage />
           </Route>
           <Route path={routes.TOS} exact={true}>
             <TOS />

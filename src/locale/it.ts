@@ -69,6 +69,14 @@ export default {
       title: 'API Key',
     },
   },
+  header: {
+    envLabel: {
+      LOCAL_DEV: 'Sviluppo locale',
+      DEV: 'Sviluppo',
+      UAT: 'Collaudo',
+      PROD: 'Produzione',
+    },
+  },
   subHeader: {
     partySelectionSearch: {
       title: 'I tuoi enti',

@@ -42,4 +42,11 @@ export const ENV = {
       .default('https://api-eu.mixpanel.com')
       .asString(),
   },
+
+  HEADER: {
+    LINK: {
+      ROOTLINK: 'https://www.pagopa.it/',
+      PRODUCTURL: '/dashboard',
+    },
+  },
 };

@@ -1,6 +1,6 @@
 import { ProductEntity } from '@pagopa/mui-italia';
 import { PartySwitchItem } from '@pagopa/mui-italia/dist/components/PartySwitch';
-import { Header as CommonHeader } from '@pagopa/selfcare-common-frontend';
+
 import { useTranslation } from 'react-i18next';
 import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
@@ -11,6 +11,7 @@ import { Product } from '../model/Product';
 import { useAppSelector } from '../redux/hooks';
 import { partiesSelectors } from '../redux/slices/partiesSlice';
 import { ENV } from './../utils/env';
+import CommonHeader from './CommonHeader/CommonHeader';
 
 type Props = WithPartiesProps & {
   onExit: (exitAction: () => void) => void;

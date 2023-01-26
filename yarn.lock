@@ -1420,6 +1420,11 @@
     lodash.isundefined "^3.0.1"
     lodash.uniq "^4.5.0"
 
+"@fontsource/dm-mono@^4.5.10":
+  version "4.5.10"
+  resolved "https://registry.yarnpkg.com/@fontsource/dm-mono/-/dm-mono-4.5.10.tgz#2d033549b4fe75ab8e26c5e74081f1ba5aa65519"
+  integrity sha512-cVd0L+tz1PrrNyClnpeJvRtVdvtB69L9PJ4sBm3t2ZCcbzKCa3MmW9duljKeRxTfQh3YTZpevnD14uWumRJYzA==
+
 "@fontsource/titillium-web@^4.5.9":
   version "4.5.9"
   resolved "https://registry.yarnpkg.com/@fontsource/titillium-web/-/titillium-web-4.5.9.tgz#9de41e7b27fd6913055c2e9f616e5a2c5180f121"
@@ -1991,11 +1996,12 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pagopa/mui-italia@0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@pagopa/mui-italia/-/mui-italia-0.8.1.tgz#57f70344218cc34644d874f7fe13dbc60dbee502"
-  integrity sha512-T2TH7vXDPxp38Jpywp8+MFB/HF7hc2UdoYXWWG+M7MuFxOM8daTuIeFyDUb7/n/PwfnJHl9tnGbRm8jQHPRiLA==
+"@pagopa/mui-italia@0.8.12":
+  version "0.8.12"
+  resolved "https://registry.yarnpkg.com/@pagopa/mui-italia/-/mui-italia-0.8.12.tgz#e53e7ce965fe44d509b63c34ec45deeb7dbb8cf3"
+  integrity sha512-Qz0fMf5T3GHp/5g0VLyMR3kUtYnXpjtM3H9Hy5Co776Bi9BSiNLEPgP1svupIyW+RX8xpQD5fohyAmCNhP4qRw==
   dependencies:
+    "@fontsource/dm-mono" "^4.5.10"
     "@fontsource/titillium-web" "^4.5.9"
     clsx "^1.2.1"
     fp-ts "^2.12.3"

@@ -10,18 +10,24 @@ export default {
     admin: 'Amministratore',
     operator: 'Referente Tecnico',
   },
-  homepage: {
+
+  apiKeysPage: {
     title: 'API Key',
     subtitle:
-      'Qui puoi generare e gestire le chiavi API da utilizzare per spiegare a cosa servono.',
+      'Genera le API Key per gestire l’autenticazione dei soggetti connessi al nodo pagoPA.',
     decription: 'API Key generate',
+    apiKey: {
+      'Connessione con nodo': 'Connessione con nodo',
+      'Posizioni debitorie': 'Posizioni debitorie',
+      'Evento di pagamento': 'Evento di pagamento',
+    },
     apiNotPresent: {
-      apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente. <1><0> Genera chiave API</0></1>`,
-      buttonLabel: 'Genera chiave API',
+      apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente.<1><0> Genera API Key</0></1>`,
+      buttonLabel: 'Genera API Key',
     },
     apiPresent: {
-      primaryApiKey: 'Codice chiave API primaria',
-      secondaryApiKey: 'Codice chiave API secondaria',
+      primaryApiKey: 'Codice API Key primaria',
+      secondaryApiKey: 'Codice API Key secondaria',
       regeneratesBtn: 'Rigenera',
       useKeyBtn: 'Usa questa chiave',
       copyPrimaryKeyLabel: 'Chiave primaria copiata correttamente',
@@ -33,13 +39,42 @@ export default {
       regenerateSecondaryKey: 'Chiave secondaria rigenerata correttamente',
       errorRegenerateSecondariKey: 'Errore durante la rigenerazione della chiave secondaria',
     },
+    regenerateModal: {
+      title: 'Rigenera API Key',
+      message: `Se rigeneri, disattivi la API Key esistente e ne generi una nuova, con gli stessi attributi.<br/><br/>
+        Dopo che hai inserito la nuova API Key nella piattaforma dell’ente, blocca ed elimina la versione precedente.`,
+      confirmButton: 'Rigenera',
+      cancelButton: 'Annulla',
+    },
+  },
+  addApiKeyPage: {
+    addForm: {
+      title: 'Generazione API Key',
+      subTitle: 'Inserisci le informazioni per generare la coppia di chiavi',
+      product: {
+        title: 'Tipo di prodotto',
+      },
+      backButton: 'Annulla',
+      continueButton: 'Genera API Key',
+      successMessage: 'Pacchetto API Key generato correttamente.',
+    },
+    products: {
+      NODOAUTH: 'Connessione con nodo',
+      GPD: 'Posizioni debitorie',
+      BIZ: 'Evento di pagamento',
+    },
   },
   sideMenu: {
     home: {
       title: 'API Key',
     },
-    wizard: {
-      title: 'Wizard',
+  },
+  header: {
+    envLabel: {
+      LOCAL_DEV: 'Sviluppo locale',
+      DEV: 'Sviluppo',
+      UAT: 'Collaudo',
+      PROD: 'Produzione',
     },
   },
   subHeader: {
@@ -48,32 +83,6 @@ export default {
       label: 'I tuoi enti',
     },
     backButton: 'Esci',
-  },
-  wizard: {
-    stepOne: {
-      title: 'Informazioni generali',
-    },
-    stepTwo: {
-      title: 'Destinatari',
-    },
-    stepThree: {
-      title: 'Regole di spesa',
-    },
-    stepFour: {
-      title: 'Regole di rimborso',
-    },
-    stepFive: {
-      title: 'Informazioni legali',
-    },
-    common: {
-      buttons: {
-        back: 'Indietro',
-        skip: 'Salva bozza',
-        continue: 'Continua',
-        send: 'Invia per la revisione',
-        reset: 'Reset',
-      },
-    },
   },
   tos: {
     title: 'pagoPA',

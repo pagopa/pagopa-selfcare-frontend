@@ -6,13 +6,14 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-import { createClient, WithDefaultsT } from './generated/portal/client';
 
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
+import { ChannelsResource } from './generated/portal/ChannelsResource';
+import { createClient, WithDefaultsT } from './generated/portal/client';
 
-const withBearerAndPartyId: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
+const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
   return wrappedOperation({
     ...params,
@@ -24,7 +25,14 @@ const apiClient = createClient({
   baseUrl: ENV.URL_API.PORTAL,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
-  withDefaults: withBearerAndPartyId,
+  withDefaults: withBearer,
+});
+
+const apiConfigClient = createClient({
+  baseUrl: ENV.URL_API.APICONFIG,
+  basePath: '',
+  fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
+  withDefaults: withBearer,
 });
 
 const onRedirectToLogin = () =>
@@ -82,5 +90,10 @@ export const PortalApi = {
   regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
     const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
+  },
+
+  getChannels: async (page: number): Promise<ChannelsResource> => {
+    const result = await apiConfigClient.getChannelsUsingGET({ page });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 };

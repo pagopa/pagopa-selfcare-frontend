@@ -64,9 +64,25 @@ export default {
       BIZ: 'Evento di pagamento',
     },
   },
+  channelsPage: {
+    title: 'Canali',
+    subtitle: 'Cerca e visualizza lo stato dei canali presenti.',
+    createChannelButtonLabel: 'Crea canale',
+    searchPlaceholder: 'Cerca per codice',
+    channelsTableColumns: {
+      headerFields: {
+        name: 'Codice canale',
+        description: 'Descrizione',
+        status: 'Stato',
+      },
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',
+    },
+    channels: {
+      title: 'Canali',
     },
   },
   header: {

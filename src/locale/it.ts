@@ -77,6 +77,44 @@ export default {
       },
     },
   },
+  addChannelPage: {
+    title: 'Crea un nuovo canale',
+    subtitle: 'Completa i campi',
+    exit: 'Esci',
+    addForm: {
+      backButton: 'Indietro',
+      continueButton: 'Conferma',
+      successMessage:
+        'Il canale è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',
+      sections: {
+        registry: 'Anagrafica',
+        redirect: 'Redirect',
+        target: 'Target',
+        paymentType: 'Tipo di versamento',
+      },
+      fields: {
+        pspBrokerCode: 'Codice intermediario PSP',
+        businessName: 'Ragione sociale intermediario',
+        idChannel: 'ID channel',
+        redirectProtocol: 'Protocollo',
+        redirectPort: 'Porta',
+        redirectIp: 'IP',
+        redirectService: 'Servizio',
+        redirectParameters: 'Parametri',
+        targetAddress: 'Indirizzo',
+        targetService: 'Servizio',
+        targetPort: 'Porta',
+        paymentType: 'Seleziona tipo di versamento',
+      },
+    },
+    confirmModal: {
+      title: 'Invio per la revisione',
+      message:
+        'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
+      confirmButton: 'Invia',
+      cancelButton: 'Torna indietro',
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',
@@ -106,5 +144,8 @@ export default {
       'Prima di entrare, leggi e accetta l’Informativa Privacy e i Termini e condizioni d’uso. Potrai consultarli di nuovo quando vuoi: li trovi sempre in fondo alla pagina.',
     termsDescription:
       'Entrando dichiari di aver letto e accettato l’<1>Informativa Privacy</1> e i <1>Termini e condizioni d’uso</1> di PagoPA',
+  },
+  general: {
+    noDataLabel: 'Nessun risultato',
   },
 };

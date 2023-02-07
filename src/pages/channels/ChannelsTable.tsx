@@ -1,3 +1,4 @@
+import { theme } from '@pagopa/mui-italia';
 import { Box, styled } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
@@ -6,6 +7,7 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
 import { getChannels } from '../../services/channelService';
 import { buildColumnDefs } from './ChannelsTableColumns';
+import { GridToolbarQuickFilter } from './QuickFilterCustom';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -17,6 +19,11 @@ const emptyChannelsResource = {
 
 const CustomDataGrid = styled(DataGrid)({
   border: 'none !important',
+  '& .MuiDataGrid-main': {
+    background: `${theme.palette.background.default}`,
+    padding: '0 24px 24px 24px',
+    marginTop: '24px',
+  },
   '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
     { outline: 'none' },
   '&.MuiDataGrid-root .MuiDataGrid-cell': {
@@ -24,7 +31,7 @@ const CustomDataGrid = styled(DataGrid)({
     wordWrap: 'break-word !important',
     lineHeight: '25px !important',
   },
-  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important' },
+  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
   '.justifyContentBold': {
     fontSize: '16px',
     fontWeight: '600',
@@ -123,14 +130,17 @@ export default function ChannelsTable() {
             columns={columns}
             components={{
               Pagination: () => <></>,
+              Toolbar: () => (
+                <>
+                  <GridToolbarQuickFilter></GridToolbarQuickFilter>
+                </>
+              ),
             }}
             componentsProps={{
               toolbar: {
-                showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
-            filterMode="server"
             getRowId={(r) => r.channel_code}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}

@@ -1,12 +1,27 @@
-import { Box, Button, Grid, InputAdornment, TextField } from '@mui/material';
+import { Alert, Box, Grid } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import SearchIcon from '@mui/icons-material/Search';
+import { useHistory } from 'react-router';
+
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ChannelsTable from './ChannelsTable';
 
 const Channels = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', clearLocationState);
+    return () => {
+      window.removeEventListener('beforeunload', clearLocationState);
+    };
+  }, []);
+
+  const clearLocationState = () => {
+    console.log(history.location.state);
+    window.history.replaceState({}, document.title);
+  };
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
@@ -18,7 +33,6 @@ const Channels = () => {
       <Grid
         item
         xs={10}
-        sx={{ backgroundColor: '#F5F6F7' }}
         display="flex"
         flexDirection="column"
         justifyContent="center"
@@ -36,6 +50,12 @@ const Channels = () => {
             variantSubTitle="body1"
           />
         </Box>
+        {history.location.state && (history.location.state as any).alertSuccessMessage && (
+          <Alert severity="success" variant="outlined">
+            {(history.location.state as any).alertSuccessMessage}
+          </Alert>
+        )}
+        {/*
         <Box width="100%" display="flex">
           <TextField
             InputProps={{
@@ -53,14 +73,9 @@ const Channels = () => {
             {t('channelsPage.createChannelButtonLabel')}
           </Button>
         </Box>
+        */}
         <Box display="flex" width="100%" mt={3}>
-          <Box
-            px={3}
-            pt={3}
-            display="flex"
-            width="100%"
-            sx={{ backgroundColor: 'background.default' }}
-          >
+          <Box pt={0} display="flex" width="100%">
             <ChannelsTable></ChannelsTable>
           </Box>
         </Box>

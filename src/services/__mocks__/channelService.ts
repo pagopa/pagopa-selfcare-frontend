@@ -1,4 +1,7 @@
+import { ChannelDetailsResource } from '../../api/generated/portal/ChannelDetailsResource';
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
+import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
+import { ChannelOnCreation } from '../../model/Channel';
 
 export const mockedChannels: ChannelsResource = {
   channels: [
@@ -261,5 +264,31 @@ export const mockedChannels: ChannelsResource = {
   },
 };
 
+export const mockedPSPChannels: PspChannelsResource = {
+  channels: [
+    {
+      channel_code: 'XPAY_03_ONUS',
+      enabled: true,
+      payment_types: [],
+    },
+    {
+      channel_code: 'XPAY_03',
+      enabled: false,
+      payment_types: [],
+    },
+    {
+      channel_code: 'WFESP_07_tot',
+      enabled: true,
+      payment_types: [],
+    },
+  ],
+};
+
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
+
+export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =>
+  new Promise((resolve) => resolve(mockedPSPChannels));
+
+export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+  new Promise((resolve) => resolve(mockedPSPChannels));

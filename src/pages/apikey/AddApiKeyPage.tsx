@@ -42,10 +42,7 @@ function AddApiKeyPage() {
     initialValues: {
       product: '',
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log(selectedProduct);
-    },
+    onSubmit: (_values) => {},
   });
 
   const history = useHistory();

@@ -18,6 +18,6 @@ export type ConfiguredProductKeys = {
 
 export const API_KEY_PRODUCTS: Array<ConfiguredProductKeys> = [
   { id: 'NODOAUTH', key: 'Connessione con nodo' },
-  { id: 'GPD', key: 'Posizioni debitorie' },
-  { id: 'BIZ', key: 'Evento di pagamento' },
+  /* { id: 'GPD', key: 'Posizioni debitorie' },
+  { id: 'BIZ', key: 'Evento di pagamento' }, */
 ];

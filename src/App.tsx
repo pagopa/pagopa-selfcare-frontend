@@ -18,7 +18,7 @@ import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apikey/AddApiKeyPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
-import AddChannelPage from './pages/channels/addChannel/AddChannelPage';
+import AddChannelPage from './pages/channels/createChannel/AddChannelPage';
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 
 const SecuredRoutes = withLogin(

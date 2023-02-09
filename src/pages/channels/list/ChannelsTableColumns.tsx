@@ -1,9 +1,13 @@
-import { Typography, Grid, Box, Chip } from '@mui/material';
+import { Typography, Grid, Box, Chip, IconButton } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { TFunction } from 'react-i18next';
 
-export function buildColumnDefs(t: TFunction<'translation', undefined>) {
+export function buildColumnDefs(
+  t: TFunction<'translation', undefined>,
+  onRowClick: (channelId: string) => void
+) {
   return [
     {
       field: 'channel_code',
@@ -46,6 +50,34 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       renderCell: (params) => showStatus(params),
       sortable: false,
       flex: 4,
+    },
+    {
+      field: 'azioni',
+      cellClassName: 'justifyContentNormalRight',
+      headerName: '',
+      align: 'right',
+      width: 100,
+      hideSortIcons: true,
+      disableColumnMenu: true,
+      editable: false,
+      renderCell: (p) => (
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          width="100%"
+          mr={2}
+          sx={{ cursor: 'pointer' }}
+        >
+          <IconButton
+            onClick={onRowClick ? () => onRowClick(p.row.channel_code) : undefined}
+            sx={{ width: '100%', '&:hover': { backgroundColor: 'transparent !important' } }}
+          >
+            <ArrowForwardIosIcon fontSize="small" sx={{ color: 'primary.main', p: '4px' }} />
+          </IconButton>
+        </Box>
+      ),
+      sortable: false,
+      flex: 1,
     },
   ] as Array<GridColDef>;
 }

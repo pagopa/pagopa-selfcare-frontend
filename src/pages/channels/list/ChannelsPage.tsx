@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 
-import SideMenu from '../../components/SideMenu/SideMenu';
+import SideMenu from '../../../components/SideMenu/SideMenu';
 import ChannelsTable from './ChannelsTable';
 
 const Channels = () => {
@@ -21,6 +21,7 @@ const Channels = () => {
   const clearLocationState = () => {
     console.log(history.location.state);
     window.history.replaceState({}, document.title);
+    console.log(history.location.state);
   };
 
   return (

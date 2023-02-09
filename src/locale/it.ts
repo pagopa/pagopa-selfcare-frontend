@@ -57,6 +57,8 @@ export default {
       backButton: 'Annulla',
       continueButton: 'Genera API Key',
       successMessage: 'Pacchetto API Key generato correttamente.',
+      errorMessageTitle: 'Errore',
+      errorMessageDesc: 'Errore nella generazione delle ApiKey',
     },
     products: {
       NODOAUTH: 'Connessione con nodo',

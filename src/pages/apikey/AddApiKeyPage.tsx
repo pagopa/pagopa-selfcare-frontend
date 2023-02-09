@@ -71,8 +71,8 @@ function AddApiKeyPage() {
             error: reason,
             techDescription: `An error occurred while adding api keys`,
             toNotify: true,
-            displayableTitle: 'errorTitle',
-            displayableDescription: '',
+            displayableTitle: t('addApiKeyPage.addForm.errorMessageTitle'),
+            displayableDescription: t('addApiKeyPage.addForm.errorMessageDesc'),
             component: 'Toast',
           })
         )

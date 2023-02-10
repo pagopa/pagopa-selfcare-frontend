@@ -1,3 +1,4 @@
+import { InstitutionDetailResource } from '../api/generated/portal/InstitutionDetailResource';
 import { InstitutionResource } from '../api/generated/portal/InstitutionResource';
 import { ENV } from '../utils/env';
 
@@ -45,6 +46,29 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     ),
     urlLogo,
     fiscalCode: institutionResource.fiscalCode,
+    registeredOffice: institutionResource.address,
+    typology: 'TODO', // it will represent the taxonomy of the party
+    institutionType: institutionResource.institutionType,
+  };
+};
+
+export const institutionDetailResource2Party = (
+  institutionResource: InstitutionDetailResource
+): Party => {
+  const urlLogo = institutionResource.id && buildUrlLog(institutionResource.id);
+  return {
+    partyId: institutionResource.id,
+    externalId: institutionResource.externalId,
+    originId: institutionResource.originId,
+    origin: institutionResource.origin,
+    description: institutionResource.description,
+    digitalAddress: institutionResource.digitalAddress,
+    status: 'ACTIVE', // 'ACTIVE' | 'PENDING',
+    roles: [] /* institutionResource.userProductRoles.map(
+      (u) => ({ partyRole: u, roleKey: u } as UserRole)
+    ), */,
+    urlLogo,
+    fiscalCode: institutionResource.taxCode,
     registeredOffice: institutionResource.address,
     typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,

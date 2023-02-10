@@ -17,8 +17,9 @@ import { TOS } from './pages/tos/TOS';
 import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apikey/AddApiKeyPage';
-import Channels from './pages/channels/Channels';
-import AddChannelPage from './pages/channels/AddChannel/AddChannelPage';
+import ChannelsPage from './pages/channels/list/ChannelsPage';
+import AddChannelPage from './pages/channels/createChannel/AddChannelPage';
+import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -43,10 +44,13 @@ const SecuredRoutes = withLogin(
             <AddApiKeyPage />
           </Route>
           <Route path={routes.CHANNELS} exact={true}>
-            <Channels />
+            <ChannelsPage />
           </Route>
           <Route path={routes.CREATE_CHANNEL} exact={true}>
             <AddChannelPage />
+          </Route>
+          <Route path={routes.CHANNEL_DETAIL} exact={true}>
+            <ChannelDetailPage />
           </Route>
           <Route path={routes.TOS} exact={true}>
             <TOS />

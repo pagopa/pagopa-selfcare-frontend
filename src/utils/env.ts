@@ -33,6 +33,12 @@ export const ENV = {
     SUFFIX: env.get('REACT_APP_URL_INSTITUTION_LOGO_SUFFIX').required().asString(),
   },
 
+  FEATURES: {
+    CHANNELS: {
+      ENABLED: env.get('REACT_APP_FEATURES_CHANNELS_ENABLED').default('false').asBool(),
+    },
+  },
+
   ANALYTCS: {
     ENABLE: env.get('REACT_APP_ANALYTICS_ENABLE').default('false').asBool(),
     MOCK: env.get('REACT_APP_ANALYTICS_MOCK').default('false').asBool(),

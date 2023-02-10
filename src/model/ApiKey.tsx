@@ -16,8 +16,16 @@ export type ConfiguredProductKeys = {
   key: string;
 };
 
+export const NODOAUTH = 'Connessione con nodo';
+export const GPD = 'Posizioni debitorie';
+export const BIZ = 'Evento di pagamento';
+
+export const API_KEY_PSP_PRODUCTS: Array<ConfiguredProductKeys> = [
+  { id: 'NODOAUTH', key: NODOAUTH },
+];
+
 export const API_KEY_PRODUCTS: Array<ConfiguredProductKeys> = [
-  { id: 'NODOAUTH', key: 'Connessione con nodo' },
-  { id: 'GPD', key: 'Posizioni debitorie' },
-  { id: 'BIZ', key: 'Evento di pagamento' },
+  { id: 'NODOAUTH', key: NODOAUTH },
+  { id: 'GPD', key: GPD },
+  { id: 'BIZ', key: BIZ },
 ];

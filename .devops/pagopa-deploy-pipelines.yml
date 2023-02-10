@@ -47,9 +47,12 @@ variables:
     react_app_url_fe_token_exchange: '$(UAT_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
     react_app_url_api_portal: '$(UAT_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_apiconfig: 'https://api.uat.platform.pagopa.it/backoffice/apiconfig/auth/v1' #'$(UAT_REACT_APP_URL_API_APICONFIG)'
     react_app_url_api_token: '$(UAT_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
+
+    react_app_features_channels_enabled: 'false'
 
     react_app_one_trust_base_url: '$(UAT_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: '$(UAT_REACT_APP_ANALYTICS_ENABLED)'
@@ -74,9 +77,12 @@ variables:
     react_app_url_fe_token_exchange: '$(PROD_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
 
     react_app_url_api_portal: 'https://api.platform.pagopa.it/selfcare/pagopa/v1' #'$(PROD_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_apiconfig: 'https://api.platform.pagopa.it/backoffice/apiconfig/auth/v1' #'$(PROD_REACT_APP_URL_API_APICONFIG)'
     react_app_url_api_token: '$(PROD_REACT_APP_URL_API_TOKEN)'
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
+
+    react_app_features_channels_enabled: 'false'
 
     react_app_one_trust_base_url: '$(PROD_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: 'false'
@@ -99,10 +105,14 @@ variables:
     react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)' 
     react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
     react_app_url_api_portal: '$(DEV_REACT_APP_URL_API_PORTAL)'
+    react_app_url_api_apiconfig: 'https://api.dev.platform.pagopa.it/backoffice/apiconfig/auth/v1' #'$(DEV_REACT_APP_URL_API_APICONFIG)'
     react_app_url_storage: 'https://selcdcheckoutsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)' 
     react_app_url_fe_selfcare: 'https://dev.selfcare.pagopa.it/dashboard/' #'$(DEV_REACT_APP_URL_FE_SELFCARE)' #
     react_app_url_fe_token_exchange: 'https://dev.selfcare.pagopa.it/token-exchange' #$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)' 
     react_app_url_api_token: '$(DEV_REACT_APP_URL_API_TOKEN)' # 'https://api.dev.platform.pagopa.it/api/token/token' #
+
+    react_app_features_channels_enabled: 'true'
+
     react_app_one_trust_base_url: 'https://dev.selfcare.pagopa.it/ot/test' # '$(DEV_SELFCARE_HOST)/ot/test'
     react_app_analytics_enabled: 'false'
     react_app_analytics_mocked: 'false'
@@ -207,11 +217,14 @@ stages:
               REACT_APP_URL_FE_TOKEN_EXCHANGE: '$(react_app_url_fe_token_exchange)'
 
               REACT_APP_URL_API_PORTAL: '$(react_app_url_api_portal)'
+              REACT_APP_URL_API_APICONFIG: '$(react_app_url_api_apiconfig)'
               REACT_APP_URL_API_TOKEN: '$(react_app_url_api_token)'
 
               REACT_APP_PAGOPA_HELP_EMAIL: '$(react_app_pagopa_help_email)'
 
               REACT_APP_URL_INSTITUTION_LOGO_PREFIX: '$(react_app_url_storage)/institutions/'
+
+              REACT_APP_FEATURES_CHANNELS_ENABLED: '$(react_app_features_channels_enabled)'
 
               REACT_APP_ANALYTICS_ENABLE: '$(react_app_analytics_enabled)'
               REACT_APP_ANALYTICS_MOCK: 'true' #$(react_app_analytics_mocked)

@@ -20,10 +20,12 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import ROUTES from '../../routes';
 import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
 import {
+  API_KEY_PSP_PRODUCTS,
   API_KEY_PRODUCTS,
   AvailableProductKeys,
   ConfiguredProductKeys,
   ProductKeys,
+  NODOAUTH,
 } from '../../model/ApiKey';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
@@ -36,16 +38,14 @@ function AddApiKeyPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
   const addError = useErrorDispatcher();
-  const products = API_KEY_PRODUCTS;
+  const products =
+    selectedParty?.institutionType === 'PSP' ? API_KEY_PSP_PRODUCTS : API_KEY_PRODUCTS;
 
   const formik = useFormik({
     initialValues: {
       product: '',
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      console.log(selectedProduct);
-    },
+    onSubmit: (_values) => {},
   });
 
   const history = useHistory();
@@ -71,8 +71,8 @@ function AddApiKeyPage() {
             error: reason,
             techDescription: `An error occurred while adding api keys`,
             toNotify: true,
-            displayableTitle: 'errorTitle',
-            displayableDescription: '',
+            displayableTitle: t('addApiKeyPage.addForm.errorMessageTitle'),
+            displayableDescription: t('addApiKeyPage.addForm.errorMessageDesc'),
             component: 'Toast',
           })
         )
@@ -212,8 +212,8 @@ const buildAvailableProduct = (
   products: Array<ConfiguredProductKeys>,
   setAvailableProduct: any
 ) => {
-  if (data.some((el) => el.displayName === 'Connessione con nodo')) {
-    // if nodeAuth was created, elements in booth array will be disabled
+  if (data.some((el) => el.displayName === NODOAUTH)) {
+    // if nodeAuth was created, elements that are present in both lists will be disabled
     setAvailableProduct(
       products.map((p) =>
         data.some((el) => el.displayName === p.key)
@@ -233,7 +233,7 @@ const buildAvailableProduct = (
     // if no apikeys was created, nodeAuth is the only items enabled
     setAvailableProduct(
       products.map((p) =>
-        p.key === 'Connessione con nodo'
+        p.key === NODOAUTH
           ? {
               id: p.id,
               title: p.key,

@@ -3,7 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { useUnloadEventOnExit } from '@pagopa/selfcare-common-frontend/hooks/useUnloadEventInterceptor';
 import { useTranslation } from 'react-i18next';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import UsbIcon from '@mui/icons-material/Usb';
 import { useState } from 'react';
+import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import SidenavItem from './SidenavItem';
 
@@ -32,12 +34,14 @@ export default function SideMenu() {
             isSelected={pathname === ROUTES.HOME}
             icon={VpnKeyIcon}
           />
-          {/* <SidenavItem
-            title={t('sideMenu.wizard.title')}
-            handleClick={() => onExit(() => history.push(ROUTES.WIZARD))}
-            isSelected={pathname === ROUTES.WIZARD}
-            icon={DashboardCustomize}
-          /> */}
+          {ENV.FEATURES.CHANNELS.ENABLED && (
+            <SidenavItem
+              title={t('sideMenu.channels.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
+              isSelected={pathname === ROUTES.CHANNELS}
+              icon={UsbIcon}
+            />
+          )}
         </List>
       </Box>
     </Box>

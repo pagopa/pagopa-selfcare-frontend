@@ -21,6 +21,7 @@ export const ENV = {
   URL_API: {
     PORTAL: env.get('REACT_APP_URL_API_PORTAL').required().asString(),
     TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
+    APICONFIG: env.get('REACT_APP_URL_API_APICONFIG').required().asString(),
   },
 
   API_TIMEOUT_MS: {
@@ -30,6 +31,12 @@ export const ENV = {
   URL_INSTITUTION_LOGO: {
     PREFIX: env.get('REACT_APP_URL_INSTITUTION_LOGO_PREFIX').required().asString(),
     SUFFIX: env.get('REACT_APP_URL_INSTITUTION_LOGO_SUFFIX').required().asString(),
+  },
+
+  FEATURES: {
+    CHANNELS: {
+      ENABLED: env.get('REACT_APP_FEATURES_CHANNELS_ENABLED').default('false').asBool(),
+    },
   },
 
   ANALYTCS: {

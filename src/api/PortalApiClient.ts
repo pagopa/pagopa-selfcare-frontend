@@ -6,13 +6,17 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-import { createClient, WithDefaultsT } from './generated/portal/client';
 
+import { ChannelOnCreation } from '../model/Channel';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
+import { ChannelsResource } from './generated/portal/ChannelsResource';
+import { createClient, WithDefaultsT } from './generated/portal/client';
+import { PspChannelsResource } from './generated/portal/PspChannelsResource';
+import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 
-const withBearerAndPartyId: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
+const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
   return wrappedOperation({
     ...params,
@@ -24,7 +28,14 @@ const apiClient = createClient({
   baseUrl: ENV.URL_API.PORTAL,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
-  withDefaults: withBearerAndPartyId,
+  withDefaults: withBearer,
+});
+
+const apiConfigClient = createClient({
+  baseUrl: ENV.URL_API.APICONFIG,
+  basePath: '',
+  fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
+  withDefaults: withBearer,
 });
 
 const onRedirectToLogin = () =>
@@ -82,5 +93,34 @@ export const PortalApi = {
   regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
     const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
+  },
+
+  getChannels: async (page: number): Promise<ChannelsResource> => {
+    const result = await apiConfigClient.getChannelsUsingGET({ page });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getPSPChannels: async (pspcode: string): Promise<PspChannelsResource> => {
+    const result = await apiConfigClient.getPspChannelsUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createChannel: async (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+    const result = await apiConfigClient.createChannelUsingPOST({
+      body: {
+        broker_psp_code: channel.pspBrokerCode,
+        broker_description: channel.businessName,
+        channel_code: channel.idChannel,
+        redirect_protocol: channel.redirectProtocol,
+        redirect_port: channel.redirectPort,
+        redirect_ip: channel.redirectIp,
+        redirect_path: channel.redirectService,
+        redirect_query_string: channel.redirectParameters,
+        target_host: channel.targetAddress,
+        target_path: channel.targetService,
+        target_port: channel.targetPort,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 };

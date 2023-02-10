@@ -3,9 +3,11 @@ import { Box, styled } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { generatePath, useHistory } from 'react-router';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
-import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
-import { getChannels } from '../../services/channelService';
+import ROUTES from '../../../routes';
+import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
+import { getChannels } from '../../../services/channelService';
 import { buildColumnDefs } from './ChannelsTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 
@@ -74,7 +76,13 @@ const CustomDataGrid = styled(DataGrid)({
 
 export default function ChannelsTable() {
   const { t } = useTranslation();
-  const columns: Array<GridColDef> = buildColumnDefs(t);
+  const history = useHistory();
+
+  const onRowClick = (channelIdRow: string) => {
+    history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
+  };
+
+  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 

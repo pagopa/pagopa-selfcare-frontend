@@ -15,7 +15,7 @@ import { GridFilterModel } from '@mui/x-data-grid';
 import { Box, Button, InputAdornment } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import ROUTES from '../../routes';
+import ROUTES from '../../../routes';
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',

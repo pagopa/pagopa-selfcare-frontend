@@ -53,7 +53,7 @@ export const useLogin = () => {
 
   const attemptSilentLogin = async () => {
     // 1. Check if there is a mock token: only used for dev purposes
-    if (CONFIG.MOCKS.MOCK_USER && process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    if (CONFIG.MOCKS.MOCK_USER && process.env.REACT_APP_API_MOCK_TOKEN === 'true') {
       setUser(mockedUser);
       storageTokenOps.write(CONFIG.TEST.JWT);
       storageUserOps.write(mockedUser);

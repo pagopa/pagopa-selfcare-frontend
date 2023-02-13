@@ -76,7 +76,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
         id: p.id,
         title: p.title,
         productUrl: p.urlPublic ?? '',
-        linkType: 'internal',
+        linkType: 'external',
       }))}
       partyList={parties2Show.map((party) => ({
         id: party.partyId,

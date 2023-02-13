@@ -10,7 +10,6 @@ export default {
     admin: 'Amministratore',
     operator: 'Referente Tecnico',
   },
-
   apiKeysPage: {
     title: 'API Key',
     subtitle:
@@ -117,6 +116,40 @@ export default {
       cancelButton: 'Torna indietro',
     },
   },
+  channelDetailPage: {
+    channels: 'Canali',
+    edit: 'Modifica',
+    duplicate: 'Duplica',
+    disable: 'Disabilita',
+    createdOn: 'Creato il',
+    detail: 'dettaglio',
+    state: 'Stato',
+    states: {
+      revision: 'In revisione',
+      needCorrection: 'Da correggere',
+      active: 'Attivo',
+    },
+    channelConfiguration: 'Configurazione del canale',
+    registry: 'Anagrafica',
+    pspBrokerCode: 'Codice intermediario PSP',
+    companyName: 'Ragione sociale',
+    idChannel: 'ID Channel',
+    redirect: 'Redirect',
+    redirectProtocol: 'Protocollo',
+    redirectPort: 'Porta',
+    redirectUrl: 'URL di redirect',
+    target: 'Target',
+    targetAddress: 'Indirizzo',
+    targetService: 'Servizio',
+    targetPort: 'Porta',
+    paymentType: 'Tipo di versamento',
+    associatedPsp: 'PSP associati',
+    managePsp: 'Gestisci PSP',
+    associated: 'Associati',
+    changes: 'Modifiche',
+    lastChange: 'Ultima modifica',
+    operatedBy: 'Operata da',
+  },
   sideMenu: {
     home: {
       title: 'API Key',
@@ -149,5 +182,8 @@ export default {
   },
   general: {
     noDataLabel: 'Nessun risultato',
+    exit: 'Esci',
+    channels: 'canali',
+    Channels: 'Canali',
   },
 };

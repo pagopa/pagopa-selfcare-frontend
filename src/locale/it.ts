@@ -150,6 +150,22 @@ export default {
     lastChange: 'Ultima modifica',
     operatedBy: 'Operata da',
   },
+  channelPSPList: {
+    title: 'Gestisci PSP',
+    subtitle: 'Gestisci e associa nuovi PSP.',
+    searchPlaceholder: 'Cerca per nome PSP',
+    csvDownload: 'Scarica csv',
+    associatePspButtonLabel: 'Associa PSP',
+    noResults: `Non sono ancora presenti PSP associati a questo canale.<1><0> Associa PSP</0></1>`,
+    channelsTableColumns: {
+      headerFields: {
+        name: 'Nome PSP',
+        referent: 'Referente',
+        contact: 'Contatto',
+        status: 'Stato',
+      },
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',

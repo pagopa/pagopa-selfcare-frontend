@@ -38,7 +38,7 @@ export default function SideMenu() {
             <SidenavItem
               title={t('sideMenu.channels.title')}
               handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
-              isSelected={pathname === ROUTES.CHANNELS}
+              isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
               icon={UsbIcon}
             />
           )}

@@ -15,6 +15,7 @@ import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { createClient, WithDefaultsT } from './generated/portal/client';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
+import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -100,6 +101,11 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
+    const result = await apiConfigClient.getChannelDetailsUsingGET({ channelcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getPSPChannels: async (pspcode: string): Promise<PspChannelsResource> => {
     const result = await apiConfigClient.getPspChannelsUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -122,5 +128,27 @@ export const PortalApi = {
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  getPaymentTypes: async (): Promise<PaymentTypesResource> => {
+    const result = await apiConfigClient.getPaymentTypesUsingGET({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  // eslint-disable-next-line arrow-body-style
+  getChannelPSPs: async (_page: number): Promise<ChannelsResource> => {
+    /* TODO: change when GET will be available */
+    // const result = await apiConfigClient.getChannelPSPsUsingGET({ page });
+
+    // return extractResponse(result, 200, onRedirectToLogin);
+    return {
+      channels: [],
+      page_info: {
+        items_found: 0,
+        limit: 0,
+        page: 0,
+        total_pages: 0,
+      },
+    };
   },
 };

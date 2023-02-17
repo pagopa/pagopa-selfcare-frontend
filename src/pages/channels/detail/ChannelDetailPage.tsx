@@ -7,20 +7,34 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router';
+import { generatePath, useHistory, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import ROUTES from '../../../routes';
+import { getChannelDetail } from '../../../services/__mocks__/channelService';
 
 const ChannelDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
+  const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
+
   const { channelId } = useParams<{ channelId: string }>();
 
   const goBack = () => history.push(ROUTES.CHANNELS);
 
-  return (
+  useEffect(() => {
+    getChannelDetail(channelId)
+      .then((channelDetailResponse) => setChannelDetail(channelDetailResponse))
+      .catch((reason) => {
+        console.error(reason);
+      });
+  }, []);
+
+  return channelDetail ? (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
         <Stack direction="row">
@@ -37,17 +51,22 @@ const ChannelDetailPage = () => {
           <Breadcrumbs>
             <Typography>{t('general.Channels')}</Typography>
             <Typography color={'#A2ADB8'}>
-              {t('channelDetailPage.detail')} {channelId}
+              {t('channelDetailPage.detail')} {channelDetail.channel_code}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
-            <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
+            <TitleBox
+              title={channelDetail.channel_code ?? ''}
+              mbTitle={2}
+              variantTitle="h4"
+              variantSubTitle="body1"
+            />
             <Typography mb={5}>
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={600}>
-                17/01/2023
+                dd/mm/yyyy
               </Typography>
             </Typography>
           </Grid>
@@ -100,7 +119,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.broker_psp_code}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -108,7 +127,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.broker_description}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -116,7 +135,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.channel_code}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -127,7 +146,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.redirect_protocol}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -135,7 +154,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.redirect_port}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -143,7 +162,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.redirect_ip}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -154,7 +173,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.target_host}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -162,7 +181,7 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.target_path}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -170,14 +189,18 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {channelDetail.target_port}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
                   <Typography variant="sidenav">{t('channelDetailPage.paymentType')}</Typography>
                 </Grid>
                 <Grid item xs={12} mb={3} mt={2}>
-                  <Chip color="primary" label="Bancomat PAY" />
+                  {channelDetail.payment_types && channelDetail.payment_types.length > 0 ? (
+                    <Chip color="primary" label={channelDetail.payment_types} />
+                  ) : (
+                    ''
+                  )}
                 </Grid>
                 <Grid item xs={6} alignItems={'center'}>
                   <Typography variant="sidenav">{t('channelDetailPage.associatedPsp')}</Typography>
@@ -190,7 +213,15 @@ const ChannelDetailPage = () => {
                   justifyContent={'flex-end'}
                   xs={6}
                 >
-                  <ButtonNaked color="primary" endIcon={<ManageAccounts />} size="medium">
+                  <ButtonNaked
+                    component={Link}
+                    to={generatePath(ROUTES.CHANNEL_PSP_LIST, {
+                      channelId: channelDetail.channel_code,
+                    })}
+                    color="primary"
+                    endIcon={<ManageAccounts />}
+                    size="medium"
+                  >
                     {t('channelDetailPage.managePsp')}
                   </ButtonNaked>
                 </Grid>
@@ -227,6 +258,8 @@ const ChannelDetailPage = () => {
         </Paper>
       </Grid>
     </Grid>
+  ) : (
+    <></>
   );
 };
 

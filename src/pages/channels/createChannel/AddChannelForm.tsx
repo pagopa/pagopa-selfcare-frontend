@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   Box,
@@ -28,8 +28,10 @@ import ROUTES from '../../../routes';
 import { ChannelOnCreation } from '../../../model/Channel';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { createChannel } from '../../../services/channelService';
+import { createChannel, getPaymentTypes } from '../../../services/channelService';
 import { Party } from '../../../model/Party';
+
+import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import AddChannelFormSectionTitle from './AddChannelFormSectionTitle';
 
 type Props = {
@@ -57,11 +59,6 @@ const validatePortRange = (redirectPort: number | undefined) => {
   }
   return false;
 };
-
-const paymentOptions = [
-  { value: 'PPAY', label: 'PostePay' },
-  { value: 'SEPA', label: 'Bonifico' },
-];
 
 const inputGroupStyle = {
   borderRadius: 1,
@@ -99,6 +96,8 @@ function AddChannelForm({ goBack }: Props) {
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+
   const formik = useFormik<ChannelOnCreation>({
     initialValues: initialFormData(selectedParty),
     validate,
@@ -110,7 +109,6 @@ function AddChannelForm({ goBack }: Props) {
   const submit = () => {
     setShowConfirmModal(false);
     // alert(JSON.stringify(formik.values, null, 2));
-
     createChannel(formik.values)
       .then(() => {
         history.push(ROUTES.CHANNELS, {
@@ -122,6 +120,18 @@ function AddChannelForm({ goBack }: Props) {
         // if (reason.httpStatus === 409) {
       });
   };
+  useEffect(() => {
+    getPaymentTypes()
+      .then((results) => {
+        if (results) {
+          setPaymentOptions(results);
+          console.log(results);
+        }
+      })
+      .catch((reason) => {
+        console.error(reason);
+      });
+  }, []);
   return (
     <>
       <form onSubmit={formik.handleSubmit} style={{ minWidth: '100%' }}>
@@ -352,11 +362,12 @@ function AddChannelForm({ goBack }: Props) {
                       onChange={formik.handleChange}
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     >
-                      {paymentOptions.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
+                      {paymentOptions &&
+                        paymentOptions.payment_types.map((option: any) => (
+                          <MenuItem key={option.payment_type} value={option.payment_type}>
+                            {option.description}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </Grid>

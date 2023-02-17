@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Paper from '@mui/material/Paper';
-import Select from '@mui/material/Select';
+
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTranslation, Trans } from 'react-i18next';
@@ -17,6 +14,9 @@ import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
+import { PSP } from '../../../model/PSP';
+import { getChannelAvailablePSP } from '../../../services/channelService';
+import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
   const { t } = useTranslation();
@@ -25,8 +25,8 @@ function ChannelAssociatePSPPage() {
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const [selectedPSP, setSelectedPSP] = useState('');
-  const [availablePSP, setAvailablePSP] = useState(['psp-a', 'psp-b', 'psp-c']);
+  const [selectedPSP, setSelectedPSP] = useState<PSP | undefined>();
+  const [availablePSP, setAvailablePSP] = useState<Array<PSP>>([]);
 
   const formik = useFormik({
     initialValues: {
@@ -81,21 +81,16 @@ function ChannelAssociatePSPPage() {
   };
 
   useEffect(() => {
-    if (channelId) {
-      /* setLoading(true);
-       getAssociablePSP(channelId)
-        .then((data) => {
-          if (data) {
-            setAvailablePSP(data);
-          }
-        })
-        .catch((reason) => console.log(reason))
-        .finally(() => setLoading(false));
-        */
-      setLoading(true);
-      setAvailablePSP(['psp-a', 'psp-b', 'psp-c']);
-      setLoading(false);
-    }
+    setLoading(true);
+    getChannelAvailablePSP()
+      .then((data) => {
+        if (data) {
+          setAvailablePSP(data);
+        }
+      })
+      .catch((reason) => console.log(reason))
+      .finally(() => setLoading(false));
+    setLoading(false);
   }, []);
 
   return (
@@ -145,57 +140,21 @@ function ChannelAssociatePSPPage() {
           <Grid item xs={12} p={3}>
             <form onSubmit={formik.handleSubmit}>
               <FormControl sx={{ width: '100%', minWidth: '100%' }}>
-                <InputLabel
-                  id="select-label-products"
-                  sx={{
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      fontWeight: 'fontWeightMedium',
-                      fontSize: 'fontSize',
-                      whiteSpace: 'nowrap',
-                    },
+                <PSPSelectionSearch
+                  iconColor={'#17324D'}
+                  label={t('channelAssociatePSPPage.associationForm.PSPSelectionInputPlaceholder')}
+                  availablePSP={availablePSP}
+                  selectedPSP={selectedPSP}
+                  onPSPSelectionChange={(selectedPSP: PSP | undefined) => {
+                    setSelectedPSP(selectedPSP);
                   }}
-                >
-                  {t('channelAssociatePSPPage.associationForm.selectPSPTitle')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  aria-label="user"
-                  name="products"
-                  value={selectedPSP ? selectedPSP : ''}
-                  labelId="select-label-products"
-                  variant="outlined"
-                  renderValue={(selectedProduct) => (
-                    <Typography sx={{ fontSize: 'fontSize', fontWeight: 'fontWeightMedium' }}>
-                      {selectedProduct}
-                    </Typography>
-                  )}
-                  input={
-                    <OutlinedInput
-                      label={t('channelAssociatePSPPage.associationForm.selectPSPTitle')}
-                    />
-                  }
-                >
-                  {availablePSP.map((psp) => (
-                    <MenuItem
-                      key={psp}
-                      value={psp}
-                      data-testid={`psp: ${psp}`}
-                      sx={{
-                        fontSize: 'fontSize',
-                        fontWeight: 'fontWeightMedium',
-                        color: 'text.primary',
-                      }}
-                      onClick={() => setSelectedPSP(psp)}
-                    >
-                      {psp}
-                    </MenuItem>
-                  ))}
-                </Select>
+                />
               </FormControl>
             </form>
           </Grid>
         </Paper>
       </Box>
+
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
           <Button color="primary" variant="outlined" onClick={goBack}>

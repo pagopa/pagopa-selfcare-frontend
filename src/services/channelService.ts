@@ -4,6 +4,7 @@ import { PaymentTypesResource } from '../api/generated/portal/PaymentTypesResour
 import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource';
 import { PortalApi } from '../api/PortalApiClient';
 import { ChannelOnCreation } from '../model/Channel';
+import { PSP } from '../model/PSP';
 
 import {
   getChannels as getChannelsMocked,
@@ -11,6 +12,7 @@ import {
   createChannel as createChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
+  getChannelAvailablePSP as getChannelAvailablePSPMocked,
   getChannelPSPsMocked,
 } from './__mocks__/channelService';
 
@@ -66,3 +68,12 @@ export const getChannelPSPs = (page: number): Promise<ChannelsResource> => {
     return PortalApi.getChannelPSPs(page).then((resources) => resources);
   }
 };
+
+export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
+  /* istanbul ignore if */
+  /* if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getChannelAvailablePSPMocked(page);
+  } else {
+    return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
+  } */
+  getChannelAvailablePSPMocked();

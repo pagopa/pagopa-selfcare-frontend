@@ -170,7 +170,7 @@ export default {
     title: 'Associa PSP',
     subTitle: 'Digita il nome del nuovo PSP da associare al canale',
     associationForm: {
-      selectPSPTitle: 'Cerca PSP',
+      PSPSelectionInputPlaceholder: 'Cerca PSP',
       successMessage: 'PSP associato con successo.',
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Non è stato possibile associare il PSP al canale',

@@ -8,6 +8,7 @@ import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
 import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesResource';
 import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
 import { ChannelOnCreation } from '../../model/Channel';
+import { PSP } from '../../model/PSP';
 
 export const mockedChannels: ChannelsResource = {
   channels: [
@@ -362,6 +363,45 @@ export const mockedChannelPSPs: ChannelsResource = {
   },
 };
 
+export const mockedChannelAvailablePSP: Array<PSP> = [
+  {
+    broker_psp_code: '0000001',
+    description: 'Intesa San Paolo S.P.A',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000002',
+    description: 'Sogei',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000003',
+    description: 'BNP',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000004',
+    description: 'Banca Nazionale',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000005',
+    description: 'Banca Regionale',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000006',
+    description: 'Banca Estera',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+];
+
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
 
@@ -379,3 +419,6 @@ export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
 
 export const getChannelPSPsMocked = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannelPSPs));
+
+export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
+  new Promise((resolve) => resolve(mockedChannelAvailablePSP));

@@ -14,7 +14,8 @@ import { gridQuickFilterValuesSelector } from '@mui/x-data-grid';
 import { GridFilterModel } from '@mui/x-data-grid';
 import { Box, Button, InputAdornment } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
+import { Add } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
@@ -69,6 +70,8 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * @default 500
    */
   debounceMs?: number;
+
+  channelId: string;
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
@@ -76,6 +79,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     quickFilterParser = defaultSearchValueParser,
     quickFilterFormatter = defaultSearchValueFormatter,
     debounceMs = 500,
+    channelId = '',
     ...other
   } = props;
 
@@ -147,7 +151,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
               <SearchIcon color="disabled" />
             </InputAdornment>
           ),
-          sx: { height: 48 },
+          sx: { height: 48, backgroundColor: '#FFFFFF' },
           endAdornment: (
             <IconButton
               aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
@@ -164,9 +168,12 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       />
       <Button
         component={Link}
-        to={ROUTES.CREATE_CHANNEL}
+        to={generatePath(ROUTES.CHANNEL_ASSOCIATE_PSP, {
+          channelId,
+        })}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
+        startIcon={<Add />}
       >
         {t('channelPSPList.associatePspButtonLabel')}
       </Button>

@@ -15,7 +15,6 @@ export function buildColumnDefs(
       headerName: t('channelPSPList.channelsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      width: 403,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -29,13 +28,12 @@ export function buildColumnDefs(
       headerName: t('channelPSPList.channelsTableColumns.headerFields.referent'),
       align: 'left',
       headerAlign: 'left',
-      width: 202,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => renderCell(params, undefined),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'broker_description2',
@@ -43,13 +41,12 @@ export function buildColumnDefs(
       headerName: t('channelPSPList.channelsTableColumns.headerFields.contact'),
       align: 'left',
       headerAlign: 'left',
-      width: 202,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => renderCell(params, undefined),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'enabled',
@@ -57,20 +54,18 @@ export function buildColumnDefs(
       headerName: t('channelPSPList.channelsTableColumns.headerFields.status'),
       align: 'left',
       headerAlign: 'left',
-      width: 404,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => showStatus(params),
       sortable: false,
-      flex: 4,
+      flex: 2,
     },
     {
       field: 'azioni',
       cellClassName: 'justifyContentNormalRight',
       headerName: '',
       align: 'right',
-      width: 100,
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
@@ -84,9 +79,12 @@ export function buildColumnDefs(
         >
           <IconButton
             onClick={onRowClick ? () => onRowClick(p.row.channel_code) : undefined}
-            sx={{ width: '100%', '&:hover': { backgroundColor: 'transparent !important' } }}
+            sx={{
+              width: '100%',
+              '&:hover': { backgroundColor: 'transparent !important' },
+            }}
           >
-            <RemoveCircle fontSize="small" sx={{ color: 'error.dark', p: '4px' }} />
+            <RemoveCircle sx={{ color: 'error.dark', fontSize: '24px' }} />
           </IconButton>
         </Box>
       ),
@@ -106,8 +104,8 @@ function renderCell(
       sx={{
         width: '100%',
         height: '100%',
-        paddingRight: '24px',
-        paddingLeft: '24px',
+        paddingRight: '18px',
+        paddingLeft: '18px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
         cursor: 'pointer',
@@ -154,7 +152,7 @@ function showChannelCode(params: GridRenderCellParams) {
         params,
         <>
           <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={7} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <Typography
                 variant="body2"
                 color="primary"
@@ -194,11 +192,6 @@ function showStatus(params: GridRenderCellParams) {
           height: '24px',
         }}
       />
-    </Box>,
-    {
-      paddingLeft: 0,
-      paddingRight: 0,
-      textAlign: 'left',
-    }
+    </Box>
   );
 }

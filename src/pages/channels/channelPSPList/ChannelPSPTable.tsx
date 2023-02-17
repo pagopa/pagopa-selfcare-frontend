@@ -3,13 +3,13 @@ import { Box, styled } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { generatePath, useHistory } from 'react-router';
+import { useParams } from 'react-router';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
-import ROUTES from '../../../routes';
 import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
 import { getChannelPSPs } from '../../../services/channelService';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
+import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -76,10 +76,13 @@ const CustomDataGrid = styled(DataGrid)({
 
 export default function ChannelPSPTable() {
   const { t } = useTranslation();
-  const history = useHistory();
 
-  const onRowClick = (channelIdRow: string) => {
-    history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
+  const { channelId } = useParams<{ channelId: string }>();
+  console.log('channelId', channelId);
+
+  const onRowClick = (_channelIdRow: string) => {
+    // history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
+    alert('Dissociato');
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
@@ -92,10 +95,9 @@ export default function ChannelPSPTable() {
     setLoading(true);
 
     getChannelPSPs(0)
-      .then((r) => {
+      .then((_r) => {
         // setChannels(emptyChannelsResource);
-        setChannels(r);
-        setError(false);
+        setChannels(_r);
       })
       .catch((reason) => {
         console.log('reason', reason);
@@ -129,7 +131,7 @@ export default function ChannelPSPTable() {
         {error && !loading ? (
           <>{error}</>
         ) : !error && !loading && channels.channels.length === 0 ? (
-          <> Empty message</>
+          <ChannelPSPTableEmpty channelId={channelId} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -143,7 +145,7 @@ export default function ChannelPSPTable() {
               Pagination: () => <></>,
               Toolbar: () => (
                 <>
-                  <GridToolbarQuickFilter></GridToolbarQuickFilter>
+                  <GridToolbarQuickFilter channelId={channelId}></GridToolbarQuickFilter>
                 </>
               ),
               NoRowsOverlay: () => <>{'NoRowsOverlay'}</>,

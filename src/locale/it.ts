@@ -166,6 +166,18 @@ export default {
       },
     },
   },
+  channelAssociatePSPPage: {
+    title: 'Associa PSP',
+    subTitle: 'Digita il nome del nuovo PSP da associare al canale',
+    associationForm: {
+      selectPSPTitle: 'Cerca PSP',
+      successMessage: 'PSP associato con successo.',
+      errorMessageTitle: 'Errore',
+      errorMessageDesc: 'Non è stato possibile associare il PSP al canale',
+      backButton: 'Annulla',
+      confirmButton: 'Conferma',
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',
@@ -199,6 +211,7 @@ export default {
   general: {
     noDataLabel: 'Nessun risultato',
     exit: 'Esci',
+    back: 'Indietro',
     channels: 'canali',
     Channels: 'Canali',
   },

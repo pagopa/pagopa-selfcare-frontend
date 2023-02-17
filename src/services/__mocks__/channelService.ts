@@ -349,34 +349,9 @@ const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
 export const mockedChannelPSPs: ChannelsResource = {
   channels: [
     {
-      channel_code: 'TotHttps',
+      channel_code: 'Intesa Sanpaolo S.P.A.',
       enabled: true,
-      broker_description: 'Intermediario per tutti',
-    },
-    {
-      channel_code: 'qqq',
-      enabled: true,
-      broker_description: 'Intermediario per tutti',
-    },
-    {
-      channel_code: 'PSOTE2',
-      enabled: true,
-      broker_description: 'Poste',
-    },
-    {
-      channel_code: 'provaCanale',
-      enabled: true,
-      broker_description: 'Intermediario per SAlvo ',
-    },
-    {
-      channel_code: 'POSTE1',
-      enabled: true,
-      broker_description: 'Poste',
-    },
-    {
-      channel_code: 'playground',
-      enabled: true,
-      broker_description: 'playground',
+      broker_description: 'Nome Cognome',
     },
   ],
   page_info: {

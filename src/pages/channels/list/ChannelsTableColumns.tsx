@@ -1,12 +1,15 @@
-import { Typography, Grid, Box, Chip, IconButton } from '@mui/material';
+import { Typography, Grid, Box, Chip } from '@mui/material';
+import { GridActionsCellItem } from '@mui/x-data-grid';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { TFunction } from 'react-i18next';
+import { generatePath } from 'react-router';
+import ROUTES from '../../../routes';
+import GridLinkAction from './GridLinkAction';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  onRowClick: (channelId: string) => void
+  _onRowClick: (channelId: string) => void
 ) {
   return [
     {
@@ -52,30 +55,49 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
-      field: 'azioni',
+      field: 'actions',
       cellClassName: 'justifyContentNormalRight',
+      type: 'actions',
       headerName: '',
-      align: 'right',
-      width: 100,
+      align: 'left',
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-      renderCell: (p) => (
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          width="100%"
-          mr={2}
-          sx={{ cursor: 'pointer' }}
-        >
-          <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.channel_code) : undefined}
-            sx={{ width: '100%', '&:hover': { backgroundColor: 'transparent !important' } }}
-          >
-            <ArrowForwardIosIcon fontSize="small" sx={{ color: 'primary.main', p: '4px' }} />
-          </IconButton>
-        </Box>
-      ),
+      getActions: (params: any) => {
+        const manageChannelAction = (
+          <GridLinkAction
+            key="Gestisci canale"
+            label="Gestisci canale"
+            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
+            onClick={() => console.log(params)}
+            showInMenu={true}
+          />
+        );
+        const manageChannelPSPAction = (
+          <GridLinkAction
+            key="Gestisci PSP"
+            label="Gestisci PSP"
+            to={generatePath(`${ROUTES.CHANNEL_PSP_LIST}`, { channelId: params.row.channel_code })}
+            onClick={() => console.log(params)}
+            showInMenu={true}
+          />
+        );
+
+        if (params.row.enabled) {
+          return [
+            manageChannelAction,
+            manageChannelPSPAction,
+            <GridActionsCellItem
+              key="duplicate"
+              label="Duplica"
+              onClick={() => console.log(params)}
+              showInMenu={true}
+            />,
+          ];
+        } else {
+          return [manageChannelAction];
+        }
+      },
       sortable: false,
       flex: 1,
     },

@@ -148,6 +148,13 @@ export default function ChannelsTable() {
               toolbar: {
                 quickFilterProps: { debounceMs: 500 },
               },
+              basePopper: {
+                sx: {
+                  '& .MuiDataGrid-menuList': {
+                    boxShadow: `0px 0px 45px rgba(0, 0, 0, 0.1)`,
+                  },
+                },
+              },
             }}
             getRowId={(r) => r.channel_code}
             headerHeight={headerHeight}

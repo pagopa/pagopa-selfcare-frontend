@@ -74,7 +74,9 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-export default function ChannelPSPTable() {
+type ChannelPSPTableProps = { setAlertMessage: any };
+
+export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProps) {
   const { t } = useTranslation();
 
   const { channelId } = useParams<{ channelId: string }>();
@@ -82,7 +84,7 @@ export default function ChannelPSPTable() {
 
   const onRowClick = (_channelIdRow: string) => {
     // history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
-    alert('Dissociato');
+    setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
@@ -149,7 +151,7 @@ export default function ChannelPSPTable() {
                 </>
               ),
               NoRowsOverlay: () => <>{'NoRowsOverlay'}</>,
-              NoResultsOverlay: () => <>{'NoResultsOverlay'}</>,
+              NoResultsOverlay: () => <></>,
             }}
             componentsProps={{
               toolbar: {

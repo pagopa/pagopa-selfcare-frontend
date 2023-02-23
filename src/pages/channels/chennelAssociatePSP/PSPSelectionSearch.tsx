@@ -47,7 +47,6 @@ export default function PSPSelectionSearch({
 
   const onFilterChange = (value: string) => {
     setInput(value);
-    console.log(value.length);
     if (!value || value.length < 3) {
       setFilteredParties([]);
     } else {

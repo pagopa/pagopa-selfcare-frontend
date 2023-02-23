@@ -7,7 +7,7 @@ export type ChannelOnCreation = {
   businessName: string;
   idChannel: string;
   redirectProtocol: Redirect_protocolEnum | undefined;
-  redirectPort: number | undefined;
+  redirectPort?: number | undefined;
   redirectIp: string;
   redirectService: string;
   redirectParameters: string;

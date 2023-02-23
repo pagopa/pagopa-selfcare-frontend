@@ -1,5 +1,4 @@
 import { Typography, Grid, Box, Chip } from '@mui/material';
-import { GridActionsCellItem } from '@mui/x-data-grid';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
@@ -59,17 +58,39 @@ export function buildColumnDefs(
       cellClassName: 'justifyContentNormalRight',
       type: 'actions',
       headerName: '',
-      align: 'left',
+      align: 'center',
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
+
       getActions: (params: any) => {
         const manageChannelAction = (
           <GridLinkAction
             key="Gestisci canale"
             label="Gestisci canale"
             to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
-            onClick={() => console.log(params)}
+            showInMenu={true}
+          />
+        );
+        const editChannelAction = (
+          <GridLinkAction
+            key="Modifica"
+            label="Modifica"
+            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+              channelId: params.row.channel_code,
+              actionId: 'edit',
+            })}
+            showInMenu={true}
+          />
+        );
+        const duplicateChannelAction = (
+          <GridLinkAction
+            key="Duplica"
+            label="Duplica"
+            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+              channelId: params.row.channel_code,
+              actionId: 'duplicate',
+            })}
             showInMenu={true}
           />
         );
@@ -78,24 +99,14 @@ export function buildColumnDefs(
             key="Gestisci PSP"
             label="Gestisci PSP"
             to={generatePath(`${ROUTES.CHANNEL_PSP_LIST}`, { channelId: params.row.channel_code })}
-            onClick={() => console.log(params)}
             showInMenu={true}
           />
         );
 
         if (params.row.enabled) {
-          return [
-            manageChannelAction,
-            manageChannelPSPAction,
-            <GridActionsCellItem
-              key="duplicate"
-              label="Duplica"
-              onClick={() => console.log(params)}
-              showInMenu={true}
-            />,
-          ];
+          return [manageChannelAction, manageChannelPSPAction, duplicateChannelAction];
         } else {
-          return [manageChannelAction];
+          return [manageChannelAction, editChannelAction];
         }
       },
       sortable: false,
@@ -114,8 +125,8 @@ function renderCell(
       sx={{
         width: '100%',
         height: '100%',
-        paddingRight: '24px',
-        paddingLeft: '24px',
+        paddingRight: '16px',
+        paddingLeft: '16px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
         cursor: 'pointer',
@@ -147,7 +158,7 @@ function showCustomHeader(params: GridColumnHeaderParams) {
       <Typography
         color="colorTextPrimary"
         variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 1 }}
+        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 0 }}
       >
         {params.colDef.headerName}
       </Typography>
@@ -190,22 +201,21 @@ function showStatus(params: GridRenderCellParams) {
     params,
     <Box sx={{ cursor: 'pointer' }}>
       <Chip
-        label={params.row.enabled ? 'Attivo' : 'Disattivo'}
+        label={params.row.enabled ? 'Attivo' : 'In revisione'}
         aria-label="Status"
         sx={{
           cursor: 'pointer',
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          // backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          backgroundColor: params.row.enabled ? 'primary.main' : 'grey.200',
           paddingBottom: '1px',
           height: '24px',
         }}
       />
     </Box>,
     {
-      paddingLeft: 0,
-      paddingRight: 0,
       textAlign: 'left',
     }
   );

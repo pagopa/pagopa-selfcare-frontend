@@ -95,7 +95,7 @@ const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
   on_us: true,
   password: 'password',
   payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,
-  payment_types: ['Bancomat PAY'],
+  payment_types: ['PPAY'],
   port: 8080,
   primitive_version: 'primitive_version',
   protocol: ProtocolEnum.HTTPS,

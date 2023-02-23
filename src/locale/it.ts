@@ -78,9 +78,22 @@ export default {
       },
     },
   },
-  addChannelPage: {
-    title: 'Crea un nuovo canale',
-    subtitle: 'Completa i campi',
+  addEditChannelPage: {
+    create: {
+      title: 'Crea un nuovo canale',
+      subtitle: 'Completa i campi',
+      breadcrumb: 'Crea canale',
+    },
+    edit: {
+      title: 'Modifica canale',
+      subtitle: 'Dopo la modifica sarà richiesta una nuova revisione del canale.',
+      breadcrumb: 'Modifica',
+    },
+    duplicate: {
+      title: 'Duplica canale',
+      subtitle: 'Modifica l’ID channel e i campi che ritieni necessari.',
+      breadcrumb: 'Duplica',
+    },
     exit: 'Esci',
     addForm: {
       backButton: 'Indietro',
@@ -115,6 +128,10 @@ export default {
       confirmButton: 'Invia',
       cancelButton: 'Torna indietro',
     },
+  },
+  editChannelPage: {
+    title: 'Modifica canale',
+    subtitle: 'Dopo la modifica sarà richiesta una nuova revisione del canale.',
   },
   channelDetailPage: {
     channels: 'Canali',

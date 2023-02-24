@@ -19,9 +19,7 @@ const Channels = () => {
   }, []);
 
   const clearLocationState = () => {
-    console.log(history.location.state);
     window.history.replaceState({}, document.title);
-    console.log(history.location.state);
   };
 
   return (

@@ -11,9 +11,10 @@ const ROUTES = {
   CREATE_APIKEY: `${BASE_ROUTE}/add-apikey`,
   CHANNELS: `${BASE_ROUTE}/channels`,
   CHANNEL_DETAIL: `${BASE_ROUTE}/channels/:channelId`,
+  CHANNEL_EDIT: `${BASE_ROUTE}/channels/:channelId/:actionId`,
   CHANNEL_PSP_LIST: `${BASE_ROUTE}/channels/:channelId/psp-list`,
   CHANNEL_ASSOCIATE_PSP: `${BASE_ROUTE}/channels/:channelId/associate-psp`,
-  CREATE_CHANNEL: `${BASE_ROUTE}/channels/add-channel`,
+  CHANNEL_ADD: `${BASE_ROUTE}/channels/add-channel/`,
 
   /* TOS: {
     PATH: '/terms-of-service',

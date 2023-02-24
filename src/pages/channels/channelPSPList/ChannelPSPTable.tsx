@@ -4,7 +4,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
+import { useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
 import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
 import { getChannelPSPs } from '../../../services/channelService';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
@@ -74,19 +76,20 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-export default function ChannelPSPTable() {
+type ChannelPSPTableProps = { setAlertMessage: any };
+
+export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProps) {
   const { t } = useTranslation();
 
   const { channelId } = useParams<{ channelId: string }>();
-  console.log('channelId', channelId);
 
   const onRowClick = (_channelIdRow: string) => {
     // history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
-    alert('Dissociato');
+    setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-  const [loading, setLoading] = useState(true);
+  const setLoading = useLoading(LOADING_TASK_CHANNEL_PSP_TABLE);
   const [error, setError] = useState(false);
 
   const [channels, setChannels] = useState<ChannelsResource>(emptyChannelsResource);
@@ -100,7 +103,7 @@ export default function ChannelPSPTable() {
         setChannels(_r);
       })
       .catch((reason) => {
-        console.log('reason', reason);
+        console.error('reason', reason);
         handleErrors([
           {
             id: `FETCH_CHANNELS_ERROR`,
@@ -128,15 +131,16 @@ export default function ChannelPSPTable() {
         }}
         justifyContent="start"
       >
-        {error && !loading ? (
+        {error ? (
           <>{error}</>
-        ) : !error && !loading && channels.channels.length === 0 ? (
+        ) : channels.channels.length === 0 ? (
           <ChannelPSPTableEmpty channelId={channelId} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
+            disableSelectionOnClick
             autoHeight={true}
             className="CustomDataGrid"
             columnBuffer={6}
@@ -149,7 +153,7 @@ export default function ChannelPSPTable() {
                 </>
               ),
               NoRowsOverlay: () => <>{'NoRowsOverlay'}</>,
-              NoResultsOverlay: () => <>{'NoResultsOverlay'}</>,
+              NoResultsOverlay: () => <></>,
             }}
             componentsProps={{
               toolbar: {

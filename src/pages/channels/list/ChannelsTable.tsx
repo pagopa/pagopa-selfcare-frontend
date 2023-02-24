@@ -33,7 +33,8 @@ const CustomDataGrid = styled(DataGrid)({
     wordWrap: 'break-word !important',
     lineHeight: '25px !important',
   },
-  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
+  '& .MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
+  '& .MuiDataGrid-columnHeader': { paddingLeft: '16px', paddingRight: '16px' },
   '.justifyContentBold': {
     fontSize: '16px',
     fontWeight: '600',
@@ -132,6 +133,7 @@ export default function ChannelsTable() {
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
+            disableSelectionOnClick
             autoHeight={true}
             className="CustomDataGrid"
             columnBuffer={5}
@@ -147,6 +149,13 @@ export default function ChannelsTable() {
             componentsProps={{
               toolbar: {
                 quickFilterProps: { debounceMs: 500 },
+              },
+              basePopper: {
+                sx: {
+                  '& .MuiDataGrid-menuList': {
+                    boxShadow: `0px 0px 45px rgba(0, 0, 0, 0.1)`,
+                  },
+                },
               },
             }}
             getRowId={(r) => r.channel_code}

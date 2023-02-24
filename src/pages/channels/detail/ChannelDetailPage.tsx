@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
-
 import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -80,10 +79,28 @@ const ChannelDetailPage = () => {
               >
                 {t('channelDetailPage.disable')}
               </Button>
-              <Button color="primary" variant="outlined" onClick={goBack}>
+              <Button
+                component={Link}
+                to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+                  channelId,
+                  actionId: 'duplicate',
+                })}
+                color="primary"
+                variant="outlined"
+                onClick={goBack}
+              >
                 {t('channelDetailPage.duplicate')}
               </Button>
-              <Button variant="contained">{t('channelDetailPage.edit')}</Button>
+              <Button
+                component={Link}
+                to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+                  channelId,
+                  actionId: 'edit',
+                })}
+                variant="contained"
+              >
+                {t('channelDetailPage.edit')}
+              </Button>
             </Stack>
           </Grid>
         </Grid>
@@ -100,6 +117,7 @@ const ChannelDetailPage = () => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
+              {/* TODO: manage channel state chip */}
               <Chip size="medium" label={t('channelDetailPage.states.revision')} />
             </Grid>
           </Grid>
@@ -218,6 +236,7 @@ const ChannelDetailPage = () => {
                     to={generatePath(ROUTES.CHANNEL_PSP_LIST, {
                       channelId: channelDetail.channel_code,
                     })}
+                    disabled={!channelDetail.enabled}
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"

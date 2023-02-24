@@ -183,6 +183,12 @@ export default {
         status: 'Stato',
       },
     },
+    dissociateModal: {
+      title: 'Dissocia PSP',
+      message: 'Se dissoci un PSP, sarà disattivata la sua connessione al canale.',
+      confirmButton: 'Dissocia PSP',
+      cancelButton: 'Torna indietro',
+    },
   },
   channelAssociatePSPPage: {
     title: 'Associa PSP',

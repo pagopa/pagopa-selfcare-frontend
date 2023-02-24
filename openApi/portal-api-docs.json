@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.77"
+    "version": "0.0.78"
   },
   "servers": [
     {
@@ -19,10 +19,6 @@
     {
       "name": "institution",
       "description": "Institution operations"
-    },
-    {
-      "name": "institution-controller",
-      "description": "Institution Controller"
     }
   ],
   "paths": {
@@ -416,6 +412,76 @@
         ]
       }
     },
+    "/channels/paymenttypes/{channelcode}/{pspcode}": {
+      "delete": {
+        "tags": ["channels"],
+        "summary": "deletePaymentServiceProvidersChannels",
+        "description": "Delete a relation between a PSP and a channel",
+        "operationId": "deletePaymentServiceProvidersChannelsUsingDELETE",
+        "parameters": [
+          {
+            "name": "channelcode",
+            "in": "path",
+            "description": "Channel's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pspcode",
+            "in": "path",
+            "description": "Code of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/channels/{channelcode}": {
       "put": {
         "tags": ["channels"],
@@ -453,6 +519,64 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["channels"],
+        "summary": "deleteChannel",
+        "description": "delete channel",
+        "operationId": "deleteChannelUsingDELETE",
+        "parameters": [
+          {
+            "name": "channelcode",
+            "in": "path",
+            "description": "Code of the payment channel",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request",
@@ -716,7 +840,7 @@
     },
     "/institutions": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutions",
         "description": "Retrieves all the onboarded institutions related to the logged user",
         "operationId": "getInstitutionsUsingGET",
@@ -784,7 +908,7 @@
     },
     "/institutions/{institutionId}": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitution",
         "description": "Retrieves an institution's details",
         "operationId": "getInstitutionUsingGET",
@@ -861,7 +985,7 @@
     },
     "/institutions/{institutionId}/api-keys": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutionApiKeys",
         "description": "Retrieve an institution's primary and secondary keys",
         "operationId": "getInstitutionApiKeysUsingGET",
@@ -939,7 +1063,7 @@
         ]
       },
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "createInstitutionApiKeys",
         "description": "Creates a new subscription for a given Institution and returns its primary and secondary keys",
         "operationId": "createInstitutionApiKeysUsingPOST",
@@ -1019,7 +1143,7 @@
     },
     "/institutions/{institutionId}/products": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutionProducts",
         "description": "retrieve all active products for given institution and logged user",
         "operationId": "getInstitutionProductsUsingGET",
@@ -1099,7 +1223,7 @@
     },
     "/institutions/{subscriptionid}/api-keys/primary/regenerate": {
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "regeneratePrimaryKey",
         "description": "Regenerates the subscription's primary key",
         "operationId": "regeneratePrimaryKeyUsingPOST",
@@ -1159,7 +1283,7 @@
     },
     "/institutions/{subscriptionid}/api-keys/secondary/regenerate": {
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "regenerateSecondaryKey",
         "description": "Regenerates the subscription's secondary key",
         "operationId": "regenerateSecondaryKeyUsingPOST",
@@ -1240,6 +1364,20 @@
           "secondaryKey": {
             "type": "string",
             "description": "Institution's secondary Api Key"
+          }
+        }
+      },
+      "AssistanceContactsResource": {
+        "title": "AssistanceContactsResource",
+        "type": "object",
+        "properties": {
+          "supportEmail": {
+            "type": "string",
+            "description": "Institution's support email contact"
+          },
+          "supportPhone": {
+            "type": "string",
+            "description": "Institution's support phone contact"
           }
         }
       },
@@ -1673,6 +1811,43 @@
           }
         }
       },
+      "CompanyInformationsResource": {
+        "title": "CompanyInformationsResource",
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
+          },
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
+          },
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
+      },
+      "DpoDataResource": {
+        "title": "DpoDataResource",
+        "required": ["address", "email", "pec"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "DPO's address"
+          },
+          "email": {
+            "type": "string",
+            "description": "DPO's email"
+          },
+          "pec": {
+            "type": "string",
+            "description": "DPO's PEC"
+          }
+        }
+      },
       "InstitutionDetailResource": {
         "title": "InstitutionDetailResource",
         "required": [
@@ -1760,6 +1935,18 @@
             "type": "string",
             "description": "Institution's physical address"
           },
+          "assistanceContacts": {
+            "description": "Institution's assistance contacts",
+            "$ref": "#/components/schemas/AssistanceContactsResource"
+          },
+          "companyInformations": {
+            "description": "GPS, SCP, PT optional data",
+            "$ref": "#/components/schemas/CompanyInformationsResource"
+          },
+          "dpoData": {
+            "description": "Data Protection Officer (DPO) specific data",
+            "$ref": "#/components/schemas/DpoDataResource"
+          },
           "externalId": {
             "type": "string",
             "description": "Institution's unique external identifier"
@@ -1792,6 +1979,14 @@
           "originId": {
             "type": "string",
             "description": "Institution's details origin Id"
+          },
+          "pspData": {
+            "description": "Payment Service Provider (PSP) specific data",
+            "$ref": "#/components/schemas/PspDataResource"
+          },
+          "recipientCode": {
+            "type": "string",
+            "description": "Billing recipient code"
           },
           "status": {
             "type": "string",
@@ -1996,6 +2191,40 @@
             "items": {
               "$ref": "#/components/schemas/PspChannelResource"
             }
+          }
+        }
+      },
+      "PspDataResource": {
+        "title": "PspDataResource",
+        "required": [
+          "abiCode",
+          "businessRegisterNumber",
+          "legalRegisterName",
+          "legalRegisterNumber",
+          "vatNumberGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
+          },
+          "businessRegisterNumber": {
+            "type": "string",
+            "description": "PSP's Business Register number"
+          },
+          "legalRegisterName": {
+            "type": "string",
+            "description": "PSP's legal register name"
+          },
+          "legalRegisterNumber": {
+            "type": "string",
+            "description": "PSP's legal register number"
+          },
+          "vatNumberGroup": {
+            "type": "boolean",
+            "description": "PSP's Vat Number group",
+            "example": false
           }
         }
       }

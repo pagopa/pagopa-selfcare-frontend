@@ -84,13 +84,37 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const onRowClick = (_channelIdRow: string) => {
+  const onRowClick = (_pspIdRow: string) => {
     setShowConfirmModal(true);
   };
 
   const dissociatePSP = () => {
     setShowConfirmModal(false);
     // TODO: connect to the services when they are ready
+    /*                
+    setLoading(true);
+    dissociatePSPfromChannel(channelId, selectedPSPCode)
+      .then((_r) => {
+        // setChannels(emptyChannelsResource);
+        setChannels(_r);
+      })
+      .catch((reason) => {
+        console.error('reason', reason);
+        handleErrors([
+          {
+            id: `FETCH_CHANNELS_ERROR`,
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while fetching channels`,
+            toNotify: false,
+          },
+        ]);
+        setError(true);
+        // setChannels(emptyChannelsResource);
+      })
+      .finally(() => setLoading(false));
+       */
+
     setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
   };
 
@@ -124,6 +148,7 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
       })
       .finally(() => setLoading(false));
   };
+
   useEffect(() => fetchChannelPSPs(), []);
 
   return (

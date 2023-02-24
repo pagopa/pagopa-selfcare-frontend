@@ -151,4 +151,12 @@ export const PortalApi = {
       },
     };
   },
+
+  dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
+    const result = await apiConfigClient.deletePaymentServiceProvidersChannelsUsingDELETE({
+      channelcode,
+      pspcode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
 };

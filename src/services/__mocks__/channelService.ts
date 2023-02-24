@@ -202,3 +202,6 @@ export const getChannelPSPsMocked = (_page: number): Promise<ChannelsResource> =
 
 export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
   new Promise((resolve) => resolve(mockedChannelAvailablePSP));
+
+export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string): Promise<void> =>
+  new Promise((resolve) => resolve());

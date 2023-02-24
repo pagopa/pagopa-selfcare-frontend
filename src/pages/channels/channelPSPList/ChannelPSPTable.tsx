@@ -1,10 +1,10 @@
 import { theme } from '@pagopa/mui-italia';
 import { Box, styled } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
 import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
@@ -80,11 +80,41 @@ type ChannelPSPTableProps = { setAlertMessage: any };
 
 export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProps) {
   const { t } = useTranslation();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const onRowClick = (_channelIdRow: string) => {
-    // history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
+  const onRowClick = (_pspIdRow: string) => {
+    setShowConfirmModal(true);
+  };
+
+  const dissociatePSP = () => {
+    setShowConfirmModal(false);
+    // TODO: connect to the services when they are ready
+    /*                
+    setLoading(true);
+    dissociatePSPfromChannel(channelId, selectedPSPCode)
+      .then((_r) => {
+        // setChannels(emptyChannelsResource);
+        setChannels(_r);
+      })
+      .catch((reason) => {
+        console.error('reason', reason);
+        handleErrors([
+          {
+            id: `FETCH_CHANNELS_ERROR`,
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while fetching channels`,
+            toNotify: false,
+          },
+        ]);
+        setError(true);
+        // setChannels(emptyChannelsResource);
+      })
+      .finally(() => setLoading(false));
+       */
+
     setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
   };
 
@@ -118,10 +148,11 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
       })
       .finally(() => setLoading(false));
   };
+
   useEffect(() => fetchChannelPSPs(), []);
 
   return (
-    <React.Fragment>
+    <>
       <Box
         id="ChannelsSearchTableBox"
         sx={{
@@ -171,6 +202,21 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
           />
         )}
       </Box>
-    </React.Fragment>
+      <SessionModal
+        open={showConfirmModal}
+        title={t('channelPSPList.dissociateModal.title')}
+        message={
+          <Trans i18nKey="channelPSPList.dissociateModal.message">
+            Se dissoci un PSP, sarà disattivata la sua connessione al canale.
+          </Trans>
+        }
+        onConfirmLabel={t('channelPSPList.dissociateModal.confirmButton')}
+        onCloseLabel={t('channelPSPList.dissociateModal.cancelButton')}
+        onConfirm={dissociatePSP}
+        handleClose={() => {
+          setShowConfirmModal(false);
+        }}
+      />
+    </>
   );
 }

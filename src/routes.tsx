@@ -14,6 +14,7 @@ const ROUTES = {
   CHANNEL_PSP_LIST: `${BASE_ROUTE}/channels/:channelId/psp-list`,
   CHANNEL_ASSOCIATE_PSP: `${BASE_ROUTE}/channels/:channelId/associate-psp`,
   CREATE_CHANNEL: `${BASE_ROUTE}/channels/add-channel`,
+  STATIONS: `${BASE_ROUTE}/stations`,
 
   /* TOS: {
     PATH: '/terms-of-service',

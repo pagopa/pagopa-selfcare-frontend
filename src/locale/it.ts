@@ -178,12 +178,32 @@ export default {
       confirmButton: 'Conferma',
     },
   },
+  stationsPage: {
+    title: 'Stazioni',
+    subtitle: 'Cerca e visualizza lo stato delle stazioni.',
+    searchPlaceholder: 'Cerca per ID stazione',
+    createStationButtonLabel: 'Crea stazione',
+    notFoundStations:
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <2>Crea stazione</2>',
+    stationsTableColumns: {
+      headerFields: {
+        name: 'ID stazione',
+        creationDate: 'Data creazione',
+        lastEditDate: 'Ultima modifica',
+        activationDate: 'Data attivazione',
+        status: 'Stato',
+      },
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',
     },
     channels: {
       title: 'Canali',
+    },
+    stations: {
+      title: 'Stazioni',
     },
   },
   header: {

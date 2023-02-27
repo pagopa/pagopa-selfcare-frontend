@@ -42,6 +42,14 @@ export default function SideMenu() {
               icon={UsbIcon}
             />
           )}
+          {ENV.FEATURES.STATIONS.ENABLED && (
+            <SidenavItem
+              title={t('sideMenu.stations.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
+              isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
+              icon={UsbIcon}
+            />
+          )}
         </List>
       </Box>
     </Box>

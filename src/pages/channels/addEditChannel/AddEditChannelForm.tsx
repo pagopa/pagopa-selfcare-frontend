@@ -35,6 +35,7 @@ import {
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
 import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
+import { sortPaymentType } from '../../../model/PaymentType';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 
 type Props = {
@@ -261,6 +262,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     id="redirectPort"
                     name="redirectPort"
                     type="number"
+                    InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
                     inputProps={{ min: 0, max: 65556 }}
                     label={t('addEditChannelPage.addForm.fields.redirectPort')}
                     size="small"
@@ -354,6 +356,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     id="targetPort"
                     name="targetPort"
                     type="number"
+                    InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
                     inputProps={{ min: 0, max: 65556 }}
                     label={t('addEditChannelPage.addForm.fields.targetPort')}
                     size="small"
@@ -389,7 +392,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     >
                       {paymentOptions &&
-                        paymentOptions.payment_types.map((option: any) => (
+                        sortPaymentType(paymentOptions.payment_types).map((option: any) => (
                           <MenuItem key={option.payment_type} value={option.payment_type}>
                             {option.description}
                           </MenuItem>

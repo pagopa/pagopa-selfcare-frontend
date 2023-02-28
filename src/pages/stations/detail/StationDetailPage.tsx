@@ -1,15 +1,22 @@
-import { ArrowBack, ManageAccounts } from '@mui/icons-material';
-import { Box, Chip, Divider, Grid } from '@mui/material';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Chip,
+  Divider,
+  Grid,
+  Breadcrumbs,
+  Button,
+  Paper,
+  Stack,
+  ToggleButton,
+  Typography,
+} from '@mui/material';
+import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { StationDetail } from '../../../model/Station';
 import { getStationDetail } from '../../../services/__mocks__/stationService';
 import { ENV } from '../../../utils/env';
@@ -19,12 +26,15 @@ const StationDetailPage = () => {
 
   const { stationId } = useParams<{ stationId: string }>();
   const [stationDetail, setStationDetail] = useState<StationDetail>();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     getStationDetail(stationId)
       .then((stationDetailData) => setStationDetail(stationDetailData))
       .catch((reason) => console.log(reason));
   }, []);
+
+  const hidePassword = 'XXXXXXXXXXXXXX';
 
   return (
     <Grid container justifyContent={'center'} mb={5}>
@@ -192,10 +202,39 @@ const StationDetailPage = () => {
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.password')}</Typography>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid
+                  item
+                  xs={9}
+                  sx={{
+                    display: 'flex',
+                    height: '38px',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.password}
+                    {showPassword ? stationDetail?.anagraphic.password : hidePassword}
                   </Typography>
+                  <ToggleButton
+                    sx={{ border: 'none !important', marginLeft: 5 }}
+                    value="check"
+                    selected={showPassword}
+                    onChange={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    {showPassword ? (
+                      <VisibilityIcon
+                        color="primary"
+                        sx={{ border: 'none!important', width: '80%' }}
+                      />
+                    ) : (
+                      <VisibilityOff
+                        color="primary"
+                        sx={{ border: 'none!important', width: '80%' }}
+                      />
+                    )}
+                  </ToggleButton>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.redirectUrl')}</Typography>

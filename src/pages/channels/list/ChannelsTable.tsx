@@ -1,15 +1,18 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { useLoading } from '@pagopa/selfcare-common-frontend';
 import { generatePath, useHistory } from 'react-router';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { LOADING_TASK_CHANNELS_LIST } from '../../../utils/constants';
 import ROUTES from '../../../routes';
 import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
 import { getChannels } from '../../../services/channelService';
 import { buildColumnDefs } from './ChannelsTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
+import ChannelTableEmpty from './ChannelTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -84,13 +87,19 @@ export default function ChannelsTable() {
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const setLoadingOverlay = useLoading(LOADING_TASK_CHANNELS_LIST);
   const [error, setError] = useState(false);
+
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+    setLoadingOverlay(status);
+  };
 
   const [channels, setChannels] = useState<ChannelsResource>(emptyChannelsResource);
 
   const fetchChannels = () => {
-    setLoading(true);
+    setLoadingStatus(true);
     getChannels(0)
       .then((r) => {
         setChannels(r);
@@ -109,7 +118,7 @@ export default function ChannelsTable() {
         setError(true);
         setChannels(emptyChannelsResource);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingStatus(false));
   };
   useEffect(() => fetchChannels(), []);
 
@@ -127,7 +136,9 @@ export default function ChannelsTable() {
         {error && !loading ? (
           <>{error}</>
         ) : !error && !loading && channels.channels.length === 0 ? (
-          <></>
+          <>
+            <ChannelTableEmpty></ChannelTableEmpty>
+          </>
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -143,6 +154,28 @@ export default function ChannelsTable() {
               Toolbar: () => (
                 <>
                   <GridToolbarQuickFilter></GridToolbarQuickFilter>
+                </>
+              ),
+              NoRowsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      {loading ? (
+                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
+                      ) : (
+                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
+                      )}
+                    </Typography>
+                  </Box>
+                </>
+              ),
+              NoResultsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
+                    </Typography>
+                  </Box>
                 </>
               ),
             }}

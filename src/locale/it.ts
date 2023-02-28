@@ -70,6 +70,10 @@ export default {
     subtitle: 'Cerca e visualizza lo stato dei canali presenti.',
     createChannelButtonLabel: 'Crea canale',
     searchPlaceholder: 'Cerca per codice',
+    table: {
+      noResults: 'Nessun risultato.',
+      loading: 'Caricamento...',
+    },
     channelsTableColumns: {
       headerFields: {
         name: 'Codice canale',
@@ -141,7 +145,7 @@ export default {
     createdOn: 'Creato il',
     detail: 'dettaglio',
     state: 'Stato',
-    states: {
+    status: {
       revision: 'In revisione',
       needCorrection: 'Da correggere',
       active: 'Attivo',

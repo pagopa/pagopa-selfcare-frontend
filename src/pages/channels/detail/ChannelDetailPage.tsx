@@ -13,7 +13,7 @@ import { generatePath, useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import ROUTES from '../../../routes';
-import { getChannelDetail } from '../../../services/__mocks__/channelService';
+import { getChannelDetail } from '../../../services/channelService';
 
 const ChannelDetailPage = () => {
   const { t } = useTranslation();
@@ -63,10 +63,10 @@ const ChannelDetailPage = () => {
               variantSubTitle="body1"
             />
             <Typography mb={5}>
-              {t('channelDetailPage.createdOn')}{' '}
+              {/* {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={600}>
                 dd/mm/yyyy
-              </Typography>
+  </Typography> */}
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -118,7 +118,18 @@ const ChannelDetailPage = () => {
             </Grid>
             <Grid item xs={9} textAlign="right">
               {/* TODO: manage channel state chip */}
-              <Chip size="medium" label={t('channelDetailPage.states.revision')} />
+              <Chip
+                size="medium"
+                label={
+                  channelDetail.enabled
+                    ? t('channelDetailPage.status.active')
+                    : t('channelDetailPage.status.revision')
+                }
+                sx={{
+                  color: channelDetail.enabled ? '#FFFFFF' : '#17324D',
+                  backgroundColor: channelDetail.enabled ? 'primary.main' : '',
+                }}
+              />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={3}>
@@ -249,9 +260,11 @@ const ChannelDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelId}
+                    {/* TODO: TODO: get from channelDetail when will be available */}
+                    {0}
                   </Typography>
                 </Grid>
+                {/* TODO: get from channelDetail when will be available
                 <Grid item xs={12} mt={2}>
                   <Typography variant="sidenav">{t('channelDetailPage.changes')}</Typography>
                 </Grid>
@@ -271,6 +284,7 @@ const ChannelDetailPage = () => {
                     {channelId}
                   </Typography>
                 </Grid>
+                */}
               </Grid>
             </Grid>
           </Box>

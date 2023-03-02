@@ -7,8 +7,8 @@ import {
   Button,
   Paper,
   Stack,
-  ToggleButton,
   Typography,
+  IconButton,
 } from '@mui/material';
 import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
@@ -215,26 +215,21 @@ const StationDetailPage = () => {
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {showPassword ? stationDetail?.anagraphic.password : hidePassword}
                   </Typography>
-                  <ToggleButton
-                    sx={{ border: 'none !important', marginLeft: 5 }}
-                    value="check"
-                    selected={showPassword}
-                    onChange={() => {
+                  <IconButton
+                    style={{
+                      border: 'none !important',
+                      marginLeft: '42px',
+                    }}
+                    onClick={() => {
                       setShowPassword(!showPassword);
                     }}
                   >
                     {showPassword ? (
-                      <VisibilityIcon
-                        color="primary"
-                        sx={{ border: 'none!important', width: '80%' }}
-                      />
+                      <VisibilityIcon color="primary" sx={{ width: '80%' }} />
                     ) : (
-                      <VisibilityOff
-                        color="primary"
-                        sx={{ border: 'none!important', width: '80%' }}
-                      />
+                      <VisibilityOff color="primary" sx={{ width: '80%' }} />
                     )}
-                  </ToggleButton>
+                  </IconButton>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.redirectUrl')}</Typography>

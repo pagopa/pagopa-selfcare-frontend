@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ButtonNaked, theme } from '@pagopa/mui-italia';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -71,6 +71,7 @@ const ChannelDetailPage = () => {
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+              {/*
               <Button
                 color={'error'}
                 style={{ color: theme.palette.error.dark, borderColor: theme.palette.error.dark }}
@@ -79,6 +80,7 @@ const ChannelDetailPage = () => {
               >
                 {t('channelDetailPage.disable')}
               </Button>
+              */}
               <Button
                 component={Link}
                 to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {

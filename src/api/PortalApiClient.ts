@@ -16,6 +16,8 @@ import { createClient, WithDefaultsT } from './generated/portal/client';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
+import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
+import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -151,6 +153,19 @@ export const PortalApi = {
         total_pages: 0,
       },
     };
+  },
+
+  associatePSPtoChannel: async (
+    channelcode: string,
+    pspcode: string,
+    payment_types: PspChannelPaymentTypes
+  ): Promise<PspChannelPaymentTypesResource> => {
+    const result = await apiConfigClient.updatePaymentServiceProvidersChannelsUsingPUT({
+      channelcode,
+      pspcode,
+      body: payment_types,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 
   dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {

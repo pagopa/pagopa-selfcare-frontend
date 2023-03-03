@@ -6,6 +6,8 @@ import {
 import { ChannelDetailsResource } from '../../api/generated/portal/ChannelDetailsResource';
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
 import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesResource';
+import { PspChannelPaymentTypes } from '../../api/generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from '../../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
@@ -202,6 +204,13 @@ export const getChannelPSPsMocked = (_page: number): Promise<ChannelsResource> =
 
 export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
   new Promise((resolve) => resolve(mockedChannelAvailablePSP));
+
+export const associatePSPtoChannel = (
+  _channelcode: string,
+  _pspcode: string,
+  _payment_type: PspChannelPaymentTypes
+): Promise<PspChannelPaymentTypesResource> =>
+  new Promise((resolve) => resolve({ payment_types: ['ptype_test'] }));
 
 export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string): Promise<void> =>
   new Promise((resolve) => resolve());

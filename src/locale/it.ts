@@ -223,7 +223,12 @@ export default {
       needCorrection: 'Da correggere',
       active: 'Attiva',
     },
-    manageStation: 'Gestisci stazione',
+    stationOptions: {
+      manageStation: 'Gestisci stazione',
+      manageEC: 'Gestisci EC',
+      correctStation: 'Correggi',
+      editStation: 'Modifica',
+    },
   },
   sideMenu: {
     home: {

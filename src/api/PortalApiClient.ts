@@ -152,16 +152,16 @@ export const PortalApi = {
     };
   },
 
-  getStations: async (page: number): Promise<StationsResource> => {
-    const result = await apiConfigClient.getStationsUsingGET({ page });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
   dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
     const result = await apiConfigClient.deletePaymentServiceProvidersChannelsUsingDELETE({
       channelcode,
       pspcode,
     });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getStations: async (page: number): Promise<StationsResource> => {
+    const result = await apiConfigClient.getStationsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

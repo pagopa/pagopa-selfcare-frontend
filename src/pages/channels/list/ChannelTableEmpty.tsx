@@ -1,5 +1,5 @@
 import { Add, Search as SearchIcon } from '@mui/icons-material';
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { Button, InputAdornment, TextField, Link } from '@mui/material';
 import Typography from '@mui/material/Typography/Typography';
 import { Box } from '@mui/system';
 import { useTranslation, Trans } from 'react-i18next';
@@ -21,7 +21,7 @@ const ChannelTableEmpty = () => {
             sx: { height: 48, backgroundColor: '#FFFFFF' },
           }}
           fullWidth
-          placeholder={t('channelPSPList.searchPlaceholder')}
+          placeholder={t('channelsPage.searchPlaceholder')}
         />
 
         <Button
@@ -31,14 +31,26 @@ const ChannelTableEmpty = () => {
           sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
           startIcon={<Add />}
         >
-          {t('channelPSPList.associatePspButtonLabel')}
+          {t('channelsPage.createChannelButtonLabel')}
         </Button>
       </Box>
       <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }}>
         <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
           <Typography variant="body2">
-            <Trans i18nKey="channelPSPList.noResults">
-              Non sono ancora presenti PSP associati a questo canale.
+            <Trans i18nKey="channelsPage.table.noResults">
+              Non sono ancora presenti canali in questo ambiente.
+              <Link
+                component={RouterLink}
+                sx={{
+                  color: 'primary.main',
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  whiteSpace: 'pre',
+                }}
+                to={generatePath(ROUTES.CHANNEL_ADD)}
+              >
+                <strong> Crea Canale</strong>
+              </Link>
             </Trans>
           </Typography>
         </Box>

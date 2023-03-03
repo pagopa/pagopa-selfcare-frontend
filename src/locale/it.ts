@@ -71,7 +71,7 @@ export default {
     createChannelButtonLabel: 'Crea canale',
     searchPlaceholder: 'Cerca per codice',
     table: {
-      noResults: 'Nessun risultato.',
+      noResults: 'Non sono ancora presenti canali in questo ambiente.<1><0> Crea Canale</0></1>',
       loading: 'Caricamento...',
     },
     channelsTableColumns: {

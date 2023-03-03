@@ -125,6 +125,7 @@ export const PortalApi = {
         target_host: channel.targetAddress,
         target_path: channel.targetService,
         target_port: channel.targetPort,
+        payment_types: [channel.paymentType],
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);

@@ -1,6 +1,7 @@
 import { IconButton, Menu, MenuItem, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
+import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 
 type Props = {
   status: string;
@@ -25,10 +26,14 @@ export function StationsMenuOptions({ status }: Props) {
         <MoreVertIcon fontSize="medium" sx={{ color: 'primary.main', padding: '3px' }} />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose} id="stations-management-menu">
-        <MenuItem onClick={() => {}}>Gestisci stazione</MenuItem>
+        <MenuItem onClick={() => {}}>{i18n.t('stationsPage.manageStation')}</MenuItem>
         {/* TODO Must redirect to stations management */}
         <MenuItem onClick={() => {}}>
-          {status === 'ACTIVE' ? 'Gestisci EC' : status === 'TO_EDIT' ? 'Correggi' : 'Modifica'}
+          {status === 'ACTIVE'
+            ? 'Gestisci EC'
+            : status === 'TO_BE_CORRECTED'
+            ? 'Correggi'
+            : 'Modifica'}
         </MenuItem>
       </Menu>
     </Box>

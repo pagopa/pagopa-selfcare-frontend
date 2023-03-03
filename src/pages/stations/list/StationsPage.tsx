@@ -8,15 +8,39 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import { theme } from '@pagopa/mui-italia';
+import { useEffect, useState } from 'react';
 import SideMenu from '../../../components/SideMenu/SideMenu';
-import StationsTable, { mockedStations } from './StationsTable';
+import { getStations } from '../../../services/__mocks__/stationService';
+import { StationsResource } from '../../../api/generated/portal/StationsResource';
+import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import StationsTable from './StationsTable';
 
 export default function StationsPage() {
   const { t } = useTranslation();
+  const addError = useErrorDispatcher();
+
+  const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
+  const [stations, setStations] = useState<StationsResource>();
+
+  useEffect(() => {
+    setLoading(true);
+    getStations(0)
+      .then((retrievedStations) => setStations(retrievedStations))
+      .catch((reason) =>
+        addError({
+          id: 'RETRIEVE_STATIONS_ERROR',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while retrieving stations`,
+          toNotify: true,
+        })
+      )
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: '#F5F5F5' }}>
@@ -65,8 +89,8 @@ export default function StationsPage() {
           </Button>
         </Grid>
 
-        {mockedStations && mockedStations.stations.length > 0 ? (
-          <StationsTable />
+        {stations && stations.stationsList.length > 0 ? (
+          <StationsTable stations={stations} />
         ) : (
           <Grid
             sx={{

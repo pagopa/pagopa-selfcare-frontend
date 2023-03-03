@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.77"
+    "version": "0.0.81"
   },
   "servers": [
     {
@@ -21,8 +21,8 @@
       "description": "Institution operations"
     },
     {
-      "name": "institution-controller",
-      "description": "Institution Controller"
+      "name": "stations",
+      "description": "Api config stations operations"
     }
   ],
   "paths": {
@@ -74,7 +74,8 @@
             "schema": {
               "type": "string"
             }
-          }
+          },
+           
         ],
         "responses": {
           "200": {
@@ -139,7 +140,9 @@
         "summary": "createChannel",
         "description": "Create a channel",
         "operationId": "createChannelUsingPOST",
-        "parameters": [],
+        "parameters": [
+           
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -278,7 +281,8 @@
             "schema": {
               "type": "string"
             }
-          }
+          },
+           
         ],
         "responses": {
           "200": {
@@ -416,6 +420,259 @@
         ]
       }
     },
+    "/channels/psp/{channelcode}/{pspcode}": {
+      "put": {
+        "tags": ["channels"],
+        "summary": "updatePaymentServiceProvidersChannels",
+        "description": "Update a relation between a PSP and a channel",
+        "operationId": "updatePaymentServiceProvidersChannelsUsingPUT",
+        "parameters": [
+          {
+            "name": "channelcode",
+            "in": "path",
+            "description": "Channel's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pspcode",
+            "in": "path",
+            "description": "Code of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PspChannelPaymentTypes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PspChannelPaymentTypesResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["channels"],
+        "summary": "deletePaymentServiceProvidersChannels",
+        "description": "Delete a relation between a PSP and a channel",
+        "operationId": "deletePaymentServiceProvidersChannelsUsingDELETE",
+        "parameters": [
+          {
+            "name": "channelcode",
+            "in": "path",
+            "description": "Channel's unique identifier",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pspcode",
+            "in": "path",
+            "description": "Code of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/channels/{brokerpspcode}/paymentserviceproviders": {
+      "get": {
+        "tags": ["channels"],
+        "summary": "getPspBrokerPsp",
+        "description": "Get the PSP list of a broker",
+        "operationId": "getPspBrokerPspUsingGET",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of elements on one page. Default = 50",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. Page value starts from 0",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "brokerpspcode",
+            "in": "path",
+            "description": "Broker code of a PSP",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentServiceProvidersResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/channels/{channelcode}": {
       "put": {
         "tags": ["channels"],
@@ -453,6 +710,64 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["channels"],
+        "summary": "deleteChannel",
+        "description": "delete channel",
+        "operationId": "deleteChannelUsingDELETE",
+        "parameters": [
+          {
+            "name": "channelcode",
+            "in": "path",
+            "description": "Code of the payment channel",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request",
@@ -653,7 +968,8 @@
             "schema": {
               "type": "string"
             }
-          }
+          },
+           
         ],
         "responses": {
           "200": {
@@ -716,7 +1032,7 @@
     },
     "/institutions": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutions",
         "description": "Retrieves all the onboarded institutions related to the logged user",
         "operationId": "getInstitutionsUsingGET",
@@ -784,7 +1100,7 @@
     },
     "/institutions/{institutionId}": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitution",
         "description": "Retrieves an institution's details",
         "operationId": "getInstitutionUsingGET",
@@ -861,7 +1177,7 @@
     },
     "/institutions/{institutionId}/api-keys": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutionApiKeys",
         "description": "Retrieve an institution's primary and secondary keys",
         "operationId": "getInstitutionApiKeysUsingGET",
@@ -939,7 +1255,7 @@
         ]
       },
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "createInstitutionApiKeys",
         "description": "Creates a new subscription for a given Institution and returns its primary and secondary keys",
         "operationId": "createInstitutionApiKeysUsingPOST",
@@ -1019,7 +1335,7 @@
     },
     "/institutions/{institutionId}/products": {
       "get": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "getInstitutionProducts",
         "description": "retrieve all active products for given institution and logged user",
         "operationId": "getInstitutionProductsUsingGET",
@@ -1099,7 +1415,7 @@
     },
     "/institutions/{subscriptionid}/api-keys/primary/regenerate": {
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "regeneratePrimaryKey",
         "description": "Regenerates the subscription's primary key",
         "operationId": "regeneratePrimaryKeyUsingPOST",
@@ -1159,7 +1475,7 @@
     },
     "/institutions/{subscriptionid}/api-keys/secondary/regenerate": {
       "post": {
-        "tags": ["institution-controller"],
+        "tags": ["institution"],
         "summary": "regenerateSecondaryKey",
         "description": "Regenerates the subscription's secondary key",
         "operationId": "regenerateSecondaryKeyUsingPOST",
@@ -1216,6 +1532,125 @@
           }
         ]
       }
+    },
+    "/stations": {
+      "get": {
+        "tags": ["stations"],
+        "summary": "getStations",
+        "description": "Get paginated list of stations",
+        "operationId": "getStationsUsingGET",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of elements on one page. Default = 50",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. Page value starts from 0",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "stationCode",
+            "in": "query",
+            "description": "Station's unique identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creditorInstitutionCode",
+            "in": "query",
+            "description": "Creditor institution associated to given station",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ordering",
+            "in": "query",
+            "description": "Sort Direction ordering",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StationsResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1240,6 +1675,20 @@
           "secondaryKey": {
             "type": "string",
             "description": "Institution's secondary Api Key"
+          }
+        }
+      },
+      "AssistanceContactsResource": {
+        "title": "AssistanceContactsResource",
+        "type": "object",
+        "properties": {
+          "supportEmail": {
+            "type": "string",
+            "description": "Institution's support email contact"
+          },
+          "supportPhone": {
+            "type": "string",
+            "description": "Institution's support phone contact"
           }
         }
       },
@@ -1673,6 +2122,43 @@
           }
         }
       },
+      "CompanyInformationsResource": {
+        "title": "CompanyInformationsResource",
+        "type": "object",
+        "properties": {
+          "businessRegisterPlace": {
+            "type": "string",
+            "description": "Institution's business register place"
+          },
+          "rea": {
+            "type": "string",
+            "description": "Institution's REA"
+          },
+          "shareCapital": {
+            "type": "string",
+            "description": "Institution's share capital value"
+          }
+        }
+      },
+      "DpoDataResource": {
+        "title": "DpoDataResource",
+        "required": ["address", "email", "pec"],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "DPO's address"
+          },
+          "email": {
+            "type": "string",
+            "description": "DPO's email"
+          },
+          "pec": {
+            "type": "string",
+            "description": "DPO's PEC"
+          }
+        }
+      },
       "InstitutionDetailResource": {
         "title": "InstitutionDetailResource",
         "required": [
@@ -1760,6 +2246,18 @@
             "type": "string",
             "description": "Institution's physical address"
           },
+          "assistanceContacts": {
+            "description": "Institution's assistance contacts",
+            "$ref": "#/components/schemas/AssistanceContactsResource"
+          },
+          "companyInformations": {
+            "description": "GPS, SCP, PT optional data",
+            "$ref": "#/components/schemas/CompanyInformationsResource"
+          },
+          "dpoData": {
+            "description": "Data Protection Officer (DPO) specific data",
+            "$ref": "#/components/schemas/DpoDataResource"
+          },
           "externalId": {
             "type": "string",
             "description": "Institution's unique external identifier"
@@ -1792,6 +2290,14 @@
           "originId": {
             "type": "string",
             "description": "Institution's details origin Id"
+          },
+          "pspData": {
+            "description": "Payment Service Provider (PSP) specific data",
+            "$ref": "#/components/schemas/PspDataResource"
+          },
+          "recipientCode": {
+            "type": "string",
+            "description": "Billing recipient code"
           },
           "status": {
             "type": "string",
@@ -1840,6 +2346,36 @@
           "total_pages": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "PaymentServiceProviderResource": {
+        "title": "PaymentServiceProviderResource",
+        "type": "object",
+        "properties": {
+          "business_name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "psp_code": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentServiceProvidersResource": {
+        "title": "PaymentServiceProvidersResource",
+        "type": "object",
+        "properties": {
+          "page_info": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "payment_service_providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentServiceProviderResource"
+            }
           }
         }
       },
@@ -1995,6 +2531,89 @@
             "description": "Channel list",
             "items": {
               "$ref": "#/components/schemas/PspChannelResource"
+            }
+          }
+        }
+      },
+      "PspDataResource": {
+        "title": "PspDataResource",
+        "required": [
+          "abiCode",
+          "businessRegisterNumber",
+          "legalRegisterName",
+          "legalRegisterNumber",
+          "vatNumberGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "abiCode": {
+            "type": "string",
+            "description": "PSP's ABI code"
+          },
+          "businessRegisterNumber": {
+            "type": "string",
+            "description": "PSP's Business Register number"
+          },
+          "legalRegisterName": {
+            "type": "string",
+            "description": "PSP's legal register name"
+          },
+          "legalRegisterNumber": {
+            "type": "string",
+            "description": "PSP's legal register number"
+          },
+          "vatNumberGroup": {
+            "type": "boolean",
+            "description": "PSP's Vat Number group",
+            "example": false
+          }
+        }
+      },
+      "StationResource": {
+        "title": "StationResource",
+        "required": ["stationId", "stationStatus"],
+        "type": "object",
+        "properties": {
+          "activationDate": {
+            "type": "string",
+            "description": "Station's activation date",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Station created on",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "Station's last modified date",
+            "format": "date-time"
+          },
+          "stationId": {
+            "type": "string",
+            "description": "Station's unique identifier"
+          },
+          "stationStatus": {
+            "type": "string",
+            "description": "Station's status",
+            "enum": ["ACTIVE", "ON_REVISION", "TO_BE_CORRECTED"]
+          }
+        }
+      },
+      "StationsResource": {
+        "title": "StationsResource",
+        "required": ["page_info", "stationsList"],
+        "type": "object",
+        "properties": {
+          "page_info": {
+            "description": "info pageable",
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "stationsList": {
+            "type": "array",
+            "description": "List of ec stations",
+            "items": {
+              "$ref": "#/components/schemas/StationResource"
             }
           }
         }

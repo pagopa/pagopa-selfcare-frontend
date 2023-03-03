@@ -1,44 +1,13 @@
 import { theme } from '@pagopa/mui-italia';
 import { Box, styled } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StationsResource } from '../../../api/generated/portal/StationsResource';
 import { buildColumnDefs } from './StationsTableColumns';
 
 const rowHeight = 64;
 const headerHeight = 56;
-
-const emptyStationsResource = {
-  stations: [],
-  page_info: { items_found: 0, limit: 0, page: 0, total_pages: 0 },
-};
-
-export const mockedStations = {
-  stations: [
-    {
-      creationDate: '01/01/2023',
-      lastEditDate: '01/02/2023',
-      activationDate: '01/01/2023',
-      station_id: '97735020584_01',
-      status: 'TO_EDIT',
-    },
-    {
-      creationDate: '01/02/2023',
-      lastEditDate: '01/03/2023',
-      activationDate: '01/02/2023',
-      station_id: '97735020584_02',
-      status: 'REVIEW',
-    },
-    {
-      creationDate: '01/03/2023',
-      lastEditDate: '01/04/2023',
-      activationDate: '01/03/2023',
-      station_id: '97735020584_03',
-      status: 'ACTIVE',
-    },
-  ],
-  page_info: { items_found: 3, limit: 0, page: 0, total_pages: 0 },
-};
 
 const CustomDataGrid = styled(DataGrid)({
   border: 'none !important',
@@ -95,18 +64,16 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-export default function StationsTable() {
+type Props = {
+  stations: StationsResource;
+};
+
+export default function StationsTable({ stations }: Props) {
   const { t } = useTranslation();
 
   const columns: Array<GridColDef> = buildColumnDefs(t);
   const [loading, _setLoading] = useState(true);
   const [error, _setError] = useState(false);
-
-  const [stations, setStations] = useState<any>(emptyStationsResource);
-
-  useEffect(() => {
-    setStations(mockedStations);
-  }, []);
 
   return (
     <React.Fragment>
@@ -121,7 +88,7 @@ export default function StationsTable() {
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && stations.stations.length === 0 ? (
+        ) : !error && !loading && stations.stationsList.length === 0 ? (
           <></>
         ) : (
           <CustomDataGrid
@@ -141,13 +108,13 @@ export default function StationsTable() {
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
-            getRowId={(r) => r.station_id}
+            getRowId={(r) => r.stationId}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="server"
-            rowCount={stations.stations.length}
+            rowCount={stations.stationsList.length}
             rowHeight={rowHeight}
-            rows={stations.stations}
+            rows={stations.stationsList}
             sortingMode="server"
           />
         )}

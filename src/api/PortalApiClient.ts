@@ -6,7 +6,6 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-
 import { ChannelOnCreation } from '../model/Channel';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
@@ -16,6 +15,7 @@ import { createClient, WithDefaultsT } from './generated/portal/client';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
+import { StationsResource } from './generated/portal/StationsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -150,5 +150,10 @@ export const PortalApi = {
         total_pages: 0,
       },
     };
+  },
+
+  getStations: async (page: number): Promise<StationsResource> => {
+    const result = await apiConfigClient.getStationsUsingGET({ page });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 };

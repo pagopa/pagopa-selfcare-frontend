@@ -1,5 +1,6 @@
 import { Typography, Grid, Box, Chip } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
 import { StationsMenuOptions } from '../components/StationsMenuOptions';
@@ -7,7 +8,7 @@ import { StationsMenuOptions } from '../components/StationsMenuOptions';
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
-      field: 'station_id',
+      field: 'stationId',
       cellClassName: 'justifyContentBold',
       headerName: t('stationsPage.stationsTableColumns.headerFields.name'),
       align: 'left',
@@ -21,7 +22,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'creation_date',
+      field: 'createdAt',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.creationDate'),
       align: 'left',
@@ -30,12 +31,12 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.creationDate, undefined),
+      renderCell: (params) => renderCell(params.row.createdAt?.toLocaleDateString(), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'last_edit_date',
+      field: 'modifiedAt',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.lastEditDate'),
       align: 'left',
@@ -44,12 +45,12 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.lastEditDate, undefined),
+      renderCell: (params) => renderCell(params.row.modifiedAt?.toLocaleDateString(), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'activation_date',
+      field: 'activationDate',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.activationDate'),
       align: 'left',
@@ -58,12 +59,13 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.activationDate, undefined),
+      renderCell: (params) =>
+        renderCell(params.row.activationDate?.toLocaleDateString(), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'status',
+      field: 'stationStatus',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.status'),
       align: 'left',
@@ -151,7 +153,7 @@ function showStationID(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.station_id}
+                {params.row.stationId}
               </Typography>
             </Grid>
           </Grid>
@@ -167,22 +169,22 @@ function showStatus(params: GridRenderCellParams) {
     <Box sx={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
       <Chip
         label={
-          params.row.status === 'ACTIVE'
-            ? 'Attiva'
-            : params.row.status === 'TO_EDIT'
-            ? 'Da correggere'
-            : 'In revisione'
+          params.row.stationStatus === 'ACTIVE'
+            ? i18n.t('stationsPage.states.active')
+            : params.row.stationStatus === 'TO_BE_CORRECTED'
+            ? i18n.t('stationsPage.states.needCorrection')
+            : i18n.t('stationsPage.states.revision')
         }
         aria-label="Status"
         sx={{
           cursor: 'pointer',
           fontSize: '10px',
           fontWeight: 'fontWeightRegular',
-          color: params.row.status === 'ACTIVE' ? '#FFFFFF' : '#17324D',
+          color: params.row.stationStatus === 'ACTIVE' ? '#FFFFFF' : '#17324D',
           backgroundColor:
-            params.row.status === 'ACTIVE'
+            params.row.stationStatus === 'ACTIVE'
               ? 'primary.main'
-              : params.row.status === 'TO_EDIT'
+              : params.row.stationStatus === 'TO_BE_CORRECTED'
               ? 'warning.light'
               : '#EEEEEE',
           paddingBottom: '1px',
@@ -191,7 +193,7 @@ function showStatus(params: GridRenderCellParams) {
           marginLeft: 2,
         }}
       />
-      <StationsMenuOptions status={params.row.status} />
+      <StationsMenuOptions status={params.row.stationStatus} />
     </Box>,
     {
       paddingLeft: 0,

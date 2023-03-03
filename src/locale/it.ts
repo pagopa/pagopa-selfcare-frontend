@@ -194,6 +194,12 @@ export default {
         status: 'Stato',
       },
     },
+    states: {
+      revision: 'In revisione',
+      needCorrection: 'Da correggere',
+      active: 'Attiva',
+    },
+    manageStation: 'Gestisci stazione',
   },
   sideMenu: {
     home: {

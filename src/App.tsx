@@ -18,7 +18,7 @@ import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apikey/AddApiKeyPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
-import AddChannelPage from './pages/channels/createChannel/AddChannelPage';
+import AddEditChannelPage from './pages/channels/addEditChannel/AddEditChannelPage';
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
@@ -49,8 +49,8 @@ const SecuredRoutes = withLogin(
           <Route path={routes.CHANNELS} exact={true}>
             <ChannelsPage />
           </Route>
-          <Route path={routes.CREATE_CHANNEL} exact={true}>
-            <AddChannelPage />
+          <Route path={routes.CHANNEL_ADD} exact={true}>
+            <AddEditChannelPage />
           </Route>
           <Route path={routes.CHANNEL_DETAIL} exact={true}>
             <ChannelDetailPage />
@@ -61,11 +61,14 @@ const SecuredRoutes = withLogin(
           <Route path={routes.CHANNEL_ASSOCIATE_PSP} exact={true}>
             <ChannelAssociatePSPPage />
           </Route>
-          <Route path={routes.STATIONS} exact={true}>
-            <StationsPage />
+          <Route path={routes.CHANNEL_EDIT} exact={true}>
+            <AddEditChannelPage />
           </Route>
           <Route path={routes.TOS} exact={true}>
             <TOS />
+          </Route>
+          <Route path={routes.STATIONS} exact={true}>
+            <StationsPage />
           </Route>
           <Route path="*">
             <Redirect to={routes.HOME} />

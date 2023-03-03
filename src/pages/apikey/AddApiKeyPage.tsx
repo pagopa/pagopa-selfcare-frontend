@@ -55,7 +55,6 @@ function AddApiKeyPage() {
   };
 
   const handleSubmit = () => {
-    console.log(selectedProduct);
     if (selectedProduct && selectedParty) {
       setLoading(true);
       createInstitutionApiKeys(selectedParty.partyId, selectedProduct)

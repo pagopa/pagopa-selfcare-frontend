@@ -14,6 +14,7 @@ import {
   getChannelDetail as getChannelDetailMocked,
   getChannelAvailablePSP as getChannelAvailablePSPMocked,
   getChannelPSPsMocked,
+  dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
 } from './__mocks__/channelService';
 
 export const getChannels = (page: number): Promise<ChannelsResource> => {
@@ -77,3 +78,12 @@ export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
     return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
   } */
   getChannelAvailablePSPMocked();
+
+export const dissociatePSPfromChannel = (channelcode: string, pspcode: string): Promise<void> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return dissociatePSPfromChannelMocked(channelcode, pspcode);
+  } else {
+    return PortalApi.dissociatePSPfromChannel(channelcode, pspcode).then((resources) => resources);
+  }
+};

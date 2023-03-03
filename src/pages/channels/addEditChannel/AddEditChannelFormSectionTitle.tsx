@@ -6,7 +6,7 @@ type Props = {
   isRequired?: boolean;
 };
 
-function AddChannelFormSectionTitle({ icon, title, isRequired = false }: Props) {
+function AddEditChannelFormSectionTitle({ icon, title, isRequired = false }: Props) {
   return (
     <Stack sx={{ alignItems: 'center', flexDirection: 'row' }}>
       {icon}
@@ -24,4 +24,4 @@ function AddChannelFormSectionTitle({ icon, title, isRequired = false }: Props) 
   );
 }
 
-export default AddChannelFormSectionTitle;
+export default AddEditChannelFormSectionTitle;

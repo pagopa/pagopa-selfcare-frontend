@@ -74,8 +74,7 @@
             "schema": {
               "type": "string"
             }
-          },
-           
+          }
         ],
         "responses": {
           "200": {
@@ -140,9 +139,7 @@
         "summary": "createChannel",
         "description": "Create a channel",
         "operationId": "createChannelUsingPOST",
-        "parameters": [
-           
-        ],
+        "parameters": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -281,8 +278,7 @@
             "schema": {
               "type": "string"
             }
-          },
-           
+          }
         ],
         "responses": {
           "200": {
@@ -968,8 +964,7 @@
             "schema": {
               "type": "string"
             }
-          },
-           
+          }
         ],
         "responses": {
           "200": {

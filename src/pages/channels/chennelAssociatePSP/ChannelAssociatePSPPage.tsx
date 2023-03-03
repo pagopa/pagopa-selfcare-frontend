@@ -68,7 +68,6 @@ function ChannelAssociatePSPPage() {
         )
         .finally(() => setLoading(false));
         */
-      console.log(selectedPSP);
       history.push(
         generatePath(ROUTES.CHANNEL_PSP_LIST, {
           channelId,
@@ -88,7 +87,7 @@ function ChannelAssociatePSPPage() {
           setAvailablePSP(data);
         }
       })
-      .catch((reason) => console.log(reason))
+      .catch((reason) => console.error(reason))
       .finally(() => setLoading(false));
     setLoading(false);
   }, []);

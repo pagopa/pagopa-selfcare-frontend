@@ -78,9 +78,22 @@ export default {
       },
     },
   },
-  addChannelPage: {
-    title: 'Crea un nuovo canale',
-    subtitle: 'Completa i campi',
+  addEditChannelPage: {
+    create: {
+      title: 'Crea un nuovo canale',
+      subtitle: 'Completa i campi',
+      breadcrumb: 'Crea canale',
+    },
+    edit: {
+      title: 'Modifica canale',
+      subtitle: 'Dopo la modifica sarà richiesta una nuova revisione del canale.',
+      breadcrumb: 'Modifica',
+    },
+    duplicate: {
+      title: 'Duplica canale',
+      subtitle: 'Modifica l’ID channel e i campi che ritieni necessari.',
+      breadcrumb: 'Duplica',
+    },
     exit: 'Esci',
     addForm: {
       backButton: 'Indietro',
@@ -115,6 +128,10 @@ export default {
       confirmButton: 'Invia',
       cancelButton: 'Torna indietro',
     },
+  },
+  editChannelPage: {
+    title: 'Modifica canale',
+    subtitle: 'Dopo la modifica sarà richiesta una nuova revisione del canale.',
   },
   channelDetailPage: {
     channels: 'Canali',
@@ -156,6 +173,7 @@ export default {
     searchPlaceholder: 'Cerca per nome PSP',
     csvDownload: 'Scarica csv',
     associatePspButtonLabel: 'Associa PSP',
+    dissociatePSPsuccessMessage: 'PSP dissociato con successo',
     noResults: `Non sono ancora presenti PSP associati a questo canale.<1><0> Associa PSP</0></1>`,
     channelsTableColumns: {
       headerFields: {
@@ -164,6 +182,12 @@ export default {
         contact: 'Contatto',
         status: 'Stato',
       },
+    },
+    dissociateModal: {
+      title: 'Dissocia PSP',
+      message: 'Se dissoci un PSP, sarà disattivata la sua connessione al canale.',
+      confirmButton: 'Dissocia PSP',
+      cancelButton: 'Torna indietro',
     },
   },
   channelAssociatePSPPage: {

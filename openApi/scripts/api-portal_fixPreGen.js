@@ -1,8 +1,10 @@
 const regexReplace = require('regex-replace');
 
 regexReplace(
-  `\{\n "name":s"X-Request-Id",\\n "in":s"header",\\n "description": "internal request trace id",\\n "required": false,\\n "schema": {\n "type": "string"\n }\n\}`,
-  'ccc',
+  /\,[\s]*\{[\s]*"name": "X-Request-Id"\,[\s]*"in": "header"\,[\s]*"description": "internal request trace id"\,[\s]*"required": false\,[\s]*"schema": \{[\s]*"type": "string"[\s]*\}[\s]*\}|[\s]*\{[\s]*"name": "X-Request-Id"\,[\s]*"in": "header"\,[\s]*"description": "internal request trace id"\,[\s]*"required": false\,[\s]*"schema": \{[\s]*"type": "string"[\s]*\}[\s]*\}/gi,
+  ' ',
   'openApi/portal-api-docs.json',
-  { fileContentsOnly: true }
+  {
+    fileContentsOnly: true,
+  }
 );

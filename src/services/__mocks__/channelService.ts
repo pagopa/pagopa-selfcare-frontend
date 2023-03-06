@@ -196,6 +196,9 @@ export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =
 export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
   new Promise((resolve) => resolve(mockedPSPChannels));
 
+export const updateChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+  new Promise((resolve) => resolve(mockedPSPChannels));
+
 export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));
 

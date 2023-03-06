@@ -12,6 +12,7 @@ import {
   getChannels as getChannelsMocked,
   getPSPChannels as getPSPChannelsMocked,
   createChannel as createChannelMocked,
+  updateChannel as updateChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
   getChannelAvailablePSP as getChannelAvailablePSPMocked,
@@ -53,6 +54,15 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
     return createChannelMocked(channel);
   } else {
     return PortalApi.createChannel(channel).then((resources) => resources);
+  }
+};
+
+export const updateChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateChannelMocked(channel);
+  } else {
+    return PortalApi.updateChannel(channel).then((resources) => resources);
   }
 };
 

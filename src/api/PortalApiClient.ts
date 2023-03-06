@@ -133,6 +133,27 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
+  updateChannel: async (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+    const result = await apiConfigClient.updateChannelUsingPUT({
+      channelcode: channel.idChannel,
+      body: {
+        broker_psp_code: channel.pspBrokerCode,
+        broker_description: channel.businessName,
+        channel_code: channel.idChannel,
+        redirect_protocol: channel.redirectProtocol,
+        redirect_port: channel.redirectPort,
+        redirect_ip: channel.redirectIp,
+        redirect_path: channel.redirectService,
+        redirect_query_string: channel.redirectParameters,
+        target_host: channel.targetAddress,
+        target_path: channel.targetService,
+        target_port: channel.targetPort,
+        payment_types: [channel.paymentType],
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getPaymentTypes: async (): Promise<PaymentTypesResource> => {
     const result = await apiConfigClient.getPaymentTypesUsingGET({});
     return extractResponse(result, 200, onRedirectToLogin);

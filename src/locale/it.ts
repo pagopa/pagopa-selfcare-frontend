@@ -124,6 +124,8 @@ export default {
         targetPort: 'Porta',
         paymentType: 'Seleziona tipo di versamento',
       },
+      errorMessageTitle: 'Errore',
+      errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
     },
     confirmModal: {
       title: 'Invio per la revisione',

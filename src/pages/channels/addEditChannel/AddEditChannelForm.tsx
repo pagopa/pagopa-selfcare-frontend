@@ -18,7 +18,7 @@ import {
 import { useFormik } from 'formik';
 import { Trans, useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
-import { SessionModal } from '@pagopa/selfcare-common-frontend';
+import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   Badge as BadgeIcon,
   MenuBook as MenuBookIcon,
@@ -28,13 +28,19 @@ import ROUTES from '../../../routes';
 import { ChannelOnCreation } from '../../../model/Channel';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { createChannel, getPaymentTypes } from '../../../services/channelService';
+import {
+  associatePSPtoChannel,
+  createChannel,
+  getPaymentTypes,
+  updateChannel,
+} from '../../../services/channelService';
+import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import { Party } from '../../../model/Party';
+import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
-import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import { sortPaymentType } from '../../../model/PaymentType';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 
@@ -118,6 +124,9 @@ const validate = (values: Partial<ChannelOnCreation>) =>
 function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
   const { t } = useTranslation();
   const history = useHistory();
+  const addError = useErrorDispatcher();
+
+  const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -132,20 +141,42 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
     enableReinitialize: true,
   });
 
-  const submit = () => {
+  const submit = async () => {
     setShowConfirmModal(false);
-    // alert(JSON.stringify(formik.values, null, 2));
-    createChannel(formik.values)
-      .then(() => {
-        history.push(ROUTES.CHANNELS, {
-          alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
-        });
-      })
-      .catch((reason) => {
-        console.error(reason);
-        // if (reason.httpStatus === 409) {
+    setLoading(true);
+
+    try {
+      if (formAction === 'create' || formAction === 'duplicate') {
+        const createResult = await createChannel(formik.values);
+
+        if (createResult) {
+          await associatePSPtoChannel(formik.values.idChannel, formik.values.pspBrokerCode, {
+            payment_types: [formik.values.paymentType],
+          });
+        }
+      }
+      if (formAction === 'edit') {
+        await updateChannel(formik.values);
+      }
+      history.push(ROUTES.CHANNELS, {
+        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
       });
+    } catch (reason) {
+      addError({
+        id: 'ADDEDIT_CHANNEL',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while adding/editing channel`,
+        toNotify: true,
+        displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+        displayableDescription: t('addEditChannelPage.addForm.errorMessageDesc'),
+        component: 'Toast',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
     getPaymentTypes()
       .then((results) => {
@@ -157,6 +188,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
         console.error(reason);
       });
   }, []);
+
   return (
     <>
       <form onSubmit={formik.handleSubmit} style={{ minWidth: '100%' }}>

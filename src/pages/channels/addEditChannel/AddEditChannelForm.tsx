@@ -212,6 +212,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     fullWidth
                     id="idChannel"
                     name="idChannel"
+                    disabled={formAction === 'edit' ?? false}
                     label={t('addEditChannelPage.addForm.fields.idChannel')}
                     size="small"
                     value={formik.values.idChannel}

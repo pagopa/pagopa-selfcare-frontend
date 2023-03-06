@@ -90,7 +90,12 @@ const ChannelPSPListPage = () => {
             />
           </Box>
           <Box>
-            <Button variant="outlined" startIcon={<FileDownload />} onClick={() => downloadCSV()}>
+            <Button
+              variant="outlined"
+              sx={{ display: 'none' }}
+              startIcon={<FileDownload />}
+              onClick={() => downloadCSV()}
+            >
               {t('channelPSPList.csvDownload')}
             </Button>
           </Box>

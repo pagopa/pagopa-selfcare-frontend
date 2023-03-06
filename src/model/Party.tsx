@@ -1,5 +1,6 @@
 import { InstitutionDetailResource } from '../api/generated/portal/InstitutionDetailResource';
 import { InstitutionResource } from '../api/generated/portal/InstitutionResource';
+import { PspDataResource } from '../api/generated/portal/PspDataResource';
 import { ENV } from '../utils/env';
 
 export type SelfcareRole = 'ADMIN' | 'LIMITED';
@@ -21,6 +22,7 @@ export type Party = {
   registeredOffice: string;
   typology: string;
   institutionType?: string;
+  pspData?: PspDataResource;
 };
 
 export type UserRole = {
@@ -49,6 +51,7 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     registeredOffice: institutionResource.address,
     typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,
+    pspData: institutionResource.pspData,
   };
 };
 

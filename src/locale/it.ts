@@ -70,6 +70,10 @@ export default {
     subtitle: 'Cerca e visualizza lo stato dei canali presenti.',
     createChannelButtonLabel: 'Crea canale',
     searchPlaceholder: 'Cerca per codice',
+    table: {
+      noResults: 'Non sono ancora presenti canali in questo ambiente.<1><0> Crea Canale</0></1>',
+      loading: 'Caricamento...',
+    },
     channelsTableColumns: {
       headerFields: {
         name: 'Codice canale',
@@ -112,14 +116,16 @@ export default {
         idChannel: 'ID channel',
         redirectProtocol: 'Protocollo',
         redirectPort: 'Porta',
-        redirectIp: 'IP',
-        redirectService: 'Servizio',
+        redirectIp: 'Indirizzo',
+        redirectService: 'Path',
         redirectParameters: 'Parametri',
         targetAddress: 'Indirizzo',
-        targetService: 'Servizio',
+        targetService: 'Path',
         targetPort: 'Porta',
         paymentType: 'Seleziona tipo di versamento',
       },
+      errorMessageTitle: 'Errore',
+      errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
     },
     confirmModal: {
       title: 'Invio per la revisione',
@@ -141,7 +147,7 @@ export default {
     createdOn: 'Creato il',
     detail: 'dettaglio',
     state: 'Stato',
-    states: {
+    status: {
       revision: 'In revisione',
       needCorrection: 'Da correggere',
       active: 'Attivo',
@@ -157,7 +163,7 @@ export default {
     redirectUrl: 'URL di redirect',
     target: 'Target',
     targetAddress: 'Indirizzo',
-    targetService: 'Servizio',
+    targetService: 'Path',
     targetPort: 'Porta',
     paymentType: 'Tipo di versamento',
     associatedPsp: 'PSP associati',

@@ -1,7 +1,14 @@
 import { fetchParties, fetchPartyDetails } from '../partyService';
-import { institutionResource2Party, Party } from '../../model/Party';
+import {
+  institutionDetailResource2Party,
+  institutionResource2Party,
+  Party,
+} from '../../model/Party';
 import { PortalApi } from '../../api/PortalApiClient';
-import { mockedInstitutionResources } from '../../api/__mocks__/PortalApiClient';
+import {
+  mockedInstitutionDetailResource,
+  mockedInstitutionResources,
+} from '../../api/__mocks__/PortalApiClient';
 
 jest.mock('../../api/PortalApiClient');
 
@@ -26,12 +33,11 @@ test('Test fetchParties', async () => {
 });
 
 describe('Test fetchPartyDetails', () => {
-  const expectedPartyId: string = '1';
+  const expectedPartyId: string = '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944';
 
   const checkSelectedParty = (party: Party | null) => {
     expect(party).not.toBeNull();
-    expect(party).toMatchObject(institutionResource2Party(mockedInstitutionResources[0]));
-
+    expect(party).toMatchObject(institutionDetailResource2Party(mockedInstitutionDetailResource));
     expect(party!.urlLogo).toBe(
       `http://checkout.selfcare/institutions/${expectedPartyId}/logo.png`
     );
@@ -47,8 +53,7 @@ describe('Test fetchPartyDetails', () => {
   test('Test no parties as cache', async () => {
     const party = await fetchPartyDetails(expectedPartyId);
     checkSelectedParty(party);
-
-    checkPortalApiInvocation(1);
+    checkPortalApiInvocation(0);
   });
 
   test('Test parties as cache', async () => {
@@ -62,6 +67,6 @@ describe('Test fetchPartyDetails', () => {
     const party2 = await fetchPartyDetails(expectedPartyId, partialParties);
     expect(party2).toStrictEqual(party);
 
-    checkPortalApiInvocation(1);
+    checkPortalApiInvocation(0);
   });
 });

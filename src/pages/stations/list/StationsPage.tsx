@@ -14,7 +14,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { theme } from '@pagopa/mui-italia';
 import { useEffect, useState } from 'react';
 import SideMenu from '../../../components/SideMenu/SideMenu';
-import { getStations } from '../../../services/__mocks__/stationService';
+import { getStations } from '../../../services/stationService';
 import { StationsResource } from '../../../api/generated/portal/StationsResource';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
 import StationsTable from './StationsTable';
@@ -29,7 +29,10 @@ export default function StationsPage() {
   useEffect(() => {
     setLoading(true);
     getStations(0)
-      .then((retrievedStations) => setStations(retrievedStations))
+      .then((retrievedStations) => {
+        console.log('retrievedStations: ', retrievedStations);
+        setStations(retrievedStations);
+      })
       .catch((reason) =>
         addError({
           id: 'RETRIEVE_STATIONS_ERROR',

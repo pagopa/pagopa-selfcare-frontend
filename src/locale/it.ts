@@ -205,13 +205,13 @@ export default {
   stationsPage: {
     title: 'Stazioni',
     subtitle: 'Cerca e visualizza lo stato delle stazioni.',
-    searchPlaceholder: 'Cerca per ID stazione',
+    searchPlaceholder: 'Cerca per codice stazione',
     createStationButtonLabel: 'Crea stazione',
     notFoundStations:
       'Non sono ancora presenti stazioni in ambiente di collaudo. <2>Crea stazione</2>',
     stationsTableColumns: {
       headerFields: {
-        name: 'ID stazione',
+        name: 'Codice stazione',
         creationDate: 'Data creazione',
         lastEditDate: 'Ultima modifica',
         activationDate: 'Data attivazione',

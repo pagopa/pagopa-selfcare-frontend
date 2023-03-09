@@ -40,7 +40,7 @@
     "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
     "generate": "npm-run-all generate:*",
     "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
-    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
+    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
   },
   "eslintConfig": {
     "extends": [

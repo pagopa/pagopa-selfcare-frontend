@@ -7,6 +7,6 @@ export const getStations = (page: number): Promise<StationsResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationsMocked(page);
   } else {
-    return PortalApi.getStations(page);
+    return PortalApi.getStations(page).then((resource) => resource);
   }
 };

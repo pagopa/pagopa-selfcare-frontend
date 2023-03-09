@@ -16,6 +16,8 @@ import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
+import { StationsResource } from './generated/portal/StationsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();

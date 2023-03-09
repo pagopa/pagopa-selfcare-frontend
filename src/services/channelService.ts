@@ -1,6 +1,8 @@
 import { ChannelDetailsResource } from '../api/generated/portal/ChannelDetailsResource';
 import { ChannelsResource } from '../api/generated/portal/ChannelsResource';
 import { PaymentTypesResource } from '../api/generated/portal/PaymentTypesResource';
+import { PspChannelPaymentTypes } from '../api/generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from '../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource';
 import { PortalApi } from '../api/PortalApiClient';
 import { ChannelOnCreation } from '../model/Channel';
@@ -10,10 +12,12 @@ import {
   getChannels as getChannelsMocked,
   getPSPChannels as getPSPChannelsMocked,
   createChannel as createChannelMocked,
+  updateChannel as updateChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
   getChannelAvailablePSP as getChannelAvailablePSPMocked,
   getChannelPSPsMocked,
+  associatePSPtoChannel as associatePSPtoChannelMocked,
   dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
 } from './__mocks__/channelService';
 
@@ -35,7 +39,7 @@ export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsRes
   }
 };
 
-export const getChannelsByPspCode = (pspCode: string): Promise<PspChannelsResource> => {
+export const getPSPChannels = (pspCode: string): Promise<PspChannelsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getPSPChannelsMocked(pspCode);
@@ -50,6 +54,15 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
     return createChannelMocked(channel);
   } else {
     return PortalApi.createChannel(channel).then((resources) => resources);
+  }
+};
+
+export const updateChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateChannelMocked(channel);
+  } else {
+    return PortalApi.updateChannel(channel).then((resources) => resources);
   }
 };
 
@@ -78,6 +91,21 @@ export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
     return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
   } */
   getChannelAvailablePSPMocked();
+
+export const associatePSPtoChannel = (
+  channelcode: string,
+  pspcode: string,
+  payment_type: PspChannelPaymentTypes
+): Promise<PspChannelPaymentTypesResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return associatePSPtoChannelMocked(channelcode, pspcode, payment_type);
+  } else {
+    return PortalApi.associatePSPtoChannel(channelcode, pspcode, payment_type).then(
+      (resources) => resources
+    );
+  }
+};
 
 export const dissociatePSPfromChannel = (channelcode: string, pspcode: string): Promise<void> => {
   /* istanbul ignore if */

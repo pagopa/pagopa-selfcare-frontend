@@ -129,7 +129,6 @@ function renderCell(
         paddingLeft: '16px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
-        cursor: 'pointer',
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
       }}
@@ -199,12 +198,11 @@ function showChannelCode(params: GridRenderCellParams) {
 function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
-    <Box sx={{ cursor: 'pointer' }}>
+    <Box>
       <Chip
         label={params.row.enabled ? 'Attivo' : 'In revisione'}
         aria-label="Status"
         sx={{
-          cursor: 'pointer',
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.enabled ? '#FFFFFF' : '#17324D',

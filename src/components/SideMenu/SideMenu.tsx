@@ -34,6 +34,12 @@ export default function SideMenu() {
             isSelected={pathname === ROUTES.HOME}
             icon={VpnKeyIcon}
           />
+          <SidenavItem
+            title={'Stazioni'}
+            handleClick={() => onExit(() => history.push(ROUTES.STATION_ADD))}
+            isSelected={pathname === ROUTES.STATION_ADD}
+            icon={VpnKeyIcon}
+          />
           {ENV.FEATURES.CHANNELS.ENABLED && (
             <SidenavItem
               title={t('sideMenu.channels.title')}

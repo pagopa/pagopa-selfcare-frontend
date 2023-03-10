@@ -208,6 +208,43 @@ export default {
       confirmButton: 'Conferma',
     },
   },
+
+  addEditStationPage: {
+    create: {
+      title: 'Crea una nuova stazione',
+      subtitle: 'Completa i campi',
+      breadcrumb: 'Crea stazione',
+    },
+    addForm: {
+      backButton: 'Indietro',
+      continueButton: 'Conferma',
+      sections: {
+        registry: 'Anagrafica',
+        redirect: 'Redirect',
+        target: 'Target',
+      },
+      fields: {
+        stationCode: 'Codice stazione',
+        primitiveVersion: 'Versione primitive',
+        redirectProtocol: 'Protocollo',
+        redirectPort: 'Porta',
+        redirectIp: 'IP',
+        redirectService: 'Pat',
+        redirectParameters: 'Parametri',
+        targetAddress: 'Parametri',
+        targetService: 'Parametri',
+        targetPort: 'Porta',
+      },
+    },
+    confirmModal: {
+      title: 'Invio per la revisione',
+      message:
+        'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
+      confirmButton: 'Invia',
+      cancelButton: 'Torna indietro',
+    },
+  },
+
   sideMenu: {
     home: {
       title: 'API Key',
@@ -244,5 +281,6 @@ export default {
     back: 'Indietro',
     channels: 'canali',
     Channels: 'Canali',
+    Stations: 'Stazioni',
   },
 };

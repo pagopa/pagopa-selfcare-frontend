@@ -3,6 +3,33 @@ import { PartyDetail } from '../../model/PartyDetail';
 
 export const mockedParties: Array<Party> = [
   {
+    partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+    externalId: '15376371009',
+    originId: 'PAGOPASPA',
+    origin: 'SELC',
+    description: 'PagoPA S.p.A.',
+    fiscalCode: '15376371009',
+    digitalAddress: 'selfcare@pec.pagopa.it',
+    status: 'ACTIVE',
+    registeredOffice: 'Piazza Colonna, 370',
+    roles: [
+      {
+        partyRole: 'DELEGATE',
+        roleKey: 'admin', // TODO use real product role
+      },
+    ],
+    urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+    typology: 'TODO',
+    institutionType: undefined,
+    pspData: {
+      businessRegisterNumber: '00000000000',
+      legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+      legalRegisterNumber: '09878',
+      abiCode: '36042',
+      vatNumberGroup: false,
+    },
+  },
+  {
     partyId: '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239',
     externalId: '15376371009',
     originId: 'PAGOPASPA',

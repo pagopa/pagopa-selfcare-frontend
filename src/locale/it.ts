@@ -210,6 +210,7 @@ export default {
   },
 
   addEditStationPage: {
+    title: 'Configurazione della stazione',
     create: {
       title: 'Crea una nuova stazione',
       subtitle: 'Completa i campi',
@@ -231,8 +232,8 @@ export default {
         redirectIp: 'IP',
         redirectService: 'Pat',
         redirectParameters: 'Parametri',
-        targetAddress: 'Parametri',
-        targetService: 'Parametri',
+        targetAddress: 'Indirizzo',
+        targetService: 'Servizio',
         targetPort: 'Porta',
       },
     },
@@ -242,6 +243,9 @@ export default {
         'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
       confirmButton: 'Invia',
       cancelButton: 'Torna indietro',
+    },
+    validation: {
+      overPort: 'Il numero di porta deve essere compreso tra 1 e 65556',
     },
   },
 

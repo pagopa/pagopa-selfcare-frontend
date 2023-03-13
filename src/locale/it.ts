@@ -113,7 +113,7 @@ export default {
       fields: {
         pspBrokerCode: 'Codice intermediario PSP',
         businessName: 'Ragione sociale intermediario',
-        idChannel: 'ID channel',
+        idChannel: 'Codice canale',
         redirectProtocol: 'Protocollo',
         redirectPort: 'Porta',
         redirectIp: 'Indirizzo',
@@ -156,7 +156,7 @@ export default {
     registry: 'Anagrafica',
     pspBrokerCode: 'Codice intermediario PSP',
     companyName: 'Ragione sociale',
-    idChannel: 'ID Channel',
+    idChannel: 'Codice canale',
     redirect: 'Redirect',
     redirectProtocol: 'Protocollo',
     redirectPort: 'Porta',

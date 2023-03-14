@@ -1,3 +1,6 @@
+import { ChannelOnCreation } from '../../model/Channel';
+import { mockedPSPChannels } from '../../services/__mocks__/channelService';
+import { ChannelDetailsResource } from '../generated/portal/ChannelDetailsResource';
 import {
   InstitutionDetailResource,
   InstitutionTypeEnum,
@@ -147,4 +150,7 @@ export const PortalApi = {
 
   getProducts: async (): Promise<Array<ProductsResource>> =>
     new Promise((resolve) => resolve(mockedProductResources)),
+
+  createChannel: (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedPSPChannels)),
 };

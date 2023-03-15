@@ -6,7 +6,7 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-
+import { StationOnCreation } from '../model/Station';
 import { ChannelOnCreation } from '../model/Channel';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
@@ -18,6 +18,7 @@ import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResourc
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
+import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -195,5 +196,23 @@ export const PortalApi = {
       pspcode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createStation: async (station: StationOnCreation): Promise<StationDetailsDto> => {
+    const result = await apiConfigClient.createStationUsingPOST({
+      body: {
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetAddress,
+        targetPort: station.targetPort,
+        targetPath: station.targetService,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 };

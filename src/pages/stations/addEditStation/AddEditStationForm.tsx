@@ -19,26 +19,28 @@ import { Box } from '@mui/system';
 import { ArrowBack, Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useHistory } from 'react-router-dom';
-import { RedirectProtocolEnum, StationOnCreation } from '../../../model/Station';
-// import { useAppSelector } from '../../../redux/hooks';
-// import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { StationOnCreation } from '../../../model/Station';
+import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
+import { createStation } from '../../../services/stationService';
+import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 const AddEditStationForm = () => {
-  const initialFormData = {
+  const initialFormData: StationOnCreation = {
     stationCode: '',
-    primitiveVersion: '',
-    redirectProtocol: undefined,
-    redirectPort: undefined,
+    primitiveVersion: 0,
+    redirectProtocol: RedirectProtocolEnum.HTTPS,
+    redirectPort: 0,
     redirectIp: '',
-    redirectService: '',
-    redirectParameters: '',
+    redirectPath: '',
+    redirectQueryString: '',
     targetAddress: '',
     targetService: '',
-    targetPort: undefined,
+    targetPort: 0,
   };
 
   const inputGroupStyle = {
@@ -51,9 +53,9 @@ const AddEditStationForm = () => {
 
   const { t } = useTranslation();
   const history = useHistory();
-  //   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
   const goBack = () => history.push(ROUTES.HOME);
 
   const validatePortRange = (redirectPort: number | undefined) => {
@@ -63,7 +65,7 @@ const AddEditStationForm = () => {
     return false;
   };
 
-  const validate = (values: Partial<StationOnCreation>) =>
+  const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
         primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
@@ -74,8 +76,8 @@ const AddEditStationForm = () => {
           ? t('addEditStationPage.validation.overPort')
           : undefined,
         redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-        redirectService: !values.redirectService ? 'Campo obbligatorio' : undefined,
-        redirectParameters: !values.redirectParameters ? 'Campo obbligatorio' : undefined,
+        redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
+        redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
         targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
         targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
         targetPort: !values.targetPort
@@ -89,8 +91,29 @@ const AddEditStationForm = () => {
   const formik = useFormik<StationOnCreation>({
     initialValues: initialFormData,
     validate,
-    onSubmit: () => {
-      setShowConfirmModal(true);
+    onSubmit: (values) => {
+      setShowConfirmModal(false);
+      setLoading(true);
+      createStation(values)
+        .then((res) => {
+          console.log('response', res);
+          history.push(ROUTES.HOME, {
+            alertSuccessMessage: t('addEditStationPage.successMessage'),
+          });
+        })
+        .catch((error) => {
+          addError({
+            id: 'ADD_EDIT_STATION',
+            blocking: false,
+            error,
+            techDescription: `An error occurred while adding/editing station`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageDesc'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => setLoading(false));
     },
     validateOnChange: true,
     enableReinitialize: true,
@@ -153,9 +176,8 @@ const AddEditStationForm = () => {
                       name="stationCode"
                       label={t('addEditStationPage.addForm.fields.stationCode')}
                       size="small"
-                      disabled
                       value={formik.values.stationCode}
-                      onChange={formik.handleChange}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.stationCode && Boolean(formik.errors.stationCode)}
                       helperText={formik.touched.stationCode && formik.errors.stationCode}
                       inputProps={{
@@ -169,14 +191,20 @@ const AddEditStationForm = () => {
                       id="primitiveVersion"
                       name="primitiveVersion"
                       label={t('addEditStationPage.addForm.fields.primitiveVersion')}
+                      placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                       size="small"
-                      value={formik.values.primitiveVersion}
-                      onChange={formik.handleChange}
+                      InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
+                      value={
+                        formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion
+                      }
+                      onChange={(e) => formik.handleChange(e)}
                       error={
                         formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)
                       }
                       helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                       inputProps={{
+                        step: 1,
+                        type: 'number',
                         'data-testid': 'primitive-version-test',
                       }}
                     />
@@ -207,7 +235,7 @@ const AddEditStationForm = () => {
                             ? 'HTTPS'
                             : 'HTTP'
                         }
-                        onChange={formik.handleChange}
+                        onChange={(e) => formik.handleChange(e)}
                         error={
                           formik.touched.redirectProtocol && Boolean(formik.errors.redirectProtocol)
                         }
@@ -229,13 +257,19 @@ const AddEditStationForm = () => {
                       fullWidth
                       id="redirectPort"
                       name="redirectPort"
-                      type="number"
                       InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
-                      inputProps={{ min: 0, max: 65556, 'data-testid': 'redirect-port-test' }}
+                      inputProps={{
+                        step: 1,
+                        type: 'number',
+                        min: 0,
+                        max: 65556,
+                        'data-testid': 'redirect-port-test',
+                      }}
                       label={t('addEditStationPage.addForm.fields.redirectPort')}
+                      placeholder={t('addEditStationPage.addForm.fields.redirectPort')}
                       size="small"
-                      value={formik.values.redirectPort}
-                      onChange={formik.handleChange}
+                      value={formik.values.redirectPort === 0 ? '' : formik.values.redirectPort}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.redirectPort && Boolean(formik.errors.redirectPort)}
                       helperText={
                         formik.touched.redirectPort &&
@@ -248,16 +282,14 @@ const AddEditStationForm = () => {
                   <Grid container item xs={6}>
                     <TextField
                       fullWidth
-                      id="redirectService"
-                      name="redirectService"
+                      id="redirectPath"
+                      name="redirectPath"
                       label={t('addEditStationPage.addForm.fields.redirectService')}
                       size="small"
-                      value={formik.values.redirectService}
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.redirectService && Boolean(formik.errors.redirectService)
-                      }
-                      helperText={formik.touched.redirectService && formik.errors.redirectService}
+                      value={formik.values.redirectPath}
+                      onChange={(e) => formik.handleChange(e)}
+                      error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
+                      helperText={formik.touched.redirectPath && formik.errors.redirectPath}
                       inputProps={{
                         'data-testid': 'redirect-service-test',
                       }}
@@ -272,7 +304,7 @@ const AddEditStationForm = () => {
                       label={t('addEditStationPage.addForm.fields.redirectIp')}
                       size="small"
                       value={formik.values.redirectIp}
-                      onChange={formik.handleChange}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.redirectIp && Boolean(formik.errors.redirectIp)}
                       helperText={formik.touched.redirectIp && formik.errors.redirectIp}
                       inputProps={{
@@ -284,18 +316,18 @@ const AddEditStationForm = () => {
                   <Grid container item xs={6}>
                     <TextField
                       fullWidth
-                      id="redirectParameters"
-                      name="redirectParameters"
+                      id="redirectQueryString"
+                      name="redirectQueryString"
                       label={t('addEditStationPage.addForm.fields.redirectParameters')}
                       size="small"
-                      value={formik.values.redirectParameters}
-                      onChange={formik.handleChange}
+                      value={formik.values.redirectQueryString}
+                      onChange={(e) => formik.handleChange(e)}
                       error={
-                        formik.touched.redirectParameters &&
-                        Boolean(formik.errors.redirectParameters)
+                        formik.touched.redirectQueryString &&
+                        Boolean(formik.errors.redirectQueryString)
                       }
                       helperText={
-                        formik.touched.redirectParameters && formik.errors.redirectParameters
+                        formik.touched.redirectQueryString && formik.errors.redirectQueryString
                       }
                       inputProps={{
                         'data-testid': 'redirect-parameters-test',
@@ -320,7 +352,7 @@ const AddEditStationForm = () => {
                       label={t('addEditStationPage.addForm.fields.targetAddress')}
                       size="small"
                       value={formik.values.targetAddress}
-                      onChange={formik.handleChange}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.targetAddress && Boolean(formik.errors.targetAddress)}
                       helperText={formik.touched.targetAddress && formik.errors.targetAddress}
                       inputProps={{
@@ -336,7 +368,7 @@ const AddEditStationForm = () => {
                       label={t('addEditStationPage.addForm.fields.targetService')}
                       size="small"
                       value={formik.values.targetService}
-                      onChange={formik.handleChange}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.targetService && Boolean(formik.errors.targetService)}
                       helperText={formik.touched.targetService && formik.errors.targetService}
                       inputProps={{
@@ -350,13 +382,19 @@ const AddEditStationForm = () => {
                       fullWidth
                       id="targetPort"
                       name="targetPort"
-                      type="number"
                       InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
-                      inputProps={{ min: 0, max: 65556, 'data-testid': 'target-port-test' }}
+                      inputProps={{
+                        step: 1,
+                        type: 'number',
+                        min: 0,
+                        max: 65556,
+                        'data-testid': 'target-port-test',
+                      }}
                       label={t('addEditStationPage.addForm.fields.targetPort')}
+                      placeholder={t('addEditStationPage.addForm.fields.targetPort')}
                       size="small"
-                      value={formik.values.targetPort}
-                      onChange={formik.handleChange}
+                      value={formik.values.targetPort === 0 ? '' : formik.values.targetPort}
+                      onChange={(e) => formik.handleChange(e)}
                       error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
                       helperText={formik.touched.targetPort && formik.errors.targetPort}
                     />

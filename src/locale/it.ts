@@ -247,6 +247,10 @@ export default {
     validation: {
       overPort: 'Il numero di porta deve essere compreso tra 1 e 65556',
     },
+    succesMessage:
+      'La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',
+    errorMessageTitle: 'Errore',
+    errorMessageDesc: 'Errore durante la creazione, Codice stazione duplicato',
   },
 
   sideMenu: {

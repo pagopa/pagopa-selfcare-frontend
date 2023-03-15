@@ -9,7 +9,10 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { PortalApi } from '../../../api/__mocks__/PortalApiClient';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { mockedPSPChannels } from '../../../services/__mocks__/channelService';
+import { mockedPaymentTypes, mockedPSPChannels } from '../../../services/__mocks__/channelService';
+import { PspChannelPaymentTypesResource } from '../../../api/generated/portal/PspChannelPaymentTypesResource';
+import { ChannelOnCreation } from '../../../model/Channel';
+import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: any) => key }),
@@ -23,7 +26,7 @@ jest.mock('@pagopa/selfcare-common-frontend/index', () => ({
 }));
 
 jest.mock('@pagopa/selfcare-common-frontend', () => ({
-  useErrorDispatcher: () => '',
+  useErrorDispatcher: () => jest.fn(),
   useLoading: () => jest.fn(),
 }));
 
@@ -40,10 +43,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   const store = injectedStore ? injectedStore : createStore();
 
-  test('Test rendering AddEditChannelForm', async () => {
-    PortalApi.createChannel = async (): Promise<ChannelDetailsResource> =>
-      new Promise((resolve) => resolve(mockedPSPChannels));
-
+  const renderComponent = () => {
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -53,6 +53,19 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<
         </Router>
       </Provider>
     );
+  };
+
+  test('Test rendering AddEditChannelForm', async () => {
+    PortalApi.createChannel = async (): Promise<ChannelDetailsResource> =>
+      new Promise((resolve) => resolve(mockedPSPChannels));
+
+    PortalApi.associatePSPtoChannel = async (): Promise<PspChannelPaymentTypesResource> =>
+      new Promise((resolve) => resolve({ payment_types: ['ptype_test'] }));
+
+    PortalApi.getPaymentTypes = async (): Promise<PaymentTypesResource> =>
+      new Promise((resolve) => resolve(mockedPaymentTypes));
+
+    renderComponent();
 
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
@@ -111,17 +124,47 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<
     fireEvent.click(cancelModalBtn);
   });
 
+  test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
+    PortalApi.updateChannel = async (
+      _channel: ChannelOnCreation
+    ): Promise<ChannelDetailsResource> => new Promise((resolve) => resolve(mockedPSPChannels));
+
+    renderComponent();
+  });
+
+  test('Test rendering AddEditChannelForm with formAction edit', async () => {
+    PortalApi.getPaymentTypes = async (): Promise<PaymentTypesResource> =>
+      new Promise((resolve) => resolve(mockedPaymentTypes));
+
+    PortalApi.updateChannel = async (): Promise<ChannelDetailsResource> =>
+      new Promise((resolve) => resolve(mockedPSPChannels));
+
+    renderComponent();
+  });
+
   test('catch case of createChannel', async () => {
     PortalApi.createChannel = async (): Promise<ChannelDetailsResource> =>
       Promise.reject('catch case of createChannel');
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={'create'} />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
+
+    renderComponent();
+  });
+
+  test('catch case of associatePSPtoChannel', async () => {
+    PortalApi.associatePSPtoChannel = async (): Promise<PspChannelPaymentTypesResource> =>
+      Promise.reject('catch case of associatePSPtoChannel');
+
+    renderComponent();
+  });
+
+  test('catch case of getPaymentTypes', async () => {
+    PortalApi.getPaymentTypes = async (): Promise<PaymentTypesResource> =>
+      Promise.reject('catch case of getPaymentTypes');
+    renderComponent();
+  });
+
+  test('catch case of updateChannel', async () => {
+    PortalApi.updateChannel = async (): Promise<ChannelDetailsResource> =>
+      Promise.reject('catch case of getPaymentTypes');
+    renderComponent();
   });
 });

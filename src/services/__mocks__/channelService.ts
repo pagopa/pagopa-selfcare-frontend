@@ -68,7 +68,7 @@ export const mockedPSPChannels: PspChannelsResource = {
   ],
 };
 
-const mockedPaymentTypes: PaymentTypesResource = {
+export const mockedPaymentTypes: PaymentTypesResource = {
   payment_types: [
     {
       description: 'PostePay',
@@ -81,7 +81,7 @@ const mockedPaymentTypes: PaymentTypesResource = {
   ],
 };
 
-const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
+export const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
   agid: true,
   broker_description: 'broker_description',
   broker_psp_code: 'broker_psp_code',

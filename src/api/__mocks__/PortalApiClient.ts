@@ -1,13 +1,20 @@
 import { ChannelOnCreation } from '../../model/Channel';
-import { mockedPSPChannels } from '../../services/__mocks__/channelService';
+import {
+  mockedPaymentTypes,
+  mockedPSPChannels,
+  mockedChannelDetail,
+} from '../../services/__mocks__/channelService';
 import { ChannelDetailsResource } from '../generated/portal/ChannelDetailsResource';
 import {
   InstitutionDetailResource,
   InstitutionTypeEnum,
 } from '../generated/portal/InstitutionDetailResource';
 import { InstitutionResource } from '../generated/portal/InstitutionResource';
+import { PaymentTypesResource } from '../generated/portal/PaymentTypesResource';
 
 import { ProductsResource } from '../generated/portal/ProductsResource';
+import { PspChannelPaymentTypes } from '../generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from '../generated/portal/PspChannelPaymentTypesResource';
 
 export const mockedInstitutionResources: Array<InstitutionResource> = [
   {
@@ -151,6 +158,22 @@ export const PortalApi = {
   getProducts: async (): Promise<Array<ProductsResource>> =>
     new Promise((resolve) => resolve(mockedProductResources)),
 
-  createChannel: (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+  createChannel: async (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
     new Promise((resolve) => resolve(mockedPSPChannels)),
+
+  associatePSPtoChannel: async (
+    _channelcode: string,
+    _pspcode: string,
+    _payment_type: PspChannelPaymentTypes
+  ): Promise<PspChannelPaymentTypesResource> =>
+    new Promise((resolve) => resolve({ payment_types: ['ptype_test'] })),
+
+  updateChannel: async (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedPSPChannels)),
+
+  getPaymentTypes: async (): Promise<PaymentTypesResource> =>
+    new Promise((resolve) => resolve(mockedPaymentTypes)),
+
+  getChannelDetail: async (_channelcode: string): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedChannelDetail('12345'))),
 };

@@ -1,23 +1,12 @@
-import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import React from 'react';
-import AddEditStationForm from '../addEditStation/AddEditStationForm';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { createStore } from '../../../redux/store';
-import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: any) => key }),
-  Trans: () => {
-    return null;
-  },
-}));
-
-jest.mock('@pagopa/selfcare-common-frontend/index', () => ({
-  TitleBox: () => <div>Test</div>,
-}));
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { store } from '../../../redux/store';
+import AddEditStationForm from '../addEditStation/AddEditStationForm';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -26,28 +15,21 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<AddEditStationForm />', (injectedHistory?: ReturnType<
-  typeof createMemoryHistory
->, injectedStore?: ReturnType<typeof createStore>) => {
+describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
-  const store = injectedStore ? injectedStore : createStore();
+
   test('Test rendering AddEditStationForm', async () => {
     render(
       <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
             <AddEditStationForm />
-          </ThemeProvider>
-        </Router>
+          </Router>
+        </ThemeProvider>
       </Provider>
     );
 
-    const overviewBackBtn = screen.getByTestId('back-btn-test') as HTMLButtonElement;
-    const oldLocPathname = history.location.pathname;
-    fireEvent.click(overviewBackBtn);
-    await waitFor(() => expect(oldLocPathname !== history.location.pathname).toBeTruthy());
-
-    // const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
+    const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
     const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
@@ -58,8 +40,8 @@ describe('<AddEditStationForm />', (injectedHistory?: ReturnType<
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
 
-    // fireEvent.change(stationCode, { target: { value: 'station Code' } });
-    // expect(stationCode.value).toBe('primitive version');
+    fireEvent.change(stationCode, { target: { value: 'station Code' } });
+    expect(stationCode.value).toBe('station Code');
 
     fireEvent.change(primitiveVersion, { target: { value: 'primitive Version' } });
     expect(primitiveVersion.value).toBe('primitive Version');
@@ -99,5 +81,10 @@ describe('<AddEditStationForm />', (injectedHistory?: ReturnType<
 
     fireEvent.click(confirmModalBtn);
     fireEvent.click(cancelModalBtn);
+
+    const overviewBackBtn = screen.getByTestId('back-btn-test') as HTMLButtonElement;
+    const oldLocPathname = history.location.pathname;
+    fireEvent.click(overviewBackBtn);
+    await waitFor(() => expect(oldLocPathname !== history.location.pathname).toBeTruthy());
   });
 });

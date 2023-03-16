@@ -29,7 +29,6 @@ const ConfirmModal = ({
     BackdropProps={{
       timeout: 500,
     }}
-    data-testid="exit-modal-test"
   >
     <Fade in={openConfirmModal} data-testid="fade-test">
       <Box

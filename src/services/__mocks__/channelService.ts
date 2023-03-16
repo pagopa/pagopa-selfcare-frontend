@@ -68,6 +68,21 @@ export const mockedPSPChannels: PspChannelsResource = {
   ],
 };
 
+export const mockedChannel: ChannelOnCreation = {
+  pspBrokerCode: 'broker_psp_code',
+  businessName: 'business_name',
+  idChannel: 'id_channel',
+  redirectProtocol: Redirect_protocolEnum.HTTPS,
+  redirectParameters: 'reirect_parameters',
+  redirectIp: 'redirect_ip',
+  redirectService: 'redirect_service',
+  redirectPort: 8080,
+  targetAddress: 'target_addres',
+  targetPort: 8081,
+  targetService: 'target_service',
+  paymentType: 'payment_type',
+};
+
 export const mockedPaymentTypes: PaymentTypesResource = {
   payment_types: [
     {
@@ -194,10 +209,10 @@ export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =
   new Promise((resolve) => resolve(mockedPSPChannels));
 
 export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
-  new Promise((resolve) => resolve(mockedPSPChannels));
+  new Promise((resolve) => resolve(mockedChannel));
 
 export const updateChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
-  new Promise((resolve) => resolve(mockedPSPChannels));
+  new Promise((resolve) => resolve(mockedChannel));
 
 export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));

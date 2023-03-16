@@ -2,7 +2,7 @@ import { RedirectProtocolEnum } from '../api/generated/portal/StationDetailsDto'
 
 export type StationOnCreation = {
   stationCode: string;
-  primitiveVersion: number;
+  primitiveVersion: string;
   redirectProtocol: RedirectProtocolEnum;
   redirectPort: number;
   redirectIp: string;

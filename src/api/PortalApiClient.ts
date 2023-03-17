@@ -16,9 +16,10 @@ import { createClient, WithDefaultsT } from './generated/portal/client';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
-import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 import { StationDetailsDto } from './generated/portal/StationDetailsDto';
+import { StationsResource } from './generated/portal/StationsResource';
+import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -214,5 +215,10 @@ export const PortalApi = {
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  getStations: async (page: number): Promise<StationsResource> => {
+    const result = await apiConfigClient.getStationsUsingGET({ page });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 };

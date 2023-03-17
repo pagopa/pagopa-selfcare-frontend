@@ -23,6 +23,7 @@ import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
 import AddEditStationForm from './pages/stations/addEditStation/AddEditStationForm';
+import StationsPage from './pages/stations/list/StationsPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -69,6 +70,9 @@ const SecuredRoutes = withLogin(
           </Route>
           <Route path={routes.TOS} exact={true}>
             <TOS />
+          </Route>
+          <Route path={routes.STATIONS} exact={true}>
+            <StationsPage />
           </Route>
           <Route path="*">
             <Redirect to={routes.HOME} />

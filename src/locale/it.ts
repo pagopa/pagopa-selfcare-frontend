@@ -253,12 +253,43 @@ export default {
     errorMessageDesc: 'Errore durante la creazione, Codice stazione duplicato',
   },
 
+  stationsPage: {
+    title: 'Stazioni',
+    subtitle: 'Cerca e visualizza lo stato delle stazioni.',
+    searchPlaceholder: 'Cerca per codice stazione',
+    createStationButtonLabel: 'Crea stazione',
+    notFoundStations:
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <2>Crea stazione</2>',
+    stationsTableColumns: {
+      headerFields: {
+        name: 'Codice stazione',
+        creationDate: 'Data creazione',
+        lastEditDate: 'Ultima modifica',
+        activationDate: 'Data attivazione',
+        status: 'Stato',
+      },
+    },
+    states: {
+      revision: 'In revisione',
+      needCorrection: 'Da correggere',
+      active: 'Attiva',
+    },
+    stationOptions: {
+      manageStation: 'Gestisci stazione',
+      manageEC: 'Gestisci EC',
+      correctStation: 'Correggi',
+      editStation: 'Modifica',
+    },
+  },
   sideMenu: {
     home: {
       title: 'API Key',
     },
     channels: {
       title: 'Canali',
+    },
+    stations: {
+      title: 'Stazioni',
     },
   },
   header: {

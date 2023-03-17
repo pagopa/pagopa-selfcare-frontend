@@ -335,7 +335,7 @@ const AddEditStationForm = () => {
 
             <Box sx={inputGroupStyle}>
               <AddEditStationFormSectionTitle
-                title={t('addEditStationPage.addForm.sections.redirect')}
+                title={t('addEditStationPage.addForm.sections.target')}
                 icon={<MenuBook />}
                 isRequired
               />

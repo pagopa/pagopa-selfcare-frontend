@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Grid,
@@ -13,16 +14,18 @@ import { useTranslation, Trans } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import { theme } from '@pagopa/mui-italia';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { getStations } from '../../../services/stationService';
 import { StationsResource } from '../../../api/generated/portal/StationsResource';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import ROUTES from '../../../routes';
 import StationsTable from './StationsTable';
 
 export default function StationsPage() {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
-
+  const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
   const [stations, setStations] = useState<StationsResource>();
 
@@ -64,7 +67,12 @@ export default function StationsPage() {
             variantSubTitle="body1"
           />
         </Box>
-        <Grid sx={{ display: 'flex', flexDirection: 'row' }} mt={1}>
+        {history.location.state && (history.location.state as any).alertSuccessMessage && (
+          <Alert severity="success" variant="outlined">
+            {(history.location.state as any).alertSuccessMessage}
+          </Alert>
+        )}
+        <Grid sx={{ display: 'flex', flexDirection: 'row' }} mt={3}>
           <TextField
             InputProps={{
               startAdornment: (
@@ -82,7 +90,11 @@ export default function StationsPage() {
             fullWidth
             placeholder={t('stationsPage.searchPlaceholder')}
           />
-          <Button variant="contained" sx={{ ml: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}>
+          <Button
+            variant="contained"
+            sx={{ ml: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}
+            onClick={() => history.push(ROUTES.STATION_ADD)}
+          >
             <Typography
               mx={3}
               sx={{ color: 'background.paper', fontWeight: '600', fontSize: '16px' }}
@@ -115,7 +127,7 @@ export default function StationsPage() {
               <Trans i18next="stationsPage.notFoundStations">
                 Non sono ancora presenti stazioni in ambiente di collaudo.&nbsp;
                 <Link
-                  onClick={() => {}}
+                  onClick={() => history.push(ROUTES.STATION_ADD)}
                   sx={{
                     cursor: 'pointer',
                     textDecoration: 'none',

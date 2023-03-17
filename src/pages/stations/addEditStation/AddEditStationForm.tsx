@@ -98,7 +98,7 @@ const AddEditStationForm = () => {
       createStation(values)
         .then((res) => {
           console.log('response', res);
-          history.push(ROUTES.HOME, {
+          history.push(ROUTES.STATIONS, {
             alertSuccessMessage: t('addEditStationPage.successMessage'),
           });
         })

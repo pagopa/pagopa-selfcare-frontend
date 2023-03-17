@@ -21,7 +21,7 @@ export const mockedStation: StationDetailsDto = {
 export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailsDto> =>
   new Promise((resolve) => resolve(mockedStation));
 
-const mockedStations: StationsResource = {
+export const mockedStations: StationsResource = {
   pageInfo: 'infotest0',
   stationsList: [
     {

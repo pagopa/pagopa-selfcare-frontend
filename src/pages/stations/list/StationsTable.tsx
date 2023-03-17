@@ -108,7 +108,7 @@ export default function StationsTable({ stations }: Props) {
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
-            getRowId={(r) => r.stationId}
+            getRowId={(r) => r.stationCode}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="server"

@@ -15,7 +15,7 @@ export const createStation = (station: StationOnCreation): Promise<StationDetail
 export const getStations = (page: number): Promise<StationsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getStationsMocked(page);
+    return getStationsMocked(0);
   } else {
     return PortalApi.getStations(page).then((resource) => resource);
   }

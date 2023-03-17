@@ -153,7 +153,7 @@ function showStationID(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.stationId}
+                {params.row.stationCode}
               </Typography>
             </Grid>
           </Grid>

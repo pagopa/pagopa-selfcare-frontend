@@ -10,6 +10,30 @@ export default {
     admin: 'Amministratore',
     operator: 'Referente Tecnico',
   },
+  dashboardPage: {
+    title: 'Panoramica',
+    subtitle: 'Tieni sotto controllo tutte le tue attività da qui.',
+    registrationData: {
+      title: 'Dati di registrazione',
+      name: 'Nome',
+      companyName: 'Ragione Sociale',
+      fiscalCode: 'Codice Fiscale',
+      abiCode: 'Codice ABI',
+      pspCode: 'Codice PSP',
+      bicCode: 'Codice BIC',
+      digitalStamp: 'Marca da bollo digitale',
+      statusLabel: 'Stato',
+      status: {
+        enabled: 'Abilitato',
+        disabled: 'Non abilitato',
+      },
+    },
+    nextStep: {
+      title: 'E ora?',
+      signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
+      signInCTA: 'Completa registrazione',
+    },
+  },
   apiKeysPage: {
     title: 'API Key',
     subtitle:
@@ -210,6 +234,9 @@ export default {
   },
   sideMenu: {
     home: {
+      title: 'Panoramica',
+    },
+    apikeys: {
       title: 'API Key',
     },
     channels: {

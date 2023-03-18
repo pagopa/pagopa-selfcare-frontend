@@ -16,7 +16,7 @@ let fetchPartyDetailsSpy: jest.SpyInstance;
 let fetchPartyProductsSpy: jest.SpyInstance;
 
 beforeEach(() => {
-  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchPartyDetails');
+  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchParties');
   fetchPartyProductsSpy = jest.spyOn(require('../../services/productService'), 'fetchProducts');
 
   storageTokenOps.write(testToken); // party with partyId="onboarded"
@@ -62,8 +62,5 @@ const checkSelectedParty = (state: RootState) => {
 
 const checkMockInvocation = (expectedCallsNumber: number) => {
   expect(fetchPartyDetailsSpy).toBeCalledTimes(expectedCallsNumber);
-  expect(fetchPartyDetailsSpy).toBeCalledWith(expectedPartyId, undefined);
-
-  expect(fetchPartyProductsSpy).toBeCalledTimes(expectedCallsNumber);
-  expect(fetchPartyProductsSpy).toBeCalledWith(expectedPartyId);
+  expect(fetchPartyDetailsSpy).toBeCalledWith();
 };

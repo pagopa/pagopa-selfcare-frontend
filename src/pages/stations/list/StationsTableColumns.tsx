@@ -8,7 +8,7 @@ import { StationsMenuOptions } from '../components/StationsMenuOptions';
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
-      field: 'stationId',
+      field: 'stationCode',
       cellClassName: 'justifyContentBold',
       headerName: t('stationsPage.stationsTableColumns.headerFields.name'),
       align: 'left',
@@ -193,7 +193,7 @@ function showStatus(params: GridRenderCellParams) {
           marginLeft: 2,
         }}
       />
-      <StationsMenuOptions status={params.row.stationStatus} />
+      <StationsMenuOptions status={params.row.stationStatus} stationCode={params.row.stationCode} />
     </Box>,
     {
       paddingLeft: 0,

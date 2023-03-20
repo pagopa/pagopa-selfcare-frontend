@@ -20,7 +20,7 @@ export const mockedParties: Array<Party> = [
     ],
     urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
     typology: 'TODO',
-    institutionType: 'PSP',
+    institutionType: 'EC',
     pspData: {
       businessRegisterNumber: '00000000000',
       legalRegisterName: 'ISTITUTI DI PAGAMENTO',

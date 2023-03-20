@@ -74,7 +74,7 @@ const initialFormData = (selectedParty?: Party, channelDetail?: ChannelDetailsDt
         pspBrokerCode: selectedParty?.fiscalCode ?? '',
         businessName: selectedParty?.description ?? '',
         idChannel: '',
-        redirectProtocol: undefined,
+        redirectProtocol: Redirect_protocolEnum.HTTPS,
         redirectIp: '',
         redirectService: '',
         redirectParameters: '',

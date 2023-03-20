@@ -17,15 +17,18 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { StationDetail } from '../../../model/Station';
 import { getStationDetail } from '../../../services/__mocks__/stationService';
 import { ENV } from '../../../utils/env';
+import {
+  StationDetailResource,
+  StationStatusEnum,
+} from '../../../api/generated/portal/StationDetailResource';
 
 const StationDetailPage = () => {
   const { t } = useTranslation();
 
   const { stationId } = useParams<{ stationId: string }>();
-  const [stationDetail, setStationDetail] = useState<StationDetail>();
+  const [stationDetail, setStationDetail] = useState<StationDetailResource>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,6 +38,24 @@ const StationDetailPage = () => {
   }, []);
 
   const hidePassword = 'XXXXXXXXXXXXXX';
+
+  const showOrHidePassword = () => {
+    if (showPassword) {
+      return stationDetail?.password;
+    }
+    return hidePassword;
+  };
+
+  const formatedDate = (date: Date | undefined) => {
+    if (date) {
+      return date.toLocaleString('it-IT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+    }
+    return null;
+  };
 
   return (
     <Grid container justifyContent={'center'} mb={5}>
@@ -53,38 +74,51 @@ const StationDetailPage = () => {
           <Breadcrumbs>
             <Typography>{t('general.Stations')}</Typography>
             <Typography variant="body2" color={'#17324D'} sx={{ fontWeight: 'fontWeightMedium' }}>
-              {t('stationDetailPage.detail')} {stationDetail?.anagraphic.stationId}
+              {t('stationDetailPage.detail', {
+                code: stationDetail?.stationCode,
+              })}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox
-              title={stationDetail?.anagraphic.stationId ?? ''}
+              title={stationDetail?.stationCode ?? ''}
               mbTitle={2}
               variantTitle="h4"
               variantSubTitle="body1"
             />
-            <Typography mb={5}>
-              {t('stationDetailPage.createdAt')}
-              <Typography component={'span'} fontWeight={'fontWeightMedium'} color={'#5C6F82'}>
-                {stationDetail?.anagraphic.activationDate}
-              </Typography>
+            <Typography mb={5} component={'span'} fontWeight={'fontWeightMedium'} color={'#5C6F82'}>
+              {t('stationDetailPage.createdAt', {
+                data: formatedDate(stationDetail?.activationDate),
+              })}
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {stationDetail?.anagraphic.status !== 'ACTIVE' ? (
+              {stationDetail?.stationStatus === StationStatusEnum.ON_REVISION ? (
                 <Button
                   color="primary"
                   style={{
-                    color: 'background.paper',
+                    color: '#FFFFFF',
                     borderColor: theme.palette.error.dark,
                   }}
                   variant="contained"
                   onClick={() => {}} // TODO FixMe
                 >
                   {t('stationDetailPage.actionButtons.edit')}
+                </Button>
+              ) : stationDetail?.stationStatus === StationStatusEnum.TO_BE_CORRECTED ? (
+                <Button
+                  color="primary"
+                  style={{
+                    color: '#FFFFFF',
+                    borderColor: theme.palette.error.dark,
+                  }}
+                  variant="contained"
+                  onClick={() => {}} // TODO FixMe
+                >
+                  {t('stationDetailPage.actionButtons.revise')}
                 </Button>
               ) : (
                 <>
@@ -141,22 +175,22 @@ const StationDetailPage = () => {
                 size="medium"
                 sx={{
                   backgroundColor:
-                    stationDetail?.anagraphic.status === 'ACTIVE'
+                    stationDetail?.stationStatus === StationStatusEnum.ACTIVE
                       ? 'primary.main'
-                      : stationDetail?.anagraphic.status === 'TO_EDIT'
+                      : stationDetail?.stationStatus === StationStatusEnum.ON_REVISION
                       ? '#EEEEEE'
                       : 'warning.light',
                   color:
-                    stationDetail?.anagraphic.status === 'ACTIVE'
+                    stationDetail?.stationStatus === StationStatusEnum.ACTIVE
                       ? 'background.paper'
                       : 'text.primary',
                 }}
                 label={
-                  stationDetail?.anagraphic.status === 'REVIEW'
-                    ? t('stationDetailPage.states.needCorrection')
-                    : stationDetail?.anagraphic.status === 'TO_EDIT'
+                  stationDetail?.stationStatus === StationStatusEnum.ACTIVE
+                    ? t('stationDetailPage.states.active')
+                    : stationDetail?.stationStatus === StationStatusEnum.ON_REVISION
                     ? t('stationDetailPage.states.revision')
-                    : t('stationDetailPage.states.active')
+                    : t('stationDetailPage.states.needCorrection')
                 }
               />
             </Grid>
@@ -180,7 +214,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.stationId}
+                    {stationDetail?.stationCode}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -188,7 +222,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.version}
+                    {stationDetail?.version}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -196,7 +230,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.primitiveVersion}
+                    {stationDetail?.primitiveVersion}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -212,31 +246,33 @@ const StationDetailPage = () => {
                     alignItems: 'center',
                   }}
                 >
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {showPassword ? stationDetail?.anagraphic.password : hidePassword}
-                  </Typography>
-                  <IconButton
-                    style={{
-                      border: 'none !important',
-                      marginLeft: '42px',
-                    }}
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  >
-                    {showPassword ? (
-                      <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                    ) : (
-                      <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                    )}
-                  </IconButton>
+                  <>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {showOrHidePassword()}
+                    </Typography>
+                    <IconButton
+                      style={{
+                        border: 'none !important',
+                        marginLeft: '42px',
+                      }}
+                      onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}
+                    >
+                      {showPassword ? (
+                        <VisibilityIcon color="primary" sx={{ width: '80%' }} />
+                      ) : (
+                        <VisibilityOff color="primary" sx={{ width: '80%' }} />
+                      )}
+                    </IconButton>
+                  </>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.redirectUrl')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.redirectUrl}
+                    {stationDetail?.redirectPath}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -244,7 +280,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.anagraphic.activationDate}
+                    {formatedDate(stationDetail?.activationDate)}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -255,7 +291,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.target.address}
+                    {stationDetail?.targetPath}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -263,7 +299,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.target.service}
+                    {stationDetail?.targetHost}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -271,7 +307,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.target.port}
+                    {stationDetail?.targetPort}
                   </Typography>
                 </Grid>
                 <Grid
@@ -284,7 +320,7 @@ const StationDetailPage = () => {
                   <ButtonNaked
                     component={Link}
                     to={ENV.URL_FE.LOGOUT} // TODO FixMe
-                    disabled={stationDetail?.anagraphic.status !== 'ACTIVE'}
+                    disabled={stationDetail?.stationStatus !== StationStatusEnum.ACTIVE}
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"
@@ -297,7 +333,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.associatesEC.associates}
+                    {stationDetail?.associatedCreditorInstitutions}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -308,7 +344,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.changes.lastChangesDate}
+                    {formatedDate(stationDetail?.modifiedAt)}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -316,7 +352,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.changes.operatedBy}
+                    {stationDetail?.operatedBy}
                   </Typography>
                 </Grid>
               </Grid>

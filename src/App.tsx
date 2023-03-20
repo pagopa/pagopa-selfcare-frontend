@@ -22,9 +22,9 @@ import AddEditChannelPage from './pages/channels/addEditChannel/AddEditChannelPa
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
-import AddEditStationForm from './pages/stations/addEditStation/AddEditStationForm';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationDetailPage from './pages/stations/detail/StationDetailPage';
+import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -67,7 +67,7 @@ const SecuredRoutes = withLogin(
             <AddEditChannelPage />
           </Route>
           <Route path={routes.STATION_ADD} exact={true}>
-            <AddEditStationForm />
+            <AddEditStationPage />
           </Route>
           <Route path={routes.STATION_DETAIL} exact={true}>
             <StationDetailPage />

@@ -1,10 +1,10 @@
+import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
   RedirectProtocolEnum,
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
-import { StationDetail } from '../../model/Station';
 
 export const mockedStation: StationDetailsDto = {
   stationCode: '97735020584_01',
@@ -58,75 +58,54 @@ export const mockedStations: StationsResource = {
   ],
 };
 
-const mockedStationsDetail: Array<StationDetail> = [
+const mockedStationsDetail: Array<StationDetailResource> = [
   {
-    anagraphic: {
-      status: 'ACTIVE',
-      stationId: '97735020584_01',
-      version: 'testversion01',
-      primitiveVersion: 'testPrimitiveVersion01',
-      password: 'PASSWORD',
-      redirectUrl: 'esempiolink1.it',
-      activationDate: '23/02/2023',
-    },
-    target: {
-      address: 'lab.link1.it',
-      service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
-      port: '80',
-    },
-    associatesEC: {
-      associates: '0',
-    },
-    changes: {
-      lastChangesDate: '19/02/2023',
-      operatedBy: 'Nome Cognome/Matricola operatore',
-    },
+    enabled: true,
+    stationStatus: StationStatusEnum.ACTIVE,
+    stationCode: '97735020584_01',
+    version: 1,
+    primitiveVersion: '1',
+    password: 'PASSWORD',
+    redirectPath: 'esempiolink1.it',
+    activationDate: new Date('2023-02-23'),
+    targetPath: 'lab.link1.it',
+    service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
+    port: 80,
+    associatedCreditorInstitutions: 0,
+    modifiedAt: new Date('2023-02-19'),
+    operatedBy: 'Nome Cognome/Matricola operatore',
   },
   {
-    anagraphic: {
-      status: 'REVIEW',
-      stationId: '97735020584_02',
-      version: 'testversion02',
-      primitiveVersion: 'testPrimitiveVersion02',
-      password: 'PASSWORD',
-      redirectUrl: 'esempiolink2.it',
-      activationDate: '24/02/2023',
-    },
-    target: {
-      address: 'lab.link2.it',
-      service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-      port: '80',
-    },
-    associatesEC: {
-      associates: '0',
-    },
-    changes: {
-      lastChangesDate: '20/02/2023',
-      operatedBy: 'Nome Cognome/Matricola operatore',
-    },
+    enabled: true,
+    stationStatus: StationStatusEnum.ON_REVISION,
+    stationCode: '97735020584_02',
+    version: 2,
+    primitiveVersion: 'testPrimitiveVersion02',
+    password: 'PASSWORD',
+    redirectPath: 'esempiolink2.it',
+    activationDate: new Date('2023-02-24'),
+    targetPath: 'lab.link2.it',
+    service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+    port: 80,
+    associatedCreditorInstitutions: 0,
+    modifiedAt: new Date('2023-02-20'),
+    operatedBy: 'Nome Cognome/Matricola operatore',
   },
   {
-    anagraphic: {
-      status: 'TO_EDIT',
-      stationId: '97735020584_03',
-      version: 'testversion03',
-      primitiveVersion: 'testPrimitiveVersion03',
-      password: 'XXXXXXXXXXXXXX',
-      redirectUrl: 'esempiolink3.it',
-      activationDate: '25/02/2023',
-    },
-    target: {
-      address: 'lab.link3.it',
-      service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-      port: '80',
-    },
-    associatesEC: {
-      associates: '0',
-    },
-    changes: {
-      lastChangesDate: '20/03/2023',
-      operatedBy: 'Nome Cognome/Matricola operatore',
-    },
+    enabled: true,
+    stationStatus: StationStatusEnum.TO_BE_CORRECTED,
+    stationCode: '97735020584_03',
+    version: 1,
+    primitiveVersion: '2',
+    password: 'XXXXXXXXXXXXXX',
+    redirectPath: 'esempiolink3.it',
+    activationDate: new Date('2023-02-25'),
+    targetPath: 'lab.link3.it',
+    service: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+    port: 80,
+    associatedCreditorInstitutions: 0,
+    modifiedAt: new Date('2023-03-20'),
+    operatedBy: 'Nome Cognome/Matricola operatore',
   },
 ];
 
@@ -136,10 +115,8 @@ export const createStationMocked = (_station: StationDetailsDto): Promise<Statio
 export const getStations = (_page: number): Promise<StationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
 
-export const getStationDetail = (stationId: string): Promise<StationDetail> => {
-  const matchedStationByStationID = mockedStationsDetail.find(
-    (s) => s.anagraphic.stationId === stationId
-  );
+export const getStationDetail = (stationCode: any): Promise<StationDetailResource> => {
+  const matchedStationByStationID = mockedStationsDetail.find((s) => s.stationCode === stationCode);
   if (matchedStationByStationID) {
     return new Promise((resolve) => resolve(matchedStationByStationID));
   } else {

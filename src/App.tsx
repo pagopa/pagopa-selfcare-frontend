@@ -24,6 +24,7 @@ import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPa
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
 import AddEditStationForm from './pages/stations/addEditStation/AddEditStationForm';
 import StationsPage from './pages/stations/list/StationsPage';
+import StationDetailPage from './pages/stations/detail/StationDetailPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -67,6 +68,9 @@ const SecuredRoutes = withLogin(
           </Route>
           <Route path={routes.STATION_ADD} exact={true}>
             <AddEditStationForm />
+          </Route>
+          <Route path={routes.STATION_DETAIL} exact={true}>
+            <StationDetailPage />
           </Route>
           <Route path={routes.TOS} exact={true}>
             <TOS />

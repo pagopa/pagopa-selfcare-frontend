@@ -17,6 +17,7 @@ const ROUTES = {
   CHANNEL_ADD: `${BASE_ROUTE}/channels/add-channel/`,
   STATION_ADD: `${BASE_ROUTE}/stations/add-station/`,
   STATIONS: `${BASE_ROUTE}/stations`,
+  STATION_DETAIL: `${BASE_ROUTE}/stations/:stationId`,
 
   /* TOS: {
     PATH: '/terms-of-service',

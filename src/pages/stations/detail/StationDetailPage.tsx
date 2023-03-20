@@ -81,7 +81,7 @@ const StationDetailPage = () => {
           </Breadcrumbs>
         </Stack>
         <Grid container mt={3}>
-          <Grid item xs={6}>
+          <Grid item xs={6} mb={5}>
             <TitleBox
               title={stationDetail?.stationCode ?? ''}
               mbTitle={2}
@@ -299,7 +299,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost}
+                    {stationDetail?.service}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -307,7 +307,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPort}
+                    {stationDetail?.port}
                   </Typography>
                 </Grid>
                 <Grid

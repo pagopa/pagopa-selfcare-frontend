@@ -78,7 +78,6 @@ function NodeSignInForm({ goBack }: Props) {
     initialValues: initialFormData(selectedParty),
     validate,
     onSubmit: async () => {
-      alert(JSON.stringify(formik.values));
       await submit();
     },
     enableReinitialize: true,

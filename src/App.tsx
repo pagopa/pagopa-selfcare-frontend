@@ -9,19 +9,21 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import withLogin from './decorators/withLogin';
 import Layout from './components/Layout/Layout';
 import routes from './routes';
-import Home from './pages/home/Home';
+import ApiKeysPage from './pages/apiKeys/ApiKeysPage';
 import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
 import Auth from './pages/auth/Auth';
 import { TOS } from './pages/tos/TOS';
 
 import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
-import AddApiKeyPage from './pages/apikey/AddApiKeyPage';
+import AddApiKeyPage from './pages/apiKeys/AddApiKeyPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
 import AddEditChannelPage from './pages/channels/addEditChannel/AddEditChannelPage';
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
+import DashboardPage from './pages/dashboard/DashboardPage';
+import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -40,9 +42,15 @@ const SecuredRoutes = withLogin(
       <Layout>
         <Switch>
           <Route path={routes.HOME} exact={true}>
-            <Home />
+            <DashboardPage />
           </Route>
-          <Route path={routes.CREATE_APIKEY} exact={true}>
+          <Route path={routes.NODE_SIGNIN} exact={true}>
+            <NodeSignInPage />
+          </Route>
+          <Route path={routes.APIKEYS} exact={true}>
+            <ApiKeysPage />
+          </Route>
+          <Route path={routes.APIKEYS_CREATE} exact={true}>
             <AddApiKeyPage />
           </Route>
           <Route path={routes.CHANNELS} exact={true}>

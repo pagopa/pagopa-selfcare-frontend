@@ -4,6 +4,7 @@ import { useUnloadEventOnExit } from '@pagopa/selfcare-common-frontend/hooks/use
 import { useTranslation } from 'react-i18next';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import UsbIcon from '@mui/icons-material/Usb';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
@@ -32,6 +33,12 @@ export default function SideMenu() {
             title={t('sideMenu.home.title')}
             handleClick={() => onExit(() => history.push(ROUTES.HOME))}
             isSelected={pathname === ROUTES.HOME}
+            icon={DashboardIcon}
+          />
+          <SidenavItem
+            title={t('sideMenu.apikeys.title')}
+            handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
+            isSelected={pathname === ROUTES.APIKEYS}
             icon={VpnKeyIcon}
           />
           {ENV.FEATURES.CHANNELS.ENABLED && (

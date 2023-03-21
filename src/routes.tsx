@@ -6,9 +6,10 @@ export const BASE_ROUTE = ENV.PUBLIC_URL;
 const ROUTES = {
   AUTH: `${BASE_ROUTE}/auth`,
   HOME: `${BASE_ROUTE}`,
-  WIZARD: `${BASE_ROUTE}/wizard`,
+  NODE_SIGNIN: `${BASE_ROUTE}/node-signin`,
   TOS: `${BASE_ROUTE}/terms-of-service`,
-  CREATE_APIKEY: `${BASE_ROUTE}/add-apikey`,
+  APIKEYS: `${BASE_ROUTE}/api-keys`,
+  APIKEYS_CREATE: `${BASE_ROUTE}/add-apikey`,
   CHANNELS: `${BASE_ROUTE}/channels`,
   CHANNEL_DETAIL: `${BASE_ROUTE}/channels/:channelId`,
   CHANNEL_EDIT: `${BASE_ROUTE}/channels/:channelId/:actionId`,

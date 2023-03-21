@@ -23,7 +23,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm />
+            <AddEditStationForm goBack={jest.fn()} formAction={''} />
           </Router>
         </ThemeProvider>
       </Provider>

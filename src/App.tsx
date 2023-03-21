@@ -23,6 +23,7 @@ import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -42,6 +43,9 @@ const SecuredRoutes = withLogin(
         <Switch>
           <Route path={routes.HOME} exact={true}>
             <DashboardPage />
+          </Route>
+          <Route path={routes.NODE_SIGNIN} exact={true}>
+            <NodeSignInPage />
           </Route>
           <Route path={routes.APIKEYS} exact={true}>
             <ApiKeysPage />

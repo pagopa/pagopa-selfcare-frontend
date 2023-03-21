@@ -6,7 +6,7 @@ export const BASE_ROUTE = ENV.PUBLIC_URL;
 const ROUTES = {
   AUTH: `${BASE_ROUTE}/auth`,
   HOME: `${BASE_ROUTE}`,
-  WIZARD: `${BASE_ROUTE}/wizard`,
+  NODE_SIGNIN: `${BASE_ROUTE}/node-signin`,
   TOS: `${BASE_ROUTE}/terms-of-service`,
   APIKEYS: `${BASE_ROUTE}/api-keys`,
   APIKEYS_CREATE: `${BASE_ROUTE}/add-apikey`,

@@ -34,6 +34,34 @@ export default {
       signInCTA: 'Completa registrazione',
     },
   },
+  nodeSignInPage: {
+    title: 'Registrazione sul Nodo',
+    subtitle: 'Completa i dati necessari alla registrazione.',
+    breadcrumb: 'Registrazione sul Nodo',
+    form: {
+      sections: {
+        registrationData: 'Dati di registrazione',
+        digitalStamp: 'Marca da bollo digitale',
+      },
+      fields: {
+        name: 'Nome',
+        businessName: 'Ragione Sociale',
+        fiscalCode: 'Codice Fiscale',
+        abiCode: 'Codice ABI',
+        pspCode: 'Codice PSP',
+        bicCode: 'Codice BIC',
+        digitalStamp: {
+          yes: 'Sì, attiva',
+          no: 'No',
+        },
+      },
+      successMessage: 'Registrazione sul Nodo completata con successo.',
+      errorMessageTitle: 'Errore',
+      errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
+      backButton: 'Annulla',
+      continueButton: 'Conferma',
+    },
+  },
   apiKeysPage: {
     title: 'API Key',
     subtitle:
@@ -271,5 +299,6 @@ export default {
     back: 'Indietro',
     channels: 'canali',
     Channels: 'Canali',
+    dashboard: 'Panoramica',
   },
 };

@@ -95,6 +95,7 @@ export default function StationsTable({ stations }: Props) {
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
+            disableSelectionOnClick
             autoHeight={true}
             className="CustomDataGrid"
             columnBuffer={5}

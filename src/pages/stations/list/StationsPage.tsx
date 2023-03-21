@@ -135,7 +135,6 @@ export default function StationsPage() {
                     color: theme.palette.primary.main,
                   }}
                 >
-                  {/* TODO Redirect to addStationPage */}
                   Crea stazione
                 </Link>
               </Trans>

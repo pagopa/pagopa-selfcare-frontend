@@ -6,7 +6,7 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-
+import { StationOnCreation } from '../model/Station';
 import { ChannelOnCreation } from '../model/Channel';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
@@ -16,8 +16,10 @@ import { createClient, WithDefaultsT } from './generated/portal/client';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
-import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
+import { StationDetailsDto } from './generated/portal/StationDetailsDto';
+import { StationsResource } from './generated/portal/StationsResource';
+import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -194,6 +196,29 @@ export const PortalApi = {
       channelcode,
       pspcode,
     });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createStation: async (station: StationOnCreation): Promise<StationDetailsDto> => {
+    const result = await apiConfigClient.createStationUsingPOST({
+      body: {
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetAddress,
+        targetPort: station.targetPort,
+        targetPath: station.targetService,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  getStations: async (page: number): Promise<StationsResource> => {
+    const result = await apiConfigClient.getStationsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

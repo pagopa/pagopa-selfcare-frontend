@@ -53,6 +53,7 @@ variables:
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
     react_app_features_channels_enabled: 'false'
+    react_app_features_stations_enabled: 'false'
 
     react_app_one_trust_base_url: '$(UAT_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: '$(UAT_REACT_APP_ANALYTICS_ENABLED)'
@@ -83,6 +84,7 @@ variables:
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
 
     react_app_features_channels_enabled: 'false'
+    react_app_features_stations_enabled: 'false'
 
     react_app_one_trust_base_url: '$(PROD_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: 'false'
@@ -97,30 +99,31 @@ variables:
     azure_subscription: $(DEV_AZURE_SUBSCRIPTION)
     cdn_endpoint: 'pagopa-d-selfcare-cdn-endpoint'
     cdn_profile: 'pagopa-d-selfcare-cdn-profile'
-    resource_group: $(DEV_RESOURCE_GROUP_AZURE) 
+    resource_group: $(DEV_RESOURCE_GROUP_AZURE)
     storage_account: $(DEV_STORAGE_ACCOUNT_NAME)
-    
-    react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELFCARE_HOST) 
-    react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)' 
-    react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)' 
+
+    react_app_url_cdn: 'https://dev.selfcare.pagopa.it' # $(DEV_SELFCARE_HOST)
+    react_app_url_fe_auth: '$(DEV_REACT_APP_URL_FE_LOGIN)'
+    react_app_url_fe_landing: '$(DEV_REACT_APP_URL_FE_LANDING)'
     react_app_url_fe_assistance: '$(DEV_REACT_APP_URL_FE_ASSISTANCE)'
     react_app_url_api_portal: '$(DEV_REACT_APP_URL_API_PORTAL)'
     react_app_url_api_apiconfig: 'https://api.dev.platform.pagopa.it/backoffice/apiconfig/auth/v1' #'$(DEV_REACT_APP_URL_API_APICONFIG)'
-    react_app_url_storage: 'https://selcdcheckoutsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)' 
+    react_app_url_storage: 'https://selcdcheckoutsa.z6.web.core.windows.net/' #'$(DEV_REACT_APP_URL_STORAGE)'
     react_app_url_fe_selfcare: 'https://dev.selfcare.pagopa.it/dashboard/' #'$(DEV_REACT_APP_URL_FE_SELFCARE)' #
-    react_app_url_fe_token_exchange: 'https://dev.selfcare.pagopa.it/token-exchange' #$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)' 
+    react_app_url_fe_token_exchange: 'https://dev.selfcare.pagopa.it/token-exchange' #$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
     react_app_url_api_token: '$(DEV_REACT_APP_URL_API_TOKEN)' # 'https://api.dev.platform.pagopa.it/api/token/token' #
 
     react_app_features_channels_enabled: 'true'
+    react_app_features_stations_enabled: 'true'
 
     react_app_one_trust_base_url: 'https://dev.selfcare.pagopa.it/ot/test' # '$(DEV_SELFCARE_HOST)/ot/test'
     react_app_analytics_enabled: 'false'
     react_app_analytics_mocked: 'false'
-    react_app_mixpanel_token: $(DEV_REACT_APP_MIXPANEL_TOKEN) 
+    react_app_mixpanel_token: $(DEV_REACT_APP_MIXPANEL_TOKEN)
     react_app_onetrust_domain_id: $(DEV_REACT_APP_ONETRUST_DOMAIN_ID)
 
   ${{ if eq(variables['Build.SourceBranchName'], 'merge') }}:
-    SOURCE_BRANCH: "main" # force to main branch
+    SOURCE_BRANCH: 'main' # force to main branch
   ${{ if ne(variables['Build.SourceBranchName'], 'merge') }}:
     SOURCE_BRANCH: ${{ variables['Build.SourceBranchName'] }}
 # Automatically triggered on PR
@@ -169,27 +172,27 @@ stages:
           #     gitEmail: $(GIT_EMAIL)
           #     gitUsername: $(GIT_USERNAME)
           #     gitHubConnection: $(GITHUB_CONNECTION)
-#    jobs:
-#      - job: make_release
-#        condition: eq(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
-#        steps:
-#          - template: templates/node-job-setup/template.yaml@pagopaCommons
-#            parameters:
-#              persistCredentials: true
-#          - template: templates/node-github-release/template.yaml@pagopaCommons
-#            parameters:
-#              release_branch: '$(DEFAULT_BRANCH)'
-#              semver: '${{ parameters.RELEASE_SEMVER }}'
-#              gitEmail: '$(GIT_EMAIL)'
-#              gitUsername: '$(GIT_USERNAME)'
-#              gitHubConnection: '$(GITHUB_CONNECTION)'
-#
-#      - job: skip_release
-#        condition: ne(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
-#        steps:
-#          - script: |
-#              echo "We assume this reference to be a valid release: $(Build.SourceBranch). Therefore, there is no need to bundle a new release."
-#            displayName: 'Skip release bundle'
+  #    jobs:
+  #      - job: make_release
+  #        condition: eq(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
+  #        steps:
+  #          - template: templates/node-job-setup/template.yaml@pagopaCommons
+  #            parameters:
+  #              persistCredentials: true
+  #          - template: templates/node-github-release/template.yaml@pagopaCommons
+  #            parameters:
+  #              release_branch: '$(DEFAULT_BRANCH)'
+  #              semver: '${{ parameters.RELEASE_SEMVER }}'
+  #              gitEmail: '$(GIT_EMAIL)'
+  #              gitUsername: '$(GIT_USERNAME)'
+  #              gitHubConnection: '$(GITHUB_CONNECTION)'
+  #
+  #      - job: skip_release
+  #        condition: ne(variables['Build.SourceBranch'], format('refs/heads/{0}', variables.DEFAULT_BRANCH))
+  #        steps:
+  #          - script: |
+  #              echo "We assume this reference to be a valid release: $(Build.SourceBranch). Therefore, there is no need to bundle a new release."
+  #            displayName: 'Skip release bundle'
 
   # Prepare Artifact with application bundle
   - stage: Prepare_artifact
@@ -225,6 +228,7 @@ stages:
               REACT_APP_URL_INSTITUTION_LOGO_PREFIX: '$(react_app_url_storage)/institutions/'
 
               REACT_APP_FEATURES_CHANNELS_ENABLED: '$(react_app_features_channels_enabled)'
+              REACT_APP_FEATURES_STATIONS_ENABLED: '$(react_app_features_stations_enabled)'
 
               REACT_APP_ANALYTICS_ENABLE: '$(react_app_analytics_enabled)'
               REACT_APP_ANALYTICS_MOCK: 'true' #$(react_app_analytics_mocked)
@@ -259,7 +263,7 @@ stages:
           #     destination: 'azureBlob'
           #     storage: '$(storage_account)'
           #     containerName: '$(blob_container_name)'
-          
+
           - task: AzureCLI@1
             displayName: 'Sync checkout storage'
             inputs:

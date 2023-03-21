@@ -23,8 +23,8 @@ const Channels = () => {
   };
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
+    <Grid container item xs={12} sx={{ backgroundColor: '#F5F5F5' }}>
+      <Grid item xs={2} sx={{ backgroundColor: 'background.paper' }}>
         <Box>
           <SideMenu />
         </Box>

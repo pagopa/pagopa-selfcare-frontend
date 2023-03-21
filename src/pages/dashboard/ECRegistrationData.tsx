@@ -37,9 +37,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
-          <Chip label={t('dashboardPage.registrationData.status.disabled')}></Chip>
-        </Typography>
+        <Chip label={t('dashboardPage.registrationData.status.disabled')}></Chip>
       </Grid>
     </>
   );

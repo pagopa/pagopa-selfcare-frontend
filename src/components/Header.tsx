@@ -8,8 +8,10 @@ import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
 import withParties, { WithPartiesProps } from '../decorators/withParties';
 import { Product } from '../model/Product';
-import { useAppSelector } from '../redux/hooks';
-import { partiesSelectors } from '../redux/slices/partiesSlice';
+import { fetchPartyDetails } from '../services/partyService';
+import { Party } from '../model/Party';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
@@ -42,6 +44,7 @@ const selfcareProduct: Product = {
 
 const Header = ({ onExit, loggedUser, parties }: Props) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
@@ -110,11 +113,20 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
           trackEvent('PARTY_SELECTION', {
             party_id: selectedParty.id,
           });
-          onExit(() =>
-            window.location.assign(
-              `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`
-            )
-          );
+          onExit(() => {
+            if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+              const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
+              fetchPartyDetails(selectedParty.id)
+                .then((partyToSwitch) =>
+                  partyToSwitch ? setParty(partyToSwitch) : console.error('error')
+                )
+                .catch((reason) => console.error(reason));
+            } else {
+              window.location.assign(
+                `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`
+              );
+            }
+          });
         }
       }}
     />

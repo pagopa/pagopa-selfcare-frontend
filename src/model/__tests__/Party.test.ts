@@ -46,7 +46,6 @@ test('Test institutionResource2Party', () => {
     urlLogo: 'http://checkout.selfcare/institutions/46ef5b6b-7ee4-4dab-b8bc-fb5e30111239/logo.png',
     fiscalCode: '15376371009',
     registeredOffice: 'Piazza Colonna, 370',
-    typology: 'TODO',
     institutionType: undefined,
     pspData: {
       businessRegisterNumber: '00000000000',

@@ -20,7 +20,6 @@ export type Party = {
   urlLogo?: string;
   fiscalCode: string;
   registeredOffice: string;
-  typology: string;
   institutionType?: string;
   pspData?: PspDataResource;
 };
@@ -49,7 +48,6 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     urlLogo,
     fiscalCode: institutionResource.fiscalCode,
     registeredOffice: institutionResource.address,
-    typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,
     pspData: institutionResource.pspData,
   };
@@ -73,7 +71,6 @@ export const institutionDetailResource2Party = (
     urlLogo,
     fiscalCode: institutionResource.taxCode,
     registeredOffice: institutionResource.address,
-    typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,
   };
 };

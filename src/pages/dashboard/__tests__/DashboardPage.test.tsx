@@ -56,7 +56,7 @@ test('Test rendering button', async () => {
     payload: pspPartySelected,
   });
   expect(
-    screen.getByRole('button', {
+    screen.getByRole('link', {
       name: /completa registrazione/i,
     })
   ).toBeVisible();
@@ -69,8 +69,8 @@ test('Test not admin', async () => {
     payload: pspPartyNotAdminSelected,
   });
   expect(
-    screen.queryByRole('button', {
-      name: /completa registrazione/i,
+    screen.queryByRole('link', {
+      name: /Completa registrazione/i,
     })
   ).toBeNull();
 });

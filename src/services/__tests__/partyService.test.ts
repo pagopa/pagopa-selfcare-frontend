@@ -22,7 +22,6 @@ beforeEach(() => {
 
 test('Test fetchParties', async () => {
   const parties = await fetchParties();
-
   expect(parties).toMatchObject(mockedInstitutionResources.map(institutionResource2Party));
 
   parties.forEach((p) =>

@@ -1,13 +1,25 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled } from '@mui/material';
+import { Box, Link, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import { generatePath, Link as RouterLink } from 'react-router-dom';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { StationsResource } from '../../../api/generated/portal/StationsResource';
+import ROUTES from '../../../routes';
+import { getStations } from '../../../services/stationService';
+import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
 import { buildColumnDefs } from './StationsTableColumns';
+import { CustomStationSearchBar } from './CustomStationSearchBar';
+import StationTableEmpty from './StationTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
+
+const emptyStationsResource: StationsResource = {
+  stationsList: [],
+  pageInfo: {},
+};
 
 const CustomDataGrid = styled(DataGrid)({
   border: 'none !important',
@@ -64,16 +76,34 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-type Props = {
-  stations: StationsResource;
-};
-
-export default function StationsTable({ stations }: Props) {
+export default function StationsTable() {
   const { t } = useTranslation();
 
   const columns: Array<GridColDef> = buildColumnDefs(t);
   const [loading, _setLoading] = useState(true);
   const [error, _setError] = useState(false);
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
+  const [stations, setStations] = useState<StationsResource>(emptyStationsResource);
+
+  useEffect(() => {
+    setLoading(true);
+    getStations(0)
+      .then((retrievedStations) => {
+        console.log('retrievedStations: ', retrievedStations);
+        setStations(retrievedStations);
+      })
+      .catch((reason) =>
+        addError({
+          id: 'RETRIEVE_STATIONS_ERROR',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while retrieving stations`,
+          toNotify: true,
+        })
+      )
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <React.Fragment>
@@ -89,7 +119,7 @@ export default function StationsTable({ stations }: Props) {
         {error && !loading ? (
           <>{error}</>
         ) : !error && !loading && stations.stationsList.length === 0 ? (
-          <></>
+          <StationTableEmpty />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -102,7 +132,48 @@ export default function StationsTable({ stations }: Props) {
             columns={columns}
             components={{
               Pagination: () => <></>,
-              Toolbar: () => <></>,
+              Toolbar: () => (
+                <>
+                  <CustomStationSearchBar />
+                </>
+              ),
+              NoRowsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      {loading ? (
+                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
+                      ) : (
+                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
+                      )}
+                    </Typography>
+                  </Box>
+                </>
+              ),
+              NoResultsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      <Trans i18next="stationsPage.notFoundStations">
+                        Non sono ancora presenti stazioni in ambiente di collaudo.
+                        <Link
+                          component={RouterLink}
+                          sx={{
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            fontWeight: '700',
+                            color: theme.palette.primary.main,
+                            whiteSpace: 'pre',
+                          }}
+                          to={generatePath(ROUTES.STATION_ADD)}
+                        >
+                          <strong> Crea stazione</strong>
+                        </Link>
+                      </Trans>
+                    </Typography>
+                  </Box>
+                </>
+              ),
             }}
             componentsProps={{
               toolbar: {

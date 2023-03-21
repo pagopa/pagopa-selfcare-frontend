@@ -259,7 +259,7 @@ export default {
     searchPlaceholder: 'Cerca per codice stazione',
     createStationButtonLabel: 'Crea stazione',
     notFoundStations:
-      'Non sono ancora presenti stazioni in ambiente di collaudo. <2>Crea stazione</2>',
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea stazione</1>',
     stationsTableColumns: {
       headerFields: {
         name: 'Codice stazione',

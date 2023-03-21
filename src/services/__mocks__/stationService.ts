@@ -20,7 +20,12 @@ export const mockedStation: StationDetailsDto = {
 };
 
 export const mockedStations: StationsResource = {
-  pageInfo: 'infotest0',
+  pageInfo: {
+    page: 0,
+    limit: 50,
+    items_found: 50,
+    total_pages: 8,
+  },
   stationsList: [
     {
       stationCode: '97735020584_01',

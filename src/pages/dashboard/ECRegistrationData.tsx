@@ -22,7 +22,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {selectedParty?.pspData?.legalRegisterName}
+          {selectedParty?.description}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -31,6 +31,64 @@ const ECRegistrationData = () => {
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
           {selectedParty?.fiscalCode}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.interBankCode')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.accessionDate')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.address')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.city')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.province')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.CAP')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">
+          {t('dashboardPage.registrationData.fiscalDomicile')}
+        </Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>

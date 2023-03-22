@@ -2,7 +2,10 @@ import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { StationOnCreation } from '../model/Station';
 import { StationsResource } from '../api/generated/portal/StationsResource';
-import { getStations as getStationsMocked } from '../services/__mocks__/stationService';
+import {
+  getStationCodeMocked,
+  getStations as getStationsMocked,
+} from '../services/__mocks__/stationService';
 import { createStationMocked, mockedStation } from './__mocks__/stationService';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailsDto> => {
@@ -16,7 +19,13 @@ export const getStations = (page: number): Promise<StationsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationsMocked(0);
-  } else {
-    return PortalApi.getStations(page).then((resource) => resource);
   }
+  return PortalApi.getStations(page).then((resource) => resource);
+};
+
+export const getStationCode = (code: string): Promise<string> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationCodeMocked(code);
+  }
+  return PortalApi.getStationCode(code).then((resource) => resource);
 };

@@ -221,4 +221,9 @@ export const PortalApi = {
     const result = await apiConfigClient.getStationsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  getStationCode: async (ecCode: string): Promise<string> => {
+    const result = await apiConfigClient.getStationCodeUsingGET({ ecCode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
 };

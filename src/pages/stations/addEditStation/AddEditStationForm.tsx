@@ -2,7 +2,7 @@
 /* eslint-disable complexity */
 import { theme } from '@pagopa/mui-italia';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import {
   Button,
@@ -25,9 +25,11 @@ import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetai
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
-import { createStation } from '../../../services/stationService';
+import { createStation, getStationCode } from '../../../services/stationService';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
 type Props = {
   goBack: () => void;
@@ -36,8 +38,42 @@ type Props = {
 };
 
 const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) => {
+  const { t } = useTranslation();
+  const history = useHistory();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [stationCodeGenerated, setStationCodeGenerated] = useState('');
+
+  const validatePortRange = (redirectPort: number | undefined) => {
+    if (redirectPort) {
+      return redirectPort > 0 && redirectPort < 65556 ? false : true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (typeof selectedParty !== 'undefined' && selectedParty.pspData === undefined) {
+      getStationCode(selectedParty.fiscalCode)
+        .then((res) => setStationCodeGenerated(res))
+        .catch((error) =>
+          addError({
+            id: 'GENERATE_STATION_CODE',
+            blocking: false,
+            error,
+            techDescription: `An error occurred while generating station code`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+            component: 'Toast',
+          })
+        );
+    }
+  }, []);
+
   const initialFormData: StationOnCreation = {
-    stationCode: '',
+    stationCode: stationCodeGenerated,
     primitiveVersion: '',
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     redirectPort: 0,
@@ -57,22 +93,10 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     mb: 3,
   };
 
-  const { t } = useTranslation();
-  const history = useHistory();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const addError = useErrorDispatcher();
-  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
-
-  const validatePortRange = (redirectPort: number | undefined) => {
-    if (redirectPort) {
-      return redirectPort > 0 && redirectPort < 65556 ? false : true;
-    }
-    return false;
-  };
-
   const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
+        stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
         primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
         redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
         redirectPort: !values.redirectPort
@@ -154,6 +178,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   label={t('addEditStationPage.addForm.fields.stationCode')}
                   size="small"
                   value={formik.values.stationCode}
+                  disabled
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.stationCode && Boolean(formik.errors.stationCode)}
                   helperText={formik.touched.stationCode && formik.errors.stationCode}

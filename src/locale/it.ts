@@ -325,6 +325,8 @@ export default {
       'La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',
     errorMessageTitle: 'Errore',
     errorMessageDesc: 'Errore durante la creazione, Codice stazione duplicato',
+    errorMessageStationCodeTitle: 'Errore',
+    errorMessageStationCodeDesc: 'Errore durante la creazione, Codice stazione non valido',
   },
 
   stationsPage: {

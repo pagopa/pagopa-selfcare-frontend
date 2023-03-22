@@ -114,6 +114,8 @@ const mockedStationsDetail: Array<StationDetailResource> = [
   },
 ];
 
+const mockedStationCode = (code: string) => `${code}_01`;
+
 export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailsDto> =>
   new Promise((resolve) => resolve(mockedStation));
 
@@ -128,3 +130,6 @@ export const getStationDetail = (stationCode: any): Promise<StationDetailResourc
     return new Promise((resolve) => resolve(mockedStationsDetail[0]));
   }
 };
+
+export const getStationCodeMocked = (code: string): Promise<string> =>
+  new Promise((resolve) => resolve(mockedStationCode(code)));

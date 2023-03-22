@@ -40,17 +40,25 @@ export default {
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
     },
+    operativeTable: {
+      title: 'Tavolo operativo',
+      paymentReferrer: 'Referente pagamenti',
+      mail: 'Mail',
+      deliveryOne: 'Recapito 1',
+      deliveryTwo: 'Recapito 2',
+    },
   },
   nodeSignInPage: {
     title: 'Registrazione sul Nodo',
-    subtitle: 'Completa i dati necessari alla registrazione.',
+    subtitlePSP: 'Completa i dati necessari alla registrazione.',
+    subtitleEC: 'Completa i dati mancanti per completare il censimento sul Nodo.',
     breadcrumb: 'Registrazione sul Nodo',
     form: {
       sections: {
         registrationData: 'Dati di registrazione',
         digitalStamp: 'Marca da bollo digitale',
       },
-      fields: {
+      pspFields: {
         name: 'Nome',
         businessName: 'Ragione Sociale',
         fiscalCode: 'Codice Fiscale',
@@ -61,6 +69,13 @@ export default {
           yes: 'Sì, attiva',
           no: 'No',
         },
+      },
+      ecFields: {
+        address: 'Indirizzo',
+        city: 'Città',
+        province: 'Provinca',
+        CAP: 'CAP',
+        fiscalDomicile: 'Domicilio Fiscale',
       },
       successMessage: 'Registrazione sul Nodo completata con successo.',
       errorMessageTitle: 'Errore',

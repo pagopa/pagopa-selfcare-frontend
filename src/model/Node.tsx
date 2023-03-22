@@ -1,4 +1,4 @@
-export type NodeOnSignIn = {
+export type NodeOnSignInPSP = {
   name: string;
   businessName: string;
   fiscalCode: string;

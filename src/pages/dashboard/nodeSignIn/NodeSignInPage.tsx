@@ -5,14 +5,17 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
 import ROUTES from '../../../routes';
-import NodeSignInForm from './NodeSignInForm';
+import NodeSignInECForm from './NodeSignInECForm';
+import NodeSignInPSPForm from './NodeSignInPSPForm';
 
 const NodeSignInPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const goBack = () => history.push(ROUTES.HOME);
 
   useEffect(() => {
@@ -40,14 +43,22 @@ const NodeSignInPage = () => {
         </Stack>
         <TitleBox
           title={t(`nodeSignInPage.title`)}
-          subTitle={t(`nodeSignInPage.subtitle`)}
+          subTitle={
+            selectedParty?.pspData
+              ? t(`nodeSignInPage.subtitlePSP`)
+              : t(`nodeSignInPage.subtitleEC`)
+          }
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <NodeSignInForm goBack={goBack}></NodeSignInForm>
+        {selectedParty?.pspData ? (
+          <NodeSignInPSPForm goBack={goBack} />
+        ) : (
+          <NodeSignInECForm goBack={goBack} />
+        )}
       </Grid>
     </Grid>
   );

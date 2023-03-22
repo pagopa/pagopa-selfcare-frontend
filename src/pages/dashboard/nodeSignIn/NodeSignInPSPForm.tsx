@@ -22,7 +22,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { NodeOnSignIn } from '../../../model/Node';
+import { NodeOnSignInPSP } from '../../../model/Node';
 
 type Props = {
   goBack: () => void;
@@ -46,7 +46,7 @@ const inputGroupStyle = {
   mb: 3,
 };
 
-const validate = (values: Partial<NodeOnSignIn>) =>
+const validate = (values: Partial<NodeOnSignInPSP>) =>
   Object.fromEntries(
     Object.entries({
       bicCode: !values.bicCode ? 'Required' : undefined,
@@ -54,7 +54,7 @@ const validate = (values: Partial<NodeOnSignIn>) =>
     }).filter(([_key, value]) => value)
   );
 
-function NodeSignInForm({ goBack }: Props) {
+function NodeSignInPSPForm({ goBack }: Props) {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -66,7 +66,7 @@ function NodeSignInForm({ goBack }: Props) {
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,
     field: string,
-    formik: FormikProps<NodeOnSignIn>
+    formik: FormikProps<NodeOnSignInPSP>
   ) => {
     const regex = /^[0-9\b]+$/;
     if (e.target.value === '' || regex.test(e.target.value)) {
@@ -74,7 +74,7 @@ function NodeSignInForm({ goBack }: Props) {
     }
   };
 
-  const formik = useFormik<NodeOnSignIn>({
+  const formik = useFormik<NodeOnSignInPSP>({
     initialValues: initialFormData(selectedParty),
     validate,
     onSubmit: async () => {
@@ -130,7 +130,7 @@ function NodeSignInForm({ goBack }: Props) {
                     fullWidth
                     id="name"
                     name="name"
-                    label={t('nodeSignInPage.form.fields.name')}
+                    label={t('nodeSignInPage.form.pspFields.name')}
                     size="small"
                     disabled
                     value={formik.values.name}
@@ -145,7 +145,7 @@ function NodeSignInForm({ goBack }: Props) {
                     id="businessName"
                     name="businessName"
                     disabled
-                    label={t('nodeSignInPage.form.fields.businessName')}
+                    label={t('nodeSignInPage.form.pspFields.businessName')}
                     size="small"
                     value={formik.values.businessName}
                     onChange={formik.handleChange}
@@ -158,7 +158,7 @@ function NodeSignInForm({ goBack }: Props) {
                     fullWidth
                     id="fiscalCode"
                     name="fiscalCode"
-                    label={t('nodeSignInPage.form.fields.fiscalCode')}
+                    label={t('nodeSignInPage.form.pspFields.fiscalCode')}
                     size="small"
                     disabled
                     value={formik.values.fiscalCode}
@@ -173,7 +173,7 @@ function NodeSignInForm({ goBack }: Props) {
                     id="abiCode"
                     name="abiCode"
                     disabled
-                    label={t('nodeSignInPage.form.fields.abiCode')}
+                    label={t('nodeSignInPage.form.pspFields.abiCode')}
                     size="small"
                     value={formik.values.abiCode}
                     onChange={formik.handleChange}
@@ -186,7 +186,7 @@ function NodeSignInForm({ goBack }: Props) {
                     fullWidth
                     id="pspCode"
                     name="pspCode"
-                    label={t('nodeSignInPage.form.fields.pspCode')}
+                    label={t('nodeSignInPage.form.pspFields.pspCode')}
                     size="small"
                     disabled
                     value={formik.values.pspCode}
@@ -200,7 +200,7 @@ function NodeSignInForm({ goBack }: Props) {
                     fullWidth
                     id="bicCode"
                     name="bicCode"
-                    label={t('nodeSignInPage.form.fields.bicCode')}
+                    label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
                     inputProps={{ maxLength: 5, inputMode: 'numeric', pattern: '[0-9]*' }}
                     value={formik.values.bicCode}
@@ -229,12 +229,12 @@ function NodeSignInForm({ goBack }: Props) {
                     <FormControlLabel
                       value="false"
                       control={<Radio />}
-                      label={t('nodeSignInPage.form.fields.digitalStamp.no')}
+                      label={t('nodeSignInPage.form.pspFields.digitalStamp.no')}
                     />
                     <FormControlLabel
                       value="true"
                       control={<Radio />}
-                      label={t('nodeSignInPage.form.fields.digitalStamp.yes')}
+                      label={t('nodeSignInPage.form.pspFields.digitalStamp.yes')}
                     />
                   </RadioGroup>
                 </Grid>
@@ -266,4 +266,4 @@ function NodeSignInForm({ goBack }: Props) {
   );
 }
 
-export default NodeSignInForm;
+export default NodeSignInPSPForm;

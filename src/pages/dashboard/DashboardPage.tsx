@@ -7,8 +7,9 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
-import ECRegistrationData from './ECRegistrationData';
-import PSPRegistrationData from './PSPRegistrationData';
+import OperativeTable from './components/OperativeTable';
+import ECRegistrationData from './components/ECRegistrationData';
+import PSPRegistrationData from './components/PSPRegistrationData';
 
 const DashboardPage = () => {
   const { t } = useTranslation();
@@ -69,20 +70,20 @@ const DashboardPage = () => {
                 <Box mb={3}>
                   <Alert severity="warning">{t('dashboardPage.nextStep.signInStepAlert')}</Alert>
                 </Box>
-                {selectedParty?.roles.find((r) => r.roleKey === 'admin') &&
-                  selectedParty.pspData && (
-                    <Button
-                      component={Link}
-                      to={ROUTES.NODE_SIGNIN}
-                      variant="contained"
-                      size="small"
-                      endIcon={<ArrowForward />}
-                    >
-                      {t('dashboardPage.nextStep.signInCTA')}
-                    </Button>
-                  )}
+                {selectedParty?.roles.find((r) => r.roleKey === 'admin') && (
+                  <Button
+                    component={Link}
+                    to={ROUTES.NODE_SIGNIN}
+                    variant="contained"
+                    size="small"
+                    endIcon={<ArrowForward />}
+                  >
+                    {t('dashboardPage.nextStep.signInCTA')}
+                  </Button>
+                )}
               </Card>
             </Grid>
+            {selectedParty?.pspData === undefined ? <OperativeTable /> : null}
           </Grid>
         </Box>
       </Grid>

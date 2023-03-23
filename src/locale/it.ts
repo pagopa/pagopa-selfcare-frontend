@@ -201,6 +201,7 @@ export default {
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
       errorMessagePaymentTypesDesc: 'Errore durante la ricezione dei metodi di pagamento',
+      errorMessageChannelDetailsDesc: 'Errore durante la ricezione dei dettagli del canale',
     },
     confirmModal: {
       title: 'Invio per la revisione',

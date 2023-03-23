@@ -7,7 +7,7 @@ import { store } from '../../../redux/store';
 import AddEditChannelPage from '../addEditChannel/AddEditChannelPage';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import ROUTES, { BASE_ROUTE } from '../../../routes';
+import ROUTES from '../../../routes';
 import { PortalApi } from '../../../api/PortalApiClient';
 
 let portalApiGetChannelDetail;

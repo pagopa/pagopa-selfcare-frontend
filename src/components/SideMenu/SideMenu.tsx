@@ -8,6 +8,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import SidenavItem from './SidenavItem';
 
 /** The side menu of the application */
@@ -15,6 +17,7 @@ export default function SideMenu() {
   const { t } = useTranslation();
   const history = useHistory();
   const onExit = useUnloadEventOnExit();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [pathname, setPathName] = useState(() => {
     /*
     For some reason, push on history will not notify this component.
@@ -41,11 +44,19 @@ export default function SideMenu() {
             isSelected={pathname === ROUTES.APIKEYS}
             icon={VpnKeyIcon}
           />
-          {ENV.FEATURES.CHANNELS.ENABLED && (
+          {ENV.FEATURES.CHANNELS.ENABLED && selectedParty?.institutionType === 'PSP' && (
             <SidenavItem
               title={t('sideMenu.channels.title')}
               handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
               isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
+              icon={UsbIcon}
+            />
+          )}
+          {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
+            <SidenavItem
+              title={t('sideMenu.stations.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
+              isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
             />
           )}

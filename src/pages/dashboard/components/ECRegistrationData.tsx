@@ -1,9 +1,9 @@
 import { Grid, Typography, Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
-const PSPRegistrationData = () => {
+const ECRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
@@ -22,7 +22,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {selectedParty?.pspData?.legalRegisterName}
+          {selectedParty?.description}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -34,23 +34,7 @@ const PSPRegistrationData = () => {
         </Typography>
       </Grid>
       <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.abiCode')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
-          {selectedParty?.pspData?.abiCode ?? '-'}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.pspCode')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
-          {selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '-'}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.bicCode')}</Typography>
+        <Typography variant="body2">{t('dashboardPage.registrationData.interBankCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
@@ -58,7 +42,49 @@ const PSPRegistrationData = () => {
         </Typography>
       </Grid>
       <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.digitalStamp')}</Typography>
+        <Typography variant="body2">{t('dashboardPage.registrationData.accessionDate')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.address')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.city')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.province')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.CAP')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">
+          {t('dashboardPage.registrationData.fiscalDomicile')}
+        </Typography>
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
@@ -75,4 +101,4 @@ const PSPRegistrationData = () => {
   );
 };
 
-export default PSPRegistrationData;
+export default ECRegistrationData;

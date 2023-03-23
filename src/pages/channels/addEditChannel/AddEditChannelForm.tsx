@@ -18,7 +18,7 @@ import {
 import { useFormik } from 'formik';
 import { Trans, useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
-import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   Badge as BadgeIcon,
   MenuBook as MenuBookIcon,
@@ -42,6 +42,7 @@ import {
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
 import { sortPaymentType } from '../../../model/PaymentType';
+import ConfirmModal from '../../components/ConfirmModal';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 
 type Props = {
@@ -73,7 +74,7 @@ const initialFormData = (selectedParty?: Party, channelDetail?: ChannelDetailsDt
         pspBrokerCode: selectedParty?.fiscalCode ?? '',
         businessName: selectedParty?.description ?? '',
         idChannel: '',
-        redirectProtocol: undefined,
+        redirectProtocol: Redirect_protocolEnum.HTTPS,
         redirectIp: '',
         redirectService: '',
         redirectParameters: '',
@@ -185,7 +186,16 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
         }
       })
       .catch((reason) => {
-        console.error(reason);
+        addError({
+          id: 'GET_PAYMENT_TYPES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting payment types`,
+          toNotify: true,
+          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+          component: 'Toast',
+        });
       });
   }, []);
 
@@ -223,6 +233,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.pspBrokerCode && Boolean(formik.errors.pspBrokerCode)}
                     helperText={formik.touched.pspBrokerCode && formik.errors.pspBrokerCode}
+                    inputProps={{
+                      'data-testid': 'psp-brokercode-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -237,6 +250,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.businessName && Boolean(formik.errors.businessName)}
                     helperText={formik.touched.businessName && formik.errors.businessName}
+                    inputProps={{
+                      'data-testid': 'business-name-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6} direction="column">
@@ -251,6 +267,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.idChannel && Boolean(formik.errors.idChannel)}
                     helperText={formik.touched.idChannel && formik.errors.idChannel}
+                    inputProps={{
+                      'data-testid': 'channel-code-test',
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -279,6 +298,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                       error={
                         formik.touched.redirectProtocol && Boolean(formik.errors.redirectProtocol)
                       }
+                      inputProps={{
+                        'data-testid': 'redirect-protocol-test',
+                      }}
                     >
                       {['HTTP', 'HTTPS'].map((p) => (
                         <MenuItem key={p} value={p}>
@@ -296,7 +318,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     name="redirectPort"
                     type="number"
                     InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
-                    inputProps={{ min: 0, max: 65556 }}
+                    inputProps={{ min: 0, max: 65556, 'data-testid': 'redirect-port-test' }}
                     label={t('addEditChannelPage.addForm.fields.redirectPort')}
                     size="small"
                     value={formik.values.redirectPort}
@@ -316,6 +338,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.redirectIp && Boolean(formik.errors.redirectIp)}
                     helperText={formik.touched.redirectIp && formik.errors.redirectIp}
+                    inputProps={{
+                      'data-testid': 'redirect-ip-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -329,6 +354,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.redirectService && Boolean(formik.errors.redirectService)}
                     helperText={formik.touched.redirectService && formik.errors.redirectService}
+                    inputProps={{
+                      'data-testid': 'redirect-service-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -346,6 +374,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     helperText={
                       formik.touched.redirectParameters && formik.errors.redirectParameters
                     }
+                    inputProps={{
+                      'data-testid': 'redirect-parameters-test',
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -368,6 +399,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.targetAddress && Boolean(formik.errors.targetAddress)}
                     helperText={formik.touched.targetAddress && formik.errors.targetAddress}
+                    inputProps={{
+                      'data-testid': 'target-address-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -381,6 +415,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     onChange={formik.handleChange}
                     error={formik.touched.targetService && Boolean(formik.errors.targetService)}
                     helperText={formik.touched.targetService && formik.errors.targetService}
+                    inputProps={{
+                      'data-testid': 'target-service-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -390,7 +427,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     name="targetPort"
                     type="number"
                     InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
-                    inputProps={{ min: 0, max: 65556 }}
+                    inputProps={{ min: 0, max: 65556, 'data-testid': 'target-port-test' }}
                     label={t('addEditChannelPage.addForm.fields.targetPort')}
                     size="small"
                     value={formik.values.targetPort}
@@ -423,6 +460,9 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                       value={formik.values.paymentType}
                       onChange={formik.handleChange}
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
+                      inputProps={{
+                        'data-testid': 'payment-type-test',
+                      }}
                     >
                       {paymentOptions &&
                         sortPaymentType(paymentOptions.payment_types).map((option: any) => (
@@ -446,7 +486,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
           </Stack>
           <Stack display="flex" justifyContent="flex-end">
             <Button
-              // onClick={()=>() /* handleSubmit */}
+              onClick={() => setShowConfirmModal(true)}
               disabled={!formik.dirty || !formik.isValid}
               color="primary"
               variant="contained"
@@ -457,9 +497,8 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
           </Stack>
         </Stack>
       </form>
-      <SessionModal
-        open={showConfirmModal}
-        title={t('addEditChannelPage.confirmModal.title')}
+      <ConfirmModal
+        title={t('addEditStationPage.confirmModal.title')}
         message={
           <Trans i18nKey="addEditChannelPage.confirmModal.message">
             Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare.
@@ -467,12 +506,11 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
             <br />
           </Trans>
         }
+        openConfirmModal={showConfirmModal}
         onConfirmLabel={t('addEditChannelPage.confirmModal.confirmButton')}
         onCloseLabel={t('addEditChannelPage.confirmModal.cancelButton')}
-        onConfirm={submit}
-        handleClose={() => {
-          setShowConfirmModal(false);
-        }}
+        handleCloseConfirmModal={() => setShowConfirmModal(false)}
+        handleConfrimSubmit={submit}
       />
     </>
   );

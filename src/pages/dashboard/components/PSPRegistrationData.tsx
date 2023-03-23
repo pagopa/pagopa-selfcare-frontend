@@ -1,9 +1,9 @@
 import { Grid, Typography, Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
-const ECRegistrationData = () => {
+const PSPRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
@@ -34,6 +34,38 @@ const ECRegistrationData = () => {
         </Typography>
       </Grid>
       <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.abiCode')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {selectedParty?.pspData?.abiCode ?? '-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.pspCode')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.bicCode')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.digitalStamp')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={600}>
+          {'-'}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>
@@ -43,4 +75,4 @@ const ECRegistrationData = () => {
   );
 };
 
-export default ECRegistrationData;
+export default PSPRegistrationData;

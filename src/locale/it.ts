@@ -18,6 +18,13 @@ export default {
       name: 'Nome',
       companyName: 'Ragione Sociale',
       fiscalCode: 'Codice Fiscale',
+      interBankCode: 'Codice Interbancario',
+      accessionDate: 'Data adesione',
+      address: 'Indirizzo',
+      city: 'Città',
+      province: 'Provinca',
+      CAP: 'CAP',
+      fiscalDomicile: 'Domicilio Fiscale',
       abiCode: 'Codice ABI',
       pspCode: 'Codice PSP',
       bicCode: 'Codice BIC',
@@ -33,17 +40,25 @@ export default {
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
     },
+    operativeTable: {
+      title: 'Tavolo operativo',
+      paymentReferrer: 'Referente pagamenti',
+      mail: 'Mail',
+      deliveryOne: 'Recapito 1',
+      deliveryTwo: 'Recapito 2',
+    },
   },
   nodeSignInPage: {
     title: 'Registrazione sul Nodo',
-    subtitle: 'Completa i dati necessari alla registrazione.',
+    subtitlePSP: 'Completa i dati necessari alla registrazione.',
+    subtitleEC: 'Completa i dati mancanti per completare il censimento sul Nodo.',
     breadcrumb: 'Registrazione sul Nodo',
     form: {
       sections: {
         registrationData: 'Dati di registrazione',
         digitalStamp: 'Marca da bollo digitale',
       },
-      fields: {
+      pspFields: {
         name: 'Nome',
         businessName: 'Ragione Sociale',
         fiscalCode: 'Codice Fiscale',
@@ -54,6 +69,13 @@ export default {
           yes: 'Sì, attiva',
           no: 'No',
         },
+      },
+      ecFields: {
+        address: 'Indirizzo',
+        city: 'Città',
+        province: 'Provinca',
+        CAP: 'CAP',
+        fiscalDomicile: 'Domicilio Fiscale',
       },
       successMessage: 'Registrazione sul Nodo completata con successo.',
       errorMessageTitle: 'Errore',
@@ -178,6 +200,7 @@ export default {
       },
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
+      errorMessagePaymentTypesDesc: 'Errore durante la ricezione dei metodi di pagamento',
     },
     confirmModal: {
       title: 'Invio per la revisione',
@@ -260,6 +283,122 @@ export default {
       confirmButton: 'Conferma',
     },
   },
+
+  addEditStationPage: {
+    title: 'Configurazione della stazione',
+    create: {
+      title: 'Crea una nuova stazione',
+      subtitle: 'Completa i campi',
+      breadcrumb: 'Crea stazione',
+    },
+    addForm: {
+      backButton: 'Indietro',
+      continueButton: 'Conferma',
+      sections: {
+        registry: 'Anagrafica',
+        redirect: 'Redirect',
+        target: 'Target',
+      },
+      fields: {
+        stationCode: 'Codice stazione',
+        primitiveVersion: 'Versione primitive',
+        redirectProtocol: 'Protocollo',
+        redirectPort: 'Porta',
+        redirectIp: 'IP',
+        redirectService: 'Path',
+        redirectParameters: 'Parametri',
+        targetAddress: 'IP',
+        targetService: 'Path',
+        targetPort: 'Porta',
+      },
+    },
+    confirmModal: {
+      title: 'Invio per la revisione',
+      message:
+        'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
+      confirmButton: 'Invia',
+      cancelButton: 'Torna indietro',
+    },
+    validation: {
+      overPort: 'Il numero di porta deve essere compreso tra 1 e 65556',
+    },
+    successMessage:
+      'La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',
+    errorMessageTitle: 'Errore',
+    errorMessageDesc: 'Errore durante la creazione, Codice stazione duplicato',
+    errorMessageStationCodeTitle: 'Errore',
+    errorMessageStationCodeDesc: 'Errore durante la creazione, Codice stazione non valido',
+  },
+
+  stationsPage: {
+    title: 'Stazioni',
+    subtitle: 'Cerca e visualizza lo stato delle stazioni.',
+    searchPlaceholder: 'Cerca per codice stazione',
+    createStationButtonLabel: 'Crea stazione',
+    notFoundStations:
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea stazione</1>',
+    stationsTableColumns: {
+      headerFields: {
+        name: 'Codice stazione',
+        creationDate: 'Data creazione',
+        lastEditDate: 'Ultima modifica',
+        activationDate: 'Data attivazione',
+        status: 'Stato',
+      },
+    },
+    states: {
+      revision: 'In revisione',
+      needCorrection: 'Da correggere',
+      active: 'Attiva',
+    },
+    stationOptions: {
+      manageStation: 'Gestisci stazione',
+      manageEC: 'Gestisci EC',
+      correctStation: 'Correggi',
+      editStation: 'Modifica',
+    },
+  },
+  stationDetailPage: {
+    detail: 'dettaglio {{code}}',
+    createdAt: 'Creata il {{data}}',
+    state: 'Stato',
+    stationConfiguration: 'Configurazione della stazione',
+    stationConfigurationDescription: 'Lorem ipsum dolor sit.',
+    anagraphic: 'Anagrafica',
+    stationId: 'ID Stazione',
+    version: 'Versione',
+    primitiveVersion: 'Versione Primitive',
+    password: 'Password',
+    redirectUrl: 'URL di redirezione',
+    activationDate: 'Data di attivazione',
+    target: 'Target',
+    address: 'IP',
+    service: 'Path',
+    port: 'Porta',
+    associatesEC: 'EC associati',
+    manageEC: 'Gestisci EC',
+    associates: 'Associati',
+    changes: 'Modifiche',
+    lastChanges: 'Ultima modifica',
+    operatedBy: 'Operata da',
+    actionButtons: {
+      revise: 'Correggi',
+      edit: 'Modifica',
+      duplicate: 'Duplica',
+      askElimination: 'Chiedi eliminazione',
+    },
+    states: {
+      revision: 'In revisione',
+      needCorrection: 'Da correggere',
+      active: 'Attiva',
+    },
+    stationOptions: {
+      manageStation: 'Gestisci stazione',
+      manageEC: 'Gestisci EC',
+      correctStation: 'Correggi',
+      editStation: 'Modifica',
+    },
+  },
   sideMenu: {
     home: {
       title: 'Panoramica',
@@ -269,6 +408,9 @@ export default {
     },
     channels: {
       title: 'Canali',
+    },
+    stations: {
+      title: 'Stazioni',
     },
   },
   header: {
@@ -300,5 +442,6 @@ export default {
     channels: 'canali',
     Channels: 'Canali',
     dashboard: 'Panoramica',
+    Stations: 'Stazioni',
   },
 };

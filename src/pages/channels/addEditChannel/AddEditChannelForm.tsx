@@ -186,7 +186,16 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
         }
       })
       .catch((reason) => {
-        console.error(reason);
+        addError({
+          id: 'GET_PAYMENT_TYPES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting payment types`,
+          toNotify: true,
+          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+          component: 'Toast',
+        });
       });
   }, []);
 

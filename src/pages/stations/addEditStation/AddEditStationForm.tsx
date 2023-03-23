@@ -429,10 +429,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         onConfirmLabel={t('addEditStationPage.confirmModal.confirmButton')}
         onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
-        handleConfrimSubmit={() => {
-          formik.handleSubmit();
-          console.log('On Submit');
-        }}
+        handleConfrimSubmit={() => formik.handleSubmit()}
       />
     </>
   );

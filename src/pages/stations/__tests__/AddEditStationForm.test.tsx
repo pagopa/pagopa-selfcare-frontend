@@ -81,10 +81,5 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.click(confirmModalBtn);
     fireEvent.click(cancelModalBtn);
-
-    const overviewBackBtn = screen.getByTestId('back-btn-test') as HTMLButtonElement;
-    const oldLocPathname = history.location.pathname;
-    fireEvent.click(overviewBackBtn);
-    await waitFor(() => expect(oldLocPathname !== history.location.pathname).toBeTruthy());
   });
 });

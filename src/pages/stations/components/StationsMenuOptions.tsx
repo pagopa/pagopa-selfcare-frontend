@@ -10,7 +10,7 @@ type Props = {
   stationCode: string;
 };
 
-export function StationsMenuOptions({ status, stationCode }: Props) {
+const StationsMenuOptions = ({ status, stationCode }: Props) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -45,4 +45,6 @@ export function StationsMenuOptions({ status, stationCode }: Props) {
       </Menu>
     </Box>
   );
-}
+};
+
+export default StationsMenuOptions;

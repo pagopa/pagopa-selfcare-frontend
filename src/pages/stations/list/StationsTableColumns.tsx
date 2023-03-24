@@ -3,7 +3,7 @@ import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
-import { StationsMenuOptions } from '../components/StationsMenuOptions';
+import StationsMenuOptions from '../components/StationsMenuOptions';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -81,7 +81,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   ] as Array<GridColDef>;
 }
 
-function renderCell(
+export function renderCell(
   params: GridRenderCellParams,
   value: ReactNode = params,
   overrideStyle: CSSProperties = {}
@@ -119,7 +119,7 @@ function renderCell(
   );
 }
 
-function showCustomHeader(params: GridColumnHeaderParams) {
+export function showCustomHeader(params: GridColumnHeaderParams) {
   return (
     <React.Fragment>
       <Typography
@@ -133,7 +133,7 @@ function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-function showStationID(params: GridRenderCellParams) {
+export function showStationID(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
@@ -163,7 +163,7 @@ function showStationID(params: GridRenderCellParams) {
   );
 }
 
-function showStatus(params: GridRenderCellParams) {
+export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
     <Box sx={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>

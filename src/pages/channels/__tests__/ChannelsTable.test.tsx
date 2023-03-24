@@ -4,9 +4,9 @@ import { cleanup, render, screen } from '@testing-library/react';
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { store } from '../../../redux/store';
+import ChannelsTable from '../list/ChannelsTable';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import StationPage from '../list/StationsPage';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -15,22 +15,18 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<StationPage />', () => {
+describe('<ChannelsTable />', () => {
   const history = createMemoryHistory();
 
-  test('render component StationPage', () => {
-    history.location.state = { alertSuccessMessage: 'Success!' };
-
+  test('render component ChannelsTable', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <StationPage />
+            <ChannelsTable />
           </Router>
         </ThemeProvider>
       </Provider>
     );
-
-    expect(screen.getByTestId('alert-test')).toBeInTheDocument();
   });
 });

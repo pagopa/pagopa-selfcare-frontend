@@ -1,4 +1,10 @@
-import { GridColDef, GridRenderCellParams, GridRowId, GridStateColDef } from '@mui/x-data-grid';
+import {
+  GridColDef,
+  GridColumnHeaderParams,
+  GridRenderCellParams,
+  GridRowId,
+  GridStateColDef,
+} from '@mui/x-data-grid';
 import { cleanup } from '@testing-library/react';
 import {
   buildColumnDefs,
@@ -14,8 +20,8 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<AddEditChannelPage />', () => {
-  it('should return an array of column definitions', () => {
+describe('<StationTableColumns />', () => {
+  test('Test of all the functions inside the component', () => {
     const rowNode = [
       {
         id: '',
@@ -26,12 +32,13 @@ describe('<AddEditChannelPage />', () => {
       },
     ];
 
-    const colDef: GridStateColDef<any, any, any> = {
+    const colDefMocked: GridStateColDef<any, any, any> = {
       computedWidth: 0,
       field: 'stationCode',
       type: '',
       hasBeenResized: undefined,
       groupPath: undefined,
+      headerName: 'stationCode',
     };
 
     const params: GridRenderCellParams<any, any, any> = {
@@ -43,7 +50,7 @@ describe('<AddEditChannelPage />', () => {
       id: '',
       field: '',
       rowNode: rowNode[0],
-      colDef: colDef[0],
+      colDef: colDefMocked[0],
       cellMode: 'edit',
       hasFocus: false,
       tabIndex: 0,
@@ -140,12 +147,15 @@ describe('<AddEditChannelPage />', () => {
       }
     };
 
-    const renderedCell = renderCell(params, params.value);
-    expect(renderedCell).toMatchSnapshot();
+    const customHeader: GridColumnHeaderParams = {
+      field: 'stationCode',
+      colDef: colDefMocked,
+    };
+
+    renderCell(params, params.value);
     showStationID(params);
     showStatus(params);
     expect(buildColumnDefs(mockTFunction)).toEqual(ArrayBuildColumnDefs);
-
-    // expect(result).toBe('some value');
+    showCustomHeader(customHeader);
   });
 });

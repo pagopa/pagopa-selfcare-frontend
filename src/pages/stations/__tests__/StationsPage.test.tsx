@@ -15,10 +15,10 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<AddEditChannelPage />', () => {
+describe('<StationPage />', () => {
   const history = createMemoryHistory();
 
-  test('render component AddEditChannelPage', () => {
+  test('render component StationPage', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>

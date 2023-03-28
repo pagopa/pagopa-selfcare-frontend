@@ -51,11 +51,16 @@ export default function PSPSelectionSearchInput({
         value={input}
         onChange={onChange}
         id="search"
+        inputProps={{ 'data-testid': 'psp-selection-search' }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
               {
-                <CustomIconButton disableRipple={true} onClick={focusTextInput}>
+                <CustomIconButton
+                  disableRipple={true}
+                  onClick={focusTextInput}
+                  data-testid="search-field-test"
+                >
                   <SearchOutlinedIcon sx={{ color: iconColor }} />
                 </CustomIconButton>
               }
@@ -66,6 +71,7 @@ export default function PSPSelectionSearchInput({
               disableRipple={true}
               onClick={clearField}
               aria-label="removeSelectionIcon"
+              data-testid="clear-field-test"
             >
               <ClearOutlinedIcon sx={{ color: iconColor }} />
             </CustomIconButton>

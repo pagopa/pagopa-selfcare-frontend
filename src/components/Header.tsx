@@ -8,7 +8,6 @@ import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
 import withParties, { WithPartiesProps } from '../decorators/withParties';
 import { Product } from '../model/Product';
-import { fetchPartyDetails } from '../services/partyService';
 import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
@@ -114,13 +113,10 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
             party_id: selectedParty.id,
           });
           onExit(() => {
-            if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+            if (ENV.ENV === 'LOCAL_DEV') {
+              const partyToSwitch = parties.find((p) => p.partyId === selectedParty.id);
               const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-              fetchPartyDetails(selectedParty.id)
-                .then((partyToSwitch) =>
-                  partyToSwitch ? setParty(partyToSwitch) : console.error('error')
-                )
-                .catch((reason) => console.error(reason));
+              setParty(partyToSwitch);
             } else {
               window.location.assign(
                 `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`

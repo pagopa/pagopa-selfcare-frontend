@@ -90,7 +90,6 @@ export default function StationsTable() {
     setLoading(true);
     getStations(0)
       .then((retrievedStations) => {
-        console.log('retrievedStations: ', retrievedStations);
         setStations(retrievedStations);
       })
       .catch((reason) =>

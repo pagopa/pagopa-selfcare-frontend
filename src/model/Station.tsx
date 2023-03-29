@@ -1,8 +1,9 @@
 import { RedirectProtocolEnum } from '../api/generated/portal/StationDetailsDto';
 
 export type StationOnCreation = {
+  brokerCode: string;
   stationCode: string;
-  primitiveVersion: string;
+  primitiveVersion: number;
   redirectProtocol: RedirectProtocolEnum;
   redirectPort: number;
   redirectIp: string;
@@ -18,7 +19,7 @@ export type StationDetail = {
     status: 'ACTIVE' | 'TO_EDIT' | 'REVIEW';
     stationId: string;
     version: string;
-    primitiveVersion: string;
+    primitiveVersion: number;
     password: string;
     redirectUrl: string;
     activationDate: string;

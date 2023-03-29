@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.91"
+    "version": "0.0.98-2"
   },
   "servers": [
     {
@@ -2342,9 +2342,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/StationCodeResource"
                 }
               }
             }
@@ -3529,6 +3529,17 @@
           }
         }
       },
+      "StationCodeResource": {
+        "title": "StationCodeResource",
+        "required": ["stationCode"],
+        "type": "object",
+        "properties": {
+          "stationCode": {
+            "type": "string",
+            "description": "Station's unique identifier"
+          }
+        }
+      },
       "StationDetailResource": {
         "title": "StationDetailResource",
         "required": ["enabled", "stationCode", "stationStatus"],
@@ -3612,8 +3623,9 @@
             "format": "int64"
           },
           "primitiveVersion": {
-            "type": "string",
-            "description": "Station's primitive version"
+            "type": "integer",
+            "description": "Station's primitive version",
+            "format": "int64"
           },
           "protocol": {
             "type": "string",
@@ -3801,8 +3813,9 @@
             "format": "int64"
           },
           "primitiveVersion": {
-            "type": "string",
-            "description": "Station's primitive version"
+            "type": "integer",
+            "description": "Station's primitive version",
+            "format": "int64"
           },
           "protocol": {
             "type": "string",

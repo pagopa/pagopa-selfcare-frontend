@@ -20,6 +20,7 @@ import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentType
 import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
+import { StationCodeResource } from './generated/portal/StationCodeResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -202,6 +203,7 @@ export const PortalApi = {
   createStation: async (station: StationOnCreation): Promise<StationDetailsDto> => {
     const result = await apiConfigClient.createStationUsingPOST({
       body: {
+        brokerCode: station.brokerCode,
         stationCode: station.stationCode,
         primitiveVersion: station.primitiveVersion,
         redirectProtocol: station.redirectProtocol,
@@ -222,7 +224,7 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getStationCode: async (ecCode: string): Promise<string> => {
+  getStationCode: async (ecCode: string): Promise<StationCodeResource> => {
     const result = await apiConfigClient.getStationCodeUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
   },

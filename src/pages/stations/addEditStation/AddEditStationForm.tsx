@@ -53,28 +53,41 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     return false;
   };
 
-  useEffect(() => {
-    if (typeof selectedParty !== 'undefined' && selectedParty.pspData === undefined) {
-      getStationCode(selectedParty.fiscalCode)
-        .then((res) => setStationCodeGenerated(res))
-        .catch((error) =>
-          addError({
-            id: 'GENERATE_STATION_CODE',
-            blocking: false,
-            error,
-            techDescription: `An error occurred while generating station code`,
-            toNotify: true,
-            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
-            component: 'Toast',
-          })
-        );
+  const validatePrimitiveVersion = (primitiveVersion: number) => {
+    if (primitiveVersion) {
+      return primitiveVersion > 0 && primitiveVersion <= 2 ? false : true;
     }
+    return false;
+  };
+
+  const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+
+  useEffect(() => {
+    console.log('stationCodeCleaner', stationCodeCleaner);
+    getStationCode(stationCodeCleaner)
+      .then((res) => {
+        setStationCodeGenerated(res.stationCode);
+        console.log('GENERATED', res);
+      })
+      .catch((error) => {
+        addError({
+          id: 'GENERATE_STATION_CODE',
+          blocking: false,
+          error,
+          techDescription: `An error occurred while generating station code`,
+          toNotify: true,
+          displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+          displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+          component: 'Toast',
+        });
+      });
   }, []);
 
   const initialFormData: StationOnCreation = {
+    brokerCode: brokerCodeCleaner,
     stationCode: stationCodeGenerated,
-    primitiveVersion: '',
+    primitiveVersion: 0,
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     redirectPort: 0,
     redirectIp: '',
@@ -96,8 +109,13 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
+        brokerCode: !values.brokerCode ? 'Campo obbligatorio' : undefined,
         stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
-        primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
+        primitiveVersion: !values.primitiveVersion
+          ? 'Campo obbligatorio'
+          : validatePrimitiveVersion(values.primitiveVersion)
+          ? t('addEditStationPage.validation.overVersion')
+          : undefined,
         redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
         redirectPort: !values.redirectPort
           ? 'Campo obbligatorio'
@@ -176,6 +194,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   id="stationCode"
                   name="stationCode"
                   label={t('addEditStationPage.addForm.fields.stationCode')}
+                  placeholder={t('addEditStationPage.addForm.fields.stationCode')}
                   size="small"
                   value={formik.values.stationCode}
                   disabled
@@ -190,17 +209,21 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
+                  type="number"
                   id="primitiveVersion"
                   name="primitiveVersion"
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
-                  value={formik.values.primitiveVersion}
+                  value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
                   helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                   inputProps={{
+                    type: 'number',
+                    min: 0,
+                    max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
                 />

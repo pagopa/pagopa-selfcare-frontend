@@ -321,6 +321,7 @@ export default {
     },
     validation: {
       overPort: 'Il numero di porta deve essere compreso tra 1 e 65556',
+      overVersion: 'il numero della Versine deve essere un intero tra 1 e 2',
     },
     successMessage:
       'La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',

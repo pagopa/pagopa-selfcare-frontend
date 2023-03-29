@@ -8,6 +8,8 @@ import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
 import { StationOnCreation } from '../model/Station';
 import { ChannelOnCreation } from '../model/Channel';
+import { NodeOnSignInPSP } from '../model/Node';
+import { PSPDirectDTO } from '../model/PSP';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
@@ -97,6 +99,25 @@ export const PortalApi = {
 
   regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
     const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
+    return extractResponse(result, 204, onRedirectToLogin);
+  },
+
+  createPSPDirect: async (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
+    const result = await apiConfigClient.createPSPDirectUsingPOST({
+      body: {
+        abi: psp.abiCode,
+        agid_psp: true,
+        bic: psp.bicCode,
+        business_name: psp.businessName,
+        enabled: true,
+        my_bank_code: '',
+        psp_code: psp.pspCode,
+        stamp: true,
+        tax_code: psp.fiscalCode,
+        transfer: true,
+        vat_number: psp.fiscalCode,
+      },
+    });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 

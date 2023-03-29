@@ -80,6 +80,8 @@ export default {
       successMessage: 'Registrazione sul Nodo completata con successo.',
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
+      pspErrorMessageTitle: 'Errore',
+      pspErrorMessageDesc: 'Errore durante la creazione, PSP già censito',
       backButton: 'Annulla',
       continueButton: 'Conferma',
     },

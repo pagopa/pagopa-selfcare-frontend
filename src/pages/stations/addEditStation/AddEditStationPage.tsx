@@ -9,6 +9,7 @@ import ROUTES from '../../../routes';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
 import { getStationDetail } from '../../../services/__mocks__/stationService';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import { FormAction } from '../../../model/Channel';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
@@ -16,14 +17,14 @@ const AddEditStationPage = () => {
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
   const { channelId, actionId } = useParams<{ channelId: string; actionId: string }>();
-  const formAction = actionId ?? 'create';
+  const formAction = actionId ?? FormAction.Create;
 
   const [stationDetail, setStationDetail] = useState<StationDetailResource>();
 
   const goBack = () => history.push(ROUTES.STATIONS);
 
   useEffect(() => {
-    if (formAction !== 'create') {
+    if (formAction !== FormAction.Create) {
       setLoading(true);
       getStationDetail(channelId)
         .then((response) => {

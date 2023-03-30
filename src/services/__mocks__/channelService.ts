@@ -1,3 +1,4 @@
+import { ChannelCodeResource } from '../../api/generated/portal/ChannelCodeResource';
 import {
   Payment_modelEnum,
   ProtocolEnum,
@@ -199,8 +200,15 @@ export const mockedChannelAvailablePSP: Array<PSP> = [
   },
 ];
 
+const channelCode: ChannelCodeResource = {
+  channel_code: '1231231231',
+};
+
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
+
+export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =>
+  new Promise((resolve) => resolve(channelCode));
 
 export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> =>
   new Promise((resolve) => resolve(mockedChannelDetail(channelcode)));

@@ -25,9 +25,7 @@ import {
   CreditCard as CreditCardIcon,
 } from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { ChannelOnCreation } from '../../../model/Channel';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
   associatePSPtoChannel,
   createChannel,
@@ -47,16 +45,22 @@ import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 
 type Props = {
   goBack: () => void;
+  selectedParty: Party;
   channelDetail?: ChannelDetailsDto;
+  channelCode: string;
   formAction: string;
 };
 
-const initialFormData = (selectedParty?: Party, channelDetail?: ChannelDetailsDto) =>
+const initialFormData = (
+  channelCode: string,
+  channelDetail?: ChannelDetailsDto,
+  selectedParty?: Party
+) =>
   channelDetail
     ? {
         pspBrokerCode: channelDetail.broker_psp_code ?? '',
         businessName: channelDetail.broker_description ?? '',
-        idChannel: channelDetail.channel_code ?? '',
+        idChannel: channelCode,
         redirectProtocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
         redirectPort: channelDetail.redirect_port ?? undefined,
         redirectIp: channelDetail.redirect_ip ?? '',
@@ -73,7 +77,7 @@ const initialFormData = (selectedParty?: Party, channelDetail?: ChannelDetailsDt
     : {
         pspBrokerCode: selectedParty?.fiscalCode ?? '',
         businessName: selectedParty?.description ?? '',
-        idChannel: '',
+        idChannel: channelCode,
         redirectProtocol: Redirect_protocolEnum.HTTPS,
         redirectIp: '',
         redirectService: '',
@@ -105,11 +109,6 @@ const validate = (values: Partial<ChannelOnCreation>) =>
       pspBrokerCode: !values.pspBrokerCode ? 'Required' : undefined,
       businessName: !values.businessName ? 'Required' : undefined,
       idChannel: !values.idChannel ? 'Required' : undefined,
-      /* redirectProtocol: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectIp: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectService: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectParameters: !values.pspBrokerCode ? 'Required' : undefined, 
-      */
       redirectPort: validatePortRange(values.redirectPort) ? 'Non Valido' : undefined,
       targetAddress: !values.targetAddress ? 'Required' : undefined,
       targetService: !values.targetService ? 'Required' : undefined,
@@ -122,19 +121,24 @@ const validate = (values: Partial<ChannelOnCreation>) =>
     }).filter(([_key, value]) => value)
   );
 
-function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
+function AddEditChannelForm({
+  goBack,
+  selectedParty,
+  channelCode,
+  channelDetail,
+  formAction,
+}: Props) {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
 
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
 
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
 
   const formik = useFormik<ChannelOnCreation>({
-    initialValues: initialFormData(selectedParty, channelDetail),
+    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
     validate,
     onSubmit: () => {
       setShowConfirmModal(true);
@@ -147,7 +151,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
     setLoading(true);
 
     try {
-      if (formAction === 'create' || formAction === 'duplicate') {
+      if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
         const createResult = await createChannel(formik.values);
 
         if (createResult) {
@@ -156,7 +160,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
           });
         }
       }
-      if (formAction === 'edit') {
+      if (formAction === FormAction.Edit) {
         await updateChannel(formik.values);
       }
       history.push(ROUTES.CHANNELS, {
@@ -260,7 +264,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                     fullWidth
                     id="idChannel"
                     name="idChannel"
-                    disabled={formAction === 'edit' ?? false}
+                    disabled={true}
                     label={t('addEditChannelPage.addForm.fields.idChannel')}
                     size="small"
                     value={formik.values.idChannel}
@@ -456,7 +460,7 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
                       name="paymentType"
                       label={t('addEditChannelPage.addForm.fields.paymentType')}
                       size="small"
-                      disabled={formAction === 'edit' ? true : false}
+                      disabled={formAction === FormAction.Edit ? true : false}
                       value={formik.values.paymentType}
                       onChange={formik.handleChange}
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
@@ -487,7 +491,11 @@ function AddEditChannelForm({ goBack, channelDetail, formAction }: Props) {
           <Stack display="flex" justifyContent="flex-end">
             <Button
               onClick={() => setShowConfirmModal(true)}
-              disabled={!formik.dirty || !formik.isValid}
+              disabled={
+                formAction === FormAction.Duplicate
+                  ? !formik.isValid
+                  : !formik.dirty || !formik.isValid
+              }
               color="primary"
               variant="contained"
               type="submit"

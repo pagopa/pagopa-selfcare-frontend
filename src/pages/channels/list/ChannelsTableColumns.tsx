@@ -3,6 +3,7 @@ import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router';
+import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
 import GridLinkAction from './GridLinkAction';
 
@@ -78,7 +79,7 @@ export function buildColumnDefs(
             label="Modifica"
             to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
               channelId: params.row.channel_code,
-              actionId: 'edit',
+              actionId: FormAction.Edit,
             })}
             showInMenu={true}
           />
@@ -89,7 +90,7 @@ export function buildColumnDefs(
             label="Duplica"
             to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
               channelId: params.row.channel_code,
-              actionId: 'duplicate',
+              actionId: FormAction.Duplicate,
             })}
             showInMenu={true}
           />

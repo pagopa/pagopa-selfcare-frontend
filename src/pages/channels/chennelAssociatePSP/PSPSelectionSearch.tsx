@@ -84,6 +84,7 @@ export default function PSPSelectionSearch({
             height: 'auto',
             maxHeight: '220px',
           }}
+          data-testid="grid-item"
         >
           {selectedPSP ? (
             <PSPAccountItemSelection

@@ -1,7 +1,7 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useLoading } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
@@ -17,7 +17,7 @@ const AddEditChannelPage = () => {
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const { channelId, actionId } = useParams<{ channelId: string; actionId: string }>();
   const formAction = actionId ?? 'create';
-
+  const addError = useErrorDispatcher();
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
 
   const goBack = () => history.push(ROUTES.CHANNELS);
@@ -30,7 +30,16 @@ const AddEditChannelPage = () => {
           setChannelDetail(response);
         })
         .catch((reason) => {
-          console.error(reason);
+          addError({
+            id: 'GET_CHANNEL_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting channel details`,
+            toNotify: true,
+            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+            displayableDescription: t('addEditChannelPage.addForm.errorMessageChannelDetailsDesc'),
+            component: 'Toast',
+          });
         })
         .finally(() => {
           setLoading(false);

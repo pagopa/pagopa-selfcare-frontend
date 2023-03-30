@@ -156,7 +156,7 @@ function ChannelAssociatePSPPage() {
 
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button color="primary" variant="outlined" onClick={goBack} data-testid="back-btn-test">
             {t('channelAssociatePSPPage.associationForm.backButton')}
           </Button>
         </Stack>
@@ -167,6 +167,7 @@ function ChannelAssociatePSPPage() {
             disabled={!selectedPSP}
             color="primary"
             variant="contained"
+            data-testid="confirm-btn-test"
           >
             {t('channelAssociatePSPPage.associationForm.confirmButton')}
           </Button>

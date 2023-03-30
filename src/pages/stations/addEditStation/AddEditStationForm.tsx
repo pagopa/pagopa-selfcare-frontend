@@ -64,11 +64,9 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   useEffect(() => {
-    console.log('stationCodeCleaner', stationCodeCleaner);
     getStationCode(stationCodeCleaner)
       .then((res) => {
         setStationCodeGenerated(res.stationCode);
-        console.log('GENERATED', res);
       })
       .catch((error) => {
         addError({

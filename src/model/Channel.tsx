@@ -2,6 +2,12 @@ import { Redirect_protocolEnum } from '../api/generated/portal/ChannelDetailsDto
 
 export type ChannelStatus = 'ACTIVE' | 'REVISION' | 'NEEDCORRECTION';
 
+export enum FormAction {
+  Create = 'create',
+  Edit = 'edit',
+  Duplicate = 'duplicate',
+}
+
 export type ChannelOnCreation = {
   pspBrokerCode: string;
   businessName: string;

@@ -6,6 +6,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { PortalApi } from '../../../api/PortalApiClient';
+import { FormAction } from '../../../model/Channel';
 import { store } from '../../../redux/store';
 import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../addEditChannel/AddEditChannelForm';
@@ -34,7 +35,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={'create'} />
+            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Create} />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -104,7 +105,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={'duplicate'} />
+            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Duplicate} />
           </ThemeProvider>
         </Router>
       </Provider>
@@ -116,7 +117,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={'edit'} />
+            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Edit} />
           </ThemeProvider>
         </Router>
       </Provider>

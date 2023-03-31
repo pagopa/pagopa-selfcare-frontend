@@ -7,8 +7,10 @@ import {
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 
-export const mockedStation: StationDetailsDto = {
+const mockedStation: StationDetailResource = {
   stationCode: '97735020584_01',
+  stationStatus: StationStatusEnum.ACTIVE,
+  enabled: true,
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   redirectPort: 3000,
@@ -117,7 +119,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
 
 const mockedStationCode = { stationCode: '1122334455_01' };
 
-export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailsDto> =>
+export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>

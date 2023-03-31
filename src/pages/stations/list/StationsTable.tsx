@@ -1,14 +1,14 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { StationsResource } from '../../../api/generated/portal/StationsResource';
-import ROUTES from '../../../routes';
 import { getStations } from '../../../services/stationService';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { buildColumnDefs } from './StationsTableColumns';
 import { CustomStationSearchBar } from './CustomStationSearchBar';
 import StationTableEmpty from './StationTableEmpty';
@@ -27,6 +27,9 @@ const CustomDataGrid = styled(DataGrid)({
     background: `${theme.palette.background.default}`,
     padding: '0 24px 24px 24px',
     marginTop: '24px',
+  },
+  '& .MuiDataGrid-main > div:first-child': {
+    zIndex: 1,
   },
   '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
     { outline: 'none' },
@@ -80,29 +83,48 @@ export default function StationsTable() {
   const { t } = useTranslation();
 
   const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [loading, _setLoading] = useState(true);
-  const [error, _setError] = useState(false);
+  const [loading, setLoadingTable] = useState(false);
+  const [error, setError] = useState(false);
   const addError = useErrorDispatcher();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
   const [stations, setStations] = useState<StationsResource>(emptyStationsResource);
+  // const [page, setPage] = useState(0);
+
+  const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+    setLoadingTable(status);
+  };
 
   useEffect(() => {
-    setLoading(true);
-    getStations(0)
-      .then((retrievedStations) => {
-        setStations(retrievedStations);
+    setLoadingStatus(true);
+    getStations(0, stationCodeCleaner)
+      .then((res) => {
+        setStations(res);
+        setError(false);
       })
-      .catch((reason) =>
+      .catch((reason) => {
         addError({
           id: 'RETRIEVE_STATIONS_ERROR',
           blocking: false,
           error: reason,
           techDescription: `An error occurred while retrieving stations`,
           toNotify: true,
-        })
-      )
-      .finally(() => setLoading(false));
+        });
+        setError(true);
+        setStations(emptyStationsResource);
+      })
+      .finally(() => setLoadingStatus(false));
   }, []);
+
+  // const handleChangePage = (
+  //   _event: React.MouseEvent<HTMLButtonElement> | null,
+  //   newPage: number
+  // ) => {
+  //   setPage(newPage);
+  // };
 
   return (
     <React.Fragment>
@@ -130,7 +152,18 @@ export default function StationsTable() {
             columnBuffer={5}
             columns={columns}
             components={{
-              Pagination: () => <></>,
+              Pagination: () => (
+                <>
+                  {/* <TablePagination
+                    rowsPerPageOptions={[]}
+                    component="div"
+                    count={stations.stationsList.length}
+                    rowsPerPage={10}
+                    page={page}
+                    onPageChange={handleChangePage}
+                  /> */}
+                </>
+              ),
               Toolbar: () => (
                 <>
                   <CustomStationSearchBar />
@@ -149,26 +182,16 @@ export default function StationsTable() {
                   </Box>
                 </>
               ),
+              // eslint-disable-next-line sonarjs/no-identical-functions
               NoResultsOverlay: () => (
                 <>
                   <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
                     <Typography variant="body2">
-                      <Trans i18next="stationsPage.notFoundStations">
-                        Non sono ancora presenti stazioni in ambiente di collaudo.
-                        <Link
-                          component={RouterLink}
-                          sx={{
-                            cursor: 'pointer',
-                            textDecoration: 'none',
-                            fontWeight: '700',
-                            color: theme.palette.primary.main,
-                            whiteSpace: 'pre',
-                          }}
-                          to={generatePath(ROUTES.STATION_ADD)}
-                        >
-                          <strong> Crea stazione</strong>
-                        </Link>
-                      </Trans>
+                      {loading ? (
+                        <Trans i18nKey="stationsPage.loading">Loading...</Trans>
+                      ) : (
+                        <Trans i18nKey="stationsPage.noResults">No results</Trans>
+                      )}
                     </Typography>
                   </Box>
                 </>

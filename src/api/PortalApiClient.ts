@@ -6,7 +6,6 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-import { StationOnCreation } from '../model/Station';
 import { ChannelOnCreation } from '../model/Channel';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
@@ -21,6 +20,9 @@ import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
+import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
+import { StationDetailResource } from './generated/portal/StationDetailResource';
+import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -200,7 +202,7 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createStation: async (station: StationOnCreation): Promise<StationDetailsDto> => {
+  createStation: async (station: StationDetailsDto): Promise<StationDetailResource> => {
     const result = await apiConfigClient.createStationUsingPOST({
       body: {
         brokerCode: station.brokerCode,
@@ -211,21 +213,50 @@ export const PortalApi = {
         redirectIp: station.redirectIp,
         redirectPath: station.redirectPath,
         redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetAddress,
+        targetHost: station.targetHost,
         targetPort: station.targetPort,
-        targetPath: station.targetService,
+        targetPath: station.targetPath,
       },
     });
+    console.log('RESULT', result);
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  getStations: async (page: number): Promise<StationsResource> => {
-    const result = await apiConfigClient.getStationsUsingGET({ page });
+  getStations: async (
+    page: number,
+    creditorInstitutionCode?: string,
+    stationCode?: string,
+    limit?: number,
+    ordering?: string
+  ): Promise<StationsResource> => {
+    const result = await apiConfigClient.getStationsUsingGET({
+      page,
+      creditorInstitutionCode,
+      stationCode,
+      limit,
+      ordering,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getStation: async (stationId: string): Promise<StationDetailResource> => {
+    const result = await apiConfigClient.getStationUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getStationCode: async (ecCode: string): Promise<StationCodeResource> => {
     const result = await apiConfigClient.getStationCodeUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  associateEcToStation: async (
+    ecCode: string,
+    station: CreditorInstitutionStationDto
+  ): Promise<CreditorInstitutionStationEditResource> => {
+    const result = await apiConfigClient.associateStationToCreditorInstitutionUsingPOST({
+      ecCode,
+      body: { stationCode: station.stationCode },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 };

@@ -287,6 +287,8 @@ export default {
 
   addEditStationPage: {
     title: 'Configurazione della stazione',
+    subTitle:
+      'L’attivazione di una stazione può richiedere dai 2 ai 5 giorni, in base al carico di richieste in corso.',
     create: {
       title: 'Crea una nuova stazione',
       subtitle: 'Completa i campi',
@@ -338,7 +340,9 @@ export default {
     searchPlaceholder: 'Cerca per codice stazione',
     createStationButtonLabel: 'Crea stazione',
     notFoundStations:
-      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea stazione</1>',
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea Stazione</1>',
+    noResults: 'Nessun risultato',
+    loading: 'Caricamento...',
     stationsTableColumns: {
       headerFields: {
         name: 'Codice stazione',

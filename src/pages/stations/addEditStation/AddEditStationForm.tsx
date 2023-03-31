@@ -20,16 +20,24 @@ import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { StationOnCreation } from '../../../model/Station';
-import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {
+  RedirectProtocolEnum,
+  StationDetailsDto,
+} from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
-import { createStation, getStationCode } from '../../../services/stationService';
+import {
+  associateEcToStation,
+  createStation,
+  getStationCode,
+} from '../../../services/stationService';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+import { ENV } from '../../../utils/env';
 
 type Props = {
   goBack: () => void;
@@ -46,24 +54,11 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationCodeGenerated, setStationCodeGenerated] = useState('');
 
-  const validatePortRange = (redirectPort: number | undefined) => {
-    if (redirectPort) {
-      return redirectPort > 0 && redirectPort < 65556 ? false : true;
-    }
-    return false;
-  };
-
-  const validatePrimitiveVersion = (primitiveVersion: number) => {
-    if (primitiveVersion) {
-      return primitiveVersion > 0 && primitiveVersion <= 2 ? false : true;
-    }
-    return false;
-  };
-
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   useEffect(() => {
+    setLoading(true);
     getStationCode(stationCodeCleaner)
       .then((res) => {
         setStationCodeGenerated(res.stationCode);
@@ -79,10 +74,15 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
           displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
           component: 'Toast',
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
-  const initialFormData: StationOnCreation = {
+  const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
+
+  const initialFormData: StationDetailsDto = {
     brokerCode: brokerCodeCleaner,
     stationCode: stationCodeGenerated,
     primitiveVersion: 0,
@@ -91,8 +91,8 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     redirectIp: '',
     redirectPath: '',
     redirectQueryString: '',
-    targetAddress: '',
-    targetService: '',
+    targetHost: '',
+    targetPath: '',
     targetPort: 0,
   };
 
@@ -104,7 +104,21 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     mb: 3,
   };
 
-  const validate = (values: StationOnCreation) =>
+  const validatePortRange = (redirectPort: number | undefined) => {
+    if (redirectPort) {
+      return redirectPort > 0 && redirectPort < 65556 ? false : true;
+    }
+    return false;
+  };
+
+  const validatePrimitiveVersion = (primitiveVersion: number) => {
+    if (primitiveVersion) {
+      return primitiveVersion > 0 && primitiveVersion <= 2 ? false : true;
+    }
+    return false;
+  };
+
+  const validate = (values: StationDetailsDto) =>
     Object.fromEntries(
       Object.entries({
         brokerCode: !values.brokerCode ? 'Campo obbligatorio' : undefined,
@@ -123,8 +137,8 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
         redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
         redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
-        targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
-        targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
+        targetHost: !values.targetHost ? 'Campo obbligatorio' : undefined,
+        targetPath: !values.targetPath ? 'Campo obbligatorio' : undefined,
         targetPort: !values.targetPort
           ? 'Campo obbligatorio'
           : validatePortRange(values.targetPort)
@@ -133,32 +147,41 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
       }).filter(([_key, value]) => value)
     );
 
-  const formik = useFormik<StationOnCreation>({
+  const submit = async (values: StationDetailsDto) => {
+    setLoading(true);
+    try {
+      const create = await createStation(values);
+      // eslint-disable-next-line no-debugger
+      debugger;
+      console.log('CREATE', create);
+      if (create) {
+        console.log('SONO QUI');
+        await associateEcToStation(stationCodeCleaner, bodyStationDto);
+      }
+      history.push(ROUTES.STATIONS, {
+        alertSuccessMessage: t('addEditStationPage.successMessage'),
+      });
+    } catch (reason) {
+      addError({
+        id: 'ADD_EDIT_STATION',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while adding/editing station`,
+        toNotify: true,
+        displayableTitle: t('addEditStationPage.errorMessageTitle'),
+        displayableDescription: t('addEditStationPage.errorMessageDesc'),
+        component: 'Toast',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formik = useFormik<StationDetailsDto>({
     initialValues: initialFormData,
     validate,
-    onSubmit: (values) => {
+    onSubmit: async () => {
       setShowConfirmModal(false);
-      setLoading(true);
-      createStation(values)
-        .then((res) => {
-          console.log('response', res);
-          history.push(ROUTES.STATIONS, {
-            alertSuccessMessage: t('addEditStationPage.successMessage'),
-          });
-        })
-        .catch((error) => {
-          addError({
-            id: 'ADD_EDIT_STATION',
-            blocking: false,
-            error,
-            techDescription: `An error occurred while adding/editing station`,
-            toNotify: true,
-            displayableTitle: t('addEditStationPage.errorMessageTitle'),
-            displayableDescription: t('addEditStationPage.errorMessageDesc'),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoading(false));
     },
     validateOnChange: true,
     enableReinitialize: true,
@@ -177,6 +200,12 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         <Typography variant="h6" mb={3}>
           {t('addEditStationPage.title')}
         </Typography>
+
+        {ENV.ENV === 'UAT' ? (
+          <Typography variant="body2" mb={3}>
+            {t('addEditStationPage.subTitle')}
+          </Typography>
+        ) : null}
 
         <Box>
           <Box sx={inputGroupStyle}>
@@ -363,14 +392,14 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="targetAddress"
-                  name="targetAddress"
+                  id="targetHost"
+                  name="targetHost"
                   label={t('addEditStationPage.addForm.fields.targetAddress')}
                   size="small"
-                  value={formik.values.targetAddress}
+                  value={formik.values.targetHost}
                   onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetAddress && Boolean(formik.errors.targetAddress)}
-                  helperText={formik.touched.targetAddress && formik.errors.targetAddress}
+                  error={formik.touched.targetHost && Boolean(formik.errors.targetHost)}
+                  helperText={formik.touched.targetHost && formik.errors.targetHost}
                   inputProps={{
                     'data-testid': 'target-address-test',
                   }}
@@ -379,14 +408,14 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="targetService"
-                  name="targetService"
+                  id="targetPath"
+                  name="targetPath"
                   label={t('addEditStationPage.addForm.fields.targetService')}
                   size="small"
-                  value={formik.values.targetService}
+                  value={formik.values.targetPath}
                   onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetService && Boolean(formik.errors.targetService)}
-                  helperText={formik.touched.targetService && formik.errors.targetService}
+                  error={formik.touched.targetPath && Boolean(formik.errors.targetPath)}
+                  helperText={formik.touched.targetPath && formik.errors.targetPath}
                   inputProps={{
                     'data-testid': 'target-service-test',
                   }}
@@ -450,7 +479,10 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         onConfirmLabel={t('addEditStationPage.confirmModal.confirmButton')}
         onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
-        handleConfrimSubmit={() => formik.handleSubmit()}
+        handleConfrimSubmit={async () => {
+          await submit(formik.values);
+          setShowConfirmModal(false);
+        }}
       />
     </>
   );

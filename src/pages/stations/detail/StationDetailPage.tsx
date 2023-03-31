@@ -15,10 +15,9 @@ import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { getStationDetail } from '../../../services/__mocks__/stationService';
-import { ENV } from '../../../utils/env';
+import { getStationDetails } from '../../../services/stationService';
 import {
   StationDetailResource,
   StationStatusEnum,
@@ -32,8 +31,11 @@ const StationDetailPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
-    getStationDetail(stationId)
-      .then((stationDetailData) => setStationDetail(stationDetailData))
+    getStationDetails(stationId)
+      .then((stationDetailData) => {
+        console.log('RESPONSE', stationDetailData);
+        setStationDetail(stationDetailData);
+      })
       .catch((reason) => console.log(reason));
   }, []);
 
@@ -318,8 +320,8 @@ const StationDetailPage = () => {
                 >
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
-                    component={Link}
-                    to={ENV.URL_FE.LOGOUT} // TODO FixMe
+                    component="button"
+                    onClick={() => ''} // TODO
                     disabled={stationDetail?.stationStatus !== StationStatusEnum.ACTIVE}
                     color="primary"
                     endIcon={<ManageAccounts />}

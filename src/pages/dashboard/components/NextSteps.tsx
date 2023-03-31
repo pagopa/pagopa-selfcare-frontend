@@ -41,15 +41,17 @@ const NextSteps = ({ selectedParty, pspNodeData }: Props) => {
           {t('dashboardPage.nextStep.generateApiKeysCTA')}
         </Button>
       ) : (
-        <Button
-          component={Link}
-          to={ROUTES.NODE_SIGNIN}
-          variant="contained"
-          size="small"
-          endIcon={<ArrowForward />}
-        >
-          {t('dashboardPage.nextStep.signInCTA')}
-        </Button>
+        isAdmin && (
+          <Button
+            component={Link}
+            to={ROUTES.NODE_SIGNIN}
+            variant="contained"
+            size="small"
+            endIcon={<ArrowForward />}
+          >
+            {t('dashboardPage.nextStep.signInCTA')}
+          </Button>
+        )
       )}
     </Card>
   );

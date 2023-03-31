@@ -29,6 +29,10 @@ export default {
       pspCode: 'Codice PSP',
       bicCode: 'Codice BIC',
       digitalStamp: 'Marca da bollo digitale',
+      digitalStampValue: {
+        yes: 'Si',
+        no: 'No',
+      },
       statusLabel: 'Stato',
       status: {
         enabled: 'Abilitato',
@@ -39,6 +43,9 @@ export default {
       title: 'E ora?',
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
+      generateApiKeysStepAlert:
+        'Genera le APIKey di connessione al  Nodo per abilitare la creazione dei canali.',
+      generateApiKeysCTA: 'Genera APIKey',
     },
     operativeTable: {
       title: 'Tavolo operativo',

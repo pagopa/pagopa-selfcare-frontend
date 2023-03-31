@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.91"
+    "version": "0.0.100"
   },
   "servers": [
     {
@@ -1504,9 +1504,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ChannelCodeResource"
                 }
               }
             }
@@ -2342,9 +2342,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/StationCodeResource"
                 }
               }
             }
@@ -2371,6 +2371,82 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/stations/{ecCode}/station": {
+      "post": {
+        "tags": ["stations"],
+        "summary": "associateStationToCreditorInstitution",
+        "description": "Creates the relationship between the created station and the creditorInstitution",
+        "operationId": "associateStationToCreditorInstitutionUsingPOST",
+        "parameters": [
+          {
+            "name": "ecCode",
+            "in": "path",
+            "description": "Creditor institution code",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditorInstitutionStationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditorInstitutionStationEditResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -2489,6 +2565,16 @@
           },
           "extended_fault_bean": {
             "type": "boolean"
+          }
+        }
+      },
+      "ChannelCodeResource": {
+        "title": "ChannelCodeResource",
+        "type": "object",
+        "properties": {
+          "channel_code": {
+            "type": "string",
+            "description": "Channel code"
           }
         }
       },
@@ -2961,6 +3047,53 @@
           "shareCapital": {
             "type": "string",
             "description": "Institution's share capital value"
+          }
+        }
+      },
+      "CreditorInstitutionStationDto": {
+        "title": "CreditorInstitutionStationDto",
+        "required": ["stationCode"],
+        "type": "object",
+        "properties": {
+          "stationCode": {
+            "type": "string",
+            "description": "Station's unique identifier"
+          }
+        }
+      },
+      "CreditorInstitutionStationEditResource": {
+        "title": "CreditorInstitutionStationEditResource",
+        "required": ["stationCode"],
+        "type": "object",
+        "properties": {
+          "applicationCode": {
+            "type": "integer",
+            "description": "Station's application code",
+            "format": "int64"
+          },
+          "auxDigit": {
+            "type": "integer",
+            "description": "Station's auxiliary digit",
+            "format": "int64"
+          },
+          "broadcast": {
+            "type": "boolean",
+            "description": "Station's broadcast enabled",
+            "example": false
+          },
+          "mod4": {
+            "type": "boolean",
+            "description": "Station's mod 4 enabled",
+            "example": false
+          },
+          "segregationCode": {
+            "type": "integer",
+            "description": "Station's segregation code number",
+            "format": "int64"
+          },
+          "stationCode": {
+            "type": "string",
+            "description": "Station's unique identifier"
           }
         }
       },
@@ -3529,6 +3662,17 @@
           }
         }
       },
+      "StationCodeResource": {
+        "title": "StationCodeResource",
+        "required": ["stationCode"],
+        "type": "object",
+        "properties": {
+          "stationCode": {
+            "type": "string",
+            "description": "Station's unique identifier"
+          }
+        }
+      },
       "StationDetailResource": {
         "title": "StationDetailResource",
         "required": ["enabled", "stationCode", "stationStatus"],
@@ -3569,7 +3713,7 @@
           },
           "flagOnline": {
             "type": "boolean",
-            "description": "Station's online flag ",
+            "description": "Station's online flag",
             "example": false
           },
           "ip": {
@@ -3767,7 +3911,7 @@
           },
           "flagOnline": {
             "type": "boolean",
-            "description": "Station's online flag ",
+            "description": "Station's online flag",
             "example": false
           },
           "ip": {

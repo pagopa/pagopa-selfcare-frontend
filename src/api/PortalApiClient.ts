@@ -188,6 +188,11 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
+    const result = await apiConfigClient.getChannelCodeUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   // eslint-disable-next-line arrow-body-style
   getChannelPSPs: async (_page: number): Promise<ChannelsResource> => {
     /* TODO: change when GET will be available */

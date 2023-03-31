@@ -23,6 +23,7 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { NodeOnSignInPSP } from '../../../model/Node';
+import { createPSPDirect } from '../../../services/nodeService';
 
 type Props = {
   goBack: () => void;
@@ -35,7 +36,7 @@ const initialFormData = (selectedParty?: Party) => ({
   abiCode: selectedParty?.pspData?.abiCode ?? '',
   pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
   bicCode: '',
-  digitalStamp: '',
+  digitalStamp: false,
 });
 
 const inputGroupStyle = {
@@ -86,25 +87,27 @@ function NodeSignInPSPForm({ goBack }: Props) {
   const submit = async () => {
     setLoading(true);
 
-    try {
-      // TODO: manage submit
-      history.push(ROUTES.HOME, {
-        alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+    createPSPDirect(formik.values)
+      .then(() => {
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+        });
+      })
+      .catch((reason) => {
+        addError({
+          id: 'NODE_SIGNIN',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while registration at the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.pspErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.pspErrorMessageDesc'),
+          component: 'Toast',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } catch (reason) {
-      addError({
-        id: 'NODE_SIGNIN',
-        blocking: false,
-        error: reason as Error,
-        techDescription: `An error occurred while registration at the node`,
-        toNotify: true,
-        displayableTitle: t('nodeSignInPage.form.errorMessageTitle'),
-        displayableDescription: t('nodeSignInPage.form.errorMessageDesc'),
-        component: 'Toast',
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -227,12 +230,12 @@ function NodeSignInPSPForm({ goBack }: Props) {
                     onChange={formik.handleChange}
                   >
                     <FormControlLabel
-                      value="false"
+                      value={false}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.no')}
                     />
                     <FormControlLabel
-                      value="true"
+                      value={true}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.yes')}
                     />

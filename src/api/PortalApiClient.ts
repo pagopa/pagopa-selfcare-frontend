@@ -8,6 +8,8 @@ import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
 import { StationOnCreation } from '../model/Station';
 import { ChannelOnCreation } from '../model/Channel';
+import { NodeOnSignInPSP } from '../model/Node';
+import { PSPDirectDTO } from '../model/PSP';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
@@ -20,7 +22,7 @@ import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentType
 import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
-import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
+import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -98,6 +100,30 @@ export const PortalApi = {
 
   regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
     const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
+    return extractResponse(result, 204, onRedirectToLogin);
+  },
+
+  getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
+    const result = await apiConfigClient.getPSPDetailsUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createPSPDirect: async (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
+    const result = await apiConfigClient.createPSPDirectUsingPOST({
+      body: {
+        abi: psp.abiCode,
+        agid_psp: true,
+        bic: psp.bicCode,
+        business_name: psp.businessName,
+        enabled: true,
+        my_bank_code: '',
+        psp_code: psp.pspCode,
+        stamp: true,
+        tax_code: psp.fiscalCode,
+        transfer: true,
+        vat_number: psp.fiscalCode,
+      },
+    });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 

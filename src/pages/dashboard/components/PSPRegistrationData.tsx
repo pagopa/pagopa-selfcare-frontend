@@ -1,11 +1,21 @@
 import { Grid, Typography, Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
-const PSPRegistrationData = () => {
+type Props = {
+  pspNodeData?: PaymentServiceProviderDetailsResource;
+};
+
+const PSPRegistrationData = ({ pspNodeData }: Props) => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  const stampToString = (stamp: boolean) =>
+    stamp
+      ? t(`dashboardPage.registrationData.digitalStampValue.yes`)
+      : t(`dashboardPage.registrationData.digitalStampValue.no`);
 
   return (
     <>
@@ -54,7 +64,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {'-'}
+          {pspNodeData?.bic ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -62,14 +72,19 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {'-'}
+          {pspNodeData?.stamp ? stampToString(pspNodeData?.stamp) : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Chip label={t('dashboardPage.registrationData.status.disabled')}></Chip>
+        <Chip
+          color={pspNodeData?.bic ? 'primary' : 'default'}
+          label={t(
+            `dashboardPage.registrationData.status.${pspNodeData?.bic ? 'enabled' : 'disabled'}`
+          )}
+        ></Chip>
       </Grid>
     </>
   );

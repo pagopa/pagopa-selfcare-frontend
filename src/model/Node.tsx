@@ -5,5 +5,5 @@ export type NodeOnSignInPSP = {
   abiCode: string;
   pspCode: string;
   bicCode: string;
-  digitalStamp: string;
+  digitalStamp: boolean;
 };

@@ -29,6 +29,10 @@ export default {
       pspCode: 'Codice PSP',
       bicCode: 'Codice BIC',
       digitalStamp: 'Marca da bollo digitale',
+      digitalStampValue: {
+        yes: 'Si',
+        no: 'No',
+      },
       statusLabel: 'Stato',
       status: {
         enabled: 'Abilitato',
@@ -39,6 +43,9 @@ export default {
       title: 'E ora?',
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
+      generateApiKeysStepAlert:
+        'Genera le APIKey di connessione al  Nodo per abilitare la creazione dei canali.',
+      generateApiKeysCTA: 'Genera APIKey',
     },
     operativeTable: {
       title: 'Tavolo operativo',
@@ -80,6 +87,8 @@ export default {
       successMessage: 'Registrazione sul Nodo completata con successo.',
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
+      pspErrorMessageTitle: 'Errore',
+      pspErrorMessageDesc: 'Errore durante la creazione, PSP già censito',
       backButton: 'Annulla',
       continueButton: 'Conferma',
     },
@@ -91,8 +100,8 @@ export default {
     decription: 'API Key generate',
     apiKey: {
       'Connessione con nodo': 'Connessione con nodo',
-      'Posizioni debitorie': 'Posizioni debitorie',
-      'Evento di pagamento': 'Evento di pagamento',
+      'Integrazione Asincrona': 'Integrazione Asincrona',
+      'Recupero Ricevuta': 'Recupero Ricevuta',
     },
     apiNotPresent: {
       apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente.<1><0> Genera API Key</0></1>`,
@@ -135,8 +144,8 @@ export default {
     },
     products: {
       NODOAUTH: 'Connessione con nodo',
-      GPD: 'Posizioni debitorie',
-      BIZ: 'Evento di pagamento',
+      GPD: 'Integrazione Asincrona',
+      BIZ: 'Recupero Ricevuta',
     },
   },
   channelsPage: {

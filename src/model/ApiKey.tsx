@@ -17,8 +17,8 @@ export type ConfiguredProductKeys = {
 };
 
 export const NODOAUTH = 'Connessione con nodo';
-export const GPD = 'Posizioni debitorie';
-export const BIZ = 'Evento di pagamento';
+export const GPD = 'Integrazione Asincrona';
+export const BIZ = 'Recupero Ricevuta';
 
 export const API_KEY_PSP_PRODUCTS: Array<ConfiguredProductKeys> = [
   { id: 'NODOAUTH', key: NODOAUTH },

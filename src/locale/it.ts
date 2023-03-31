@@ -93,8 +93,8 @@ export default {
     decription: 'API Key generate',
     apiKey: {
       'Connessione con nodo': 'Connessione con nodo',
-      'Posizioni debitorie': 'Posizioni debitorie',
-      'Evento di pagamento': 'Evento di pagamento',
+      'Integrazione Asincrona': 'Integrazione Asincrona',
+      'Recupero Ricevuta': 'Recupero Ricevuta',
     },
     apiNotPresent: {
       apiNotPresentDescription: `Non è stata ancora generata nessuna chiave API per questo ente.<1><0> Genera API Key</0></1>`,
@@ -137,8 +137,8 @@ export default {
     },
     products: {
       NODOAUTH: 'Connessione con nodo',
-      GPD: 'Posizioni debitorie',
-      BIZ: 'Evento di pagamento',
+      GPD: 'Integrazione Asincrona',
+      BIZ: 'Recupero Ricevuta',
     },
   },
   channelsPage: {

@@ -10,13 +10,13 @@ export const createMockedKeys: Array<ProductKeys> = [
   {
     primaryKey: 'f8b0d8b19e7d42d9bf4e40697a9e2819',
     secondaryKey: '6ec6877879a64640bd15ff5b78e2b37f',
-    displayName: 'Posizioni debitorie',
+    displayName: ' Integrazione Asincrona',
     id: 'gdp-e162ca3b-fe5a-4bfd-a0b7-1ca1586d079e',
   },
   {
     primaryKey: '32ca791981df4ec0b10de14cced7a59a',
     secondaryKey: '273e47988e1a489b8aa164eb875f1417',
-    displayName: 'Evento di pagamento',
+    displayName: 'Recupero Ricevuta',
     id: 'bes-e162ca3b-fe5a-4bfd-a0b7-1ca1586d079e',
   },
 ];
@@ -31,7 +31,7 @@ export const mockedKeys: Array<ProductKeys> = [
   {
     primaryKey: 'f8b0d8b19e7d42d9bf4e40697a9e2819',
     secondaryKey: '6ec6877879a64640bd15ff5b78e2b37f',
-    displayName: 'Posizioni debitorie',
+    displayName: ' Integrazione Asincrona',
     id: 'gdp-e162ca3b-fe5a-4bfd-a0b7-1ca1586d079e',
   },
 ];

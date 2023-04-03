@@ -7,6 +7,8 @@ import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
 import { ChannelOnCreation } from '../model/Channel';
+import { NodeOnSignInPSP } from '../model/Node';
+import { PSPDirectDTO } from '../model/PSP';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
@@ -23,6 +25,8 @@ import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
+import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
+import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -103,6 +107,30 @@ export const PortalApi = {
     return extractResponse(result, 204, onRedirectToLogin);
   },
 
+  getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
+    const result = await apiConfigClient.getPSPDetailsUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createPSPDirect: async (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
+    const result = await apiConfigClient.createPSPDirectUsingPOST({
+      body: {
+        abi: psp.abiCode,
+        agid_psp: true,
+        bic: psp.bicCode,
+        business_name: psp.businessName,
+        enabled: true,
+        my_bank_code: '',
+        psp_code: psp.pspCode,
+        stamp: true,
+        tax_code: psp.fiscalCode,
+        transfer: true,
+        vat_number: psp.fiscalCode,
+      },
+    });
+    return extractResponse(result, 204, onRedirectToLogin);
+  },
+
   getChannels: async (page: number): Promise<ChannelsResource> => {
     const result = await apiConfigClient.getChannelsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -161,6 +189,11 @@ export const PortalApi = {
 
   getPaymentTypes: async (): Promise<PaymentTypesResource> => {
     const result = await apiConfigClient.getPaymentTypesUsingGET({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
+    const result = await apiConfigClient.getChannelCodeUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

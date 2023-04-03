@@ -6,19 +6,22 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { FormAction } from '../../../model/Channel';
+
 import ROUTES from '../../../routes';
 import { getChannelDetail } from '../../../services/channelService';
+import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
 
 const ChannelDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const setLoading = useLoading(LOADING_TASK_CHANNEL_DETAIL);
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
@@ -26,6 +29,7 @@ const ChannelDetailPage = () => {
   const goBack = () => history.push(ROUTES.CHANNELS);
 
   useEffect(() => {
+    setLoading(true);
     getChannelDetail(channelId)
       .then((channelDetailResponse) => setChannelDetail(channelDetailResponse))
       .catch((reason) => {
@@ -39,7 +43,8 @@ const ChannelDetailPage = () => {
           displayableDescription: t('addEditChannelPage.addForm.errorMessageChannelDetailsDesc'),
           component: 'Toast',
         });
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return channelDetail ? (
@@ -94,7 +99,7 @@ const ChannelDetailPage = () => {
                 component={Link}
                 to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
                   channelId,
-                  actionId: 'duplicate',
+                  actionId: FormAction.Duplicate,
                 })}
                 color="primary"
                 variant="outlined"
@@ -106,7 +111,7 @@ const ChannelDetailPage = () => {
                 component={Link}
                 to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
                   channelId,
-                  actionId: 'edit',
+                  actionId: FormAction.Edit,
                 })}
                 variant="contained"
               >

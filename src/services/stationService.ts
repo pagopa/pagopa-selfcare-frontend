@@ -13,7 +13,7 @@ import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 
 export const createStation = (station: StationDetailsDto): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL !== 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createStationMocked(station);
   }
   return PortalApi.createStation(station).then((resources) => resources);
@@ -23,7 +23,6 @@ export const getStations = (
   page: number,
   creditorInstitutionCode?: string
 ): Promise<StationsResource> => {
-  /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationsMocked(0);
   }

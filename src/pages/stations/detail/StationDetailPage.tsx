@@ -50,7 +50,8 @@ const StationDetailPage = () => {
           displayableDescription: t('stationDetailPage.errorMessageStationDetailsDesc'),
           component: 'Toast',
         });
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const hidePassword = 'XXXXXXXXXXXXXX';

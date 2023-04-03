@@ -24,21 +24,21 @@ export const getStations = (
   creditorInstitutionCode?: string
 ): Promise<StationsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL !== 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationsMocked(0);
   }
   return PortalApi.getStations(page, creditorInstitutionCode).then((resource) => resource);
 };
 
 export const getStationDetails = (stationId: string): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL !== 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationDetail(stationId);
   }
   return PortalApi.getStation(stationId).then((resource) => resource);
 };
 
 export const getStationCode = (code: string): Promise<StationCodeResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL !== 'true') {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationCodeMocked(code);
   }
   return PortalApi.getStationCode(code).then((resource) => resource);

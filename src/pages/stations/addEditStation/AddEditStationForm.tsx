@@ -40,7 +40,6 @@ import { StationDetailResource } from '../../../api/generated/portal/StationDeta
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
-import { ENV } from '../../../utils/env';
 
 type Props = {
   goBack: () => void;
@@ -201,11 +200,9 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
           {t('addEditStationPage.title')}
         </Typography>
 
-        {ENV.ENV === 'UAT' ? (
-          <Typography variant="body2" mb={3}>
-            {t('addEditStationPage.subTitle')}
-          </Typography>
-        ) : null}
+        <Typography variant="body2" mb={3}>
+          {t('addEditStationPage.subTitle')}
+        </Typography>
 
         <Box>
           <Box sx={inputGroupStyle}>

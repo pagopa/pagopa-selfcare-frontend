@@ -32,7 +32,10 @@ import {
   createStation,
   getStationCode,
 } from '../../../services/stationService';
-import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
+import {
+  LOADING_TASK_GENERATION_STATION_CODE,
+  LOADING_TASK_STATION_ADD_EDIT,
+} from '../../../utils/constants';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -51,6 +54,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
+  const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationCodeGenerated, setStationCodeGenerated] = useState('');
 
@@ -58,7 +62,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingGeneration(true);
     getStationCode(stationCodeCleaner)
       .then((res) => {
         setStationCodeGenerated(res.stationCode);
@@ -76,7 +80,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         });
       })
       .finally(() => {
-        setLoading(false);
+        setLoadingGeneration(false);
       });
   }, []);
 
@@ -151,11 +155,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     setLoading(true);
     try {
       const create = await createStation(values);
-      // eslint-disable-next-line no-debugger
-      debugger;
-      console.log('CREATE', create);
       if (create) {
-        console.log('SONO QUI');
         await associateEcToStation(stationCodeCleaner, bodyStationDto);
       }
       history.push(ROUTES.STATIONS, {

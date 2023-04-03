@@ -397,6 +397,8 @@ export default {
     changes: 'Modifiche',
     lastChanges: 'Ultima modifica',
     operatedBy: 'Operata da',
+    errorMessageStationDetails: 'Errore',
+    errorMessageStationDetailsDesc: 'Errore durante la ricezione del dettaglio della stazione',
     actionButtons: {
       revise: 'Correggi',
       edit: 'Modifica',

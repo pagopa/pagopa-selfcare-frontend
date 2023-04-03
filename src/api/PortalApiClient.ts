@@ -251,7 +251,6 @@ export const PortalApi = {
         targetPath: station.targetPath,
       },
     });
-    console.log('RESULT', result);
     return extractResponse(result, 201, onRedirectToLogin);
   },
 

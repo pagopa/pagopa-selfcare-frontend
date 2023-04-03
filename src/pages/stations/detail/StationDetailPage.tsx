@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -22,6 +22,7 @@ import {
   StationDetailResource,
   StationStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
+import { LOADING_TASK_STATION_DETAILS } from '../../../utils/constants';
 
 const StationDetailPage = () => {
   const { t } = useTranslation();
@@ -29,14 +30,27 @@ const StationDetailPage = () => {
   const { stationId } = useParams<{ stationId: string }>();
   const [stationDetail, setStationDetail] = useState<StationDetailResource>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_STATION_DETAILS);
 
   useEffect(() => {
+    setLoading(true);
     getStationDetails(stationId)
       .then((stationDetailData) => {
-        console.log('RESPONSE', stationDetailData);
         setStationDetail(stationDetailData);
       })
-      .catch((reason) => console.log(reason));
+      .catch((reason) => {
+        addError({
+          id: 'GETTING_STATION_DETAILS',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting station details`,
+          toNotify: true,
+          displayableTitle: t('stationDetailPage.errorMessageStationDetails'),
+          displayableDescription: t('stationDetailPage.errorMessageStationDetailsDesc'),
+          component: 'Toast',
+        });
+      });
   }, []);
 
   const hidePassword = 'XXXXXXXXXXXXXX';

@@ -217,6 +217,8 @@ export default {
       title: 'Invio per la revisione',
       message:
         'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
+      messageStation:
+        'Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>',
       confirmButton: 'Invia',
       cancelButton: 'Torna indietro',
     },

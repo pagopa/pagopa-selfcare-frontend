@@ -469,7 +469,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
       <ConfirmModal
         title={t('addEditStationPage.confirmModal.title')}
         message={
-          <Trans i18nKey="addEditStationPage.confirmModal.message">
+          <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
             Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
             approvare. Riceverai una notifica a revisione completata.
             <br />

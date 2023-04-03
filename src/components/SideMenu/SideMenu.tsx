@@ -37,12 +37,14 @@ export default function SideMenu() {
             handleClick={() => onExit(() => history.push(ROUTES.HOME))}
             isSelected={pathname === ROUTES.HOME}
             icon={DashboardIcon}
+            data-testid="home-test"
           />
           <SidenavItem
             title={t('sideMenu.apikeys.title')}
             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
             isSelected={pathname === ROUTES.APIKEYS}
             icon={VpnKeyIcon}
+            data-testid="apikeys-test"
           />
           {ENV.FEATURES.CHANNELS.ENABLED && selectedParty?.institutionType === 'PSP' && (
             <SidenavItem
@@ -50,6 +52,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
               isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
               icon={UsbIcon}
+              data-testid="channels-test"
             />
           )}
           {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
@@ -58,6 +61,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
               isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
+              data-testid="stations-test"
             />
           )}
         </List>

@@ -5,7 +5,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { generatePath, Link as RouterLink } from 'react-router-dom';
 import ROUTES from '../../../routes';
 
-type ChannelPSPTableEmptyProps = { channelId?: string };
+type ChannelPSPTableEmptyProps = { channelId: string };
 
 const ChannelPSPTableEmpty = ({ channelId }: ChannelPSPTableEmptyProps) => {
   const { t } = useTranslation();

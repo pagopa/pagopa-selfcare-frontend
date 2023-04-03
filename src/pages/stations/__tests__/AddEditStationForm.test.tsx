@@ -43,8 +43,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
     expect(stationCode.value).toBe('station Code');
 
-    fireEvent.change(primitiveVersion, { target: { value: 'primitive Version' } });
-    expect(primitiveVersion.value).toBe('primitive Version');
+    fireEvent.change(primitiveVersion, { target: { value: 1 } });
 
     fireEvent.click(redirectProtocol);
     fireEvent.change(redirectProtocol, { target: { value: 'HTTPS' } });

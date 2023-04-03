@@ -1,3 +1,4 @@
+import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
   RedirectProtocolEnum,
@@ -6,9 +7,11 @@ import {
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 
-export const mockedStation: StationDetailsDto = {
+const mockedStation: StationDetailResource = {
   stationCode: '97735020584_01',
-  primitiveVersion: '12345',
+  stationStatus: StationStatusEnum.ACTIVE,
+  enabled: true,
+  primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   redirectPort: 3000,
   redirectIp: 'Esempio Ip',
@@ -69,7 +72,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     stationStatus: StationStatusEnum.ACTIVE,
     stationCode: '97735020584_01',
     version: 1,
-    primitiveVersion: '1',
+    primitiveVersion: 1,
     password: 'PASSWORD',
     redirectPath: 'esempiolink1.it',
     activationDate: new Date('2023-02-23'),
@@ -85,7 +88,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     stationStatus: StationStatusEnum.ON_REVISION,
     stationCode: '97735020584_02',
     version: 2,
-    primitiveVersion: 'testPrimitiveVersion02',
+    primitiveVersion: 1,
     password: 'PASSWORD',
     redirectPath: 'esempiolink2.it',
     activationDate: new Date('2023-02-24'),
@@ -101,7 +104,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     stationStatus: StationStatusEnum.TO_BE_CORRECTED,
     stationCode: '97735020584_03',
     version: 1,
-    primitiveVersion: '2',
+    primitiveVersion: 1,
     password: 'XXXXXXXXXXXXXX',
     redirectPath: 'esempiolink3.it',
     activationDate: new Date('2023-02-25'),
@@ -114,9 +117,9 @@ const mockedStationsDetail: Array<StationDetailResource> = [
   },
 ];
 
-const mockedStationCode = (code: string) => `${code}_01`;
+const mockedStationCode = { stationCode: '1122334455_01' };
 
-export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailsDto> =>
+export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>
@@ -131,5 +134,5 @@ export const getStationDetail = (stationCode: any): Promise<StationDetailResourc
   }
 };
 
-export const getStationCodeMocked = (code: string): Promise<string> =>
-  new Promise((resolve) => resolve(mockedStationCode(code)));
+export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
+  new Promise((resolve) => resolve(mockedStationCode));

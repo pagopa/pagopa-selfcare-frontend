@@ -210,12 +210,15 @@ export default {
       errorMessageTitle: 'Errore',
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
       errorMessagePaymentTypesDesc: 'Errore durante la ricezione dei metodi di pagamento',
+      errorMessageChannelDetailsDesc: 'Errore durante la ricezione dei dettagli del canale',
       errorMessageChannelCodeTypesDesc: 'Errore durante la generazione del Codice Canale',
     },
     confirmModal: {
       title: 'Invio per la revisione',
       message:
         'Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>',
+      messageStation:
+        'Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>',
       confirmButton: 'Invia',
       cancelButton: 'Torna indietro',
     },
@@ -296,6 +299,8 @@ export default {
 
   addEditStationPage: {
     title: 'Configurazione della stazione',
+    subTitle:
+      'L’attivazione di una stazione può richiedere dai 2 ai 5 giorni, in base al carico di richieste in corso.',
     create: {
       title: 'Crea una nuova stazione',
       subtitle: 'Completa i campi',
@@ -331,6 +336,7 @@ export default {
     },
     validation: {
       overPort: 'Il numero di porta deve essere compreso tra 1 e 65556',
+      overVersion: 'il numero della Versine deve essere un intero tra 1 e 2',
     },
     successMessage:
       'La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.',
@@ -346,7 +352,9 @@ export default {
     searchPlaceholder: 'Cerca per codice stazione',
     createStationButtonLabel: 'Crea stazione',
     notFoundStations:
-      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea stazione</1>',
+      'Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea Stazione</1>',
+    noResults: 'Nessun risultato',
+    loading: 'Caricamento...',
     stationsTableColumns: {
       headerFields: {
         name: 'Codice stazione',
@@ -391,6 +399,8 @@ export default {
     changes: 'Modifiche',
     lastChanges: 'Ultima modifica',
     operatedBy: 'Operata da',
+    errorMessageStationDetails: 'Errore',
+    errorMessageStationDetailsDesc: 'Errore durante la ricezione del dettaglio della stazione',
     actionButtons: {
       revise: 'Correggi',
       edit: 'Modifica',

@@ -30,7 +30,7 @@ export default function StationsPage() {
           />
         </Box>
         {history.location.state && (history.location.state as any).alertSuccessMessage && (
-          <Alert severity="success" variant="outlined">
+          <Alert severity="success" variant="outlined" data-testid="alert-test">
             {(history.location.state as any).alertSuccessMessage}
           </Alert>
         )}

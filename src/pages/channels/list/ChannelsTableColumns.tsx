@@ -116,7 +116,7 @@ export function buildColumnDefs(
   ] as Array<GridColDef>;
 }
 
-function renderCell(
+export function renderCell(
   params: GridRenderCellParams,
   value: ReactNode = params.value,
   overrideStyle: CSSProperties = {}
@@ -152,7 +152,7 @@ function renderCell(
   );
 }
 
-function showCustomHeader(params: GridColumnHeaderParams) {
+export function showCustomHeader(params: GridColumnHeaderParams) {
   return (
     <React.Fragment>
       <Typography
@@ -166,7 +166,7 @@ function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-function showChannelCode(params: GridRenderCellParams) {
+export function showChannelCode(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
@@ -196,7 +196,7 @@ function showChannelCode(params: GridRenderCellParams) {
   );
 }
 
-function showStatus(params: GridRenderCellParams) {
+export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
     <Box>

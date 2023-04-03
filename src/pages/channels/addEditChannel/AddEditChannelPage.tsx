@@ -38,7 +38,16 @@ const AddEditChannelPage = () => {
           setChannelCode(response.channel_code ?? '');
         })
         .catch((reason) => {
-          console.error(reason);
+          addError({
+            id: 'GET_CHANNEL_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting channel details`,
+            toNotify: true,
+            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+            displayableDescription: t('addEditChannelPage.addForm.errorMessageChannelDetailsDesc'),
+            component: 'Toast',
+          });
         })
         .finally(() => {
           setLoading(false);

@@ -1,3 +1,5 @@
+import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { CreditorInstitutionDto } from '../../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { NodeOnSignInPSP } from '../../model/Node';
 import { PSPDirectDTO } from '../../model/PSP';
@@ -30,8 +32,28 @@ const pspDetails: PaymentServiceProviderDetailsResource = {
   psp_code: '12312312',
 };
 
+// const ecDirect: CreditorInstitutionDetailsResource = {
+//   address: {
+//     city: 'città',
+//     countryCode: 'indirizzo',
+//     location: 'provincia',
+//     taxDomicile: 'Domicilio Fiscale',
+//     zipCode: 'CAP',
+//   },
+//   businessName: 'businessName',
+//   creditorInstitutionCode: 'creditorInstitutionCode',
+//   enabled: false,
+//   pspPayment: false,
+//   reportingFtp: false,
+//   reportingZip: false,
+// };
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
 export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
   new Promise((resolve) => resolve(pspDetails));
+
+export const createECDirect = (
+  ec: CreditorInstitutionDto
+): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));

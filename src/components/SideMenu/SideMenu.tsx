@@ -32,20 +32,33 @@ export default function SideMenu() {
     <Box display="grid" mt={1}>
       <Box gridColumn="auto">
         <List>
-          <SidenavItem
-            title={t('sideMenu.home.title')}
-            handleClick={() => onExit(() => history.push(ROUTES.HOME))}
-            isSelected={pathname === ROUTES.HOME}
-            icon={DashboardIcon}
-            data-testid="home-test"
-          />
-          <SidenavItem
-            title={t('sideMenu.apikeys.title')}
-            handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-            isSelected={pathname === ROUTES.APIKEYS}
-            icon={VpnKeyIcon}
-            data-testid="apikeys-test"
-          />
+          {ENV.FEATURES.DASHBOARD.ENABLED ? (
+            <>
+              <SidenavItem
+                title={t('sideMenu.home.title')}
+                handleClick={() => onExit(() => history.push(ROUTES.HOME))}
+                isSelected={pathname === ROUTES.HOME}
+                icon={DashboardIcon}
+                data-testid="home-test"
+              />
+              <SidenavItem
+                title={t('sideMenu.apikeys.title')}
+                handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
+                isSelected={pathname === ROUTES.APIKEYS}
+                icon={VpnKeyIcon}
+                data-testid="apikeys-test"
+              />
+            </>
+          ) : (
+            <SidenavItem
+              title={t('sideMenu.apikeys.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
+              isSelected={pathname === ROUTES.APIKEYS || pathname === ROUTES.HOME}
+              icon={VpnKeyIcon}
+              data-testid="apikeys-test"
+            />
+          )}
+
           {ENV.FEATURES.CHANNELS.ENABLED && selectedParty?.institutionType === 'PSP' && (
             <SidenavItem
               title={t('sideMenu.channels.title')}

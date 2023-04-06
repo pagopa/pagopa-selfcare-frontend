@@ -1,3 +1,4 @@
+// eslint-disable @typescript-eslint/restrict-plus-operands
 import { ArrowBack, FileDownload } from '@mui/icons-material';
 import { Alert, Box, Button, Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';

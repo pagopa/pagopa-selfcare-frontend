@@ -51,16 +51,15 @@ function AddApiKeyPage() {
   const history = useHistory();
 
   const goBack = () => {
-    history.push(ROUTES.HOME);
+    history.push(ROUTES.APIKEYS);
   };
 
   const handleSubmit = () => {
-    console.log(selectedProduct);
     if (selectedProduct && selectedParty) {
       setLoading(true);
       createInstitutionApiKeys(selectedParty.partyId, selectedProduct)
         .then((_data) => {
-          history.push(ROUTES.HOME, {
+          history.push(ROUTES.APIKEYS, {
             alertSuccessMessage: t('addApiKeyPage.addForm.successMessage'),
           });
         })

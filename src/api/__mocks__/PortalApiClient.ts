@@ -1,94 +1,123 @@
-import { InstitutionResource, InstitutionTypeEnum } from '../generated/portal/InstitutionResource';
+import { ChannelOnCreation } from '../../model/Channel';
+import {
+  mockedPaymentTypes,
+  mockedPSPChannels,
+  mockedChannelDetail,
+} from '../../services/__mocks__/channelService';
+import { ChannelDetailsResource } from '../generated/portal/ChannelDetailsResource';
+import {
+  InstitutionDetailResource,
+  InstitutionTypeEnum,
+} from '../generated/portal/InstitutionDetailResource';
+import { InstitutionResource } from '../generated/portal/InstitutionResource';
+import { PaymentTypesResource } from '../generated/portal/PaymentTypesResource';
 
 import { ProductsResource } from '../generated/portal/ProductsResource';
+import { PspChannelPaymentTypes } from '../generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from '../generated/portal/PspChannelPaymentTypesResource';
 
 export const mockedInstitutionResources: Array<InstitutionResource> = [
   {
-    name: 'Comune di Bari',
+    id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+    externalId: '14847241008',
+    originId: 'PSP_14847241008',
+    origin: 'SELC',
+    institutionType: 'PSP' as InstitutionTypeEnum,
+    name: 'PSP S.p.A.',
+    fiscalCode: '14847241008',
+    mailAddress: 'pspspa@test.dummy',
     status: 'ACTIVE',
-    id: '1',
-    externalId: 'externalId1',
-    originId: 'originId1',
-    origin: 'IPA',
-    mailAddress: 'address',
-    fiscalCode: 'fiscalCode',
-    // userRole: 'LIMITED',
-    institutionType: InstitutionTypeEnum.PA,
-    address: 'Piazza della Scala, 2 - 20121 Milano',
-    userProductRoles: ['security', 'api'],
+    address: 'VIA DEI PSP 20, ROMA',
+    userProductRoles: ['admin'],
+    companyInformations: {},
+    assistanceContacts: {},
+    pspData: {
+      businessRegisterNumber: '00000000000',
+      legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+      legalRegisterNumber: '09878',
+      abiCode: '36042',
+      vatNumberGroup: false,
+    },
+    dpoData: {
+      address: 'pectest@pec.pagopa.it',
+      pec: 'pectest@pec.pagopa.it',
+      email: 'pectest@pec.pagopa.it',
+    },
   },
   {
-    name: 'Comune di Milano',
-    status: 'PENDING',
-    id: '2',
-    externalId: 'externalId2',
-    originId: 'originId2',
+    id: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
+    externalId: '1122334455',
+    originId: 'c_g922',
     origin: 'IPA',
-    mailAddress: 'address',
-    fiscalCode: 'fiscalCode',
-    // userRole: 'ADMIN',
-    institutionType: InstitutionTypeEnum.PA,
-    address: 'Piazza della Scala, 2 - 20121 Milano',
-    userProductRoles: ['security', 'api'],
+    institutionType: 'PA' as InstitutionTypeEnum,
+    name: 'Ente Creditore S.r.l.',
+    fiscalCode: '1122334455',
+    mailAddress: 'email-ec@test.dummy',
+    status: 'ACTIVE',
+    address: 'Via degli Enti Creditori 1',
+    userProductRoles: ['admin'],
+    companyInformations: {},
+    assistanceContacts: {},
   },
 ];
+
+export const mockedInstitutionDetailResource: InstitutionDetailResource = {
+  id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+  externalId: '14847241008',
+  originId: 'PSP_14847241008',
+  description: 'PSP S.p.A.',
+  digitalAddress: 'pspspa@test.dummy',
+  address: 'VIA DEI PSP 20, ROMA',
+  zipCode: '00161',
+  taxCode: '14847241008',
+  origin: 'SELC',
+  institutionType: 'PSP' as InstitutionTypeEnum,
+  attributes: [],
+};
 
 export const mockedProductResources: Array<ProductsResource> = [
   {
     title: 'App IO',
     description: 'App IO description',
-    id: '1',
+    id: 'prod-io',
     urlBO: 'http://appio/bo#<IdentityToken>',
     urlPublic: 'http://appio/public',
   },
   {
-    id: '2',
+    id: 'prod-pn',
     title: 'Piattaforma Notifiche',
     description: 'Piattaforma Notifiche description',
     urlBO: 'http://notifiche/bo?token=<IdentityToken>',
     urlPublic: 'http://notifiche/public',
   },
-  {
-    id: '3',
-    title: 'Pagamenti pagoPA',
-    description: 'Pagamenti pagoPA description',
-
-    urlBO: 'http://pagopa/bo#token=<IdentityToken>',
-    urlPublic: 'http://pagopa/public',
-  },
-  {
-    title: 'Check-IBAN',
-    description: "Verifica l'abbinamento di un IBAN ad un CF di un cittadino o di un'impresa.",
-    id: '4',
-
-    urlPublic: 'http://www.google.it',
-    urlBO: 'http://checkiban/bo#token=<IdentityToken>',
-  },
-  {
-    id: '5',
-    title: 'Carta Giovani',
-    description: 'Richiedi la convenzione e gestisci i dati e le agevolazioni da offrire.',
-
-    urlPublic: undefined,
-    urlBO: 'http://cgn/bo#token=<IdentityToken>',
-  },
-  {
-    id: '6',
-    title: 'PDND',
-    description: 'Condividi dati con altri Enti in maniera semplice, sicura ed economica.',
-
-    urlPublic: undefined,
-    urlBO: 'http://PDND/bo#token=<IdentityToken>',
-  },
 ];
 
 export const PortalApi = {
-  getInstitutions: async (): Promise<Array<InstitutionResource>> =>
+  getInstitutions: async (_productId: string): Promise<Array<InstitutionResource>> =>
     new Promise((resolve) => resolve(mockedInstitutionResources)),
 
-  getInstitution: async (_partyId: string): Promise<InstitutionResource> =>
-    new Promise((resolve) => resolve(mockedInstitutionResources[0])),
+  getInstitution: async (_institutionId: string): Promise<InstitutionDetailResource> =>
+    new Promise((resolve) => resolve(mockedInstitutionDetailResource)),
 
   getProducts: async (): Promise<Array<ProductsResource>> =>
     new Promise((resolve) => resolve(mockedProductResources)),
+
+  createChannel: async (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedPSPChannels)),
+
+  associatePSPtoChannel: async (
+    _channelcode: string,
+    _pspcode: string,
+    _payment_type: PspChannelPaymentTypes
+  ): Promise<PspChannelPaymentTypesResource> =>
+    new Promise((resolve) => resolve({ payment_types: ['ptype_test'] })),
+
+  updateChannel: async (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedPSPChannels)),
+
+  getPaymentTypes: async (): Promise<PaymentTypesResource> =>
+    new Promise((resolve) => resolve(mockedPaymentTypes)),
+
+  getChannelDetail: async (_channelcode: string): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedChannelDetail('12345'))),
 };

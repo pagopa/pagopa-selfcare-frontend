@@ -8,8 +8,9 @@ import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
 import withParties, { WithPartiesProps } from '../decorators/withParties';
 import { Product } from '../model/Product';
-import { useAppSelector } from '../redux/hooks';
-import { partiesSelectors } from '../redux/slices/partiesSlice';
+import { Party } from '../model/Party';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
@@ -42,6 +43,7 @@ const selfcareProduct: Product = {
 
 const Header = ({ onExit, loggedUser, parties }: Props) => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
@@ -76,7 +78,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
         id: p.id,
         title: p.title,
         productUrl: p.urlPublic ?? '',
-        linkType: 'internal',
+        linkType: 'external',
       }))}
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
@@ -110,11 +112,17 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
           trackEvent('PARTY_SELECTION', {
             party_id: selectedParty.id,
           });
-          onExit(() =>
-            window.location.assign(
-              `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`
-            )
-          );
+          onExit(() => {
+            if (ENV.ENV === 'LOCAL_DEV') {
+              const partyToSwitch = parties.find((p) => p.partyId === selectedParty.id);
+              const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
+              setParty(partyToSwitch);
+            } else {
+              window.location.assign(
+                `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`
+              );
+            }
+          });
         }
       }}
     />

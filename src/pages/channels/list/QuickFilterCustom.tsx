@@ -164,7 +164,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       />
       <Button
         component={Link}
-        to={ROUTES.CREATE_CHANNEL}
+        to={ROUTES.CHANNEL_ADD}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
       >

@@ -1,5 +1,6 @@
 import { InstitutionDetailResource } from '../api/generated/portal/InstitutionDetailResource';
 import { InstitutionResource } from '../api/generated/portal/InstitutionResource';
+import { PspDataResource } from '../api/generated/portal/PspDataResource';
 import { ENV } from '../utils/env';
 
 export type SelfcareRole = 'ADMIN' | 'LIMITED';
@@ -19,8 +20,8 @@ export type Party = {
   urlLogo?: string;
   fiscalCode: string;
   registeredOffice: string;
-  typology: string;
   institutionType?: string;
+  pspData?: PspDataResource;
 };
 
 export type UserRole = {
@@ -42,13 +43,13 @@ export const institutionResource2Party = (institutionResource: InstitutionResour
     digitalAddress: institutionResource.mailAddress,
     status: institutionResource.status as 'ACTIVE' | 'PENDING',
     roles: institutionResource.userProductRoles.map(
-      (u) => ({ partyRole: u, roleKey: u } as UserRole)
+      (u) => ({ partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u } as UserRole)
     ),
     urlLogo,
     fiscalCode: institutionResource.fiscalCode,
     registeredOffice: institutionResource.address,
-    typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,
+    pspData: institutionResource.pspData,
   };
 };
 
@@ -70,7 +71,6 @@ export const institutionDetailResource2Party = (
     urlLogo,
     fiscalCode: institutionResource.taxCode,
     registeredOffice: institutionResource.address,
-    typology: 'TODO', // it will represent the taxonomy of the party
     institutionType: institutionResource.institutionType,
   };
 };

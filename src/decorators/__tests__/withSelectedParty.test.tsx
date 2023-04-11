@@ -8,13 +8,29 @@ import { testToken } from '../../utils/constants';
 
 jest.mock('../../services/partyService');
 
-const expectedPartyId: string = '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239';
+const expectedPartyId: string = '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944';
 
 let fetchPartyDetailsSpy: jest.SpyInstance;
 
-beforeEach(() => {
-  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchPartyDetails');
+const mockWinAssign = jest.fn();
 
+const savedLocation = window.location;
+
+beforeEach(() => {
+  delete (window as Partial<Window>).location;
+  window.location = {
+    ...window.location,
+    reload: jest.fn(),
+    assign: jest.fn(),
+    replace: jest.fn(),
+  };
+});
+afterEach(() => {
+  window.location = savedLocation;
+});
+
+beforeEach(() => {
+  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchParties');
   storageTokenOps.write(testToken); // party with partyId="46ef5b6b-7ee4-4dab-b8bc-fb5e30111239"
 });
 
@@ -70,5 +86,5 @@ const checkSelectedParty = (state: RootState) => {
 
 const checkMockInvocation = (expectedCallsNumber: number) => {
   expect(fetchPartyDetailsSpy).toBeCalledTimes(expectedCallsNumber);
-  expect(fetchPartyDetailsSpy).toBeCalledWith(expectedPartyId, undefined);
+  expect(fetchPartyDetailsSpy).toBeCalledWith();
 };

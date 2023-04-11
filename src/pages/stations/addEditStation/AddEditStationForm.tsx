@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { theme } from '@pagopa/mui-italia';
-import { useFormik } from 'formik';
+import { FormikProps, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import {
@@ -124,7 +124,6 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const validate = (values: StationDetailsDto) =>
     Object.fromEntries(
       Object.entries({
-        brokerCode: !values.brokerCode ? 'Campo obbligatorio' : undefined,
         stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
         primitiveVersion: !values.primitiveVersion
           ? 'Campo obbligatorio'
@@ -180,11 +179,42 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     initialValues: initialFormData,
     validate,
     onSubmit: async () => {
-      setShowConfirmModal(false);
+      setShowConfirmModal(true);
     },
-    validateOnChange: true,
     enableReinitialize: true,
   });
+
+  const enebledSubmit = (values: StationDetailsDto) =>
+    !(
+      values.stationCode !== '' &&
+      values.primitiveVersion !== 0 &&
+      values.redirectIp !== '' &&
+      values.redirectPath !== '' &&
+      values.redirectPort !== 0 &&
+      values.redirectProtocol !== undefined &&
+      values.redirectQueryString !== '' &&
+      values.targetHost !== '' &&
+      values.targetPort !== 0 &&
+      values.targetPath !== ''
+    );
+
+  const handleChangeNumberOnly = (
+    e: React.ChangeEvent<any>,
+    field: string,
+    formik: FormikProps<StationDetailsDto>
+  ) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === '' || regex.test(e.target.value)) {
+      formik.setFieldValue(field, e.target.value);
+    }
+  };
+
+  const openConfirmModal = () => {
+    if (formik.isValid) {
+      setShowConfirmModal(true);
+    }
+    setShowConfirmModal(false);
+  };
 
   return (
     <>
@@ -241,13 +271,11 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   size="small"
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
                   error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
                   helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                   inputProps={{
                     type: 'number',
-                    min: 0,
-                    max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
                 />
@@ -303,7 +331,6 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
                   inputProps={{
                     step: 1,
-                    type: 'number',
                     min: 0,
                     max: 65556,
                     'data-testid': 'redirect-port-test',
@@ -312,7 +339,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   placeholder={t('addEditStationPage.addForm.fields.redirectPort')}
                   size="small"
                   value={formik.values.redirectPort === 0 ? '' : formik.values.redirectPort}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'redirectPort', formik)}
                   error={formik.touched.redirectPort && Boolean(formik.errors.redirectPort)}
                   helperText={
                     formik.touched.redirectPort &&
@@ -427,7 +454,6 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
                   inputProps={{
                     step: 1,
-                    type: 'number',
                     min: 0,
                     max: 65556,
                     'data-testid': 'target-port-test',
@@ -436,7 +462,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   placeholder={t('addEditStationPage.addForm.fields.targetPort')}
                   size="small"
                   value={formik.values.targetPort === 0 ? '' : formik.values.targetPort}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'targetPort', formik)}
                   error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
                   helperText={formik.touched.targetPort && formik.errors.targetPort}
                 />
@@ -453,8 +479,11 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
           <Button
-            onClick={() => setShowConfirmModal(true)}
-            disabled={!formik.dirty || !formik.isValid}
+            onClick={() => {
+              openConfirmModal();
+              formik.handleSubmit();
+            }}
+            disabled={enebledSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

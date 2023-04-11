@@ -17,6 +17,11 @@ import { BrowserRouter } from 'react-router-dom';
 import DashboardPage from '../DashboardPage';
 import { createStore } from '../../../redux/store';
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
 jest.mock('../../../decorators/withLogin');
 jest.mock('../../../decorators/withParties');
 jest.mock('../../../decorators/withSelectedParty');

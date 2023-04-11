@@ -69,6 +69,19 @@ export const mockedPSPChannels: PspChannelsResource = {
   ],
 };
 
+export const mockedPaymentTypes: PaymentTypesResource = {
+  payment_types: [
+    {
+      description: 'PostePay',
+      payment_type: 'PPAY',
+    },
+    {
+      description: 'Bonifico',
+      payment_type: 'SEPA',
+    },
+  ],
+};
+
 export const mockedChannel: ChannelOnCreation = {
   pspBrokerCode: 'broker_psp_code',
   businessName: 'business_name',
@@ -81,20 +94,7 @@ export const mockedChannel: ChannelOnCreation = {
   targetAddress: 'target_addres',
   targetPort: 8081,
   targetService: 'target_service',
-  paymentType: 'payment_type',
-};
-
-export const mockedPaymentTypes: PaymentTypesResource = {
-  payment_types: [
-    {
-      description: 'PostePay',
-      payment_type: 'PPAY',
-    },
-    {
-      description: 'Bonifico',
-      payment_type: 'SEPA',
-    },
-  ],
+  paymentType: mockedPaymentTypes.payment_types[0].description,
 };
 
 export const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({

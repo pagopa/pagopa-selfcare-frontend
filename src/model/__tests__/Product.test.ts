@@ -19,7 +19,7 @@ test('Test institutionInfo2Party', () => {
     title: 'Pagamenti pagoPA',
     urlBO: 'http://pagopa/bo',
     urlPublic: 'http://pagopa/public',
-    selfcareRole: undefined,
+    selfcareRole: 'ADMIN',
     roles: [],
     authorized: true,
     status: 'ACTIVE',

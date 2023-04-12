@@ -214,16 +214,16 @@ function AddEditChannelForm({
     !(
       values.businessName !== '' &&
       values.idChannel !== '' &&
-      values.paymentType !== '' &&
       values.pspBrokerCode !== '' &&
       values.redirectIp !== '' &&
       values.redirectParameters !== '' &&
-      values.redirectPort !== 0 &&
+      values.redirectPort?.toString() !== '' &&
       values.redirectProtocol !== undefined &&
       values.redirectService !== '' &&
       values.targetAddress !== '' &&
-      values.targetPort !== 0 &&
-      values.targetService !== ''
+      values.targetPort?.toString() !== '' &&
+      values.targetService !== '' &&
+      values.paymentType !== ''
     );
 
   const openConfrimModal = () => {

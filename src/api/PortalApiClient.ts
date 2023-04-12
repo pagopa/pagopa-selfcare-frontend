@@ -27,6 +27,8 @@ import { StationDetailResource } from './generated/portal/StationDetailResource'
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
+import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
+import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -289,6 +291,24 @@ export const PortalApi = {
       ecCode,
       body: { stationCode: station.stationCode },
     });
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  createECDirect: async (
+    ec: CreditorInstitutionDto
+  ): Promise<CreditorInstitutionDetailsResource> => {
+    const result = await apiConfigClient.createCreditorInstitutionUsingPOST({
+      body: {
+        address: ec.address,
+        businessName: ec.businessName,
+        creditorInstitutionCode: ec.businessName,
+        enabled: ec.enabled,
+        pspPayment: ec.pspPayment,
+        reportingFtp: ec.reportingFtp,
+        reportingZip: ec.reportingZip,
+      },
+    });
+
     return extractResponse(result, 201, onRedirectToLogin);
   },
 };

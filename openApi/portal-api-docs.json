@@ -3145,6 +3145,33 @@
           }
         }
       },
+      "CreditorInstitutionAddressResource": {
+        "title": "CreditorInstitutionAddressResource",
+        "required": ["city", "countryCode", "location", "taxDomicile", "zipCode"],
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "Creditor Institution's city"
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "Creditor Institution's country code"
+          },
+          "location": {
+            "type": "string",
+            "description": "Creditor Institution's physical address"
+          },
+          "taxDomicile": {
+            "type": "string",
+            "description": "Creditor Institution's tax domicile"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Creditor Institution's zip code"
+          }
+        }
+      },
       "CreditorInstitutionDetailsResource": {
         "title": "CreditorInstitutionDetailsResource",
         "required": [
@@ -3160,7 +3187,7 @@
         "properties": {
           "address": {
             "description": "Creditor Institution's address object",
-            "$ref": "#/components/schemas/CreditorInstitutionAddressDto"
+            "$ref": "#/components/schemas/CreditorInstitutionAddressResource"
           },
           "businessName": {
             "type": "string",

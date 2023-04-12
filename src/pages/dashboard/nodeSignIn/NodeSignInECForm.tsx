@@ -8,7 +8,7 @@ import { Badge as BadgeIcon } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { createECDirect } from '../../../services/__mocks__/nodeService';
+import { createECDirect } from '../../../services/nodeService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';

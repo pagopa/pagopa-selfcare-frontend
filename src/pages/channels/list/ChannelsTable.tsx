@@ -1,22 +1,27 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography, Link } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { generatePath, useHistory } from 'react-router';
+import { Trans, useTranslation } from 'react-i18next';
+import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { useHistory } from 'react-router';
+import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { LOADING_TASK_CHANNELS_LIST } from '../../../utils/constants';
 import ROUTES from '../../../routes';
-import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
-import { getChannels } from '../../../services/channelService';
+import { PspChannelsResource } from '../../../api/generated/portal/PspChannelsResource';
+import { getPSPChannels } from '../../../services/channelService';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { useAppSelector } from '../../../redux/hooks';
 import { buildColumnDefs } from './ChannelsTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
+import ChannelTableEmpty from './ChannelTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyChannelsResource = {
+const emptyChannelsResource: PspChannelsResource = {
   channels: [],
-  page_info: { items_found: 0, limit: 0, page: 0, total_pages: 0 },
 };
 
 const CustomDataGrid = styled(DataGrid)({
@@ -33,7 +38,8 @@ const CustomDataGrid = styled(DataGrid)({
     wordWrap: 'break-word !important',
     lineHeight: '25px !important',
   },
-  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
+  '& .MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
+  '& .MuiDataGrid-columnHeader': { paddingLeft: '16px', paddingRight: '16px' },
   '.justifyContentBold': {
     fontSize: '16px',
     fontWeight: '600',
@@ -78,19 +84,27 @@ export default function ChannelsTable() {
   const { t } = useTranslation();
   const history = useHistory();
 
+  const partySelected = useAppSelector(partiesSelectors.selectPartySelected);
+
   const onRowClick = (channelIdRow: string) => {
     history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const setLoadingOverlay = useLoading(LOADING_TASK_CHANNELS_LIST);
   const [error, setError] = useState(false);
 
-  const [channels, setChannels] = useState<ChannelsResource>(emptyChannelsResource);
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+    setLoadingOverlay(status);
+  };
 
-  const fetchChannels = () => {
-    setLoading(true);
-    getChannels(0)
+  const [channels, setChannels] = useState<PspChannelsResource>(emptyChannelsResource);
+
+  const fetchChannels = (pspcode: string) => {
+    setLoadingStatus(true);
+    getPSPChannels(pspcode)
       .then((r) => {
         setChannels(r);
         setError(false);
@@ -108,9 +122,13 @@ export default function ChannelsTable() {
         setError(true);
         setChannels(emptyChannelsResource);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingStatus(false));
   };
-  useEffect(() => fetchChannels(), []);
+  useEffect(() => {
+    if (partySelected) {
+      fetchChannels(partySelected.fiscalCode);
+    }
+  }, [partySelected]);
 
   return (
     <React.Fragment>
@@ -126,12 +144,15 @@ export default function ChannelsTable() {
         {error && !loading ? (
           <>{error}</>
         ) : !error && !loading && channels.channels.length === 0 ? (
-          <></>
+          <>
+            <ChannelTableEmpty></ChannelTableEmpty>
+          </>
         ) : (
           <CustomDataGrid
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
+            disableSelectionOnClick
             autoHeight={true}
             className="CustomDataGrid"
             columnBuffer={5}
@@ -143,10 +164,53 @@ export default function ChannelsTable() {
                   <GridToolbarQuickFilter></GridToolbarQuickFilter>
                 </>
               ),
+              NoRowsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      {loading ? (
+                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
+                      ) : (
+                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
+                      )}
+                    </Typography>
+                  </Box>
+                </>
+              ),
+              NoResultsOverlay: () => (
+                <>
+                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                    <Typography variant="body2">
+                      <Trans i18nKey="channelsPage.table.noResults">
+                        Non sono ancora presenti canali in questo ambiente.
+                        <Link
+                          component={RouterLink}
+                          sx={{
+                            color: 'primary.main',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            whiteSpace: 'pre',
+                          }}
+                          to={generatePath(ROUTES.CHANNEL_ADD)}
+                        >
+                          <strong> Crea Canale</strong>
+                        </Link>
+                      </Trans>
+                    </Typography>
+                  </Box>
+                </>
+              ),
             }}
             componentsProps={{
               toolbar: {
                 quickFilterProps: { debounceMs: 500 },
+              },
+              basePopper: {
+                sx: {
+                  '& .MuiDataGrid-menuList': {
+                    boxShadow: `0px 0px 45px rgba(0, 0, 0, 0.1)`,
+                  },
+                },
               },
             }}
             getRowId={(r) => r.channel_code}

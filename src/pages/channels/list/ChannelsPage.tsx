@@ -7,6 +7,10 @@ import { useHistory } from 'react-router';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ChannelsTable from './ChannelsTable';
 
+export const clearLocationState = () => {
+  window.history.replaceState({}, document.title);
+};
+
 const Channels = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -18,15 +22,9 @@ const Channels = () => {
     };
   }, []);
 
-  const clearLocationState = () => {
-    console.log(history.location.state);
-    window.history.replaceState({}, document.title);
-    console.log(history.location.state);
-  };
-
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
+    <Grid container item xs={12} sx={{ backgroundColor: '#F5F5F5' }}>
+      <Grid item xs={2} sx={{ backgroundColor: 'background.paper' }}>
         <Box>
           <SideMenu />
         </Box>
@@ -52,7 +50,7 @@ const Channels = () => {
           />
         </Box>
         {history.location.state && (history.location.state as any).alertSuccessMessage && (
-          <Alert severity="success" variant="outlined">
+          <Alert severity="success" variant="outlined" data-testid="alert-test">
             {(history.location.state as any).alertSuccessMessage}
           </Alert>
         )}
@@ -77,7 +75,7 @@ const Channels = () => {
         */}
         <Box display="flex" width="100%" mt={3}>
           <Box pt={0} display="flex" width="100%">
-            <ChannelsTable></ChannelsTable>
+            <ChannelsTable />
           </Box>
         </Box>
       </Grid>

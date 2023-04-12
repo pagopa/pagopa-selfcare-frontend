@@ -1,12 +1,15 @@
-import { Typography, Grid, Box, Chip, IconButton } from '@mui/material';
+import { Typography, Grid, Box, Chip } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { TFunction } from 'react-i18next';
+import { generatePath } from 'react-router';
+import { FormAction } from '../../../model/Channel';
+import ROUTES from '../../../routes';
+import GridLinkAction from './GridLinkAction';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  onRowClick: (channelId: string) => void
+  _onRowClick: (channelId: string) => void
 ) {
   return [
     {
@@ -52,37 +55,68 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
-      field: 'azioni',
+      field: 'actions',
       cellClassName: 'justifyContentNormalRight',
+      type: 'actions',
       headerName: '',
-      align: 'right',
-      width: 100,
+      align: 'center',
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-      renderCell: (p) => (
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          width="100%"
-          mr={2}
-          sx={{ cursor: 'pointer' }}
-        >
-          <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.channel_code) : undefined}
-            sx={{ width: '100%', '&:hover': { backgroundColor: 'transparent !important' } }}
-          >
-            <ArrowForwardIosIcon fontSize="small" sx={{ color: 'primary.main', p: '4px' }} />
-          </IconButton>
-        </Box>
-      ),
+
+      getActions: (params: any) => {
+        const manageChannelAction = (
+          <GridLinkAction
+            key="Gestisci canale"
+            label="Gestisci canale"
+            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
+            showInMenu={true}
+          />
+        );
+        const editChannelAction = (
+          <GridLinkAction
+            key="Modifica"
+            label="Modifica"
+            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+              channelId: params.row.channel_code,
+              actionId: FormAction.Edit,
+            })}
+            showInMenu={true}
+          />
+        );
+        const duplicateChannelAction = (
+          <GridLinkAction
+            key="Duplica"
+            label="Duplica"
+            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+              channelId: params.row.channel_code,
+              actionId: FormAction.Duplicate,
+            })}
+            showInMenu={true}
+          />
+        );
+        const manageChannelPSPAction = (
+          <GridLinkAction
+            key="Gestisci PSP"
+            label="Gestisci PSP"
+            to={generatePath(`${ROUTES.CHANNEL_PSP_LIST}`, { channelId: params.row.channel_code })}
+            showInMenu={true}
+          />
+        );
+
+        if (params.row.enabled) {
+          return [manageChannelAction, manageChannelPSPAction, duplicateChannelAction];
+        } else {
+          return [manageChannelAction, editChannelAction];
+        }
+      },
       sortable: false,
       flex: 1,
     },
   ] as Array<GridColDef>;
 }
 
-function renderCell(
+export function renderCell(
   params: GridRenderCellParams,
   value: ReactNode = params.value,
   overrideStyle: CSSProperties = {}
@@ -92,11 +126,10 @@ function renderCell(
       sx={{
         width: '100%',
         height: '100%',
-        paddingRight: '24px',
-        paddingLeft: '24px',
+        paddingRight: '16px',
+        paddingLeft: '16px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
-        cursor: 'pointer',
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
       }}
@@ -119,13 +152,13 @@ function renderCell(
   );
 }
 
-function showCustomHeader(params: GridColumnHeaderParams) {
+export function showCustomHeader(params: GridColumnHeaderParams) {
   return (
     <React.Fragment>
       <Typography
         color="colorTextPrimary"
         variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 1 }}
+        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 0 }}
       >
         {params.colDef.headerName}
       </Typography>
@@ -133,7 +166,7 @@ function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-function showChannelCode(params: GridRenderCellParams) {
+export function showChannelCode(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
@@ -163,27 +196,25 @@ function showChannelCode(params: GridRenderCellParams) {
   );
 }
 
-function showStatus(params: GridRenderCellParams) {
+export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
-    <Box sx={{ cursor: 'pointer' }}>
+    <Box>
       <Chip
-        label={params.row.enabled ? 'Attivo' : 'Disattivo'}
+        label={params.row.enabled ? 'Attivo' : 'In revisione'}
         aria-label="Status"
         sx={{
-          cursor: 'pointer',
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          // backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          backgroundColor: params.row.enabled ? 'primary.main' : 'grey.200',
           paddingBottom: '1px',
           height: '24px',
         }}
       />
     </Box>,
     {
-      paddingLeft: 0,
-      paddingRight: 0,
       textAlign: 'left',
     }
   );

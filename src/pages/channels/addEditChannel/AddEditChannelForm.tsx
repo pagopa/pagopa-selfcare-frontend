@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   Box,
@@ -18,38 +18,75 @@ import {
 import { useFormik } from 'formik';
 import { Trans, useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
-import { SessionModal } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   Badge as BadgeIcon,
   MenuBook as MenuBookIcon,
   CreditCard as CreditCardIcon,
 } from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { ChannelOnCreation } from '../../../model/Channel';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { createChannel } from '../../../services/channelService';
+import { ChannelOnCreation, FormAction } from '../../../model/Channel';
+import {
+  associatePSPtoChannel,
+  createChannel,
+  getPaymentTypes,
+  updateChannel,
+} from '../../../services/channelService';
+import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import { Party } from '../../../model/Party';
-import AddChannelFormSectionTitle from './AddChannelFormSectionTitle';
+import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
+import {
+  ChannelDetailsDto,
+  Redirect_protocolEnum,
+} from '../../../api/generated/portal/ChannelDetailsDto';
+import { sortPaymentType } from '../../../model/PaymentType';
+import ConfirmModal from '../../components/ConfirmModal';
+import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 
 type Props = {
   goBack: () => void;
+  selectedParty: Party;
+  channelDetail?: ChannelDetailsDto;
+  channelCode: string;
+  formAction: string;
 };
 
-const initialFormData = (selectedParty?: Party) => ({
-  pspBrokerCode: selectedParty?.fiscalCode ?? '', // broker_psp_code
-  businessName: selectedParty?.description ?? '', // ?
-  idChannel: '', // channel_code
-  redirectProtocol: undefined, // redirect_protocol
-  redirectPort: undefined, // redirect_port
-  redirectIp: '', // redirect_ip
-  redirectService: '', // redirect_path ?
-  redirectParameters: '', // redirect_query_string ?
-  targetAddress: '', // target_host ?
-  targetService: '', // target_path ?
-  targetPort: undefined, // target_port
-  paymentType: '', // ?
-});
+const initialFormData = (
+  channelCode: string,
+  channelDetail?: ChannelDetailsDto,
+  selectedParty?: Party
+) =>
+  channelDetail
+    ? {
+        pspBrokerCode: channelDetail.broker_psp_code ?? '',
+        businessName: channelDetail.broker_description ?? '',
+        idChannel: channelCode,
+        redirectProtocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
+        redirectPort: channelDetail.redirect_port ?? undefined,
+        redirectIp: channelDetail.redirect_ip ?? '',
+        redirectService: channelDetail.redirect_path ?? '',
+        redirectParameters: channelDetail.redirect_query_string ?? '',
+        targetAddress: channelDetail.target_host ?? '',
+        targetService: channelDetail.target_path ?? '',
+        targetPort: channelDetail.target_port,
+        paymentType:
+          channelDetail.payment_types && channelDetail.payment_types[0]
+            ? channelDetail.payment_types[0]
+            : '',
+      }
+    : {
+        pspBrokerCode: selectedParty?.fiscalCode ?? '',
+        businessName: selectedParty?.description ?? '',
+        idChannel: channelCode,
+        redirectProtocol: Redirect_protocolEnum.HTTPS,
+        redirectIp: '',
+        redirectService: '',
+        redirectParameters: '',
+        targetAddress: '',
+        targetService: '',
+        targetPort: undefined,
+        paymentType: '',
+      };
 
 const validatePortRange = (redirectPort: number | undefined) => {
   if (redirectPort) {
@@ -57,11 +94,6 @@ const validatePortRange = (redirectPort: number | undefined) => {
   }
   return false;
 };
-
-const paymentOptions = [
-  { value: 'PPAY', label: 'PostePay' },
-  { value: 'SEPA', label: 'Bonifico' },
-];
 
 const inputGroupStyle = {
   borderRadius: 1,
@@ -77,11 +109,6 @@ const validate = (values: Partial<ChannelOnCreation>) =>
       pspBrokerCode: !values.pspBrokerCode ? 'Required' : undefined,
       businessName: !values.businessName ? 'Required' : undefined,
       idChannel: !values.idChannel ? 'Required' : undefined,
-      /* redirectProtocol: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectIp: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectService: !values.pspBrokerCode ? 'Required' : undefined,
-        redirectParameters: !values.pspBrokerCode ? 'Required' : undefined, 
-      */
       redirectPort: validatePortRange(values.redirectPort) ? 'Non Valido' : undefined,
       targetAddress: !values.targetAddress ? 'Required' : undefined,
       targetService: !values.targetService ? 'Required' : undefined,
@@ -94,34 +121,88 @@ const validate = (values: Partial<ChannelOnCreation>) =>
     }).filter(([_key, value]) => value)
   );
 
-function AddChannelForm({ goBack }: Props) {
+function AddEditChannelForm({
+  goBack,
+  selectedParty,
+  channelCode,
+  channelDetail,
+  formAction,
+}: Props) {
   const { t } = useTranslation();
   const history = useHistory();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const addError = useErrorDispatcher();
+
+  const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+
   const formik = useFormik<ChannelOnCreation>({
-    initialValues: initialFormData(selectedParty),
+    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
     validate,
     onSubmit: () => {
       setShowConfirmModal(true);
     },
+    enableReinitialize: true,
   });
 
-  const submit = () => {
+  const submit = async () => {
     setShowConfirmModal(false);
-    // alert(JSON.stringify(formik.values, null, 2));
+    setLoading(true);
 
-    createChannel(formik.values)
-      .then(() => {
-        history.push(ROUTES.CHANNELS, {
-          alertSuccessMessage: t('addChannelPage.addForm.successMessage'),
-        });
+    try {
+      if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
+        const createResult = await createChannel(formik.values);
+
+        if (createResult) {
+          await associatePSPtoChannel(formik.values.idChannel, formik.values.pspBrokerCode, {
+            payment_types: [formik.values.paymentType],
+          });
+        }
+      }
+      if (formAction === FormAction.Edit) {
+        await updateChannel(formik.values);
+      }
+      history.push(ROUTES.CHANNELS, {
+        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
+      });
+    } catch (reason) {
+      addError({
+        id: 'ADDEDIT_CHANNEL',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while adding/editing channel`,
+        toNotify: true,
+        displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+        displayableDescription: t('addEditChannelPage.addForm.errorMessageDesc'),
+        component: 'Toast',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPaymentTypes()
+      .then((results) => {
+        if (results) {
+          setPaymentOptions(results);
+        }
       })
       .catch((reason) => {
-        console.log(reason);
-        // if (reason.httpStatus === 409) {
+        addError({
+          id: 'GET_PAYMENT_TYPES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting payment types`,
+          toNotify: true,
+          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+          component: 'Toast',
+        });
       });
-  };
+  }, []);
+
   return (
     <>
       <form onSubmit={formik.handleSubmit} style={{ minWidth: '100%' }}>
@@ -138,24 +219,27 @@ function AddChannelForm({ goBack }: Props) {
 
           <Box>
             <Box sx={inputGroupStyle}>
-              <AddChannelFormSectionTitle
-                title={t('addChannelPage.addForm.sections.registry')}
+              <AddEditChannelFormSectionTitle
+                title={t('addEditChannelPage.addForm.sections.registry')}
                 icon={<BadgeIcon fontSize="small" />}
                 isRequired
-              ></AddChannelFormSectionTitle>
+              ></AddEditChannelFormSectionTitle>
               <Grid container spacing={2} mt={1}>
                 <Grid container item xs={6}>
                   <TextField
                     fullWidth
                     id="pspBrokerCode"
                     name="pspBrokerCode"
-                    label={t('addChannelPage.addForm.fields.pspBrokerCode')}
+                    label={t('addEditChannelPage.addForm.fields.pspBrokerCode')}
                     size="small"
                     disabled
                     value={formik.values.pspBrokerCode}
                     onChange={formik.handleChange}
                     error={formik.touched.pspBrokerCode && Boolean(formik.errors.pspBrokerCode)}
                     helperText={formik.touched.pspBrokerCode && formik.errors.pspBrokerCode}
+                    inputProps={{
+                      'data-testid': 'psp-brokercode-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -164,12 +248,15 @@ function AddChannelForm({ goBack }: Props) {
                     id="businessName"
                     name="businessName"
                     disabled
-                    label={t('addChannelPage.addForm.fields.businessName')}
+                    label={t('addEditChannelPage.addForm.fields.businessName')}
                     size="small"
                     value={formik.values.businessName}
                     onChange={formik.handleChange}
                     error={formik.touched.businessName && Boolean(formik.errors.businessName)}
                     helperText={formik.touched.businessName && formik.errors.businessName}
+                    inputProps={{
+                      'data-testid': 'business-name-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6} direction="column">
@@ -177,39 +264,47 @@ function AddChannelForm({ goBack }: Props) {
                     fullWidth
                     id="idChannel"
                     name="idChannel"
-                    label={t('addChannelPage.addForm.fields.idChannel')}
+                    disabled={true}
+                    label={t('addEditChannelPage.addForm.fields.idChannel')}
                     size="small"
                     value={formik.values.idChannel}
                     onChange={formik.handleChange}
                     error={formik.touched.idChannel && Boolean(formik.errors.idChannel)}
                     helperText={formik.touched.idChannel && formik.errors.idChannel}
+                    inputProps={{
+                      'data-testid': 'channel-code-test',
+                    }}
                   />
                 </Grid>
               </Grid>
             </Box>
 
             <Box sx={inputGroupStyle}>
-              <AddChannelFormSectionTitle
-                title={t('addChannelPage.addForm.sections.redirect')}
+              <AddEditChannelFormSectionTitle
+                title={t('addEditChannelPage.addForm.sections.redirect')}
                 icon={<MenuBookIcon />}
-              ></AddChannelFormSectionTitle>
+              ></AddEditChannelFormSectionTitle>
               <Grid container spacing={2} mt={1}>
                 <Grid container item xs={6}>
                   <FormControl fullWidth>
                     <InputLabel size="small">
-                      {t('addChannelPage.addForm.fields.redirectProtocol')}
+                      {t('addEditChannelPage.addForm.fields.redirectProtocol')}
                     </InputLabel>
                     <Select
                       fullWidth
                       id="redirectProtocol"
                       name="redirectProtocol"
-                      label={t('addChannelPage.addForm.fields.redirectProtocol')}
+                      label={t('addEditChannelPage.addForm.fields.redirectProtocol')}
                       size="small"
-                      value={formik.values.redirectProtocol}
+                      defaultValue={formik.values.redirectProtocol}
+                      value={formik.values.redirectProtocol === 'HTTPS' ? 'HTTPS' : 'HTTP'}
                       onChange={formik.handleChange}
                       error={
                         formik.touched.redirectProtocol && Boolean(formik.errors.redirectProtocol)
                       }
+                      inputProps={{
+                        'data-testid': 'redirect-protocol-test',
+                      }}
                     >
                       {['HTTP', 'HTTPS'].map((p) => (
                         <MenuItem key={p} value={p}>
@@ -226,8 +321,9 @@ function AddChannelForm({ goBack }: Props) {
                     id="redirectPort"
                     name="redirectPort"
                     type="number"
-                    inputProps={{ min: 0, max: 65556 }}
-                    label={t('addChannelPage.addForm.fields.redirectPort')}
+                    InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
+                    inputProps={{ min: 0, max: 65556, 'data-testid': 'redirect-port-test' }}
+                    label={t('addEditChannelPage.addForm.fields.redirectPort')}
                     size="small"
                     value={formik.values.redirectPort}
                     onChange={formik.handleChange}
@@ -240,12 +336,15 @@ function AddChannelForm({ goBack }: Props) {
                     fullWidth
                     id="redirectIp"
                     name="redirectIp"
-                    label={t('addChannelPage.addForm.fields.redirectIp')}
+                    label={t('addEditChannelPage.addForm.fields.redirectIp')}
                     size="small"
                     value={formik.values.redirectIp}
                     onChange={formik.handleChange}
                     error={formik.touched.redirectIp && Boolean(formik.errors.redirectIp)}
                     helperText={formik.touched.redirectIp && formik.errors.redirectIp}
+                    inputProps={{
+                      'data-testid': 'redirect-ip-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -253,12 +352,15 @@ function AddChannelForm({ goBack }: Props) {
                     fullWidth
                     id="redirectService"
                     name="redirectService"
-                    label={t('addChannelPage.addForm.fields.redirectService')}
+                    label={t('addEditChannelPage.addForm.fields.redirectService')}
                     size="small"
                     value={formik.values.redirectService}
                     onChange={formik.handleChange}
                     error={formik.touched.redirectService && Boolean(formik.errors.redirectService)}
                     helperText={formik.touched.redirectService && formik.errors.redirectService}
+                    inputProps={{
+                      'data-testid': 'redirect-service-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -266,7 +368,7 @@ function AddChannelForm({ goBack }: Props) {
                     fullWidth
                     id="redirectParameters"
                     name="redirectParameters"
-                    label={t('addChannelPage.addForm.fields.redirectParameters')}
+                    label={t('addEditChannelPage.addForm.fields.redirectParameters')}
                     size="small"
                     value={formik.values.redirectParameters}
                     onChange={formik.handleChange}
@@ -276,28 +378,34 @@ function AddChannelForm({ goBack }: Props) {
                     helperText={
                       formik.touched.redirectParameters && formik.errors.redirectParameters
                     }
+                    inputProps={{
+                      'data-testid': 'redirect-parameters-test',
+                    }}
                   />
                 </Grid>
               </Grid>
             </Box>
             <Box sx={inputGroupStyle}>
-              <AddChannelFormSectionTitle
-                title={t('addChannelPage.addForm.sections.target')}
+              <AddEditChannelFormSectionTitle
+                title={t('addEditChannelPage.addForm.sections.target')}
                 icon={<MenuBookIcon />}
                 isRequired
-              ></AddChannelFormSectionTitle>
+              ></AddEditChannelFormSectionTitle>
               <Grid container spacing={2} mt={1}>
                 <Grid container item xs={6}>
                   <TextField
                     fullWidth
                     id="targetAddress"
                     name="targetAddress"
-                    label={t('addChannelPage.addForm.fields.targetAddress')}
+                    label={t('addEditChannelPage.addForm.fields.targetAddress')}
                     size="small"
                     value={formik.values.targetAddress}
                     onChange={formik.handleChange}
                     error={formik.touched.targetAddress && Boolean(formik.errors.targetAddress)}
                     helperText={formik.touched.targetAddress && formik.errors.targetAddress}
+                    inputProps={{
+                      'data-testid': 'target-address-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -305,12 +413,15 @@ function AddChannelForm({ goBack }: Props) {
                     fullWidth
                     id="targetService"
                     name="targetService"
-                    label={t('addChannelPage.addForm.fields.targetService')}
+                    label={t('addEditChannelPage.addForm.fields.targetService')}
                     size="small"
                     value={formik.values.targetService}
                     onChange={formik.handleChange}
                     error={formik.touched.targetService && Boolean(formik.errors.targetService)}
                     helperText={formik.touched.targetService && formik.errors.targetService}
+                    inputProps={{
+                      'data-testid': 'target-service-test',
+                    }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -319,8 +430,9 @@ function AddChannelForm({ goBack }: Props) {
                     id="targetPort"
                     name="targetPort"
                     type="number"
-                    inputProps={{ min: 0, max: 65556 }}
-                    label={t('addChannelPage.addForm.fields.targetPort')}
+                    InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
+                    inputProps={{ min: 0, max: 65556, 'data-testid': 'target-port-test' }}
+                    label={t('addEditChannelPage.addForm.fields.targetPort')}
                     size="small"
                     value={formik.values.targetPort}
                     onChange={formik.handleChange}
@@ -331,32 +443,37 @@ function AddChannelForm({ goBack }: Props) {
               </Grid>
             </Box>
             <Box sx={inputGroupStyle}>
-              <AddChannelFormSectionTitle
-                title={t('addChannelPage.addForm.sections.paymentType')}
+              <AddEditChannelFormSectionTitle
+                title={t('addEditChannelPage.addForm.sections.paymentType')}
                 icon={<CreditCardIcon />}
                 isRequired
-              ></AddChannelFormSectionTitle>
+              ></AddEditChannelFormSectionTitle>
               <Grid container spacing={2} mt={1}>
                 <Grid container item xs={6}>
                   <FormControl fullWidth>
                     <InputLabel size="small">
-                      {t('addChannelPage.addForm.fields.paymentType')}
+                      {t('addEditChannelPage.addForm.fields.paymentType')}
                     </InputLabel>
                     <Select
                       fullWidth
                       id="paymentType"
                       name="paymentType"
-                      label={t('addChannelPage.addForm.fields.paymentType')}
+                      label={t('addEditChannelPage.addForm.fields.paymentType')}
                       size="small"
+                      disabled={formAction === FormAction.Edit ? true : false}
                       value={formik.values.paymentType}
                       onChange={formik.handleChange}
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
+                      inputProps={{
+                        'data-testid': 'payment-type-test',
+                      }}
                     >
-                      {paymentOptions.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
+                      {paymentOptions &&
+                        sortPaymentType(paymentOptions.payment_types).map((option: any) => (
+                          <MenuItem key={option.payment_type} value={option.payment_type}>
+                            {option.description}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -368,41 +485,43 @@ function AddChannelForm({ goBack }: Props) {
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>
             <Button color="primary" variant="outlined" onClick={goBack}>
-              {t('addChannelPage.addForm.backButton')}
+              {t('addEditChannelPage.addForm.backButton')}
             </Button>
           </Stack>
           <Stack display="flex" justifyContent="flex-end">
             <Button
-              // onClick={()=>() /* handleSubmit */}
-              disabled={!formik.dirty || !formik.isValid}
+              onClick={() => setShowConfirmModal(true)}
+              disabled={
+                formAction === FormAction.Duplicate
+                  ? !formik.isValid
+                  : !formik.dirty || !formik.isValid
+              }
               color="primary"
               variant="contained"
               type="submit"
             >
-              {t('addChannelPage.addForm.continueButton')}
+              {t('addEditChannelPage.addForm.continueButton')}
             </Button>
           </Stack>
         </Stack>
       </form>
-      <SessionModal
-        open={showConfirmModal}
-        title={t('addChannelPage.confirmModal.title')}
+      <ConfirmModal
+        title={t('addEditStationPage.confirmModal.title')}
         message={
-          <Trans i18nKey="addChannelPage.confirmModal.message">
+          <Trans i18nKey="addEditChannelPage.confirmModal.message">
             Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare.
             Riceverai una notifica a revisione completata.
             <br />
           </Trans>
         }
-        onConfirmLabel={t('addChannelPage.confirmModal.confirmButton')}
-        onCloseLabel={t('addChannelPage.confirmModal.cancelButton')}
-        onConfirm={submit}
-        handleClose={() => {
-          setShowConfirmModal(false);
-        }}
+        openConfirmModal={showConfirmModal}
+        onConfirmLabel={t('addEditChannelPage.confirmModal.confirmButton')}
+        onCloseLabel={t('addEditChannelPage.confirmModal.cancelButton')}
+        handleCloseConfirmModal={() => setShowConfirmModal(false)}
+        handleConfrimSubmit={submit}
       />
     </>
   );
 }
 
-export default AddChannelForm;
+export default AddEditChannelForm;

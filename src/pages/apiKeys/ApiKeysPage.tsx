@@ -15,7 +15,7 @@ import { ProductKeys } from '../../model/ApiKey';
 import ROUTES from '../../routes';
 import ApiKeysCard from './ApiKeysCard';
 
-const Home = () => {
+const ApiKeysPage = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const history = useHistory();
@@ -51,7 +51,7 @@ const Home = () => {
   }, [selectedParty]);
 
   const createKeys = () => {
-    history.push(ROUTES.CREATE_APIKEY);
+    history.push(ROUTES.APIKEYS_CREATE);
   };
 
   return (
@@ -143,4 +143,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ApiKeysPage;

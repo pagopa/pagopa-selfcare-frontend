@@ -10,13 +10,13 @@ import withSelectedPartyProducts from '../withSelectedPartyProducts';
 jest.mock('../../services/partyService');
 jest.mock('../../services/productService');
 
-const expectedPartyId: string = '46ef5b6b-7ee4-4dab-b8bc-fb5e30111239';
+const expectedPartyId: string = '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944';
 
 let fetchPartyDetailsSpy: jest.SpyInstance;
 let fetchPartyProductsSpy: jest.SpyInstance;
 
 beforeEach(() => {
-  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchPartyDetails');
+  fetchPartyDetailsSpy = jest.spyOn(require('../../services/partyService'), 'fetchParties');
   fetchPartyProductsSpy = jest.spyOn(require('../../services/productService'), 'fetchProducts');
 
   storageTokenOps.write(testToken); // party with partyId="onboarded"
@@ -62,8 +62,5 @@ const checkSelectedParty = (state: RootState) => {
 
 const checkMockInvocation = (expectedCallsNumber: number) => {
   expect(fetchPartyDetailsSpy).toBeCalledTimes(expectedCallsNumber);
-  expect(fetchPartyDetailsSpy).toBeCalledWith(expectedPartyId, undefined);
-
-  expect(fetchPartyProductsSpy).toBeCalledTimes(expectedCallsNumber);
-  expect(fetchPartyProductsSpy).toBeCalledWith(expectedPartyId);
+  expect(fetchPartyDetailsSpy).toBeCalledWith();
 };

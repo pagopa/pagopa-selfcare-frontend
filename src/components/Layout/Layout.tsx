@@ -30,7 +30,7 @@ const Layout = ({ children }: Props) => {
         minHeight: '100vh',
       }}
     >
-      <Box gridArea="header">
+      <Box gridArea="header" sx={{ position: 'sticky', top: 0, zIndex: '100' }}>
         <Header onExit={onExit} loggedUser={loggedUser} />
       </Box>
       <Grid container direction="row" flexGrow={1}>

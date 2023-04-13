@@ -90,6 +90,7 @@ const pspPartySelected = {
   digitalAddress: 'selfcare@pec.pagopa.it',
   status: 'ACTIVE',
   registeredOffice: 'Piazza Colonna, 370',
+  institutionType: 'PSP',
   roles: [
     {
       partyRole: 'DELEGATE',

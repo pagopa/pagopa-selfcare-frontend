@@ -23,7 +23,7 @@ const DashboardPage = () => {
     if (
       selectedParty !== undefined &&
       selectedParty.pspData !== undefined &&
-      selectedParty.institutionType !== 'PA'
+      selectedParty.institutionType === 'PSP'
     ) {
       getPSPDetails(selectedParty.fiscalCode)
         .then((response) => {

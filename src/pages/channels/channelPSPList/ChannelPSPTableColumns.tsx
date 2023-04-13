@@ -6,7 +6,7 @@ import { RemoveCircle } from '@mui/icons-material';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  onRowClick: (channelId: string) => void
+  onRowClick: (psp_code: string) => void
 ) {
   return [
     {
@@ -78,7 +78,7 @@ export function buildColumnDefs(
           sx={{ cursor: 'pointer' }}
         >
           <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.channel_code) : undefined}
+            onClick={onRowClick ? () => onRowClick(p.row.psp_code) : undefined}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },

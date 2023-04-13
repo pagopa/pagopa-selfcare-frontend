@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
-import { getChannelPSPs } from '../../../services/channelService';
+import { dissociatePSPfromChannel, getChannelPSPs } from '../../../services/channelService';
 import { ChannelPspListResource } from '../../../api/generated/portal/ChannelPspListResource';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
@@ -103,9 +103,12 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
       : 0
   );
 
+  const [selectedPSPCode, setSelectedPSPCode] = useState<string>('');
+
   const { channelId } = useParams<{ channelId: string }>();
 
-  const onRowClick = (_pspIdRow: string) => {
+  const onRowClick = (pspIdRow: string) => {
+    setSelectedPSPCode(pspIdRow);
     setShowConfirmModal(true);
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
@@ -120,13 +123,11 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
 
   const dissociatePSP = () => {
     setShowConfirmModal(false);
-    // TODO: connect to the services when they are ready
-    /*                
     setLoading(true);
     dissociatePSPfromChannel(channelId, selectedPSPCode)
-      .then((_r) => {
-        // setChannels(emptyChannelsResource);
-        setChannels(_r);
+      .then(() => {
+        setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
+        fetchChannelPSPs(page);
       })
       .catch((reason) => {
         console.error('reason', reason);
@@ -140,12 +141,11 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
           },
         ]);
         setError(true);
-        // setChannels(emptyChannelsResource);
       })
-      .finally(() => setLoading(false));
-       */
-
-    setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
+      .finally(() => {
+        setSelectedPSPCode('');
+        setLoading(false);
+      });
   };
 
   const fetchChannelPSPs = (currentPage: number) => {

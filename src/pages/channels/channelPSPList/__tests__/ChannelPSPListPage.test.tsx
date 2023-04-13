@@ -1,6 +1,7 @@
+import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../../../redux/store';
@@ -16,16 +17,18 @@ afterEach(cleanup);
 describe('<ChannelPSPTable />', () => {
   const channelId = 'XPAY_03_ONUS';
   test('render component ChannelPSPTable', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/channels/${channelId}/psp-list`]}>
-          <Route path="/channels/:channelId/psp-list">
-            <ThemeProvider theme={theme}>
-              <ChannelPSPListPage />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
+    await waitFor(() => {
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={[`/channels/${channelId}/psp-list`]}>
+            <Route path="/channels/:channelId/psp-list">
+              <ThemeProvider theme={theme}>
+                <ChannelPSPListPage />
+              </ThemeProvider>
+            </Route>
+          </MemoryRouter>
+        </Provider>
+      );
+    });
   });
 });

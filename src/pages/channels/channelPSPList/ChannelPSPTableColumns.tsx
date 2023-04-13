@@ -79,6 +79,7 @@ export function buildColumnDefs(
         >
           <IconButton
             onClick={onRowClick ? () => onRowClick(p.row.psp_code) : undefined}
+            data-testid={`dissociate-${p.row.psp_code}`}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },

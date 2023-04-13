@@ -10,7 +10,7 @@ export function buildColumnDefs(
 ) {
   return [
     {
-      field: 'channel_code',
+      field: 'business_name',
       cellClassName: 'justifyContentBold',
       headerName: t('channelPSPList.channelsTableColumns.headerFields.name'),
       align: 'left',
@@ -18,12 +18,12 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showChannelCode(params),
-      sortable: true,
+      renderCell: (params: any) => showPspName(params),
+      sortable: false,
       flex: 4,
     },
     {
-      field: 'broker_description',
+      field: 'referent',
       cellClassName: 'justifyContentNormal',
       headerName: t('channelPSPList.channelsTableColumns.headerFields.referent'),
       align: 'left',
@@ -36,7 +36,7 @@ export function buildColumnDefs(
       flex: 3,
     },
     {
-      field: 'broker_description2',
+      field: 'contact',
       cellClassName: 'justifyContentNormal',
       headerName: t('channelPSPList.channelsTableColumns.headerFields.contact'),
       align: 'left',
@@ -62,7 +62,7 @@ export function buildColumnDefs(
       flex: 2,
     },
     {
-      field: 'azioni',
+      field: 'actions',
       cellClassName: 'justifyContentNormalRight',
       headerName: '',
       align: 'right',
@@ -108,7 +108,7 @@ export function renderCell(
         paddingLeft: '18px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
-        cursor: 'pointer',
+
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
       }}
@@ -145,7 +145,7 @@ export function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-export function showChannelCode(params: GridRenderCellParams) {
+export function showPspName(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
@@ -165,7 +165,7 @@ export function showChannelCode(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.channel_code}
+                {params.row.business_name}
               </Typography>
             </Grid>
           </Grid>
@@ -178,12 +178,11 @@ export function showChannelCode(params: GridRenderCellParams) {
 export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
-    <Box sx={{ cursor: 'pointer' }}>
+    <Box>
       <Chip
         label={params.row.enabled ? 'Attivo' : 'Disattivo'}
         aria-label="Status"
         sx={{
-          cursor: 'pointer',
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.enabled ? '#FFFFFF' : '#17324D',

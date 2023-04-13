@@ -27,11 +27,11 @@ const ChannelPSPListPage = () => {
 
   const downloadCSV = () => {
     // TODO: fetch current PSP associated with channel
-    const rows = mockedChannelPSPs.channels;
-    const headers = ['Nome PSP', 'Referente'];
+    const rows = mockedChannelPSPs.payment_service_providers ?? [];
+    const headers = ['Nome PSP', 'PSP Code'];
 
     const csvContent = `${headers.join(';')}\n${rows
-      .map((e) => [e.channel_code, e.broker_description].join(';'))
+      .map((e) => [e.business_name, e.psp_code].join(';'))
       .join('\n')}`;
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);

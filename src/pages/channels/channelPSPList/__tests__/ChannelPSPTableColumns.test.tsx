@@ -6,7 +6,7 @@ import {
   showPspName,
   showCustomHeader,
   showStatus,
-} from '../channelPSPList/ChannelPSPTableColumns';
+} from '../ChannelPSPTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

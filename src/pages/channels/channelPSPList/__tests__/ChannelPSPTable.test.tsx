@@ -1,11 +1,10 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, render } from '@testing-library/react';
-import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
-import ChannelPSPTable from '../channelPSPList/ChannelPSPTable';
 import { Provider } from 'react-redux';
+import { store } from '../../../../redux/store';
+import ChannelPSPTable from '../ChannelPSPTable';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

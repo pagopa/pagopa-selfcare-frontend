@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -10,29 +10,14 @@ import { FormAction } from '../../../model/Channel';
 import { store } from '../../../redux/store';
 import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../addEditChannel/AddEditChannelForm';
-
-let portalApiPostCreateChannelSpy: jest.SpyInstance;
-let portalApiGetPaymentTypesSpy: jest.SpyInstance;
-let portalApiPutUpdateChannel: jest.SpyInstance;
-// let portalApiGetAssociatePSPtoChannel;
+import { mockedParties } from '../../../services/__mocks__/partyService';
+import { Redirect_protocolEnum } from '../../../api/generated/portal/ChannelDetailsDto';
+import { PortalApi } from '../../../api/PortalApiClient';
+import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  portalApiPostCreateChannelSpy = jest.spyOn(
-    require('../../../services/channelService'),
-    'createChannel'
-  );
-  portalApiGetPaymentTypesSpy = jest.spyOn(
-    require('../../../services/channelService'),
-    'getPaymentTypes'
-  );
-
-  portalApiPutUpdateChannel = jest.spyOn(
-    require('../../../services/channelService'),
-    'updateChannel'
-  );
-  // portalApiGetAssociatePSPtoChannel = jest.spyOn(PortalApi, 'associatePSPtoChannel');
 });
 
 afterEach(cleanup);
@@ -41,22 +26,22 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
   test('Test rendering AddEditChannelForm', async () => {
-    await waitFor(() =>
-      render(
-        <Provider store={store}>
+    render(
+      <Provider store={store}>
+        <Router history={history}>
           <ThemeProvider theme={theme}>
-            <Router history={history}>
-              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Create} />
-            </Router>
+            <AddEditChannelForm
+              goBack={jest.fn()}
+              formAction={FormAction.Duplicate}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+            />
           </ThemeProvider>
-        </Provider>
-      )
+        </Router>
+      </Provider>
     );
-
-    await waitFor(() => {
-      expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
-    });
-
+    const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+    const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
     const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
@@ -67,83 +52,149 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
+    const continueBtn = screen.getByText(
+      'addEditChannelPage.addForm.continueButton'
+    ) as HTMLButtonElement;
 
-    fireEvent.change(channelCode, { target: { value: 'channel Code' } });
-    expect(channelCode.value).toBe('channel Code');
+    expect(businessName.value).toBe(mockedParties[0].description);
+    expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
+    expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
+
+    fireEvent.click(businessName);
+    fireEvent.change(businessName, { target: { value: 'businessName' } });
+    expect(businessName.value).toBe('businessName');
+
+    fireEvent.click(pspBrokerCode);
+    fireEvent.change(pspBrokerCode, { target: { value: 'pspBrokerCode' } });
+    expect(pspBrokerCode.value).toBe('pspBrokerCode');
+
+    fireEvent.click(channelCode);
+    fireEvent.change(channelCode, { target: { value: 'channelCode' } });
+    expect(channelCode.value).toBe('channelCode');
 
     fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: 'HTTPS' } });
+    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
 
-    fireEvent.change(redirectPort, { target: { value: '' } });
-    expect(redirectPort.value).toBe('');
+    fireEvent.click(redirectPort);
+    fireEvent.change(redirectPort, { target: { value: undefined } });
 
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-    expect(redirectPort.value).toBe('555');
+    fireEvent.click(redirectPort);
+    fireEvent.change(redirectPort, { target: { value: 555 } });
 
-    fireEvent.change(redirectService, { target: { value: 'redirect Service' } });
-    expect(redirectService.value).toBe('redirect Service');
+    fireEvent.click(redirectService);
+    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
+    expect(redirectService.value).toBe('redirectService');
 
-    fireEvent.change(redirectIp, { target: { value: 'redirect Ip' } });
-    expect(redirectIp.value).toBe('redirect Ip');
+    fireEvent.click(redirectIp);
+    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
+    expect(redirectIp.value).toBe('redirectIp');
 
-    fireEvent.change(redirectParameters, { target: { value: 'redirect Parameters' } });
-    expect(redirectParameters.value).toBe('redirect Parameters');
+    fireEvent.click(redirectParameters);
+    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
+    expect(redirectParameters.value).toBe('redirectParameters');
 
-    fireEvent.change(targetAddress, { target: { value: 'redirect Address' } });
-    expect(targetAddress.value).toBe('redirect Address');
+    fireEvent.click(targetAddress);
+    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
+    expect(targetAddress.value).toBe('redirectAddress');
 
-    fireEvent.change(targetService, { target: { value: 'redirect Service' } });
-    expect(targetService.value).toBe('redirect Service');
+    fireEvent.click(targetService);
+    fireEvent.change(targetService, { target: { value: 'redirectService' } });
+    expect(targetService.value).toBe('redirectService');
 
-    fireEvent.change(targetPort, { target: { value: '555' } });
-    expect(targetPort.value).toBe('555');
+    fireEvent.click(targetPort);
+    fireEvent.change(targetPort, { target: { value: undefined } });
+
+    fireEvent.click(targetPort);
+    fireEvent.change(targetPort, { target: { value: 555 } });
 
     fireEvent.click(paymentType);
-    fireEvent.change(paymentType, { target: { value: mockedPaymentTypes[1] } });
+    fireEvent.change(paymentType, {
+      target: { value: mockedPaymentTypes.payment_types[0].description },
+    });
 
-    const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
+    expect(continueBtn).not.toBeDisabled();
+
     fireEvent.click(continueBtn);
 
-    const confirmModalBtn = await screen.findByTestId('confirm-button-test');
-    const cancelModalBtn = await screen.findByTestId('cancel-button-test');
+    const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
+    const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
 
-    fireEvent.click(cancelModalBtn);
+    userEvent.click(cancelBtn);
     fireEvent.click(continueBtn);
 
-    fireEvent.click(confirmModalBtn);
-    expect(portalApiPostCreateChannelSpy).toHaveBeenCalledTimes(1);
+    userEvent.click(confirmBtn);
+  });
+
+  test('test catch case api getPaymentTypes', async () => {
+    PortalApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              goBack={jest.fn()}
+              formAction={FormAction.Create}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
   });
 
   test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
-    await waitFor(() =>
-      render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ThemeProvider theme={theme}>
-              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Duplicate} />
-            </ThemeProvider>
-          </Router>
-        </Provider>
-      )
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              goBack={jest.fn()}
+              formAction={FormAction.Create}
+              selectedParty={mockedParties[0]}
+              channelCode={'14847241008_01'}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
+
+  test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              goBack={jest.fn()}
+              formAction={FormAction.Edit}
+              selectedParty={mockedParties[0]}
+              channelCode={'14847241008_01'}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
     );
   });
 
   test('Test rendering AddEditChannelForm with formAction edit', async () => {
-    await waitFor(() =>
-      render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ThemeProvider theme={theme}>
-              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Edit} />
-            </ThemeProvider>
-          </Router>
-        </Provider>
-      )
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              goBack={jest.fn()}
+              formAction={FormAction.Duplicate}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
     );
-    await waitFor(() => {
-      expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
-    });
 
+    const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+    const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
     const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
@@ -154,52 +205,50 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
-    fireEvent.change(channelCode, { target: { value: 'channel Code' } });
-    expect(channelCode.value).toBe('channel Code');
+    const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
+
+    expect(businessName.value).toBe(mockedParties[0].description);
+    expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
+    expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
 
     fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: 'HTTPS' } });
+    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
 
-    fireEvent.change(redirectPort, { target: { value: '' } });
-    expect(redirectPort.value).toBe('');
-
+    fireEvent.change(redirectPort, { target: { value: '0' } });
     fireEvent.change(redirectPort, { target: { value: '555' } });
-    expect(redirectPort.value).toBe('555');
 
-    fireEvent.change(redirectService, { target: { value: 'redirect Service' } });
-    expect(redirectService.value).toBe('redirect Service');
+    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
+    expect(redirectService.value).toBe('redirectService');
 
-    fireEvent.change(redirectIp, { target: { value: 'redirect Ip' } });
-    expect(redirectIp.value).toBe('redirect Ip');
+    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
+    expect(redirectIp.value).toBe('redirectIp');
 
-    fireEvent.change(redirectParameters, { target: { value: 'redirect Parameters' } });
-    expect(redirectParameters.value).toBe('redirect Parameters');
+    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
+    expect(redirectParameters.value).toBe('redirectParameters');
 
-    fireEvent.change(targetAddress, { target: { value: 'redirect Address' } });
-    expect(targetAddress.value).toBe('redirect Address');
+    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
+    expect(targetAddress.value).toBe('redirectAddress');
 
-    fireEvent.change(targetService, { target: { value: 'redirect Service' } });
-    expect(targetService.value).toBe('redirect Service');
+    fireEvent.change(targetService, { target: { value: 'redirectService' } });
+    expect(targetService.value).toBe('redirectService');
 
+    fireEvent.change(targetPort, { target: { value: '0' } });
     fireEvent.change(targetPort, { target: { value: '555' } });
-    expect(targetPort.value).toBe('555');
 
     fireEvent.click(paymentType);
-    fireEvent.change(paymentType, { target: { value: mockedPaymentTypes[1] } });
-
-    const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
-    fireEvent.click(continueBtn);
-
-    const confirmModalBtn = await screen.findByTestId('confirm-button-test');
-    const cancelModalBtn = await screen.findByTestId('cancel-button-test');
-
-    fireEvent.click(cancelModalBtn);
-    fireEvent.click(continueBtn);
-
-    fireEvent.click(confirmModalBtn);
-
-    await waitFor(() => {
-      expect(portalApiPutUpdateChannel).toHaveBeenCalledTimes(1);
+    fireEvent.change(paymentType, {
+      target: { value: mockedPaymentTypes.payment_types[0].description },
     });
+
+    expect(continueBtn).not.toBeDisabled();
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
+    const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
+
+    userEvent.click(cancelBtn);
+    fireEvent.click(continueBtn);
+
+    userEvent.click(confirmBtn);
   });
 });

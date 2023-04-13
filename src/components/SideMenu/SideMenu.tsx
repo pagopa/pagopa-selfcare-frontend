@@ -68,17 +68,15 @@ export default function SideMenu() {
               data-testid="channels-test"
             />
           )}
-          {(ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType === 'PA') ||
-            selectedParty?.institutionType === 'GSP' ||
-            (selectedParty?.institutionType === 'SCP' && (
-              <SidenavItem
-                title={t('sideMenu.stations.title')}
-                handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
-                isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
-                icon={UsbIcon}
-                data-testid="stations-test"
-              />
-            ))}
+          {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
+            <SidenavItem
+              title={t('sideMenu.stations.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
+              isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
+              icon={UsbIcon}
+              data-testid="stations-test"
+            />
+          )}
         </List>
       </Box>
     </Box>

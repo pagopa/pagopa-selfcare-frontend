@@ -301,7 +301,7 @@ export const PortalApi = {
       body: {
         address: ec.address,
         businessName: ec.businessName,
-        creditorInstitutionCode: ec.businessName,
+        creditorInstitutionCode: ec.creditorInstitutionCode,
         enabled: ec.enabled,
         pspPayment: ec.pspPayment,
         reportingFtp: ec.reportingFtp,

@@ -55,7 +55,7 @@ export default function SideMenu() {
               data-testid="channels-test"
             />
           )}
-          {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
+          {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType === 'PA' && (
             <SidenavItem
               title={t('sideMenu.stations.title')}
               handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}

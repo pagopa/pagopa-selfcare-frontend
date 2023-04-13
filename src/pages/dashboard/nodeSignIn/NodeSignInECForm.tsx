@@ -17,7 +17,7 @@ type Props = {
   goBack: () => void;
 };
 
-const NodeSignInPSPForm = ({ goBack }: Props) => {
+const NodeSignInECForm = ({ goBack }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -164,6 +164,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                 onChange={(e) => formik.handleChange(e)}
                 error={formik.touched.location && Boolean(formik.errors.location)}
                 helperText={formik.touched.location && formik.errors.location}
+                inputProps={{ 'data-testid': 'address-test' }}
               />
             </Grid>
             <Grid container item xs={6}>
@@ -178,6 +179,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                 onChange={(e) => formik.handleChange(e)}
                 error={formik.touched.city && Boolean(formik.errors.city)}
                 helperText={formik.touched.city && formik.errors.city}
+                inputProps={{ 'data-testid': 'city-test' }}
               />
             </Grid>
             <Grid container item xs={6}>
@@ -193,6 +195,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                   maxLength: 2,
                   inputMode: 'text',
                   pattern: '[A-Za-z]*',
+                  'data-testid': 'province-test',
                 }}
                 onChange={(e) => handleChangeLetterOnly(e, 'countryCode', formik)}
                 error={formik.touched.countryCode && Boolean(formik.errors.countryCode)}
@@ -208,7 +211,12 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                 placeholder={t('nodeSignInPage.form.ecFields.CAP')}
                 size="small"
                 value={formik.values.zipCode}
-                inputProps={{ maxLength: 5, inputMode: 'numeric', pattern: '[0-9]*' }}
+                inputProps={{
+                  maxLength: 5,
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                  'data-testid': 'CAP-test',
+                }}
                 onChange={(e) => handleChangeNumberOnly(e, 'zipCode', formik)}
                 error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
                 helperText={formik.touched.zipCode && formik.errors.zipCode}
@@ -227,6 +235,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                 onChange={(e) => formik.handleChange(e)}
                 error={formik.touched.taxDomicile && Boolean(formik.errors.taxDomicile)}
                 helperText={formik.touched.taxDomicile && formik.errors.taxDomicile}
+                inputProps={{ 'data-testid': 'fiscal-domicile-test' }}
               />
             </Grid>
           </Grid>
@@ -235,7 +244,12 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
 
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="back-button-test"
+          >
             {t('nodeSignInPage.form.backButton')}
           </Button>
         </Stack>
@@ -246,6 +260,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
             color="primary"
             variant="contained"
             type="submit"
+            data-testid="continue-button-test"
           >
             {t('nodeSignInPage.form.continueButton')}
           </Button>
@@ -255,4 +270,4 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
   );
 };
 
-export default NodeSignInPSPForm;
+export default NodeSignInECForm;

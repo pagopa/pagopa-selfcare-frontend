@@ -20,7 +20,11 @@ const DashboardPage = () => {
   const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
 
   useEffect(() => {
-    if (selectedParty) {
+    if (
+      selectedParty !== undefined &&
+      selectedParty.pspData !== undefined &&
+      selectedParty.institutionType !== 'PA'
+    ) {
       getPSPDetails(selectedParty.fiscalCode)
         .then((response) => {
           setPspNodeData(response);
@@ -67,10 +71,10 @@ const DashboardPage = () => {
                   <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
                 </Box>
                 <Grid container spacing={3} pb={4}>
-                  {selectedParty?.pspData ? (
+                  {selectedParty?.institutionType === 'PSP' ? (
                     <PSPRegistrationData pspNodeData={pspNodeData}></PSPRegistrationData>
                   ) : (
-                    <ECRegistrationData></ECRegistrationData>
+                    <ECRegistrationData />
                   )}
                 </Grid>
               </Card>

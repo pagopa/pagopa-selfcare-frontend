@@ -52,6 +52,7 @@ variables:
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
+    react_app_features_dashboard_enabled: 'false'
     react_app_features_channels_enabled: 'false'
     react_app_features_stations_enabled: 'false'
 
@@ -83,6 +84,7 @@ variables:
 
     react_app_url_storage: '$(PROD_REACT_APP_URL_STORAGE)'
 
+    react_app_features_dashboard_enabled: 'false'
     react_app_features_channels_enabled: 'false'
     react_app_features_stations_enabled: 'false'
 
@@ -113,6 +115,7 @@ variables:
     react_app_url_fe_token_exchange: 'https://dev.selfcare.pagopa.it/token-exchange' #$(DEV_REACT_APP_URL_FE_TOKEN_EXCHANGE)'
     react_app_url_api_token: '$(DEV_REACT_APP_URL_API_TOKEN)' # 'https://api.dev.platform.pagopa.it/api/token/token' #
 
+    react_app_features_dashboard_enabled: 'true'
     react_app_features_channels_enabled: 'true'
     react_app_features_stations_enabled: 'true'
 
@@ -227,6 +230,7 @@ stages:
 
               REACT_APP_URL_INSTITUTION_LOGO_PREFIX: '$(react_app_url_storage)/institutions/'
 
+              REACT_APP_FEATURES_DASHBOARD_ENABLED: '$(react_app_features_dashboard_enabled)'
               REACT_APP_FEATURES_CHANNELS_ENABLED: '$(react_app_features_channels_enabled)'
               REACT_APP_FEATURES_STATIONS_ENABLED: '$(react_app_features_stations_enabled)'
 

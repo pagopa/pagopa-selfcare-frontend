@@ -34,6 +34,9 @@ export const ENV = {
   },
 
   FEATURES: {
+    DASHBOARD: {
+      ENABLED: env.get('REACT_APP_FEATURES_DASHBOARD_ENABLED').default('false').asBool(),
+    },
     CHANNELS: {
       ENABLED: env.get('REACT_APP_FEATURES_CHANNELS_ENABLED').default('false').asBool(),
     },

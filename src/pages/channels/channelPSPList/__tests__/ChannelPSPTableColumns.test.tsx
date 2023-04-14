@@ -3,10 +3,10 @@ import { cleanup } from '@testing-library/react';
 import {
   buildColumnDefs,
   renderCell,
-  showChannelCode,
+  showPspName,
   showCustomHeader,
   showStatus,
-} from '../channelPSPList/ChannelPSPTableColumns';
+} from '../ChannelPSPTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -159,22 +159,22 @@ describe('<ChannelPSPTableColumns />', () => {
 
     buildColumnDefs(mockTFunction, () => jest.fn());
 
-    showChannelCode(params);
+    showPspName(params);
     showStatus(params);
     showCustomHeader(customHeaderChannel);
     renderCell(params);
 
-    showChannelCode(paramsBroker);
+    showPspName(paramsBroker);
     showStatus(paramsBroker);
     showCustomHeader(customHeaderBroker);
     renderCell(paramsBroker, undefined);
 
-    showChannelCode(paramsBroker2);
+    showPspName(paramsBroker2);
     showStatus(paramsBroker2);
     showCustomHeader(customHeaderBroker2);
     renderCell(paramsBroker2, undefined);
 
-    showChannelCode(paramsStatus);
+    showPspName(paramsStatus);
     showStatus(paramsStatus);
     showCustomHeader(customHeaderStatus);
     renderCell(paramsStatus, undefined);

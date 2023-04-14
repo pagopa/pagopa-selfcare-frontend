@@ -3,8 +3,8 @@ import { theme } from '@pagopa/mui-italia';
 import { cleanup, render, screen } from '@testing-library/react';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
-import ChannelsPage, { clearLocationState } from '../list/ChannelsPage';
+import { store } from '../../../../redux/store';
+import ChannelsPage, { clearLocationState } from '../ChannelsPage';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 

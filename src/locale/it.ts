@@ -276,6 +276,10 @@ export default {
     associatePspButtonLabel: 'Associa PSP',
     dissociatePSPsuccessMessage: 'PSP dissociato con successo',
     noResults: `Non sono ancora presenti PSP associati a questo canale.<1><0> Associa PSP</0></1>`,
+    noSearchResults: 'Nessun PSP trovato',
+    table: {
+      loading: 'Caricamento...',
+    },
     channelsTableColumns: {
       headerFields: {
         name: 'Nome PSP',

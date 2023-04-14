@@ -21,7 +21,7 @@ import ChannelsPage from './pages/channels/list/ChannelsPage';
 import AddEditChannelPage from './pages/channels/addEditChannel/AddEditChannelPage';
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
-import ChannelAssociatePSPPage from './pages/channels/chennelAssociatePSP/ChannelAssociatePSPPage';
+import ChannelAssociatePSPPage from './pages/channels/channelAssociatePSP/ChannelAssociatePSPPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
 import StationsPage from './pages/stations/list/StationsPage';

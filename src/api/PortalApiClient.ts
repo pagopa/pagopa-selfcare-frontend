@@ -27,6 +27,7 @@ import { StationDetailResource } from './generated/portal/StationDetailResource'
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
+import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 
@@ -148,6 +149,20 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  getChannelPSPs: async (
+    channelcode: string,
+    page: number,
+    limit?: number
+  ): Promise<ChannelPspListResource> => {
+    // return all PSP associated to the channel
+    const result = await apiConfigClient.getChannelPaymentServiceProvidersUsingGET({
+      page,
+      channelcode,
+      limit,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   createChannel: async (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
     const result = await apiConfigClient.createChannelUsingPOST({
       body: {
@@ -197,23 +212,6 @@ export const PortalApi = {
   getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
     const result = await apiConfigClient.getChannelCodeUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  // eslint-disable-next-line arrow-body-style
-  getChannelPSPs: async (_page: number): Promise<ChannelsResource> => {
-    /* TODO: change when GET will be available */
-    // const result = await apiConfigClient.getChannelPSPsUsingGET({ page });
-
-    // return extractResponse(result, 200, onRedirectToLogin);
-    return {
-      channels: [],
-      page_info: {
-        items_found: 0,
-        limit: 0,
-        page: 0,
-        total_pages: 0,
-      },
-    };
   },
 
   associatePSPtoChannel: async (

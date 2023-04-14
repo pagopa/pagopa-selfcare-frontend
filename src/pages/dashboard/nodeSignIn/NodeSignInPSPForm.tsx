@@ -50,8 +50,8 @@ const inputGroupStyle = {
 const validate = (values: Partial<NodeOnSignInPSP>) =>
   Object.fromEntries(
     Object.entries({
-      bicCode: !values.bicCode ? 'Required' : undefined,
-      digitalStamp: !values.digitalStamp ? 'Required' : undefined,
+      bicCode: !values.bicCode ? 'Campo obbligatorio' : undefined,
+      digitalStamp: !values.digitalStamp ? 'Campo obbligatorio' : undefined,
     }).filter(([_key, value]) => value)
   );
 
@@ -109,6 +109,9 @@ function NodeSignInPSPForm({ goBack }: Props) {
         setLoading(false);
       });
   };
+
+  const enebledSubmit = (values: NodeOnSignInPSP) =>
+    !!(values.bicCode !== '' && values.digitalStamp !== false);
 
   return (
     <>
@@ -255,7 +258,7 @@ function NodeSignInPSPForm({ goBack }: Props) {
           <Stack display="flex" justifyContent="flex-end">
             <Button
               // onClick={()=>() /* handleSubmit */}
-              disabled={!formik.dirty || !formik.isValid}
+              disabled={!enebledSubmit(formik.values)}
               color="primary"
               variant="contained"
               type="submit"

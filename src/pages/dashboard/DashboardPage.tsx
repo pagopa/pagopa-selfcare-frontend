@@ -6,10 +6,9 @@ import { useHistory } from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getPSPDetails } from '../../services/nodeService';
+import { getCreditorInstitutionDetails, getPSPDetails } from '../../services/nodeService';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { getECDetails } from '../../services/__mocks__/nodeService';
 import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../utils/constants';
 import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
@@ -35,14 +34,25 @@ const DashboardPage = () => {
         .then((response) => {
           setPspNodeData(response);
         })
-        .catch((reason) => console.error(reason));
+        .catch((reason) =>
+          addError({
+            id: 'DASHBOARD_PAGE_PSP_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting psp details`,
+            toNotify: true,
+            displayableTitle: t('dashboardPage.registrationData.pspDetailsErrorMessageTitle'),
+            displayableDescription: t('dashboardPage.registrationData.pspDetailsErrorMessageDesc'),
+            component: 'Toast',
+          })
+        );
     } else if (
       selectedParty !== undefined &&
       selectedParty.pspData === undefined &&
       selectedParty.institutionType !== 'PSP'
     ) {
       setLoading(true);
-      getECDetails(selectedParty.fiscalCode)
+      getCreditorInstitutionDetails(selectedParty.fiscalCode)
         .then((res) => {
           setEcNodeData(res);
         })
@@ -53,8 +63,8 @@ const DashboardPage = () => {
             error: reason as Error,
             techDescription: `An error occurred while getting ec details`,
             toNotify: true,
-            displayableTitle: t('dashboardPage.ecDetailsErrorMessageTitle'),
-            displayableDescription: t('dashboardPage.ecDetailsErrorMessageDesc'),
+            displayableTitle: t('dashboardPage.registrationData.ecDetailsErrorMessageTitle'),
+            displayableDescription: t('dashboardPage.registrationData.ecDetailsErrorMessageDesc'),
             component: 'Toast',
           });
         })

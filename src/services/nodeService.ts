@@ -9,6 +9,7 @@ import {
   createPSPDirect as createPSPDirectMocked,
   getPSPDetails as getPSPDetailsMocked,
   createECDirect as createECDirectMocked,
+  getECDetails as getCreditorInstitutionDetailsMocked,
 } from './__mocks__/nodeService';
 
 export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
@@ -36,5 +37,15 @@ export const createECDirect = (
     return createECDirectMocked(ec);
   } else {
     return PortalApi.createECDirect(ec).then((resources) => resources);
+  }
+};
+
+export const getCreditorInstitutionDetails = (
+  ecCode: string
+): Promise<CreditorInstitutionDetailsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getCreditorInstitutionDetailsMocked(ecCode);
+  } else {
+    return PortalApi.getCreditorInstitutionDetails(ecCode).then((resources) => resources);
   }
 };

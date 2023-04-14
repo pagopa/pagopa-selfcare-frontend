@@ -40,6 +40,8 @@ export default {
       },
       ecDetailsErrorMessageTitle: 'Errore',
       ecDetailsErrorMessageDesc: 'Errore durante la ricezione del dettaglio dell’EC',
+      pspDetailsErrorMessageTitle: 'Errore',
+      pspDetailsErrorMessageDesc: 'Errore durante la ricezione del dettaglio del PSP',
       modifyData: 'Modifica dati',
     },
     nextStep: {

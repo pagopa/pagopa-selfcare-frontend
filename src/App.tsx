@@ -27,6 +27,7 @@ import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
+import { ENV } from './utils/env';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -45,7 +46,7 @@ const SecuredRoutes = withLogin(
       <Layout>
         <Switch>
           <Route path={routes.HOME} exact={true}>
-            <DashboardPage />
+            {ENV.FEATURES.DASHBOARD.ENABLED ? <DashboardPage /> : <ApiKeysPage />}
           </Route>
           <Route path={routes.NODE_SIGNIN} exact={true}>
             <NodeSignInPage />

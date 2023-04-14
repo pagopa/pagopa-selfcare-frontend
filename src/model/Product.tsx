@@ -32,7 +32,7 @@ export const productResource2Product = (resource: ProductsResource): Product => 
   title: resource.title,
   urlBO: resource.urlBO,
   urlPublic: resource.urlPublic,
-  selfcareRole: (resource as any).selfcareRole as SelfcareRole, // TODO maybe it will be added to the API?
+  selfcareRole: 'ADMIN', // TODO maybe it will be added to the API?
   roles: [],
   authorized: true,
   status: 'ACTIVE',

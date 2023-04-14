@@ -10,7 +10,10 @@ import { PortalApi } from '../../../api/PortalApiClient';
 
 let portalApiGetChannelDetails;
 beforeEach(() => {
-  portalApiGetChannelDetails = jest.spyOn(PortalApi, 'getChannelDetail');
+  portalApiGetChannelDetails = jest.spyOn(
+    require('../../../services/channelService'),
+    'getChannelDetail'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.resetModules();

@@ -1,27 +1,37 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { PortalApi } from '../../../api/PortalApiClient';
 import { FormAction } from '../../../model/Channel';
 import { store } from '../../../redux/store';
 import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../addEditChannel/AddEditChannelForm';
 
-let portalApiPostCreateChannelSpy;
-let portalApiGetPaymentTypesSpy;
-let portalApiPutUpdateChannel;
+let portalApiPostCreateChannelSpy: jest.SpyInstance;
+let portalApiGetPaymentTypesSpy: jest.SpyInstance;
+let portalApiPutUpdateChannel: jest.SpyInstance;
 // let portalApiGetAssociatePSPtoChannel;
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  portalApiPostCreateChannelSpy = jest.spyOn(PortalApi, 'createChannel');
-  portalApiGetPaymentTypesSpy = jest.spyOn(PortalApi, 'getPaymentTypes');
-  portalApiPutUpdateChannel = jest.spyOn(PortalApi, 'updateChannel');
+  portalApiPostCreateChannelSpy = jest.spyOn(
+    require('../../../services/channelService'),
+    'createChannel'
+  );
+  portalApiGetPaymentTypesSpy = jest.spyOn(
+    require('../../../services/channelService'),
+    'getPaymentTypes'
+  );
+
+  portalApiPutUpdateChannel = jest.spyOn(
+    require('../../../services/channelService'),
+    'updateChannel'
+  );
   // portalApiGetAssociatePSPtoChannel = jest.spyOn(PortalApi, 'associatePSPtoChannel');
 });
 
@@ -31,17 +41,21 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
   test('Test rendering AddEditChannelForm', async () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Create} />
-          </Router>
-        </ThemeProvider>
-      </Provider>
+    await waitFor(() =>
+      render(
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <Router history={history}>
+              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Create} />
+            </Router>
+          </ThemeProvider>
+        </Provider>
+      )
     );
 
-    expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
+    });
 
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
@@ -101,29 +115,34 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Duplicate} />
-          </ThemeProvider>
-        </Router>
-      </Provider>
+    await waitFor(() =>
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ThemeProvider theme={theme}>
+              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Duplicate} />
+            </ThemeProvider>
+          </Router>
+        </Provider>
+      )
     );
   });
 
   test('Test rendering AddEditChannelForm with formAction edit', async () => {
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Edit} />
-          </ThemeProvider>
-        </Router>
-      </Provider>
+    await waitFor(() =>
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <ThemeProvider theme={theme}>
+              <AddEditChannelForm goBack={jest.fn()} formAction={FormAction.Edit} />
+            </ThemeProvider>
+          </Router>
+        </Provider>
+      )
     );
-
-    expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(portalApiGetPaymentTypesSpy).toHaveBeenCalledTimes(1);
+    });
 
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
     const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
@@ -178,6 +197,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.click(continueBtn);
 
     fireEvent.click(confirmModalBtn);
-    expect(portalApiPutUpdateChannel).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => {
+      expect(portalApiPutUpdateChannel).toHaveBeenCalledTimes(1);
+    });
   });
 });

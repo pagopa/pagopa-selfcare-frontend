@@ -38,6 +38,9 @@ export default {
         enabled: 'Abilitato',
         disabled: 'Non abilitato',
       },
+      ecDetailsErrorMessageTitle: 'Errore',
+      ecDetailsErrorMessageDesc: 'Errore durante la ricezione del dettaglio dell’EC',
+      modifyData: 'Modifica dati',
     },
     nextStep: {
       title: 'E ora?',
@@ -390,7 +393,7 @@ export default {
     stationConfiguration: 'Configurazione della stazione',
     stationConfigurationDescription: 'Lorem ipsum dolor sit.',
     anagraphic: 'Anagrafica',
-    stationId: 'ID Stazione',
+    stationId: 'Codice stazione',
     version: 'Versione',
     primitiveVersion: 'Versione Primitive',
     password: 'Password',

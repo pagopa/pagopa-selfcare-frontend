@@ -352,23 +352,6 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="redirectPath"
-                  name="redirectPath"
-                  label={t('addEditStationPage.addForm.fields.redirectService')}
-                  size="small"
-                  value={formik.values.redirectPath}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
-                  helperText={formik.touched.redirectPath && formik.errors.redirectPath}
-                  inputProps={{
-                    'data-testid': 'redirect-service-test',
-                  }}
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
                   id="redirectIp"
                   name="redirectIp"
                   label={t('addEditStationPage.addForm.fields.redirectIp')}
@@ -379,6 +362,23 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   helperText={formik.touched.redirectIp && formik.errors.redirectIp}
                   inputProps={{
                     'data-testid': 'redirect-ip-test',
+                  }}
+                />
+              </Grid>
+
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="redirectPath"
+                  name="redirectPath"
+                  label={t('addEditStationPage.addForm.fields.redirectService')}
+                  size="small"
+                  value={formik.values.redirectPath}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
+                  helperText={formik.touched.redirectPath && formik.errors.redirectPath}
+                  inputProps={{
+                    'data-testid': 'redirect-service-test',
                   }}
                 />
               </Grid>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Alert, Card } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
@@ -8,6 +8,9 @@ import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { getPSPDetails } from '../../services/nodeService';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { getECDetails } from '../../services/__mocks__/nodeService';
+import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../utils/constants';
 import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
@@ -16,8 +19,11 @@ import NextSteps from './components/NextSteps';
 const DashboardPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
+  const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
 
   useEffect(() => {
     if (
@@ -30,6 +36,29 @@ const DashboardPage = () => {
           setPspNodeData(response);
         })
         .catch((reason) => console.error(reason));
+    } else if (
+      selectedParty !== undefined &&
+      selectedParty.pspData === undefined &&
+      selectedParty.institutionType !== 'PSP'
+    ) {
+      setLoading(true);
+      getECDetails(selectedParty.fiscalCode)
+        .then((res) => {
+          setEcNodeData(res);
+        })
+        .catch((reason) => {
+          addError({
+            id: 'DASHBOARD_PAGE_EC_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting ec details`,
+            toNotify: true,
+            displayableTitle: t('dashboardPage.ecDetailsErrorMessageTitle'),
+            displayableDescription: t('dashboardPage.ecDetailsErrorMessageDesc'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => setLoading(false));
     }
   }, [selectedParty]);
 
@@ -72,9 +101,9 @@ const DashboardPage = () => {
                 </Box>
                 <Grid container spacing={3} pb={4}>
                   {selectedParty?.institutionType === 'PSP' ? (
-                    <PSPRegistrationData pspNodeData={pspNodeData}></PSPRegistrationData>
+                    <PSPRegistrationData pspNodeData={pspNodeData} />
                   ) : (
-                    <ECRegistrationData />
+                    <ECRegistrationData ecNodeData={ecNodeData} />
                   )}
                 </Grid>
               </Card>
@@ -82,7 +111,7 @@ const DashboardPage = () => {
             <Grid item xs={6}>
               <NextSteps selectedParty={selectedParty} pspNodeData={pspNodeData}></NextSteps>
             </Grid>
-            {selectedParty?.pspData === undefined ? <OperativeTable /> : null}
+            {selectedParty?.institutionType !== 'PSP' ? <OperativeTable /> : null}
           </Grid>
         </Box>
       </Grid>

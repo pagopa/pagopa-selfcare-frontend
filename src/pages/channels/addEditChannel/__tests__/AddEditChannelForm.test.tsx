@@ -6,14 +6,14 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { FormAction } from '../../../model/Channel';
-import { store } from '../../../redux/store';
-import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
-import AddEditChannelForm from '../addEditChannel/AddEditChannelForm';
-import { mockedParties } from '../../../services/__mocks__/partyService';
-import { Redirect_protocolEnum } from '../../../api/generated/portal/ChannelDetailsDto';
-import { PortalApi } from '../../../api/PortalApiClient';
-import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
+import { FormAction } from '../../../../model/Channel';
+import { store } from '../../../../redux/store';
+import { mockedPaymentTypes } from '../../../../services/__mocks__/channelService';
+import AddEditChannelForm from '../AddEditChannelForm';
+import { mockedParties } from '../../../../services/__mocks__/partyService';
+import { Redirect_protocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
+import { PortalApi } from '../../../../api/PortalApiClient';
+import { PaymentTypesResource } from '../../../../api/generated/portal/PaymentTypesResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

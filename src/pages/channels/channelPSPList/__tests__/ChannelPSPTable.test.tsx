@@ -11,8 +11,8 @@ import * as channelService from '../../../../services/channelService';
 let spyApi: jest.SpyInstance;
 
 beforeEach(() => {
-  // jest.spyOn(console, 'error').mockImplementation(() => {});
-  // jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
   spyApi = jest.spyOn(channelService, 'dissociatePSPfromChannel');
   jest.resetModules();
 });

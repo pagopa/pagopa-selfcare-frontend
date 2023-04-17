@@ -5,16 +5,19 @@ import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { Party } from '../../../model/Party';
+import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
 type Props = {
   selectedParty?: Party;
   pspNodeData?: PaymentServiceProviderDetailsResource;
+  ecNodeData?: CreditorInstitutionDetailsResource;
 };
 
-const NextSteps = ({ selectedParty, pspNodeData }: Props) => {
+const NextSteps = ({ selectedParty, pspNodeData, ecNodeData }: Props) => {
   const { t } = useTranslation();
   const isPSPRegistered = pspNodeData?.bic ? true : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
+  const isEcRegistered = ecNodeData ? true : false;
 
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
@@ -30,7 +33,7 @@ const NextSteps = ({ selectedParty, pspNodeData }: Props) => {
           )}
         </Alert>
       </Box>
-      {isAdmin && isPSPRegistered ? (
+      {isAdmin && (isPSPRegistered || isEcRegistered) ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}

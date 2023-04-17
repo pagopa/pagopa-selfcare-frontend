@@ -32,21 +32,21 @@ const pspDetails: PaymentServiceProviderDetailsResource = {
   psp_code: '12312312',
 };
 
-// const ecDirect: CreditorInstitutionDetailsResource = {
-//   address: {
-//     city: 'città',
-//     countryCode: 'indirizzo',
-//     location: 'provincia',
-//     taxDomicile: 'Domicilio Fiscale',
-//     zipCode: 'CAP',
-//   },
-//   businessName: 'businessName',
-//   creditorInstitutionCode: 'creditorInstitutionCode',
-//   enabled: false,
-//   pspPayment: false,
-//   reportingFtp: false,
-//   reportingZip: false,
-// };
+const ecDirect: CreditorInstitutionDetailsResource = {
+  address: {
+    city: 'Milano',
+    countryCode: 'Via Ernesto Calindri 4',
+    location: 'MI',
+    taxDomicile: 'Via Ernesto Calindri 4',
+    zipCode: '20143',
+  },
+  businessName: 'businessName',
+  creditorInstitutionCode: 'creditorInstitutionCode',
+  enabled: true,
+  pspPayment: false,
+  reportingFtp: false,
+  reportingZip: false,
+};
 
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
@@ -57,3 +57,6 @@ export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderD
 export const createECDirect = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));
+
+export const getECDetails = (_ecCode: string): Promise<CreditorInstitutionDetailsResource> =>
+  new Promise((resolve) => resolve(ecDirect));

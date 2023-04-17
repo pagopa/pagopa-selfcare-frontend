@@ -327,12 +327,7 @@ const StationDetailPage = () => {
                     {stationDetail?.port}
                   </Typography>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  mt={2}
-                  sx={{ display: 'flex', justifyContent: 'space-between', marginRight: 10 }}
-                >
+                <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
                     component="button"
@@ -341,6 +336,7 @@ const StationDetailPage = () => {
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"
+                    sx={{ alignItems: 'end' }}
                   >
                     {t('stationDetailPage.manageEC')}
                   </ButtonNaked>

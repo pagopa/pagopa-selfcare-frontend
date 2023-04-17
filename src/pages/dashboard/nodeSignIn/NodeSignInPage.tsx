@@ -25,11 +25,7 @@ const NodeSignInPage = () => {
   const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
 
   useEffect(() => {
-    if (
-      selectedParty !== undefined &&
-      selectedParty.pspData === undefined &&
-      selectedParty.institutionType !== 'PSP'
-    ) {
+    if (selectedParty && selectedParty.institutionType !== 'PSP') {
       setLoading(true);
       getCreditorInstitutionDetails(selectedParty.fiscalCode)
         .then((res) => {

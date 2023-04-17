@@ -25,7 +25,7 @@ const DashboardPage = () => {
   const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
 
   useEffect(() => {
-    if (selectedParty !== undefined) {
+    if (selectedParty) {
       if (selectedParty.institutionType === 'PSP') {
         getPSPDetails(selectedParty.fiscalCode)
           .then((response) => {

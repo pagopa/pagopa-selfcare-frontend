@@ -12,25 +12,37 @@ import { createECDirect } from '../../../services/nodeService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
+import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { updateECDirect } from '../../../services/__mocks__/nodeService';
 
 type Props = {
   goBack: () => void;
+  ecNodeData?: CreditorInstitutionDetailsResource;
 };
 
-const NodeSignInECForm = ({ goBack }: Props) => {
+const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  const initialFormData: CreditorInstitutionAddressDto = {
-    city: '',
-    countryCode: '',
-    location: '',
-    taxDomicile: '',
-    zipCode: '',
-  };
+  const initialFormData = (ecDetails: CreditorInstitutionDetailsResource | undefined) =>
+    ecDetails
+      ? {
+          city: ecNodeData?.address.city ?? '',
+          countryCode: ecNodeData?.address.countryCode ?? '',
+          location: ecNodeData?.address.location ?? '',
+          taxDomicile: ecNodeData?.address.taxDomicile ?? '',
+          zipCode: ecNodeData?.address.zipCode ?? '',
+        }
+      : {
+          city: '',
+          countryCode: '',
+          location: '',
+          taxDomicile: '',
+          zipCode: '',
+        };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -65,37 +77,67 @@ const NodeSignInECForm = ({ goBack }: Props) => {
 
   const submit = async () => {
     setLoading(true);
-    try {
-      await createECDirect({
-        address: { ...formik.values },
-        businessName: selectedParty?.description ?? '',
-        creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-        enabled: true,
-        pspPayment: false,
-        reportingFtp: false,
-        reportingZip: false,
-      });
-      history.push(ROUTES.HOME, {
-        alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
-      });
-    } catch (reason) {
-      addError({
-        id: 'NODE_SIGNIN_EC',
-        blocking: false,
-        error: reason as Error,
-        techDescription: `An error occurred while registration EC at the node`,
-        toNotify: true,
-        displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
-        displayableDescription: t('nodeSignInPage.form.ecErrorMessageDesc'),
-        component: 'Toast',
-      });
-    } finally {
-      setLoading(false);
+    if (ecNodeData) {
+      try {
+        await updateECDirect({
+          address: { ...formik.values },
+          businessName: selectedParty?.description ?? '',
+          creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+          enabled: false,
+          pspPayment: false,
+          reportingFtp: false,
+          reportingZip: false,
+        });
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+        });
+      } catch (reason) {
+        addError({
+          id: 'NODE_SIGNIN_EC_UPDATE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while updating Ec data at the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.ecUpdateErrorMessageDesc'),
+          component: 'Toast',
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        await createECDirect({
+          address: { ...formik.values },
+          businessName: selectedParty?.description ?? '',
+          creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+          enabled: false,
+          pspPayment: false,
+          reportingFtp: false,
+          reportingZip: false,
+        });
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+        });
+      } catch (reason) {
+        addError({
+          id: 'NODE_SIGNIN_EC_CREATE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while registration EC at the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.ecErrorMessageDesc'),
+          component: 'Toast',
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const formik = useFormik<CreditorInstitutionAddressDto>({
-    initialValues: initialFormData,
+    initialValues: initialFormData(ecNodeData),
     validate,
     onSubmit: async () => {
       await submit();
@@ -236,6 +278,7 @@ const NodeSignInECForm = ({ goBack }: Props) => {
                 error={formik.touched.taxDomicile && Boolean(formik.errors.taxDomicile)}
                 helperText={formik.touched.taxDomicile && formik.errors.taxDomicile}
                 inputProps={{ 'data-testid': 'fiscal-domicile-test' }}
+                disabled={ecNodeData?.address.taxDomicile ? true : false}
               />
             </Grid>
           </Grid>

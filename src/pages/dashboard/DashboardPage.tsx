@@ -25,50 +25,46 @@ const DashboardPage = () => {
   const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
 
   useEffect(() => {
-    if (
-      selectedParty !== undefined &&
-      selectedParty.pspData !== undefined &&
-      selectedParty.institutionType === 'PSP'
-    ) {
-      getPSPDetails(selectedParty.fiscalCode)
-        .then((response) => {
-          setPspNodeData(response);
-        })
-        .catch((reason) =>
-          addError({
-            id: 'DASHBOARD_PAGE_PSP_DETAILS',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while getting psp details`,
-            toNotify: true,
-            displayableTitle: t('dashboardPage.registrationData.pspDetailsErrorMessageTitle'),
-            displayableDescription: t('dashboardPage.registrationData.pspDetailsErrorMessageDesc'),
-            component: 'Toast',
+    if (selectedParty) {
+      if (selectedParty.institutionType === 'PSP') {
+        getPSPDetails(selectedParty.fiscalCode)
+          .then((response) => {
+            setPspNodeData(response);
           })
-        );
-    } else if (
-      selectedParty !== undefined &&
-      selectedParty.pspData === undefined &&
-      selectedParty.institutionType !== 'PSP'
-    ) {
-      setLoading(true);
-      getCreditorInstitutionDetails(selectedParty.fiscalCode)
-        .then((res) => {
-          setEcNodeData(res);
-        })
-        .catch((reason) => {
-          addError({
-            id: 'DASHBOARD_PAGE_EC_DETAILS',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while getting ec details`,
-            toNotify: true,
-            displayableTitle: t('dashboardPage.registrationData.ecDetailsErrorMessageTitle'),
-            displayableDescription: t('dashboardPage.registrationData.ecDetailsErrorMessageDesc'),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoading(false));
+          .catch((reason) =>
+            addError({
+              id: 'DASHBOARD_PAGE_PSP_DETAILS',
+              blocking: false,
+              error: reason as Error,
+              techDescription: `An error occurred while getting psp details`,
+              toNotify: true,
+              displayableTitle: t('dashboardPage.registrationData.pspDetailsErrorMessageTitle'),
+              displayableDescription: t(
+                'dashboardPage.registrationData.pspDetailsErrorMessageDesc'
+              ),
+              component: 'Toast',
+            })
+          );
+      } else {
+        setLoading(true);
+        getCreditorInstitutionDetails(selectedParty.fiscalCode)
+          .then((res) => {
+            setEcNodeData(res);
+          })
+          .catch((reason) => {
+            addError({
+              id: 'DASHBOARD_PAGE_EC_DETAILS',
+              blocking: false,
+              error: reason as Error,
+              techDescription: `An error occurred while getting ec details`,
+              toNotify: true,
+              displayableTitle: t('dashboardPage.registrationData.ecDetailsErrorMessageTitle'),
+              displayableDescription: t('dashboardPage.registrationData.ecDetailsErrorMessageDesc'),
+              component: 'Toast',
+            });
+          })
+          .finally(() => setLoading(false));
+      }
     }
   }, [selectedParty]);
 
@@ -119,7 +115,11 @@ const DashboardPage = () => {
               </Card>
             </Grid>
             <Grid item xs={6}>
-              <NextSteps selectedParty={selectedParty} pspNodeData={pspNodeData}></NextSteps>
+              <NextSteps
+                selectedParty={selectedParty}
+                pspNodeData={pspNodeData}
+                ecNodeData={ecNodeData}
+              ></NextSteps>
             </Grid>
             {selectedParty?.institutionType !== 'PSP' ? <OperativeTable /> : null}
           </Grid>

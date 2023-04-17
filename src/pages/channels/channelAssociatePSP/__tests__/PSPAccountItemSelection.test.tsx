@@ -3,9 +3,9 @@ import { theme } from '@pagopa/mui-italia';
 import { cleanup, render } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
-import PSPAccountItemSelection from '../chennelAssociatePSP/PSPAccountItemSelection';
+import PSPAccountItemSelection from '../PSPAccountItemSelection';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

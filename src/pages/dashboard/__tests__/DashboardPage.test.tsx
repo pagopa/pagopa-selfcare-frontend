@@ -47,10 +47,12 @@ const renderApp = (
 
 test('Test rendering', async () => {
   const { store } = renderApp();
-  store.dispatch({
-    type: 'parties/setPartySelected',
-    payload: pspPartySelected,
-  });
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspPartySelected,
+    })
+  );
   expect(screen.getByText(/istituti di pagamento/i)).toBeVisible();
 });
 

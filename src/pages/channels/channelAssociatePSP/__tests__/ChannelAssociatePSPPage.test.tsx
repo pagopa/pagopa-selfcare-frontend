@@ -3,9 +3,9 @@ import { theme } from '@pagopa/mui-italia';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
-import ChannelAssociatePSPPage from '../chennelAssociatePSP/ChannelAssociatePSPPage';
+import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -14,7 +14,7 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-jest.mock('../../../services/channelService', () => ({
+jest.mock('../../../../services/channelService', () => ({
   getChannelAvailablePSP: jest.fn(),
 }));
 
@@ -22,7 +22,7 @@ describe('<ChannelAssociatePSPPage />', () => {
   const channelId = 'XPAY_03_ONUS';
   test('render component ChannelAssociatePSPPage', async () => {
     jest
-      .spyOn(require('../../../services/channelService'), 'getChannelAvailablePSP')
+      .spyOn(require('../../../../services/channelService'), 'getChannelAvailablePSP')
       .mockResolvedValue([
         {
           id: 'psp1',

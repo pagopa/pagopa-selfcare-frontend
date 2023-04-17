@@ -1,14 +1,14 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled } from '@mui/material';
+import { Box, Pagination, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
-import { ChannelsResource } from '../../../api/generated/portal/ChannelsResource';
-import { getChannelPSPs } from '../../../services/channelService';
+import { dissociatePSPfromChannel, getChannelPSPs } from '../../../services/channelService';
+import { ChannelPspListResource } from '../../../api/generated/portal/ChannelPspListResource';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
@@ -16,9 +16,14 @@ import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyChannelsResource = {
-  channels: [],
-  page_info: { items_found: 0, limit: 0, page: 0, total_pages: 0 },
+const emptyPSPList: ChannelPspListResource = {
+  payment_service_providers: [],
+  page_info: {
+    page: 0,
+    limit: 50,
+    items_found: 0,
+    total_pages: 0,
+  },
 };
 
 const CustomDataGrid = styled(DataGrid)({
@@ -81,22 +86,48 @@ type ChannelPSPTableProps = { setAlertMessage: any };
 export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const setLoadingOverlay = useLoading(LOADING_TASK_CHANNEL_PSP_TABLE);
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+    setLoadingOverlay(status);
+  };
+
+  const [pspListPage, setPSPListPage] = useState<ChannelPspListResource>(emptyPSPList);
+  const [page, setPage] = useState<number>(0);
+  const [rowCountState, setRowCountState] = useState(
+    pspListPage.page_info?.total_pages && pspListPage.page_info?.items_found
+      ? pspListPage.page_info?.total_pages * pspListPage.page_info?.items_found
+      : 0
+  );
+
+  const [selectedPSPCode, setSelectedPSPCode] = useState<string>('');
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const onRowClick = (_pspIdRow: string) => {
+  const onRowClick = (pspIdRow: string) => {
+    setSelectedPSPCode(pspIdRow);
     setShowConfirmModal(true);
   };
+  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
+
+  useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      pspListPage.page_info?.total_pages && pspListPage.page_info?.items_found
+        ? pspListPage.page_info?.total_pages * pspListPage.page_info?.items_found
+        : prevRowCountState
+    );
+  }, [pspListPage.page_info?.total_pages, setRowCountState]);
 
   const dissociatePSP = () => {
     setShowConfirmModal(false);
-    // TODO: connect to the services when they are ready
-    /*                
     setLoading(true);
     dissociatePSPfromChannel(channelId, selectedPSPCode)
-      .then((_r) => {
-        // setChannels(emptyChannelsResource);
-        setChannels(_r);
+      .then(() => {
+        setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
+        fetchChannelPSPs(page);
       })
       .catch((reason) => {
         console.error('reason', reason);
@@ -110,28 +141,18 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
           },
         ]);
         setError(true);
-        // setChannels(emptyChannelsResource);
       })
-      .finally(() => setLoading(false));
-       */
-
-    setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
+      .finally(() => {
+        setSelectedPSPCode('');
+        setLoading(false);
+      });
   };
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-  const setLoading = useLoading(LOADING_TASK_CHANNEL_PSP_TABLE);
-  const [error, setError] = useState(false);
+  const fetchChannelPSPs = (currentPage: number) => {
+    setLoadingStatus(true);
 
-  const [channels, setChannels] = useState<ChannelsResource>(emptyChannelsResource);
-
-  const fetchChannelPSPs = () => {
-    setLoading(true);
-
-    getChannelPSPs(0)
-      .then((_r) => {
-        // setChannels(emptyChannelsResource);
-        setChannels(_r);
-      })
+    getChannelPSPs(channelId, currentPage)
+      .then((r) => (r ? setPSPListPage(r) : setPSPListPage(emptyPSPList)))
       .catch((reason) => {
         console.error('reason', reason);
         handleErrors([
@@ -144,12 +165,12 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
           },
         ]);
         setError(true);
-        // setChannels(emptyChannelsResource);
+        setPSPListPage(emptyPSPList);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingStatus(false));
   };
 
-  useEffect(() => fetchChannelPSPs(), []);
+  useEffect(() => fetchChannelPSPs(page), [page]);
 
   return (
     <>
@@ -162,44 +183,84 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
         }}
         justifyContent="start"
       >
-        {error ? (
+        {error && !loading ? (
           <>{error}</>
-        ) : channels.channels.length === 0 ? (
+        ) : !error && !loading && pspListPage.payment_service_providers?.length === 0 ? (
           <ChannelPSPTableEmpty channelId={channelId} />
         ) : (
-          <CustomDataGrid
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableSelectionOnClick
-            autoHeight={true}
-            className="CustomDataGrid"
-            columnBuffer={6}
-            columns={columns}
-            components={{
-              Pagination: () => <></>,
-              Toolbar: () => (
-                <>
-                  <GridToolbarQuickFilter channelId={channelId}></GridToolbarQuickFilter>
-                </>
-              ),
-              NoRowsOverlay: () => <>{'NoRowsOverlay'}</>,
-              NoResultsOverlay: () => <></>,
-            }}
-            componentsProps={{
-              toolbar: {
-                quickFilterProps: { debounceMs: 500 },
-              },
-            }}
-            getRowId={(r) => r.channel_code}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            paginationMode="server"
-            rowCount={channels.channels.length}
-            rowHeight={rowHeight}
-            rows={channels.channels}
-            sortingMode="server"
-          />
+          <>
+            <CustomDataGrid
+              disableColumnFilter
+              disableColumnSelector
+              disableDensitySelector
+              disableSelectionOnClick
+              autoHeight={true}
+              className="CustomDataGrid"
+              columnBuffer={6}
+              columns={columns}
+              components={{
+                Pagination: () =>
+                  pspListPage.page_info?.total_pages && pspListPage.page_info?.total_pages > 1 ? (
+                    <Pagination
+                      color="primary"
+                      count={pspListPage.page_info?.total_pages ?? 0}
+                      page={page + 1}
+                      onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                    />
+                  ) : (
+                    <></>
+                  ),
+                Toolbar: () => (
+                  <>
+                    <GridToolbarQuickFilter channelId={channelId}></GridToolbarQuickFilter>
+                  </>
+                ),
+                NoRowsOverlay: () => (
+                  <>
+                    <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                      <Typography variant="body2">
+                        {loading ? (
+                          <Trans i18nKey="channelPSPList.table.loading">Loading...</Trans>
+                        ) : (
+                          <Trans i18nKey="channelPSPList.noResults">No results</Trans>
+                        )}
+                      </Typography>
+                    </Box>
+                  </>
+                ),
+                NoResultsOverlay: () => (
+                  <>
+                    <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
+                      <Typography variant="body2">
+                        {loading ? (
+                          <Trans i18nKey="channelPSPList.table.loading">Loading...</Trans>
+                        ) : (
+                          <Trans i18nKey="channelPSPList.noSearchResults">No search results</Trans>
+                        )}
+                      </Typography>
+                    </Box>
+                  </>
+                ),
+              }}
+              componentsProps={{
+                toolbar: {
+                  quickFilterProps: { debounceMs: 500 },
+                },
+              }}
+              getRowId={(r) => r.psp_code}
+              headerHeight={headerHeight}
+              hideFooterSelectedRowCount={true}
+              paginationMode="server"
+              rowsPerPageOptions={[3]}
+              onPageChange={(newPage) => setPage(newPage)}
+              pageSize={3}
+              pagination
+              rowHeight={rowHeight}
+              rows={pspListPage.payment_service_providers ?? []}
+              rowCount={rowCountState}
+              sortingMode="server"
+            />
+          </>
         )}
       </Box>
       <SessionModal

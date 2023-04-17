@@ -8,7 +8,7 @@ import { useHistory, useParams } from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ROUTES from '../../../routes';
-import { mockedChannelPSPs } from '../../../services/__mocks__/channelService';
+// import { mockedChannelPSPs } from '../../../services/__mocks__/channelService';
 import ChannelPSPTable from './ChannelPSPTable';
 
 const ChannelPSPListPage = () => {
@@ -27,18 +27,19 @@ const ChannelPSPListPage = () => {
 
   const downloadCSV = () => {
     // TODO: fetch current PSP associated with channel
-    const rows = mockedChannelPSPs.channels;
-    const headers = ['Nome PSP', 'Referente'];
+    /*
+    const rows = mockedChannelPSPs.payment_service_providers ?? [];
+    const headers = ['Nome PSP', 'PSP Code'];
 
     const csvContent = `${headers.join(';')}\n${rows
-      .map((e) => [e.channel_code, e.broker_description].join(';'))
+      .map((e) => [e.business_name, e.psp_code].join(';'))
       .join('\n')}`;
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('href', url);
     a.setAttribute('download', `PSP-channel-${channelId}.csv`);
-    a.click();
+    a.click(); */
   };
 
   return (

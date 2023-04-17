@@ -5,6 +5,7 @@ import {
   Redirect_protocolEnum,
 } from '../../api/generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from '../../api/generated/portal/ChannelDetailsResource';
+import { ChannelPspListResource } from '../../api/generated/portal/ChannelPspListResource';
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
 import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypes } from '../../api/generated/portal/PspChannelPaymentTypes';
@@ -140,24 +141,72 @@ export const mockedChannelDetail = (channel_code: string): ChannelDetailsResourc
   timeout_c: 3000,
 });
 
-export const mockedChannelPSPs: ChannelsResource = {
-  channels: [
+export const mockedChannelPSPs: ChannelPspListResource = {
+  payment_service_providers: [
     {
-      channel_code: 'Intesa Sanpaolo S.P.A.',
+      psp_code: '14847241001',
+      business_name: 'PSP S.p.A.',
       enabled: true,
-      broker_description: 'Paolo San',
+      payment_types: ['MYBK'],
     },
     {
-      channel_code: 'Sogei S.P.A.',
+      psp_code: '14847241002',
+      business_name: 'PSP2 S.p.A.',
       enabled: true,
-      broker_description: 'Gei So',
+      payment_types: ['PPAY'],
+    },
+    {
+      psp_code: '14847241003',
+      business_name: 'PSP3 S.p.A.',
+      enabled: false,
+      payment_types: ['STP'],
+    },
+    {
+      psp_code: '14847241004',
+      business_name: 'PSP4 S.p.A.',
+      enabled: false,
+      payment_types: ['STP'],
+    },
+    {
+      psp_code: '14847241005',
+      business_name: 'PSP5 S.p.A.',
+      enabled: true,
+      payment_types: ['STP'],
     },
   ],
   page_info: {
     page: 0,
-    limit: 50,
-    items_found: 50,
-    total_pages: 8,
+    limit: 5,
+    items_found: 8,
+    total_pages: 2,
+  },
+};
+export const mockedChannelPSPsPage2: ChannelPspListResource = {
+  payment_service_providers: [
+    {
+      psp_code: '14847241006',
+      business_name: 'PSP6 S.p.A.',
+      enabled: true,
+      payment_types: ['MYBK'],
+    },
+    {
+      psp_code: '14847241007',
+      business_name: 'PSP7 S.p.A.',
+      enabled: true,
+      payment_types: ['PPAY'],
+    },
+    {
+      psp_code: '14847241008',
+      business_name: 'PSP8 S.p.A.',
+      enabled: true,
+      payment_types: ['STP'],
+    },
+  ],
+  page_info: {
+    page: 1,
+    limit: 5,
+    items_found: 8,
+    total_pages: 2,
   },
 };
 
@@ -225,8 +274,8 @@ export const updateChannel = (_channel: ChannelOnCreation): Promise<ChannelDetai
 export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));
 
-export const getChannelPSPsMocked = (_page: number): Promise<ChannelsResource> =>
-  new Promise((resolve) => resolve(mockedChannelPSPs));
+export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
+  new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
 export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
   new Promise((resolve) => resolve(mockedChannelAvailablePSP));

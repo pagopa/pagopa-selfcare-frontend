@@ -6,7 +6,7 @@ import {
   showChannelCode,
   showCustomHeader,
   showStatus,
-} from '../list/ChannelsTableColumns';
+} from '../ChannelsTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

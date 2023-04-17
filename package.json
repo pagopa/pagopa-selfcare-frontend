@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
-    "@pagopa/openapi-codegen-ts": "^12.2.1",
+    "@pagopa/openapi-codegen-ts": "^13.0.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.0.4",

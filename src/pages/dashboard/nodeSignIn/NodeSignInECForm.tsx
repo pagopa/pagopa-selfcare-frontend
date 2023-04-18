@@ -111,7 +111,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
           address: { ...formik.values },
           businessName: selectedParty?.description ?? '',
           creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-          enabled: false,
+          enabled: true,
           pspPayment: false,
           reportingFtp: false,
           reportingZip: false,

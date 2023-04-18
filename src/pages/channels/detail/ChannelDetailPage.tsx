@@ -32,6 +32,7 @@ const ChannelDetailPage = () => {
   const { channelId } = useParams<{ channelId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const isOperator = selectedParty?.roles[0].roleKey === 'operator';
+
   const goBack = () => history.push(ROUTES.CHANNELS);
 
   useEffect(() => {

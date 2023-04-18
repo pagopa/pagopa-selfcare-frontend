@@ -147,7 +147,7 @@ export const mockedChannelDetail = (channel_code: string): ChannelDetailsResourc
   card_chart: true,
   channel_code,
   digital_stamp_brand: true,
-  enabled: true,
+  enabled: false,
   flag_io: true,
   ip: 'ip',
   new_fault_code: true,

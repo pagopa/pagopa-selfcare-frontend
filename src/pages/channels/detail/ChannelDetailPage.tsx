@@ -1,7 +1,6 @@
 import { ArrowBack, ManageAccounts } from '@mui/icons-material';
-import { Box, Chip, Divider, Grid } from '@mui/material';
+import { Alert, Box, Chip, Divider, Grid } from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -12,12 +11,15 @@ import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { FormAction } from '../../../model/Channel';
-
 import ROUTES from '../../../routes';
 import { getChannelDetail } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
+import ChannelDetailValidation from '../channelDetailValidation/ChannelDetailValidation';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import DetailButtons from './components/DetailButtons';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const ChannelDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -25,6 +27,7 @@ const ChannelDetailPage = () => {
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   const goBack = () => history.push(ROUTES.CHANNELS);
 
@@ -80,45 +83,19 @@ const ChannelDetailPage = () => {
               {/* {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={600}>
                 dd/mm/yyyy
-  </Typography> */}
+              </Typography> */}
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {/*
-              <Button
-                color={'error'}
-                style={{ color: theme.palette.error.dark, borderColor: theme.palette.error.dark }}
-                variant="outlined"
-                onClick={goBack}
-              >
-                {t('channelDetailPage.disable')}
-              </Button>
-              */}
-              <Button
-                component={Link}
-                to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
-                  channelId,
-                  actionId: FormAction.Duplicate,
-                })}
-                color="primary"
-                variant="outlined"
-                onClick={goBack}
-              >
-                {t('channelDetailPage.duplicate')}
-              </Button>
-              <Button
-                component={Link}
-                to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
-                  channelId,
-                  actionId: FormAction.Edit,
-                })}
-                variant="contained"
-              >
-                {t('channelDetailPage.edit')}
-              </Button>
-            </Stack>
+            <DetailButtons channelDetails={channelDetail} goBack={goBack} />
           </Grid>
+          {selectedParty?.roles[0].roleKey === 'operator' && !channelDetail?.enabled ? (
+            <Grid item xs={12} sx={{ mb: 5 }}>
+              <Alert severity="warning" variant="outlined">
+                <Typography sx={{ py: 2 }}>{t('channelDetailPage.alertWarning')}</Typography>
+              </Alert>
+            </Grid>
+          ) : null}
         </Grid>
 
         <Paper
@@ -306,6 +283,10 @@ const ChannelDetailPage = () => {
           </Box>
         </Paper>
       </Grid>
+
+      {selectedParty?.roles[0].roleKey === 'operator' ? (
+        <ChannelDetailValidation channelDetails={channelDetail} />
+      ) : null}
     </Grid>
   ) : (
     <></>

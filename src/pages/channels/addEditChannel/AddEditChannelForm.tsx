@@ -37,11 +37,14 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
+  Payment_modelEnum,
+  ProtocolEnum,
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
+import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
 type Props = {
   goBack: () => void;
@@ -51,98 +54,187 @@ type Props = {
   formAction: string;
 };
 
-const initialFormData = (
-  channelCode: string,
-  channelDetail?: ChannelDetailsDto,
-  selectedParty?: Party
-) =>
-  channelDetail
-    ? {
-        pspBrokerCode: channelDetail.broker_psp_code ?? '',
-        businessName: channelDetail.broker_description ?? '',
-        idChannel: channelCode,
-        redirectProtocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
-        redirectPort: channelDetail.redirect_port ?? undefined,
-        redirectIp: channelDetail.redirect_ip ?? '',
-        redirectService: channelDetail.redirect_path ?? '',
-        redirectParameters: channelDetail.redirect_query_string ?? '',
-        targetAddress: channelDetail.target_host ?? '',
-        targetService: channelDetail.target_path ?? '',
-        targetPort: channelDetail.target_port,
-        paymentType:
-          channelDetail.payment_types && channelDetail.payment_types[0]
-            ? channelDetail.payment_types[0]
-            : '',
-      }
-    : {
-        pspBrokerCode: selectedParty?.fiscalCode ?? '',
-        businessName: selectedParty?.description ?? '',
-        idChannel: channelCode,
-        redirectProtocol: Redirect_protocolEnum.HTTPS,
-        redirectIp: '',
-        redirectService: '',
-        redirectParameters: '',
-        targetAddress: '',
-        targetService: '',
-        targetPort: undefined,
-        paymentType: '',
-      };
-
-const validatePortRange = (redirectPort: number | undefined) => {
-  if (redirectPort) {
-    return redirectPort > 0 && redirectPort < 65556 ? false : true;
-  }
-  return false;
-};
-
-const inputGroupStyle = {
-  borderRadius: 1,
-  border: 1,
-  borderColor: theme.palette.divider,
-  p: 3,
-  mb: 3,
-};
-
-const validate = (values: Partial<ChannelOnCreation>) =>
-  Object.fromEntries(
-    Object.entries({
-      pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
-      businessName: !values.businessName ? 'Campo obbligatorio' : undefined,
-      idChannel: !values.idChannel ? 'Campo obbligatorio' : undefined,
-      redirectPort: !values.redirectPort
-        ? 'Campo obbligatorio'
-        : validatePortRange(values.redirectPort)
-        ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
-        : undefined,
-      redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-      redirectService: !values.redirectService ? 'Campo obbligatorio' : undefined,
-      redirectParameters: !values.redirectParameters ? 'Campo obbligatorio' : undefined,
-      targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
-      targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
-      targetPort: !values.targetPort
-        ? 'Campo obbligatorio'
-        : validatePortRange(values.targetPort)
-        ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
-        : undefined,
-      paymentType: !values.paymentType ? 'Campo obbligatorio' : undefined,
-    }).filter(([_key, value]) => value)
-  );
-
-function AddEditChannelForm({
+const AddEditChannelForm = ({
   goBack,
   selectedParty,
   channelCode,
   channelDetail,
   formAction,
-}: Props) {
+}: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
 
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
-
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+
+  const initialFormData = (
+    channelCode: string,
+    channelDetail?: ChannelDetailsDto,
+    selectedParty?: Party
+  ) =>
+    channelDetail
+      ? {
+          pspBrokerCode: channelDetail.broker_psp_code ?? '',
+          businessName: channelDetail.broker_description ?? '',
+          idChannel: channelCode,
+          redirectProtocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
+          redirectPort: channelDetail.redirect_port ?? undefined,
+          redirectIp: channelDetail.redirect_ip ?? '',
+          redirectService: channelDetail.redirect_path ?? '',
+          redirectParameters: channelDetail.redirect_query_string ?? '',
+          targetAddress: channelDetail.target_host ?? '',
+          targetService: channelDetail.target_path ?? '',
+          targetPort: channelDetail.target_port,
+          paymentType:
+            channelDetail.payment_types && channelDetail.payment_types[0]
+              ? channelDetail.payment_types[0]
+              : '',
+          primitiveVersion: channelDetail.primitive_version ?? '',
+          password: channelDetail.password ?? '',
+          new_password: channelDetail.new_password ?? '',
+          protocol: channelDetail.protocol ?? undefined,
+          ip: channelDetail.ip ?? '',
+          port: channelDetail.port ?? 0,
+          service: channelDetail.service ?? '',
+          npm_service: channelDetail.npm_service ?? '',
+          proxy_host: channelDetail.proxy_host ?? '',
+          proxy_port: channelDetail.proxy_port ?? 0,
+          payment_model: channelDetail.payment_model ?? undefined,
+          thread_number: channelDetail.thread_number ?? 0,
+          timeout_a: channelDetail.timeout_a ?? 0,
+          timeout_b: channelDetail.timeout_b ?? 0,
+          timeout_c: channelDetail.timeout_c ?? 0,
+          psp_notify_payment: false,
+          rt_push: channelDetail.rt_push ?? false,
+          rpt_carousel: false,
+          recovery: channelDetail.recovery ?? false,
+          digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
+          on_us: channelDetail.on_us ?? false,
+        }
+      : {
+          pspBrokerCode: selectedParty?.fiscalCode ?? '',
+          businessName: selectedParty?.description ?? '',
+          idChannel: channelCode,
+          redirectProtocol: Redirect_protocolEnum.HTTPS,
+          redirectIp: '',
+          redirectService: '',
+          redirectParameters: '',
+          targetAddress: '',
+          targetService: '',
+          targetPort: undefined,
+          paymentType: '',
+          primitiveVersion: '',
+          password: '',
+          new_password: '',
+          protocol: ProtocolEnum.HTTPS,
+          ip: '',
+          port: 0,
+          service: '',
+          npm_service: '',
+          proxy_host: '',
+          proxy_port: 0,
+          payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,
+          thread_number: 0,
+          timeout_a: 0,
+          timeout_b: 0,
+          timeout_c: 0,
+          psp_notify_payment: false,
+          rt_push: false,
+          rpt_carousel: false,
+          recovery: false,
+          digital_stamp_brand: false,
+          on_us: false,
+        };
+
+  const validatePortRange = (redirectPort: number | undefined) => {
+    if (redirectPort) {
+      return redirectPort > 0 && redirectPort < 65556 ? false : true;
+    }
+    return false;
+  };
+
+  const inputGroupStyle = {
+    borderRadius: 1,
+    border: 1,
+    borderColor: theme.palette.divider,
+    p: 3,
+    mb: 3,
+  };
+
+  const validate = (values: Partial<ChannelOnCreation>) => {
+    if (selectedParty.roles[0].roleKey === 'operator') {
+      Object.fromEntries(
+        Object.entries({
+          pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
+          businessName: !values.businessName ? 'Campo obbligatorio' : undefined,
+          idChannel: !values.idChannel ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.redirectPort)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
+          redirectService: !values.redirectService ? 'Campo obbligatorio' : undefined,
+          redirectParameters: !values.redirectParameters ? 'Campo obbligatorio' : undefined,
+          targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
+          targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
+          targetPort: !values.targetPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPort)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          paymentType: !values.paymentType ? 'Campo obbligatorio' : undefined,
+          primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
+          password: !values.password ? 'Campo obbligatorio' : undefined,
+          new_password: !values.new_password ? 'Campo obbligatorio' : undefined,
+          ip: !values.ip ? 'Campo obbligatorio' : undefined,
+          port: !values.port
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.port)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          service: '',
+          npm_service: '',
+          proxy_host: !values.proxy_host ? 'Campo obbligatorio' : undefined,
+          proxy_port: !values.proxy_port
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.proxy_port)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          thread_number: !values.thread_number ? 'Campo obbligatorio' : undefined,
+          timeout_a: !values.timeout_a ? 'Campo obbligatorio' : undefined,
+          timeout_b: !values.timeout_b ? 'Campo obbligatorio' : undefined,
+          timeout_c: !values.timeout_c ? 'Campo obbligatorio' : undefined,
+        }).filter(([_key, value]) => value)
+      );
+    } else {
+      Object.fromEntries(
+        Object.entries({
+          pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
+          businessName: !values.businessName ? 'Campo obbligatorio' : undefined,
+          idChannel: !values.idChannel ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.redirectPort)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
+          redirectService: !values.redirectService ? 'Campo obbligatorio' : undefined,
+          redirectParameters: !values.redirectParameters ? 'Campo obbligatorio' : undefined,
+          targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
+          targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
+          targetPort: !values.targetPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPort)
+            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : undefined,
+          paymentType: !values.paymentType ? 'Campo obbligatorio' : undefined,
+        }).filter(([_key, value]) => value)
+      );
+    }
+  };
 
   const formik = useFormik<ChannelOnCreation>({
     initialValues: initialFormData(channelCode, channelDetail, selectedParty),
@@ -210,21 +302,53 @@ function AddEditChannelForm({
       });
   }, []);
 
-  const enebledSubmit = (values: ChannelOnCreation) =>
-    !(
-      values.businessName !== '' &&
-      values.idChannel !== '' &&
-      values.pspBrokerCode !== '' &&
-      values.redirectIp !== '' &&
-      values.redirectParameters !== '' &&
-      values.redirectPort?.toString() !== '' &&
-      values.redirectProtocol !== undefined &&
-      values.redirectService !== '' &&
-      values.targetAddress !== '' &&
-      values.targetPort?.toString() !== '' &&
-      values.targetService !== '' &&
-      values.paymentType !== ''
-    );
+  const enebledSubmit = (values: ChannelOnCreation) => {
+    if (selectedParty.roles[0].roleKey === 'operator') {
+      return !(
+        values.businessName !== '' &&
+        values.idChannel !== '' &&
+        values.pspBrokerCode !== '' &&
+        values.redirectIp !== '' &&
+        values.redirectParameters !== '' &&
+        values.redirectPort?.toString() !== '' &&
+        values.redirectProtocol !== undefined &&
+        values.redirectService !== '' &&
+        values.targetAddress !== '' &&
+        values.targetPort?.toString() !== '' &&
+        values.targetService !== '' &&
+        values.paymentType !== '' &&
+        values.primitiveVersion !== '' &&
+        values.password !== '' &&
+        values.new_password !== '' &&
+        values.protocol !== undefined &&
+        values.ip !== '' &&
+        values.service !== '' &&
+        values.npm_service !== '' &&
+        values.proxy_host !== '' &&
+        values.proxy_port?.toString() !== '' &&
+        values.payment_model !== undefined &&
+        values.thread_number?.toString() !== '' &&
+        values.timeout_a?.toString() !== '' &&
+        values.timeout_b?.toString() !== '' &&
+        values.timeout_c?.toString() !== ''
+      );
+    } else {
+      return !(
+        values.businessName !== '' &&
+        values.idChannel !== '' &&
+        values.pspBrokerCode !== '' &&
+        values.redirectIp !== '' &&
+        values.redirectParameters !== '' &&
+        values.redirectPort?.toString() !== '' &&
+        values.redirectProtocol !== undefined &&
+        values.redirectService !== '' &&
+        values.targetAddress !== '' &&
+        values.targetPort?.toString() !== '' &&
+        values.targetService !== '' &&
+        values.paymentType !== ''
+      );
+    }
+  };
 
   const openConfrimModal = () => {
     if (formik.isValid) {
@@ -254,9 +378,18 @@ function AddEditChannelForm({
             p: 3,
           }}
         >
-          <Typography variant="h6" mb={3}>
-            Configurazione del canale
-          </Typography>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h6" mb={1}>
+                Configurazione del canale
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2" mb={3}>
+                Informazioni a carico dell’ente.
+              </Typography>
+            </Grid>
+          </Grid>
 
           <Box>
             <Box sx={inputGroupStyle}>
@@ -533,6 +666,15 @@ function AddEditChannelForm({
           </Box>
         </Paper>
 
+        {selectedParty.roles[0].roleKey === 'operator' ? (
+          <AddEditChannelValidationForm
+            values={formik.values}
+            handleChange={formik.handleChange}
+            errors={formik.errors}
+            touched={formik.touched}
+          />
+        ) : null}
+
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>
             <Button color="primary" variant="outlined" onClick={goBack}>
@@ -571,6 +713,6 @@ function AddEditChannelForm({
       />
     </>
   );
-}
+};
 
 export default AddEditChannelForm;

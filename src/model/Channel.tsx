@@ -1,4 +1,8 @@
-import { Redirect_protocolEnum } from '../api/generated/portal/ChannelDetailsDto';
+import {
+  Payment_modelEnum,
+  ProtocolEnum,
+  Redirect_protocolEnum,
+} from '../api/generated/portal/ChannelDetailsDto';
 
 export type ChannelStatus = 'ACTIVE' | 'REVISION' | 'NEEDCORRECTION';
 
@@ -21,6 +25,27 @@ export type ChannelOnCreation = {
   targetService: string;
   targetPort: number | undefined;
   paymentType: string;
+  primitiveVersion: string;
+  password: string;
+  new_password: string;
+  protocol: ProtocolEnum | undefined;
+  ip: string;
+  port: number | undefined;
+  service: string;
+  npm_service: string;
+  proxy_host: string;
+  proxy_port: number | undefined;
+  payment_model: Payment_modelEnum | undefined;
+  thread_number: number | undefined;
+  timeout_a: number | undefined;
+  timeout_b: number | undefined;
+  timeout_c: number | undefined;
+  psp_notify_payment: boolean;
+  rt_push: boolean;
+  rpt_carousel: boolean;
+  recovery: boolean;
+  digital_stamp_brand: boolean;
+  on_us: boolean;
 };
 
 export type Channel = {

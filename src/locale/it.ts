@@ -180,6 +180,11 @@ export default {
     },
   },
   addEditChannelPage: {
+    config: {
+      titleConfiguration: 'Configura canale',
+      subtitleConfiguration:
+        'Completa le informazioni a carico di PagoPA per completare la configurazione.',
+    },
     create: {
       title: 'Crea un nuovo canale',
       subtitle: 'Completa i campi',
@@ -226,6 +231,15 @@ export default {
       errorMessagePaymentTypesDesc: 'Errore durante la ricezione dei metodi di pagamento',
       errorMessageChannelDetailsDesc: 'Errore durante la ricezione dei dettagli del canale',
       errorMessageChannelCodeTypesDesc: 'Errore durante la generazione del Codice Canale',
+      validationForm: {
+        title: 'Informazione da completare',
+        subtitle: 'Informazioni a carico di PagoPA.',
+        fields: {
+          primitiveVersion: 'Versioni primitive',
+          password: 'Password',
+          newPassword: 'Nuova password',
+        },
+      },
     },
     confirmModal: {
       title: 'Invio per la revisione',

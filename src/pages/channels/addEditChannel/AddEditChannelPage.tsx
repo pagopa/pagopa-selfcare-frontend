@@ -102,13 +102,23 @@ const AddEditChannelPage = () => {
               </>
             )}
             <Typography color={'#A2ADB8'}>
-              {t(`addEditChannelPage.${formAction}.breadcrumb`)}
+              {selectedParty?.roles[0].roleKey === 'operator'
+                ? t(`addEditChannelPage.config.titleConfiguration`)
+                : t(`addEditChannelPage.${formAction}.breadcrumb`)}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t(`addEditChannelPage.${formAction}.title`)}
-          subTitle={t(`addEditChannelPage.${formAction}.subtitle`)}
+          title={
+            selectedParty?.roles[0].roleKey === 'operator'
+              ? t(`addEditChannelPage.config.titleConfiguration`)
+              : t(`addEditChannelPage.${formAction}.title`)
+          }
+          subTitle={
+            selectedParty?.roles[0].roleKey === 'operator'
+              ? t(`addEditChannelPage.config.subtitleConfiguration`)
+              : t(`addEditChannelPage.${formAction}.subtitle`)
+          }
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}

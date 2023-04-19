@@ -8,12 +8,11 @@ import { Badge as BadgeIcon } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { createECDirect } from '../../../services/nodeService';
+import { createECDirect, updateCreditorInstitution } from '../../../services/nodeService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
 import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { updateECDirect } from '../../../services/__mocks__/nodeService';
 
 type Props = {
   goBack: () => void;
@@ -78,32 +77,34 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   const submit = async () => {
     setLoading(true);
     if (ecNodeData) {
-      try {
-        await updateECDirect({
-          address: { ...formik.values },
-          businessName: selectedParty?.description ?? '',
-          creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-          enabled: true,
-          pspPayment: false,
-          reportingFtp: false,
-          reportingZip: false,
-        });
-        history.push(ROUTES.HOME, {
-          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
-        });
-      } catch (reason) {
-        addError({
-          id: 'NODE_SIGNIN_EC_UPDATE',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while updating Ec data at the node`,
-          toNotify: true,
-          displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
-          displayableDescription: t('nodeSignInPage.form.ecUpdateErrorMessageDesc'),
-          component: 'Toast',
-        });
-      } finally {
-        setLoading(false);
+      if (selectedParty) {
+        try {
+          await updateCreditorInstitution(selectedParty.fiscalCode, {
+            address: { ...formik.values },
+            businessName: selectedParty?.description ?? '',
+            creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+            enabled: true,
+            pspPayment: false,
+            reportingFtp: false,
+            reportingZip: false,
+          });
+          history.push(ROUTES.HOME, {
+            alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+          });
+        } catch (reason) {
+          addError({
+            id: 'NODE_SIGNIN_EC_UPDATE',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while updating Ec data at the node`,
+            toNotify: true,
+            displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
+            displayableDescription: t('nodeSignInPage.form.ecUpdateErrorMessageDesc'),
+            component: 'Toast',
+          });
+        } finally {
+          setLoading(false);
+        }
       }
     } else {
       try {

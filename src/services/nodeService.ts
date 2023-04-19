@@ -1,6 +1,7 @@
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
@@ -10,6 +11,7 @@ import {
   getPSPDetails as getPSPDetailsMocked,
   createECDirect as createECDirectMocked,
   getECDetails as getCreditorInstitutionDetailsMocked,
+  updateECDirect,
 } from './__mocks__/nodeService';
 
 export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
@@ -47,5 +49,16 @@ export const getCreditorInstitutionDetails = (
     return getCreditorInstitutionDetailsMocked(ecCode);
   } else {
     return PortalApi.getCreditorInstitutionDetails(ecCode).then((resources) => resources);
+  }
+};
+
+export const updateCreditorInstitution = (
+  ecCode: string,
+  ec: UpdateCreditorInstitutionDto
+): Promise<CreditorInstitutionDetailsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateECDirect(ecCode, ec);
+  } else {
+    return PortalApi.updateCreditorInstitution(ecCode, ec).then((resources) => resources);
   }
 };

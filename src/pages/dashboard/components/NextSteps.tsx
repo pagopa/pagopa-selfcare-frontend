@@ -28,7 +28,11 @@ const NextSteps = ({ selectedParty, pspNodeData, ecNodeData }: Props) => {
         <Alert severity="warning">
           {t(
             `dashboardPage.nextStep.${
-              isAdmin && isPSPRegistered ? 'generateApiKeysStepAlert' : 'signInStepAlert'
+              isAdmin && isPSPRegistered
+                ? 'generateApiKeysStepAlertPSP'
+                : isAdmin && isEcRegistered
+                ? 'generateApiKeyStepAlertEC'
+                : 'signInStepAlert'
             }`
           )}
         </Alert>

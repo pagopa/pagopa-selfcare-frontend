@@ -79,6 +79,7 @@ export const getECDetails = (_ecCode: string): Promise<CreditorInstitutionDetail
   new Promise((resolve) => resolve(ecDirect));
 
 export const updateECDirect = (
+  _ecCode: string,
   _ec: UpdateCreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve(ecDirectUpdated));

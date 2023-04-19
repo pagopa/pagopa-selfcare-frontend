@@ -48,9 +48,11 @@ export default {
       title: 'E ora?',
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
-      generateApiKeysStepAlert:
-        'Genera le APIKey di connessione al  Nodo per abilitare la creazione dei canali.',
-      generateApiKeysCTA: 'Genera APIKey',
+      generateApiKeysStepAlertPSP:
+        'Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.',
+      generateApiKeyStepAlertEC:
+        'Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.',
+      generateApiKeysCTA: 'Genera API Key',
     },
     operativeTable: {
       title: 'Tavolo operativo',
@@ -154,7 +156,7 @@ export default {
       continueButton: 'Genera API Key',
       successMessage: 'Pacchetto API Key generato correttamente.',
       errorMessageTitle: 'Errore',
-      errorMessageDesc: 'Errore nella generazione delle ApiKey',
+      errorMessageDesc: 'Errore nella generazione delle API Key',
     },
     products: {
       NODOAUTH: 'Connessione con nodo',

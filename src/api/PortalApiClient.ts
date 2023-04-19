@@ -30,6 +30,7 @@ import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
+import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -314,6 +315,25 @@ export const PortalApi = {
     ecCode: string
   ): Promise<CreditorInstitutionDetailsResource> => {
     const result = await apiConfigClient.getCreditorInstitutionDetailsUsingGET({ ecCode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateCreditorInstitution: async (
+    ecCode: string,
+    ec: UpdateCreditorInstitutionDto
+  ): Promise<CreditorInstitutionDetailsResource> => {
+    const result = await apiConfigClient.updateCreditorInstitutionDetailsUsingPUT({
+      ecCode,
+      body: {
+        address: ec.address,
+        businessName: ec.businessName,
+        creditorInstitutionCode: ec.creditorInstitutionCode,
+        enabled: ec.enabled,
+        pspPayment: ec.pspPayment,
+        reportingFtp: ec.reportingFtp,
+        reportingZip: ec.reportingZip,
+      },
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

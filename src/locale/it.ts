@@ -49,9 +49,9 @@ export default {
       signInStepAlert: 'Completa la registrazione sul Nodo inserendo i dati mancanti.',
       signInCTA: 'Completa registrazione',
       generateApiKeysStepAlertPSP:
-        'Genera le API Key di connessione al  Nodo per abilitare la creazione dei canali.',
+        'Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.',
       generateApiKeyStepAlertEC:
-        'Genera le API Key di connessione al  Nodo per abilitare la creazione delle stazioni.',
+        'Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.',
       generateApiKeysCTA: 'Genera API Key',
     },
     operativeTable: {

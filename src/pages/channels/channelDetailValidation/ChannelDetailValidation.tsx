@@ -178,7 +178,7 @@ const ChannelDetailValidation = ({ channelDetails }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'-'}
+                    {channelDetails?.payment_model ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -188,7 +188,7 @@ const ChannelDetailValidation = ({ channelDetails }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelDetails?.payment_model ?? '-'}
+                    {'-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

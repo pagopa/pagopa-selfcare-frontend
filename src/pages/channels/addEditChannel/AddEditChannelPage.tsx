@@ -97,9 +97,7 @@ const AddEditChannelPage = () => {
           <Breadcrumbs>
             <Typography>{t('general.Channels')}</Typography>
             {formAction === FormAction.Edit && (
-              <>
-                <Typography color={'#A2ADB8'}>{channelId}</Typography>
-              </>
+              <Typography color={'#A2ADB8'}>{channelId}</Typography>
             )}
             <Typography color={'#A2ADB8'}>
               {selectedParty?.roles[0].roleKey === 'operator'

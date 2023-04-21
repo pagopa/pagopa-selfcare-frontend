@@ -17,12 +17,13 @@ import {
 } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import { Trans, useTranslation } from 'react-i18next';
-import { theme } from '@pagopa/mui-italia';
+import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   Badge as BadgeIcon,
   MenuBook as MenuBookIcon,
   CreditCard as CreditCardIcon,
+  RemoveCircleOutline,
 } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
@@ -37,7 +38,6 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
-  Payment_modelEnum,
   ProtocolEnum,
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
@@ -68,6 +68,9 @@ const AddEditChannelForm = ({
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+  const [multiPaymentMethod, setMultiPaymentMethod] = useState<Array<PaymentTypesResource>>([]);
+  const readOnlyPaymentType: Readonly<Array<string>> = [''];
+  const redirectProtocol = ['HTTP', 'HTTPS'];
 
   const initialFormData = (
     channelCode: string,
@@ -89,12 +92,12 @@ const AddEditChannelForm = ({
           targetPort: channelDetail.target_port,
           paymentType:
             channelDetail.payment_types && channelDetail.payment_types[0]
-              ? channelDetail.payment_types[0]
-              : '',
+              ? channelDetail.payment_types
+              : readOnlyPaymentType,
           primitiveVersion: channelDetail.primitive_version ?? '',
           password: channelDetail.password ?? '',
           new_password: channelDetail.new_password ?? '',
-          protocol: channelDetail.protocol ?? undefined,
+          protocol: channelDetail.protocol ?? ProtocolEnum.HTTPS,
           ip: channelDetail.ip ?? '',
           port: channelDetail.port ?? 0,
           service: channelDetail.service ?? '',
@@ -102,6 +105,7 @@ const AddEditChannelForm = ({
           proxy_host: channelDetail.proxy_host ?? '',
           proxy_port: channelDetail.proxy_port ?? 0,
           payment_model: channelDetail.payment_model ?? undefined,
+          serv_plugin: channelDetail.serv_plugin ?? '',
           thread_number: channelDetail.thread_number ?? 0,
           timeout_a: channelDetail.timeout_a ?? 0,
           timeout_b: channelDetail.timeout_b ?? 0,
@@ -124,18 +128,19 @@ const AddEditChannelForm = ({
           targetAddress: '',
           targetService: '',
           targetPort: undefined,
-          paymentType: '',
+          paymentType: readOnlyPaymentType,
           primitiveVersion: '',
           password: '',
           new_password: '',
-          protocol: ProtocolEnum.HTTPS,
+          protocol: undefined,
           ip: '',
           port: 0,
           service: '',
           npm_service: '',
           proxy_host: '',
           proxy_port: 0,
-          payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,
+          payment_model: undefined,
+          serv_plugin: '',
           thread_number: 0,
           timeout_a: 0,
           timeout_b: 0,
@@ -189,6 +194,7 @@ const AddEditChannelForm = ({
           primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
           password: !values.password ? 'Campo obbligatorio' : undefined,
           new_password: !values.new_password ? 'Campo obbligatorio' : undefined,
+          protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
           ip: !values.ip ? 'Campo obbligatorio' : undefined,
           port: !values.port
             ? 'Campo obbligatorio'
@@ -203,6 +209,7 @@ const AddEditChannelForm = ({
             : validatePortRange(values.proxy_port)
             ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
             : undefined,
+          payment_model: !values.payment_model ? 'Campo obbligatorio' : undefined,
           thread_number: !values.thread_number ? 'Campo obbligatorio' : undefined,
           timeout_a: !values.timeout_a ? 'Campo obbligatorio' : undefined,
           timeout_b: !values.timeout_b ? 'Campo obbligatorio' : undefined,
@@ -245,6 +252,12 @@ const AddEditChannelForm = ({
     enableReinitialize: true,
   });
 
+  const updateChannelNewPaymentTypes = (values: ChannelOnCreation, setValues: any) => {
+    const newArr = multiPaymentMethod.map((e, i) => e.payment_types[i].payment_type);
+    const newPayments = formik.values.paymentType.concat(newArr);
+    return setValues({ ...values, paymentType: newPayments });
+  };
+
   const submit = async () => {
     setShowConfirmModal(false);
     setLoading(true);
@@ -255,12 +268,12 @@ const AddEditChannelForm = ({
 
         if (createResult) {
           await associatePSPtoChannel(formik.values.idChannel, formik.values.pspBrokerCode, {
-            payment_types: [formik.values.paymentType],
+            payment_types: formik.values.paymentType,
           });
         }
       }
       if (formAction === FormAction.Edit) {
-        await updateChannel(formik.values);
+        await updateChannel(updateChannelNewPaymentTypes(formik.values, formik.setValues));
       }
       history.push(ROUTES.CHANNELS, {
         alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
@@ -316,7 +329,7 @@ const AddEditChannelForm = ({
         values.targetAddress !== '' &&
         values.targetPort?.toString() !== '' &&
         values.targetService !== '' &&
-        values.paymentType !== '' &&
+        values.paymentType !== undefined &&
         values.primitiveVersion !== '' &&
         values.password !== '' &&
         values.new_password !== '' &&
@@ -330,7 +343,13 @@ const AddEditChannelForm = ({
         values.thread_number?.toString() !== '' &&
         values.timeout_a?.toString() !== '' &&
         values.timeout_b?.toString() !== '' &&
-        values.timeout_c?.toString() !== ''
+        values.timeout_c?.toString() !== '' &&
+        values.psp_notify_payment !== false &&
+        values.rt_push !== false &&
+        values.rpt_carousel !== false &&
+        values.recovery !== false &&
+        values.digital_stamp_brand !== false &&
+        values.on_us !== false
       );
     } else {
       return !(
@@ -345,7 +364,7 @@ const AddEditChannelForm = ({
         values.targetAddress !== '' &&
         values.targetPort?.toString() !== '' &&
         values.targetService !== '' &&
-        values.paymentType !== ''
+        values.paymentType !== undefined
       );
     }
   };
@@ -366,6 +385,24 @@ const AddEditChannelForm = ({
     if (e.target.value === '' || regex.test(e.target.value)) {
       formik.setFieldValue(field, e.target.value);
     }
+  };
+
+  const addPaymentMethod = () => {
+    const newPaymentType: PaymentTypesResource = {
+      payment_types: [{ description: '', payment_type: '' }],
+    };
+    const newArr = [...multiPaymentMethod, newPaymentType];
+    setMultiPaymentMethod(newArr);
+  };
+
+  const deletePaymentMethod = (i: number) => {
+    const indexValueToRemove = i;
+    const newArr = multiPaymentMethod.filter((e: any, i: number) => {
+      if (i !== indexValueToRemove) {
+        return e;
+      }
+    });
+    setMultiPaymentMethod(newArr);
   };
 
   return (
@@ -480,7 +517,7 @@ const AddEditChannelForm = ({
                         'data-testid': 'redirect-protocol-test',
                       }}
                     >
-                      {['HTTP', 'HTTPS'].map((p) => (
+                      {redirectProtocol.map((p) => (
                         <MenuItem key={p} value={p}>
                           {p}
                         </MenuItem>
@@ -645,8 +682,11 @@ const AddEditChannelForm = ({
                       label={t('addEditChannelPage.addForm.fields.paymentType')}
                       size="small"
                       disabled={formAction === FormAction.Edit ? true : false}
+                      defaultValue={['']}
                       value={formik.values.paymentType}
-                      onChange={formik.handleChange}
+                      onChange={() =>
+                        formik.setFieldValue('paymentType', formik.values.paymentType)
+                      }
                       error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                       inputProps={{
                         'data-testid': 'payment-type-test',
@@ -661,6 +701,71 @@ const AddEditChannelForm = ({
                     </Select>
                   </FormControl>
                 </Grid>
+                <Grid container spacing={2} mt={1} ml={1}>
+                  <Grid container item xs={6}>
+                    <ButtonNaked
+                      size="medium"
+                      component="button"
+                      onClick={() => addPaymentMethod()}
+                      sx={{ color: 'primary.main', mr: '20px' }}
+                      weight="default"
+                    >
+                      {t('addEditChannelPage.addForm.fields.addPayment')}
+                    </ButtonNaked>
+                  </Grid>
+                </Grid>
+
+                {multiPaymentMethod.map((_e, i) => (
+                  // const paymentTypeErrors =
+                  //   (formik.errors.paymentType?.length && formik.errors.paymentType[i]) || {};
+                  // const paymentTypeTouched =
+                  //   (formik.touched.paymentType?.length && formik.touched.paymentType[i]) || {};
+
+                  // return (
+                  <Grid container spacing={2} mt={1} key={i} ml={1}>
+                    <Grid container item xs={1} key={`remove${i}`} mt={1}>
+                      <RemoveCircleOutline
+                        color="error"
+                        sx={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => deletePaymentMethod(i)}
+                        id={`remove_PaymentMethod${i}`}
+                        data-testid="remove-payment-method"
+                      />
+                    </Grid>
+                    <Grid container item xs={6} key={`item${i}`}>
+                      <FormControl fullWidth key={`FormControl${i}`}>
+                        <InputLabel size="small" key={`InputLabel${i}_label`}>
+                          {t('addEditChannelPage.addForm.fields.paymentType')}
+                        </InputLabel>
+                        <Select
+                          id={`newPaymentType${i}_select`}
+                          labelId={`newPaymentType${i}_label`}
+                          name={`newPaymentType${i}_name`}
+                          label={t('addEditChannelPage.addForm.fields.paymentType')}
+                          size="small"
+                          value={formik.values.paymentType[i + 1]}
+                          onChange={() =>
+                            formik.setFieldValue(
+                              `newPaymentType${i}_name`,
+                              formik.values.paymentType[i + 1]
+                            )
+                          }
+                          // error={paymentTypeTouched && Boolean(paymentTypeErrors)}
+                        >
+                          {paymentOptions &&
+                            sortPaymentType(paymentOptions.payment_types).map((option: any) => (
+                              <MenuItem key={option.payment_type} value={option.payment_type}>
+                                {option.description}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  // );
+                ))}
               </Grid>
             </Box>
           </Box>
@@ -668,10 +773,8 @@ const AddEditChannelForm = ({
 
         {selectedParty.roles[0].roleKey === 'operator' ? (
           <AddEditChannelValidationForm
-            values={formik.values}
-            handleChange={formik.handleChange}
-            errors={formik.errors}
-            touched={formik.touched}
+            formik={formik}
+            handleChangeNumberOnly={handleChangeNumberOnly}
           />
         ) : null}
 

@@ -24,7 +24,7 @@ export type ChannelOnCreation = {
   targetAddress: string;
   targetService: string;
   targetPort: number | undefined;
-  paymentType: string;
+  paymentType: Readonly<Array<string>>;
   primitiveVersion: string;
   password: string;
   new_password: string;
@@ -36,6 +36,7 @@ export type ChannelOnCreation = {
   proxy_host: string;
   proxy_port: number | undefined;
   payment_model: Payment_modelEnum | undefined;
+  serv_plugin: string;
   thread_number: number | undefined;
   timeout_a: number | undefined;
   timeout_b: number | undefined;

@@ -40,7 +40,6 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
-  Payment_modelEnum,
   ProtocolEnum,
   Redirect_protocolEnum,
   StatusEnum,
@@ -252,12 +251,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           targetPort: channelDetail.target_port,
           paymentType:
             channelDetail.payment_types && channelDetail.payment_types[0]
-              ? channelDetail.payment_types[0]
-              : '',
+              ? channelDetail.payment_types
+              : readOnlyPaymentType,
           primitiveVersion: channelDetail.primitive_version ?? '',
           password: channelDetail.password ?? '',
           new_password: channelDetail.new_password ?? '',
-          protocol: channelDetail.protocol ?? undefined,
+          protocol: channelDetail.protocol ?? ProtocolEnum.HTTPS,
           ip: channelDetail.ip ?? '',
           port: channelDetail.port ?? 0,
           service: channelDetail.service ?? '',
@@ -265,6 +264,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           proxy_host: channelDetail.proxy_host ?? '',
           proxy_port: channelDetail.proxy_port ?? 0,
           payment_model: channelDetail.payment_model ?? undefined,
+          serv_plugin: channelDetail.serv_plugin ?? '',
           thread_number: channelDetail.thread_number ?? 0,
           timeout_a: channelDetail.timeout_a ?? 0,
           timeout_b: channelDetail.timeout_b ?? 0,
@@ -287,18 +287,19 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           targetAddress: '',
           targetService: '',
           targetPort: undefined,
-          paymentType: '',
+          paymentType: readOnlyPaymentType,
           primitiveVersion: '',
           password: '',
           new_password: '',
-          protocol: ProtocolEnum.HTTPS,
+          protocol: undefined,
           ip: '',
           port: 0,
           service: '',
           npm_service: '',
           proxy_host: '',
           proxy_port: 0,
-          payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,
+          payment_model: undefined,
+          serv_plugin: '',
           thread_number: 0,
           timeout_a: 0,
           timeout_b: 0,
@@ -352,6 +353,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           primitiveVersion: !values.primitiveVersion ? 'Campo obbligatorio' : undefined,
           password: !values.password ? 'Campo obbligatorio' : undefined,
           new_password: !values.new_password ? 'Campo obbligatorio' : undefined,
+          protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
           ip: !values.ip ? 'Campo obbligatorio' : undefined,
           port: !values.port
             ? 'Campo obbligatorio'
@@ -366,6 +368,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             : validatePortRange(values.proxy_port)
             ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
             : undefined,
+          payment_model: !values.payment_model ? 'Campo obbligatorio' : undefined,
           thread_number: !values.thread_number ? 'Campo obbligatorio' : undefined,
           timeout_a: !values.timeout_a ? 'Campo obbligatorio' : undefined,
           timeout_b: !values.timeout_b ? 'Campo obbligatorio' : undefined,
@@ -520,6 +523,24 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     if (e.target.value === '' || regex.test(e.target.value)) {
       formik.setFieldValue(field, e.target.value);
     }
+  };
+
+  const addPaymentMethod = () => {
+    const newPaymentType: PaymentTypesResource = {
+      payment_types: [{ description: '', payment_type: '' }],
+    };
+    const newArr = [...multiPaymentMethod, newPaymentType];
+    setMultiPaymentMethod(newArr);
+  };
+
+  const deletePaymentMethod = (i: number) => {
+    const indexValueToRemove = i;
+    const newArr = multiPaymentMethod.filter((e: any, i: number) => {
+      if (i !== indexValueToRemove) {
+        return e;
+      }
+    });
+    setMultiPaymentMethod(newArr);
   };
 
   return (

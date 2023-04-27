@@ -40,7 +40,6 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
-  ProtocolEnum,
   Redirect_protocolEnum,
   StatusEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
@@ -248,15 +247,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           redirectParameters: channelDetail.redirect_query_string ?? '',
           targetAddress: channelDetail.target_host ?? '',
           targetService: channelDetail.target_path ?? '',
-          targetPort: channelDetail.target_port,
-          paymentType:
-            channelDetail.payment_types && channelDetail.payment_types[0]
-              ? channelDetail.payment_types
-              : readOnlyPaymentType,
+          targetPort: channelDetail.target_port ?? 0,
+          paymentType: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
           primitiveVersion: channelDetail.primitive_version ?? '',
           password: channelDetail.password ?? '',
           new_password: channelDetail.new_password ?? '',
-          protocol: channelDetail.protocol ?? ProtocolEnum.HTTPS,
+          protocol: channelDetail.protocol ?? undefined,
           ip: channelDetail.ip ?? '',
           port: channelDetail.port ?? 0,
           service: channelDetail.service ?? '',
@@ -286,8 +282,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           redirectParameters: '',
           targetAddress: '',
           targetService: '',
-          targetPort: undefined,
-          paymentType: readOnlyPaymentType,
+          targetPort: 0,
+          paymentType: [''],
           primitiveVersion: '',
           password: '',
           new_password: '',
@@ -328,7 +324,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const validate = (values: Partial<ChannelOnCreation>) => {
-    if (selectedParty.roles[0].roleKey === 'operator') {
+    if (isOperator) {
       Object.fromEntries(
         Object.entries({
           pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
@@ -523,24 +519,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     if (e.target.value === '' || regex.test(e.target.value)) {
       formik.setFieldValue(field, e.target.value);
     }
-  };
-
-  const addPaymentMethod = () => {
-    const newPaymentType: PaymentTypesResource = {
-      payment_types: [{ description: '', payment_type: '' }],
-    };
-    const newArr = [...multiPaymentMethod, newPaymentType];
-    setMultiPaymentMethod(newArr);
-  };
-
-  const deletePaymentMethod = (i: number) => {
-    const indexValueToRemove = i;
-    const newArr = multiPaymentMethod.filter((e: any, i: number) => {
-      if (i !== indexValueToRemove) {
-        return e;
-      }
-    });
-    setMultiPaymentMethod(newArr);
   };
 
   return (

@@ -217,12 +217,15 @@ const ChannelDetailPage = () => {
                 <Grid item xs={12} mt={2}>
                   <Typography variant="sidenav">{t('channelDetailPage.paymentType')}</Typography>
                 </Grid>
-                <Grid item xs={12} mb={3} mt={2}>
-                  {channelDetail.payment_types && channelDetail.payment_types.length > 0 ? (
-                    <Chip color="primary" label={channelDetail.payment_types} />
-                  ) : (
-                    ''
-                  )}
+                <Grid container xs={12} mb={3} mt={2}>
+                  {channelDetail.payment_types && channelDetail.payment_types.length > 0
+                    ? channelDetail.payment_types.map((e, i) => (
+                        // eslint-disable-next-line react/jsx-key
+                        <Grid item xs={3} sx={i === 0 ? { ml: 2 } : null}>
+                          <Chip key={i} color="primary" label={`${e}`} />
+                        </Grid>
+                      ))
+                    : ''}
                 </Grid>
                 <Grid item xs={6} alignItems={'center'}>
                   <Typography variant="sidenav">{t('channelDetailPage.associatedPsp')}</Typography>

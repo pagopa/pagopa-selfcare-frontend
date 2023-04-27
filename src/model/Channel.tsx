@@ -24,7 +24,7 @@ export type ChannelOnCreation = {
   targetAddress: string;
   targetService: string;
   targetPort: number | undefined;
-  paymentType: Readonly<Array<string>>;
+  paymentType: Array<string>;
   primitiveVersion: string;
   password: string;
   new_password: string;

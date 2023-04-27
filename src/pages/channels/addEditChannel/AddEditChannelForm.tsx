@@ -25,6 +25,7 @@ import {
   CreditCard as CreditCardIcon,
   RemoveCircleOutline,
 } from '@mui/icons-material';
+import { generatePath, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
@@ -38,7 +39,6 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import {
   ChannelDetailsDto,
-  ProtocolEnum,
   Redirect_protocolEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
 import { sortPaymentType } from '../../../model/PaymentType';
@@ -68,9 +68,9 @@ const AddEditChannelForm = ({
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
-  const [multiPaymentMethod, setMultiPaymentMethod] = useState<Array<PaymentTypesResource>>([]);
-  const readOnlyPaymentType: Readonly<Array<string>> = [''];
+  const isOperator = selectedParty.roles[0].roleKey === 'operator';
   const redirectProtocol = ['HTTP', 'HTTPS'];
+  const { channelId } = useParams<{ channelId: string }>();
 
   const initialFormData = (
     channelCode: string,
@@ -89,15 +89,12 @@ const AddEditChannelForm = ({
           redirectParameters: channelDetail.redirect_query_string ?? '',
           targetAddress: channelDetail.target_host ?? '',
           targetService: channelDetail.target_path ?? '',
-          targetPort: channelDetail.target_port,
-          paymentType:
-            channelDetail.payment_types && channelDetail.payment_types[0]
-              ? channelDetail.payment_types
-              : readOnlyPaymentType,
+          targetPort: channelDetail.target_port ?? 0,
+          paymentType: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
           primitiveVersion: channelDetail.primitive_version ?? '',
           password: channelDetail.password ?? '',
           new_password: channelDetail.new_password ?? '',
-          protocol: channelDetail.protocol ?? ProtocolEnum.HTTPS,
+          protocol: channelDetail.protocol ?? undefined,
           ip: channelDetail.ip ?? '',
           port: channelDetail.port ?? 0,
           service: channelDetail.service ?? '',
@@ -127,8 +124,8 @@ const AddEditChannelForm = ({
           redirectParameters: '',
           targetAddress: '',
           targetService: '',
-          targetPort: undefined,
-          paymentType: readOnlyPaymentType,
+          targetPort: 0,
+          paymentType: [''],
           primitiveVersion: '',
           password: '',
           new_password: '',
@@ -169,7 +166,7 @@ const AddEditChannelForm = ({
   };
 
   const validate = (values: Partial<ChannelOnCreation>) => {
-    if (selectedParty.roles[0].roleKey === 'operator') {
+    if (isOperator) {
       Object.fromEntries(
         Object.entries({
           pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
@@ -252,10 +249,34 @@ const AddEditChannelForm = ({
     enableReinitialize: true,
   });
 
-  const updateChannelNewPaymentTypes = (values: ChannelOnCreation, setValues: any) => {
-    const newArr = multiPaymentMethod.map((e, i) => e.payment_types[i].payment_type);
-    const newPayments = formik.values.paymentType.concat(newArr);
-    return setValues({ ...values, paymentType: newPayments });
+  const addPaymentMethod = async () => {
+    const newPaymentType: PaymentTypesResource = {
+      payment_types: [{ description: '', payment_type: '' }],
+    };
+    const newArr = [...formik.values.paymentType, newPaymentType];
+    await formik.setFieldValue('paymentType', newArr);
+  };
+
+  const deletePaymentMethod = async (i: number) => {
+    const indexValueToRemove = i;
+    const newArr = formik.values.paymentType.filter((e: any, i: number) => {
+      if (i !== indexValueToRemove) {
+        return e;
+      }
+    });
+    await formik.setFieldValue('paymentType', newArr);
+  };
+
+  const redirectAfterSubmit = () => {
+    if (isOperator) {
+      history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId }), {
+        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
+      });
+    } else {
+      history.push(ROUTES.CHANNELS, {
+        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
+      });
+    }
   };
 
   const submit = async () => {
@@ -273,11 +294,10 @@ const AddEditChannelForm = ({
         }
       }
       if (formAction === FormAction.Edit) {
-        await updateChannel(updateChannelNewPaymentTypes(formik.values, formik.setValues));
+        // await updateChannelNewPaymentTypes(formik.values, formik.setFieldValue);
+        await updateChannel(formik.values);
       }
-      history.push(ROUTES.CHANNELS, {
-        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
-      });
+      redirectAfterSubmit();
     } catch (reason) {
       addError({
         id: 'ADDEDIT_CHANNEL',
@@ -316,7 +336,7 @@ const AddEditChannelForm = ({
   }, []);
 
   const enebledSubmit = (values: ChannelOnCreation) => {
-    if (selectedParty.roles[0].roleKey === 'operator') {
+    if (isOperator) {
       return !(
         values.businessName !== '' &&
         values.idChannel !== '' &&
@@ -385,24 +405,6 @@ const AddEditChannelForm = ({
     if (e.target.value === '' || regex.test(e.target.value)) {
       formik.setFieldValue(field, e.target.value);
     }
-  };
-
-  const addPaymentMethod = () => {
-    const newPaymentType: PaymentTypesResource = {
-      payment_types: [{ description: '', payment_type: '' }],
-    };
-    const newArr = [...multiPaymentMethod, newPaymentType];
-    setMultiPaymentMethod(newArr);
-  };
-
-  const deletePaymentMethod = (i: number) => {
-    const indexValueToRemove = i;
-    const newArr = multiPaymentMethod.filter((e: any, i: number) => {
-      if (i !== indexValueToRemove) {
-        return e;
-      }
-    });
-    setMultiPaymentMethod(newArr);
   };
 
   return (
@@ -670,108 +672,79 @@ const AddEditChannelForm = ({
                 isRequired
               ></AddEditChannelFormSectionTitle>
               <Grid container spacing={2} mt={1}>
-                <Grid container item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel size="small">
-                      {t('addEditChannelPage.addForm.fields.paymentType')}
-                    </InputLabel>
-                    <Select
-                      fullWidth
-                      id="paymentType"
-                      name="paymentType"
-                      label={t('addEditChannelPage.addForm.fields.paymentType')}
-                      size="small"
-                      disabled={formAction === FormAction.Edit ? true : false}
-                      defaultValue={['']}
-                      value={formik.values.paymentType}
-                      onChange={() =>
-                        formik.setFieldValue('paymentType', formik.values.paymentType)
-                      }
-                      error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
-                      inputProps={{
-                        'data-testid': 'payment-type-test',
-                      }}
-                    >
-                      {paymentOptions &&
-                        sortPaymentType(paymentOptions.payment_types).map((option: any) => (
-                          <MenuItem key={option.payment_type} value={option.payment_type}>
-                            {option.description}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid container spacing={2} mt={1} ml={1}>
-                  <Grid container item xs={6}>
-                    <ButtonNaked
-                      size="medium"
-                      component="button"
-                      onClick={() => addPaymentMethod()}
-                      sx={{ color: 'primary.main', mr: '20px' }}
-                      weight="default"
-                    >
-                      {t('addEditChannelPage.addForm.fields.addPayment')}
-                    </ButtonNaked>
-                  </Grid>
-                </Grid>
-
-                {multiPaymentMethod.map((_e, i) => (
-                  // const paymentTypeErrors =
-                  //   (formik.errors.paymentType?.length && formik.errors.paymentType[i]) || {};
-                  // const paymentTypeTouched =
-                  //   (formik.touched.paymentType?.length && formik.touched.paymentType[i]) || {};
-
-                  // return (
+                {formik.values.paymentType.map((_pT, i) => (
                   <Grid container spacing={2} mt={1} key={i} ml={1}>
-                    <Grid container item xs={1} key={`remove${i}`} mt={1}>
-                      <RemoveCircleOutline
-                        color="error"
-                        sx={{
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deletePaymentMethod(i)}
-                        id={`remove_PaymentMethod${i}`}
-                        data-testid="remove-payment-method"
-                      />
-                    </Grid>
-                    <Grid container item xs={6} key={`item${i}`}>
+                    {i > 0 ? (
+                      <Grid container item xs={1} key={`remove${i}`} mt={1}>
+                        <RemoveCircleOutline
+                          color="error"
+                          sx={{
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => deletePaymentMethod(i)}
+                          id={`remove_PaymentMethod${i}`}
+                          data-testid="remove-payment-method"
+                        />
+                      </Grid>
+                    ) : null}
+                    <Grid container item xs={i > 0 ? 5 : 6} key={`item${i}`}>
                       <FormControl fullWidth key={`FormControl${i}`}>
                         <InputLabel size="small" key={`InputLabel${i}_label`}>
                           {t('addEditChannelPage.addForm.fields.paymentType')}
                         </InputLabel>
                         <Select
-                          id={`newPaymentType${i}_select`}
-                          labelId={`newPaymentType${i}_label`}
-                          name={`newPaymentType${i}_name`}
+                          id={`paymentType${i}_select`}
+                          labelId={`paymentType${i}_label`}
+                          name={`paymentType${i}_name`}
                           label={t('addEditChannelPage.addForm.fields.paymentType')}
                           size="small"
-                          value={formik.values.paymentType[i + 1]}
-                          onChange={() =>
+                          disabled={
+                            isOperator ? false : formAction === FormAction.Edit ? true : false
+                          }
+                          value={formik.values.paymentType[i]}
+                          onChange={(event) =>
                             formik.setFieldValue(
-                              `newPaymentType${i}_name`,
-                              formik.values.paymentType[i + 1]
+                              'paymentType',
+                              formik.values.paymentType.map((pType, j) =>
+                                j === i ? event.target.value : pType
+                              )
                             )
                           }
-                          // error={paymentTypeTouched && Boolean(paymentTypeErrors)}
                         >
                           {paymentOptions &&
                             sortPaymentType(paymentOptions.payment_types).map((option: any) => (
                               <MenuItem key={option.payment_type} value={option.payment_type}>
-                                {option.description}
+                                {`${option.description} - ${option.payment_type}`}
                               </MenuItem>
                             ))}
                         </Select>
                       </FormControl>
                     </Grid>
+                    {isOperator && (
+                      <Grid container spacing={2} mt={1} ml={1}>
+                        {i === 0 && (
+                          <Grid container item xs={6}>
+                            <ButtonNaked
+                              size="medium"
+                              component="button"
+                              onClick={() => addPaymentMethod()}
+                              sx={{ color: 'primary.main', mr: '20px' }}
+                              weight="default"
+                            >
+                              {t('addEditChannelPage.addForm.fields.addPayment')}
+                            </ButtonNaked>
+                          </Grid>
+                        )}
+                      </Grid>
+                    )}
                   </Grid>
-                  // );
                 ))}
               </Grid>
             </Box>
           </Box>
         </Paper>
 
-        {selectedParty.roles[0].roleKey === 'operator' ? (
+        {formAction === FormAction.Edit && isOperator ? (
           <AddEditChannelValidationForm
             formik={formik}
             handleChangeNumberOnly={handleChangeNumberOnly}

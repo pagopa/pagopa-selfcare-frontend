@@ -15,6 +15,7 @@ type Props = {
 const DetailButtons = ({ channelDetails, goBack }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const { t } = useTranslation();
 
   return (
@@ -30,7 +31,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
               </Button>
               */}
 
-      {selectedParty?.roles[0].roleKey === 'operator' && channelDetails?.enabled ? (
+      {isOperator && channelDetails?.enabled ? (
         <>
           <Button
             component={Link}
@@ -43,7 +44,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
             {t('channelDetailPage.edit')}
           </Button>
         </>
-      ) : selectedParty?.roles[0].roleKey === 'operator' && !channelDetails?.enabled ? (
+      ) : isOperator && !channelDetails?.enabled ? (
         <>
           <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
             {t('channelDetailPage.correctionRequired')}

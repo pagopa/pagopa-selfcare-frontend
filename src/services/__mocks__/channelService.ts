@@ -97,7 +97,7 @@ export const mockedChannel: ChannelOnCreation = {
   targetAddress: 'target_addres',
   targetPort: 8081,
   targetService: 'target_service',
-  paymentType: [mockedPaymentTypes.payment_types[0].payment_type],
+  paymentType: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
   primitiveVersion: '01',
   password: 'password',
   new_password: 'new_password',
@@ -178,7 +178,9 @@ export const mockedChannelDetail = (channel_code: string): ChannelDetailsResourc
   on_us: true,
   password: 'password',
   payment_model: undefined,
-  payment_types: ['PPAY'],
+  payment_types: mockedPaymentTypes.payment_types.map(
+    (e, _i) => `${e.description} - ${e.payment_type}`
+  ),
   port: 8080,
   primitive_version: 'primitive_version',
   protocol: undefined,

@@ -101,11 +101,11 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                 }}
               />
             </Grid>
-            <Grid container item xs={6} direction="column">
+            <Grid container item xs={6}>
               <TextField
                 fullWidth
-                id="newPassword"
-                name="newPassword"
+                id="new_password"
+                name="new_password"
                 label={t('addEditChannelPage.addForm.validationForm.fields.newPassword')}
                 size="small"
                 value={formik.values.new_password}
@@ -138,15 +138,15 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                   label={t('addEditChannelPage.addForm.validationForm.fields.protocol')}
                   size="small"
                   defaultValue=""
-                  value={formik.values.protocol}
+                  value={formik.values.protocol || ''}
                   onChange={formik.handleChange}
                   error={formik.touched.protocol && Boolean(formik.errors.protocol)}
                   inputProps={{
                     'data-testid': 'protocol-test',
                   }}
                 >
-                  {protocol.map((p) => (
-                    <MenuItem key={p} value={p}>
+                  {protocol.map((p, i) => (
+                    <MenuItem key={i} value={p}>
                       {p}
                     </MenuItem>
                   ))}
@@ -283,7 +283,7 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                   label={t('addEditChannelPage.addForm.validationForm.fields.paymentModel')}
                   size="small"
                   defaultValue=""
-                  value={formik.values.payment_model}
+                  value={formik.values.payment_model || ''}
                   onChange={formik.handleChange}
                   error={formik.touched.payment_model && Boolean(formik.errors.payment_model)}
                   inputProps={{
@@ -291,7 +291,7 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                   }}
                 >
                   {paymentMethod.map((e, i) => (
-                    <MenuItem key={e} value={e[i]}>
+                    <MenuItem key={i} value={e}>
                       {e}
                     </MenuItem>
                   ))}

@@ -23,7 +23,7 @@ const AddEditChannelPage = () => {
   const formAction = actionId ?? FormAction.Create;
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-
+  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
   const [channelCode, setChannelCode] = useState<string>('');
 
@@ -100,7 +100,7 @@ const AddEditChannelPage = () => {
               <Typography color={'#A2ADB8'}>{channelId}</Typography>
             )}
             <Typography color={'#A2ADB8'}>
-              {selectedParty?.roles[0].roleKey === 'operator'
+              {isOperator
                 ? t(`addEditChannelPage.config.titleConfiguration`)
                 : t(`addEditChannelPage.${formAction}.breadcrumb`)}
             </Typography>
@@ -108,12 +108,12 @@ const AddEditChannelPage = () => {
         </Stack>
         <TitleBox
           title={
-            selectedParty?.roles[0].roleKey === 'operator'
+            isOperator
               ? t(`addEditChannelPage.config.titleConfiguration`)
               : t(`addEditChannelPage.${formAction}.title`)
           }
           subTitle={
-            selectedParty?.roles[0].roleKey === 'operator'
+            isOperator
               ? t(`addEditChannelPage.config.subtitleConfiguration`)
               : t(`addEditChannelPage.${formAction}.subtitle`)
           }

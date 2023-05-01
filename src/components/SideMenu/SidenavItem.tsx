@@ -15,7 +15,6 @@ export default function SidenavItem({ handleClick, title, isSelected, icon }: Pr
       onClick={handleClick}
       sx={{
         height: '100%',
-        maxWidth: 360,
         backgroundColor: 'background.paper',
       }}
     >

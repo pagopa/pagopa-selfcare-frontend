@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Link, useTheme, Alert } from '@mui/material';
+import { Box, Grid, Typography, Link, useTheme, Alert, Button } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
 import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import AddIcon from '@mui/icons-material/Add';
-import { ButtonNaked } from '@pagopa/mui-italia';
 import { useHistory } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
@@ -90,8 +89,8 @@ const ApiKeysPage = () => {
             </Box>
             {apiKeys && (
               <Box>
-                <ButtonNaked
-                  component="button"
+                <Button
+                  variant="contained"
                   onClick={createKeys}
                   startIcon={<AddIcon />}
                   color="primary"
@@ -103,10 +102,9 @@ const ApiKeysPage = () => {
                     display: 'flex',
                     justifyContent: 'center',
                   }}
-                  weight="default"
                 >
                   {t('apiKeysPage.apiNotPresent.buttonLabel')}
-                </ButtonNaked>
+                </Button>
               </Box>
             )}
           </Box>

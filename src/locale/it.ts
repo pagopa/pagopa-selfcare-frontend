@@ -231,6 +231,8 @@ export default {
       errorMessageDesc: 'Errore durante la creazione, ID Channel duplicato',
       errorMessagePaymentTypesDesc: 'Errore durante la ricezione dei metodi di pagamento',
       errorMessageChannelDetailsDesc: 'Errore durante la ricezione dei dettagli del canale',
+      errorMessageChannelWrapperDetailsDesc:
+        'Errore durante la ricezione dei dettagli del canale wrappato',
       errorMessageChannelCodeTypesDesc: 'Errore durante la generazione del Codice Canale',
       validationForm: {
         title: 'Informazione da completare',

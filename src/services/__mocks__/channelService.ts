@@ -1,6 +1,6 @@
 import { ChannelCodeResource } from '../../api/generated/portal/ChannelCodeResource';
 import {
-  Payment_modelEnum,
+  ChannelDetailsDto,
   ProtocolEnum,
   Redirect_protocolEnum,
 } from '../../api/generated/portal/ChannelDetailsDto';
@@ -13,6 +13,14 @@ import { PspChannelPaymentTypesResource } from '../../api/generated/portal/PspCh
 import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
 import { WrapperStatusEnum } from '../../api/generated/portal/WrapperChannelResource';
 import { WrapperChannelsResource } from '../../api/generated/portal/WrapperChannelsResource';
+import {
+  StatusEnum,
+  WrapperChannelDetailsDto,
+} from '../../api/generated/portal/WrapperChannelDetailsDto';
+import {
+  TypeEnum,
+  WrapperEntitiesOperations,
+} from '../../api/generated/portal/WrapperEntitiesOperations';
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
 
@@ -85,41 +93,67 @@ export const mockedPaymentTypes: PaymentTypesResource = {
   ],
 };
 
-export const mockedChannel: ChannelOnCreation = {
-  pspBrokerCode: 'broker_psp_code',
-  businessName: 'business_name',
-  idChannel: 'id_channel',
-  redirectProtocol: Redirect_protocolEnum.HTTPS,
-  redirectParameters: 'reirect_parameters',
-  redirectIp: 'redirect_ip',
-  redirectService: 'redirect_service',
-  redirectPort: 8080,
-  targetAddress: 'target_addres',
-  targetPort: 8081,
-  targetService: 'target_service',
-  paymentType: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
-  primitiveVersion: '01',
-  password: 'password',
-  new_password: 'new_password',
+export const mockedChannel: ChannelDetailsDto = {
+  agid: false,
+  broker_description: 'string',
+  broker_psp_code: 'string',
+  card_chart: false,
+  channel_code: 'string',
+  digital_stamp_brand: false,
+  enabled: true,
+  flag_io: false,
+  ip: 'string',
+  new_fault_code: false,
+  new_password: 'string',
+  note: 'string',
+  nmp_service: 'string',
+  on_us: false,
+  password: 'string',
+  payment_model: undefined,
+  payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
+  port: 0,
+  primitive_version: 'string',
   protocol: ProtocolEnum.HTTPS,
-  ip: 'ip',
-  port: 3000,
-  service: 'service',
-  npm_service: 'npm_service',
-  proxy_host: 'proxy_host',
-  proxy_port: 3001,
-  payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,
-  serv_plugin: '',
+  proxy_enabled: false,
+  proxy_host: 'string',
+  proxy_password: 'string',
+  proxy_port: 0,
+  proxy_username: 'string',
+  recovery: false,
+  redirect_ip: 'string',
+  redirect_path: 'string',
+  redirect_port: 0,
+  redirect_protocol: Redirect_protocolEnum.HTTPS,
+  redirect_query_string: 'string',
+  rt_push: false,
+  serv_plugin: 'string',
+  service: 'string',
+  status: StatusEnum.APPROVED,
+  target_host: 'string',
+  target_path: 'string',
+  target_port: 3000,
   thread_number: 3,
   timeout_a: 1000,
   timeout_b: 2000,
   timeout_c: 3000,
-  psp_notify_payment: false,
-  rt_push: false,
-  rpt_carousel: false,
-  recovery: false,
-  digital_stamp_brand: false,
-  on_us: false,
+};
+
+export const mockedWrapperChannel: WrapperChannelDetailsDto = {
+  broker_psp_code: 'broker_psp_code',
+  broker_description: 'broker_description',
+  channel_code: 'id_channel',
+  redirect_protocol: Redirect_protocolEnum.HTTPS,
+  redirect_path: 'reirect_parameters',
+  redirect_ip: 'redirect_ip',
+  redirect_port: 8080,
+  redirect_query_string: 'redirect_service',
+  target_path: 'target_path',
+  target_port: 8081,
+  target_host: 'target_host',
+  payment_types: mockedPaymentTypes.payment_types.map(
+    (e, _i) => `${e.description} - ${e.payment_type}`
+  ),
+  status: StatusEnum.TO_CHECK,
 };
 export const mockedStationsMerged: WrapperChannelsResource = {
   page_info: {
@@ -174,13 +208,11 @@ export const mockedChannelDetail = (channel_code: string): ChannelDetailsResourc
   ip: 'ip',
   new_fault_code: true,
   new_password: 'new_password',
-  nmp_service: 'nmp_service',
+  nmp_service: 'npm_service',
   on_us: true,
   password: 'password',
   payment_model: undefined,
-  payment_types: mockedPaymentTypes.payment_types.map(
-    (e, _i) => `${e.description} - ${e.payment_type}`
-  ),
+  payment_types: mockedPaymentTypes.payment_types.map((e, _i) => e.payment_type),
   port: 8080,
   primitive_version: 'primitive_version',
   protocol: undefined,
@@ -319,6 +351,46 @@ const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
 };
 
+const channelWrapperMockedGet: WrapperEntitiesOperations = {
+  brokerCode: 'string',
+  createdAt: new Date(),
+  createdBy: 'string',
+  id: 'string',
+  modifiedAt: new Date(),
+  modifiedBy: 'string',
+  modifiedByOpt: 'string',
+  note: 'string',
+  status: StatusEnum.APPROVED,
+  type: TypeEnum.CHANNEL,
+  wrapperEntityOperationsSortedList: [
+    {
+      createdAt: new Date(),
+      entity: {
+        broker_psp_code: 'broker_psp_code',
+        broker_description: 'broker_description',
+        channel_code: 'id_channel',
+        redirect_protocol: Redirect_protocolEnum.HTTPS,
+        redirect_path: 'reirect_parameters',
+        redirect_ip: 'redirect_ip',
+        redirect_port: 8080,
+        redirect_query_string: 'redirect_service',
+        target_path: 'target_path',
+        target_port: 8081,
+        target_host: 'target_host',
+        payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
+        status: StatusEnum.TO_CHECK,
+      },
+      id: 'string',
+      modifiedAt: new Date(),
+      modifiedBy: 'string',
+      modifiedByOpt: 'string',
+      note: 'string',
+      status: StatusEnum.APPROVED,
+      type: TypeEnum.CHANNEL,
+    },
+  ],
+};
+
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
 
@@ -363,3 +435,14 @@ export const associatePSPtoChannel = (
 
 export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string): Promise<void> =>
   new Promise((resolve) => resolve());
+
+export const createWrapperChannel = (
+  _channel: WrapperChannelDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
+
+export const updateWrapperChannel = (
+  _channel: WrapperChannelDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
+
+export const getWrapperChannel = (_pspCode: string): Promise<WrapperEntitiesOperations> =>
+  new Promise((resolve) => resolve(channelWrapperMockedGet));

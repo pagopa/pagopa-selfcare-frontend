@@ -3906,7 +3906,7 @@
       "put": {
         "tags": ["stations"],
         "summary": "updateWrapperStationDetails",
-        "description": "Update WrapperStationDetails",
+        "description": "Update WrapperStationDetails ",
         "operationId": "updateWrapperStationDetailsUsingPUT",
         "requestBody": {
           "content": {
@@ -7320,7 +7320,10 @@
           "redirectPort",
           "redirectProtocol",
           "redirectQueryString",
-          "stationCode"
+          "stationCode",
+          "targetHost",
+          "targetPath",
+          "targetPort"
         ],
         "type": "object",
         "properties": {

@@ -157,10 +157,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           }),
         };
 
-  useEffect(() => {
-    console.log('HERE', initialFormData(channelCode, channelDetail, selectedParty));
-  }, []);
-
   const validatePortRange = (port: number | undefined) => {
     if (port) {
       return port > 0 && port < 65556 ? false : true;
@@ -664,6 +660,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                             )
                           }
                           error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
+                          inputProps={{
+                            'data-testid': 'payment-type-test',
+                          }}
                         >
                           {paymentOptions &&
                             sortPaymentType(paymentOptions.payment_types).map((option: any) => (
@@ -684,6 +683,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                               onClick={() => addPaymentMethod()}
                               sx={{ color: 'primary.main', mr: '20px' }}
                               weight="default"
+                              data-testid="add-payment-test"
                             >
                               {t('addEditChannelPage.addForm.fields.addPayment')}
                             </ButtonNaked>

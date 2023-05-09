@@ -17,6 +17,7 @@ import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
+import { ProtocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -105,7 +106,7 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
                 inputProps={{
-                  'data-testid': 'password-name-test',
+                  'data-testid': 'password-test',
                 }}
               />
             </Grid>
@@ -146,7 +147,11 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                   label={t('addEditChannelPage.addForm.validationForm.fields.protocol')}
                   size="small"
                   defaultValue=""
-                  value={formik.values.protocol || ''}
+                  value={
+                    formik.values.protocol === 'HTTPS'
+                      ? ProtocolEnum.HTTPS
+                      : ProtocolEnum.HTTP || ''
+                  }
                   onChange={formik.handleChange}
                   error={formik.touched.protocol && Boolean(formik.errors.protocol)}
                   inputProps={{

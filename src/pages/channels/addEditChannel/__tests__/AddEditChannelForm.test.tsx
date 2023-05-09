@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -11,9 +11,13 @@ import { store } from '../../../../redux/store';
 import { mockedPaymentTypes } from '../../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../AddEditChannelForm';
 import { mockedParties } from '../../../../services/__mocks__/partyService';
-import { Redirect_protocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
+import {
+  ChannelDetailsDto,
+  ProtocolEnum,
+  Redirect_protocolEnum,
+  StatusEnum,
+} from '../../../../api/generated/portal/ChannelDetailsDto';
 import { PortalApi } from '../../../../api/PortalApiClient';
-import { PaymentTypesResource } from '../../../../api/generated/portal/PaymentTypesResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -31,7 +35,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              goBack={jest.fn()}
               formAction={FormAction.Duplicate}
               selectedParty={mockedParties[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
@@ -76,10 +79,10 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
 
     fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: undefined } });
+    fireEvent.change(redirectPort, { target: { value: '' } });
 
     fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: 555 } });
+    fireEvent.change(redirectPort, { target: { value: '555' } });
 
     fireEvent.click(redirectService);
     fireEvent.change(redirectService, { target: { value: 'redirectService' } });
@@ -132,7 +135,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              goBack={jest.fn()}
               formAction={FormAction.Create}
               selectedParty={mockedParties[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
@@ -149,25 +151,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              goBack={jest.fn()}
               formAction={FormAction.Create}
-              selectedParty={mockedParties[0]}
-              channelCode={'14847241008_01'}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-  });
-
-  test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              goBack={jest.fn()}
-              formAction={FormAction.Edit}
               selectedParty={mockedParties[0]}
               channelCode={'14847241008_01'}
             />
@@ -183,8 +167,23 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              goBack={jest.fn()}
-              formAction={FormAction.Duplicate}
+              formAction={FormAction.Edit}
+              selectedParty={mockedParties[0]}
+              channelCode={'14847241008_01'}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
+
+  test('Test rendering AddEditChannelForm with formAction Create', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Create}
               selectedParty={mockedParties[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
             />
@@ -250,5 +249,124 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.click(continueBtn);
 
     userEvent.click(confirmBtn);
+  });
+
+  test('Test Multipayment methods add/remove', async () => {
+    const channelDetail: ChannelDetailsDto = {
+      broker_psp_code: '97735020584',
+      broker_description: 'AgID - Agenzia per l’Italia Digitale',
+      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      redirect_protocol: Redirect_protocolEnum.HTTPS,
+      redirect_path: 'reirect_parameters',
+      redirect_ip: 'esempiolink.redirect.it',
+      redirect_port: 8080,
+      redirect_query_string: 'redirect_service',
+      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8081,
+      target_host: ' lab.link.it',
+      payment_types: ['PPAY'],
+      status: StatusEnum.TO_CHECK,
+    };
+
+    const { getByTestId, getAllByTestId } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+
+    const addPaymentType = getByTestId('add-payment-test') as HTMLButtonElement;
+
+    fireEvent.click(addPaymentType);
+    await waitFor(() => {
+      const paymentType = getAllByTestId('payment-type-test');
+      expect(paymentType).toHaveLength(2);
+    });
+
+    fireEvent.click(addPaymentType);
+
+    await waitFor(() => {
+      const paymentType = getAllByTestId('payment-type-test');
+      expect(paymentType).toHaveLength(3);
+
+      const deletePaymentMethod = getAllByTestId('remove-payment-method') as HTMLButtonElement[];
+      if (deletePaymentMethod.length > 0) {
+        fireEvent.click(deletePaymentMethod[0]);
+      }
+    });
+  });
+
+  test('Test Multipayment methods add/remove', async () => {
+    const channelDetail: ChannelDetailsDto = {
+      broker_psp_code: '97735020584',
+      broker_description: 'AgID - Agenzia per l’Italia Digitale',
+      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      redirect_protocol: Redirect_protocolEnum.HTTPS,
+      redirect_path: 'reirect_parameters',
+      redirect_ip: 'esempiolink.redirect.it',
+      redirect_port: 8080,
+      redirect_query_string: 'redirect_service',
+      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8081,
+      target_host: ' lab.link.it',
+      payment_types: ['PPAY'],
+      status: StatusEnum.TO_CHECK,
+    };
+
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+
+    const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
+    const password = getByTestId('password-test') as HTMLInputElement;
+    const newPassword = getByTestId('new-password-code-test') as HTMLInputElement;
+    const protocol = getByTestId('protocol-test') as HTMLInputElement;
+    const ip = getByTestId('ip-test') as HTMLInputElement;
+    const port = getByTestId('port-test') as HTMLInputElement;
+    const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
+    const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
+
+    fireEvent.change(primitiveVersion, { target: { value: undefined } });
+    fireEvent.change(primitiveVersion, { target: { value: 1 } });
+
+    fireEvent.change(password, { target: { value: 1 } });
+
+    fireEvent.change(newPassword, { target: { value: 1 } });
+
+    fireEvent.click(protocol);
+    fireEvent.change(protocol, { target: { value: ProtocolEnum.HTTP } });
+
+    fireEvent.change(ip, { target: { value: 1 } });
+
+    fireEvent.change(port, { target: { value: 1000 } });
+    expect(port.value).toBe('1000');
+
+    fireEvent.change(port, { target: { value: 'abc' } });
+    expect(port.value).toBe('');
+
+    fireEvent.click(paymentModel);
+    fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
+
+    fireEvent.click(servPlugIn);
+    fireEvent.change(servPlugIn, { target: { value: 'abc' } });
   });
 });

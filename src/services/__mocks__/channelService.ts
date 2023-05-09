@@ -68,7 +68,7 @@ export const mockedPSPChannels: PspChannelsResource = {
       payment_types: [],
     },
     {
-      channel_code: 'XPAY_03',
+      channel_code: '97735020584_01',
       enabled: false,
       payment_types: [],
     },
@@ -78,6 +78,13 @@ export const mockedPSPChannels: PspChannelsResource = {
       payment_types: [],
     },
   ],
+};
+
+const channelEnabled = (channel: PspChannelsResource) => {
+  const newList: PspChannelsResource = {
+    channels: channel.channels.filter((e) => e.enabled === false),
+  };
+  return newList;
 };
 
 export const mockedPaymentTypes: PaymentTypesResource = {
@@ -196,12 +203,12 @@ export const mockedStationsMerged: WrapperChannelsResource = {
   ],
 };
 
-export const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
+export const mockedChannelDetail = (channelId: string): ChannelDetailsResource => ({
   agid: true,
   broker_description: 'broker_description',
   broker_psp_code: 'broker_psp_code',
   card_chart: true,
-  channel_code,
+  channel_code: channelId,
   digital_stamp_brand: true,
   enabled: false,
   flag_io: true,
@@ -351,10 +358,10 @@ const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
 };
 
-const channelWrapperMockedGet: WrapperEntitiesOperations = {
+const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
   brokerCode: 'string',
   createdAt: new Date(),
-  createdBy: 'string',
+  createdBy: 'PSP S.p.A',
   id: 'string',
   modifiedAt: new Date(),
   modifiedBy: 'string',
@@ -366,30 +373,30 @@ const channelWrapperMockedGet: WrapperEntitiesOperations = {
     {
       createdAt: new Date(),
       entity: {
-        broker_psp_code: 'broker_psp_code',
-        broker_description: 'broker_description',
-        channel_code: 'id_channel',
+        broker_psp_code: '97735020584',
+        broker_description: 'AgID - Agenzia per l’Italia Digitale',
+        channel_code: code,
         redirect_protocol: Redirect_protocolEnum.HTTPS,
         redirect_path: 'reirect_parameters',
-        redirect_ip: 'redirect_ip',
+        redirect_ip: 'esempiolink.redirect.it',
         redirect_port: 8080,
         redirect_query_string: 'redirect_service',
-        target_path: 'target_path',
+        target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
         target_port: 8081,
-        target_host: 'target_host',
+        target_host: ' lab.link.it',
         payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
         status: StatusEnum.TO_CHECK,
       },
       id: 'string',
       modifiedAt: new Date(),
       modifiedBy: 'string',
-      modifiedByOpt: 'string',
+      modifiedByOpt: 'Operatore PSP',
       note: 'string',
-      status: StatusEnum.APPROVED,
+      status: StatusEnum.TO_CHECK,
       type: TypeEnum.CHANNEL,
     },
   ],
-};
+});
 
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
@@ -409,13 +416,15 @@ export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsRes
   new Promise((resolve) => resolve(mockedChannelDetail(channelcode)));
 
 export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =>
-  new Promise((resolve) => resolve(mockedPSPChannels));
+  new Promise((resolve) => resolve(channelEnabled(mockedPSPChannels)));
 
 export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
   new Promise((resolve) => resolve(mockedChannel));
 
-export const updateChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
-  new Promise((resolve) => resolve(mockedChannel));
+export const updateChannel = (
+  _code: string,
+  _channel: ChannelOnCreation
+): Promise<ChannelDetailsResource> => new Promise((resolve) => resolve(mockedChannel));
 
 export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));
@@ -444,5 +453,5 @@ export const updateWrapperChannel = (
   _channel: WrapperChannelDetailsDto
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
-export const getWrapperChannel = (_pspCode: string): Promise<WrapperEntitiesOperations> =>
-  new Promise((resolve) => resolve(channelWrapperMockedGet));
+export const getWrapperChannel = (pspCode: string): Promise<WrapperEntitiesOperations> =>
+  new Promise((resolve) => resolve(channelWrapperMockedGet(pspCode)));

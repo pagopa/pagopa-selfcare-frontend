@@ -37,7 +37,12 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
     p: 3,
     mb: 3,
   };
-  const paymentMethod = ['ACTIVATED_AT_PSP', 'DEFERRED', 'IMMEDIATE', 'IMMEDIATE_MULTIBENEFICIARY'];
+  const paymentMethod = [
+    t('addEditChannelPage.addForm.validationForm.paymentModel.activatedAtPsp'),
+    t('addEditChannelPage.addForm.validationForm.paymentModel.multi'),
+    t('addEditChannelPage.addForm.validationForm.paymentModel.immediate'),
+    t('addEditChannelPage.addForm.validationForm.paymentModel.different'),
+  ];
   const protocol = ['HTTP', 'HTTPS'];
 
   return (
@@ -66,7 +71,6 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
           <AddEditChannelFormSectionTitle
             title={t('addEditChannelPage.addForm.validationForm.sections.registry')}
             icon={<BadgeIcon fontSize="small" />}
-            isRequired
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -76,11 +80,15 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                 name="primitiveVersion"
                 label={t('addEditChannelPage.addForm.validationForm.fields.primitiveVersion')}
                 size="small"
-                value={formik.values.primitiveVersion}
-                onChange={formik.handleChange}
+                InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
+                value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
+                onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
                 error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
                 helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                 inputProps={{
+                  step: 1,
+                  min: 0,
+                  max: 2,
                   'data-testid': 'primitive-version-test',
                 }}
               />
@@ -175,7 +183,7 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                 id="port"
                 name="port"
                 type="number"
-                InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
+                InputLabelProps={{ shrink: formik.values.port ? true : false }}
                 inputProps={{
                   step: 1,
                   min: 0,
@@ -209,14 +217,14 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
             <Grid container item xs={6}>
               <TextField
                 fullWidth
-                id="npm_service"
-                name="npm_service"
+                id="nmp_service"
+                name="nmp_service"
                 label={t('addEditChannelPage.addForm.validationForm.fields.npmService')}
                 size="small"
-                value={formik.values.npm_service}
+                value={formik.values.nmp_service}
                 onChange={formik.handleChange}
-                error={formik.touched.npm_service && Boolean(formik.errors.npm_service)}
-                helperText={formik.touched.npm_service && formik.errors.npm_service}
+                error={formik.touched.nmp_service && Boolean(formik.errors.nmp_service)}
+                helperText={formik.touched.nmp_service && formik.errors.nmp_service}
                 inputProps={{
                   'data-testid': 'npm-service-test',
                 }}

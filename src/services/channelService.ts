@@ -85,12 +85,15 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
   }
 };
 
-export const updateChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+export const updateChannel = (
+  code: string,
+  channel: ChannelOnCreation
+): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateChannelMocked(channel);
+    return updateChannelMocked(code, channel);
   } else {
-    return PortalApi.updateChannel(channel).then((resources) => resources);
+    return PortalApi.updateChannel(code, channel).then((resources) => resources);
   }
 };
 

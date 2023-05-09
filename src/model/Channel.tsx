@@ -3,6 +3,7 @@ import {
   ProtocolEnum,
   Redirect_protocolEnum,
 } from '../api/generated/portal/ChannelDetailsDto';
+import { StatusEnum } from '../api/generated/portal/WrapperChannelDetailsDto';
 
 export type ChannelStatus = 'ACTIVE' | 'REVISION' | 'NEEDCORRECTION';
 
@@ -13,40 +14,42 @@ export enum FormAction {
 }
 
 export type ChannelOnCreation = {
-  pspBrokerCode: string;
-  businessName: string;
-  idChannel: string;
-  redirectProtocol: Redirect_protocolEnum | undefined;
+  pspBrokerCode?: string;
+  businessName?: string;
+  idChannel?: string;
+  redirectProtocol?: Redirect_protocolEnum | undefined;
   redirectPort?: number | undefined;
-  redirectIp: string;
-  redirectService: string;
-  redirectParameters: string;
-  targetAddress: string;
-  targetService: string;
-  targetPort: number | undefined;
-  paymentType: Array<string>;
-  primitiveVersion: string;
-  password: string;
-  new_password: string;
-  protocol: ProtocolEnum | undefined;
-  ip: string;
-  port: number | undefined;
-  service: string;
-  npm_service: string;
-  proxy_host: string;
-  proxy_port: number | undefined;
-  payment_model: Payment_modelEnum | undefined;
-  serv_plugin: string;
-  thread_number: number | undefined;
-  timeout_a: number | undefined;
-  timeout_b: number | undefined;
-  timeout_c: number | undefined;
-  psp_notify_payment: boolean;
-  rt_push: boolean;
-  rpt_carousel: boolean;
-  recovery: boolean;
-  digital_stamp_brand: boolean;
-  on_us: boolean;
+  redirectIp?: string;
+  redirectService?: string;
+  redirectParameters?: string;
+  targetAddress?: string;
+  targetService?: string;
+  targetPort?: number | undefined;
+  paymentType?: Readonly<Array<string>>;
+  status?: StatusEnum | undefined;
+  primitiveVersion?: number;
+  password?: string;
+  new_password?: string;
+  protocol?: ProtocolEnum | undefined;
+  ip?: string;
+  port?: number | undefined;
+  service?: string;
+  nmp_service?: string;
+  proxy_host?: string;
+  proxy_port?: number | undefined;
+  payment_model?: Payment_modelEnum | undefined;
+  serv_plugin?: string;
+  thread_number?: number | undefined;
+  timeout_a?: number | undefined;
+  timeout_b?: number | undefined;
+  timeout_c?: number | undefined;
+  psp_notify_payment?: boolean;
+  rt_push?: boolean;
+  rpt_carousel?: boolean;
+  recovery?: boolean;
+  digital_stamp_brand?: boolean;
+  on_us?: boolean;
+  enabled?: boolean;
 };
 
 export type Channel = {

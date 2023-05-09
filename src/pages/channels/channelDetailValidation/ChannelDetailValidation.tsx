@@ -1,7 +1,6 @@
 import { Box, Divider, Grid } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 
@@ -11,13 +10,6 @@ type Props = {
 
 const ChannelDetailValidation = ({ channelDetails }: Props) => {
   const { t } = useTranslation();
-  //   const setLoading = useLoading();
-  //   const addError = useErrorDispatcher();
-  //   const { channelId } = useParams<{ channelId: string }>();
-
-  useEffect(() => {
-    // TO DO
-  }, []);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -130,7 +122,7 @@ const ChannelDetailValidation = ({ channelDetails }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelDetails?.npm_service ?? '-'}
+                    {channelDetails?.nmp_service ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -150,7 +142,7 @@ const ChannelDetailValidation = ({ channelDetails }: Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('channelDetailValidationPage.newPassword')}
+                    {t('channelDetailValidationPage.proxyPort')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -229,14 +221,6 @@ const ChannelDetailValidation = ({ channelDetails }: Props) => {
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
                     {channelDetails?.timeout_c ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailValidationPage.status')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

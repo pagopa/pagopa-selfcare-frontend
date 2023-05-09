@@ -157,10 +157,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           }),
         };
 
-  useEffect(() => {
-    console.log('HERE', initialFormData(channelCode, channelDetail, selectedParty));
-  }, []);
-
   const validatePortRange = (port: number | undefined) => {
     if (port) {
       return port > 0 && port < 65556 ? false : true;

@@ -36,7 +36,6 @@ import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitu
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
-import { WrapperChannelDetailsDto } from './generated/portal/WrapperChannelDetailsDto';
 import { ChannelDetailsDto } from './generated/portal/ChannelDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
@@ -426,22 +425,23 @@ export const PortalApi = {
   },
 
   createWrapperChannelDetails: async (
-    channel: WrapperChannelDetailsDto
+    channel: ChannelOnCreation
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
       body: {
-        broker_psp_code: channel.broker_psp_code,
-        broker_description: channel.broker_description,
-        channel_code: channel.channel_code,
-        redirect_protocol: channel.redirect_protocol,
-        redirect_port: channel.redirect_port,
-        redirect_ip: channel.redirect_ip,
-        redirect_path: channel.redirect_path,
-        redirect_query_string: channel.redirect_query_string,
-        target_host: channel.target_host,
-        target_path: channel.target_path,
-        target_port: channel.target_port,
-        payment_types: channel.payment_types,
+        broker_psp_code: channel.pspBrokerCode,
+        broker_description: channel.businessName,
+        channel_code: channel.idChannel,
+        redirect_protocol: channel.redirectProtocol,
+        redirect_port: channel.redirectPort,
+        redirect_ip: channel.redirectIp,
+        redirect_path: channel.redirectService,
+        redirect_query_string: channel.redirectParameters,
+        target_host: channel.targetAddress,
+        target_path: channel.targetService,
+        target_port: channel.targetPort,
+        payment_types: channel.paymentType,
+        status: channel.status,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);

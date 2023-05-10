@@ -178,6 +178,10 @@
     }
   },
   "addEditChannelPage": {
+    "config": {
+      "titleConfiguration": "Configura canale",
+      "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione."
+    },
     "create": {
       "title": "Crea un nuovo canale",
       "subtitle": "Completa i campi",
@@ -214,22 +218,68 @@
         "redirectService": "Path",
         "redirectParameters": "Parametri",
         "targetAddress": "IP",
+        "targetIp": "IP",
         "targetService": "Path",
         "targetPort": "Porta",
-        "paymentType": "Seleziona tipo di versamento"
+        "paymentType": "Seleziona tipo di versamento",
+        "addPayment": "Aggiunta metodo"
       },
       "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
-      "errorMessageChannelCodeTypesDesc": "Errore durante la generazione del Codice Canale"
+      "errorMessageChannelWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato",
+      "errorMessageChannelCodeTypesDesc": "Errore durante la generazione del Codice Canale",
+      "validationForm": {
+        "title": "Informazione da completare",
+        "subtitle": "Informazioni a carico di PagoPA.",
+        "sections": {
+          "registry": "Anagrafica",
+          "endPoint": "Endpoint",
+          "proxy": "Proxy",
+          "otherInfo": "Altre informazioni"
+        },
+        "fields": {
+          "primitiveVersion": "Versioni primitive",
+          "password": "Password",
+          "newPassword": "Nuova password",
+          "protocol": "Protocollo",
+          "ip": "IP",
+          "port": "Porta",
+          "service": "Servizio",
+          "npmService": "Servizio NPM",
+          "proxyPort": "Porta proxy",
+          "proxyAddress": "Indirizzo proxy",
+          "paymentModel": "Modello di pagamento",
+          "plugin": "Plugin WFESP",
+          "threadNumber": "Numero Thread",
+          "timeoutA": "Timeout A",
+          "timeoutB": "Timeout B",
+          "timeoutC": "Timeout C",
+          "pspNotify": "PSP Notify Payment",
+          "telematicReceipt": "Push Ricevuta Telematica ",
+          "rptCard": "Carrello RPT",
+          "recoveryPull": "Processo Recovery Pull",
+          "digitalStamp": "Marca da bollo digitale",
+          "onUs": "On us"
+        },
+        "paymentModel": {
+          "activatedAtPsp": "Attivato presso PSP",
+          "multi": "Multibeneficiario",
+          "immediate": "Immediato",
+          "different": "Differito"
+        }
+      }
     },
     "confirmModal": {
       "title": "Invio per la revisione",
       "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
       "messageStation": "Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>",
+      "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
       "confirmButton": "Invia",
-      "cancelButton": "Torna indietro"
+      "confirmButtonOpe": "Conferma",
+      "cancelButton": "Torna indietro",
+      "channelConfiguration": "Configurazione canale"
     }
   },
   "editChannelPage": {
@@ -239,9 +289,13 @@
   "channelDetailPage": {
     "channels": "Canali",
     "edit": "Modifica",
+    "deleteRequired": "Richiedi eliminazione",
+    "correctionRequired": "Richiedi correzione",
+    "configure": "Configura",
     "duplicate": "Duplica",
     "disable": "Disabilita",
     "createdOn": "Creato il",
+    "alertWarning": "Canale in attesa di revisione da parte di un operatore PagoPA.",
     "detail": "dettaglio",
     "state": "Stato",
     "status": {
@@ -250,6 +304,7 @@
       "active": "Attivo"
     },
     "channelConfiguration": "Configurazione del canale",
+    "institutionInfo": "Informazioni a carico dell’ente.",
     "registry": "Anagrafica",
     "pspBrokerCode": "Codice intermediario PSP",
     "companyName": "Ragione sociale",
@@ -260,15 +315,50 @@
     "redirectUrl": "URL di redirect",
     "target": "Target",
     "targetAddress": "IP",
+    "targetIp": "IP",
     "targetService": "Path",
     "targetPort": "Porta",
     "paymentType": "Tipo di versamento",
     "associatedPsp": "PSP associati",
+    "changeHistory": "Storico modifiche",
     "managePsp": "Gestisci PSP",
     "associated": "Associati",
     "changes": "Modifiche",
     "lastChange": "Ultima modifica",
     "operatedBy": "Operata da"
+  },
+  "channelDetailValidationPage": {
+    "title": "Informazioni da completare",
+    "subtitle": "Informazioni a carico di PagoPA.",
+    "registry": "Anagrafica",
+    "primitiveVersion": "Versione primitive",
+    "password": "Password",
+    "newPassword": "Nuova password",
+    "endPoint": "Endpoint",
+    "protocol": "Protocollo",
+    "ip": "IP",
+    "port": "Porta",
+    "service": "Servizio",
+    "serviceNMP": "Servizio NMP",
+    "proxy": "Proxy",
+    "proxyAddress": "Indirizzo proxy",
+    "proxyPort": "Porta proxy",
+    "status": "Stato",
+    "enabled": "Abilitato",
+    "disabled": "Non abilitato",
+    "otherInfo": "Altre informazioni",
+    "paymentModel": "Modello di pagamento",
+    "pliugin": "Plugin WFESP",
+    "threadNumber": "Numero Thread",
+    "timeoutA": "Timeout A",
+    "timeoutB": "Timeout B",
+    "timeoutC": "Timeout C",
+    "pspNotify": "PSP Notify Payment",
+    "electronicReceipt": "Push Ricevuta Telematica",
+    "onUs": "On Us",
+    "rptSign": "Carello RPT",
+    "recoveryProcess": "Processo di Recovery Pull",
+    "stamp": "Marca da bollo"
   },
   "channelPSPList": {
     "title": "Gestisci PSP",

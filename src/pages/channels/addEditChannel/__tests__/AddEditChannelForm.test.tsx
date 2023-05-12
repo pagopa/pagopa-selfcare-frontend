@@ -1,14 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import {
-  act,
-  cleanup,
-  fireEvent,
-  queryByTestId,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -36,6 +28,7 @@ afterEach(cleanup);
 
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
+
   const adminUser: Array<Party> = [
     {
       partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
@@ -602,7 +595,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
+              selectedParty={operatorUser[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
               channelDetail={channelDetail}
             />

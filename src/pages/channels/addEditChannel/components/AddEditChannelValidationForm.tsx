@@ -391,7 +391,7 @@ const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props)
                 type="number"
                 InputLabelProps={{ shrink: formik.values.timeout_c ? true : false }}
                 inputProps={{
-                  'data-testid': 'timeout-a-test',
+                  'data-testid': 'timeout-c-test',
                 }}
                 label={t('addEditChannelPage.addForm.validationForm.fields.timeoutC')}
                 size="small"

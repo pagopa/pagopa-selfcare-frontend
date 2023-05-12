@@ -711,6 +711,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
               color="primary"
               variant="outlined"
               onClick={() => history.push(`${BASE_ROUTE}/channels/${channelCode}`)}
+              data-testid="back-btn-test"
             >
               {t('addEditChannelPage.addForm.backButton')}
             </Button>

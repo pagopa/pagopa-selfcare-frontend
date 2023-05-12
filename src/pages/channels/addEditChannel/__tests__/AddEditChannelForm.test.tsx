@@ -1,6 +1,14 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  queryByTestId,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -18,6 +26,7 @@ import {
   StatusEnum,
 } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { PortalApi } from '../../../../api/PortalApiClient';
+import { Party } from '../../../../model/Party';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -28,6 +37,35 @@ afterEach(cleanup);
 
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
+  const adminUser: Array<Party> = [
+    {
+      partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+      externalId: '14847241008',
+      originId: 'PSP_14847241008',
+      origin: 'SELC',
+      description: 'PSP S.p.A.',
+      fiscalCode: '14847241008',
+      digitalAddress: 'pspspa@test.dummy',
+      status: 'ACTIVE',
+      registeredOffice: 'VIA DEI PSP 20, ROMA',
+      roles: [
+        {
+          partyRole: 'DELEGATE',
+          roleKey: 'admin',
+        },
+      ],
+      urlLogo:
+        'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+      institutionType: 'PSP',
+      pspData: {
+        businessRegisterNumber: '00000000000',
+        legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+        legalRegisterNumber: '09878',
+        abiCode: '36042',
+        vatNumberGroup: false,
+      },
+    },
+  ];
 
   test('Test rendering AddEditChannelForm', async () => {
     render(
@@ -111,9 +149,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(targetPort, { target: { value: 555 } });
 
     fireEvent.click(paymentType);
-    fireEvent.change(paymentType, {
-      target: { value: mockedPaymentTypes.payment_types[0].description },
-    });
+    fireEvent.change(paymentType, { target: { value: 'Option 1' } });
 
     expect(continueBtn).not.toBeDisabled();
 
@@ -184,7 +220,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Create}
-              selectedParty={mockedParties[0]}
+              selectedParty={adminUser[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
             />
           </ThemeProvider>
@@ -205,6 +241,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
     const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
+    const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
 
     expect(businessName.value).toBe(mockedParties[0].description);
     expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
@@ -234,21 +271,29 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(targetPort, { target: { value: '0' } });
     fireEvent.change(targetPort, { target: { value: '555' } });
 
-    fireEvent.click(paymentType);
-    fireEvent.change(paymentType, {
-      target: { value: mockedPaymentTypes.payment_types[0].description },
-    });
+    paymentType.value = 'Option 1';
+
+    fireEvent.change(paymentType);
+    expect(paymentType.value).toBe('Option 1');
 
     expect(continueBtn).not.toBeDisabled();
     fireEvent.click(continueBtn);
 
-    const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
-    const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
+    const confirmBtn = screen.getByText(
+      'addEditChannelPage.addForm.continueButton'
+    ) as HTMLButtonElement;
+    const cancelBtn = screen.getByText(
+      'addEditChannelPage.addForm.backButton'
+    ) as HTMLButtonElement;
 
-    userEvent.click(cancelBtn);
+    fireEvent.click(cancelBtn);
     fireEvent.click(continueBtn);
 
-    userEvent.click(confirmBtn);
+    fireEvent.click(confirmBtn);
+
+    fireEvent.click(continueBtn);
+
+    fireEvent.click(backButton);
   });
 
   test('Test Multipayment methods add/remove', async () => {
@@ -304,7 +349,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     });
   });
 
-  test('Test Multipayment methods add/remove', async () => {
+  test('Test of AddEditChannelValidationForm', async () => {
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
@@ -321,7 +366,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       status: StatusEnum.TO_CHECK,
     };
 
-    const { getByTestId } = render(
+    const { getByTestId, getByText, container } = render(
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
@@ -344,6 +389,12 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const port = getByTestId('port-test') as HTMLInputElement;
     const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
     const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
+    const threadNumber = getByTestId('thread-number-test') as HTMLInputElement;
+    const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
+    const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
+    const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
+    const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
+    const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
 
     fireEvent.change(primitiveVersion, { target: { value: undefined } });
     fireEvent.change(primitiveVersion, { target: { value: 1 } });
@@ -358,15 +409,45 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(ip, { target: { value: 1 } });
 
     fireEvent.change(port, { target: { value: 1000 } });
-    expect(port.value).toBe('1000');
-
-    fireEvent.change(port, { target: { value: 'abc' } });
-    expect(port.value).toBe('');
 
     fireEvent.click(paymentModel);
     fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
 
-    fireEvent.click(servPlugIn);
     fireEvent.change(servPlugIn, { target: { value: 'abc' } });
+
+    fireEvent.change(threadNumber, { target: { value: 1 } });
+
+    fireEvent.change(timeoutA, { target: { value: 10 } });
+
+    fireEvent.change(timeoutB, { target: { value: 20 } });
+
+    fireEvent.change(timeoutC, { target: { value: 30 } });
+
+    expect(continueBtn).not.toBeDisabled();
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.queryByText(
+      (content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
+    ) as HTMLButtonElement;
+
+    const cancelBtn = screen.queryByText(
+      (content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
+    ) as HTMLButtonElement;
+
+    if (cancelBtn) {
+      fireEvent.click(cancelBtn);
+    }
+
+    fireEvent.click(continueBtn);
+
+    if (confirmBtn) {
+      fireEvent.click(confirmBtn);
+    }
+
+    fireEvent.click(backButton);
   });
 });

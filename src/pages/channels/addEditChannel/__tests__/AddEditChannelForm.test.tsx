@@ -1,14 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import {
-  act,
-  cleanup,
-  fireEvent,
-  queryByTestId,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -16,7 +8,6 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { FormAction } from '../../../../model/Channel';
 import { store } from '../../../../redux/store';
-import { mockedPaymentTypes } from '../../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../AddEditChannelForm';
 import { mockedParties } from '../../../../services/__mocks__/partyService';
 import {
@@ -37,6 +28,7 @@ afterEach(cleanup);
 
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
+
   const adminUser: Array<Party> = [
     {
       partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
@@ -52,6 +44,36 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         {
           partyRole: 'DELEGATE',
           roleKey: 'admin',
+        },
+      ],
+      urlLogo:
+        'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+      institutionType: 'PSP',
+      pspData: {
+        businessRegisterNumber: '00000000000',
+        legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+        legalRegisterNumber: '09878',
+        abiCode: '36042',
+        vatNumberGroup: false,
+      },
+    },
+  ];
+
+  const operatorUser: Array<Party> = [
+    {
+      partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+      externalId: '14847241008',
+      originId: 'PSP_14847241008',
+      origin: 'SELC',
+      description: 'PSP S.p.A.',
+      fiscalCode: '14847241008',
+      digitalAddress: 'pspspa@test.dummy',
+      status: 'ACTIVE',
+      registeredOffice: 'VIA DEI PSP 20, ROMA',
+      roles: [
+        {
+          partyRole: 'DELEGATE',
+          roleKey: 'operator', // TODO use real product role
         },
       ],
       urlLogo:
@@ -319,7 +341,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
+              selectedParty={operatorUser[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
               channelDetail={channelDetail}
             />
@@ -372,7 +394,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
+              selectedParty={operatorUser[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
               channelDetail={channelDetail}
             />

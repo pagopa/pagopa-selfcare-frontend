@@ -354,11 +354,11 @@ export const mockedChannelAvailablePSP: Array<PSP> = [
   },
 ];
 
-const channelCode: ChannelCodeResource = {
+export const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
 };
 
-const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
+export const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
   brokerCode: 'string',
   createdAt: new Date(),
   createdBy: 'PSP S.p.A',

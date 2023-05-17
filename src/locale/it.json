@@ -488,9 +488,12 @@
     "password": "Password",
     "redirectUrl": "URL di redirezione",
     "activationDate": "Data di attivazione",
+    "redirect": "Redirect",
+    "protocol": "Protocollo",
     "target": "Target",
     "address": "IP",
     "service": "Path",
+    "POFTargetService": "Target Servizio POF",
     "port": "Porta",
     "associatesEC": "EC associati",
     "manageEC": "Gestisci EC",
@@ -515,7 +518,11 @@
       "manageStation": "Gestisci stazione",
       "manageEC": "Gestisci EC",
       "correctStation": "Correggi",
-      "editStation": "Modifica"
+      "duplicateStation": "Duplica",
+      "editStation": "Modifica",
+      "deleteRequired": "Richiedi eliminazione",
+      "correctionRequired": "Richiedi correzione",
+      "configureStation": "Configura"
     }
   },
   "stationECList": {

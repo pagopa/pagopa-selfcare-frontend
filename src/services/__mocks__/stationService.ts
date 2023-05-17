@@ -30,6 +30,54 @@ export const mockedStation: StationDetailResource = {
   targetPort: 3001,
 };
 
+const mockedFullStation: StationDetailResource = {
+  stationCode: '97735020584_01',
+  stationStatus: StationStatusEnum.ON_REVISION,
+  enabled: true,
+  activationDate: undefined,
+  associatedCreditorInstitutions: 2,
+  brokerCode: '97735020584',
+  brokerDescription: undefined,
+  brokerObjId: 2,
+  createdAt: new Date(),
+  flagOnline: false,
+  ip: 'Valore',
+  ip4Mod: 'Valore',
+  modifiedAt: new Date(),
+  newPassword: undefined,
+  password: undefined,
+  pofService: 'Valore',
+  port: undefined,
+  port4Mod: undefined,
+  primitiveVersion: 1,
+  protocol: undefined,
+  protocol4Mod: undefined,
+  proxyEnabled: undefined,
+  proxyHost: 'Valore',
+  proxyPassword: undefined,
+  proxyPort: 3000,
+  proxyUsername: undefined,
+  redirectIp: 'Valore',
+  redirectPath: 'Valore',
+  redirectPort: 8080,
+  redirectProtocol: RedirectProtocolEnum.HTTPS,
+  redirectQueryString: 'Valore',
+  rtInstantaneousDispatch: undefined,
+  service: undefined,
+  service4Mod: undefined,
+  targetHost: 'Valore',
+  targetHostPof: 'Valore',
+  targetPath: 'Valore',
+  targetPathPof: 'Valore',
+  targetPort: 1000,
+  targetPortPof: 1001,
+  threadNumber: undefined,
+  timeoutA: undefined,
+  timeoutB: undefined,
+  timeoutC: undefined,
+  version: undefined,
+};
+
 export const mockedStations: StationsResource = {
   pageInfo: {
     page: 0,
@@ -248,56 +296,56 @@ export const mockedStationsMerged2: WrapperStationsResource = {
   ],
 };
 
-const mockedStationsDetail: Array<StationDetailResource> = [
-  {
-    enabled: true,
-    stationStatus: StationStatusEnum.ACTIVE,
-    stationCode: '97735020584_01',
-    version: 1,
-    primitiveVersion: 1,
-    password: 'PASSWORD',
-    redirectPath: 'esempiolink1.it',
-    activationDate: new Date('2023-02-23'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
-    service: 'lab.link1.it',
-    port: 80,
-    associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-02-19'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
-  },
-  {
-    enabled: true,
-    stationStatus: StationStatusEnum.ON_REVISION,
-    stationCode: '97735020584_02',
-    version: 2,
-    primitiveVersion: 1,
-    password: 'PASSWORD',
-    redirectPath: 'esempiolink2.it',
-    activationDate: new Date('2023-02-24'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-    service: 'lab.link2.it',
-    port: 80,
-    associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-02-20'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
-  },
-  {
-    enabled: true,
-    stationStatus: StationStatusEnum.TO_BE_CORRECTED,
-    stationCode: '97735020584_03',
-    version: 1,
-    primitiveVersion: 1,
-    password: 'XXXXXXXXXXXXXX',
-    redirectPath: 'esempiolink3.it',
-    activationDate: new Date('2023-02-25'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-    service: 'lab.link3.it',
-    port: 80,
-    associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-03-20'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
-  },
-];
+// const mockedStationsDetail: Array<StationDetailResource> = [
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.ACTIVE,
+//     stationCode: '97735020584_01',
+//     version: 1,
+//     primitiveVersion: 1,
+//     password: 'PASSWORD',
+//     redirectPath: 'esempiolink1.it',
+//     activationDate: new Date('2023-02-23'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
+//     service: 'lab.link1.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-02-19'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.ON_REVISION,
+//     stationCode: '97735020584_02',
+//     version: 2,
+//     primitiveVersion: 1,
+//     password: 'PASSWORD',
+//     redirectPath: 'esempiolink2.it',
+//     activationDate: new Date('2023-02-24'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+//     service: 'lab.link2.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-02-20'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.TO_BE_CORRECTED,
+//     stationCode: '97735020584_03',
+//     version: 1,
+//     primitiveVersion: 1,
+//     password: 'XXXXXXXXXXXXXX',
+//     redirectPath: 'esempiolink3.it',
+//     activationDate: new Date('2023-02-25'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+//     service: 'lab.link3.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-03-20'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+// ];
 
 export const mockedStationECs: CreditorInstitutionsResource = {
   creditor_institutions: [
@@ -410,14 +458,8 @@ export const getStations = (_page: number): Promise<StationsResource> =>
 export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));
 
-export const getStationDetail = (stationCode: any): Promise<StationDetailResource> => {
-  const matchedStationByStationID = mockedStationsDetail.find((s) => s.stationCode === stationCode);
-  if (matchedStationByStationID) {
-    return new Promise((resolve) => resolve(matchedStationByStationID));
-  } else {
-    return new Promise((resolve) => resolve(mockedStationsDetail[0]));
-  }
-};
+export const getStationDetail = (_stationCode: any): Promise<StationDetailResource> =>
+  new Promise((resolve) => resolve(mockedFullStation));
 
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));

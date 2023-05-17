@@ -5,19 +5,22 @@ import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { StatusEnum } from '../../../../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
+import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
+import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 
 type Props = {
-  stationDetail?: WrapperEntitiesOperations;
+  stationDetailWrapper?: WrapperEntitiesOperations;
+  stationDetail?: StationDetailResource;
 };
 
-const DetailButtons = ({ stationDetail }: Props) => {
+const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const { t } = useTranslation();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {isOperator && stationDetail?.status === StatusEnum.APPROVED ? (
+      {isOperator && stationDetailWrapper?.status === StatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -25,13 +28,14 @@ const DetailButtons = ({ stationDetail }: Props) => {
             variant="contained"
             // TBD
           >
-            {t('channelDetailPage.edit')}
+            {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : isOperator && stationDetail?.status === (StatusEnum.TO_CHECK || StatusEnum.TO_FIX) ? (
+      ) : isOperator &&
+        stationDetailWrapper?.status === (StatusEnum.TO_CHECK || StatusEnum.TO_FIX) ? (
         <>
           <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
-            {t('channelDetailPage.correctionRequired')}
+            {t('stationDetailPage.stationOptions.correctionRequired')}
           </Button>
           <Button
             component={Link}
@@ -39,13 +43,21 @@ const DetailButtons = ({ stationDetail }: Props) => {
             variant="contained"
             // TBD
           >
-            {t('channelDetailPage.configure')}
+            {t('stationDetailPage.stationOptions.configureStation')}
           </Button>
         </>
-      ) : stationDetail?.status === StatusEnum.APPROVED ? (
+      ) : stationDetail?.stationStatus === StationStatusEnum.ACTIVE ? (
         <>
           <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
-            {t('channelDetailPage.deleteRequired')}
+            {t('stationDetailPage.stationOptions.deleteRequired')}
+          </Button>
+          <Button
+            component={Link}
+            to={() => ''}
+            variant="outlined"
+            // TBD
+          >
+            {t('stationDetailPage.stationOptions.duplicateStation')}
           </Button>
           <Button
             component={Link}
@@ -53,18 +65,10 @@ const DetailButtons = ({ stationDetail }: Props) => {
             variant="contained"
             // TBD
           >
-            {t('channelDetailPage.duplicate')}
-          </Button>
-          <Button
-            component={Link}
-            to={() => ''}
-            variant="contained"
-            // TBD
-          >
-            {t('channelDetailPage.edit')}
+            {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : stationDetail?.status === StatusEnum.TO_FIX ? (
+      ) : stationDetail?.stationStatus === StationStatusEnum.TO_BE_CORRECTED ? (
         <>
           <Button
             component={Link}
@@ -72,7 +76,7 @@ const DetailButtons = ({ stationDetail }: Props) => {
             variant="contained"
             // TBD
           >
-            {t('channelDetailPage.correctStation')}
+            {t('stationDetailPage.stationOptions.correctStation')}
           </Button>
         </>
       ) : (
@@ -83,7 +87,7 @@ const DetailButtons = ({ stationDetail }: Props) => {
             variant="contained"
             // TBD
           >
-            {t('channelDetailPage.edit')}
+            {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
       )}

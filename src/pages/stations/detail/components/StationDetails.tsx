@@ -4,7 +4,6 @@ import {
   Stack,
   Breadcrumbs,
   Typography,
-  Button,
   Paper,
   Chip,
   Divider,
@@ -12,12 +11,13 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
-import { ButtonNaked, theme } from '@pagopa/mui-italia';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
+import DetailButtons from './DetailButtons';
 
 type Prop = {
   stationDetail?: StationDetailResource;
@@ -69,72 +69,12 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
             />
             <Typography mb={5} component={'span'} fontWeight={'fontWeightMedium'} color={'#5C6F82'}>
               {t('stationDetailPage.createdAt', {
-                data: formatedDate(stationDetail?.activationDate),
+                data: formatedDate(stationDetail?.createdAt),
               })}
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {stationDetail?.stationStatus === StationStatusEnum.ON_REVISION ? (
-                <Button
-                  color="primary"
-                  style={{
-                    color: '#FFFFFF',
-                    borderColor: theme.palette.error.dark,
-                  }}
-                  variant="contained"
-                  onClick={() => {}} // TODO FixMe
-                >
-                  {t('stationDetailPage.actionButtons.edit')}
-                </Button>
-              ) : stationDetail?.stationStatus === StationStatusEnum.TO_BE_CORRECTED ? (
-                <Button
-                  color="primary"
-                  style={{
-                    color: '#FFFFFF',
-                    borderColor: theme.palette.error.dark,
-                  }}
-                  variant="contained"
-                  onClick={() => {}} // TODO FixMe
-                >
-                  {t('stationDetailPage.actionButtons.revise')}
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    style={{
-                      color: theme.palette.error.dark,
-                      borderColor: theme.palette.error.dark,
-                    }}
-                    variant="outlined"
-                    onClick={() => {}} // TODO FixMe
-                  >
-                    {t('stationDetailPage.actionButtons.askElimination')}
-                  </Button>
-                  <Button
-                    style={{
-                      color: theme.palette.primary.main,
-                      borderColor: theme.palette.primary.main,
-                    }}
-                    variant="outlined"
-                    onClick={() => {}} // TODO FixMe
-                  >
-                    {t('stationDetailPage.actionButtons.duplicate')}
-                  </Button>
-                  <Button
-                    color="primary"
-                    style={{
-                      color: 'background.paper',
-                      borderColor: theme.palette.error.dark,
-                    }}
-                    variant="contained"
-                    onClick={() => {}} // TODO FixMe
-                  >
-                    {t('stationDetailPage.actionButtons.edit')}
-                  </Button>
-                </>
-              )}
-            </Stack>
+            <DetailButtons stationDetail={stationDetail} />
           </Grid>
         </Grid>
 
@@ -201,7 +141,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.version}
+                    {stationDetail?.version ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -225,26 +165,30 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                     alignItems: 'center',
                   }}
                 >
-                  <>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {showOrHidePassword()}
-                    </Typography>
-                    <IconButton
-                      style={{
-                        border: 'none !important',
-                        marginLeft: '42px',
-                      }}
-                      onClick={() => {
-                        setShowPassword(!showPassword);
-                      }}
-                    >
-                      {showPassword ? (
-                        <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                      ) : (
-                        <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                      )}
-                    </IconButton>
-                  </>
+                  {stationDetail?.password ? (
+                    <>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                        {showOrHidePassword()}
+                      </Typography>
+                      <IconButton
+                        style={{
+                          border: 'none !important',
+                          marginLeft: '42px',
+                        }}
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
+                        ) : (
+                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
+                        )}
+                      </IconButton>
+                    </>
+                  ) : (
+                    '-'
+                  )}
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.redirectUrl')}</Typography>
@@ -259,7 +203,34 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {formatedDate(stationDetail?.activationDate)}
+                    {formatedDate(stationDetail?.activationDate) ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">{t('stationDetailPage.redirect')}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.protocol')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.redirectProtocol}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.service')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.redirectPort}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.port')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.redirectPath}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -270,7 +241,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPath}
+                    {stationDetail?.targetHost}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -278,7 +249,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.service}
+                    {stationDetail?.targetPath}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -286,7 +257,36 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.port}
+                    {stationDetail?.targetPort}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPage.POFTargetService')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.address')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetHostPof}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.service')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetPathPof}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPage.port')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetPortPof}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -327,7 +327,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {}
+                    {'-'}
                   </Typography>
                 </Grid>
               </Grid>

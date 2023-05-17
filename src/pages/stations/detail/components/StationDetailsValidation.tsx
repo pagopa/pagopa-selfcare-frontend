@@ -51,7 +51,7 @@ Props) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtons stationDetail={stationWrap} />
+            <DetailButtons stationDetailWrapper={stationWrap} />
           </Grid>
           {isOperator && stationWrap.status === StatusEnum.TO_CHECK ? (
             <Grid item xs={12} sx={{ mb: 5 }}>

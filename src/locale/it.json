@@ -559,6 +559,46 @@
       "confirmButton": "Conferma"
     }
   },
+  "stationDetailPageValidation": {
+    "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
+    "configuration": {
+      "status": "Stato",
+      "title": "Configurazione della stazione",
+      "subtitle": "Informazioni a carico dell’ente.",
+      "registry": "Anagrafica",
+      "stationCode": "Codice stazione",
+      "primitiveVersion": "Versione Primitive",
+      "intermediaryCode": "Codice intermediario",
+      "redirect": "Redirect",
+      "protocol": "Protocollo",
+      "port": "Porta",
+      "ip": "IP",
+      "path": "Path",
+      "parameters": "Parametri",
+      "targetService": "Target Servizio",
+      "POFTargetService": "Target Servizio POF",
+      "modify": "Modifiche",
+      "lastUpgrade": "Ultima modifica",
+      "operatedBy": "Operata da",
+      "changeHistory": "Storico modifiche"
+    },
+    "infoToCompltete": {
+      "title": "Informazioni da completare",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "registry": "Anagrafica",
+      "version": "Versione",
+      "password": "Password",
+      "newPassword": "Nuova password",
+      "endpoint": "Endpoint",
+      "protocol": "Protocollo",
+      "ip": "IP",
+      "port": "Porta",
+      "POFService": "Servizio POF",
+      "NMPService": "Servizio NMP",
+      "model4": "Modello 4",
+      "service": "Servizio"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"

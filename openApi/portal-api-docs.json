@@ -3282,7 +3282,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WrapperEntitiesOperationsOfStationDetails"
+                  "$ref": "#/components/schemas/WrapperEntitiesOperations"
                 }
               }
             }
@@ -7122,7 +7122,10 @@
           "redirectPort",
           "redirectProtocol",
           "redirectQueryString",
-          "stationCode"
+          "stationCode",
+          "targetHost",
+          "targetPath",
+          "targetPort"
         ],
         "type": "object",
         "properties": {

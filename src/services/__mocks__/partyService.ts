@@ -43,7 +43,7 @@ export const mockedParties: Array<Party> = [
     roles: [
       {
         partyRole: 'DELEGATE',
-        roleKey: 'admin', // TODO use real product role
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',

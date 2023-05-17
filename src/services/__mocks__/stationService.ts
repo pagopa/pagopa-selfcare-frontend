@@ -1,6 +1,7 @@
 import { CreditorInstitutionStationDto } from '../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from '../../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from '../../api/generated/portal/CreditorInstitutionsResource';
+import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
@@ -11,6 +12,8 @@ import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
+import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEntitiesOperations';
+import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
 
 export const mockedStation: StationDetailResource = {
   stationCode: '97735020584_01',
@@ -318,6 +321,44 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
+export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
+  brokerCode: 'string',
+  createdAt: new Date(),
+  createdBy: 'EC S.p.A',
+  id: 'string',
+  modifiedAt: new Date(),
+  modifiedBy: 'string',
+  modifiedByOpt: 'string',
+  note: 'string',
+  status: StatusEnum.TO_CHECK,
+  type: TypeEnum.STATION,
+  wrapperEntityOperationsSortedList: [
+    {
+      createdAt: new Date(),
+      entity: {
+        stationCode: code,
+        stationStatus: StationStatusEnum.ON_REVISION,
+        enabled: true,
+        primitiveVersion: 1,
+        redirectProtocol: RedirectProtocolEnum.HTTPS,
+        redirectPort: 3000,
+        redirectIp: 'Esempio Ip',
+        redirectPath: 'Esempio Pat',
+        redirectQueryString: 'Esempio parametri',
+        targetHost: 'Esempio indirizzo',
+        targetPath: 'Esempio Pat',
+        targetPort: 3001,
+      },
+      id: 'string',
+      modifiedAt: new Date(),
+      modifiedBy: 'string',
+      modifiedByOpt: 'Operatore EC',
+      note: 'string',
+      status: StatusEnum.TO_CHECK,
+      type: TypeEnum.CHANNEL,
+    },
+  ],
+});
 
 const mockedStationCode = { stationCode: '1122334455_01' };
 
@@ -399,3 +440,5 @@ export const associateEcToStation = (
   _station: CreditorInstitutionStationDto
 ): Promise<CreditorInstitutionStationEditResource> =>
   new Promise((resolve) => resolve({ stationCode: '123' }));
+export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> =>
+  new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));

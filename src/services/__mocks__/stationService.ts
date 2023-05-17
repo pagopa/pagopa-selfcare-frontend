@@ -117,7 +117,126 @@ const mockedStationsDetail: Array<StationDetailResource> = [
   },
 ];
 
+// TODO: fix this object and type when openapi will be available
+export const mockedStationECs: any = {
+  creditor_institutions: [
+    {
+      ec_code: '14847241001',
+      business_name: 'Intenda Sanpietro S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ec.dummy.com',
+    },
+    {
+      ec_code: '14847241002',
+      business_name: 'Regione Lombardia',
+      enabled: true,
+      referent_name: 'Jon Snow',
+      referent_mail: 'f.lastname@rlomb.dummy.com',
+    },
+    {
+      ec_code: '14847241003',
+      business_name: 'Università Cattolica del Sacro Cuore',
+      enabled: false,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ucsc.dummy.com',
+    },
+    {
+      ec_code: '14847241004',
+      business_name: 'EC4 S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ucsc.dummy.com',
+    },
+    {
+      ec_code: '14847241005',
+      business_name: 'EC5 S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ucsc.dummy.com',
+    },
+  ],
+  page_info: {
+    page: 0,
+    limit: 5,
+    items_found: 8,
+    total_pages: 2,
+  },
+};
+
+// TODO: fix this object and type when openapi will be available
+export const mockedStationECsPage2: any = {
+  creditor_institutions: [
+    {
+      ec_code: '14847241006',
+      business_name: 'EC6 S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ec.dummy.com',
+    },
+    {
+      ec_code: '14847241007',
+      business_name: 'EC7 S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ec.dummy.com',
+    },
+    {
+      ec_code: '14847241008',
+      business_name: 'EC8 S.p.A.',
+      enabled: true,
+      referent_name: 'Firstname Lastname',
+      referent_mail: 'f.lastname@ec.dummy.com',
+    },
+  ],
+  page_info: {
+    page: 1,
+    limit: 5,
+    items_found: 8,
+    total_pages: 2,
+  },
+};
+
 const mockedStationCode = { stationCode: '1122334455_01' };
+
+export const mockedStationAvailableEC: Array<any> = [
+  {
+    broker_psp_code: '0000001',
+    description: 'Intesa San Paolo S.P.A',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000002',
+    description: 'Sogei',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000003',
+    description: 'BNP',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000004',
+    description: 'Banca Nazionale',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000005',
+    description: 'Banca Regionale',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_psp_code: '0000006',
+    description: 'Banca Estera',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+];
 
 export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
@@ -136,3 +255,13 @@ export const getStationDetail = (stationCode: any): Promise<StationDetailResourc
 
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));
+
+// TODO: remove 'any' return type when openApi will be available
+export const getStationECs = (_stationcode: string, page: number, _limit?: number): Promise<any> =>
+  new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
+
+export const dissociateECfromStation = (_stationcode: string, _eccode: string): Promise<void> =>
+  new Promise((resolve) => resolve());
+
+export const getStationAvailableEC = (): Promise<Array<any>> =>
+  new Promise((resolve) => resolve(mockedStationAvailableEC));

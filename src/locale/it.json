@@ -516,6 +516,45 @@
       "editStation": "Modifica"
     }
   },
+  "stationECList": {
+    "title": "Gestisci EC",
+    "subtitle": "Gestisci e associa nuovi EC.",
+    "searchPlaceholder": "Cerca per nome EC",
+    "csvDownload": "Scarica CSV",
+    "associateEcButtonLabel": "Associa EC",
+    "dissociateEcSuccessMessage": "EC dissociato con successo",
+    "noResults": "Non sono ancora presenti EC associati a questo canale.<1><0> Associa EC</0></1>",
+    "noSearchResults": "Nessun EC trovato",
+    "table": {
+      "loading": "Caricamento..."
+    },
+    "stationsTableColumns": {
+      "headerFields": {
+        "name": "Nome EC",
+        "referent": "Referente",
+        "contact": "Contatto",
+        "status": "Stato"
+      }
+    },
+    "dissociateModal": {
+      "title": "Dissocia EC",
+      "message": "Se dissoci un EC, sarà disattivata la sua connessione alla stazione.",
+      "confirmButton": "Dissocia EC",
+      "cancelButton": "Torna indietro"
+    }
+  },
+  "stationAssociateECPage": {
+    "title": "Associa EC",
+    "subTitle": "Digita il nome del nuovo EC da associare alla stazione",
+    "associationForm": {
+      "ECSelectionInputPlaceholder": "Cerca EC",
+      "successMessage": "EC associato con successo.",
+      "errorMessageTitle": "Errore",
+      "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
+      "backButton": "Annulla",
+      "confirmButton": "Conferma"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"

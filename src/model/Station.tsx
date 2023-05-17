@@ -1,5 +1,11 @@
 import { RedirectProtocolEnum } from '../api/generated/portal/StationDetailsDto';
 
+export enum FormAction {
+  Create = 'create',
+  Edit = 'edit',
+  Duplicate = 'duplicate',
+}
+
 export type StationOnCreation = {
   brokerCode: string;
   stationCode: string;

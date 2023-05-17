@@ -296,6 +296,13 @@ export const mockedStationsMerged2: WrapperStationsResource = {
   ],
 };
 
+const filteredStations = (station: StationsResource) => {
+  const sortedList = station.stationsList.filter(
+    (e) => e.stationStatus === StationStatusEnum.ON_REVISION
+  );
+  return { ...station, stationsList: sortedList };
+};
+
 // const mockedStationsDetail: Array<StationDetailResource> = [
 //   {
 //     enabled: true,
@@ -453,7 +460,7 @@ export const createStationMocked = (_station: StationDetailsDto): Promise<Statio
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>
-  new Promise((resolve) => resolve(mockedStations));
+  new Promise((resolve) => resolve(filteredStations(mockedStations)));
 
 export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));

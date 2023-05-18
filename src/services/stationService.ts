@@ -8,6 +8,7 @@ import {
   dissociateECfromStation as dissociateECfromStationMocked,
   getStationECs as getStationECsMocked,
   getStationAvailableEC as getStationAvailableECMocked,
+  associateEcToStation as associateEcToStationMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -78,8 +79,12 @@ export const dissociateECfromStation = (stationcode: string, pspcode: string): P
 export const associateEcToStation = (
   code: string,
   station: CreditorInstitutionStationDto
-): Promise<CreditorInstitutionStationEditResource> =>
-  PortalApi.associateEcToStation(code, station).then((resource) => resource);
+): Promise<CreditorInstitutionStationEditResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return associateEcToStationMocked(code, station);
+  }
+  return PortalApi.associateEcToStation(code, station).then((resource) => resource);
+};
 
 export const getStationAvailableEC = (): Promise<Array<any>> =>
   /* istanbul ignore if */

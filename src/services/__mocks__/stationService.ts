@@ -1,3 +1,5 @@
+import { CreditorInstitutionStationDto } from '../../api/generated/portal/CreditorInstitutionStationDto';
+import { CreditorInstitutionStationEditResource } from '../../api/generated/portal/CreditorInstitutionStationEditResource';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
@@ -7,7 +9,7 @@ import {
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 
-const mockedStation: StationDetailResource = {
+export const mockedStation: StationDetailResource = {
   stationCode: '97735020584_01',
   stationStatus: StationStatusEnum.ACTIVE,
   enabled: true,
@@ -265,3 +267,9 @@ export const dissociateECfromStation = (_stationcode: string, _eccode: string): 
 
 export const getStationAvailableEC = (): Promise<Array<any>> =>
   new Promise((resolve) => resolve(mockedStationAvailableEC));
+
+export const associateEcToStation = (
+  _code: string,
+  _station: CreditorInstitutionStationDto
+): Promise<CreditorInstitutionStationEditResource> =>
+  new Promise((resolve) => resolve({ stationCode: '123' }));

@@ -9,6 +9,7 @@ import { ProductKeys } from '../model/ApiKey';
 import { ChannelOnCreation } from '../model/Channel';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
+import { StationOnCreation } from '../model/Station';
 import { InstitutionResource } from './generated/portal/InstitutionResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { ProductsResource } from './generated/portal/ProductsResource';
@@ -18,7 +19,7 @@ import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
-import { StationDetailsDto } from './generated/portal/StationDetailsDto';
+// import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
@@ -33,6 +34,8 @@ import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorI
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
+import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
+import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -240,7 +243,7 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createStation: async (station: StationDetailsDto): Promise<StationDetailResource> => {
+  createStation: async (station: StationOnCreation): Promise<StationDetailResource> => {
     const result = await apiConfigClient.createStationUsingPOST({
       body: {
         brokerCode: station.brokerCode,
@@ -377,5 +380,25 @@ export const PortalApi = {
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createWrapperStation: async (
+    station: WrapperStationDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.createWrapperStationDetailsUsingPOST({
+      body: {
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetHost,
+        targetPath: station.targetPath,
+        targetPort: station.targetPort,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 };

@@ -1,5 +1,6 @@
+/* eslint-disable sonarjs/no-identical-functions */
 import { Stack, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
@@ -7,13 +8,16 @@ import { StatusEnum } from '../../../../api/generated/portal/WrapperStationDetai
 import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
 import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
+import ROUTES from '../../../../routes';
+import { StationFormAction } from '../../../../model/Station';
 
 type Props = {
   stationDetailWrapper?: WrapperEntitiesOperations;
   stationDetail?: StationDetailResource;
+  stationCode: string;
 };
 
-const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
+const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const { t } = useTranslation();
@@ -24,7 +28,12 @@ const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
         <>
           <Button
             component={Link}
-            to={() => ''}
+            to={() =>
+              generatePath(`${ROUTES.STATION_EDIT}`, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
             variant="contained"
             // TBD
           >
@@ -61,7 +70,12 @@ const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
           </Button>
           <Button
             component={Link}
-            to={() => ''}
+            to={() =>
+              generatePath(`${ROUTES.STATION_EDIT}`, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
             variant="contained"
             // TBD
           >
@@ -83,7 +97,12 @@ const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
         <>
           <Button
             component={Link}
-            to={() => ''}
+            to={() =>
+              generatePath(`${ROUTES.STATION_EDIT}`, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
             variant="contained"
             // TBD
           >
@@ -95,4 +114,4 @@ const DetailButtons = ({ stationDetailWrapper, stationDetail }: Props) => {
   );
 };
 
-export default DetailButtons;
+export default DetailButtonsStation;

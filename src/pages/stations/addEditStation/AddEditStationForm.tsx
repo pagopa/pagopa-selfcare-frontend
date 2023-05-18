@@ -20,16 +20,14 @@ import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  RedirectProtocolEnum,
-  StationDetailsDto,
-} from '../../../api/generated/portal/StationDetailsDto';
+import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
   /* associateEcToStation, */
   createStation,
+  createWrapperStation,
   getStationCode,
 } from '../../../services/stationService';
 import {
@@ -40,14 +38,19 @@ import { StationDetailResource } from '../../../api/generated/portal/StationDeta
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 // import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+// import { WrapperStationDetailsDto } from '../../../api/generated/portal/WrapperStationDetailsDto';
+import { StationStatusEnum } from '../../../api/generated/portal/StationResource';
+import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import AddEdiitStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
   goBack: () => void;
-  stationDetail?: StationDetailResource;
+  stationDetail?: StationOnCreation;
   formAction: string;
+  isOperator: boolean;
 };
 
-const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) => {
+const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -56,52 +59,111 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationCodeGenerated, setStationCodeGenerated] = useState('');
-
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   useEffect(() => {
-    setLoadingGeneration(true);
-    getStationCode(stationCodeCleaner)
-      .then((res) => {
-        setStationCodeGenerated(res.stationCode);
-      })
-      .catch((error) => {
-        addError({
-          id: 'GENERATE_STATION_CODE',
-          blocking: false,
-          error,
-          techDescription: `An error occurred while generating station code`,
-          toNotify: true,
-          displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-          displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
-          component: 'Toast',
+    if (formAction === StationFormAction.Create) {
+      setLoadingGeneration(true);
+      getStationCode(stationCodeCleaner)
+        .then((res) => {
+          setStationCodeGenerated(res.stationCode);
+        })
+        .catch((error) => {
+          addError({
+            id: 'GENERATE_STATION_CODE',
+            blocking: false,
+            error,
+            techDescription: `An error occurred while generating station code`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => {
+          setLoadingGeneration(false);
         });
-      })
-      .finally(() => {
-        setLoadingGeneration(false);
-      });
+    }
   }, []);
 
-  /* const bodyStationDto: CreditorInstitutionStationDto = {
-    auxDigit: 0,
-    segregationCode: 0,
-    stationCode: stationCodeGenerated,
-  }; */
+  // const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
+  const stationActive = stationDetail ? stationDetail.enabled : false;
+  const status = stationDetail ? stationDetail.stationStatus : StationStatusEnum.ON_REVISION;
 
-  const initialFormData: StationDetailsDto = {
-    brokerCode: brokerCodeCleaner,
-    stationCode: stationCodeGenerated,
-    primitiveVersion: 0,
-    redirectProtocol: RedirectProtocolEnum.HTTPS,
-    redirectPort: 0,
-    redirectIp: '',
-    redirectPath: '',
-    redirectQueryString: '',
-    targetHost: '',
-    targetPath: '',
-    targetPort: 0,
-  };
+  const initialFormData = (detail?: StationOnCreation) =>
+    detail
+      ? {
+          ...{
+            enabled: stationActive,
+            brokerCode: brokerCodeCleaner,
+            stationCode: detail.stationCode ?? '',
+            stationStatus: detail.stationStatus ?? undefined,
+            primitiveVersion: detail.primitiveVersion ?? undefined,
+            redirectProtocol: detail.redirectProtocol ?? '',
+            redirectPort: detail.redirectPort ?? undefined,
+            redirectIp: detail.redirectIp ?? '',
+            redirectPath: detail.redirectPath ?? '',
+            redirectQueryString: detail.redirectQueryString ?? '',
+            targetHost: detail.targetHost ?? '',
+            targetPath: detail.targetPath ?? '',
+            targetPort: detail.targetPort ?? undefined,
+            targetHostPof: detail.targetHostPof ?? '',
+            targetPathPof: detail.targetPathPof ?? '',
+            targetPortPof: detail.targetPortPof ?? undefined,
+          },
+          ...(isOperator && {
+            version: detail.version ?? undefined,
+            password: detail.password ?? '',
+            newPassword: detail.newPassword ?? '',
+            protocol: detail.protocol ?? undefined,
+            port: detail.port ?? undefined,
+            ip: detail.ip ?? '',
+            service: detail.service ?? '',
+            pofService: detail.pofService ?? '',
+            endpointIp: detail.endpointIp ?? '',
+            endpointPath: detail.endpointPath ?? '',
+            endpointPort: detail.endpointPort ?? undefined,
+            protocol4Mod: detail.protocol4Mod ?? undefined,
+            ip4Mod: detail.ip4Mod ?? '',
+            port4Mod: detail.port4Mod ?? undefined,
+            service4Mod: detail.service4Mod ?? '',
+          }),
+        }
+      : {
+          ...{
+            enabled: stationActive,
+            stationStatus: status,
+            brokerCode: brokerCodeCleaner,
+            stationCode: stationCodeGenerated,
+            primitiveVersion: 0,
+            redirectProtocol: RedirectProtocolEnum.HTTPS,
+            redirectPort: 0,
+            redirectIp: '',
+            redirectPath: '',
+            redirectQueryString: '',
+            targetHost: '',
+            targetPath: '',
+            targetPort: 0,
+          },
+          ...(isOperator && {
+            version: 0,
+            password: '',
+            newPassword: '',
+            protocol: undefined,
+            port: 0,
+            ip: '',
+            service: '',
+            pofService: '',
+            endpointIp: '',
+            endpointPath: '',
+            endpointPort: 0,
+            protocol4Mod: undefined,
+            ip4Mod: '',
+            port4Mod: 0,
+            service4Mod: '',
+          }),
+        };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -125,41 +187,74 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     return false;
   };
 
-  const validate = (values: StationDetailsDto) =>
+  const validate = (values: StationDetailResource) =>
     Object.fromEntries(
       Object.entries({
-        stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
-        primitiveVersion: !values.primitiveVersion
-          ? 'Campo obbligatorio'
-          : validatePrimitiveVersion(values.primitiveVersion)
-          ? t('addEditStationPage.validation.overVersion')
-          : undefined,
-        redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
-        redirectPort: !values.redirectPort
-          ? 'Campo obbligatorio'
-          : validatePortRange(values.redirectPort)
-          ? t('addEditStationPage.validation.overPort')
-          : undefined,
-        redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-        redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
-        redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
-        targetHost: !values.targetHost ? 'Campo obbligatorio' : undefined,
-        targetPath: !values.targetPath ? 'Campo obbligatorio' : undefined,
-        targetPort: !values.targetPort
-          ? 'Campo obbligatorio'
-          : validatePortRange(values.targetPort)
-          ? t('addEditStationPage.validation.overPort')
-          : undefined,
+        ...{
+          stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
+          brokerCode: !values.brokerCode ? 'Campo obbligatorio' : '',
+          primitiveVersion: !values.primitiveVersion
+            ? 'Campo obbligatorio'
+            : validatePrimitiveVersion(values.primitiveVersion)
+            ? t('addEditStationPage.validation.overVersion')
+            : undefined,
+          redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.redirectPort)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
+          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
+          redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
+          redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
+          targetHost: !values.targetHost ? 'Campo obbligatorio' : undefined,
+          targetPath: !values.targetPath ? 'Campo obbligatorio' : undefined,
+          targetPort: !values.targetPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPort)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
+          targetHostPof: !values.targetHostPof ? 'Campo obbligatorio' : undefined,
+          targetPathPof: !values.targetPathPof ? 'Campo obbligatorio' : undefined,
+          targetPortPof: !values.targetPortPof
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPortPof)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
+        },
+        ...(isOperator && {
+          version: !values.version
+            ? 'Campo obbligatorio'
+            : validatePrimitiveVersion(values.version)
+            ? t('addEditStationPage.validation.overVersion')
+            : undefined,
+          password: !values.password ? 'Campo obbligatorio' : undefined,
+          newPassword: !values.newPassword ? 'Campo obbligatorio' : undefined,
+          protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
+          port: !values.port
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPort)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
+          ip: '',
+          service: '',
+          pofService: '',
+        }),
       }).filter(([_key, value]) => value)
     );
 
-  const submit = async (values: StationDetailsDto) => {
+  const submit = async (values: StationOnCreation) => {
     setLoading(true);
     try {
-      const create = await createStation(values);
-      if (create) {
-        // await associateEcToStation(stationCodeCleaner, bodyStationDto);
+      if (isOperator) {
+        await createStation(values);
       }
+      await createWrapperStation(values);
+
+      // const create = await createStation(values);
+      // if (create) {
+      //   await associateEcToStation(stationCodeCleaner, bodyStationDto);
+      // }
       history.push(ROUTES.STATIONS, {
         alertSuccessMessage: t('addEditStationPage.successMessage'),
       });
@@ -179,33 +274,25 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     }
   };
 
-  const formik = useFormik<StationDetailsDto>({
-    initialValues: initialFormData,
+  const formik = useFormik<StationOnCreation>({
+    initialValues: initialFormData(stationDetail),
     validate,
     onSubmit: async () => {
       setShowConfirmModal(true);
     },
     enableReinitialize: true,
+    validateOnMount: true,
   });
 
-  const enebledSubmit = (values: StationDetailsDto) =>
-    !(
-      values.stationCode !== '' &&
-      values.primitiveVersion !== 0 &&
-      values.redirectIp !== '' &&
-      values.redirectPath !== '' &&
-      values.redirectPort !== 0 &&
-      values.redirectProtocol !== undefined &&
-      values.redirectQueryString !== '' &&
-      values.targetHost !== '' &&
-      values.targetPort !== 0 &&
-      values.targetPath !== ''
-    );
+  useEffect(() => {
+    console.log('stationDetail', stationDetail);
+    console.log('FORMIK', formik);
+  }, [formik]);
 
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,
     field: string,
-    formik: FormikProps<StationDetailsDto>
+    formik: FormikProps<StationOnCreation>
   ) => {
     const regex = /^[0-9\b]+$/;
     if (e.target.value === '' || regex.test(e.target.value)) {
@@ -228,6 +315,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
           borderRadius: 1,
           p: 3,
           minWidth: '100%',
+          mb: 4,
         }}
       >
         <Typography variant="h6" mb={3}>
@@ -412,7 +500,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
 
           <Box sx={inputGroupStyle}>
             <AddEditStationFormSectionTitle
-              title={t('addEditStationPage.addForm.sections.target')}
+              title={t('addEditStationPage.addForm.sections.targetService')}
               icon={<MenuBook />}
               isRequired
             />
@@ -473,8 +561,82 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               </Grid>
             </Grid>
           </Box>
+
+          <Box sx={inputGroupStyle}>
+            <AddEditStationFormSectionTitle
+              title={t('addEditStationPage.addForm.sections.targetServicePof')}
+              icon={<MenuBook />}
+              isRequired
+            />
+            <Grid container spacing={2} mt={1}>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetHostPof"
+                  name="targetHostPof"
+                  label={t('addEditStationPage.addForm.fields.targetAddress')}
+                  size="small"
+                  value={formik.values.targetHostPof}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.targetHostPof && Boolean(formik.errors.targetHostPof)}
+                  helperText={formik.touched.targetHostPof && formik.errors.targetHostPof}
+                  inputProps={{
+                    'data-testid': 'target-address-pof-test',
+                  }}
+                />
+              </Grid>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetPathPof"
+                  name="targetPathPof"
+                  label={t('addEditStationPage.addForm.fields.targetService')}
+                  size="small"
+                  value={formik.values.targetPathPof}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.targetPathPof && Boolean(formik.errors.targetPathPof)}
+                  helperText={formik.touched.targetPathPof && formik.errors.targetPathPof}
+                  inputProps={{
+                    'data-testid': 'target-service-pof-test',
+                  }}
+                />
+              </Grid>
+
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetPortPof"
+                  name="targetPortPof"
+                  InputLabelProps={{ shrink: formik.values.targetPortPof ? true : false }}
+                  inputProps={{
+                    step: 1,
+                    min: 0,
+                    max: 65556,
+                    'data-testid': 'target-port-pof-test',
+                  }}
+                  label={t('addEditStationPage.addForm.fields.targetPort')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPort')}
+                  size="small"
+                  value={formik.values.targetPortPof === 0 ? '' : formik.values.targetPortPof}
+                  onChange={(e) => handleChangeNumberOnly(e, 'targetPortPof', formik)}
+                  error={formik.touched.targetPortPof && Boolean(formik.errors.targetPortPof)}
+                  helperText={formik.touched.targetPortPof && formik.errors.targetPortPof}
+                />
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       </Paper>
+
+      {isOperator ? (
+        <AddEdiitStationFormValidation
+          formik={formik}
+          handleChangeNumberOnly={handleChangeNumberOnly}
+          inputGroupStyle={inputGroupStyle}
+        />
+      ) : (
+        <></>
+      )}
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
           <Button color="primary" variant="outlined" onClick={goBack}>
@@ -487,7 +649,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={enebledSubmit(formik.values)}
+            disabled={!formik.isValid}
             color="primary"
             variant="contained"
             type="submit"

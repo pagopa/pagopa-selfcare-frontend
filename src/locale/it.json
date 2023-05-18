@@ -415,7 +415,8 @@
       "sections": {
         "registry": "Anagrafica",
         "redirect": "Redirect",
-        "target": "Target"
+        "targetService": "Target Servizio",
+        "targetServicePof": "Target Servizio POF"
       },
       "fields": {
         "stationCode": "Codice stazione",
@@ -428,6 +429,28 @@
         "targetAddress": "IP",
         "targetService": "Path",
         "targetPort": "Porta"
+      }
+    },
+    "addFormValidation": {
+      "title": "Informazione da completare",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "sections": {
+        "registry": "Anagrafica",
+        "endpoint": "Endpoint",
+        "targetEndPointPof": "Target (endpoint servizio POF)",
+        "model4": "Modello 4"
+      },
+      "fields": {
+        "version": "Versione",
+        "protocol": "Protocollo",
+        "port": "Porta",
+        "ip": "IP",
+        "path": "Path",
+        "password": "Password",
+        "newPassword": "Nuova password",
+        "servicePof": "Servizio POF",
+        "serviceNmp": "Servizio NMP",
+        "service": "Servizio"
       }
     },
     "confirmModal": {
@@ -444,7 +467,8 @@
     "errorMessageTitle": "Errore",
     "errorMessageDesc": "Errore durante la creazione, Codice stazione duplicato",
     "errorMessageStationCodeTitle": "Errore",
-    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido"
+    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido",
+    "errorMessageStationWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato"
   },
   "stationsPage": {
     "title": "Stazioni",

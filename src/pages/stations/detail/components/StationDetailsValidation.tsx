@@ -11,7 +11,7 @@ import {
 } from '../../../../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
-import DetailButtons from './DetailButtons';
+import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
   stationWrapper?: WrapperEntitiesOperations;
@@ -51,7 +51,7 @@ Props) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtons stationDetailWrapper={stationWrap} />
+            <DetailButtonsStation stationDetailWrapper={stationWrap} stationCode={stationId} />
           </Grid>
           {isOperator && stationWrap.status === StatusEnum.TO_CHECK ? (
             <Grid item xs={12} sx={{ mb: 5 }}>

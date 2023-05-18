@@ -4,21 +4,37 @@ import { CreditorInstitutionsResource } from '../../api/generated/portal/Credito
 import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
-import {
-  RedirectProtocolEnum,
-  StationDetailsDto,
-} from '../../api/generated/portal/StationDetailsDto';
+import { RedirectProtocolEnum } from '../../api/generated/portal/StationDetailsDto';
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
 import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEntitiesOperations';
 import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
+import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
+import { StationOnCreation } from '../../model/Station';
 
-export const mockedStation: StationDetailResource = {
-  stationCode: '97735020584_01',
-  stationStatus: StationStatusEnum.ACTIVE,
+const mockedStation: StationDetailResource = {
+  stationCode: '97735020584_02',
+  brokerCode: '97735020584',
+  stationStatus: StationStatusEnum.ON_REVISION,
   enabled: true,
+  primitiveVersion: 1,
+  redirectProtocol: RedirectProtocolEnum.HTTPS,
+  redirectPort: 3000,
+  redirectIp: 'Esempio Ip',
+  redirectPath: 'Esempio Pat',
+  redirectQueryString: 'Esempio parametri',
+  targetHost: 'Esempio indirizzo',
+  targetPath: 'Esempio Pat',
+  targetPort: 3001,
+  targetHostPof: 'Valore',
+  targetPathPof: 'Valore',
+  targetPortPof: 1001,
+};
+
+const mockedWrapperStation: WrapperStationDetailsDto = {
+  stationCode: '97735020584_01',
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   redirectPort: 3000,
@@ -30,7 +46,7 @@ export const mockedStation: StationDetailResource = {
   targetPort: 3001,
 };
 
-const mockedFullStation: StationDetailResource = {
+const mockedFullStation: StationOnCreation = {
   stationCode: '97735020584_01',
   stationStatus: StationStatusEnum.ON_REVISION,
   enabled: true,
@@ -91,7 +107,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-03T12:30:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-04T12:30:00Z'),
-      stationStatus: 'ACTIVE' as StationStatusEnum,
+      stationStatus: StationStatusEnum.ACTIVE,
       brokerDescription: 'test1',
       version: 1,
       associatedCreditorInstitutions: 1,
@@ -102,7 +118,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-04T12:31:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-03T12:34:00Z'),
-      stationStatus: 'ON_REVISION' as StationStatusEnum,
+      stationStatus: StationStatusEnum.ON_REVISION,
       brokerDescription: 'test2',
       version: 2,
       associatedCreditorInstitutions: 2,
@@ -113,7 +129,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      stationStatus: StationStatusEnum.TO_BE_CORRECTED,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -392,6 +408,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
       createdAt: new Date(),
       entity: {
         stationCode: code,
+        brokerCode: '97735020584',
         stationStatus: StationStatusEnum.ON_REVISION,
         enabled: true,
         primitiveVersion: 1,
@@ -403,6 +420,9 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
         targetHost: 'Esempio indirizzo',
         targetPath: 'Esempio Pat',
         targetPort: 3001,
+        targetHostPof: 'Valore',
+        targetPathPof: 'Valore',
+        targetPortPof: 1001,
       },
       id: 'string',
       modifiedAt: new Date(),
@@ -456,7 +476,7 @@ export const mockedStationAvailableEC: Array<any> = [
   },
 ];
 
-export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailResource> =>
+export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>
@@ -470,6 +490,10 @@ export const getStationDetail = (_stationCode: any): Promise<StationDetailResour
 
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));
+
+export const createWrapperStation = (
+  _station: WrapperStationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
   _stationcode: string,

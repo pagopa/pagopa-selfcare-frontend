@@ -15,11 +15,14 @@ import {
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
-import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
+// import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
+import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
+import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
+import { StationOnCreation } from '../model/Station';
 
-export const createStation = (station: StationDetailsDto): Promise<StationDetailResource> => {
+export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createStationMocked(station);
   }
@@ -108,3 +111,12 @@ export const getStationAvailableEC = (): Promise<Array<any>> =>
     return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
   } */
   getStationAvailableECMocked();
+
+export const createWrapperStation = (
+  station: WrapperStationDetailsDto
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createWrapperStation(station);
+  }
+  return PortalApi.createWrapperStation(station).then((resources) => resources);
+};

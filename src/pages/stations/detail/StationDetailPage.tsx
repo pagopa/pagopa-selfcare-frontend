@@ -44,12 +44,10 @@ const StationDetailPage = () => {
             id: 'GET_STATION_DETAILS_WRAPPER',
             blocking: false,
             error: reason as Error,
-            techDescription: `An error occurred while getting channel details wrapper`,
+            techDescription: `An error occurred while getting station details wrapper`,
             toNotify: true,
-            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-            displayableDescription: t(
-              'addEditChannelPage.addForm.errorMessageChannelWrapperDetailsDesc'
-            ),
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationWrapperDetailsDesc'),
             component: 'Toast',
           });
         })
@@ -97,7 +95,11 @@ const StationDetailPage = () => {
       isOperator={isOperator}
     />
   ) : (
-    <StationDetails stationDetail={stationDetail} formatedDate={formatedDate} />
+    <StationDetails
+      stationDetail={stationDetail}
+      stationId={stationId}
+      formatedDate={formatedDate}
+    />
   );
 };
 

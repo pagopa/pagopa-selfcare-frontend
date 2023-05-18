@@ -17,14 +17,15 @@ import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
-import DetailButtons from './DetailButtons';
+import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
   stationDetail?: StationDetailResource;
   formatedDate: (date: Date | undefined) => string | null;
+  stationId: string;
 };
 
-const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
+const StationDetails = ({ stationDetail, formatedDate, stationId }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
@@ -54,7 +55,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
             <Typography>{t('general.Stations')}</Typography>
             <Typography variant="body2" color={'#17324D'} sx={{ fontWeight: 'fontWeightMedium' }}>
               {t('stationDetailPage.detail', {
-                code: stationDetail?.stationCode,
+                code: stationId,
               })}
             </Typography>
           </Breadcrumbs>
@@ -62,7 +63,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
         <Grid container mt={3}>
           <Grid item xs={6} mb={5}>
             <TitleBox
-              title={stationDetail?.stationCode ?? ''}
+              title={stationId ?? ''}
               mbTitle={2}
               variantTitle="h4"
               variantSubTitle="body1"
@@ -74,7 +75,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtons stationDetail={stationDetail} />
+            <DetailButtonsStation stationDetail={stationDetail} stationCode={stationId} />
           </Grid>
         </Grid>
 
@@ -133,7 +134,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.stationCode}
+                    {stationId}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

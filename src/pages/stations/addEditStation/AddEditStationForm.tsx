@@ -392,7 +392,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                     name="redirectProtocol"
                     label={t('addEditStationPage.addForm.fields.redirectProtocol')}
                     size="small"
-                    defaultValue={formik.values.redirectProtocol}
+                    defaultValue={formik.values.protocol}
                     value={
                       formik.values.redirectProtocol === RedirectProtocolEnum.HTTPS
                         ? 'HTTPS'

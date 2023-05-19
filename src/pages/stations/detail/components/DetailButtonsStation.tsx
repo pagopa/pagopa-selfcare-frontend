@@ -48,7 +48,12 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
           </Button>
           <Button
             component={Link}
-            to={() => ''}
+            to={() =>
+              generatePath(`${ROUTES.STATION_EDIT}`, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
             variant="contained"
             // TBD
           >
@@ -57,7 +62,13 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
         </>
       ) : stationDetail?.stationStatus === StationStatusEnum.ACTIVE ? (
         <>
-          <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
+          <Button
+            component={Link}
+            to={''}
+            color="error"
+            variant="outlined"
+            // onClick={() => ''}
+          >
             {t('stationDetailPage.stationOptions.deleteRequired')}
           </Button>
           <Button

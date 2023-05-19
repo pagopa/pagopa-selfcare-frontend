@@ -61,9 +61,10 @@ Props) => {
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
               <TextField
+                type="number"
                 fullWidth
-                id="port"
-                name="port"
+                id="version"
+                name="version"
                 InputLabelProps={{ shrink: formik.values.version ? true : false }}
                 inputProps={{
                   'data-testid': 'version-test',
@@ -90,7 +91,6 @@ Props) => {
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
                 inputProps={{
-                  type: 'number',
                   'data-testid': 'password-test',
                 }}
               />
@@ -108,7 +108,6 @@ Props) => {
                 error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
                 helperText={formik.touched.newPassword && formik.errors.newPassword}
                 inputProps={{
-                  type: 'number',
                   'data-testid': 'new-password-test',
                 }}
               />
@@ -195,8 +194,8 @@ Props) => {
             <Grid container item xs={6}>
               <TextField
                 fullWidth
-                id="redirectPath"
-                name="redirectPath"
+                id="pofService"
+                name="pofService"
                 label={t('addEditStationPage.addFormValidation.fields.servicePof')}
                 size="small"
                 value={formik.values.pofService}
@@ -275,6 +274,7 @@ Props) => {
                 name="endpointPort"
                 InputLabelProps={{ shrink: formik.values.endpointPort ? true : false }}
                 inputProps={{
+                  type: 'number',
                   step: 1,
                   min: 0,
                   max: 65556,
@@ -356,6 +356,7 @@ Props) => {
                 name="port4Mod"
                 InputLabelProps={{ shrink: formik.values.port4Mod ? true : false }}
                 inputProps={{
+                  type: 'number',
                   step: 1,
                   min: 0,
                   max: 65556,

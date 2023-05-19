@@ -17,7 +17,7 @@ import { StationOnCreation } from '../../model/Station';
 const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
   brokerCode: '97735020584',
-  stationStatus: StationStatusEnum.ON_REVISION,
+  stationStatus: StationStatusEnum.ACTIVE,
   enabled: true,
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
@@ -48,7 +48,7 @@ const mockedWrapperStation: WrapperStationDetailsDto = {
 
 const mockedFullStation: StationOnCreation = {
   stationCode: '97735020584_01',
-  stationStatus: StationStatusEnum.ON_REVISION,
+  stationStatus: StationStatusEnum.ACTIVE,
   enabled: true,
   activationDate: undefined,
   associatedCreditorInstitutions: 2,
@@ -312,12 +312,12 @@ export const mockedStationsMerged2: WrapperStationsResource = {
   ],
 };
 
-const filteredStations = (station: StationsResource) => {
-  const sortedList = station.stationsList.filter(
-    (e) => e.stationStatus === StationStatusEnum.ON_REVISION
-  );
-  return { ...station, stationsList: sortedList };
-};
+// const filteredStations = (station: StationsResource) => {
+//   const sortedList = station.stationsList.filter(
+//     (e) => e.stationStatus === StationStatusEnum.ON_REVISION
+//   );
+//   return { ...station, stationsList: sortedList };
+// };
 
 // const mockedStationsDetail: Array<StationDetailResource> = [
 //   {
@@ -480,7 +480,7 @@ export const createStationMocked = (_station: StationOnCreation): Promise<Statio
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>
-  new Promise((resolve) => resolve(filteredStations(mockedStations)));
+  new Promise((resolve) => resolve(mockedStations));
 
 export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));
@@ -513,5 +513,6 @@ export const associateEcToStation = (
   _station: CreditorInstitutionStationDto
 ): Promise<CreditorInstitutionStationEditResource> =>
   new Promise((resolve) => resolve({ stationCode: '123' }));
+
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));

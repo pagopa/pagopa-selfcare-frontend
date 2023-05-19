@@ -248,8 +248,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
     try {
       if (isOperator) {
         await createStation(values);
+      } else {
+        await createWrapperStation(values);
       }
-      await createWrapperStation(values);
 
       // const create = await createStation(values);
       // if (create) {
@@ -368,6 +369,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                   helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                   inputProps={{
                     type: 'number',
+                    min: 1,
+                    max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
                 />

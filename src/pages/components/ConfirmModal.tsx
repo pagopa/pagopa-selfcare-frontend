@@ -9,6 +9,7 @@ type Props = {
   onCloseLabel: string;
   handleCloseConfirmModal: MouseEventHandler;
   handleConfrimSubmit: MouseEventHandler;
+  isOperator?: boolean;
 };
 
 const ConfirmModal = ({
@@ -19,6 +20,7 @@ const ConfirmModal = ({
   onCloseLabel,
   handleCloseConfirmModal,
   handleConfrimSubmit,
+  isOperator,
 }: Props) => (
   <Modal
     aria-labelledby="confirm-modal-title"
@@ -57,7 +59,11 @@ const ConfirmModal = ({
         >
           <Button
             variant="outlined"
-            sx={{ gridColumn: 'span 5', justifySelf: 'end', mr: 2 }}
+            sx={
+              isOperator
+                ? { gridColumn: 'span 5', justifySelf: 'end', mr: 4 }
+                : { gridColumn: 'span 5', justifySelf: 'end', mr: 2 }
+            }
             onClick={handleCloseConfirmModal}
             data-testid="cancel-button-test"
           >

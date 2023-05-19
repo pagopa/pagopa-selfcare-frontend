@@ -132,7 +132,13 @@ Props) => {
                   label={t('addEditStationPage.addFormValidation.fields.protocol')}
                   size="small"
                   defaultValue={formik.values.protocol}
-                  value={formik.values.protocol === ProtocolEnum.HTTPS ? 'HTTPS' : 'HTTP'}
+                  value={
+                    formik.values.protocol === undefined
+                      ? ''
+                      : formik.values.protocol === ProtocolEnum.HTTPS
+                      ? 'HTTPS'
+                      : 'HTTP'
+                  }
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.protocol && Boolean(formik.errors.protocol)}
                   inputProps={{
@@ -314,7 +320,13 @@ Props) => {
                   label={t('addEditStationPage.addFormValidation.fields.protocol')}
                   size="small"
                   defaultValue={formik.values.protocol4Mod}
-                  value={formik.values.protocol4Mod === Protocol4ModEnum.HTTPS ? 'HTTPS' : 'HTTP'}
+                  value={
+                    formik.values.protocol4Mod === undefined
+                      ? ''
+                      : formik.values.protocol4Mod === Protocol4ModEnum.HTTPS
+                      ? 'HTTPS'
+                      : 'HTTP'
+                  }
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.protocol4Mod && Boolean(formik.errors.protocol4Mod)}
                   inputProps={{

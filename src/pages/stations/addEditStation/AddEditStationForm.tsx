@@ -96,7 +96,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
       ? {
           ...{
             enabled: stationActive,
-            brokerCode: brokerCodeCleaner,
+            brokerCode: detail.brokerCode ?? '',
             stationCode: detail.stationCode ?? '',
             stationStatus: detail.stationStatus ?? undefined,
             primitiveVersion: detail.primitiveVersion ?? undefined,
@@ -353,6 +353,26 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                   }}
                 />
               </Grid>
+              {isOperator ? (
+                <Grid container item xs={6}>
+                  <TextField
+                    fullWidth
+                    id="brokerCode"
+                    name="brokerCode"
+                    label={t('addEditStationPage.addForm.fields.brokerCode')}
+                    placeholder={t('addEditStationPage.addForm.fields.brokerCode')}
+                    size="small"
+                    value={formik.values.brokerCode}
+                    disabled
+                    onChange={(e) => formik.handleChange(e)}
+                    error={formik.touched.brokerCode && Boolean(formik.errors.brokerCode)}
+                    helperText={formik.touched.brokerCode && formik.errors.brokerCode}
+                    inputProps={{
+                      'data-testid': 'broker-code-test',
+                    }}
+                  />
+                </Grid>
+              ) : null}
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
@@ -362,6 +382,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
+                  disabled={isOperator ? true : false}
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                   onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
@@ -662,16 +683,32 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         </Stack>
       </Stack>
       <ConfirmModal
-        title={t('addEditStationPage.confirmModal.title')}
+        isOperator={isOperator}
+        title={
+          isOperator
+            ? t('addEditStationPage.confirmModal.titleOperator')
+            : t('addEditStationPage.confirmModal.title')
+        }
         message={
-          <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
-            Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
-            approvare. Riceverai una notifica a revisione completata.
-            <br />
-          </Trans>
+          isOperator ? (
+            <Trans i18nKey="addEditStationPage.confirmModal.messageStationOperator">
+              L’ente riceverà una notifica di conferma attivazione della stazione.
+              <br />
+            </Trans>
+          ) : (
+            <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
+              Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
+              approvare. Riceverai una notifica a revisione completata.
+              <br />
+            </Trans>
+          )
         }
         openConfirmModal={showConfirmModal}
-        onConfirmLabel={t('addEditStationPage.confirmModal.confirmButton')}
+        onConfirmLabel={
+          isOperator
+            ? t('addEditStationPage.confirmModal.confirmButtonOpe')
+            : 'addEditStationPage.confirmModal.confirmButton'
+        }
         onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
         handleConfrimSubmit={async () => {

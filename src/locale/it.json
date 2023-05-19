@@ -420,6 +420,7 @@
       },
       "fields": {
         "stationCode": "Codice stazione",
+        "brokerCode": "Codice intermediario",
         "primitiveVersion": "Versione primitive",
         "redirectProtocol": "Protocollo",
         "redirectPort": "Porta",
@@ -457,7 +458,10 @@
       "title": "Invio per la revisione",
       "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
       "confirmButton": "Invia",
-      "cancelButton": "Torna indietro"
+      "cancelButton": "Torna indietro",
+      "titleOperator": "Configurazione stazione",
+      "messageStationOperator": "L’ente riceverà una notifica di conferma attivazione della stazione.<br/>",
+      "confirmButtonOpe": "Conferma"
     },
     "validation": {
       "overPort": "Il numero di porta deve essere compreso tra 1 e 65556",

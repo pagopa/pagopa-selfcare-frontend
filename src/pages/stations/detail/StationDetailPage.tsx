@@ -1,6 +1,6 @@
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getStationDetails } from '../../../services/stationService';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
@@ -12,6 +12,7 @@ import {
   TypeEnum,
   WrapperEntitiesOperations,
 } from '../../../api/generated/portal/WrapperEntitiesOperations';
+import ROUTES from '../../../routes';
 import StationDetails from './components/StationDetails';
 import StationDetailsValidation from './components/StationDetailsValidation';
 
@@ -19,13 +20,14 @@ const StationDetailPage = () => {
   const { t } = useTranslation();
   const { stationId } = useParams<{ stationId: string }>();
   const [stationDetail, setStationDetail] = useState<StationDetailResource>();
-
+  const history = useHistory();
   const [stationDetailWrapper, setStationDetailWrapper] = useState<WrapperEntitiesOperations>();
   const [stationDetWrap, setStationDetWrap] = useState<any>();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_STATION_DETAILS);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const isOperator = selectedParty?.roles[0].roleKey === 'operator';
+  const goBack = () => history.push(ROUTES.STATIONS);
 
   useEffect(() => {
     if (isOperator) {
@@ -93,6 +95,7 @@ const StationDetailPage = () => {
       stationId={stationId}
       formatedDate={formatedDate}
       isOperator={isOperator}
+      goBack={goBack}
     />
   ) : (
     <StationDetails

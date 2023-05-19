@@ -1,10 +1,11 @@
-import { Alert, Box, Chip, Divider, Grid } from '@mui/material';
+import { Alert, Box, Breadcrumbs, Chip, Divider, Grid, Stack } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
 import { ButtonNaked } from '@pagopa/mui-italia';
+import { ArrowBack } from '@mui/icons-material';
 import {
   StatusEnum,
   WrapperStationDetailsDto,
@@ -20,6 +21,7 @@ type Props = {
   stationId: string;
   formatedDate: (date: Date | undefined) => string | null;
   isOperator: boolean;
+  goBack: () => void;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
@@ -30,6 +32,7 @@ const StationDetailsValidation = ({
   stationId,
   formatedDate,
   isOperator,
+  goBack,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
@@ -40,6 +43,27 @@ Props) => {
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
+        <Stack direction="row">
+          <ButtonNaked
+            size="small"
+            component="button"
+            onClick={goBack}
+            startIcon={<ArrowBack />}
+            sx={{ color: 'primary.main', mr: '20px' }}
+            weight="default"
+            data-testid="back-btn-test"
+          >
+            {t('general.exit')}
+          </ButtonNaked>
+          <Breadcrumbs>
+            <Typography>{t('general.Stations')}</Typography>
+            <Typography color={'#A2ADB8'}>
+              {t('stationDetailPage.detail', {
+                code: stationId,
+              })}
+            </Typography>
+          </Breadcrumbs>
+        </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox title={stationId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />

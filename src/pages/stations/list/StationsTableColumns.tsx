@@ -1,9 +1,12 @@
 import { Typography, Grid, Box, Chip } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
-import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
-import StationsMenuOptions from '../components/StationsMenuOptions';
+import React, { CSSProperties, ReactNode } from 'react';
+import { generatePath } from 'react-router-dom';
+import GridLinkAction from '../../../components/Table/GridLinkAction';
+import { FormAction } from '../../../model/Station';
+import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -77,6 +80,65 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       renderCell: (params) => showStatus(params),
       sortable: false,
       flex: 4,
+    },
+    {
+      field: 'actions',
+      cellClassName: 'justifyContentNormalRight',
+      type: 'actions',
+      headerName: '',
+      align: 'center',
+      hideSortIcons: true,
+      disableColumnMenu: true,
+      editable: false,
+
+      getActions: (params: any) => {
+        const manageStationAction = (
+          <GridLinkAction
+            key="Gestisci stazione"
+            label="Gestisci stazione"
+            to={generatePath(`${ROUTES.STATION_DETAIL}`, { stationId: params.row.stationCode })}
+            showInMenu={true}
+          />
+        );
+        const editStationAction = (
+          <GridLinkAction
+            key="Modifica"
+            label="Modifica"
+            to={generatePath(`${ROUTES.STATION_EDIT}`, {
+              stationId: params.row.stationCode,
+              actionId: FormAction.Edit,
+            })}
+            showInMenu={true}
+          />
+        );
+        const duplicateStationAction = (
+          <GridLinkAction
+            key="Duplica"
+            label="Duplica"
+            to={generatePath(`${ROUTES.STATION_EDIT}`, {
+              stationId: params.row.stationCode,
+              actionId: FormAction.Duplicate,
+            })}
+            showInMenu={true}
+          />
+        );
+        const manageStationECAction = (
+          <GridLinkAction
+            key="Gestisci EC"
+            label="Gestisci EC"
+            to={generatePath(`${ROUTES.STATION_EC_LIST}`, { stationId: params.row.stationCode })}
+            showInMenu={true}
+          />
+        );
+
+        if (params.row.enabled) {
+          return [manageStationAction, manageStationECAction, duplicateStationAction];
+        } else {
+          return [manageStationAction, editStationAction];
+        }
+      },
+      sortable: false,
+      flex: 1,
     },
   ] as Array<GridColDef>;
 }
@@ -193,7 +255,6 @@ export function showStatus(params: GridRenderCellParams) {
           marginLeft: 2,
         }}
       />
-      <StationsMenuOptions status={params.row.stationStatus} stationCode={params.row.stationCode} />
     </Box>,
     {
       paddingLeft: 0,

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Alert, Box, Grid } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
@@ -5,10 +6,20 @@ import { useHistory } from 'react-router-dom';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import StationsTable from './StationsTable';
 
+export const clearLocationState = () => {
+  window.history.replaceState({}, document.title);
+};
+
 export default function StationsPage() {
   const { t } = useTranslation();
-
   const history = useHistory();
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', clearLocationState);
+    return () => {
+      window.removeEventListener('beforeunload', clearLocationState);
+    };
+  }, []);
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: '#F5F5F5' }}>

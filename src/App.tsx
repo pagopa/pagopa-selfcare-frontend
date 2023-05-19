@@ -28,6 +28,8 @@ import StationsPage from './pages/stations/list/StationsPage';
 import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
 import { ENV } from './utils/env';
+import StationECListPage from './pages/stations/stationECList/StationECPage';
+import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -57,6 +59,7 @@ const SecuredRoutes = withLogin(
           <Route path={routes.APIKEYS_CREATE} exact={true}>
             <AddApiKeyPage />
           </Route>
+
           <Route path={routes.CHANNELS} exact={true}>
             <ChannelsPage />
           </Route>
@@ -75,17 +78,28 @@ const SecuredRoutes = withLogin(
           <Route path={routes.CHANNEL_EDIT} exact={true}>
             <AddEditChannelPage />
           </Route>
+
+          <Route path={routes.STATIONS} exact={true}>
+            <StationsPage />
+          </Route>
           <Route path={routes.STATION_ADD} exact={true}>
             <AddEditStationPage />
           </Route>
           <Route path={routes.STATION_DETAIL} exact={true}>
             <StationDetailPage />
           </Route>
+          <Route path={routes.STATION_EC_LIST} exact={true}>
+            <StationECListPage />
+          </Route>
+          <Route path={routes.STATION_ASSOCIATE_EC} exact={true}>
+            <StationAssociateECPage />
+          </Route>
+          <Route path={routes.STATION_EDIT} exact={true}>
+            <AddEditStationPage />
+          </Route>
+
           <Route path={routes.TOS} exact={true}>
             <TOS />
-          </Route>
-          <Route path={routes.STATIONS} exact={true}>
-            <StationsPage />
           </Route>
           <Route path="*">
             <Redirect to={routes.HOME} />

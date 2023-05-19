@@ -4,6 +4,7 @@ import {
   mockedPSPChannels,
   mockedChannelDetail,
 } from '../../services/__mocks__/channelService';
+import { mockedStations } from '../../services/__mocks__/stationService';
 import { ChannelDetailsResource } from '../generated/portal/ChannelDetailsResource';
 import {
   InstitutionDetailResource,
@@ -15,6 +16,7 @@ import { PaymentTypesResource } from '../generated/portal/PaymentTypesResource';
 import { ProductsResource } from '../generated/portal/ProductsResource';
 import { PspChannelPaymentTypes } from '../generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from '../generated/portal/PspChannelPaymentTypesResource';
+import { StationsResource } from '../generated/portal/StationsResource';
 
 export const mockedInstitutionResources: Array<InstitutionResource> = [
   {
@@ -120,4 +122,7 @@ export const PortalApi = {
 
   getChannelDetail: async (_channelcode: string): Promise<ChannelDetailsResource> =>
     new Promise((resolve) => resolve(mockedChannelDetail('12345'))),
+
+  getStations: async (_page: number): Promise<StationsResource> =>
+    new Promise((resolve) => resolve(mockedStations)),
 };

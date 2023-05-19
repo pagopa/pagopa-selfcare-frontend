@@ -1,115 +1,94 @@
-import { Typography, Grid, Box, Chip } from '@mui/material';
+import { Typography, Grid, Box, Chip, IconButton } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
-import { generatePath } from 'react-router';
-import { FormAction } from '../../../model/Channel';
-import ROUTES from '../../../routes';
-import GridLinkAction from '../../../components/Table/GridLinkAction';
+import { RemoveCircle } from '@mui/icons-material';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  _onRowClick: (channelId: string) => void
+  onRowClick: (ec_code: string) => void
 ) {
   return [
     {
-      field: 'channel_code',
+      field: 'business_name',
       cellClassName: 'justifyContentBold',
-      headerName: t('channelsPage.channelsTableColumns.headerFields.name'),
+      headerName: t('stationECList.stationsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      width: 403,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showChannelCode(params),
-      sortable: true,
-      flex: 4,
-    },
-    {
-      field: 'broker_description',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('channelsPage.channelsTableColumns.headerFields.description'),
-      align: 'left',
-      headerAlign: 'left',
-      width: 404,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, undefined),
+      renderCell: (params: any) => showEcName(params),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'enabled',
+      field: 'referent',
       cellClassName: 'justifyContentNormal',
-      headerName: t('channelsPage.channelsTableColumns.headerFields.status'),
+      headerName: t('stationECList.stationsTableColumns.headerFields.referent'),
       align: 'left',
       headerAlign: 'left',
-      width: 404,
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => renderCell(params, params.row.referent_name),
+      sortable: false,
+      flex: 3,
+    },
+    {
+      field: 'contact',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationECList.stationsTableColumns.headerFields.contact'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => renderCell(params, params.row.referent_mail),
+      sortable: false,
+      flex: 3,
+    },
+    {
+      field: 'enabled',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationECList.stationsTableColumns.headerFields.status'),
+      align: 'left',
+      headerAlign: 'left',
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => showStatus(params),
       sortable: false,
-      flex: 4,
+      flex: 2,
     },
     {
       field: 'actions',
       cellClassName: 'justifyContentNormalRight',
-      type: 'actions',
       headerName: '',
-      align: 'center',
+      align: 'right',
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-
-      getActions: (params: any) => {
-        const manageChannelAction = (
-          <GridLinkAction
-            key="Gestisci canale"
-            label="Gestisci canale"
-            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
-            showInMenu={true}
-          />
-        );
-        const editChannelAction = (
-          <GridLinkAction
-            key="Modifica"
-            label="Modifica"
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
-              channelId: params.row.channel_code,
-              actionId: FormAction.Edit,
-            })}
-            showInMenu={true}
-          />
-        );
-        const duplicateChannelAction = (
-          <GridLinkAction
-            key="Duplica"
-            label="Duplica"
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
-              channelId: params.row.channel_code,
-              actionId: FormAction.Duplicate,
-            })}
-            showInMenu={true}
-          />
-        );
-        const manageChannelPSPAction = (
-          <GridLinkAction
-            key="Gestisci PSP"
-            label="Gestisci PSP"
-            to={generatePath(`${ROUTES.CHANNEL_PSP_LIST}`, { channelId: params.row.channel_code })}
-            showInMenu={true}
-          />
-        );
-
-        if (params.row.enabled) {
-          return [manageChannelAction, manageChannelPSPAction, duplicateChannelAction];
-        } else {
-          return [manageChannelAction, editChannelAction];
-        }
-      },
+      renderCell: (p) => (
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          width="100%"
+          mr={2}
+          sx={{ cursor: 'pointer' }}
+        >
+          <IconButton
+            onClick={onRowClick ? () => onRowClick(p.row.ec_code) : undefined}
+            data-testid={`dissociate-${p.row.ec_code}`}
+            sx={{
+              width: '100%',
+              '&:hover': { backgroundColor: 'transparent !important' },
+            }}
+          >
+            <RemoveCircle sx={{ color: 'error.dark', fontSize: '24px' }} />
+          </IconButton>
+        </Box>
+      ),
       sortable: false,
       flex: 1,
     },
@@ -126,10 +105,11 @@ export function renderCell(
       sx={{
         width: '100%',
         height: '100%',
-        paddingRight: '16px',
-        paddingLeft: '16px',
+        paddingRight: '18px',
+        paddingLeft: '18px',
         paddingTop: '-16px',
         paddingBottom: '-16px',
+
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
       }}
@@ -158,7 +138,7 @@ export function showCustomHeader(params: GridColumnHeaderParams) {
       <Typography
         color="colorTextPrimary"
         variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 0 }}
+        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 1 }}
       >
         {params.colDef.headerName}
       </Typography>
@@ -166,14 +146,14 @@ export function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-export function showChannelCode(params: GridRenderCellParams) {
+export function showEcName(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
         params,
         <>
           <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={7} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <Typography
                 variant="body2"
                 color="primary"
@@ -186,7 +166,7 @@ export function showChannelCode(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.channel_code}
+                {params.row.business_name}
               </Typography>
             </Grid>
           </Grid>
@@ -201,21 +181,17 @@ export function showStatus(params: GridRenderCellParams) {
     params,
     <Box>
       <Chip
-        label={params.row.enabled ? 'Attivo' : 'In revisione'}
+        label={params.row.enabled ? 'Attivo' : 'Disattivo'}
         aria-label="Status"
         sx={{
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          // backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'grey.200',
+          backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
           paddingBottom: '1px',
           height: '24px',
         }}
       />
-    </Box>,
-    {
-      textAlign: 'left',
-    }
+    </Box>
   );
 }

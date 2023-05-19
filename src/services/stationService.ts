@@ -5,6 +5,10 @@ import {
   getStationCodeMocked,
   getStationDetail,
   getStations as getStationsMocked,
+  dissociateECfromStation as dissociateECfromStationMocked,
+  getStationECs as getStationECsMocked,
+  getStationAvailableEC as getStationAvailableECMocked,
+  associateEcToStation as associateEcToStationMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -43,8 +47,51 @@ export const getStationCode = (code: string): Promise<StationCodeResource> => {
   return PortalApi.getStationCode(code).then((resource) => resource);
 };
 
+export const getStationECs = (stationcode: string, page: number, limit?: number): Promise<any> =>
+  getStationECsMocked(stationcode, page, limit);
+/*
+TODO: fix when real service rollout
+{
+  /* istanbul ignore if */
+/*
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationECsMocked(page);
+  } else {
+    return PortalApi.getStationECs(stationcode, page, limit).then((resources) => resources);
+  }
+};
+*/
+
+export const dissociateECfromStation = (stationcode: string, pspcode: string): Promise<void> =>
+  dissociateECfromStationMocked(stationcode, pspcode);
+/* 
+  TODO: fix when real service rollout
+  {
+  /* istanbul ignore if */
+/*
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return dissociateECfromStationMocked(stationcode, pspcode);
+  } else {
+    return PortalApi.dissociateECfromStation(stationcode, pspcode).then((resources) => resources);
+  } 
+}; */
+
 export const associateEcToStation = (
   code: string,
   station: CreditorInstitutionStationDto
-): Promise<CreditorInstitutionStationEditResource> =>
-  PortalApi.associateEcToStation(code, station).then((resource) => resource);
+): Promise<CreditorInstitutionStationEditResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return associateEcToStationMocked(code, station);
+  }
+  return PortalApi.associateEcToStation(code, station).then((resource) => resource);
+};
+
+export const getStationAvailableEC = (): Promise<Array<any>> =>
+  /* istanbul ignore if */
+  /* if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    TODO: fix when real service rollout
+    return getChannelAvailablePSPMocked(page);
+  } else {
+    return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
+  } */
+  getStationAvailableECMocked();

@@ -409,6 +409,11 @@
       "subtitle": "Completa i campi",
       "breadcrumb": "Crea stazione"
     },
+    "configure": {
+      "title": "Configura stazione",
+      "subtitle": "Completa le informazioni a carico di PagoPA per completare la configurazione.",
+      "breadcrumb": "Configura stazione"
+    },
     "addForm": {
       "backButton": "Indietro",
       "continueButton": "Conferma",

@@ -27,7 +27,7 @@ type Props = {
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
-const AddEdiitStationFormValidation = ({
+const AddEditStationFormValidation = ({
   formik,
   handleChangeNumberOnly,
   inputGroupStyle,
@@ -178,6 +178,7 @@ Props) => {
                 name="port"
                 InputLabelProps={{ shrink: formik.values.port ? true : false }}
                 inputProps={{
+                  type: 'number',
                   step: 1,
                   min: 0,
                   max: 65556,
@@ -411,4 +412,4 @@ Props) => {
   );
 };
 
-export default AddEdiitStationFormValidation;
+export default AddEditStationFormValidation;

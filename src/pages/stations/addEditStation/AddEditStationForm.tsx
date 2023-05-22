@@ -21,7 +21,7 @@ import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
-import ROUTES from '../../../routes';
+import { BASE_ROUTE } from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
@@ -34,14 +34,13 @@ import {
   LOADING_TASK_GENERATION_STATION_CODE,
   LOADING_TASK_STATION_ADD_EDIT,
 } from '../../../utils/constants';
-import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 // import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 // import { WrapperStationDetailsDto } from '../../../api/generated/portal/WrapperStationDetailsDto';
 import { StationStatusEnum } from '../../../api/generated/portal/StationResource';
 import { StationFormAction, StationOnCreation } from '../../../model/Station';
-import AddEdiitStationFormValidation from './components/AddEditStationFormValidation';
+import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
   goBack: () => void;
@@ -187,7 +186,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
     return false;
   };
 
-  const validate = (values: StationDetailResource) =>
+  const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
         ...{
@@ -229,19 +228,29 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
           password: !values.password ? 'Campo obbligatorio' : undefined,
-          newPassword: !values.newPassword ? 'Campo obbligatorio' : undefined,
           protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
+          ip: !values.ip ? 'Campo obbligatorio' : undefined,
           port: !values.port
             ? 'Campo obbligatorio'
             : validatePortRange(values.targetPort)
             ? t('addEditStationPage.validation.overPort')
             : undefined,
-          ip: '',
-          service: '',
-          pofService: '',
+
+          service: !values.service ? 'Campo obbligatorio' : undefined,
+          pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
+          endpointIp: !values.endpointIp ? 'Campo obbligatorio' : undefined,
+          endpointPath: !values.endpointPath ? 'Campo obbligatorio' : undefined,
+          endpointPort: !values.endpointPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.targetPort)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
         }),
       }).filter(([_key, value]) => value)
     );
+
+  const stationCode4Redirect =
+    formAction === StationFormAction.Create ? stationCodeGenerated : stationDetail?.stationCode;
 
   const submit = async (values: StationOnCreation) => {
     setLoading(true);
@@ -256,9 +265,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
       // if (create) {
       //   await associateEcToStation(stationCodeCleaner, bodyStationDto);
       // }
-      history.push(ROUTES.STATIONS, {
-        alertSuccessMessage: t('addEditStationPage.successMessage'),
-      });
+      history.push(`${BASE_ROUTE}/stations/${stationCode4Redirect}`);
     } catch (reason) {
       addError({
         id: 'ADD_EDIT_STATION',
@@ -652,8 +659,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         </Box>
       </Paper>
 
-      {isOperator ? (
-        <AddEdiitStationFormValidation
+      {isOperator && formAction !== StationFormAction.Create ? (
+        <AddEditStationFormValidation
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
           inputGroupStyle={inputGroupStyle}

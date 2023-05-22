@@ -100,12 +100,24 @@ const AddEditStationPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{t('general.Stations')}</Typography>
-            <Typography color={'#A2ADB8'}>{t(`addEditStationPage.create.breadcrumb`)}</Typography>
+            <Typography color={'#A2ADB8'}>
+              {formAction === StationFormAction.Create
+                ? t(`addEditStationPage.create.breadcrumb`)
+                : t('addEditStationPage.configure.breadcrumb')}
+            </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t(`addEditStationPage.create.title`)}
-          subTitle={t(`addEditChannelPage.create.subtitle`)}
+          title={
+            formAction === StationFormAction.Create
+              ? t(`addEditStationPage.create.title`)
+              : t('addEditStationPage.configure.title')
+          }
+          subTitle={
+            formAction === StationFormAction.Create
+              ? t(`addEditChannelPage.create.subtitle`)
+              : t('addEditStationPage.configure.subtitle')
+          }
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}

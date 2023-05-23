@@ -49,6 +49,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
             startIcon={<ArrowBack />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"
+            data-testid="exit-btn-test"
           >
             {t('general.exit')}
           </ButtonNaked>
@@ -180,6 +181,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                         onClick={() => {
                           setShowPassword(!showPassword);
                         }}
+                        data-testid="show-ps2-test"
                       >
                         {showPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />

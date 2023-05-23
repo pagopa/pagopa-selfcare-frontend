@@ -81,14 +81,15 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
             {t('stationDetailPage.stationOptions.duplicateStation')}
           </Button>
           <Button
-            component={Link}
-            to={() =>
-              generatePath(ROUTES.STATION_EDIT, {
-                stationId: stationCode,
-                actionId: StationFormAction.Edit,
-              })
-            }
+            // component={Link}
+            // to={() =>
+            //   generatePath(ROUTES.STATION_EDIT, {
+            //     stationId: stationCode,
+            //     actionId: StationFormAction.Edit,
+            //   })
+            // }
             variant="contained"
+            onClick={() => history.push(`${BASE_ROUTE}/stations/${stationCode}/edit`)}
             // TBD
           >
             {t('stationDetailPage.stationOptions.editStation')}

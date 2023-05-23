@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
+import { mockedFullStation } from '../../../services/__mocks__/stationService';
+import { StationFormAction } from '../../../model/Station';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -18,12 +20,16 @@ afterEach(cleanup);
 describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
-  test('Test rendering AddEditStationForm', async () => {
+  test('Test rendering AddEditStationForm with operator false and without stationDetail', async () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm goBack={jest.fn()} formAction={''} />
+            <AddEditStationForm
+              goBack={jest.fn()}
+              formAction={StationFormAction.Create}
+              isOperator={false}
+            />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -39,6 +45,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetAddressPof = screen.getByTestId('target-address-pof-test') as HTMLInputElement;
+    const targetServicePof = screen.getByTestId('target-service-pof-test') as HTMLInputElement;
+    const targetPortPof = screen.getByTestId('target-port-pof-test') as HTMLInputElement;
 
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
     expect(stationCode.value).toBe('station Code');
@@ -72,13 +81,116 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(targetPort, { target: { value: '555' } });
     expect(targetPort.value).toBe('555');
 
+    fireEvent.change(targetAddressPof, { target: { value: 'targetAddressPof' } });
+    expect(targetAddressPof.value).toBe('targetAddressPof');
+
+    fireEvent.change(targetServicePof, { target: { value: 'targetServicePof' } });
+    expect(targetServicePof.value).toBe('targetServicePof');
+
+    fireEvent.change(targetPortPof, { target: { value: '555' } });
+    expect(targetPortPof.value).toBe('555');
+
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);
 
-    const confirmModalBtn = await screen.findByTestId('confirm-button-test');
-    const cancelModalBtn = await screen.findByTestId('cancel-button-test');
+    const confirmBtn = screen.getByTestId('confirm-button-test');
+    fireEvent.click(confirmBtn);
 
-    fireEvent.click(confirmModalBtn);
-    fireEvent.click(cancelModalBtn);
+    fireEvent.click(continueBtn);
+
+    const backBtn = screen.getByTestId('cancel-button-test');
+    fireEvent.click(backBtn);
+  });
+
+  test('Test rendering AddEditStationForm with operator false and without stationDetail', async () => {
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              goBack={jest.fn()}
+              stationDetail={mockedFullStation}
+              formAction={StationFormAction.Edit}
+              isOperator={true}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const version = screen.getByTestId('version-test') as HTMLInputElement;
+    const password = screen.getByTestId('password-test') as HTMLInputElement;
+    const newPassword = screen.getByTestId('new-password-test') as HTMLInputElement;
+    const protocol = screen.getByTestId('protocol-test') as HTMLSelectElement;
+    const ip = screen.getByTestId('ip-test') as HTMLInputElement;
+    const port = screen.getByTestId('port-test') as HTMLInputElement;
+    const servicePof = screen.getByTestId('pof-service-test') as HTMLInputElement;
+    const serviceNmp = screen.getByTestId('nmp-service-test') as HTMLInputElement;
+    const endpointIp = screen.getByTestId('endpoint-ip-test') as HTMLInputElement;
+    const endpointPath = screen.getByTestId('endpoint-path-test') as HTMLInputElement;
+    const endpointPort = screen.getByTestId('endpoint-port-test') as HTMLInputElement;
+    const protocol4Mod = screen.getByTestId('protocol-4Mod-test') as HTMLSelectElement;
+    const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
+    const port4Mod = screen.getByTestId('port-4Mod-test') as HTMLInputElement;
+    const service4Mod = screen.getByTestId('service-4Mod-test') as HTMLInputElement;
+
+    fireEvent.change(version, { target: { value: 1 } });
+    expect(version.value).toBe('1');
+
+    fireEvent.change(password, { target: { value: 'password' } });
+    expect(password.value).toBe('password');
+
+    fireEvent.change(newPassword, { target: { value: 'newPassword' } });
+    expect(newPassword.value).toBe('newPassword');
+
+    fireEvent.click(protocol);
+    fireEvent.change(protocol, { target: { value: 'HTTPS' } });
+
+    fireEvent.change(ip, { target: { value: 'ip' } });
+    expect(ip.value).toBe('ip');
+
+    fireEvent.change(port, { target: { value: '' } });
+    expect(port.value).toBe('');
+
+    fireEvent.change(port, { target: { value: 555 } });
+    expect(port.value).toBe('555');
+
+    fireEvent.change(servicePof, { target: { value: 'servicePof' } });
+    expect(servicePof.value).toBe('servicePof');
+
+    fireEvent.change(serviceNmp, { target: { value: 'serviceNmp' } });
+    expect(serviceNmp.value).toBe('serviceNmp');
+
+    fireEvent.change(endpointIp, { target: { value: 'endpointIp' } });
+    expect(endpointIp.value).toBe('endpointIp');
+
+    fireEvent.change(endpointPath, { target: { value: 'endpointPath' } });
+    expect(endpointPath.value).toBe('endpointPath');
+
+    fireEvent.change(endpointPort, { target: { value: 555 } });
+    expect(endpointPort.value).toBe('555');
+
+    fireEvent.click(protocol4Mod);
+    fireEvent.change(protocol4Mod, { target: { value: 'HTTPS' } });
+
+    fireEvent.change(ip4Mod, { target: { value: 'ip4Mod' } });
+    expect(ip4Mod.value).toBe('ip4Mod');
+
+    fireEvent.change(port4Mod, { target: { value: 555 } });
+    expect(port4Mod.value).toBe('555');
+
+    fireEvent.change(service4Mod, { target: { value: 'service4Mod' } });
+    expect(service4Mod.value).toBe('service4Mod');
+
+    const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.getByTestId('confirm-button-test');
+    fireEvent.click(confirmBtn);
+
+    fireEvent.click(continueBtn);
+
+    const backBtn = screen.getByTestId('cancel-button-test');
+    fireEvent.click(backBtn);
   });
 });

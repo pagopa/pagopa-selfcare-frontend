@@ -292,11 +292,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
     validateOnMount: true,
   });
 
-  useEffect(() => {
-    console.log('stationDetail', stationDetail);
-    console.log('FORMIK', formik);
-  }, [formik]);
-
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,
     field: string,
@@ -311,8 +306,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
   const openConfirmModal = () => {
     if (formik.isValid) {
       setShowConfirmModal(true);
+    } else {
+      setShowConfirmModal(false);
     }
-    setShowConfirmModal(false);
   };
 
   return (

@@ -33,7 +33,7 @@ const mockedStation: StationDetailResource = {
   targetPortPof: 1001,
 };
 
-const mockedWrapperStation: WrapperStationDetailsDto = {
+export const mockedWrapperStation: WrapperStationDetailsDto = {
   stationCode: '97735020584_01',
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
@@ -46,7 +46,7 @@ const mockedWrapperStation: WrapperStationDetailsDto = {
   targetPort: 3001,
 };
 
-const mockedFullStation: StationOnCreation = {
+export const mockedFullStation: StationOnCreation = {
   stationCode: '97735020584_01',
   stationStatus: StationStatusEnum.ACTIVE,
   enabled: true,

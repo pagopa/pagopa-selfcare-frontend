@@ -11,6 +11,7 @@ import {
   getECListByStationCode as getECListByStationCodeMocked,
   getStationAvailableEC as getStationAvailableECMocked,
   associateEcToStation as associateEcToStationMocked,
+  createWrapperStation as createStationWrap,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -116,7 +117,7 @@ export const createWrapperStation = (
   station: WrapperStationDetailsDto
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createWrapperStation(station);
+    return createStationWrap(station);
   }
   return PortalApi.createWrapperStation(station).then((resources) => resources);
 };

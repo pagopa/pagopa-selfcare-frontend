@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getStationDetails } from '../../../services/stationService';
-import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
-import { LOADING_TASK_STATION_DETAILS } from '../../../utils/constants';
+// import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import {
+  LOADING_TASK_STATION_DETAILS,
+  LOADING_TASK_STATION_DETAILS_WRAPPER,
+} from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getWrapperStation } from '../../../services/__mocks__/stationService';
@@ -19,26 +22,25 @@ import StationDetailsValidation from './components/StationDetailsValidation';
 const StationDetailPage = () => {
   const { t } = useTranslation();
   const { stationId } = useParams<{ stationId: string }>();
-  const [stationDetail, setStationDetail] = useState<StationDetailResource>();
+  const [stationDetail, setStationDetail] = useState<any>();
   const history = useHistory();
   const [stationDetailWrapper, setStationDetailWrapper] = useState<WrapperEntitiesOperations>();
-  const [stationDetWrap, setStationDetWrap] = useState<any>();
+  // const [stationDetWrap, setStationDetWrap] = useState<any>();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_STATION_DETAILS);
+  const setLoadingWrap = useLoading(LOADING_TASK_STATION_DETAILS_WRAPPER);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const goBack = () => history.push(ROUTES.STATIONS);
 
   useEffect(() => {
     if (isOperator) {
-      setLoading(true);
+      setLoadingWrap(true);
       getWrapperStation(stationId)
         .then((response) => {
-          console.log('Response', response);
           setStationDetailWrapper(response);
           if (response.type === TypeEnum.STATION && response.wrapperEntityOperationsSortedList) {
-            console.log('Response', response.wrapperEntityOperationsSortedList[0].entity);
-            setStationDetWrap(response.wrapperEntityOperationsSortedList[0].entity);
+            setStationDetail(response.wrapperEntityOperationsSortedList[0].entity);
           }
         })
         .catch((reason) => {
@@ -53,7 +55,7 @@ const StationDetailPage = () => {
             component: 'Toast',
           });
         })
-        .finally(() => setLoading(false));
+        .finally(() => setLoadingWrap(false));
     } else {
       setLoading(true);
       getStationDetails(stationId)
@@ -90,7 +92,7 @@ const StationDetailPage = () => {
   return isOperator ? (
     <StationDetailsValidation
       stationWrapper={stationDetailWrapper}
-      StationDetailsValidation={stationDetWrap}
+      StationDetailsValidation={stationDetail}
       stationDetail={stationDetail}
       stationId={stationId}
       formatedDate={formatedDate}
@@ -98,11 +100,7 @@ const StationDetailPage = () => {
       goBack={goBack}
     />
   ) : (
-    <StationDetails
-      stationDetail={stationDetail}
-      stationId={stationId}
-      formatedDate={formatedDate}
-    />
+    <StationDetails stationDetail={stationDetail} formatedDate={formatedDate} />
   );
 };
 

@@ -42,7 +42,7 @@ export const mockedParties: Array<Party> = [
     registeredOffice: 'Via degli Enti Creditori 1',
     roles: [
       {
-        partyRole: 'DELEGATE',
+        partyRole: 'OPERATOR',
         roleKey: 'operator', // TODO use real product role
       },
     ],

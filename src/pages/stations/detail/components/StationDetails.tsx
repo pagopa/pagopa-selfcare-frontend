@@ -15,6 +15,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useParams } from 'react-router-dom';
 import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
 import DetailButtonsStation from './DetailButtonsStation';
@@ -22,13 +23,13 @@ import DetailButtonsStation from './DetailButtonsStation';
 type Prop = {
   stationDetail?: StationDetailResource;
   formatedDate: (date: Date | undefined) => string | null;
-  stationId: string;
 };
 
-const StationDetails = ({ stationDetail, formatedDate, stationId }: Prop) => {
+const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
+  const { stationId } = useParams<{ stationId: string }>();
 
   const showOrHidePassword = () => {
     if (showPassword) {

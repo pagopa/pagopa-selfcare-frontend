@@ -12,10 +12,16 @@ import {
   RedirectProtocolEnum,
   StationStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {
+  Protocol4ModEnum,
+  ProtocolEnum,
+  StatusEnum,
+} from '../../../api/generated/portal/StationDetailsDto';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
 import { mockedWrapperStation } from '../../../services/__mocks__/stationService';
+import StationDetailsValidation from '../detail/components/StationDetailsValidation';
+import { TypeEnum } from '../../../api/generated/portal/WrapperEntityOperationsOfobject';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -24,7 +30,7 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<StationDetails />', () => {
+describe('<StationDetailsValidation.test />', () => {
   const history = createMemoryHistory();
 
   const mockedFullStation: StationOnCreation = {
@@ -58,87 +64,78 @@ describe('<StationDetails />', () => {
     version: 2,
   };
 
-  const mockedFullStationOnrevision: StationOnCreation = {
-    enabled: true,
-    stationCode: '97735020584_01',
-    stationStatus: StationStatusEnum.ON_REVISION,
-    brokerCode: '97735020584',
-    ip: 'Valore',
-    ip4Mod: 'Valore',
-    newPassword: 'Valore',
-    password: 'Valore',
-    pofService: 'Valore',
-    port: 100,
-    port4Mod: 100,
-    primitiveVersion: 1,
-    protocol: ProtocolEnum.HTTPS,
-    protocol4Mod: Protocol4ModEnum.HTTPS,
-    redirectIp: 'Valore',
-    redirectPath: 'Valore',
-    redirectPort: 8080,
-    redirectProtocol: RedirectProtocolEnum.HTTPS,
-    redirectQueryString: 'Valore',
-    service: 'Valore',
-    service4Mod: 'Valore',
-    targetHost: 'Valore',
-    targetHostPof: 'Valore',
-    targetPath: 'Valore',
-    targetPathPof: 'Valore',
-    targetPort: 1000,
-    targetPortPof: 1001,
-    version: 2,
+  const mockedStationWrapperEntity = {
+    createdAt: new Date(),
+    entity: {
+      stationCode: '97735020584_01',
+      brokerCode: '97735020584',
+      stationStatus: StationStatusEnum.ON_REVISION,
+      enabled: true,
+      primitiveVersion: 1,
+      redirectProtocol: RedirectProtocolEnum.HTTPS,
+      redirectPort: 3000,
+      redirectIp: 'Esempio Ip',
+      redirectPath: 'Esempio Pat',
+      redirectQueryString: 'Esempio parametri',
+      targetHost: 'Esempio indirizzo',
+      targetPath: 'Esempio Pat',
+      targetPort: 3001,
+      targetHostPof: 'Valore',
+      targetPathPof: 'Valore',
+      targetPortPof: 1001,
+    },
+    id: 'string',
+    modifiedAt: new Date(),
+    modifiedBy: 'string',
+    modifiedByOpt: 'Operatore EC',
+    note: 'string',
+    status: StatusEnum.APPROVED,
+    type: TypeEnum.STATION,
   };
 
   test('render component StationDetails and exit button test', () => {
-    // store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <StationDetails stationDetail={mockedFullStation} formatedDate={jest.fn()} />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
-
-    const backBtn = screen.getByTestId('exit-btn-test');
-    fireEvent.click(backBtn);
-
-    expect(history.location.pathname).toBe('/');
-
-    const showPassword = screen.getByTestId('show-ps2-test');
-    fireEvent.click(showPassword);
-  });
-
-  test('Test edit Button with StationDetails in role operator and status approved', () => {
     store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <StationDetails stationDetail={mockedFullStation} formatedDate={jest.fn()} />
+            <StationDetailsValidation
+              stationDetail={mockedFullStation}
+              formatedDate={jest.fn()}
+              StationDetailsValidation={mockedWrapperStation}
+              stationId={''}
+              isOperator={true}
+              goBack={jest.fn()}
+            />
           </Router>
         </ThemeProvider>
       </Provider>
     );
 
-    const editBtn = screen.getByText('stationDetailPage.stationOptions.editStation');
-    fireEvent.click(editBtn);
+    const backBtn = screen.getByTestId('back-btn-test');
+    fireEvent.click(backBtn);
+
+    expect(history.location.pathname).toBe('/');
   });
 
-  test('render component StationDetails', () => {
-    // store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+  test('Test edit Button with StationDetails in role operator and status approved', async () => {
+    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <StationDetails stationDetail={mockedFullStationOnrevision} formatedDate={jest.fn()} />
+            <StationDetailsValidation
+              stationWrapper={mockedStationWrapperEntity}
+              stationDetail={mockedFullStation}
+              formatedDate={jest.fn()}
+              StationDetailsValidation={mockedWrapperStation}
+              stationId={mockedStationWrapperEntity.entity.stationCode}
+              isOperator={true}
+              goBack={jest.fn()}
+            />
           </Router>
         </ThemeProvider>
       </Provider>
     );
-
-    const editBtn = screen.getByText('stationDetailPage.stationOptions.editStation');
-    fireEvent.click(editBtn);
   });
 });

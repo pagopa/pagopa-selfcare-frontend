@@ -28,6 +28,9 @@ export default function SideMenu() {
     return history.location.pathname;
   });
 
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const isDisabled = signinData ? false : true;
+
   return (
     <Box display="grid" mt={1}>
       <Box gridColumn="auto">
@@ -45,6 +48,7 @@ export default function SideMenu() {
                 title={t('sideMenu.apikeys.title')}
                 handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
                 isSelected={pathname === ROUTES.APIKEYS}
+                disabled={isDisabled}
                 icon={VpnKeyIcon}
                 data-testid="apikeys-test"
               />
@@ -55,6 +59,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
               isSelected={pathname === ROUTES.APIKEYS || pathname === ROUTES.HOME}
               icon={VpnKeyIcon}
+              disabled={isDisabled}
               data-testid="apikeys-test"
             />
           )}
@@ -65,6 +70,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
               isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
               icon={UsbIcon}
+              disabled={isDisabled}
               data-testid="channels-test"
             />
           )}
@@ -74,6 +80,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
               isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
+              disabled={isDisabled}
               data-testid="stations-test"
             />
           )}

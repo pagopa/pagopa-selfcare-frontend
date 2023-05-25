@@ -5,17 +5,16 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { useHistory } from 'react-router';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 import ROUTES from '../../../routes';
+import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
-type Props = {
-  ecNodeData?: CreditorInstitutionDetailsResource;
-};
-
-const ECRegistrationData = ({ ecNodeData }: Props) => {
+const ECRegistrationData = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(
+    partiesSelectors.selectSigninData
+  ) as CreditorInstitutionDetailsResource;
 
   return (
     <>
@@ -64,7 +63,7 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {ecNodeData?.address.location ? ecNodeData.address.location : '-'}
+          {signinData?.address.location ? signinData.address.location : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -72,7 +71,7 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {ecNodeData?.address.city ? ecNodeData.address.city : '-'}
+          {signinData?.address.city ? signinData.address.city : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -80,7 +79,7 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {ecNodeData?.address.countryCode ? ecNodeData.address.countryCode : '-'}
+          {signinData?.address.countryCode ? signinData.address.countryCode : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -88,7 +87,7 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {ecNodeData?.address.zipCode ? ecNodeData.address.zipCode : '-'}
+          {signinData?.address.zipCode ? signinData.address.zipCode : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -98,14 +97,14 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {ecNodeData?.address.taxDomicile ? ecNodeData.address.taxDomicile : '-'}
+          {signinData?.address.taxDomicile ? signinData.address.taxDomicile : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        {ecNodeData?.enabled ? (
+        {signinData?.enabled ? (
           <Chip label={t('dashboardPage.registrationData.status.enabled')} color="primary"></Chip>
         ) : (
           <Chip label={t('dashboardPage.registrationData.status.disabled')}></Chip>
@@ -113,7 +112,7 @@ const ECRegistrationData = ({ ecNodeData }: Props) => {
       </Grid>
 
       <Grid item xs={8}>
-        {ecNodeData?.enabled ? (
+        {signinData?.enabled ? (
           <ButtonNaked
             size="medium"
             component="button"

@@ -3,21 +3,19 @@ import { Alert, Box, Button, Card, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { Party } from '../../../model/Party';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { SigninData } from '../../../model/Node';
 
 type Props = {
   selectedParty?: Party;
-  pspNodeData?: PaymentServiceProviderDetailsResource;
-  ecNodeData?: CreditorInstitutionDetailsResource;
+  signinData?: SigninData;
 };
 
-const NextSteps = ({ selectedParty, pspNodeData, ecNodeData }: Props) => {
+const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
-  const isPSPRegistered = pspNodeData?.bic ? true : false;
+  const isSignedIn = signinData ? true : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
-  const isEcRegistered = ecNodeData ? true : false;
+  const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
 
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
@@ -28,16 +26,16 @@ const NextSteps = ({ selectedParty, pspNodeData, ecNodeData }: Props) => {
         <Alert severity="warning">
           {t(
             `dashboardPage.nextStep.${
-              isAdmin && isPSPRegistered
+              isAdmin && isSignedIn && isPSP
                 ? 'generateApiKeysStepAlertPSP'
-                : isAdmin && isEcRegistered
+                : isAdmin && isSignedIn
                 ? 'generateApiKeyStepAlertEC'
                 : 'signInStepAlert'
             }`
           )}
         </Alert>
       </Box>
-      {isAdmin && (isPSPRegistered || isEcRegistered) ? (
+      {isAdmin && isSignedIn ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}

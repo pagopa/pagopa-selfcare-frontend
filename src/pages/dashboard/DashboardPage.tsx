@@ -1,15 +1,10 @@
-import { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Alert, Card } from '@mui/material';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getCreditorInstitutionDetails, getPSPDetails } from '../../services/nodeService';
-import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
-import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../utils/constants';
 import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
@@ -18,55 +13,9 @@ import NextSteps from './components/NextSteps';
 const DashboardPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const addError = useErrorDispatcher();
-  const setLoading = useLoading(LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS);
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
-  const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
 
-  useEffect(() => {
-    if (selectedParty) {
-      if (selectedParty.institutionType === 'PSP') {
-        getPSPDetails(selectedParty.fiscalCode)
-          .then((response) => {
-            setPspNodeData(response);
-          })
-          .catch((reason) =>
-            addError({
-              id: 'DASHBOARD_PAGE_PSP_DETAILS',
-              blocking: false,
-              error: reason as Error,
-              techDescription: `An error occurred while getting psp details`,
-              toNotify: true,
-              displayableTitle: t('dashboardPage.registrationData.pspDetailsErrorMessageTitle'),
-              displayableDescription: t(
-                'dashboardPage.registrationData.pspDetailsErrorMessageDesc'
-              ),
-              component: 'Toast',
-            })
-          );
-      } else {
-        setLoading(true);
-        getCreditorInstitutionDetails(selectedParty.fiscalCode)
-          .then((res) => {
-            setEcNodeData(res);
-          })
-          .catch((reason) => {
-            addError({
-              id: 'DASHBOARD_PAGE_EC_DETAILS',
-              blocking: false,
-              error: reason as Error,
-              techDescription: `An error occurred while getting ec details`,
-              toNotify: true,
-              displayableTitle: t('dashboardPage.registrationData.ecDetailsErrorMessageTitle'),
-              displayableDescription: t('dashboardPage.registrationData.ecDetailsErrorMessageDesc'),
-              component: 'Toast',
-            });
-          })
-          .finally(() => setLoading(false));
-      }
-    }
-  }, [selectedParty]);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
@@ -107,19 +56,15 @@ const DashboardPage = () => {
                 </Box>
                 <Grid container spacing={3} pb={4}>
                   {selectedParty?.institutionType === 'PSP' ? (
-                    <PSPRegistrationData pspNodeData={pspNodeData} />
+                    <PSPRegistrationData />
                   ) : (
-                    <ECRegistrationData ecNodeData={ecNodeData} />
+                    <ECRegistrationData />
                   )}
                 </Grid>
               </Card>
             </Grid>
             <Grid item xs={6}>
-              <NextSteps
-                selectedParty={selectedParty}
-                pspNodeData={pspNodeData}
-                ecNodeData={ecNodeData}
-              ></NextSteps>
+              <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
             </Grid>
             {selectedParty?.institutionType !== 'PSP' ? <OperativeTable /> : null}
           </Grid>

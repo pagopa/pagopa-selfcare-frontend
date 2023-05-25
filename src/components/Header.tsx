@@ -23,7 +23,7 @@ type Props = WithPartiesProps & {
 const pagoPAProduct: ProductEntity = {
   // TODO check if correct
   id: 'prod-pagopa',
-  title: 'Piattaforma pagoPA',
+  title: 'Pagamenti pagoPA',
   productUrl: CONFIG.HEADER.LINK.PRODUCTURL,
   linkType: 'internal',
 };

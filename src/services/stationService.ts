@@ -12,16 +12,18 @@ import {
   getStationAvailableEC as getStationAvailableECMocked,
   associateEcToStation as associateEcToStationMocked,
   createWrapperStation as createStationWrap,
+  updateWrapperStation as updateStationWrap,
+  updateWrapperStationByOpt as updateStationWrapByOpt,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
-// import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { StationOnCreation } from '../model/Station';
+import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
@@ -120,4 +122,24 @@ export const createWrapperStation = (
     return createStationWrap(station);
   }
   return PortalApi.createWrapperStation(station).then((resources) => resources);
+};
+
+export const updateWrapperStation = (
+  station: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateStationWrap(station);
+  } else {
+    return PortalApi.updateWrapperStation(station).then((resources) => resources);
+  }
+};
+
+export const updateWrapperStationByOpt = (
+  station: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateStationWrapByOpt(station);
+  } else {
+    return PortalApi.updateWrapperStationByOpt(station).then((resources) => resources);
+  }
 };

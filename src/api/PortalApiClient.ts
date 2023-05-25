@@ -36,6 +36,7 @@ import { WrapperStationsResource } from './generated/portal/WrapperStationsResou
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
+import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -400,5 +401,45 @@ export const PortalApi = {
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  updateWrapperStation: async (station: StationDetailsDto): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
+      body: {
+        brokerCode: station.brokerCode,
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetHost,
+        targetPath: station.targetPath,
+        targetPort: station.targetPort,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperStationByOpt: async (
+    station: StationDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
+      body: {
+        brokerCode: station.brokerCode,
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetHost,
+        targetPath: station.targetPath,
+        targetPort: station.targetPort,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 };

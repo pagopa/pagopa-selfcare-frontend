@@ -4,7 +4,10 @@ import { CreditorInstitutionsResource } from '../../api/generated/portal/Credito
 import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
-import { RedirectProtocolEnum } from '../../api/generated/portal/StationDetailsDto';
+import {
+  RedirectProtocolEnum,
+  StationDetailsDto,
+} from '../../api/generated/portal/StationDetailsDto';
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
 import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
@@ -501,6 +504,14 @@ export const getECListByStationCode = (
   _limit?: number
 ): Promise<CreditorInstitutionsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
+
+export const updateWrapperStation = (
+  _stations: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+
+export const updateWrapperStationByOpt = (
+  _stations: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const dissociateECfromStation = (_stationcode: string, _eccode: string): Promise<void> =>
   new Promise((resolve) => resolve());

@@ -21,7 +21,7 @@ import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
-import { BASE_ROUTE } from '../../../routes';
+import ROUTES, { BASE_ROUTE } from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
@@ -29,6 +29,8 @@ import {
   createStation,
   createWrapperStation,
   getStationCode,
+  updateWrapperStation,
+  updateWrapperStationByOpt,
 } from '../../../services/stationService';
 import {
   LOADING_TASK_GENERATION_STATION_CODE,
@@ -249,23 +251,30 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
       }).filter(([_key, value]) => value)
     );
 
-  const stationCode4Redirect =
-    formAction === StationFormAction.Create ? stationCodeGenerated : stationDetail?.stationCode;
+  const redirect = () => {
+    const stationCode4Redirect =
+      formAction === StationFormAction.Create ? stationCodeGenerated : stationDetail?.stationCode;
+    if (isOperator) {
+      history.push(`${BASE_ROUTE}/stations/${stationCode4Redirect}`);
+    } else {
+      history.push(ROUTES.STATIONS);
+    }
+  };
 
   const submit = async (values: StationOnCreation) => {
     setLoading(true);
     try {
-      if (isOperator) {
-        await createStation(values);
-      } else {
-        await createWrapperStation(values);
+      if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isOperator ? await createStation(values) : await createWrapperStation(values);
       }
 
-      // const create = await createStation(values);
-      // if (create) {
-      //   await associateEcToStation(stationCodeCleaner, bodyStationDto);
-      // }
-      history.push(`${BASE_ROUTE}/stations/${stationCode4Redirect}`);
+      if (formAction === StationFormAction.Edit) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        isOperator ? await updateWrapperStationByOpt(values) : await updateWrapperStation(values);
+      }
+
+      redirect();
     } catch (reason) {
       addError({
         id: 'ADD_EDIT_STATION',
@@ -710,7 +719,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         onConfirmLabel={
           isOperator
             ? t('addEditStationPage.confirmModal.confirmButtonOpe')
-            : 'addEditStationPage.confirmModal.confirmButton'
+            : t('addEditStationPage.confirmModal.confirmButton')
         }
         onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}

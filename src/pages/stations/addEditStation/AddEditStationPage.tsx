@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
-import { getStationDetail, getWrapperStation } from '../../../services/__mocks__/stationService';
+import { getStationDetail, getWrapperStation } from '../../../services/stationService';
 import { StationFormAction } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -35,28 +35,6 @@ const AddEditStationPage = () => {
     if (formAction !== StationFormAction.Create) {
       if (isOperator) {
         setLoading(true);
-        getStationDetail(stationId)
-          .then((response) => {
-            console.log('Response full detail', response);
-            setStationDetail(response);
-          })
-          .catch((reason) => {
-            addError({
-              id: 'GET_STATION_DETAILS',
-              blocking: false,
-              error: reason as Error,
-              techDescription: `An error occurred while getting station details`,
-              toNotify: true,
-              displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-              displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
-              component: 'Toast',
-            });
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } else {
-        setLoading(true);
         getWrapperStation(stationId)
           .then((response) => {
             console.log('Response Wrapped', response);
@@ -79,6 +57,28 @@ const AddEditStationPage = () => {
             });
           })
           .finally(() => setLoading(false));
+      } else {
+        setLoading(true);
+        getStationDetail(stationId)
+          .then((response) => {
+            console.log('Response full detail', response);
+            setStationDetail(response);
+          })
+          .catch((reason) => {
+            addError({
+              id: 'GET_STATION_DETAILS',
+              blocking: false,
+              error: reason as Error,
+              techDescription: `An error occurred while getting station details`,
+              toNotify: true,
+              displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+              displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+              component: 'Toast',
+            });
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
     }
   }, [selectedParty]);

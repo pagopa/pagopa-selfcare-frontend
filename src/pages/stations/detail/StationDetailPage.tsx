@@ -2,15 +2,13 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getStationDetails } from '../../../services/stationService';
-// import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import { getStationDetail, getWrapperStation } from '../../../services/stationService';
 import {
   LOADING_TASK_STATION_DETAILS,
   LOADING_TASK_STATION_DETAILS_WRAPPER,
 } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { getWrapperStation } from '../../../services/__mocks__/stationService';
 import {
   TypeEnum,
   WrapperEntitiesOperations,
@@ -58,7 +56,7 @@ const StationDetailPage = () => {
         .finally(() => setLoadingWrap(false));
     } else {
       setLoading(true);
-      getStationDetails(stationId)
+      getStationDetail(stationId)
         .then((stationDetailData) => {
           setStationDetail(stationDetailData);
         })

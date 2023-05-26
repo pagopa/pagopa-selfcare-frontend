@@ -4,7 +4,7 @@ import { WrapperStationsResource } from '../api/generated/portal/WrapperStations
 import {
   createStationMocked,
   getStationCodeMocked,
-  getStationDetail,
+  getStationDetail as getStationDetailMock,
   getStations as getStationsMocked,
   getStationsMerged as getStationsMergedMocked,
   dissociateECfromStation as dissociateECfromStationMocked,
@@ -14,6 +14,7 @@ import {
   createWrapperStation as createStationWrap,
   updateWrapperStation as updateStationWrap,
   updateWrapperStationByOpt as updateStationWrapByOpt,
+  getWrapperStation as getStationWrap,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -57,7 +58,7 @@ export const getStationsMerged = (
   );
 };
 
-export const getStationDetails = (stationId: string): Promise<StationDetailResource> => {
+export const getStation = (stationId: string): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationDetail(stationId);
   }
@@ -124,6 +125,14 @@ export const createWrapperStation = (
   return PortalApi.createWrapperStation(station).then((resources) => resources);
 };
 
+export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationWrap(ecCode);
+  } else {
+    return PortalApi.getWrapperEntitiesStation(ecCode).then((resources) => resources);
+  }
+};
+
 export const updateWrapperStation = (
   station: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => {
@@ -142,4 +151,11 @@ export const updateWrapperStationByOpt = (
   } else {
     return PortalApi.updateWrapperStationByOpt(station).then((resources) => resources);
   }
+};
+
+export const getStationDetail = (stationId: string): Promise<StationDetailResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationDetailMock(stationId);
+  }
+  return PortalApi.getStationDetail(stationId).then((resource) => resource);
 };

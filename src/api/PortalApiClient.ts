@@ -297,11 +297,6 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getStation: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await apiConfigClient.getStationUsingGET({ stationId });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
   getStationCode: async (ecCode: string): Promise<StationCodeResource> => {
     const result = await apiConfigClient.getStationCodeUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -440,6 +435,25 @@ export const PortalApi = {
         targetPort: station.targetPort,
       },
     });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getWrapperEntitiesStation: async (code: string): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.getWrapperEntitiesStationUsingGET({ code });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  // before tries to get the detail from the DB, if doesn't finds anything, will try to get the detail form apim
+
+  getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
+    const result = await apiConfigClient.getStationDetailUsingGET({ stationId });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  // get the detail directly from apim
+
+  getStation: async (stationId: string): Promise<StationDetailResource> => {
+    const result = await apiConfigClient.getStationUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

@@ -265,13 +265,19 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
     setLoading(true);
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isOperator ? await createStation(values) : await createWrapperStation(values);
+        if (isOperator) {
+          await createStation(values);
+        } else {
+          await createWrapperStation(values);
+        }
       }
 
       if (formAction === StationFormAction.Edit) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        isOperator ? await updateWrapperStationByOpt(values) : await updateWrapperStation(values);
+        if (isOperator) {
+          await updateWrapperStationByOpt(values);
+        } else {
+          await updateWrapperStation(values);
+        }
       }
 
       redirect();

@@ -342,7 +342,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         </Typography>
 
         <Typography variant="body2" mb={3}>
-          {t('addEditStationPage.subTitle')}
+          {t('stationDetailPageValidation.configuration.subtitle')}
         </Typography>
 
         <Box>
@@ -696,7 +696,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
             variant="contained"
             type="submit"
           >
-            {t('addEditStationPage.addForm.continueButton')}
+            {isOperator
+              ? t('addEditStationPage.addForm.continueButton')
+              : t('addEditStationPage.addForm.confrimButton')}
           </Button>
         </Stack>
       </Stack>

@@ -416,7 +416,8 @@
     },
     "addForm": {
       "backButton": "Indietro",
-      "continueButton": "Conferma",
+      "continueButton": "Continua",
+      "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
         "redirect": "Redirect",

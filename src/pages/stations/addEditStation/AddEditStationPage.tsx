@@ -103,7 +103,7 @@ const AddEditStationPage = () => {
             <Typography color={'#A2ADB8'}>
               {formAction === StationFormAction.Create
                 ? t(`addEditStationPage.create.breadcrumb`)
-                : t('addEditStationPage.configure.breadcrumb')}
+                : stationId}
             </Typography>
           </Breadcrumbs>
         </Stack>

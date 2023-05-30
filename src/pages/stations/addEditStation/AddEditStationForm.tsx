@@ -208,20 +208,43 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
           redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
           redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
           redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
-          targetHost: !values.targetHost ? 'Campo obbligatorio' : undefined,
-          targetPath: !values.targetPath ? 'Campo obbligatorio' : undefined,
-          targetPort: !values.targetPort
-            ? 'Campo obbligatorio'
-            : validatePortRange(values.targetPort)
-            ? t('addEditStationPage.validation.overPort')
-            : undefined,
-          targetHostPof: !values.targetHostPof ? 'Campo obbligatorio' : undefined,
-          targetPathPof: !values.targetPathPof ? 'Campo obbligatorio' : undefined,
-          targetPortPof: !values.targetPortPof
-            ? 'Campo obbligatorio'
-            : validatePortRange(values.targetPortPof)
-            ? t('addEditStationPage.validation.overPort')
-            : undefined,
+          targetHost:
+            !values.targetHost &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPath:
+            !values.targetPath &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPort:
+            !values.targetPort &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : validatePortRange(values.targetPort)
+              ? t('addEditStationPage.validation.overPort')
+              : undefined,
+          targetHostPof:
+            !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPathPof:
+            !values.targetPathPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPortPof:
+            !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : validatePortRange(values.targetPortPof)
+              ? t('addEditStationPage.validation.overPort')
+              : undefined,
         },
         ...(isOperator && {
           version: !values.version
@@ -698,7 +721,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
           >
             {isOperator
               ? t('addEditStationPage.addForm.continueButton')
-              : t('addEditStationPage.addForm.confrimButton')}
+              : t('addEditStationPage.addForm.confirmButton')}
           </Button>
         </Stack>
       </Stack>

@@ -2,14 +2,15 @@
 import { Stack, Button } from '@mui/material';
 import { Link, generatePath, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../../../redux/hooks';
-import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
+// import { useAppSelector } from '../../../../redux/hooks';
+// import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { StatusEnum } from '../../../../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
 import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 import ROUTES, { BASE_ROUTE } from '../../../../routes';
 import { StationFormAction } from '../../../../model/Station';
+import { isOperator } from '../../components/commonFunctions';
 
 type Props = {
   stationDetailWrapper?: WrapperEntitiesOperations;
@@ -18,14 +19,14 @@ type Props = {
 };
 
 const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode }: Props) => {
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
+  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { t } = useTranslation();
   const history = useHistory();
+  const operator = isOperator();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {isOperator && stationDetailWrapper?.status === StatusEnum.APPROVED ? (
+      {operator && stationDetailWrapper?.status === StatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -41,7 +42,7 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
             {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : isOperator &&
+      ) : operator &&
         stationDetailWrapper?.status === (StatusEnum.TO_CHECK || StatusEnum.TO_FIX) ? (
         <>
           <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>

@@ -15,6 +15,7 @@ import {
   TypeEnum,
   WrapperEntitiesOperations,
 } from '../../../api/generated/portal/WrapperEntitiesOperations';
+import { isOperator } from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
@@ -24,16 +25,16 @@ const AddEditStationPage = () => {
   const { stationId, actionId } = useParams<{ stationId: string; actionId: string }>();
   const formAction = actionId ?? StationFormAction.Create;
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const [stationDetail, setStationDetail] = useState<any>();
   const [_stationDetailWrapper, setStationDetailWrapper] = useState<WrapperEntitiesOperations>();
   const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
+  const operator = isOperator();
 
   useEffect(() => {
     // eslint-disable-next-line sonarjs/no-collapsible-if
     if (formAction !== StationFormAction.Create) {
-      if (isOperator) {
+      if (operator) {
         setLoading(true);
         getWrapperStation(stationId)
           .then((response) => {
@@ -130,7 +131,6 @@ const AddEditStationPage = () => {
             goBack={goBack}
             stationDetail={stationDetail}
             formAction={formAction}
-            isOperator={isOperator}
           />
         )}
       </Grid>

@@ -38,20 +38,21 @@ import {
 } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+
 // import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 // import { WrapperStationDetailsDto } from '../../../api/generated/portal/WrapperStationDetailsDto';
 import { StationStatusEnum } from '../../../api/generated/portal/StationResource';
 import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import { isOperator } from '../components/commonFunctions';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
   goBack: () => void;
   stationDetail?: StationOnCreation;
   formAction: string;
-  isOperator: boolean;
 };
 
-const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: Props) => {
+const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -62,6 +63,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
   const [stationCodeGenerated, setStationCodeGenerated] = useState('');
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const operator = isOperator();
 
   useEffect(() => {
     if (formAction === StationFormAction.Create) {
@@ -113,7 +115,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
             targetPathPof: detail.targetPathPof ?? '',
             targetPortPof: detail.targetPortPof ?? undefined,
           },
-          ...(isOperator && {
+          ...(operator && {
             version: detail.version ?? undefined,
             password: detail.password ?? '',
             newPassword: detail.newPassword ?? '',
@@ -147,7 +149,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
             targetPath: '',
             targetPort: 0,
           },
-          ...(isOperator && {
+          ...(operator && {
             version: 0,
             password: '',
             newPassword: '',
@@ -193,7 +195,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
       Object.entries({
         ...{
           stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
-          brokerCode: !values.brokerCode ? 'Campo obbligatorio' : '',
+          brokerCode:
+            operator && formAction !== StationFormAction.Create
+              ? ''
+              : !values.brokerCode
+              ? 'Campo obbligatorio'
+              : '',
           primitiveVersion: !values.primitiveVersion
             ? 'Campo obbligatorio'
             : validatePrimitiveVersion(values.primitiveVersion)
@@ -246,7 +253,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
               ? t('addEditStationPage.validation.overPort')
               : undefined,
         },
-        ...(isOperator && {
+        ...(operator && {
           version: !values.version
             ? 'Campo obbligatorio'
             : validatePrimitiveVersion(values.version)
@@ -277,7 +284,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
   const redirect = () => {
     const stationCode4Redirect =
       formAction === StationFormAction.Create ? stationCodeGenerated : stationDetail?.stationCode;
-    if (isOperator) {
+    if (operator) {
       history.push(`${BASE_ROUTE}/stations/${stationCode4Redirect}`);
     } else {
       history.push(ROUTES.STATIONS);
@@ -288,7 +295,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
     setLoading(true);
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        if (isOperator) {
+        if (operator) {
           await createStation(values);
         } else {
           await createWrapperStation(values);
@@ -296,7 +303,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
       }
 
       if (formAction === StationFormAction.Edit) {
-        if (isOperator) {
+        if (operator) {
           await updateWrapperStationByOpt(values);
         } else {
           await updateWrapperStation(values);
@@ -394,7 +401,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                   }}
                 />
               </Grid>
-              {isOperator ? (
+              {operator && formAction !== StationFormAction.Create ? (
                 <Grid container item xs={6}>
                   <TextField
                     fullWidth
@@ -423,7 +430,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
-                  disabled={isOperator ? true : false}
+                  disabled={formAction !== StationFormAction.Create || !operator}
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                   onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
@@ -693,7 +700,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         </Box>
       </Paper>
 
-      {isOperator && formAction !== StationFormAction.Create ? (
+      {operator && formAction !== StationFormAction.Create ? (
         <AddEditStationFormValidation
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
@@ -719,21 +726,20 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
             variant="contained"
             type="submit"
           >
-            {isOperator
+            {operator
               ? t('addEditStationPage.addForm.continueButton')
               : t('addEditStationPage.addForm.confirmButton')}
           </Button>
         </Stack>
       </Stack>
       <ConfirmModal
-        isOperator={isOperator}
         title={
-          isOperator
+          operator
             ? t('addEditStationPage.confirmModal.titleOperator')
             : t('addEditStationPage.confirmModal.title')
         }
         message={
-          isOperator ? (
+          operator ? (
             <Trans i18nKey="addEditStationPage.confirmModal.messageStationOperator">
               L’ente riceverà una notifica di conferma attivazione della stazione.
               <br />
@@ -748,7 +754,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction, isOperator }: P
         }
         openConfirmModal={showConfirmModal}
         onConfirmLabel={
-          isOperator
+          operator
             ? t('addEditStationPage.confirmModal.confirmButtonOpe')
             : t('addEditStationPage.confirmModal.confirmButton')
         }

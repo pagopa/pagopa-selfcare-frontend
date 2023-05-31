@@ -433,7 +433,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
       modifiedByOpt: 'Operatore EC',
       note: 'string',
       status: StatusEnum.TO_CHECK,
-      type: TypeEnum.CHANNEL,
+      type: TypeEnum.STATION,
     },
   ],
 });

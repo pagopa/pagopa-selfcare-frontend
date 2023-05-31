@@ -12,6 +12,7 @@ import {
 } from '../../../../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
+import { isOperator } from '../../components/commonFunctions';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
@@ -20,7 +21,6 @@ type Props = {
   stationDetail?: StationDetailResource;
   stationId: string;
   formatedDate: (date: Date | undefined) => string | null;
-  isOperator: boolean;
   goBack: () => void;
 };
 
@@ -31,7 +31,6 @@ const StationDetailsValidation = ({
   stationDetail,
   stationId,
   formatedDate,
-  isOperator,
   goBack,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
@@ -40,6 +39,8 @@ Props) => {
     stationWrapper?.wrapperEntityOperationsSortedList !== undefined
       ? stationWrapper?.wrapperEntityOperationsSortedList[0]
       : {};
+  const operator = isOperator();
+
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -77,7 +78,7 @@ Props) => {
           <Grid item xs={6}>
             <DetailButtonsStation stationDetailWrapper={stationWrap} stationCode={stationId} />
           </Grid>
-          {isOperator && stationWrap.status === StatusEnum.TO_CHECK ? (
+          {operator && stationWrap.status === StatusEnum.TO_CHECK ? (
             <Grid item xs={12} sx={{ mb: 5 }}>
               <Alert severity="warning" variant="outlined">
                 <Typography sx={{ py: 2 }}>{t('stationDetailPageValidation.alert')}</Typography>

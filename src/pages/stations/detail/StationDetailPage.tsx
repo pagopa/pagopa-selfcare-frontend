@@ -14,6 +14,7 @@ import {
   WrapperEntitiesOperations,
 } from '../../../api/generated/portal/WrapperEntitiesOperations';
 import ROUTES from '../../../routes';
+import { isOperator } from '../components/commonFunctions';
 import StationDetails from './components/StationDetails';
 import StationDetailsValidation from './components/StationDetailsValidation';
 
@@ -28,11 +29,13 @@ const StationDetailPage = () => {
   const setLoading = useLoading(LOADING_TASK_STATION_DETAILS);
   const setLoadingWrap = useLoading(LOADING_TASK_STATION_DETAILS_WRAPPER);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
   const goBack = () => history.push(ROUTES.STATIONS);
 
+  const operator = isOperator();
+
   useEffect(() => {
-    if (isOperator) {
+    // console.log('operatore', operator);
+    if (operator) {
       setLoadingWrap(true);
       getWrapperStation(stationId)
         .then((response) => {
@@ -74,7 +77,7 @@ const StationDetailPage = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, []);
+  }, [selectedParty]);
 
   const formatedDate = (date: Date | undefined) => {
     if (date) {
@@ -87,14 +90,13 @@ const StationDetailPage = () => {
     return null;
   };
 
-  return isOperator ? (
+  return operator ? (
     <StationDetailsValidation
       stationWrapper={stationDetailWrapper}
       StationDetailsValidation={stationDetail}
       stationDetail={stationDetail}
       stationId={stationId}
       formatedDate={formatedDate}
-      isOperator={isOperator}
       goBack={goBack}
     />
   ) : (

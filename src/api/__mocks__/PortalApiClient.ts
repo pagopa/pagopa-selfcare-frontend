@@ -57,7 +57,7 @@ export const mockedInstitutionResources: Array<InstitutionResource> = [
     mailAddress: 'email-ec@test.dummy',
     status: 'ACTIVE',
     address: 'Via degli Enti Creditori 1',
-    userProductRoles: ['operator'],
+    userProductRoles: ['admin'],
     companyInformations: {},
     assistanceContacts: {},
   },

@@ -31,6 +31,7 @@ import { ChannelPspListResource } from './generated/portal/ChannelPspListResourc
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
+import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -91,6 +92,7 @@ export const PortalApi = {
     const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
   createInstitutionApiKeys: async (
     institutionId: string,
     subscriptionCode: string
@@ -101,6 +103,7 @@ export const PortalApi = {
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
+
   regeneratePrimaryKey: async (subscriptionid: string): Promise<string> => {
     const result = await apiClient.regeneratePrimaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
@@ -272,6 +275,23 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  getStationsMerged: async (
+    page: number,
+    brokerCode: string,
+    stationcode?: string,
+    limit?: number,
+    sorting?: string
+  ): Promise<WrapperStationsResource> => {
+    const result = await apiConfigClient.getAllStationsMergedUsingGET({
+      limit,
+      stationcode,
+      brokerCode,
+      page,
+      sorting,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getStation: async (stationId: string): Promise<StationDetailResource> => {
     const result = await apiConfigClient.getStationUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -288,7 +308,7 @@ export const PortalApi = {
   ): Promise<CreditorInstitutionStationEditResource> => {
     const result = await apiConfigClient.associateStationToCreditorInstitutionUsingPOST({
       ecCode,
-      body: { stationCode: station.stationCode },
+      body: { auxDigit: 0, segregationCode: 0, stationCode: station.stationCode },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },

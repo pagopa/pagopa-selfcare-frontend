@@ -69,7 +69,7 @@ describe('<StationTableColumns />', () => {
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
-        sortable: false,
+        sortable: true,
         flex: 4,
       },
       {
@@ -129,18 +129,18 @@ describe('<StationTableColumns />', () => {
         flex: 4,
       },
       {
-        field: "actions",
-        cellClassName: "justifyContentNormalRight",
-        headerName: "",
-        align: "center",
+        field: 'actions',
+        cellClassName: 'justifyContentNormalRight',
+        headerName: '',
+        align: 'center',
         disableColumnMenu: true,
         editable: false,
         flex: 1,
         getActions: expect.any(Function),
         hideSortIcons: true,
         sortable: false,
-        type: "actions",
-      }
+        type: 'actions',
+      },
     ] as Array<GridColDef>;
 
     const mockTFunction = (key: string) => {

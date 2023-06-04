@@ -28,7 +28,7 @@ import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
-  associateEcToStation,
+  /* associateEcToStation, */
   createStation,
   getStationCode,
 } from '../../../services/stationService';
@@ -39,7 +39,7 @@ import {
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+// import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 
 type Props = {
   goBack: () => void;
@@ -83,7 +83,11 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
       });
   }, []);
 
-  const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
+  /* const bodyStationDto: CreditorInstitutionStationDto = {
+    auxDigit: 0,
+    segregationCode: 0,
+    stationCode: stationCodeGenerated,
+  }; */
 
   const initialFormData: StationDetailsDto = {
     brokerCode: brokerCodeCleaner,
@@ -154,7 +158,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     try {
       const create = await createStation(values);
       if (create) {
-        await associateEcToStation(stationCodeCleaner, bodyStationDto);
+        // await associateEcToStation(stationCodeCleaner, bodyStationDto);
       }
       history.push(ROUTES.STATIONS, {
         alertSuccessMessage: t('addEditStationPage.successMessage'),

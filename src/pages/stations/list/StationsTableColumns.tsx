@@ -21,7 +21,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => showStationID(params),
-      sortable: false,
+      sortable: true,
       flex: 4,
     },
     {

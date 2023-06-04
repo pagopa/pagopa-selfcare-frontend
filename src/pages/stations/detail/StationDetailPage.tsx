@@ -365,7 +365,7 @@ const StationDetailPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.operatedBy}
+                    {/* stationDetail?.operatedBy */}
                   </Typography>
                 </Grid>
               </Grid>

@@ -8,6 +8,8 @@ import {
 } from '../../api/generated/portal/StationDetailsDto';
 import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
+import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
+import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
 
 export const mockedStation: StationDetailResource = {
   stationCode: '97735020584_01',
@@ -68,6 +70,180 @@ export const mockedStations: StationsResource = {
   ],
 };
 
+export const mockedStationsMerged: WrapperStationsResource = {
+  pageInfo: {
+    page: 0,
+    limit: 10,
+    items_found: 14,
+    total_pages: 2,
+  },
+  stationsList: [
+    {
+      stationCode: '97735020584_01',
+      activationDate: new Date('2023-03-03T12:30:00Z'),
+      createdAt: new Date('2023-02-02T12:30:00Z'),
+      modifiedAt: new Date('2023-03-04T12:30:00Z'),
+      stationStatus: 'ACTIVE' as StationStatusEnum,
+      brokerDescription: 'test1',
+      version: 1,
+      associatedCreditorInstitutions: 1,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+    },
+    {
+      stationCode: '97735020584_02',
+      activationDate: new Date('2023-03-04T12:31:00Z'),
+      createdAt: new Date('2023-02-02T12:30:00Z'),
+      modifiedAt: new Date('2023-03-03T12:34:00Z'),
+      stationStatus: 'ON_REVISION' as StationStatusEnum,
+      brokerDescription: 'test2',
+      version: 2,
+      associatedCreditorInstitutions: 2,
+      enabled: false,
+      wrapperStatus: WrapperStatusEnum.TO_CHECK,
+    },
+    {
+      stationCode: '97735020584_03',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE,
+    },
+    {
+      stationCode: '97735020584_04',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_05',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_06',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_07',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_08',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_09',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+    {
+      stationCode: '97735020584_10',
+      activationDate: new Date('2023-03-05T12:32:00Z'),
+      createdAt: new Date('2023-01-03T12:30:00Z'),
+      modifiedAt: new Date('2023-01-06T12:55:00Z'),
+      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      brokerDescription: 'test3',
+      version: 3,
+      associatedCreditorInstitutions: 3,
+      enabled: true,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+    },
+  ],
+};
+
+export const mockedStationsMerged2: WrapperStationsResource = {
+  pageInfo: { page: 0, limit: 10, items_found: 14, total_pages: 2 },
+  stationsList: [
+    {
+      stationCode: 'serenissima',
+      version: 2,
+      stationStatus: 'ACTIVE' as StationStatusEnum,
+      associatedCreditorInstitutions: 0,
+      activationDate: new Date('2023-04-27T14:16:11.145Z'),
+      createdAt: new Date('2023-04-27T14:16:11.272Z'),
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+      enabled: true,
+    },
+    {
+      stationCode: '555555555_01',
+      stationStatus: 'ACTIVE' as StationStatusEnum,
+      associatedCreditorInstitutions: 0,
+      activationDate: new Date('2023-05-11T10:52:39.336Z'),
+      createdAt: new Date('2023-05-11T10:52:39.336Z'),
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+      enabled: true,
+    },
+    {
+      stationCode: '55555555555_09',
+      stationStatus: 'ACTIVE' as StationStatusEnum,
+      associatedCreditorInstitutions: 0,
+      activationDate: new Date('2023-05-11T11:10:50.245Z'),
+      createdAt: new Date('2023-05-11T11:10:50.245Z'),
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+      enabled: true,
+    },
+    {
+      stationCode: '81001870922_03',
+      stationStatus: 'ACTIVE' as StationStatusEnum,
+      associatedCreditorInstitutions: 0,
+      activationDate: new Date('2023-05-25T14:55:08.250Z'),
+      createdAt: new Date('2023-05-25T14:55:08.415Z'),
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+      enabled: true,
+    },
+  ],
+};
+
 const mockedStationsDetail: Array<StationDetailResource> = [
   {
     enabled: true,
@@ -83,7 +259,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     port: 80,
     associatedCreditorInstitutions: 0,
     modifiedAt: new Date('2023-02-19'),
-    operatedBy: 'Nome Cognome/Matricola operatore',
+    // operatedBy: 'Nome Cognome/Matricola operatore',
   },
   {
     enabled: true,
@@ -99,7 +275,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     port: 80,
     associatedCreditorInstitutions: 0,
     modifiedAt: new Date('2023-02-20'),
-    operatedBy: 'Nome Cognome/Matricola operatore',
+    // operatedBy: 'Nome Cognome/Matricola operatore',
   },
   {
     enabled: true,
@@ -115,7 +291,7 @@ const mockedStationsDetail: Array<StationDetailResource> = [
     port: 80,
     associatedCreditorInstitutions: 0,
     modifiedAt: new Date('2023-03-20'),
-    operatedBy: 'Nome Cognome/Matricola operatore',
+    // operatedBy: 'Nome Cognome/Matricola operatore',
   },
 ];
 
@@ -245,6 +421,9 @@ export const createStationMocked = (_station: StationDetailsDto): Promise<Statio
 
 export const getStations = (_page: number): Promise<StationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
+
+export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
+  new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));
 
 export const getStationDetail = (stationCode: any): Promise<StationDetailResource> => {
   const matchedStationByStationID = mockedStationsDetail.find((s) => s.stationCode === stationCode);

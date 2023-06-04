@@ -1,10 +1,12 @@
 import { PortalApi } from '../api/PortalApiClient';
 import { StationsResource } from '../api/generated/portal/StationsResource';
+import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
 import {
   createStationMocked,
   getStationCodeMocked,
   getStationDetail,
   getStations as getStationsMocked,
+  getStationsMerged as getStationsMergedMocked,
   dissociateECfromStation as dissociateECfromStationMocked,
   getStationECs as getStationECsMocked,
   getStationAvailableEC as getStationAvailableECMocked,
@@ -31,6 +33,21 @@ export const getStations = (
     return getStationsMocked(0);
   }
   return PortalApi.getStations(page, creditorInstitutionCode).then((resource) => resource);
+};
+
+export const getStationsMerged = (
+  page: number,
+  brokerCode: string,
+  stationcode?: string,
+  limit?: number,
+  sorting?: string
+): Promise<WrapperStationsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationsMergedMocked(page);
+  }
+  return PortalApi.getStationsMerged(page, brokerCode, stationcode, limit, sorting).then(
+    (resource) => resource
+  );
 };
 
 export const getStationDetails = (stationId: string): Promise<StationDetailResource> => {

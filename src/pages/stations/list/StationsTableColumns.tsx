@@ -34,7 +34,8 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.createdAt?.toLocaleDateString(), undefined),
+      renderCell: (params) =>
+        renderCell(params.row.createdAt?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
@@ -48,7 +49,8 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.modifiedAt?.toLocaleDateString(), undefined),
+      renderCell: (params) =>
+        renderCell(params.row.modifiedAt?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
@@ -63,7 +65,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.activationDate?.toLocaleDateString(), undefined),
+        renderCell(params.row.activationDate?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },

@@ -10,7 +10,7 @@ export function buildColumnDefs(
 ) {
   return [
     {
-      field: 'business_name',
+      field: 'businessName',
       cellClassName: 'justifyContentBold',
       headerName: t('stationECList.stationsTableColumns.headerFields.name'),
       align: 'left',
@@ -78,8 +78,8 @@ export function buildColumnDefs(
           sx={{ cursor: 'pointer' }}
         >
           <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.ec_code) : undefined}
-            data-testid={`dissociate-${p.row.ec_code}`}
+            onClick={onRowClick ? () => onRowClick(p.row.creditorInstitutionCode) : undefined}
+            data-testid={`dissociate-${p.row.creditorInstitutionCode}`}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },
@@ -166,7 +166,7 @@ export function showEcName(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.business_name}
+                {params.row.businessName}
               </Typography>
             </Grid>
           </Grid>

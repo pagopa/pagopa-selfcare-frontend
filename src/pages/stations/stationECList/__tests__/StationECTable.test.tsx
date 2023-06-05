@@ -52,7 +52,7 @@ describe('<StationECTable />', () => {
       );
     });
 
-    const dissociateEcBtn = screen.getByTestId('dissociate-14847241001');
+    const dissociateEcBtn = screen.getByTestId('dissociate-12345678906');
     await waitFor(() => {
       fireEvent.click(dissociateEcBtn);
     });

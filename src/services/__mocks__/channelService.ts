@@ -110,7 +110,7 @@ export const mockedChannelDetail = (channel_code: string): ChannelDetailsResourc
   ip: 'ip',
   new_fault_code: true,
   new_password: 'new_password',
-  npm_service: 'npm_service',
+  nmp_service: 'nmp_service',
   on_us: true,
   password: 'password',
   payment_model: Payment_modelEnum.ACTIVATED_AT_PSP,

@@ -63,7 +63,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {signinData?.address.location ? signinData.address.location : '-'}
+          {signinData?.address?.location ? signinData.address.location : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -71,7 +71,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {signinData?.address.city ? signinData.address.city : '-'}
+          {signinData?.address?.city ? signinData.address.city : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -79,7 +79,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {signinData?.address.countryCode ? signinData.address.countryCode : '-'}
+          {signinData?.address?.countryCode ? signinData.address.countryCode : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -87,7 +87,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {signinData?.address.zipCode ? signinData.address.zipCode : '-'}
+          {signinData?.address?.zipCode ? signinData.address.zipCode : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -97,7 +97,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {signinData?.address.taxDomicile ? signinData.address.taxDomicile : '-'}
+          {signinData?.address?.taxDomicile ? signinData.address.taxDomicile : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>

@@ -8,7 +8,7 @@ import {
   getStations as getStationsMocked,
   getStationsMerged as getStationsMergedMocked,
   dissociateECfromStation as dissociateECfromStationMocked,
-  getStationECs as getStationECsMocked,
+  getECListByStationCode as getECListByStationCodeMocked,
   getStationAvailableEC as getStationAvailableECMocked,
   associateEcToStation as associateEcToStationMocked,
 } from '../services/__mocks__/stationService';
@@ -17,6 +17,7 @@ import { CreditorInstitutionStationEditResource } from '../api/generated/portal/
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
+import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 
 export const createStation = (station: StationDetailsDto): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
@@ -64,20 +65,20 @@ export const getStationCode = (code: string): Promise<StationCodeResource> => {
   return PortalApi.getStationCode(code).then((resource) => resource);
 };
 
-export const getStationECs = (stationcode: string, page: number, limit?: number): Promise<any> =>
-  getStationECsMocked(stationcode, page, limit);
-/*
-TODO: fix when real service rollout
-{
+export const getECListByStationCode = (
+  stationcode: string,
+  page: number,
+  limit?: number
+): Promise<CreditorInstitutionsResource> => {
   /* istanbul ignore if */
-/*
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getStationECsMocked(page);
+    return getECListByStationCodeMocked(stationcode, page, limit);
   } else {
-    return PortalApi.getStationECs(stationcode, page, limit).then((resources) => resources);
+    return PortalApi.getECListByStationCode(stationcode, page, limit).then(
+      (resources) => resources
+    );
   }
 };
-*/
 
 export const dissociateECfromStation = (stationcode: string, pspcode: string): Promise<void> =>
   dissociateECfromStationMocked(stationcode, pspcode);

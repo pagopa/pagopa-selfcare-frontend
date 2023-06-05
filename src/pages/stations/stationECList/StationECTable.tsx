@@ -7,8 +7,8 @@ import { useParams } from 'react-router';
 import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
-import { dissociateECfromStation, getStationECs } from '../../../services/stationService';
-// import { StationEcListResource } from '../../../api/generated/portal/StationEcListResource';
+import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
+import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import { buildColumnDefs } from './StationECTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import StationECTableEmpty from './StationECTableEmpty';
@@ -16,9 +16,7 @@ import StationECTableEmpty from './StationECTableEmpty';
 const rowHeight = 64;
 const headerHeight = 56;
 
-type StationEcListResource = any;
-
-const emptyECList: StationEcListResource = {
+const emptyECList: CreditorInstitutionsResource = {
   creditor_institutions: [],
   page_info: {
     page: 0,
@@ -96,14 +94,9 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
     setLoading(status);
     setLoadingOverlay(status);
   };
-  // TODO: fix any type
-  const [ecListPage, setECListPage] = useState<any>(emptyECList);
+
+  const [ecListPage, setECListPage] = useState<CreditorInstitutionsResource>(emptyECList);
   const [page, setPage] = useState<number>(0);
-  const [rowCountState, setRowCountState] = useState(
-    ecListPage.page_info?.total_pages && ecListPage.page_info?.items_found
-      ? ecListPage.page_info?.total_pages * ecListPage.page_info?.items_found
-      : 0
-  );
 
   const [selectedECCode, setSelectedECCode] = useState<string>('');
 
@@ -114,14 +107,6 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
     setShowConfirmModal(true);
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-
-  useEffect(() => {
-    setRowCountState((prevRowCountState) =>
-      ecListPage.page_info?.total_pages && ecListPage.page_info?.items_found
-        ? ecListPage.page_info?.total_pages * ecListPage.page_info?.items_found
-        : prevRowCountState
-    );
-  }, [ecListPage.page_info?.total_pages, setRowCountState]);
 
   const dissociateEC = () => {
     setShowConfirmModal(false);
@@ -153,7 +138,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
   const fetchStationECs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getStationECs(stationId, currentPage)
+    getECListByStationCode(stationId, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
       .catch((reason) => {
         console.error('reason', reason);
@@ -249,7 +234,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
                   quickFilterProps: { debounceMs: 500 },
                 },
               }}
-              getRowId={(r) => r.ec_code}
+              getRowId={(r) => r.creditorInstitutionCode}
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="server"
@@ -259,7 +244,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
               pagination
               rowHeight={rowHeight}
               rows={ecListPage.creditor_institutions ?? []}
-              rowCount={rowCountState}
+              rowCount={ecListPage.page_info.items_found}
               sortingMode="server"
             />
           </>

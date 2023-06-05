@@ -1,5 +1,6 @@
 import { CreditorInstitutionStationDto } from '../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from '../../api/generated/portal/CreditorInstitutionStationEditResource';
+import { CreditorInstitutionsResource } from '../../api/generated/portal/CreditorInstitutionsResource';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
@@ -295,84 +296,27 @@ const mockedStationsDetail: Array<StationDetailResource> = [
   },
 ];
 
-// TODO: fix this object and type when openapi will be available
-export const mockedStationECs: any = {
+export const mockedStationECs: CreditorInstitutionsResource = {
   creditor_institutions: [
-    {
-      ec_code: '14847241001',
-      business_name: 'Intenda Sanpietro S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ec.dummy.com',
-    },
-    {
-      ec_code: '14847241002',
-      business_name: 'Regione Lombardia',
-      enabled: true,
-      referent_name: 'Jon Snow',
-      referent_mail: 'f.lastname@rlomb.dummy.com',
-    },
-    {
-      ec_code: '14847241003',
-      business_name: 'Università Cattolica del Sacro Cuore',
-      enabled: false,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ucsc.dummy.com',
-    },
-    {
-      ec_code: '14847241004',
-      business_name: 'EC4 S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ucsc.dummy.com',
-    },
-    {
-      ec_code: '14847241005',
-      business_name: 'EC5 S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ucsc.dummy.com',
-    },
+    { creditorInstitutionCode: '12345678901', enabled: true, businessName: 'EC1 S.p.A' },
+    { creditorInstitutionCode: '12345678902', enabled: true, businessName: 'EC2 S.p.A' },
+    { creditorInstitutionCode: '12345678903', enabled: false, businessName: 'EC3 S.p.A' },
+    { creditorInstitutionCode: '12345678904', enabled: true, businessName: 'EC4 S.p.A' },
+    { creditorInstitutionCode: '12345678905', enabled: true, businessName: 'EC5 S.p.A' },
+    { creditorInstitutionCode: '12345678906', enabled: true, businessName: 'EC6 S.p.A' },
+    { creditorInstitutionCode: '12345678907', enabled: true, businessName: 'EC7 S.p.A' },
+    { creditorInstitutionCode: '12345678908', enabled: true, businessName: 'EC8 S.p.A' },
+    { creditorInstitutionCode: '12345678909', enabled: true, businessName: 'EC9 S.p.A' },
+    { creditorInstitutionCode: '12345678910', enabled: true, businessName: 'EC10 S.p.A' },
   ],
-  page_info: {
-    page: 0,
-    limit: 5,
-    items_found: 8,
-    total_pages: 2,
-  },
+  page_info: { page: 0, limit: 10, items_found: 11, total_pages: 2 },
 };
 
-// TODO: fix this object and type when openapi will be available
-export const mockedStationECsPage2: any = {
+export const mockedStationECsPage2: CreditorInstitutionsResource = {
   creditor_institutions: [
-    {
-      ec_code: '14847241006',
-      business_name: 'EC6 S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ec.dummy.com',
-    },
-    {
-      ec_code: '14847241007',
-      business_name: 'EC7 S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ec.dummy.com',
-    },
-    {
-      ec_code: '14847241008',
-      business_name: 'EC8 S.p.A.',
-      enabled: true,
-      referent_name: 'Firstname Lastname',
-      referent_mail: 'f.lastname@ec.dummy.com',
-    },
+    { creditorInstitutionCode: '12345678911', enabled: true, businessName: 'EC11 S.p.A' },
   ],
-  page_info: {
-    page: 1,
-    limit: 5,
-    items_found: 8,
-    total_pages: 2,
-  },
+  page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
 
 const mockedStationCode = { stationCode: '1122334455_01' };
@@ -437,8 +381,11 @@ export const getStationDetail = (stationCode: any): Promise<StationDetailResourc
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));
 
-// TODO: remove 'any' return type when openApi will be available
-export const getStationECs = (_stationcode: string, page: number, _limit?: number): Promise<any> =>
+export const getECListByStationCode = (
+  _stationcode: string,
+  page: number,
+  _limit?: number
+): Promise<CreditorInstitutionsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
 
 export const dissociateECfromStation = (_stationcode: string, _eccode: string): Promise<void> =>

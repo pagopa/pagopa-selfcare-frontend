@@ -32,6 +32,7 @@ import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDt
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
+import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -311,6 +312,19 @@ export const PortalApi = {
       body: { auxDigit: 0, segregationCode: 0, stationCode: station.stationCode },
     });
     return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  getECListByStationCode: async (
+    stationcode: string,
+    page: number,
+    limit?: number
+  ): Promise<CreditorInstitutionsResource> => {
+    const result = await apiConfigClient.getCreditorInstitutionsByStationCodeUsingGET({
+      stationcode,
+      limit,
+      page,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 
   createECDirect: async (

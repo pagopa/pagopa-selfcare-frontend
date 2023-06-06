@@ -101,7 +101,13 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getStationsMerged(page, brokerCode, stationCode, undefined, stationCodeSort)
+      getStationsMerged(
+        page,
+        brokerCode,
+        stationCode ? stationCode : undefined,
+        undefined,
+        stationCodeSort
+      )
         .then((res) => {
           setStations(res);
           setError(false);

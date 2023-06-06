@@ -255,9 +255,26 @@ export const PortalApi = {
         redirectIp: station.redirectIp,
         redirectPath: station.redirectPath,
         redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPort: station.targetPort,
-        targetPath: station.targetPath,
+        targetHost: station.targetHost ? station.targetHost : undefined,
+        targetPort: station.targetPort ? station.targetPort : undefined,
+        targetPath: station.targetPath ? station.targetPath : undefined,
+        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
+        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
+        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
+        version: station.version,
+        threadNumber: 2,
+        enabled: true,
+        password: station.password,
+        newPassword: station.newPassword,
+        protocol: station.protocol,
+        port: station.port,
+        ip: station.ip,
+        service: station.service,
+        pofService: station.pofService,
+        protocol4Mod: station.protocol4Mod,
+        ip4Mod: station.ip4Mod,
+        port4Mod: station.port4Mod,
+        service4Mod: station.service4Mod,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -383,6 +400,10 @@ export const PortalApi = {
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.createWrapperStationDetailsUsingPOST({
       body: {
+        brokerCode: station.brokerCode,
+        broker_description: station.broker_description,
+        version: 1,
+        enabled: station.enabled,
         stationCode: station.stationCode,
         primitiveVersion: station.primitiveVersion,
         redirectProtocol: station.redirectProtocol,
@@ -390,9 +411,12 @@ export const PortalApi = {
         redirectIp: station.redirectIp,
         redirectPath: station.redirectPath,
         redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPath: station.targetPath,
-        targetPort: station.targetPort,
+        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
+        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
+        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
+        targetHost: station.targetHost ? station.targetHost : undefined,
+        targetPath: station.targetPath ? station.targetPath : undefined,
+        targetPort: station.targetPort ? station.targetPort : undefined,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -401,7 +425,10 @@ export const PortalApi = {
   updateWrapperStation: async (station: StationDetailsDto): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
+        version: 1,
+        brokerDescription: station.brokerDescription,
         brokerCode: station.brokerCode,
+        enabled: station.enabled,
         stationCode: station.stationCode,
         primitiveVersion: station.primitiveVersion,
         redirectProtocol: station.redirectProtocol,
@@ -412,6 +439,9 @@ export const PortalApi = {
         targetHost: station.targetHost,
         targetPath: station.targetPath,
         targetPort: station.targetPort,
+        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
+        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
+        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

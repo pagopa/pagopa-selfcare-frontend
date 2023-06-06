@@ -7,15 +7,10 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
-import { getStationDetail, getWrapperStation } from '../../../services/stationService';
+import { getStationDetail } from '../../../services/stationService';
 import { StationFormAction } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import {
-  TypeEnum,
-  WrapperEntitiesOperations,
-} from '../../../api/generated/portal/WrapperEntitiesOperations';
-import { isOperator } from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
@@ -26,61 +21,32 @@ const AddEditStationPage = () => {
   const formAction = actionId ?? StationFormAction.Create;
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationDetail, setStationDetail] = useState<any>();
-  const [_stationDetailWrapper, setStationDetailWrapper] = useState<WrapperEntitiesOperations>();
   const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
-  const operator = isOperator();
 
   useEffect(() => {
-    // eslint-disable-next-line sonarjs/no-collapsible-if
     if (formAction !== StationFormAction.Create) {
-      if (operator) {
-        setLoading(true);
-        getWrapperStation(stationId)
-          .then((response) => {
-            console.log('Response Wrapped', response);
-            setStationDetailWrapper(response);
-            if (response.type === TypeEnum.STATION && response.wrapperEntityOperationsSortedList) {
-              console.log('Response', response.wrapperEntityOperationsSortedList[0].entity);
-              setStationDetail(response.wrapperEntityOperationsSortedList[0].entity);
-            }
-          })
-          .catch((reason) => {
-            addError({
-              id: 'GET_STATION_DETAILS_WRAPPER',
-              blocking: false,
-              error: reason as Error,
-              techDescription: `An error occurred while getting station details wrapper`,
-              toNotify: true,
-              displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-              displayableDescription: t('addEditStationPage.errorMessageStationWrapperDetailsDesc'),
-              component: 'Toast',
-            });
-          })
-          .finally(() => setLoading(false));
-      } else {
-        setLoading(true);
-        getStationDetail(stationId)
-          .then((response) => {
-            console.log('Response full detail', response);
-            setStationDetail(response);
-          })
-          .catch((reason) => {
-            addError({
-              id: 'GET_STATION_DETAILS',
-              blocking: false,
-              error: reason as Error,
-              techDescription: `An error occurred while getting station details`,
-              toNotify: true,
-              displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-              displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
-              component: 'Toast',
-            });
-          })
-          .finally(() => {
-            setLoading(false);
+      setLoading(true);
+      getStationDetail(stationId)
+        .then((response) => {
+          console.log('Response full detail', response);
+          setStationDetail(response);
+        })
+        .catch((reason) => {
+          addError({
+            id: 'GET_STATION_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting station details`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+            component: 'Toast',
           });
-      }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [selectedParty]);
 

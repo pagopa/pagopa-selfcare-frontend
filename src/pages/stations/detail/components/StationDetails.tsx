@@ -16,8 +16,10 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useParams } from 'react-router-dom';
-import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
-import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
+import {
+  StationDetailResource,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/StationDetailResource';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
@@ -97,20 +99,20 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 size="medium"
                 sx={{
                   backgroundColor:
-                    stationDetail?.stationStatus === StationStatusEnum.ACTIVE
+                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? 'primary.main'
-                      : stationDetail?.stationStatus === StationStatusEnum.ON_REVISION
+                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
                       ? '#EEEEEE'
                       : 'warning.light',
                   color:
-                    stationDetail?.stationStatus === StationStatusEnum.ACTIVE
+                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? 'background.paper'
                       : 'text.primary',
                 }}
                 label={
-                  stationDetail?.stationStatus === StationStatusEnum.ACTIVE
+                  stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                     ? t('stationDetailPage.states.active')
-                    : stationDetail?.stationStatus === StationStatusEnum.ON_REVISION
+                    : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
                     ? t('stationDetailPage.states.revision')
                     : t('stationDetailPage.states.needCorrection')
                 }
@@ -298,7 +300,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                   <ButtonNaked
                     component="button"
                     onClick={() => ''} // TODO
-                    disabled={stationDetail?.stationStatus !== StationStatusEnum.ACTIVE}
+                    disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"

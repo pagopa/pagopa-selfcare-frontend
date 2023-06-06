@@ -70,7 +70,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'stationStatus',
+      field: 'wrapperStatus',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.status'),
       align: 'left',
@@ -233,24 +233,24 @@ export function showStatus(params: GridRenderCellParams) {
     <Box sx={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
       <Chip
         label={
-          params.row.stationStatus === 'ACTIVE'
+          params.row.wrapperStatus === 'APPROVED'
             ? i18n.t('stationsPage.states.active')
-            : params.row.stationStatus === 'TO_BE_CORRECTED'
-            ? i18n.t('stationsPage.states.needCorrection')
-            : i18n.t('stationsPage.states.revision')
+            : params.row.wrapperStatus === 'TO_CHECK'
+            ? i18n.t('stationsPage.states.revision')
+            : i18n.t('stationsPage.states.needCorrection')
         }
         aria-label="Status"
         sx={{
           cursor: 'pointer',
           fontSize: '10px',
           fontWeight: 'fontWeightRegular',
-          color: params.row.stationStatus === 'ACTIVE' ? '#FFFFFF' : '#17324D',
+          color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
           backgroundColor:
-            params.row.stationStatus === 'ACTIVE'
+            params.row.wrapperStatus === 'APPROVED'
               ? 'primary.main'
-              : params.row.stationStatus === 'TO_BE_CORRECTED'
-              ? 'warning.light'
-              : '#EEEEEE',
+              : params.row.wrapperStatus === 'TO_CHECK'
+              ? '#EEEEEE'
+              : 'warning.light',
           paddingBottom: '1px',
           height: '30px',
           marginY: 2,

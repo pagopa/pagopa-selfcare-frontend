@@ -8,9 +8,11 @@ import {
   RedirectProtocolEnum,
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
-import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
-import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
+import {
+  WrapperStationResource,
+  WrapperStatusEnum,
+} from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
 import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEntitiesOperations';
 import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
@@ -20,7 +22,7 @@ import { StationOnCreation } from '../../model/Station';
 const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
   brokerCode: '97735020584',
-  stationStatus: StationStatusEnum.ACTIVE,
+  wrapperStatus: WrapperStatusEnum.APPROVED,
   enabled: true,
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
@@ -37,7 +39,7 @@ const mockedStation: StationDetailResource = {
 };
 
 export const mockedWrapperStation: WrapperStationDetailsDto = {
-  stationCode: '97735020584_01',
+  stationCode: '81001870922_01',
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   redirectPort: 3000,
@@ -49,52 +51,33 @@ export const mockedWrapperStation: WrapperStationDetailsDto = {
   targetPort: 3001,
 };
 
-export const mockedFullStation: StationOnCreation = {
-  stationCode: '97735020584_01',
-  stationStatus: StationStatusEnum.ACTIVE,
+export const mockedFullStation: StationDetailResource = {
+  wrapperStatus: WrapperStatusEnum.TO_CHECK,
+  stationCode: '81001870922_04',
   enabled: true,
-  activationDate: undefined,
-  associatedCreditorInstitutions: 2,
-  brokerCode: '97735020584',
-  brokerDescription: undefined,
-  brokerObjId: 2,
+  brokerDescription: '',
+  version: 1,
+  associatedCreditorInstitutions: 0,
+  activationDate: new Date(),
   createdAt: new Date(),
-  flagOnline: false,
-  ip: undefined,
-  ip4Mod: undefined,
   modifiedAt: new Date(),
-  newPassword: undefined,
-  password: undefined,
-  pofService: undefined,
-  port: undefined,
-  port4Mod: undefined,
-  primitiveVersion: 1,
-  protocol: undefined,
-  protocol4Mod: undefined,
-  proxyEnabled: undefined,
-  proxyHost: 'Valore',
-  proxyPassword: undefined,
-  proxyPort: 3000,
-  proxyUsername: undefined,
-  redirectIp: 'Valore',
-  redirectPath: 'Valore',
-  redirectPort: 8080,
+  redirectIp: 'ww',
+  redirectPath: 'ww',
+  redirectPort: 111,
+  redirectQueryString: 'www',
   redirectProtocol: RedirectProtocolEnum.HTTPS,
-  redirectQueryString: 'Valore',
-  rtInstantaneousDispatch: undefined,
-  service: undefined,
-  service4Mod: undefined,
-  targetHost: 'Valore',
-  targetHostPof: 'Valore',
-  targetPath: 'Valore',
-  targetPathPof: 'Valore',
-  targetPort: 1000,
-  targetPortPof: 1001,
-  threadNumber: undefined,
-  timeoutA: undefined,
-  timeoutB: undefined,
-  timeoutC: undefined,
-  version: undefined,
+  brokerCode: '81001870922',
+  threadNumber: 1,
+  timeoutA: 15,
+  timeoutB: 30,
+  timeoutC: 120,
+  targetHost: '1www',
+  targetPort: 11,
+  targetPath: 'www',
+  targetHostPof: 'www',
+  targetPortPof: 111,
+  targetPathPof: '11',
+  primitiveVersion: 1,
 };
 
 export const mockedStations: StationsResource = {
@@ -110,7 +93,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-03T12:30:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-04T12:30:00Z'),
-      stationStatus: StationStatusEnum.ACTIVE,
+      wrapperStatus: WrapperStatusEnum.APPROVED,
       brokerDescription: 'test1',
       version: 1,
       associatedCreditorInstitutions: 1,
@@ -121,7 +104,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-04T12:31:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-03T12:34:00Z'),
-      stationStatus: StationStatusEnum.ON_REVISION,
+      wrapperStatus: WrapperStatusEnum.TO_CHECK,
       brokerDescription: 'test2',
       version: 2,
       associatedCreditorInstitutions: 2,
@@ -132,7 +115,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: StationStatusEnum.TO_BE_CORRECTED,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -154,7 +137,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-03T12:30:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-04T12:30:00Z'),
-      stationStatus: 'ACTIVE' as StationStatusEnum,
       brokerDescription: 'test1',
       version: 1,
       associatedCreditorInstitutions: 1,
@@ -166,7 +148,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-04T12:31:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-03T12:34:00Z'),
-      stationStatus: 'ON_REVISION' as StationStatusEnum,
       brokerDescription: 'test2',
       version: 2,
       associatedCreditorInstitutions: 2,
@@ -178,7 +159,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -190,7 +170,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -202,7 +181,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -214,7 +192,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -226,7 +203,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -238,7 +214,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -250,7 +225,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -262,7 +236,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -272,47 +245,54 @@ export const mockedStationsMerged: WrapperStationsResource = {
   ],
 };
 
+const stationList: Array<WrapperStationResource> = [
+  {
+    stationCode: '81001870922_01',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 2,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+  },
+  {
+    stationCode: '81001870922_02',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 2,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+  },
+  {
+    stationCode: '81001870922_03',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 2,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+  },
+  {
+    stationCode: '81001870922_04',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 1,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.TO_CHECK,
+  },
+];
 export const mockedStationsMerged2: WrapperStationsResource = {
-  pageInfo: { page: 0, limit: 10, items_found: 14, total_pages: 2 },
-  stationsList: [
-    {
-      stationCode: 'serenissima',
-      version: 2,
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-04-27T14:16:11.145Z'),
-      createdAt: new Date('2023-04-27T14:16:11.272Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '555555555_01',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-11T10:52:39.336Z'),
-      createdAt: new Date('2023-05-11T10:52:39.336Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '55555555555_09',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-11T11:10:50.245Z'),
-      createdAt: new Date('2023-05-11T11:10:50.245Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '81001870922_03',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-25T14:55:08.250Z'),
-      createdAt: new Date('2023-05-25T14:55:08.415Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-  ],
+  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1 },
+  stationsList: stationList,
 };
 
 // const filteredStations = (station: StationsResource) => {
@@ -412,7 +392,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
       entity: {
         stationCode: code,
         brokerCode: '97735020584',
-        stationStatus: StationStatusEnum.ON_REVISION,
+        wrapperStatus: WrapperStatusEnum.TO_CHECK,
         enabled: true,
         primitiveVersion: 1,
         redirectProtocol: RedirectProtocolEnum.HTTPS,
@@ -485,8 +465,13 @@ export const createStationMocked = (_station: StationOnCreation): Promise<Statio
 export const getStations = (_page: number): Promise<StationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
 
-export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
-  new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));
+export const getStationsMerged = (
+  _page: number,
+  _brokerCode: string,
+  _stationcode?: string,
+  _limit?: number,
+  _sorting?: string
+): Promise<WrapperStationsResource> => new Promise((resolve) => resolve(mockedStationsMerged2));
 
 export const getStationDetail = (_stationCode: any): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedFullStation));

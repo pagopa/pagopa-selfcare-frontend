@@ -1,9 +1,8 @@
-import { StationStatusEnum } from '../api/generated/portal/StationDetailResource';
+import { WrapperStatusEnum } from '../api/generated/portal/StationDetailResource';
 import {
   Protocol4ModEnum,
   ProtocolEnum,
   RedirectProtocolEnum,
-  StatusEnum,
 } from '../api/generated/portal/StationDetailsDto';
 
 export enum StationFormAction {
@@ -19,8 +18,8 @@ export enum FormAction {
 }
 
 export type StationOnCreation = {
-  enabled: boolean;
-  stationStatus: StationStatusEnum;
+  enabled?: boolean;
+
   brokerCode: string;
   stationCode: string;
   primitiveVersion: number;
@@ -67,7 +66,7 @@ export type StationOnCreation = {
   proxyUsername?: string | undefined;
   rtInstantaneousDispatch?: boolean | undefined;
   threadNumber?: number | undefined;
-  status?: StatusEnum | undefined;
+  wrapperStatus?: WrapperStatusEnum;
 };
 
 export type StationDetail = {

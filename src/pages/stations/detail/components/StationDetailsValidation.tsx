@@ -6,40 +6,30 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { ArrowBack } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
 import {
-  StatusEnum,
-  WrapperStationDetailsDto,
-} from '../../../../api/generated/portal/WrapperStationDetailsDto';
-import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
-import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
+  StationDetailResource,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/StationDetailResource';
 import { isOperator } from '../../components/commonFunctions';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
-  stationWrapper?: WrapperEntitiesOperations;
-  StationDetailsValidation: WrapperStationDetailsDto;
   stationDetail?: StationDetailResource;
-  stationId: string;
   formatedDate: (date: Date | undefined) => string | null;
   goBack: () => void;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 const StationDetailsValidation = ({
-  stationWrapper,
-  StationDetailsValidation,
   stationDetail,
-  stationId,
   formatedDate,
   goBack,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
-  const stationWrap =
-    stationWrapper?.wrapperEntityOperationsSortedList !== undefined
-      ? stationWrapper?.wrapperEntityOperationsSortedList[0]
-      : {};
   const operator = isOperator();
+  const { stationId } = useParams<{ stationId: string }>();
 
   return (
     <Grid container justifyContent={'center'}>
@@ -71,14 +61,14 @@ Props) => {
             <Typography mb={5} color="#5C6F82">
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`${formatedDate(stationWrapper?.createdAt)} da ${stationWrapper?.createdBy}`}
+                {`${formatedDate(stationDetail?.createdAt)} da `}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtonsStation stationDetailWrapper={stationWrap} stationCode={stationId} />
+            <DetailButtonsStation stationDetail={stationDetail} stationCode={stationId} />
           </Grid>
-          {operator && stationWrap.status === StatusEnum.TO_CHECK ? (
+          {operator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ? (
             <Grid item xs={12} sx={{ mb: 5 }}>
               <Alert severity="warning" variant="outlined">
                 <Typography sx={{ py: 2 }}>{t('stationDetailPageValidation.alert')}</Typography>
@@ -106,20 +96,20 @@ Props) => {
                   size="medium"
                   sx={{
                     backgroundColor:
-                      stationWrap.status === StatusEnum.APPROVED
+                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                         ? 'primary.main'
-                        : StationDetailsValidation?.status === StatusEnum.TO_CHECK
+                        : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
                         ? 'warning.light'
                         : '#EEEEEE',
                     color:
-                      stationWrap.status === StatusEnum.APPROVED
+                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                         ? 'background.paper'
                         : 'text.primary',
                   }}
                   label={
-                    stationWrap.status === StatusEnum.APPROVED
+                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? t('stationDetailPage.states.active')
-                      : stationWrap.status === StatusEnum.TO_CHECK
+                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
                       ? t('stationDetailPage.states.revision')
                       : t('stationDetailPage.states.needCorrection')
                   }
@@ -153,7 +143,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.stationCode ?? '-'}
+                    {stationDetail?.stationCode ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -163,7 +153,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.primitiveVersion ?? '-'}
+                    {stationDetail?.primitiveVersion ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -173,7 +163,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.brokerCode ?? '-'}
+                    {stationDetail?.brokerCode ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -188,7 +178,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.redirectProtocol ?? '-'}
+                    {stationDetail?.redirectProtocol ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -198,7 +188,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.redirectPort ?? '-'}
+                    {stationDetail?.redirectPort ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -208,7 +198,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.redirectIp ?? '-'}
+                    {stationDetail?.redirectIp ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -218,7 +208,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.redirectPath ?? '-'}
+                    {stationDetail?.redirectPath ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -228,7 +218,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.redirectQueryString ?? '-'}
+                    {stationDetail?.redirectQueryString ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -243,7 +233,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.targetHost ?? '-'}
+                    {stationDetail?.targetHost ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -253,7 +243,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.targetPath ?? '-'}
+                    {stationDetail?.targetPath ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -263,7 +253,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {StationDetailsValidation?.targetPort ?? '-'}
+                    {stationDetail?.targetPort ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -278,7 +268,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'lab.link.it'}
+                    {stationDetail?.targetHostPof ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -288,7 +278,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'/govpay/api/pagopa/PagamentiTelematiciCCPservice'}
+                    {stationDetail?.targetPathPof ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -298,7 +288,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'80'}
+                    {stationDetail?.targetPortPof ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3} mt={4}>
@@ -325,7 +315,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {formatedDate(stationWrap.modifiedAt) ?? '-'}
+                    {formatedDate(stationDetail?.modifiedAt) ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -335,7 +325,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationWrap.modifiedByOpt}
+                    {/* stationDetail?.modifiedByOpt */ '-'}
                   </Typography>
                 </Grid>
               </Grid>

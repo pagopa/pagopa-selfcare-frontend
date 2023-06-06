@@ -25,12 +25,10 @@ import ROUTES, { BASE_ROUTE } from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
-  /* associateEcToStation, */
   createStation,
   createWrapperStation,
   getStationCode,
   updateWrapperStation,
-  updateWrapperStationByOpt,
 } from '../../../services/stationService';
 import {
   LOADING_TASK_GENERATION_STATION_CODE,
@@ -41,9 +39,9 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
 // import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 // import { WrapperStationDetailsDto } from '../../../api/generated/portal/WrapperStationDetailsDto';
-import { StationStatusEnum } from '../../../api/generated/portal/StationResource';
 import { StationFormAction, StationOnCreation } from '../../../model/Station';
 import { isOperator } from '../components/commonFunctions';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
@@ -91,17 +89,16 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   }, []);
 
   // const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
-  const stationActive = stationDetail ? stationDetail.enabled : false;
-  const status = stationDetail ? stationDetail.stationStatus : StationStatusEnum.ON_REVISION;
+  // const stationActive = stationDetail ? stationDetail.enabled : false;
+  const status = stationDetail ? stationDetail.wrapperStatus : WrapperStatusEnum.TO_CHECK;
 
   const initialFormData = (detail?: StationOnCreation) =>
     detail
       ? {
           ...{
-            enabled: stationActive,
             brokerCode: detail.brokerCode ?? '',
             stationCode: detail.stationCode ?? '',
-            stationStatus: detail.stationStatus ?? undefined,
+            status: detail.wrapperStatus ?? undefined,
             primitiveVersion: detail.primitiveVersion ?? undefined,
             redirectProtocol: detail.redirectProtocol ?? '',
             redirectPort: detail.redirectPort ?? undefined,
@@ -135,8 +132,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         }
       : {
           ...{
-            enabled: stationActive,
-            stationStatus: status,
+            status,
             brokerCode: brokerCodeCleaner,
             stationCode: stationCodeGenerated,
             primitiveVersion: 0,
@@ -150,7 +146,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             targetPort: 0,
           },
           ...(operator && {
-            version: 0,
+            version: stationDetail?.version ?? 0,
             password: '',
             newPassword: '',
             protocol: undefined,
@@ -253,31 +249,33 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               ? t('addEditStationPage.validation.overPort')
               : undefined,
         },
-        ...(operator && {
-          version: !values.version
-            ? 'Campo obbligatorio'
-            : validatePrimitiveVersion(values.version)
-            ? t('addEditStationPage.validation.overVersion')
-            : undefined,
-          password: !values.password ? 'Campo obbligatorio' : undefined,
-          protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
-          ip: !values.ip ? 'Campo obbligatorio' : undefined,
-          port: !values.port
-            ? 'Campo obbligatorio'
-            : validatePortRange(values.targetPort)
-            ? t('addEditStationPage.validation.overPort')
-            : undefined,
+        ...(operator && formAction !== StationFormAction.Create
+          ? {
+              version: !values.version
+                ? 'Campo obbligatorio'
+                : validatePrimitiveVersion(values.version)
+                ? t('addEditStationPage.validation.overVersion')
+                : undefined,
+              password: !values.password ? 'Campo obbligatorio' : undefined,
+              protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
+              ip: !values.ip ? 'Campo obbligatorio' : undefined,
+              port: !values.port
+                ? 'Campo obbligatorio'
+                : validatePortRange(values.targetPort)
+                ? t('addEditStationPage.validation.overPort')
+                : undefined,
 
-          service: !values.service ? 'Campo obbligatorio' : undefined,
-          pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
-          endpointIp: !values.endpointIp ? 'Campo obbligatorio' : undefined,
-          endpointPath: !values.endpointPath ? 'Campo obbligatorio' : undefined,
-          endpointPort: !values.endpointPort
-            ? 'Campo obbligatorio'
-            : validatePortRange(values.targetPort)
-            ? t('addEditStationPage.validation.overPort')
-            : undefined,
-        }),
+              service: !values.service ? 'Campo obbligatorio' : undefined,
+              pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
+              endpointIp: !values.endpointIp ? 'Campo obbligatorio' : undefined,
+              endpointPath: !values.endpointPath ? 'Campo obbligatorio' : undefined,
+              endpointPort: !values.endpointPort
+                ? 'Campo obbligatorio'
+                : validatePortRange(values.targetPort)
+                ? t('addEditStationPage.validation.overPort')
+                : undefined,
+            }
+          : null),
       }).filter(([_key, value]) => value)
     );
 
@@ -291,21 +289,21 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     }
   };
 
+  // const redirect = () => history.push(`${BASE_ROUTE}/stations`);
+
   const submit = async (values: StationOnCreation) => {
     setLoading(true);
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        if (operator) {
-          await createStation(values);
-        } else {
-          await createWrapperStation(values);
-        }
+        await createWrapperStation(values);
       }
 
       if (formAction === StationFormAction.Edit) {
-        if (operator) {
+        if (operator /* && status === WrapperStatusEnum.TO_CHECK */) {
+          await createStation(values);
+        } /* else if (operator && status === WrapperStatusEnum.TO_CHECK_UPDATE) {
           await updateWrapperStationByOpt(values);
-        } else {
+        } */ else {
           await updateWrapperStation(values);
         }
       }
@@ -430,7 +428,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
-                  disabled={formAction !== StationFormAction.Create || !operator}
+                  disabled={formAction !== StationFormAction.Create || operator}
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                   onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
@@ -647,6 +645,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   id="targetHostPof"
                   name="targetHostPof"
                   label={t('addEditStationPage.addForm.fields.targetAddress')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetAddress')}
                   size="small"
                   value={formik.values.targetHostPof}
                   onChange={(e) => formik.handleChange(e)}
@@ -663,6 +662,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   id="targetPathPof"
                   name="targetPathPof"
                   label={t('addEditStationPage.addForm.fields.targetService')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetService')}
                   size="small"
                   value={formik.values.targetPathPof}
                   onChange={(e) => formik.handleChange(e)}

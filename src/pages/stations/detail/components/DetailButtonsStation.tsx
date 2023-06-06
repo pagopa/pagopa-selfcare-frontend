@@ -4,21 +4,18 @@ import { Link, generatePath, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // import { useAppSelector } from '../../../../redux/hooks';
 // import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import { StatusEnum } from '../../../../api/generated/portal/WrapperStationDetailsDto';
-import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
 import { StationDetailResource } from '../../../../api/generated/portal/StationDetailResource';
-import { StationStatusEnum } from '../../../../api/generated/portal/StationResource';
 import ROUTES, { BASE_ROUTE } from '../../../../routes';
 import { StationFormAction } from '../../../../model/Station';
 import { isOperator } from '../../components/commonFunctions';
+import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
 
 type Props = {
-  stationDetailWrapper?: WrapperEntitiesOperations;
   stationDetail?: StationDetailResource;
   stationCode: string;
 };
 
-const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode }: Props) => {
+const DetailButtonsStation = ({ stationDetail, stationCode }: Props) => {
   // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { t } = useTranslation();
   const history = useHistory();
@@ -26,7 +23,7 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {operator && stationDetailWrapper?.status === StatusEnum.APPROVED ? (
+      {operator && stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -43,7 +40,8 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
           </Button>
         </>
       ) : operator &&
-        stationDetailWrapper?.status === (StatusEnum.TO_CHECK || StatusEnum.TO_FIX) ? (
+        stationDetail?.wrapperStatus ===
+          (WrapperStatusEnum.TO_CHECK || WrapperStatusEnum.TO_FIX) ? (
         <>
           <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
             {t('stationDetailPage.stationOptions.correctionRequired')}
@@ -62,7 +60,7 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
             {t('stationDetailPage.stationOptions.configureStation')}
           </Button>
         </>
-      ) : stationDetail?.stationStatus === StationStatusEnum.ACTIVE ? (
+      ) : stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -96,7 +94,7 @@ const DetailButtonsStation = ({ stationDetailWrapper, stationDetail, stationCode
             {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : stationDetail?.stationStatus === StationStatusEnum.TO_BE_CORRECTED ? (
+      ) : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ? (
         <>
           <Button
             // component={Link}

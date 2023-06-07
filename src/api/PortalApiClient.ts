@@ -314,6 +314,14 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
+  dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
+    const result = await apiConfigClient.deleteCreditorInstitutionStationRelationshipUsingDELETE({
+      ecCode,
+      stationcode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getECListByStationCode: async (
     stationcode: string,
     page: number,

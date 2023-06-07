@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
+import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
@@ -95,6 +95,8 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
     setLoadingOverlay(status);
   };
 
+  const addError = useErrorDispatcher();
+
   const [ecListPage, setECListPage] = useState<CreditorInstitutionsResource>(emptyECList);
   const [page, setPage] = useState<number>(0);
 
@@ -111,23 +113,22 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
   const dissociateEC = () => {
     setShowConfirmModal(false);
     setLoading(true);
-    dissociateECfromStation(stationId, selectedECCode)
+    dissociateECfromStation(selectedECCode, stationId)
       .then(() => {
         setAlertMessage(t('stationECList.dissociateEcSuccessMessage'));
         fetchStationECs(page);
       })
       .catch((reason) => {
-        console.error('reason', reason);
-        handleErrors([
-          {
-            id: `FETCH_STATIONS_ERROR`,
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while fetching stations`,
-            toNotify: false,
-          },
-        ]);
-        setError(true);
+        addError({
+          id: 'STATION_DELETE_RELATIONSHIP',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while deleting relationship between EC and Station`,
+          toNotify: true,
+          displayableTitle: t('stationECList.dissociateEcErrorTitle'),
+          displayableDescription: t('stationECList.dissociateEcErrorMessage'),
+          component: 'Toast',
+        });
       })
       .finally(() => {
         setSelectedECCode('');
@@ -141,7 +142,6 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
     getECListByStationCode(stationId, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
       .catch((reason) => {
-        console.error('reason', reason);
         handleErrors([
           {
             id: `FETCH_STATIONS_ERROR`,

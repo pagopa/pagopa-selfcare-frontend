@@ -80,19 +80,14 @@ export const getECListByStationCode = (
   }
 };
 
-export const dissociateECfromStation = (stationcode: string, pspcode: string): Promise<void> =>
-  dissociateECfromStationMocked(stationcode, pspcode);
-/* 
-  TODO: fix when real service rollout
-  {
+export const dissociateECfromStation = (ecCode: string, stationCode: string): Promise<void> => {
   /* istanbul ignore if */
-/*
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return dissociateECfromStationMocked(stationcode, pspcode);
+    return dissociateECfromStationMocked(ecCode, stationCode);
   } else {
-    return PortalApi.dissociateECfromStation(stationcode, pspcode).then((resources) => resources);
-  } 
-}; */
+    return PortalApi.dissociateECfromStation(ecCode, stationCode).then((resources) => resources);
+  }
+};
 
 export const associateEcToStation = (
   code: string,

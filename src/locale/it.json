@@ -156,7 +156,8 @@
     "products": {
       "NODOAUTH": "Connessione con nodo",
       "GPD": "Integrazione Asincrona",
-      "BIZ": "Recupero Ricevuta"
+      "BIZ": "Recupero Ricevuta",
+      "GPD_REP": "Gestione Flussi di Rendicontazione"
     }
   },
   "channelsPage": {

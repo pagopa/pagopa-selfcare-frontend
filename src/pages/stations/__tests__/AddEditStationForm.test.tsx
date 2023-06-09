@@ -8,7 +8,10 @@ import { Router } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
 import { mockedFullStation } from '../../../services/__mocks__/stationService';
-import { StationFormAction } from '../../../model/Station';
+import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import { mockedFullStationApproved } from './StationDetails.test';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -20,16 +23,39 @@ afterEach(cleanup);
 describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
+  const stationDetail: StationOnCreation = {
+    stationCode: '81001870922_06',
+    enabled: true,
+    brokerDescription: '',
+    version: 1,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date('2023-06-07T16:30:26.384Z'),
+    createdAt: new Date('2023-06-07T16:30:26.384Z'),
+    modifiedAt: new Date('2023-06-07T16:30:26.384Z'),
+    redirectIp: '11.22.44',
+    redirectPath: 'Stazione/path/redirect/prova',
+    redirectPort: 3333,
+    redirectQueryString: 'nessuno',
+    redirectProtocol: RedirectProtocolEnum.HTTPS,
+    brokerCode: '81001870922',
+    threadNumber: 1,
+    timeoutA: 15,
+    timeoutB: 30,
+    timeoutC: 120,
+    targetHost: '33.55.66',
+    targetPort: 4443,
+    targetPath: 'Stazione/path/target/prova',
+    primitiveVersion: 1,
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+    password: 'password',
+  };
+
   test('Test rendering AddEditStationForm with operator false and without stationDetail', async () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm
-              goBack={jest.fn()}
-              formAction={StationFormAction.Create}
-              isOperator={false}
-            />
+            <AddEditStationForm goBack={jest.fn()} formAction={StationFormAction.Create} />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -109,9 +135,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               goBack={jest.fn()}
-              stationDetail={mockedFullStation}
+              stationDetail={stationDetail}
               formAction={StationFormAction.Edit}
-              isOperator={true}
             />
           </Router>
         </ThemeProvider>
@@ -126,9 +151,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const port = screen.getByTestId('port-test') as HTMLInputElement;
     const servicePof = screen.getByTestId('pof-service-test') as HTMLInputElement;
     const serviceNmp = screen.getByTestId('nmp-service-test') as HTMLInputElement;
-    const endpointIp = screen.getByTestId('endpoint-ip-test') as HTMLInputElement;
-    const endpointPath = screen.getByTestId('endpoint-path-test') as HTMLInputElement;
-    const endpointPort = screen.getByTestId('endpoint-port-test') as HTMLInputElement;
     const protocol4Mod = screen.getByTestId('protocol-4Mod-test') as HTMLSelectElement;
     const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
     const port4Mod = screen.getByTestId('port-4Mod-test') as HTMLInputElement;
@@ -160,15 +182,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(serviceNmp, { target: { value: 'serviceNmp' } });
     expect(serviceNmp.value).toBe('serviceNmp');
-
-    fireEvent.change(endpointIp, { target: { value: 'endpointIp' } });
-    expect(endpointIp.value).toBe('endpointIp');
-
-    fireEvent.change(endpointPath, { target: { value: 'endpointPath' } });
-    expect(endpointPath.value).toBe('endpointPath');
-
-    fireEvent.change(endpointPort, { target: { value: 555 } });
-    expect(endpointPort.value).toBe('555');
 
     fireEvent.click(protocol4Mod);
     fireEvent.change(protocol4Mod, { target: { value: 'HTTPS' } });

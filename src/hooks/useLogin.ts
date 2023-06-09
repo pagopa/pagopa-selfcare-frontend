@@ -14,7 +14,7 @@ const mockedUser = {
   taxCode: 'AAAAAA00A00A000A',
   name: 'loggedName',
   surname: 'loggedSurname',
-  email: 'loggedEmail@aa.a',
+  email: 'loggedEmail@aa.aa',
 };
 
 export const userFromJwtToken: (token: string) => User = function (token: string) {

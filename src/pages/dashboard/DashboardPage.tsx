@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Alert, Card } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
@@ -6,8 +5,6 @@ import { useHistory } from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getPSPDetails } from '../../services/nodeService';
-import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
@@ -16,18 +13,9 @@ import NextSteps from './components/NextSteps';
 const DashboardPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
 
-  useEffect(() => {
-    if (selectedParty) {
-      getPSPDetails(selectedParty.fiscalCode)
-        .then((response) => {
-          setPspNodeData(response);
-        })
-        .catch((reason) => console.error(reason));
-    }
-  }, [selectedParty]);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
@@ -67,18 +55,18 @@ const DashboardPage = () => {
                   <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
                 </Box>
                 <Grid container spacing={3} pb={4}>
-                  {selectedParty?.pspData ? (
-                    <PSPRegistrationData pspNodeData={pspNodeData}></PSPRegistrationData>
+                  {selectedParty?.institutionType === 'PSP' ? (
+                    <PSPRegistrationData />
                   ) : (
-                    <ECRegistrationData></ECRegistrationData>
+                    <ECRegistrationData />
                   )}
                 </Grid>
               </Card>
             </Grid>
             <Grid item xs={6}>
-              <NextSteps selectedParty={selectedParty} pspNodeData={pspNodeData}></NextSteps>
+              <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
             </Grid>
-            {selectedParty?.pspData === undefined ? <OperativeTable /> : null}
+            {selectedParty?.institutionType !== 'PSP' ? <OperativeTable /> : null}
           </Grid>
         </Box>
       </Grid>

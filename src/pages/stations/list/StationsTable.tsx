@@ -1,22 +1,21 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import { Box, Pagination, styled, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { StationsResource } from '../../../api/generated/portal/StationsResource';
-import { getStations } from '../../../services/stationService';
+import { WrapperStationsResource } from '../../../api/generated/portal/WrapperStationsResource';
+import { getStationsMerged } from '../../../services/stationService';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { buildColumnDefs } from './StationsTableColumns';
-import { CustomStationSearchBar } from './CustomStationSearchBar';
 import StationTableEmpty from './StationTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyStationsResource: StationsResource = {
+const emptyStationsResource: WrapperStationsResource = {
   stationsList: [],
   pageInfo: {},
 };
@@ -28,7 +27,7 @@ const CustomDataGrid = styled(DataGrid)({
     padding: '0 24px 24px 24px',
     marginTop: '24px',
   },
-  '& .MuiDataGrid-main > div:first-child': {
+  '& .MuiDataGrid-main > div::first-of-type': {
     zIndex: 1,
   },
   '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
@@ -79,7 +78,7 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-export default function StationsTable() {
+export default function StationsTable({ stationCode }: { stationCode: string }) {
   const { t } = useTranslation();
 
   const columns: Array<GridColDef> = buildColumnDefs(t);
@@ -88,10 +87,11 @@ export default function StationsTable() {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
-  const [stations, setStations] = useState<StationsResource>(emptyStationsResource);
-  // const [page, setPage] = useState(0);
+  const [stations, setStations] = useState<WrapperStationsResource>(emptyStationsResource);
+  const [page, setPage] = useState(0);
+  const [stationCodeSort, setStationCodeSort] = useState('ASC');
 
-  const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
@@ -99,32 +99,39 @@ export default function StationsTable() {
   };
 
   useEffect(() => {
-    setLoadingStatus(true);
-    getStations(0, stationCodeCleaner)
-      .then((res) => {
-        setStations(res);
-        setError(false);
-      })
-      .catch((reason) => {
-        addError({
-          id: 'RETRIEVE_STATIONS_ERROR',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while retrieving stations`,
-          toNotify: true,
-        });
-        setError(true);
-        setStations(emptyStationsResource);
-      })
-      .finally(() => setLoadingStatus(false));
-  }, []);
+    if (brokerCode) {
+      setLoadingStatus(true);
+      getStationsMerged(
+        page,
+        brokerCode,
+        stationCode ? stationCode : undefined,
+        undefined,
+        stationCodeSort
+      )
+        .then((res) => {
+          setStations(res);
+          setError(false);
+        })
+        .catch((reason) => {
+          addError({
+            id: 'RETRIEVE_STATIONS_ERROR',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while retrieving stations`,
+            toNotify: true,
+          });
+          setError(true);
+          setStations(emptyStationsResource);
+        })
+        .finally(() => setLoadingStatus(false));
+    }
+  }, [page, stationCode, brokerCode, stationCodeSort]);
 
-  // const handleChangePage = (
-  //   _event: React.MouseEvent<HTMLButtonElement> | null,
-  //   newPage: number
-  // ) => {
-  //   setPage(newPage);
-  // };
+  const handleSortModelChange = (sortModel: GridSortModel) => {
+    setStationCodeSort(
+      sortModel.find((column) => column.field === 'stationCode')?.sort?.toUpperCase() ?? 'ASC'
+    );
+  };
 
   return (
     <React.Fragment>
@@ -154,19 +161,12 @@ export default function StationsTable() {
             components={{
               Pagination: () => (
                 <>
-                  {/* <TablePagination
-                    rowsPerPageOptions={[]}
-                    component="div"
-                    count={stations.stationsList.length}
-                    rowsPerPage={10}
-                    page={page}
-                    onPageChange={handleChangePage}
-                  /> */}
-                </>
-              ),
-              Toolbar: () => (
-                <>
-                  <CustomStationSearchBar />
+                  <Pagination
+                    color="primary"
+                    count={stations.pageInfo.total_pages ?? 0}
+                    page={page + 1}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                  />
                 </>
               ),
               NoRowsOverlay: () => (
@@ -210,6 +210,7 @@ export default function StationsTable() {
             rowHeight={rowHeight}
             rows={stations.stationsList}
             sortingMode="server"
+            onSortModelChange={handleSortModelChange}
           />
         )}
       </Box>

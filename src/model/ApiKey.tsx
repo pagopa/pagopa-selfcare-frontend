@@ -18,6 +18,7 @@ export type ConfiguredProductKeys = {
 
 export const NODOAUTH = 'Connessione con nodo';
 export const GPD = 'Integrazione Asincrona';
+export const GPD_REP = 'Gestione Flussi di Rendicontazione';
 export const BIZ = 'Recupero Ricevuta';
 
 export const API_KEY_PSP_PRODUCTS: Array<ConfiguredProductKeys> = [
@@ -26,6 +27,7 @@ export const API_KEY_PSP_PRODUCTS: Array<ConfiguredProductKeys> = [
 
 export const API_KEY_PRODUCTS: Array<ConfiguredProductKeys> = [
   { id: 'NODOAUTH', key: NODOAUTH },
+  { id: 'GPD_REP', key: GPD_REP },
   { id: 'GPD', key: GPD },
   { id: 'BIZ', key: BIZ },
 ];

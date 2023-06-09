@@ -34,8 +34,13 @@ const StationsMenuOptions = ({ status, stationCode }: Props) => {
         <MenuItem onClick={() => history.push(`${BASE_ROUTE}/stations/${stationCode}`)}>
           {t('stationsPage.stationOptions.manageStation')}
         </MenuItem>
-        {/* TODO Must redirect to stations management */}
-        <MenuItem onClick={() => {}}>
+        <MenuItem
+          onClick={() =>
+            status === 'ON_REVISION'
+              ? history.push(`${BASE_ROUTE}/stations/${stationCode}/edit`)
+              : null
+          }
+        >
           {status === 'ACTIVE'
             ? t('stationsPage.stationOptions.manageEC')
             : status === 'TO_BE_CORRECTED'

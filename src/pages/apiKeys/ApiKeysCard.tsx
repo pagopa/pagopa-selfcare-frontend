@@ -33,6 +33,7 @@ export default function ApiKeysCard({ selectedParty, apiKey }: Props) {
   const hideValue = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 
   const [primaryKey, setPrimaryKey] = useState<string>(apiKey.primaryKey);
+
   const [secondaryKey, setSecondaryKey] = useState<string>(apiKey.secondaryKey);
 
   const addNotify = useUserNotify();
@@ -40,7 +41,7 @@ export default function ApiKeysCard({ selectedParty, apiKey }: Props) {
   const setLoading = useLoading('KEY_REGEN');
 
   const copyPrimaryKey = () =>
-    navigator.clipboard.writeText(apiKey.primaryKey).then(
+    navigator.clipboard.writeText(primaryKey).then(
       () => {
         addNotify({
           id: 'ACTION_ON_COPY_PRIMARY_KEY',
@@ -63,7 +64,7 @@ export default function ApiKeysCard({ selectedParty, apiKey }: Props) {
       }
     );
   const copySecondaryKey = () =>
-    navigator.clipboard.writeText(apiKey.secondaryKey).then(
+    navigator.clipboard.writeText(secondaryKey).then(
       () => {
         addNotify({
           id: 'ACTION_ON_COPY_SECONDARY_KEY',

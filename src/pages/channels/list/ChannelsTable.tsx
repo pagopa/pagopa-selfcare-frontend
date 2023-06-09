@@ -1,11 +1,11 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled, Typography, Link } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory } from 'react-router';
-import { generatePath, Link as RouterLink } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_CHANNELS_LIST } from '../../../utils/constants';
 import ROUTES from '../../../routes';
@@ -181,21 +181,7 @@ export default function ChannelsTable() {
                 <>
                   <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
                     <Typography variant="body2">
-                      <Trans i18nKey="channelsPage.table.noResults">
-                        Non sono ancora presenti canali in questo ambiente.
-                        <Link
-                          component={RouterLink}
-                          sx={{
-                            color: 'primary.main',
-                            cursor: 'pointer',
-                            textDecoration: 'none',
-                            whiteSpace: 'pre',
-                          }}
-                          to={generatePath(ROUTES.CHANNEL_ADD)}
-                        >
-                          <strong> Crea Canale</strong>
-                        </Link>
-                      </Trans>
+                      <Trans i18nKey="channelsPage.table.noResults">Nessun risultato</Trans>
                     </Typography>
                   </Box>
                 </>

@@ -3,18 +3,19 @@ import { Alert, Box, Button, Card, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { Party } from '../../../model/Party';
+import { SigninData } from '../../../model/Node';
 
 type Props = {
   selectedParty?: Party;
-  pspNodeData?: PaymentServiceProviderDetailsResource;
+  signinData?: SigninData;
 };
 
-const NextSteps = ({ selectedParty, pspNodeData }: Props) => {
+const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
-  const isPSPRegistered = pspNodeData?.bic ? true : false;
+  const isSignedIn = signinData ? true : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
+  const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
 
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
@@ -25,12 +26,16 @@ const NextSteps = ({ selectedParty, pspNodeData }: Props) => {
         <Alert severity="warning">
           {t(
             `dashboardPage.nextStep.${
-              isAdmin && isPSPRegistered ? 'generateApiKeysStepAlert' : 'signInStepAlert'
+              isAdmin && isSignedIn && isPSP
+                ? 'generateApiKeysStepAlertPSP'
+                : isAdmin && isSignedIn
+                ? 'generateApiKeyStepAlertEC'
+                : 'signInStepAlert'
             }`
           )}
         </Alert>
       </Box>
-      {isAdmin && isPSPRegistered ? (
+      {isAdmin && isSignedIn ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}

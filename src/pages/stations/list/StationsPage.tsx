@@ -1,14 +1,37 @@
+import { useEffect, useState } from 'react';
 import { Alert, Box, Grid } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import StationsTable from './StationsTable';
+import StationsTableSearchBar from './StationsTableSearchBar';
+
+export const clearLocationState = () => {
+  window.history.replaceState({}, document.title);
+};
 
 export default function StationsPage() {
   const { t } = useTranslation();
-
   const history = useHistory();
+
+  const [stationCodeInput, setStationCodeInput] = useState<string>('');
+  const [stationCode, setStationCode] = useState<string>('');
+
+  useEffect(() => {
+    const setSearchValue = setTimeout(() => {
+      setStationCode(stationCodeInput);
+    }, 500);
+
+    return () => clearTimeout(setSearchValue);
+  }, [stationCodeInput]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', clearLocationState);
+    return () => {
+      window.removeEventListener('beforeunload', clearLocationState);
+    };
+  }, []);
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: '#F5F5F5' }}>
@@ -35,9 +58,14 @@ export default function StationsPage() {
           </Alert>
         )}
 
+        <StationsTableSearchBar
+          stationCodeInput={stationCodeInput}
+          setStationCodeInput={setStationCodeInput}
+        />
+
         <Box display="flex" width="100%" mt={3}>
           <Box pt={2} display="flex" width="100%">
-            <StationsTable />
+            <StationsTable stationCode={stationCode} />
           </Box>
         </Box>
       </Grid>

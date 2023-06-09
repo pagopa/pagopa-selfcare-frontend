@@ -5,7 +5,7 @@ import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router';
 import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
-import GridLinkAction from './GridLinkAction';
+import GridLinkAction from '../../../components/Table/GridLinkAction';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,

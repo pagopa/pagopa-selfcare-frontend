@@ -50,7 +50,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     password: 'password',
   };
 
-  test('Test rendering AddEditStationForm with operator false and without stationDetail', async () => {
+  test('Test rendering AddEditStationForm with operator true and without stationDetail', async () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -128,7 +128,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.click(backBtn);
   });
 
-  test('Test rendering AddEditStationForm with operator false and without stationDetail', async () => {
+  test('Test rendering AddEditStationForm with operator true', async () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>

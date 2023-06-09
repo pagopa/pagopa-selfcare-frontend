@@ -6,5 +6,5 @@ export const isOperator = (): boolean => {
   const email = typeof user !== 'undefined' ? user.email : '';
   // console.log('EMAIL', email);
   // console.log('OPERATOR', ENV.PAGOPA_OPERATOR.MAIL_ADDRESSES.includes(email));
-  return ENV.PAGOPA_OPERATOR.MAIL_ADDRESSES.includes(email);
+  return ENV.PAGOPA_OPERATOR.MAIL_ADDRESSES.split(';').includes(email);
 };

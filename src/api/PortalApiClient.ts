@@ -36,7 +36,7 @@ import { WrapperStationsResource } from './generated/portal/WrapperStationsResou
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
-import { StationDetailsDto } from './generated/portal/StationDetailsDto';
+import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -255,26 +255,26 @@ export const PortalApi = {
         redirectIp: station.redirectIp,
         redirectPath: station.redirectPath,
         redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost ? station.targetHost : undefined,
-        targetPort: station.targetPort ? station.targetPort : undefined,
-        targetPath: station.targetPath ? station.targetPath : undefined,
-        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
-        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
-        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
+        targetHost: station.targetHost ?? undefined,
+        targetPort: station.targetPort ?? undefined,
+        targetPath: station.targetPath ?? undefined,
+        targetHostPof: station.targetHostPof ?? undefined,
+        targetPortPof: station.targetPortPof ?? undefined,
+        targetPathPof: station.targetPathPof ?? undefined,
         version: station.version,
-        threadNumber: 2,
+        threadNumber: station.threadNumber,
         enabled: true,
         password: station.password,
-        newPassword: station.newPassword,
+        newPassword: station.newPassword ?? undefined,
         protocol: station.protocol,
         port: station.port,
         ip: station.ip,
         service: station.service,
         pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod,
-        ip4Mod: station.ip4Mod,
-        port4Mod: station.port4Mod,
-        service4Mod: station.service4Mod,
+        protocol4Mod: station.protocol4Mod ?? undefined,
+        ip4Mod: station.ip4Mod ?? undefined,
+        port4Mod: station.port4Mod ?? undefined,
+        service4Mod: station.service4Mod ?? undefined,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -422,10 +422,91 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  updateWrapperStation: async (station: StationDetailsDto): Promise<WrapperEntitiesOperations> => {
+  updateWrapperStationToCheck: async (
+    station: StationDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
-        version: 1,
+        brokerDescription: station.brokerDescription,
+        brokerCode: station.brokerCode,
+        enabled: station.enabled,
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetHost,
+        targetPath: station.targetPath,
+        targetPort: station.targetPort,
+        targetHostPof: station.targetHostPof ?? undefined,
+        targetPortPof: station.targetPortPof ?? undefined,
+        targetPathPof: station.targetPathPof ?? undefined,
+        version: station.version,
+        threadNumber: station.threadNumber,
+        password: station.password,
+        newPassword: station.newPassword ?? undefined,
+        protocol: station.protocol,
+        port: station.port,
+        ip: station.ip,
+        service: station.service,
+        pofService: station.pofService,
+        protocol4Mod: station.protocol4Mod ?? undefined,
+        ip4Mod: station.ip4Mod ?? undefined,
+        port4Mod: station.port4Mod ?? undefined,
+        service4Mod: station.service4Mod ?? undefined,
+        status: StatusEnum.TO_CHECK,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperStationToCheckUpdate: async (
+    station: StationDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
+      body: {
+        brokerDescription: station.brokerDescription,
+        brokerCode: station.brokerCode,
+        enabled: station.enabled,
+        stationCode: station.stationCode,
+        primitiveVersion: station.primitiveVersion,
+        redirectProtocol: station.redirectProtocol,
+        redirectPort: station.redirectPort,
+        redirectIp: station.redirectIp,
+        redirectPath: station.redirectPath,
+        redirectQueryString: station.redirectQueryString,
+        targetHost: station.targetHost,
+        targetPath: station.targetPath,
+        targetPort: station.targetPort,
+        targetHostPof: station.targetHostPof ?? undefined,
+        targetPortPof: station.targetPortPof ?? undefined,
+        targetPathPof: station.targetPathPof ?? undefined,
+        version: station.version,
+        threadNumber: station.threadNumber,
+        password: station.password,
+        newPassword: station.newPassword ?? undefined,
+        protocol: station.protocol,
+        port: station.port,
+        ip: station.ip,
+        service: station.service,
+        pofService: station.pofService,
+        protocol4Mod: station.protocol4Mod ?? undefined,
+        ip4Mod: station.ip4Mod ?? undefined,
+        port4Mod: station.port4Mod ?? undefined,
+        service4Mod: station.service4Mod ?? undefined,
+        status: StatusEnum.TO_CHECK_UPDATE,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperStationByOpt: async (
+    station: StationDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
+      body: {
         brokerDescription: station.brokerDescription,
         brokerCode: station.brokerCode,
         enabled: station.enabled,
@@ -442,17 +523,34 @@ export const PortalApi = {
         targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
         targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
         targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
+        version: station.version,
+        threadNumber: station.threadNumber,
+        password: station.password,
+        newPassword: station.newPassword ?? undefined,
+        protocol: station.protocol,
+        port: station.port,
+        ip: station.ip,
+        service: station.service,
+        pofService: station.pofService,
+        protocol4Mod: station.protocol4Mod ?? undefined,
+        ip4Mod: station.ip4Mod ?? undefined,
+        port4Mod: station.port4Mod ?? undefined,
+        service4Mod: station.service4Mod ?? undefined,
+        status: StatusEnum.TO_CHECK_UPDATE,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperStationByOpt: async (
-    station: StationDetailsDto
-  ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
+  updateStation: async (
+    station: StationDetailsDto,
+    stationcode: string
+  ): Promise<StationDetailResource> => {
+    const result = await apiConfigClient.updateStationUsingPUT({
       body: {
+        brokerDescription: station.brokerDescription,
         brokerCode: station.brokerCode,
+        enabled: station.enabled,
         stationCode: station.stationCode,
         primitiveVersion: station.primitiveVersion,
         redirectProtocol: station.redirectProtocol,
@@ -463,7 +561,25 @@ export const PortalApi = {
         targetHost: station.targetHost,
         targetPath: station.targetPath,
         targetPort: station.targetPort,
+        targetHostPof: station.targetHostPof ?? undefined,
+        targetPortPof: station.targetPortPof ?? undefined,
+        targetPathPof: station.targetPathPof ?? undefined,
+        version: station.version,
+        threadNumber: station.threadNumber,
+        password: station.password,
+        newPassword: station.newPassword ?? undefined,
+        protocol: station.protocol,
+        port: station.port,
+        ip: station.ip,
+        service: station.service,
+        pofService: station.pofService,
+        protocol4Mod: station.protocol4Mod ?? undefined,
+        ip4Mod: station.ip4Mod ?? undefined,
+        port4Mod: station.port4Mod ?? undefined,
+        service4Mod: station.service4Mod ?? undefined,
+        status: StatusEnum.APPROVED,
       },
+      stationcode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

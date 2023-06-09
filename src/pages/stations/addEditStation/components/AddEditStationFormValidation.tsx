@@ -100,8 +100,8 @@ Props) => {
                 fullWidth
                 id="newPassword"
                 name="newPassword"
-                label={t('addEditStationPage.addFormValidation.fields.password')}
-                placeholder={t('addEditStationPage.addFormValidation.fields.password')}
+                label={t('addEditStationPage.addFormValidation.fields.newPassword')}
+                placeholder={t('addEditStationPage.addFormValidation.fields.newPassword')}
                 size="small"
                 value={formik.values.newPassword}
                 onChange={(e) => formik.handleChange(e)}
@@ -110,6 +110,28 @@ Props) => {
                 inputProps={{
                   'data-testid': 'new-password-test',
                 }}
+              />
+            </Grid>
+            <Grid container item xs={6}>
+              <TextField
+                type="number"
+                fullWidth
+                id="threadNumber"
+                name="threadNumber"
+                InputLabelProps={{ shrink: formik.values.threadNumber ? true : false }}
+                inputProps={{
+                  type: 'number',
+                  step: 1,
+                  min: 0,
+                  'data-testid': 'thread-number-test',
+                }}
+                label={t('addEditStationPage.addFormValidation.fields.threadNumber')}
+                placeholder={t('addEditStationPage.addForm.fields.threadNumber')}
+                size="small"
+                value={formik.values.threadNumber === 0 ? '' : formik.values.threadNumber}
+                onChange={(e) => handleChangeNumberOnly(e, 'threadNumber', formik)}
+                error={formik.touched.threadNumber && Boolean(formik.errors.threadNumber)}
+                helperText={formik.touched.threadNumber && formik.errors.threadNumber}
               />
             </Grid>
           </Grid>
@@ -201,6 +223,23 @@ Props) => {
             <Grid container item xs={6}>
               <TextField
                 fullWidth
+                id="service"
+                name="service"
+                label={t('addEditStationPage.addFormValidation.fields.service')}
+                size="small"
+                value={formik.values.service}
+                onChange={(e) => formik.handleChange(e)}
+                error={formik.touched.service && Boolean(formik.errors.service)}
+                helperText={formik.touched.service && formik.errors.service}
+                inputProps={{
+                  'data-testid': 'nmp-service-test',
+                }}
+              />
+            </Grid>
+
+            <Grid container item xs={6}>
+              <TextField
+                fullWidth
                 id="pofService"
                 name="pofService"
                 label={t('addEditStationPage.addFormValidation.fields.servicePof')}
@@ -214,27 +253,10 @@ Props) => {
                 }}
               />
             </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="service"
-                name="service"
-                label={t('addEditStationPage.addFormValidation.fields.serviceNmp')}
-                size="small"
-                value={formik.values.service}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.service && Boolean(formik.errors.service)}
-                helperText={formik.touched.service && formik.errors.service}
-                inputProps={{
-                  'data-testid': 'nmp-service-test',
-                }}
-              />
-            </Grid>
           </Grid>
         </Box>
 
-        <Box sx={inputGroupStyle}>
+        {/* <Box sx={inputGroupStyle}>
           <AddEditStationFormSectionTitle
             title={t('addEditStationPage.addFormValidation.sections.targetEndPointPof')}
             icon={<MenuBook />}
@@ -301,7 +323,7 @@ Props) => {
               />
             </Grid>
           </Grid>
-        </Box>
+        </Box> */}
 
         <Box sx={inputGroupStyle}>
           <AddEditStationFormSectionTitle

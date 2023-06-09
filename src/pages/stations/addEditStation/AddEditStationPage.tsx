@@ -5,12 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import ROUTES from '../../../routes';
+import ROUTES, { BASE_ROUTE } from '../../../routes';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
 import { getStationDetail } from '../../../services/stationService';
 import { StationFormAction } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { isOperator } from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
@@ -23,6 +24,7 @@ const AddEditStationPage = () => {
   const [stationDetail, setStationDetail] = useState<any>();
   const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
+  const goBack2Details = () => history.push(`${BASE_ROUTE}/stations/${stationId}`);
 
   useEffect(() => {
     if (formAction !== StationFormAction.Create) {
@@ -57,7 +59,9 @@ const AddEditStationPage = () => {
           <ButtonNaked
             size="small"
             component="button"
-            onClick={goBack}
+            onClick={() =>
+              isOperator() && formAction === StationFormAction.Edit ? goBack2Details() : goBack()
+            }
             startIcon={<ArrowBack />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"

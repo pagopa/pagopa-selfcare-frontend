@@ -1,12 +1,14 @@
-import { Alert, Box, Breadcrumbs, Chip, Divider, Grid, Stack } from '@mui/material';
+import { Alert, Box, Chip, Divider, Grid, IconButton } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { ArrowBack } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { VisibilityOff } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   StationDetailResource,
   WrapperStatusEnum,
@@ -17,61 +19,55 @@ import DetailButtonsStation from './DetailButtonsStation';
 type Props = {
   stationDetail?: StationDetailResource;
   formatedDate: (date: Date | undefined) => string | null;
-  goBack: () => void;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 const StationDetailsValidation = ({
   stationDetail,
   formatedDate,
-  goBack,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
   const { stationId } = useParams<{ stationId: string }>();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const hidePassword = 'XXXXXXXXXXXXXX';
+
+  const showOrHidePassword = (password?: string) => {
+    if (showPassword) {
+      return password;
+    }
+    return hidePassword;
+  };
 
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
-        <Stack direction="row">
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px' }}
-            weight="default"
-            data-testid="back-btn-test"
-          >
-            {t('general.exit')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography>{t('general.Stations')}</Typography>
-            <Typography color={'#A2ADB8'}>
-              {t('stationDetailPage.detail', {
-                code: stationId,
-              })}
-            </Typography>
-          </Breadcrumbs>
-        </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox title={stationId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
             <Typography mb={5} color="#5C6F82">
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`${formatedDate(stationDetail?.createdAt)} da `}
+                {`${formatedDate(stationDetail?.createdAt)} da ${stationDetail?.createdBy}`}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtonsStation stationDetail={stationDetail} stationCode={stationId} />
+            <DetailButtonsStation status={stationDetail?.wrapperStatus} stationCode={stationId} />
           </Grid>
           {operator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ? (
             <Grid item xs={12} sx={{ mb: 5 }}>
               <Alert severity="warning" variant="outlined">
                 <Typography sx={{ py: 2 }}>{t('stationDetailPageValidation.alert')}</Typography>
+              </Alert>
+            </Grid>
+          ) : operator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ? (
+            <Grid item xs={12} sx={{ mb: 5 }}>
+              <Alert severity="warning" variant="outlined">
+                <Typography sx={{ py: 2 }}>
+                  {t('stationDetailPageValidation.alertToFix')}
+                </Typography>
               </Alert>
             </Grid>
           ) : null}
@@ -98,9 +94,10 @@ Props) => {
                     backgroundColor:
                       stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                         ? 'primary.main'
-                        : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
-                        ? 'warning.light'
-                        : '#EEEEEE',
+                        : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                          stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
+                        ? '#EEEEEE'
+                        : 'warning.light',
                     color:
                       stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                         ? 'background.paper'
@@ -109,7 +106,8 @@ Props) => {
                   label={
                     stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? t('stationDetailPage.states.active')
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
+                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
                       ? t('stationDetailPage.states.revision')
                       : t('stationDetailPage.states.needCorrection')
                   }
@@ -377,19 +375,91 @@ Props) => {
                     {t('stationDetailPageValidation.infoToCompltete.password')}
                   </Typography>
                 </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.password ?? '-'}
-                  </Typography>
+                <Grid
+                  item
+                  xs={9}
+                  sx={{
+                    display: 'flex',
+                    height: '38px',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  {stationDetail?.password ? (
+                    <>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                        {showOrHidePassword(stationDetail?.password)}
+                      </Typography>
+                      <IconButton
+                        style={{
+                          border: 'none !important',
+                          marginLeft: '42px',
+                        }}
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                        data-testid="show-ps2-test"
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
+                        ) : (
+                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
+                        )}
+                      </IconButton>
+                    </>
+                  ) : (
+                    '-'
+                  )}
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
                     {t('stationDetailPageValidation.infoToCompltete.newPassword')}
                   </Typography>
                 </Grid>
+                <Grid
+                  item
+                  xs={9}
+                  sx={{
+                    display: 'flex',
+                    height: '38px',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  {stationDetail?.newPassword ? (
+                    <>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                        {showOrHidePassword(stationDetail?.newPassword)}
+                      </Typography>
+                      <IconButton
+                        style={{
+                          border: 'none !important',
+                          marginLeft: '42px',
+                        }}
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                        data-testid="show-ps2-test"
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
+                        ) : (
+                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
+                        )}
+                      </IconButton>
+                    </>
+                  ) : (
+                    '-'
+                  )}
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToCompltete.threadNumber')}
+                  </Typography>
+                </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.newPassword ?? '-'}
+                    {stationDetail?.threadNumber ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -439,12 +509,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.NMPService')}
+                    {t('stationDetailPageValidation.infoToCompltete.service')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'-'}
+                    {stationDetail?.service ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -459,7 +529,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.protocol4Mod ?? '-'}
+                    {stationDetail?.protocol4Mod ? stationDetail.protocol4Mod : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -469,7 +539,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.ip4Mod ?? '-'}
+                    {stationDetail?.ip4Mod ? stationDetail.ip4Mod : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -479,7 +549,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.port4Mod ?? '-'}
+                    {stationDetail?.port4Mod ? stationDetail.port4Mod : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -489,7 +559,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.service4Mod ?? '-'}
+                    {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
                   </Typography>
                 </Grid>
               </Grid>

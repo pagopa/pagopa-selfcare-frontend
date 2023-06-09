@@ -20,7 +20,7 @@ import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES, { BASE_ROUTE } from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -28,7 +28,9 @@ import {
   createStation,
   createWrapperStation,
   getStationCode,
-  updateWrapperStation,
+  updateStation,
+  updateWrapperStationToCheck,
+  updateWrapperStationToCheckUpdate,
 } from '../../../services/stationService';
 import {
   LOADING_TASK_GENERATION_STATION_CODE,
@@ -36,9 +38,6 @@ import {
 } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-
-// import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
-// import { WrapperStationDetailsDto } from '../../../api/generated/portal/WrapperStationDetailsDto';
 import { StationFormAction, StationOnCreation } from '../../../model/Station';
 import { isOperator } from '../components/commonFunctions';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
@@ -88,80 +87,65 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     }
   }, []);
 
-  // const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
-  // const stationActive = stationDetail ? stationDetail.enabled : false;
-  const status = stationDetail ? stationDetail.wrapperStatus : WrapperStatusEnum.TO_CHECK;
-
   const initialFormData = (detail?: StationOnCreation) =>
     detail
       ? {
-          ...{
-            brokerCode: detail.brokerCode ?? '',
-            stationCode: detail.stationCode ?? '',
-            status: detail.wrapperStatus ?? undefined,
-            primitiveVersion: detail.primitiveVersion ?? undefined,
-            redirectProtocol: detail.redirectProtocol ?? '',
-            redirectPort: detail.redirectPort ?? undefined,
-            redirectIp: detail.redirectIp ?? '',
-            redirectPath: detail.redirectPath ?? '',
-            redirectQueryString: detail.redirectQueryString ?? '',
-            targetHost: detail.targetHost ?? '',
-            targetPath: detail.targetPath ?? '',
-            targetPort: detail.targetPort ?? undefined,
-            targetHostPof: detail.targetHostPof ?? '',
-            targetPathPof: detail.targetPathPof ?? '',
-            targetPortPof: detail.targetPortPof ?? undefined,
-          },
-          ...(operator && {
-            version: detail.version ?? undefined,
-            password: detail.password ?? '',
-            newPassword: detail.newPassword ?? '',
-            protocol: detail.protocol ?? undefined,
-            port: detail.port ?? undefined,
-            ip: detail.ip ?? '',
-            service: detail.service ?? '',
-            pofService: detail.pofService ?? '',
-            endpointIp: detail.endpointIp ?? '',
-            endpointPath: detail.endpointPath ?? '',
-            endpointPort: detail.endpointPort ?? undefined,
-            protocol4Mod: detail.protocol4Mod ?? undefined,
-            ip4Mod: detail.ip4Mod ?? '',
-            port4Mod: detail.port4Mod ?? undefined,
-            service4Mod: detail.service4Mod ?? '',
-          }),
+          brokerCode: detail.brokerCode ?? '',
+          stationCode: detail.stationCode ?? '',
+          status: detail?.wrapperStatus,
+          primitiveVersion: detail.primitiveVersion ?? undefined,
+          redirectProtocol: detail.redirectProtocol ?? '',
+          redirectPort: detail.redirectPort ?? undefined,
+          redirectIp: detail.redirectIp ?? '',
+          redirectPath: detail.redirectPath ?? '',
+          redirectQueryString: detail.redirectQueryString ?? '',
+          targetHost: detail.targetHost ?? '',
+          targetPath: detail.targetPath ?? '',
+          targetPort: detail.targetPort ?? undefined,
+          targetHostPof: detail.targetHostPof ?? '',
+          targetPathPof: detail.targetPathPof ?? '',
+          targetPortPof: detail.targetPortPof ?? undefined,
+          version: detail.version ?? undefined,
+          password: detail.password ?? '',
+          newPassword: detail.newPassword ?? '',
+          threadNumber: detail.threadNumber ?? undefined,
+          protocol: detail.protocol ?? undefined,
+          port: detail.port ?? undefined,
+          ip: detail.ip ?? '',
+          service: detail.service ?? '',
+          pofService: detail.pofService ?? '',
+          protocol4Mod: detail.protocol4Mod ?? undefined,
+          ip4Mod: detail.ip4Mod ?? '',
+          port4Mod: detail.port4Mod ?? undefined,
+          service4Mod: detail.service4Mod ?? '',
+          enabled: detail.enabled,
         }
       : {
-          ...{
-            status,
-            brokerCode: brokerCodeCleaner,
-            stationCode: stationCodeGenerated,
-            primitiveVersion: 0,
-            redirectProtocol: RedirectProtocolEnum.HTTPS,
-            redirectPort: 0,
-            redirectIp: '',
-            redirectPath: '',
-            redirectQueryString: '',
-            targetHost: '',
-            targetPath: '',
-            targetPort: 0,
-          },
-          ...(operator && {
-            version: stationDetail?.version ?? 0,
-            password: '',
-            newPassword: '',
-            protocol: undefined,
-            port: 0,
-            ip: '',
-            service: '',
-            pofService: '',
-            endpointIp: '',
-            endpointPath: '',
-            endpointPort: 0,
-            protocol4Mod: undefined,
-            ip4Mod: '',
-            port4Mod: 0,
-            service4Mod: '',
-          }),
+          status: StatusEnum.TO_CHECK,
+          brokerCode: brokerCodeCleaner,
+          stationCode: stationCodeGenerated,
+          primitiveVersion: 0,
+          redirectProtocol: RedirectProtocolEnum.HTTPS,
+          redirectPort: 0,
+          redirectIp: '',
+          redirectPath: '',
+          redirectQueryString: '',
+          targetHost: '',
+          targetPath: '',
+          targetPort: 0,
+          version: stationDetail?.version ?? 0,
+          password: '',
+          newPassword: '',
+          threadNumber: 0,
+          protocol: undefined,
+          port: 0,
+          ip: '',
+          service: '',
+          pofService: '',
+          protocol4Mod: undefined,
+          ip4Mod: '',
+          port4Mod: 0,
+          service4Mod: '',
         };
 
   const inputGroupStyle = {
@@ -257,6 +241,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                 ? t('addEditStationPage.validation.overVersion')
                 : undefined,
               password: !values.password ? 'Campo obbligatorio' : undefined,
+              threadNumber: !values.threadNumber ? 'Campo obbligatorio' : undefined,
               protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
               ip: !values.ip ? 'Campo obbligatorio' : undefined,
               port: !values.port
@@ -267,48 +252,66 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
               service: !values.service ? 'Campo obbligatorio' : undefined,
               pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
-              endpointIp: !values.endpointIp ? 'Campo obbligatorio' : undefined,
-              endpointPath: !values.endpointPath ? 'Campo obbligatorio' : undefined,
-              endpointPort: !values.endpointPort
-                ? 'Campo obbligatorio'
-                : validatePortRange(values.targetPort)
-                ? t('addEditStationPage.validation.overPort')
-                : undefined,
             }
           : null),
       }).filter(([_key, value]) => value)
     );
 
-  const redirect = () => {
-    const stationCode4Redirect =
-      formAction === StationFormAction.Create ? stationCodeGenerated : stationDetail?.stationCode;
+  const redirect = (stCode: string) => {
     if (operator) {
-      history.push(`${BASE_ROUTE}/stations/${stationCode4Redirect}`);
+      history.push(`${BASE_ROUTE}/stations/${stCode}`);
     } else {
       history.push(ROUTES.STATIONS);
     }
   };
 
-  // const redirect = () => history.push(`${BASE_ROUTE}/stations`);
-
   const submit = async (values: StationOnCreation) => {
     setLoading(true);
+    const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
+    const stationCode4Redirect =
+      formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
+
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
         await createWrapperStation(values);
+        redirect(stationCode4Redirect);
       }
 
       if (formAction === StationFormAction.Edit) {
-        if (operator /* && status === WrapperStatusEnum.TO_CHECK */) {
-          await createStation(values);
-        } /* else if (operator && status === WrapperStatusEnum.TO_CHECK_UPDATE) {
-          await updateWrapperStationByOpt(values);
-        } */ else {
-          await updateWrapperStation(values);
+        switch (stationDetail?.wrapperStatus) {
+          case WrapperStatusEnum.TO_CHECK:
+            if (operator) {
+              await createStation(values);
+              redirect(stationCode4Redirect);
+            } else {
+              await updateWrapperStationToCheck(values);
+              redirect(stationCode4Redirect);
+            }
+            break;
+          case WrapperStatusEnum.APPROVED:
+            if (operator) {
+              await updateStation(values, stationCode);
+              redirect(stationCode4Redirect);
+            } else {
+              await updateWrapperStationToCheckUpdate(values);
+              redirect(stationCode4Redirect);
+            }
+            break;
+          case WrapperStatusEnum.TO_CHECK_UPDATE:
+            if (operator) {
+              await updateStation(values, stationCode);
+              redirect(stationCode4Redirect);
+            }
+            break;
+          case WrapperStatusEnum.TO_FIX:
+            await updateWrapperStationToCheck(values);
+            redirect(stationCode4Redirect);
+            break;
+          default:
+            redirect(stationCode4Redirect);
+            break;
         }
       }
-
-      redirect();
     } catch (reason) {
       addError({
         id: 'ADD_EDIT_STATION',
@@ -580,7 +583,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetHost"
                   name="targetHost"
-                  label={t('addEditStationPage.addForm.fields.targetAddress')}
+                  label={t('addEditStationPage.addForm.fields.targetHost')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetHost')}
                   size="small"
                   value={formik.values.targetHost}
                   onChange={(e) => formik.handleChange(e)}
@@ -596,7 +600,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetPath"
                   name="targetPath"
-                  label={t('addEditStationPage.addForm.fields.targetService')}
+                  label={t('addEditStationPage.addForm.fields.targetPath')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPath')}
                   size="small"
                   value={formik.values.targetPath}
                   onChange={(e) => formik.handleChange(e)}
@@ -610,6 +615,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
               <Grid container item xs={6}>
                 <TextField
+                  type="number"
                   fullWidth
                   id="targetPort"
                   name="targetPort"
@@ -644,8 +650,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetHostPof"
                   name="targetHostPof"
-                  label={t('addEditStationPage.addForm.fields.targetAddress')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetAddress')}
+                  label={t('addEditStationPage.addForm.fields.targetHostPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
                   size="small"
                   value={formik.values.targetHostPof}
                   onChange={(e) => formik.handleChange(e)}
@@ -661,8 +667,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetPathPof"
                   name="targetPathPof"
-                  label={t('addEditStationPage.addForm.fields.targetService')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetService')}
+                  label={t('addEditStationPage.addForm.fields.targetPathPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
                   size="small"
                   value={formik.values.targetPathPof}
                   onChange={(e) => formik.handleChange(e)}
@@ -676,6 +682,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
               <Grid container item xs={6}>
                 <TextField
+                  type="number"
                   fullWidth
                   id="targetPortPof"
                   name="targetPortPof"
@@ -686,8 +693,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     max: 65556,
                     'data-testid': 'target-port-pof-test',
                   }}
-                  label={t('addEditStationPage.addForm.fields.targetPort')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetPort')}
+                  label={t('addEditStationPage.addForm.fields.targetPortPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPortPof')}
                   size="small"
                   value={formik.values.targetPortPof === 0 ? '' : formik.values.targetPortPof}
                   onChange={(e) => handleChangeNumberOnly(e, 'targetPortPof', formik)}

@@ -498,6 +498,11 @@ export const updateWrapperStationByOpt = (
   _stations: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
+export const updateStation = (
+  _stations: StationDetailsDto,
+  _statonCode: string
+): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
+
 export const dissociateECfromStation = (_stationcode: string, _eccode: string): Promise<void> =>
   new Promise((resolve) => resolve());
 

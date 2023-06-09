@@ -15,6 +15,7 @@ import {
   updateWrapperStation as updateStationWrap,
   updateWrapperStationByOpt as updateStationWrapByOpt,
   getWrapperStation as getStationWrap,
+  updateStation as UpdateStationMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -133,13 +134,23 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperat
   }
 };
 
-export const updateWrapperStation = (
+export const updateWrapperStationToCheck = (
   station: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateStationWrap(station);
   } else {
-    return PortalApi.updateWrapperStation(station).then((resources) => resources);
+    return PortalApi.updateWrapperStationToCheck(station).then((resources) => resources);
+  }
+};
+
+export const updateWrapperStationToCheckUpdate = (
+  station: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateStationWrap(station);
+  } else {
+    return PortalApi.updateWrapperStationToCheckUpdate(station).then((resources) => resources);
   }
 };
 
@@ -150,6 +161,17 @@ export const updateWrapperStationByOpt = (
     return updateStationWrapByOpt(station);
   } else {
     return PortalApi.updateWrapperStationByOpt(station).then((resources) => resources);
+  }
+};
+
+export const updateStation = (
+  station: StationDetailsDto,
+  stationCode: string
+): Promise<StationDetailResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return UpdateStationMocked(station, stationCode);
+  } else {
+    return PortalApi.updateStation(station, stationCode).then((resources) => resources);
   }
 };
 

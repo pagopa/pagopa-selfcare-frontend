@@ -6,7 +6,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { FormAction } from '../../../model/Station';
-import ROUTES from '../../../routes';
+import ROUTES, { BASE_ROUTE } from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -98,7 +98,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           <GridLinkAction
             key="Gestisci stazione"
             label="Gestisci stazione"
-            to={generatePath(`${ROUTES.STATION_DETAIL}`, { stationId: params.row.stationCode })}
+            to={generatePath(`${BASE_ROUTE}/stations/${params.row.stationCode}`)}
             showInMenu={true}
           />
         );
@@ -235,7 +235,8 @@ export function showStatus(params: GridRenderCellParams) {
         label={
           params.row.wrapperStatus === 'APPROVED'
             ? i18n.t('stationsPage.states.active')
-            : params.row.wrapperStatus === 'TO_CHECK'
+            : params.row.wrapperStatus === 'TO_CHECK' ||
+              params.row.wrapperStatus === 'TO_CHECK_UPDATE'
             ? i18n.t('stationsPage.states.revision')
             : i18n.t('stationsPage.states.needCorrection')
         }
@@ -248,7 +249,8 @@ export function showStatus(params: GridRenderCellParams) {
           backgroundColor:
             params.row.wrapperStatus === 'APPROVED'
               ? 'primary.main'
-              : params.row.wrapperStatus === 'TO_CHECK'
+              : params.row.wrapperStatus === 'TO_CHECK' ||
+                params.row.wrapperStatus === 'TO_CHECK_UPDATE'
               ? '#EEEEEE'
               : 'warning.light',
           paddingBottom: '1px',

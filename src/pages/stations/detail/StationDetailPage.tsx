@@ -57,13 +57,9 @@ const StationDetailPage = () => {
   };
 
   return operator ? (
-    <StationDetailsValidation
-      stationDetail={stationDetail}
-      formatedDate={formatedDate}
-      goBack={goBack}
-    />
+    <StationDetailsValidation stationDetail={stationDetail} formatedDate={formatedDate} />
   ) : (
-    <StationDetails stationDetail={stationDetail} formatedDate={formatedDate} />
+    <StationDetails stationDetail={stationDetail} formatedDate={formatedDate} goBack={goBack} />
   );
 };
 

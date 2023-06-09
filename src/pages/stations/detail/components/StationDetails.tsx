@@ -15,23 +15,26 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
+import ROUTES from '../../../../routes';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
   stationDetail?: StationDetailResource;
   formatedDate: (date: Date | undefined) => string | null;
+  goBack: () => void;
 };
 
-const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
+const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
   const { stationId } = useParams<{ stationId: string }>();
+  const history = useHistory();
 
   const showOrHidePassword = () => {
     if (showPassword) {
@@ -47,7 +50,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
           <ButtonNaked
             size="small"
             component="button"
-            onClick={() => history.back()}
+            onClick={() => goBack()}
             startIcon={<ArrowBack />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"
@@ -79,7 +82,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <DetailButtonsStation stationDetail={stationDetail} stationCode={stationId} />
+            <DetailButtonsStation status={stationDetail?.wrapperStatus} stationCode={stationId} />
           </Grid>
         </Grid>
 
@@ -101,7 +104,8 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                   backgroundColor:
                     stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? 'primary.main'
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
+                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
                       ? '#EEEEEE'
                       : 'warning.light',
                   color:
@@ -112,7 +116,8 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                 label={
                   stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                     ? t('stationDetailPage.states.active')
-                    : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
+                    : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
                     ? t('stationDetailPage.states.revision')
                     : t('stationDetailPage.states.needCorrection')
                 }
@@ -183,7 +188,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                         onClick={() => {
                           setShowPassword(!showPassword);
                         }}
-                        data-testid="show-ps2-test"
+                        data-testid="show-psw-test"
                       >
                         {showPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />
@@ -299,7 +304,7 @@ const StationDetails = ({ stationDetail, formatedDate }: Prop) => {
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
                     component="button"
-                    onClick={() => ''} // TODO
+                    onClick={() => history.push(ROUTES.STATION_EC_LIST, { stationId })}
                     disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}

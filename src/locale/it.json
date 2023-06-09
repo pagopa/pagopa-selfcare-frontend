@@ -433,9 +433,12 @@
         "redirectIp": "IP",
         "redirectService": "Path",
         "redirectParameters": "Parametri",
-        "targetAddress": "IP",
-        "targetService": "Path",
-        "targetPort": "Porta"
+        "targetHost": "IP",
+        "targetPath": "Path",
+        "targetPort": "Porta",
+        "targetHostPof": "IP",
+        "targetPathPof": "Path",
+        "targetPortPof": "Port"
       }
     },
     "addFormValidation": {
@@ -449,6 +452,7 @@
       },
       "fields": {
         "version": "Versione",
+        "threadNumber": "Numero Thread",
         "protocol": "Protocollo",
         "port": "Porta",
         "ip": "IP",
@@ -456,7 +460,6 @@
         "password": "Password",
         "newPassword": "Nuova password",
         "servicePof": "Servizio POF",
-        "serviceNmp": "Servizio NMP",
         "service": "Servizio"
       }
     },
@@ -514,7 +517,7 @@
     "createdAt": "Creata il {{data}}",
     "state": "Stato",
     "stationConfiguration": "Configurazione della stazione",
-    "stationConfigurationDescription": "Lorem ipsum dolor sit.",
+    "stationConfigurationDescription": "L’attivazione di una stazione può richiedere dai 2 ai 5 giorni, in base al carico di richieste in corso.",
     "anagraphic": "Anagrafica",
     "stationId": "Codice stazione",
     "version": "Versione",
@@ -602,6 +605,7 @@
   },
   "stationDetailPageValidation": {
     "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
+    "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
     "configuration": {
       "status": "Stato",
       "title": "Configurazione della stazione",
@@ -630,12 +634,12 @@
       "version": "Versione",
       "password": "Password",
       "newPassword": "Nuova password",
+      "threadNumber": "Numero Thread",
       "endpoint": "Endpoint",
       "protocol": "Protocollo",
       "ip": "IP",
       "port": "Porta",
       "POFService": "Servizio POF",
-      "NMPService": "Servizio NMP",
       "model4": "Modello 4",
       "service": "Servizio"
     }

@@ -113,7 +113,8 @@
     "apiKey": {
       "Connessione con nodo": "Connessione con nodo",
       "Integrazione Asincrona": "Integrazione Asincrona",
-      "Recupero Ricevuta": "Recupero Ricevuta"
+      "Recupero Ricevuta": "Recupero Ricevuta",
+      "Gestione flussi di rendicontazione": "Gestione Flussi di Rendicontazione"
     },
     "apiNotPresent": {
       "apiNotPresentDescription": "Non è stata ancora generata nessuna chiave API per questo ente.<1><0> Genera API Key</0></1>",
@@ -156,7 +157,8 @@
     "products": {
       "NODOAUTH": "Connessione con nodo",
       "GPD": "Integrazione Asincrona",
-      "BIZ": "Recupero Ricevuta"
+      "BIZ": "Recupero Ricevuta",
+      "GPD_REP": "Gestione Flussi di Rendicontazione"
     }
   },
   "channelsPage": {

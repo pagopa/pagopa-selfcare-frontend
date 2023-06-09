@@ -1,20 +1,28 @@
 import { CreditorInstitutionStationDto } from '../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from '../../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from '../../api/generated/portal/CreditorInstitutionsResource';
+import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
   RedirectProtocolEnum,
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
-import { StationStatusEnum } from '../../api/generated/portal/StationResource';
 import { StationsResource } from '../../api/generated/portal/StationsResource';
-import { WrapperStatusEnum } from '../../api/generated/portal/WrapperStationResource';
+import {
+  WrapperStationResource,
+  WrapperStatusEnum,
+} from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
+import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEntitiesOperations';
+import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
+import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
+import { StationOnCreation } from '../../model/Station';
 
-export const mockedStation: StationDetailResource = {
-  stationCode: '97735020584_01',
-  stationStatus: StationStatusEnum.ACTIVE,
+const mockedStation: StationDetailResource = {
+  stationCode: '97735020584_02',
+  brokerCode: '97735020584',
+  wrapperStatus: WrapperStatusEnum.APPROVED,
   enabled: true,
   primitiveVersion: 1,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
@@ -25,6 +33,51 @@ export const mockedStation: StationDetailResource = {
   targetHost: 'Esempio indirizzo',
   targetPath: 'Esempio Pat',
   targetPort: 3001,
+  targetHostPof: 'Valore',
+  targetPathPof: 'Valore',
+  targetPortPof: 1001,
+};
+
+export const mockedWrapperStation: WrapperStationDetailsDto = {
+  stationCode: '81001870922_01',
+  primitiveVersion: 1,
+  redirectProtocol: RedirectProtocolEnum.HTTPS,
+  redirectPort: 3000,
+  redirectIp: 'Esempio Ip',
+  redirectPath: 'Esempio Pat',
+  redirectQueryString: 'Esempio parametri',
+  targetHost: 'Esempio indirizzo',
+  targetPath: 'Esempio Pat',
+  targetPort: 3001,
+};
+
+export const mockedFullStation: StationDetailResource = {
+  wrapperStatus: WrapperStatusEnum.TO_CHECK,
+  stationCode: '81001870922_04',
+  enabled: true,
+  brokerDescription: '',
+  version: 1,
+  associatedCreditorInstitutions: 0,
+  activationDate: new Date(),
+  createdAt: new Date(),
+  modifiedAt: new Date(),
+  redirectIp: 'ww',
+  redirectPath: 'ww',
+  redirectPort: 111,
+  redirectQueryString: 'www',
+  redirectProtocol: RedirectProtocolEnum.HTTPS,
+  brokerCode: '81001870922',
+  threadNumber: 1,
+  timeoutA: 15,
+  timeoutB: 30,
+  timeoutC: 120,
+  targetHost: '1www',
+  targetPort: 11,
+  targetPath: 'www',
+  targetHostPof: 'www',
+  targetPortPof: 111,
+  targetPathPof: '11',
+  primitiveVersion: 1,
 };
 
 export const mockedStations: StationsResource = {
@@ -40,7 +93,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-03T12:30:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-04T12:30:00Z'),
-      stationStatus: 'ACTIVE' as StationStatusEnum,
+      wrapperStatus: WrapperStatusEnum.APPROVED,
       brokerDescription: 'test1',
       version: 1,
       associatedCreditorInstitutions: 1,
@@ -51,7 +104,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-04T12:31:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-03T12:34:00Z'),
-      stationStatus: 'ON_REVISION' as StationStatusEnum,
+      wrapperStatus: WrapperStatusEnum.TO_CHECK,
       brokerDescription: 'test2',
       version: 2,
       associatedCreditorInstitutions: 2,
@@ -62,7 +115,7 @@ export const mockedStations: StationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -84,7 +137,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-03T12:30:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-04T12:30:00Z'),
-      stationStatus: 'ACTIVE' as StationStatusEnum,
       brokerDescription: 'test1',
       version: 1,
       associatedCreditorInstitutions: 1,
@@ -96,7 +148,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-04T12:31:00Z'),
       createdAt: new Date('2023-02-02T12:30:00Z'),
       modifiedAt: new Date('2023-03-03T12:34:00Z'),
-      stationStatus: 'ON_REVISION' as StationStatusEnum,
       brokerDescription: 'test2',
       version: 2,
       associatedCreditorInstitutions: 2,
@@ -108,7 +159,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -120,7 +170,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -132,7 +181,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -144,7 +192,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -156,7 +203,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -168,7 +214,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -180,7 +225,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -192,7 +236,6 @@ export const mockedStationsMerged: WrapperStationsResource = {
       activationDate: new Date('2023-03-05T12:32:00Z'),
       createdAt: new Date('2023-01-03T12:30:00Z'),
       modifiedAt: new Date('2023-01-06T12:55:00Z'),
-      stationStatus: 'TO_BE_CORRECTED' as StationStatusEnum,
       brokerDescription: 'test3',
       version: 3,
       associatedCreditorInstitutions: 3,
@@ -202,99 +245,113 @@ export const mockedStationsMerged: WrapperStationsResource = {
   ],
 };
 
-export const mockedStationsMerged2: WrapperStationsResource = {
-  pageInfo: { page: 0, limit: 10, items_found: 14, total_pages: 2 },
-  stationsList: [
-    {
-      stationCode: 'serenissima',
-      version: 2,
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-04-27T14:16:11.145Z'),
-      createdAt: new Date('2023-04-27T14:16:11.272Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '555555555_01',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-11T10:52:39.336Z'),
-      createdAt: new Date('2023-05-11T10:52:39.336Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '55555555555_09',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-11T11:10:50.245Z'),
-      createdAt: new Date('2023-05-11T11:10:50.245Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-    {
-      stationCode: '81001870922_03',
-      stationStatus: 'ACTIVE' as StationStatusEnum,
-      associatedCreditorInstitutions: 0,
-      activationDate: new Date('2023-05-25T14:55:08.250Z'),
-      createdAt: new Date('2023-05-25T14:55:08.415Z'),
-      wrapperStatus: WrapperStatusEnum.APPROVED,
-      enabled: true,
-    },
-  ],
-};
-
-const mockedStationsDetail: Array<StationDetailResource> = [
+const stationList: Array<WrapperStationResource> = [
   {
+    stationCode: '81001870922_01',
     enabled: true,
-    stationStatus: StationStatusEnum.ACTIVE,
-    stationCode: '97735020584_01',
-    version: 1,
-    primitiveVersion: 1,
-    password: 'PASSWORD',
-    redirectPath: 'esempiolink1.it',
-    activationDate: new Date('2023-02-23'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
-    service: 'lab.link1.it',
-    port: 80,
-    associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-02-19'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
-  },
-  {
-    enabled: true,
-    stationStatus: StationStatusEnum.ON_REVISION,
-    stationCode: '97735020584_02',
+    brokerDescription: 'Comune di Portoscuso',
     version: 2,
-    primitiveVersion: 1,
-    password: 'PASSWORD',
-    redirectPath: 'esempiolink2.it',
-    activationDate: new Date('2023-02-24'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-    service: 'lab.link2.it',
-    port: 80,
     associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-02-20'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
   },
   {
+    stationCode: '81001870922_02',
     enabled: true,
-    stationStatus: StationStatusEnum.TO_BE_CORRECTED,
-    stationCode: '97735020584_03',
-    version: 1,
-    primitiveVersion: 1,
-    password: 'XXXXXXXXXXXXXX',
-    redirectPath: 'esempiolink3.it',
-    activationDate: new Date('2023-02-25'),
-    targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-    service: 'lab.link3.it',
-    port: 80,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 2,
     associatedCreditorInstitutions: 0,
-    modifiedAt: new Date('2023-03-20'),
-    // operatedBy: 'Nome Cognome/Matricola operatore',
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+  },
+  {
+    stationCode: '81001870922_03',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 2,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.APPROVED,
+  },
+  {
+    stationCode: '81001870922_04',
+    enabled: true,
+    brokerDescription: 'Comune di Portoscuso',
+    version: 1,
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    wrapperStatus: WrapperStatusEnum.TO_CHECK,
   },
 ];
+export const mockedStationsMerged2: WrapperStationsResource = {
+  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1 },
+  stationsList: stationList,
+};
+
+// const filteredStations = (station: StationsResource) => {
+//   const sortedList = station.stationsList.filter(
+//     (e) => e.stationStatus === StationStatusEnum.ON_REVISION
+//   );
+//   return { ...station, stationsList: sortedList };
+// };
+
+// const mockedStationsDetail: Array<StationDetailResource> = [
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.ACTIVE,
+//     stationCode: '97735020584_01',
+//     version: 1,
+//     primitiveVersion: 1,
+//     password: 'PASSWORD',
+//     redirectPath: 'esempiolink1.it',
+//     activationDate: new Date('2023-02-23'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
+//     service: 'lab.link1.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-02-19'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.ON_REVISION,
+//     stationCode: '97735020584_02',
+//     version: 2,
+//     primitiveVersion: 1,
+//     password: 'PASSWORD',
+//     redirectPath: 'esempiolink2.it',
+//     activationDate: new Date('2023-02-24'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+//     service: 'lab.link2.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-02-20'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+//   {
+//     enabled: true,
+//     stationStatus: StationStatusEnum.TO_BE_CORRECTED,
+//     stationCode: '97735020584_03',
+//     version: 1,
+//     primitiveVersion: 1,
+//     password: 'XXXXXXXXXXXXXX',
+//     redirectPath: 'esempiolink3.it',
+//     activationDate: new Date('2023-02-25'),
+//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
+//     service: 'lab.link3.it',
+//     port: 80,
+//     associatedCreditorInstitutions: 0,
+//     modifiedAt: new Date('2023-03-20'),
+//     // operatedBy: 'Nome Cognome/Matricola operatore',
+//   },
+// ];
 
 export const mockedStationECs: CreditorInstitutionsResource = {
   creditor_institutions: [
@@ -318,6 +375,48 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
+export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
+  brokerCode: 'string',
+  createdAt: new Date(),
+  createdBy: 'EC S.p.A',
+  id: 'string',
+  modifiedAt: new Date(),
+  modifiedBy: 'string',
+  modifiedByOpt: 'string',
+  note: 'string',
+  status: StatusEnum.TO_CHECK,
+  type: TypeEnum.STATION,
+  wrapperEntityOperationsSortedList: [
+    {
+      createdAt: new Date(),
+      entity: {
+        stationCode: code,
+        brokerCode: '97735020584',
+        wrapperStatus: WrapperStatusEnum.TO_CHECK,
+        enabled: true,
+        primitiveVersion: 1,
+        redirectProtocol: RedirectProtocolEnum.HTTPS,
+        redirectPort: 3000,
+        redirectIp: 'Esempio Ip',
+        redirectPath: 'Esempio Pat',
+        redirectQueryString: 'Esempio parametri',
+        targetHost: 'Esempio indirizzo',
+        targetPath: 'Esempio Pat',
+        targetPort: 3001,
+        targetHostPof: 'Valore',
+        targetPathPof: 'Valore',
+        targetPortPof: 1001,
+      },
+      id: 'string',
+      modifiedAt: new Date(),
+      modifiedBy: 'string',
+      modifiedByOpt: 'Operatore EC',
+      note: 'string',
+      status: StatusEnum.TO_CHECK,
+      type: TypeEnum.STATION,
+    },
+  ],
+});
 
 const mockedStationCode = { stationCode: '1122334455_01' };
 
@@ -360,26 +459,29 @@ export const mockedStationAvailableEC: Array<any> = [
   },
 ];
 
-export const createStationMocked = (_station: StationDetailsDto): Promise<StationDetailResource> =>
+export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
 export const getStations = (_page: number): Promise<StationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
 
-export const getStationsMerged = (page: number): Promise<WrapperStationsResource> =>
-  new Promise((resolve) => resolve(page === 0 ? mockedStationsMerged : mockedStationsMerged2));
+export const getStationsMerged = (
+  _page: number,
+  _brokerCode: string,
+  _stationcode?: string,
+  _limit?: number,
+  _sorting?: string
+): Promise<WrapperStationsResource> => new Promise((resolve) => resolve(mockedStationsMerged2));
 
-export const getStationDetail = (stationCode: any): Promise<StationDetailResource> => {
-  const matchedStationByStationID = mockedStationsDetail.find((s) => s.stationCode === stationCode);
-  if (matchedStationByStationID) {
-    return new Promise((resolve) => resolve(matchedStationByStationID));
-  } else {
-    return new Promise((resolve) => resolve(mockedStationsDetail[0]));
-  }
-};
+export const getStationDetail = (_stationCode: any): Promise<StationDetailResource> =>
+  new Promise((resolve) => resolve(mockedFullStation));
 
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));
+
+export const createWrapperStation = (
+  _station: WrapperStationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
   _stationcode: string,
@@ -387,6 +489,19 @@ export const getECListByStationCode = (
   _limit?: number
 ): Promise<CreditorInstitutionsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
+
+export const updateWrapperStation = (
+  _stations: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+
+export const updateWrapperStationByOpt = (
+  _stations: StationDetailsDto
+): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+
+export const updateStation = (
+  _stations: StationDetailsDto,
+  _statonCode: string
+): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
 
 export const dissociateECfromStation = (_stationcode: string, _eccode: string): Promise<void> =>
   new Promise((resolve) => resolve());
@@ -399,3 +514,6 @@ export const associateEcToStation = (
   _station: CreditorInstitutionStationDto
 ): Promise<CreditorInstitutionStationEditResource> =>
   new Promise((resolve) => resolve({ stationCode: '123' }));
+
+export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> =>
+  new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));

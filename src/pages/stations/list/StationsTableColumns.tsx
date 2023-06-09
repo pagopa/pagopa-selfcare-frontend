@@ -6,7 +6,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { FormAction } from '../../../model/Station';
-import ROUTES from '../../../routes';
+import ROUTES, { BASE_ROUTE } from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -70,7 +70,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'stationStatus',
+      field: 'wrapperStatus',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.status'),
       align: 'left',
@@ -98,7 +98,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           <GridLinkAction
             key="Gestisci stazione"
             label="Gestisci stazione"
-            to={generatePath(`${ROUTES.STATION_DETAIL}`, { stationId: params.row.stationCode })}
+            to={generatePath(`${BASE_ROUTE}/stations/${params.row.stationCode}`)}
             showInMenu={true}
           />
         );
@@ -233,24 +233,26 @@ export function showStatus(params: GridRenderCellParams) {
     <Box sx={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
       <Chip
         label={
-          params.row.stationStatus === 'ACTIVE'
+          params.row.wrapperStatus === 'APPROVED'
             ? i18n.t('stationsPage.states.active')
-            : params.row.stationStatus === 'TO_BE_CORRECTED'
-            ? i18n.t('stationsPage.states.needCorrection')
-            : i18n.t('stationsPage.states.revision')
+            : params.row.wrapperStatus === 'TO_CHECK' ||
+              params.row.wrapperStatus === 'TO_CHECK_UPDATE'
+            ? i18n.t('stationsPage.states.revision')
+            : i18n.t('stationsPage.states.needCorrection')
         }
         aria-label="Status"
         sx={{
           cursor: 'pointer',
           fontSize: '10px',
           fontWeight: 'fontWeightRegular',
-          color: params.row.stationStatus === 'ACTIVE' ? '#FFFFFF' : '#17324D',
+          color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
           backgroundColor:
-            params.row.stationStatus === 'ACTIVE'
+            params.row.wrapperStatus === 'APPROVED'
               ? 'primary.main'
-              : params.row.stationStatus === 'TO_BE_CORRECTED'
-              ? 'warning.light'
-              : '#EEEEEE',
+              : params.row.wrapperStatus === 'TO_CHECK' ||
+                params.row.wrapperStatus === 'TO_CHECK_UPDATE'
+              ? '#EEEEEE'
+              : 'warning.light',
           paddingBottom: '1px',
           height: '30px',
           marginY: 2,

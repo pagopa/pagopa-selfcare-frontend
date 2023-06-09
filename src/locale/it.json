@@ -409,32 +409,68 @@
       "subtitle": "Completa i campi",
       "breadcrumb": "Crea stazione"
     },
+    "configure": {
+      "title": "Configura stazione",
+      "subtitle": "Completa le informazioni a carico di PagoPA per completare la configurazione.",
+      "breadcrumb": "Configura stazione"
+    },
     "addForm": {
       "backButton": "Indietro",
-      "continueButton": "Conferma",
+      "continueButton": "Continua",
+      "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
         "redirect": "Redirect",
-        "target": "Target"
+        "targetService": "Target Servizio",
+        "targetServicePof": "Target Servizio POF"
       },
       "fields": {
         "stationCode": "Codice stazione",
+        "brokerCode": "Codice intermediario",
         "primitiveVersion": "Versione primitive",
         "redirectProtocol": "Protocollo",
         "redirectPort": "Porta",
         "redirectIp": "IP",
         "redirectService": "Path",
         "redirectParameters": "Parametri",
-        "targetAddress": "IP",
-        "targetService": "Path",
-        "targetPort": "Porta"
+        "targetHost": "IP",
+        "targetPath": "Path",
+        "targetPort": "Porta",
+        "targetHostPof": "IP",
+        "targetPathPof": "Path",
+        "targetPortPof": "Port"
+      }
+    },
+    "addFormValidation": {
+      "title": "Informazione da completare",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "sections": {
+        "registry": "Anagrafica",
+        "endpoint": "Endpoint",
+        "targetEndPointPof": "Target (endpoint servizio POF)",
+        "model4": "Modello 4"
+      },
+      "fields": {
+        "version": "Versione",
+        "threadNumber": "Numero Thread",
+        "protocol": "Protocollo",
+        "port": "Porta",
+        "ip": "IP",
+        "path": "Path",
+        "password": "Password",
+        "newPassword": "Nuova password",
+        "servicePof": "Servizio POF",
+        "service": "Servizio"
       }
     },
     "confirmModal": {
       "title": "Invio per la revisione",
       "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
       "confirmButton": "Invia",
-      "cancelButton": "Torna indietro"
+      "cancelButton": "Torna indietro",
+      "titleOperator": "Configurazione stazione",
+      "messageStationOperator": "L’ente riceverà una notifica di conferma attivazione della stazione.<br/>",
+      "confirmButtonOpe": "Conferma"
     },
     "validation": {
       "overPort": "Il numero di porta deve essere compreso tra 1 e 65556",
@@ -444,7 +480,8 @@
     "errorMessageTitle": "Errore",
     "errorMessageDesc": "Errore durante la creazione, Codice stazione duplicato",
     "errorMessageStationCodeTitle": "Errore",
-    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido"
+    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido",
+    "errorMessageStationWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato"
   },
   "stationsPage": {
     "title": "Stazioni",
@@ -480,7 +517,7 @@
     "createdAt": "Creata il {{data}}",
     "state": "Stato",
     "stationConfiguration": "Configurazione della stazione",
-    "stationConfigurationDescription": "Lorem ipsum dolor sit.",
+    "stationConfigurationDescription": "L’attivazione di una stazione può richiedere dai 2 ai 5 giorni, in base al carico di richieste in corso.",
     "anagraphic": "Anagrafica",
     "stationId": "Codice stazione",
     "version": "Versione",
@@ -488,9 +525,12 @@
     "password": "Password",
     "redirectUrl": "URL di redirezione",
     "activationDate": "Data di attivazione",
+    "redirect": "Redirect",
+    "protocol": "Protocollo",
     "target": "Target",
     "address": "IP",
     "service": "Path",
+    "POFTargetService": "Target Servizio POF",
     "port": "Porta",
     "associatesEC": "EC associati",
     "manageEC": "Gestisci EC",
@@ -515,7 +555,11 @@
       "manageStation": "Gestisci stazione",
       "manageEC": "Gestisci EC",
       "correctStation": "Correggi",
-      "editStation": "Modifica"
+      "duplicateStation": "Duplica",
+      "editStation": "Modifica",
+      "deleteRequired": "Richiedi eliminazione",
+      "correctionRequired": "Richiedi correzione",
+      "configureStation": "Configura"
     }
   },
   "stationECList": {
@@ -557,6 +601,47 @@
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
+    }
+  },
+  "stationDetailPageValidation": {
+    "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
+    "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
+    "configuration": {
+      "status": "Stato",
+      "title": "Configurazione della stazione",
+      "subtitle": "Informazioni a carico dell’ente.",
+      "registry": "Anagrafica",
+      "stationCode": "Codice stazione",
+      "primitiveVersion": "Versione Primitive",
+      "intermediaryCode": "Codice intermediario",
+      "redirect": "Redirect",
+      "protocol": "Protocollo",
+      "port": "Porta",
+      "ip": "IP",
+      "path": "Path",
+      "parameters": "Parametri",
+      "targetService": "Target Servizio",
+      "POFTargetService": "Target Servizio POF",
+      "modify": "Modifiche",
+      "lastUpgrade": "Ultima modifica",
+      "operatedBy": "Operata da",
+      "changeHistory": "Storico modifiche"
+    },
+    "infoToCompltete": {
+      "title": "Informazioni da completare",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "registry": "Anagrafica",
+      "version": "Versione",
+      "password": "Password",
+      "newPassword": "Nuova password",
+      "threadNumber": "Numero Thread",
+      "endpoint": "Endpoint",
+      "protocol": "Protocollo",
+      "ip": "IP",
+      "port": "Porta",
+      "POFService": "Servizio POF",
+      "model4": "Modello 4",
+      "service": "Servizio"
     }
   },
   "sideMenu": {

@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.128"
+    "version": "0.0.139-1"
   },
   "servers": [
     {
@@ -5815,7 +5815,7 @@
       },
       "StationDetailResource": {
         "title": "StationDetailResource",
-        "required": ["enabled", "stationCode", "stationStatus"],
+        "required": ["enabled", "stationCode"],
         "type": "object",
         "properties": {
           "activationDate": {
@@ -5850,6 +5850,10 @@
             "description": "Station created on",
             "format": "date-time"
           },
+          "createdBy": {
+            "type": "string",
+            "description": "User that create the station"
+          },
           "enabled": {
             "type": "boolean",
             "description": "Station's activation state",
@@ -5872,6 +5876,10 @@
             "type": "string",
             "description": "Station's last modified date",
             "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "Last user that modified the station"
           },
           "newPassword": {
             "type": "string",
@@ -5971,11 +5979,6 @@
             "type": "string",
             "description": "Station's unique identifier"
           },
-          "stationStatus": {
-            "type": "string",
-            "description": "Station's status",
-            "enum": ["ACTIVE", "ON_REVISION", "TO_BE_CORRECTED"]
-          },
           "targetHost": {
             "type": "string",
             "description": "Station's target host"
@@ -6026,6 +6029,11 @@
             "type": "integer",
             "description": "Station's version",
             "format": "int64"
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "Station's status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX"]
           }
         }
       },
@@ -6367,6 +6375,11 @@
             "type": "integer",
             "description": "Station's timeoutC",
             "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Station's version",
+            "format": "int64"
           }
         }
       },
@@ -6389,7 +6402,7 @@
       },
       "StationResource": {
         "title": "StationResource",
-        "required": ["enabled", "stationCode", "stationStatus"],
+        "required": ["enabled", "stationCode"],
         "type": "object",
         "properties": {
           "activationDate": {
@@ -6425,15 +6438,15 @@
             "type": "string",
             "description": "Station's unique identifier"
           },
-          "stationStatus": {
-            "type": "string",
-            "description": "Station's status",
-            "enum": ["ACTIVE", "ON_REVISION", "TO_BE_CORRECTED"]
-          },
           "version": {
             "type": "integer",
             "description": "Station's version",
             "format": "int64"
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "Station's status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX"]
           }
         }
       },
@@ -7130,6 +7143,14 @@
             "type": "string",
             "description": "Station's broker code"
           },
+          "broker_description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Station's activation state",
+            "example": false
+          },
           "note": {
             "type": "string",
             "description": "station note description by operation team"
@@ -7203,12 +7224,17 @@
             "type": "integer",
             "description": "Station's target port POF",
             "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Station's version",
+            "format": "int64"
           }
         }
       },
       "WrapperStationResource": {
         "title": "WrapperStationResource",
-        "required": ["enabled", "stationCode", "stationStatus", "wrapperStatus"],
+        "required": ["enabled", "stationCode", "wrapperStatus"],
         "type": "object",
         "properties": {
           "activationDate": {
@@ -7251,11 +7277,6 @@
           "stationCode": {
             "type": "string",
             "description": "Station's unique identifier"
-          },
-          "stationStatus": {
-            "type": "string",
-            "description": "Station's status",
-            "enum": ["ACTIVE", "ON_REVISION", "TO_BE_CORRECTED"]
           },
           "targetHost": {
             "type": "string",

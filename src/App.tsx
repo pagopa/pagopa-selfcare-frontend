@@ -97,7 +97,6 @@ const SecuredRoutes = withLogin(
           <Route path={routes.STATION_EDIT} exact={true}>
             <AddEditStationPage />
           </Route>
-
           <Route path={routes.TOS} exact={true}>
             <TOS />
           </Route>

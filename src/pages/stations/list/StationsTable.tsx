@@ -27,7 +27,7 @@ const CustomDataGrid = styled(DataGrid)({
     padding: '0 24px 24px 24px',
     marginTop: '24px',
   },
-  '& .MuiDataGrid-main > div:first-child': {
+  '& .MuiDataGrid-main > div::first-of-type': {
     zIndex: 1,
   },
   '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
@@ -101,7 +101,13 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getStationsMerged(page, brokerCode, stationCode, undefined, stationCodeSort)
+      getStationsMerged(
+        page,
+        brokerCode,
+        stationCode ? stationCode : undefined,
+        undefined,
+        stationCodeSort
+      )
         .then((res) => {
           setStations(res);
           setError(false);

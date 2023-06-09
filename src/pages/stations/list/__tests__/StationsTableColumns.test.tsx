@@ -187,7 +187,7 @@ describe('<StationsTableColumns />', () => {
       }
     };
 
-    buildColumnDefs(mockTFunction, () => jest.fn());
+    buildColumnDefs(mockTFunction);
 
     showStationID(params);
     showStatus(params);

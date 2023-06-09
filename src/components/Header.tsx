@@ -12,6 +12,7 @@ import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
 import { useSigninData } from '../hooks/useSigninData';
+import { isOperator } from '../pages/stations/components/commonFunctions';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
@@ -86,7 +87,10 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole: t(`roles.${party.roles[0].roleKey}`),
+        productRole:
+          party.roles[0].roleKey === 'operator' || isOperator()
+            ? t(`roles.operator`)
+            : t(`roles.admin`),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={

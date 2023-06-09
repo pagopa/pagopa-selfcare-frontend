@@ -115,7 +115,7 @@ describe('<StationTableColumns />', () => {
         flex: 4,
       },
       {
-        field: 'stationStatus',
+        field: 'wrapperStatus',
         cellClassName: 'justifyContentNormal',
         headerName: 'Status',
         align: 'left',

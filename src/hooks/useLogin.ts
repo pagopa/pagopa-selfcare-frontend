@@ -1,4 +1,4 @@
-import isEmpty from 'lodash/isEmpty';
+// import isEmpty from 'lodash/isEmpty';
 import { useDispatch } from 'react-redux';
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { User } from '@pagopa/selfcare-common-frontend/model/User';
@@ -86,16 +86,16 @@ export const useLogin = () => {
       return;
     }
 
-    const sessionStorageUser = storageUserOps.read();
+    // const sessionStorageUser = storageUserOps.read();
 
-    if (isEmpty(sessionStorageUser)) {
-      const user: User = userFromJwtToken(token);
-      storageUserOps.write(user);
-      setUser(user);
-    } else {
-      // Otherwise, set the user to the one stored in the storage
-      setUser(sessionStorageUser);
-    }
+    // if (isEmpty(sessionStorageUser)) {
+    const user: User = userFromJwtToken(token);
+    storageUserOps.write(user);
+    setUser(user);
+    // } else {
+    //   // Otherwise, set the user to the one stored in the storage
+    //   setUser(sessionStorageUser);
+    // }
   };
 
   return { attemptSilentLogin };

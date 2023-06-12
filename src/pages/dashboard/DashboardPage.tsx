@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import OperativeTable from './components/OperativeTable';
+// import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -66,7 +66,9 @@ const DashboardPage = () => {
             <Grid item xs={6}>
               <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
             </Grid>
+            {/* 
             {selectedParty?.institutionType !== 'PSP' ? <OperativeTable /> : null}
+            */}
           </Grid>
         </Box>
       </Grid>

@@ -52,9 +52,9 @@ variables:
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
-    react_app_features_dashboard_enabled: 'false'
+    react_app_features_dashboard_enabled: 'true'
     react_app_features_channels_enabled: 'false'
-    react_app_features_stations_enabled: 'false'
+    react_app_features_stations_enabled: 'true'
     react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it;giovanna94@libero.it;aaron77@poste.it;'
 
     react_app_one_trust_base_url: '$(UAT_REACT_APP_URL_CDN)/ot'

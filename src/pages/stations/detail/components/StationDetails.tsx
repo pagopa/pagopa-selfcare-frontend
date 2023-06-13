@@ -15,12 +15,12 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, generatePath, useParams } from 'react-router-dom';
 import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
-import { BASE_ROUTE } from '../../../../routes';
+import ROUTES from '../../../../routes';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
@@ -35,7 +35,6 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
   const { stationId } = useParams<{ stationId: string }>();
-  const history = useHistory();
 
   const showOrHidePassword = () => {
     if (showPassword) {
@@ -304,8 +303,10 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
-                    component="button"
-                    onClick={() => history.push(`${BASE_ROUTE}/stations/${stationId}/ec-list`)}
+                    component={Link}
+                    to={generatePath(ROUTES.STATION_EC_LIST, {
+                      stationId: stationDetail?.stationCode,
+                    })}
                     disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}

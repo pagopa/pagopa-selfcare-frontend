@@ -5,6 +5,7 @@ import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import { createStore } from '../../redux/store';
 import withLogin from '../withLogin';
 import { testToken } from '../../utils/constants';
+import React from 'react';
 
 const oldWindowLocation = global.window.location;
 const mockedLocation = {
@@ -42,11 +43,11 @@ const renderApp = () => {
 
 const mockUser = (): User => {
   const user: User = {
-    name: 'NAME',
-    surname: 'SURNAME',
-    uid: 'UID',
-    taxCode: 'AAAAAA00A00A000A',
-    email: 'a@a.aa',
+    uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
+    name: 'Anselmo',
+    surname: 'Sartori',
+    email: 'furiovitale@martino.it',
+    taxCode: undefined,
   };
 
   storageUserOps.write(user);

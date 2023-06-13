@@ -15,7 +15,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, generatePath, useParams } from 'react-router-dom';
 import {
   StationDetailResource,
   WrapperStatusEnum,
@@ -29,12 +29,12 @@ type Prop = {
   goBack: () => void;
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
   const { stationId } = useParams<{ stationId: string }>();
-  const history = useHistory();
 
   const showOrHidePassword = () => {
     if (showPassword) {
@@ -281,7 +281,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof}
+                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -289,7 +289,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPathPof}
+                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -297,14 +297,16 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPortPof}
+                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
-                    component="button"
-                    onClick={() => history.push(ROUTES.STATION_EC_LIST, { stationId })}
+                    component={Link}
+                    to={generatePath(ROUTES.STATION_EC_LIST, {
+                      stationId: stationDetail?.stationCode,
+                    })}
                     disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}

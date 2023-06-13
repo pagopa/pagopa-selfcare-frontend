@@ -63,7 +63,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const operator = isOperator();
 
   useEffect(() => {
-    if (formAction === StationFormAction.Create) {
+    if (formAction !== StationFormAction.Edit) {
       setLoadingGeneration(true);
       getStationCode(stationCodeCleaner)
         .then((res) => {
@@ -289,17 +289,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             }
             break;
           case WrapperStatusEnum.APPROVED:
+          case WrapperStatusEnum.TO_CHECK_UPDATE:
             if (operator) {
               await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             } else {
               await updateWrapperStationToCheckUpdate(values);
-              redirect(stationCode4Redirect);
-            }
-            break;
-          case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (operator) {
-              await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             }
             break;

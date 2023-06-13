@@ -6,7 +6,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { FormAction } from '../../../model/Station';
-import ROUTES, { BASE_ROUTE } from '../../../routes';
+import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -98,7 +98,9 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           <GridLinkAction
             key="Gestisci stazione"
             label="Gestisci stazione"
-            to={generatePath(`${BASE_ROUTE}/stations/${params.row.stationCode}`)}
+            to={generatePath(`${ROUTES.STATION_DETAIL}`, {
+              stationId: params.row.stationCode,
+            })}
             showInMenu={true}
           />
         );

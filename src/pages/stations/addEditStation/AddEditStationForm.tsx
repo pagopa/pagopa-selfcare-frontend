@@ -21,7 +21,7 @@ import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
-import ROUTES, { BASE_ROUTE } from '../../../routes';
+import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
@@ -63,7 +63,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const operator = isOperator();
 
   useEffect(() => {
-    if (formAction === StationFormAction.Create) {
+    if (formAction !== StationFormAction.Edit) {
       setLoadingGeneration(true);
       getStationCode(stationCodeCleaner)
         .then((res) => {
@@ -259,7 +259,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   const redirect = (stCode: string) => {
     if (operator) {
-      history.push(`${BASE_ROUTE}/stations/${stCode}`);
+      history.push(ROUTES.STATION_DETAIL, { stationId: stCode });
     } else {
       history.push(ROUTES.STATIONS);
     }
@@ -289,17 +289,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             }
             break;
           case WrapperStatusEnum.APPROVED:
+          case WrapperStatusEnum.TO_CHECK_UPDATE:
             if (operator) {
               await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             } else {
               await updateWrapperStationToCheckUpdate(values);
-              redirect(stationCode4Redirect);
-            }
-            break;
-          case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (operator) {
-              await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             }
             break;

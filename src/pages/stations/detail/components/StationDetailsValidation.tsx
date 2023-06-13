@@ -31,11 +31,19 @@ Props) => {
   const operator = isOperator();
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
 
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
       return password;
+    }
+    return hidePassword;
+  };
+
+  const showOrHideNewPassword = (newPassword?: string) => {
+    if (showNewPassword) {
+      return newPassword;
     }
     return hidePassword;
   };
@@ -266,7 +274,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.targetHostPof ?? '-'}
+                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -276,7 +284,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.targetPathPof ?? '-'}
+                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -286,7 +294,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {stationDetail?.targetPortPof ?? '-'}
+                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3} mt={4}>
@@ -429,7 +437,7 @@ Props) => {
                   {stationDetail?.newPassword ? (
                     <>
                       <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {showOrHidePassword(stationDetail?.newPassword)}
+                        {showOrHideNewPassword(stationDetail?.newPassword)}
                       </Typography>
                       <IconButton
                         style={{
@@ -437,11 +445,11 @@ Props) => {
                           marginLeft: '42px',
                         }}
                         onClick={() => {
-                          setShowPassword(!showPassword);
+                          setShowNewPassword(!showNewPassword);
                         }}
                         data-testid="show-ps2-test"
                       >
-                        {showPassword ? (
+                        {showNewPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />
                         ) : (
                           <VisibilityOff color="primary" sx={{ width: '80%' }} />

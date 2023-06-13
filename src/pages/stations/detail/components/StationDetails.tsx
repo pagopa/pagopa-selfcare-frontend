@@ -304,9 +304,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
                     component={Link}
-                    to={generatePath(ROUTES.STATION_EC_LIST, {
-                      stationId: stationDetail?.stationCode,
-                    })}
+                    to={generatePath(ROUTES.STATION_EC_LIST, { stationId })}
                     disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}

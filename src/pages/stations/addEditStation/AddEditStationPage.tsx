@@ -27,7 +27,7 @@ const AddEditStationPage = () => {
   const goBack2Details = () => history.push(`${BASE_ROUTE}/stations/${stationId}`);
 
   useEffect(() => {
-    if (formAction !== StationFormAction.Create) {
+    if (formAction === StationFormAction.Edit) {
       setLoading(true);
       getStationDetail(stationId)
         .then((response) => {

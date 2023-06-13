@@ -2,8 +2,6 @@
 import { Stack, Button } from '@mui/material';
 import { Link, generatePath, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-// import { useAppSelector } from '../../../../redux/hooks';
-// import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import ROUTES, { BASE_ROUTE } from '../../../../routes';
 import { StationFormAction } from '../../../../model/Station';
 import { isOperator } from '../../components/commonFunctions';
@@ -15,7 +13,6 @@ type Props = {
 };
 
 const DetailButtonsStation = ({ status, stationCode }: Props) => {
-  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { t } = useTranslation();
   const history = useHistory();
   const operator = isOperator();
@@ -41,7 +38,14 @@ const DetailButtonsStation = ({ status, stationCode }: Props) => {
         </>
       ) : operator && status !== WrapperStatusEnum.APPROVED ? (
         <>
-          <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
+          <Button
+            component={Link}
+            to={''}
+            disabled={true}
+            color="error"
+            variant="outlined"
+            onClick={() => ''}
+          >
             {t('stationDetailPage.stationOptions.correctionRequired')}
           </Button>
           <Button
@@ -66,15 +70,22 @@ const DetailButtonsStation = ({ status, stationCode }: Props) => {
             to={''}
             color="error"
             variant="outlined"
+            disabled={true}
             // onClick={() => ''}
           >
             {t('stationDetailPage.stationOptions.deleteRequired')}
           </Button>
           <Button
             component={Link}
-            to={() => ''}
+            to={() =>
+              generatePath(ROUTES.STATION_EDIT, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
             variant="outlined"
-            // TBD
+            onClick={() => history.push(`${BASE_ROUTE}/stations/${stationCode}/edit`)}
+            data-testid="duplicate-btn-sts-approved"
           >
             {t('stationDetailPage.stationOptions.duplicateStation')}
           </Button>
@@ -101,6 +112,7 @@ const DetailButtonsStation = ({ status, stationCode }: Props) => {
             // to={() => ''}
             variant="contained"
             // TBD
+            disabled={true}
             data-testid="edit-btn-sts-fix"
           >
             {t('stationDetailPage.stationOptions.correctStation')}

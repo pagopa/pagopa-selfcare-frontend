@@ -300,13 +300,13 @@ export const PortalApi = {
   getStationsMerged: async (
     page: number,
     brokerCode: string,
-    stationcode?: string,
+    stationcodefilter?: string,
     limit?: number,
     sorting?: string
   ): Promise<WrapperStationsResource> => {
     const result = await apiConfigClient.getAllStationsMergedUsingGET({
       limit,
-      stationcode,
+      stationcodefilter,
       brokerCode,
       page,
       sorting,

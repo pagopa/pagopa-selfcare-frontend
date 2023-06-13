@@ -20,7 +20,7 @@ import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
-import ROUTES from '../../../../routes';
+import { BASE_ROUTE } from '../../../../routes';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
@@ -29,6 +29,7 @@ type Prop = {
   goBack: () => void;
 };
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -281,7 +282,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof}
+                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -289,7 +290,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPathPof}
+                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -297,14 +298,14 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPortPof}
+                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked
                     component="button"
-                    onClick={() => history.push(ROUTES.STATION_EC_LIST, { stationId })}
+                    onClick={() => history.push(`${BASE_ROUTE}/stations/${stationId}/ec-list`)}
                     disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}

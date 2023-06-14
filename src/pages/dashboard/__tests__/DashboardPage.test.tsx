@@ -17,6 +17,11 @@ import { BrowserRouter } from 'react-router-dom';
 import DashboardPage from '../DashboardPage';
 import { createStore } from '../../../redux/store';
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+});
+
 jest.mock('../../../decorators/withLogin');
 jest.mock('../../../decorators/withParties');
 jest.mock('../../../decorators/withSelectedParty');
@@ -42,10 +47,12 @@ const renderApp = (
 
 test('Test rendering', async () => {
   const { store } = renderApp();
-  store.dispatch({
-    type: 'parties/setPartySelected',
-    payload: pspPartySelected,
-  });
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspPartySelected,
+    })
+  );
   expect(screen.getByText(/istituti di pagamento/i)).toBeVisible();
 });
 
@@ -85,6 +92,7 @@ const pspPartySelected = {
   digitalAddress: 'selfcare@pec.pagopa.it',
   status: 'ACTIVE',
   registeredOffice: 'Piazza Colonna, 370',
+  institutionType: 'PSP',
   roles: [
     {
       partyRole: 'DELEGATE',

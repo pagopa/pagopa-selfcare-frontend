@@ -1,16 +1,15 @@
 import { Grid, Typography, Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
-type Props = {
-  pspNodeData?: PaymentServiceProviderDetailsResource;
-};
-
-const PSPRegistrationData = ({ pspNodeData }: Props) => {
+const PSPRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(
+    partiesSelectors.selectSigninData
+  ) as PaymentServiceProviderDetailsResource;
 
   const stampToString = (stamp: boolean) =>
     stamp
@@ -64,7 +63,7 @@ const PSPRegistrationData = ({ pspNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {pspNodeData?.bic ?? '-'}
+          {signinData?.bic ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -72,7 +71,7 @@ const PSPRegistrationData = ({ pspNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={600}>
-          {pspNodeData?.stamp ? stampToString(pspNodeData?.stamp) : '-'}
+          {signinData?.stamp ? stampToString(signinData?.stamp) : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -80,9 +79,9 @@ const PSPRegistrationData = ({ pspNodeData }: Props) => {
       </Grid>
       <Grid item xs={8}>
         <Chip
-          color={pspNodeData?.bic ? 'primary' : 'default'}
+          color={signinData?.bic ? 'primary' : 'default'}
           label={t(
-            `dashboardPage.registrationData.status.${pspNodeData?.bic ? 'enabled' : 'disabled'}`
+            `dashboardPage.registrationData.status.${signinData?.bic ? 'enabled' : 'disabled'}`
           )}
         ></Chip>
       </Grid>

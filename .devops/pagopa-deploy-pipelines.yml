@@ -52,9 +52,10 @@ variables:
 
     react_app_url_storage: '$(UAT_REACT_APP_URL_STORAGE)'
 
-    react_app_features_dashboard_enabled: 'false'
+    react_app_features_dashboard_enabled: 'true'
     react_app_features_channels_enabled: 'false'
-    react_app_features_stations_enabled: 'false'
+    react_app_features_stations_enabled: 'true'
+    react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it;giovanna94@libero.it;aaron77@poste.it;'
 
     react_app_one_trust_base_url: '$(UAT_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: '$(UAT_REACT_APP_ANALYTICS_ENABLED)'
@@ -87,6 +88,7 @@ variables:
     react_app_features_dashboard_enabled: 'false'
     react_app_features_channels_enabled: 'false'
     react_app_features_stations_enabled: 'false'
+    react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it'
 
     react_app_one_trust_base_url: '$(PROD_REACT_APP_URL_CDN)/ot'
     react_app_analytics_enabled: 'false'
@@ -118,6 +120,7 @@ variables:
     react_app_features_dashboard_enabled: 'true'
     react_app_features_channels_enabled: 'true'
     react_app_features_stations_enabled: 'true'
+    react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;'
 
     react_app_one_trust_base_url: 'https://dev.selfcare.pagopa.it/ot/test' # '$(DEV_SELFCARE_HOST)/ot/test'
     react_app_analytics_enabled: 'false'
@@ -233,6 +236,7 @@ stages:
               REACT_APP_FEATURES_DASHBOARD_ENABLED: '$(react_app_features_dashboard_enabled)'
               REACT_APP_FEATURES_CHANNELS_ENABLED: '$(react_app_features_channels_enabled)'
               REACT_APP_FEATURES_STATIONS_ENABLED: '$(react_app_features_stations_enabled)'
+              REACT_APP_OPERATOR_EMAIL_ADDRESSES: '$(react_app_operator_email_addresses)'
 
               REACT_APP_ANALYTICS_ENABLE: '$(react_app_analytics_enabled)'
               REACT_APP_ANALYTICS_MOCK: 'true' #$(react_app_analytics_mocked)

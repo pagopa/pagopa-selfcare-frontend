@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useFormik } from 'formik';
+import { FormikProps, useFormik } from 'formik';
 import { Trans, useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -106,18 +106,25 @@ const inputGroupStyle = {
 const validate = (values: Partial<ChannelOnCreation>) =>
   Object.fromEntries(
     Object.entries({
-      pspBrokerCode: !values.pspBrokerCode ? 'Required' : undefined,
-      businessName: !values.businessName ? 'Required' : undefined,
-      idChannel: !values.idChannel ? 'Required' : undefined,
-      redirectPort: validatePortRange(values.redirectPort) ? 'Non Valido' : undefined,
-      targetAddress: !values.targetAddress ? 'Required' : undefined,
-      targetService: !values.targetService ? 'Required' : undefined,
-      targetPort: !values.targetPort
-        ? 'Required'
-        : validatePortRange(values.targetPort)
-        ? 'Non Valido'
+      pspBrokerCode: !values.pspBrokerCode ? 'Campo obbligatorio' : undefined,
+      businessName: !values.businessName ? 'Campo obbligatorio' : undefined,
+      idChannel: !values.idChannel ? 'Campo obbligatorio' : undefined,
+      redirectPort: !values.redirectPort
+        ? 'Campo obbligatorio'
+        : validatePortRange(values.redirectPort)
+        ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
         : undefined,
-      paymentType: !values.paymentType ? 'Required' : undefined,
+      redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
+      redirectService: !values.redirectService ? 'Campo obbligatorio' : undefined,
+      redirectParameters: !values.redirectParameters ? 'Campo obbligatorio' : undefined,
+      targetAddress: !values.targetAddress ? 'Campo obbligatorio' : undefined,
+      targetService: !values.targetService ? 'Campo obbligatorio' : undefined,
+      targetPort: !values.targetPort
+        ? 'Campo obbligatorio'
+        : validatePortRange(values.targetPort)
+        ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+        : undefined,
+      paymentType: !values.paymentType ? 'Campo obbligatorio' : undefined,
     }).filter(([_key, value]) => value)
   );
 
@@ -202,6 +209,40 @@ function AddEditChannelForm({
         });
       });
   }, []);
+
+  const enebledSubmit = (values: ChannelOnCreation) =>
+    !(
+      values.businessName !== '' &&
+      values.idChannel !== '' &&
+      values.pspBrokerCode !== '' &&
+      values.redirectIp !== '' &&
+      values.redirectParameters !== '' &&
+      values.redirectPort?.toString() !== '' &&
+      values.redirectProtocol !== undefined &&
+      values.redirectService !== '' &&
+      values.targetAddress !== '' &&
+      values.targetPort?.toString() !== '' &&
+      values.targetService !== '' &&
+      values.paymentType !== ''
+    );
+
+  const openConfrimModal = () => {
+    if (formik.isValid) {
+      setShowConfirmModal(true);
+    }
+    setShowConfirmModal(false);
+  };
+
+  const handleChangeNumberOnly = (
+    e: React.ChangeEvent<any>,
+    field: string,
+    formik: FormikProps<ChannelOnCreation>
+  ) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === '' || regex.test(e.target.value)) {
+      formik.setFieldValue(field, e.target.value);
+    }
+  };
 
   return (
     <>
@@ -322,11 +363,16 @@ function AddEditChannelForm({
                     name="redirectPort"
                     type="number"
                     InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
-                    inputProps={{ min: 0, max: 65556, 'data-testid': 'redirect-port-test' }}
+                    inputProps={{
+                      step: 1,
+                      min: 0,
+                      max: 65556,
+                      'data-testid': 'redirect-port-test',
+                    }}
                     label={t('addEditChannelPage.addForm.fields.redirectPort')}
                     size="small"
-                    value={formik.values.redirectPort}
-                    onChange={formik.handleChange}
+                    value={formik.values.redirectPort === 0 ? '' : formik.values.redirectPort}
+                    onChange={(e) => handleChangeNumberOnly(e, 'redirectPort', formik)}
                     error={formik.touched.redirectPort && Boolean(formik.errors.redirectPort)}
                     helperText={formik.touched.redirectPort && formik.errors.redirectPort}
                   />
@@ -431,11 +477,16 @@ function AddEditChannelForm({
                     name="targetPort"
                     type="number"
                     InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
-                    inputProps={{ min: 0, max: 65556, 'data-testid': 'target-port-test' }}
+                    inputProps={{
+                      step: 1,
+                      min: 0,
+                      max: 65556,
+                      'data-testid': 'target-port-test',
+                    }}
                     label={t('addEditChannelPage.addForm.fields.targetPort')}
                     size="small"
-                    value={formik.values.targetPort}
-                    onChange={formik.handleChange}
+                    value={formik.values.targetPort === 0 ? '' : formik.values.targetPort}
+                    onChange={(e) => handleChangeNumberOnly(e, 'targetPort', formik)}
                     error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
                     helperText={formik.touched.targetPort && formik.errors.targetPort}
                   />
@@ -490,11 +541,9 @@ function AddEditChannelForm({
           </Stack>
           <Stack display="flex" justifyContent="flex-end">
             <Button
-              onClick={() => setShowConfirmModal(true)}
+              onClick={() => openConfrimModal}
               disabled={
-                formAction === FormAction.Duplicate
-                  ? !formik.isValid
-                  : !formik.dirty || !formik.isValid
+                formAction === FormAction.Duplicate ? !formik.isValid : enebledSubmit(formik.values)
               }
               color="primary"
               variant="contained"

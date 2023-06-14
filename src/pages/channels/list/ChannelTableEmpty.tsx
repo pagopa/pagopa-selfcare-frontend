@@ -36,7 +36,7 @@ const ChannelTableEmpty = () => {
       <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }}>
         <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
           <Typography variant="body2">
-            <Trans i18nKey="channelsPage.table.noResults">
+            <Trans i18nKey="channelsPage.table.noChannels">
               Non sono ancora presenti canali in questo ambiente.
               <Link
                 component={RouterLink}

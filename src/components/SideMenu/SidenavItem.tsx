@@ -6,16 +6,17 @@ type Props = {
   title: string;
   isSelected?: boolean;
   icon: SvgIconComponent;
+  disabled?: boolean;
 };
 
-export default function SidenavItem({ handleClick, title, isSelected, icon }: Props) {
+export default function SidenavItem({ handleClick, title, isSelected, icon, disabled}: Props) {
   return (
     <ListItemButton
       selected={isSelected}
       onClick={handleClick}
+      disabled={disabled}
       sx={{
         height: '100%',
-        maxWidth: 360,
         backgroundColor: 'background.paper',
       }}
     >

@@ -2,42 +2,54 @@ import { ArrowBack } from '@mui/icons-material';
 import { Grid, Stack, Breadcrumbs, Typography } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useTranslation } from 'react-i18next';
-import { TitleBox, useLoading } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
-import { getStationDetail } from '../../../services/__mocks__/stationService';
-import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
-import { FormAction } from '../../../model/Channel';
+import { getStationDetail } from '../../../services/stationService';
+import { StationFormAction } from '../../../model/Station';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { isOperator } from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
-  const { channelId, actionId } = useParams<{ channelId: string; actionId: string }>();
-  const formAction = actionId ?? FormAction.Create;
-
-  const [stationDetail, setStationDetail] = useState<StationDetailResource>();
-
+  const { stationId, actionId } = useParams<{ stationId: string; actionId: string }>();
+  const formAction = actionId ?? StationFormAction.Create;
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [stationDetail, setStationDetail] = useState<any>();
+  const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
-
+  const goBack2Details = () => history.push(ROUTES.STATION_DETAIL, { stationId });
   useEffect(() => {
-    if (formAction !== FormAction.Create) {
+    if (formAction !== StationFormAction.Create) {
       setLoading(true);
-      getStationDetail(channelId)
+      getStationDetail(stationId)
         .then((response) => {
+          console.log('Response full detail', response);
           setStationDetail(response);
         })
         .catch((reason) => {
-          console.error(reason);
+          addError({
+            id: 'GET_STATION_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting station details`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+            component: 'Toast',
+          });
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, []);
+  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -46,7 +58,9 @@ const AddEditStationPage = () => {
           <ButtonNaked
             size="small"
             component="button"
-            onClick={goBack}
+            onClick={() =>
+              isOperator() && formAction === StationFormAction.Edit ? goBack2Details() : goBack()
+            }
             startIcon={<ArrowBack />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"
@@ -56,12 +70,24 @@ const AddEditStationPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{t('general.Stations')}</Typography>
-            <Typography color={'#A2ADB8'}>{t(`addEditStationPage.create.breadcrumb`)}</Typography>
+            <Typography color={'#A2ADB8'}>
+              {formAction === StationFormAction.Create
+                ? t(`addEditStationPage.create.breadcrumb`)
+                : stationId}
+            </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t(`addEditStationPage.create.title`)}
-          subTitle={t(`addEditChannelPage.create.subtitle`)}
+          title={
+            formAction === StationFormAction.Create
+              ? t(`addEditStationPage.create.title`)
+              : t('addEditStationPage.configure.title')
+          }
+          subTitle={
+            formAction === StationFormAction.Create
+              ? t(`addEditChannelPage.create.subtitle`)
+              : t('addEditStationPage.configure.subtitle')
+          }
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
@@ -69,7 +95,13 @@ const AddEditStationPage = () => {
           variantSubTitle="body1"
         />
 
-        <AddEditStationForm goBack={goBack} stationDetail={stationDetail} formAction={formAction} />
+        {selectedParty && (
+          <AddEditStationForm
+            goBack={goBack}
+            stationDetail={stationDetail}
+            formAction={formAction}
+          />
+        )}
       </Grid>
     </Grid>
   );

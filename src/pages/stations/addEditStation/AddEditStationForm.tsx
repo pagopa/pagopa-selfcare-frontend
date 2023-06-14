@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { theme } from '@pagopa/mui-italia';
-import { useFormik } from 'formik';
+import { FormikProps, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import {
@@ -20,34 +20,36 @@ import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  RedirectProtocolEnum,
-  StationDetailsDto,
-} from '../../../api/generated/portal/StationDetailsDto';
+import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
-  associateEcToStation,
   createStation,
+  createWrapperStation,
   getStationCode,
+  updateStation,
+  updateWrapperStationToCheck,
+  updateWrapperStationToCheckUpdate,
 } from '../../../services/stationService';
 import {
   LOADING_TASK_GENERATION_STATION_CODE,
   LOADING_TASK_STATION_ADD_EDIT,
 } from '../../../utils/constants';
-import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import { isOperator } from '../components/commonFunctions';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
   goBack: () => void;
-  stationDetail?: StationDetailResource;
+  stationDetail?: StationOnCreation;
   formAction: string;
 };
 
-const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) => {
+const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -56,48 +58,95 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
   const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationCodeGenerated, setStationCodeGenerated] = useState('');
-
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const operator = isOperator();
 
   useEffect(() => {
-    setLoadingGeneration(true);
-    getStationCode(stationCodeCleaner)
-      .then((res) => {
-        setStationCodeGenerated(res.stationCode);
-      })
-      .catch((error) => {
-        addError({
-          id: 'GENERATE_STATION_CODE',
-          blocking: false,
-          error,
-          techDescription: `An error occurred while generating station code`,
-          toNotify: true,
-          displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
-          displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
-          component: 'Toast',
+    if (formAction !== StationFormAction.Edit) {
+      setLoadingGeneration(true);
+      getStationCode(stationCodeCleaner)
+        .then((res) => {
+          setStationCodeGenerated(res.stationCode);
+        })
+        .catch((error) => {
+          addError({
+            id: 'GENERATE_STATION_CODE',
+            blocking: false,
+            error,
+            techDescription: `An error occurred while generating station code`,
+            toNotify: true,
+            displayableTitle: t('addEditStationPage.errorMessageStationCodeTitle'),
+            displayableDescription: t('addEditStationPage.errorMessageStationCodeDesc'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => {
+          setLoadingGeneration(false);
         });
-      })
-      .finally(() => {
-        setLoadingGeneration(false);
-      });
+    }
   }, []);
 
-  const bodyStationDto: CreditorInstitutionStationDto = { stationCode: stationCodeGenerated };
-
-  const initialFormData: StationDetailsDto = {
-    brokerCode: brokerCodeCleaner,
-    stationCode: stationCodeGenerated,
-    primitiveVersion: 0,
-    redirectProtocol: RedirectProtocolEnum.HTTPS,
-    redirectPort: 0,
-    redirectIp: '',
-    redirectPath: '',
-    redirectQueryString: '',
-    targetHost: '',
-    targetPath: '',
-    targetPort: 0,
-  };
+  const initialFormData = (detail?: StationOnCreation) =>
+    detail
+      ? {
+          brokerCode: detail.brokerCode ?? '',
+          stationCode: detail.stationCode ?? '',
+          status: detail?.wrapperStatus,
+          primitiveVersion: detail.primitiveVersion ?? undefined,
+          redirectProtocol: detail.redirectProtocol ?? '',
+          redirectPort: detail.redirectPort ?? undefined,
+          redirectIp: detail.redirectIp ?? '',
+          redirectPath: detail.redirectPath ?? '',
+          redirectQueryString: detail.redirectQueryString ?? '',
+          targetHost: detail.targetHost ?? '',
+          targetPath: detail.targetPath ?? '',
+          targetPort: detail.targetPort ?? undefined,
+          targetHostPof: detail.targetHostPof ?? '',
+          targetPathPof: detail.targetPathPof ?? '',
+          targetPortPof: detail.targetPortPof ?? undefined,
+          version: detail.version ?? undefined,
+          password: detail.password ?? '',
+          newPassword: detail.newPassword ?? '',
+          threadNumber: detail.threadNumber ?? undefined,
+          protocol: detail.protocol ?? undefined,
+          port: detail.port ?? undefined,
+          ip: detail.ip ?? '',
+          service: detail.service ?? '',
+          pofService: detail.pofService ?? '',
+          protocol4Mod: detail.protocol4Mod ?? undefined,
+          ip4Mod: detail.ip4Mod ?? '',
+          port4Mod: detail.port4Mod ?? undefined,
+          service4Mod: detail.service4Mod ?? '',
+          enabled: detail.enabled,
+        }
+      : {
+          status: StatusEnum.TO_CHECK,
+          brokerCode: brokerCodeCleaner,
+          stationCode: stationCodeGenerated,
+          primitiveVersion: 0,
+          redirectProtocol: RedirectProtocolEnum.HTTPS,
+          redirectPort: 0,
+          redirectIp: '',
+          redirectPath: '',
+          redirectQueryString: '',
+          targetHost: '',
+          targetPath: '',
+          targetPort: 0,
+          version: stationDetail?.version ?? 0,
+          password: '',
+          newPassword: '',
+          threadNumber: 0,
+          protocol: undefined,
+          port: 0,
+          ip: '',
+          service: '',
+          pofService: '',
+          protocol4Mod: undefined,
+          ip4Mod: '',
+          port4Mod: 0,
+          service4Mod: '',
+        };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -121,45 +170,143 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     return false;
   };
 
-  const validate = (values: StationDetailsDto) =>
+  const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
-        brokerCode: !values.brokerCode ? 'Campo obbligatorio' : undefined,
-        stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
-        primitiveVersion: !values.primitiveVersion
-          ? 'Campo obbligatorio'
-          : validatePrimitiveVersion(values.primitiveVersion)
-          ? t('addEditStationPage.validation.overVersion')
-          : undefined,
-        redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
-        redirectPort: !values.redirectPort
-          ? 'Campo obbligatorio'
-          : validatePortRange(values.redirectPort)
-          ? t('addEditStationPage.validation.overPort')
-          : undefined,
-        redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-        redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
-        redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
-        targetHost: !values.targetHost ? 'Campo obbligatorio' : undefined,
-        targetPath: !values.targetPath ? 'Campo obbligatorio' : undefined,
-        targetPort: !values.targetPort
-          ? 'Campo obbligatorio'
-          : validatePortRange(values.targetPort)
-          ? t('addEditStationPage.validation.overPort')
-          : undefined,
+        ...{
+          stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
+          brokerCode:
+            operator && formAction !== StationFormAction.Create
+              ? ''
+              : !values.brokerCode
+              ? 'Campo obbligatorio'
+              : '',
+          primitiveVersion: !values.primitiveVersion
+            ? 'Campo obbligatorio'
+            : validatePrimitiveVersion(values.primitiveVersion)
+            ? t('addEditStationPage.validation.overVersion')
+            : undefined,
+          redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? 'Campo obbligatorio'
+            : validatePortRange(values.redirectPort)
+            ? t('addEditStationPage.validation.overPort')
+            : undefined,
+          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
+          redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
+          redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
+          targetHost:
+            !values.targetHost &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPath:
+            !values.targetPath &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPort:
+            !values.targetPort &&
+            !values.targetHostPof &&
+            !values.targetPathPof &&
+            !values.targetPortPof
+              ? 'Campo obbligatorio'
+              : validatePortRange(values.targetPort)
+              ? t('addEditStationPage.validation.overPort')
+              : undefined,
+          targetHostPof:
+            !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPathPof:
+            !values.targetPathPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : undefined,
+          targetPortPof:
+            !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
+              ? 'Campo obbligatorio'
+              : validatePortRange(values.targetPortPof)
+              ? t('addEditStationPage.validation.overPort')
+              : undefined,
+        },
+        ...(operator && formAction !== StationFormAction.Create
+          ? {
+              version: !values.version
+                ? 'Campo obbligatorio'
+                : validatePrimitiveVersion(values.version)
+                ? t('addEditStationPage.validation.overVersion')
+                : undefined,
+              password: !values.password ? 'Campo obbligatorio' : undefined,
+              threadNumber: !values.threadNumber ? 'Campo obbligatorio' : undefined,
+              protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
+              ip: !values.ip ? 'Campo obbligatorio' : undefined,
+              port: !values.port
+                ? 'Campo obbligatorio'
+                : validatePortRange(values.targetPort)
+                ? t('addEditStationPage.validation.overPort')
+                : undefined,
+
+              service: !values.service ? 'Campo obbligatorio' : undefined,
+              pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
+            }
+          : null),
       }).filter(([_key, value]) => value)
     );
 
-  const submit = async (values: StationDetailsDto) => {
+  const redirect = (stCode: string) => {
+    if (operator) {
+      history.push(ROUTES.STATION_DETAIL, { stationId: stCode });
+    } else {
+      history.push(ROUTES.STATIONS);
+    }
+  };
+
+  const submit = async (values: StationOnCreation) => {
     setLoading(true);
+    const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
+    const stationCode4Redirect =
+      formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
+
     try {
-      const create = await createStation(values);
-      if (create) {
-        await associateEcToStation(stationCodeCleaner, bodyStationDto);
+      if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
+        await createWrapperStation(values);
+        redirect(stationCode4Redirect);
       }
-      history.push(ROUTES.STATIONS, {
-        alertSuccessMessage: t('addEditStationPage.successMessage'),
-      });
+
+      if (formAction === StationFormAction.Edit) {
+        switch (stationDetail?.wrapperStatus) {
+          case WrapperStatusEnum.TO_CHECK:
+            if (operator) {
+              await createStation(values);
+              redirect(stationCode4Redirect);
+            } else {
+              await updateWrapperStationToCheck(values);
+              redirect(stationCode4Redirect);
+            }
+            break;
+          case WrapperStatusEnum.APPROVED:
+          case WrapperStatusEnum.TO_CHECK_UPDATE:
+            if (operator) {
+              await updateStation(values, stationCode);
+              redirect(stationCode4Redirect);
+            } else {
+              await updateWrapperStationToCheckUpdate(values);
+              redirect(stationCode4Redirect);
+            }
+            break;
+          case WrapperStatusEnum.TO_FIX:
+            await updateWrapperStationToCheck(values);
+            redirect(stationCode4Redirect);
+            break;
+          default:
+            redirect(stationCode4Redirect);
+            break;
+        }
+      }
     } catch (reason) {
       addError({
         id: 'ADD_EDIT_STATION',
@@ -176,15 +323,34 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
     }
   };
 
-  const formik = useFormik<StationDetailsDto>({
-    initialValues: initialFormData,
+  const formik = useFormik<StationOnCreation>({
+    initialValues: initialFormData(stationDetail),
     validate,
     onSubmit: async () => {
-      setShowConfirmModal(false);
+      setShowConfirmModal(true);
     },
-    validateOnChange: true,
     enableReinitialize: true,
+    validateOnMount: true,
   });
+
+  const handleChangeNumberOnly = (
+    e: React.ChangeEvent<any>,
+    field: string,
+    formik: FormikProps<StationOnCreation>
+  ) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === '' || regex.test(e.target.value)) {
+      formik.setFieldValue(field, e.target.value);
+    }
+  };
+
+  const openConfirmModal = () => {
+    if (formik.isValid) {
+      setShowConfirmModal(true);
+    } else {
+      setShowConfirmModal(false);
+    }
+  };
 
   return (
     <>
@@ -194,6 +360,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
           borderRadius: 1,
           p: 3,
           minWidth: '100%',
+          mb: 4,
         }}
       >
         <Typography variant="h6" mb={3}>
@@ -201,7 +368,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         </Typography>
 
         <Typography variant="body2" mb={3}>
-          {t('addEditStationPage.subTitle')}
+          {t('stationDetailPageValidation.configuration.subtitle')}
         </Typography>
 
         <Box>
@@ -230,6 +397,26 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   }}
                 />
               </Grid>
+              {operator && formAction !== StationFormAction.Create ? (
+                <Grid container item xs={6}>
+                  <TextField
+                    fullWidth
+                    id="brokerCode"
+                    name="brokerCode"
+                    label={t('addEditStationPage.addForm.fields.brokerCode')}
+                    placeholder={t('addEditStationPage.addForm.fields.brokerCode')}
+                    size="small"
+                    value={formik.values.brokerCode}
+                    disabled
+                    onChange={(e) => formik.handleChange(e)}
+                    error={formik.touched.brokerCode && Boolean(formik.errors.brokerCode)}
+                    helperText={formik.touched.brokerCode && formik.errors.brokerCode}
+                    inputProps={{
+                      'data-testid': 'broker-code-test',
+                    }}
+                  />
+                </Grid>
+              ) : null}
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
@@ -239,14 +426,15 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
+                  disabled={formAction !== StationFormAction.Create || operator}
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
                   error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
                   helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
                   inputProps={{
                     type: 'number',
-                    min: 0,
+                    min: 1,
                     max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
@@ -272,7 +460,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                     name="redirectProtocol"
                     label={t('addEditStationPage.addForm.fields.redirectProtocol')}
                     size="small"
-                    defaultValue={formik.values.redirectProtocol}
+                    defaultValue={formik.values.protocol}
                     value={
                       formik.values.redirectProtocol === RedirectProtocolEnum.HTTPS
                         ? 'HTTPS'
@@ -303,7 +491,6 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
                   inputProps={{
                     step: 1,
-                    type: 'number',
                     min: 0,
                     max: 65556,
                     'data-testid': 'redirect-port-test',
@@ -312,30 +499,13 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   placeholder={t('addEditStationPage.addForm.fields.redirectPort')}
                   size="small"
                   value={formik.values.redirectPort === 0 ? '' : formik.values.redirectPort}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'redirectPort', formik)}
                   error={formik.touched.redirectPort && Boolean(formik.errors.redirectPort)}
                   helperText={
                     formik.touched.redirectPort &&
                     formik.errors.redirectPort &&
                     t('addEditStationPage.validation.overPort')
                   }
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirectPath"
-                  name="redirectPath"
-                  label={t('addEditStationPage.addForm.fields.redirectService')}
-                  size="small"
-                  value={formik.values.redirectPath}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
-                  helperText={formik.touched.redirectPath && formik.errors.redirectPath}
-                  inputProps={{
-                    'data-testid': 'redirect-service-test',
-                  }}
                 />
               </Grid>
 
@@ -352,6 +522,23 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   helperText={formik.touched.redirectIp && formik.errors.redirectIp}
                   inputProps={{
                     'data-testid': 'redirect-ip-test',
+                  }}
+                />
+              </Grid>
+
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="redirectPath"
+                  name="redirectPath"
+                  label={t('addEditStationPage.addForm.fields.redirectService')}
+                  size="small"
+                  value={formik.values.redirectPath}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
+                  helperText={formik.touched.redirectPath && formik.errors.redirectPath}
+                  inputProps={{
+                    'data-testid': 'redirect-service-test',
                   }}
                 />
               </Grid>
@@ -381,7 +568,7 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
 
           <Box sx={inputGroupStyle}>
             <AddEditStationFormSectionTitle
-              title={t('addEditStationPage.addForm.sections.target')}
+              title={t('addEditStationPage.addForm.sections.targetService')}
               icon={<MenuBook />}
               isRequired
             />
@@ -391,7 +578,8 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   fullWidth
                   id="targetHost"
                   name="targetHost"
-                  label={t('addEditStationPage.addForm.fields.targetAddress')}
+                  label={t('addEditStationPage.addForm.fields.targetHost')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetHost')}
                   size="small"
                   value={formik.values.targetHost}
                   onChange={(e) => formik.handleChange(e)}
@@ -407,7 +595,8 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   fullWidth
                   id="targetPath"
                   name="targetPath"
-                  label={t('addEditStationPage.addForm.fields.targetService')}
+                  label={t('addEditStationPage.addForm.fields.targetPath')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPath')}
                   size="small"
                   value={formik.values.targetPath}
                   onChange={(e) => formik.handleChange(e)}
@@ -421,13 +610,13 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
 
               <Grid container item xs={6}>
                 <TextField
+                  type="number"
                   fullWidth
                   id="targetPort"
                   name="targetPort"
                   InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
                   inputProps={{
                     step: 1,
-                    type: 'number',
                     min: 0,
                     max: 65556,
                     'data-testid': 'target-port-test',
@@ -436,15 +625,92 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
                   placeholder={t('addEditStationPage.addForm.fields.targetPort')}
                   size="small"
                   value={formik.values.targetPort === 0 ? '' : formik.values.targetPort}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => handleChangeNumberOnly(e, 'targetPort', formik)}
                   error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
                   helperText={formik.touched.targetPort && formik.errors.targetPort}
                 />
               </Grid>
             </Grid>
           </Box>
+
+          <Box sx={inputGroupStyle}>
+            <AddEditStationFormSectionTitle
+              title={t('addEditStationPage.addForm.sections.targetServicePof')}
+              icon={<MenuBook />}
+              isRequired
+            />
+            <Grid container spacing={2} mt={1}>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetHostPof"
+                  name="targetHostPof"
+                  label={t('addEditStationPage.addForm.fields.targetHostPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
+                  size="small"
+                  value={formik.values.targetHostPof}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.targetHostPof && Boolean(formik.errors.targetHostPof)}
+                  helperText={formik.touched.targetHostPof && formik.errors.targetHostPof}
+                  inputProps={{
+                    'data-testid': 'target-address-pof-test',
+                  }}
+                />
+              </Grid>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetPathPof"
+                  name="targetPathPof"
+                  label={t('addEditStationPage.addForm.fields.targetPathPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
+                  size="small"
+                  value={formik.values.targetPathPof}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.targetPathPof && Boolean(formik.errors.targetPathPof)}
+                  helperText={formik.touched.targetPathPof && formik.errors.targetPathPof}
+                  inputProps={{
+                    'data-testid': 'target-service-pof-test',
+                  }}
+                />
+              </Grid>
+
+              <Grid container item xs={6}>
+                <TextField
+                  type="number"
+                  fullWidth
+                  id="targetPortPof"
+                  name="targetPortPof"
+                  InputLabelProps={{ shrink: formik.values.targetPortPof ? true : false }}
+                  inputProps={{
+                    step: 1,
+                    min: 0,
+                    max: 65556,
+                    'data-testid': 'target-port-pof-test',
+                  }}
+                  label={t('addEditStationPage.addForm.fields.targetPortPof')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetPortPof')}
+                  size="small"
+                  value={formik.values.targetPortPof === 0 ? '' : formik.values.targetPortPof}
+                  onChange={(e) => handleChangeNumberOnly(e, 'targetPortPof', formik)}
+                  error={formik.touched.targetPortPof && Boolean(formik.errors.targetPortPof)}
+                  helperText={formik.touched.targetPortPof && formik.errors.targetPortPof}
+                />
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       </Paper>
+
+      {operator && formAction !== StationFormAction.Create ? (
+        <AddEditStationFormValidation
+          formik={formik}
+          handleChangeNumberOnly={handleChangeNumberOnly}
+          inputGroupStyle={inputGroupStyle}
+        />
+      ) : (
+        <></>
+      )}
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
           <Button color="primary" variant="outlined" onClick={goBack}>
@@ -453,27 +719,47 @@ const AddEditStationForm = ({ goBack /* stationDetail, formAction */ }: Props) =
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
           <Button
-            onClick={() => setShowConfirmModal(true)}
-            disabled={!formik.dirty || !formik.isValid}
+            onClick={() => {
+              openConfirmModal();
+              formik.handleSubmit();
+            }}
+            disabled={!formik.isValid}
             color="primary"
             variant="contained"
             type="submit"
           >
-            {t('addEditStationPage.addForm.continueButton')}
+            {operator
+              ? t('addEditStationPage.addForm.continueButton')
+              : t('addEditStationPage.addForm.confirmButton')}
           </Button>
         </Stack>
       </Stack>
       <ConfirmModal
-        title={t('addEditStationPage.confirmModal.title')}
+        title={
+          operator
+            ? t('addEditStationPage.confirmModal.titleOperator')
+            : t('addEditStationPage.confirmModal.title')
+        }
         message={
-          <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
-            Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
-            approvare. Riceverai una notifica a revisione completata.
-            <br />
-          </Trans>
+          operator ? (
+            <Trans i18nKey="addEditStationPage.confirmModal.messageStationOperator">
+              L’ente riceverà una notifica di conferma attivazione della stazione.
+              <br />
+            </Trans>
+          ) : (
+            <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
+              Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
+              approvare. Riceverai una notifica a revisione completata.
+              <br />
+            </Trans>
+          )
         }
         openConfirmModal={showConfirmModal}
-        onConfirmLabel={t('addEditStationPage.confirmModal.confirmButton')}
+        onConfirmLabel={
+          operator
+            ? t('addEditStationPage.confirmModal.confirmButtonOpe')
+            : t('addEditStationPage.confirmModal.confirmButton')
+        }
         onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
         handleConfrimSubmit={async () => {

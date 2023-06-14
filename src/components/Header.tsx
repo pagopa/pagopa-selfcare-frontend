@@ -11,6 +11,8 @@ import { Product } from '../model/Product';
 import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
+import { useSigninData } from '../hooks/useSigninData';
+import { isOperator } from '../pages/stations/components/commonFunctions';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
@@ -22,7 +24,7 @@ type Props = WithPartiesProps & {
 const pagoPAProduct: ProductEntity = {
   // TODO check if correct
   id: 'prod-pagopa',
-  title: 'Piattaforma pagoPA',
+  title: 'Pagamenti pagoPA',
   productUrl: CONFIG.HEADER.LINK.PRODUCTURL,
   linkType: 'internal',
 };
@@ -47,6 +49,8 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
   const products = useAppSelector(partiesSelectors.selectPartySelectedProducts);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
+
+  const updateSigninData = useSigninData();
 
   const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   // const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
@@ -83,7 +87,10 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole: t(`roles.${party.roles[0].roleKey}`),
+        productRole:
+          party.roles[0].roleKey === 'operator' || isOperator()
+            ? t(`roles.operator`)
+            : t(`roles.admin`),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={
@@ -117,6 +124,9 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
               const partyToSwitch = parties.find((p) => p.partyId === selectedParty.id);
               const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
               setParty(partyToSwitch);
+              if (partyToSwitch) {
+                void updateSigninData(partyToSwitch);
+              }
             } else {
               window.location.assign(
                 `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${selectedParty.id}&productId=prod-pagopa`

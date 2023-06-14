@@ -6,12 +6,14 @@ import { PaymentTypesResource } from '../api/generated/portal/PaymentTypesResour
 import { PspChannelPaymentTypes } from '../api/generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from '../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource';
+import { WrapperChannelsResource } from '../api/generated/portal/WrapperChannelsResource';
 import { PortalApi } from '../api/PortalApiClient';
 import { ChannelOnCreation } from '../model/Channel';
 import { PSP } from '../model/PSP';
 
 import {
   getChannels as getChannelsMocked,
+  getChannelsMerged as getChannelsMergedMocked,
   getPSPChannels as getPSPChannelsMocked,
   createChannel as createChannelMocked,
   updateChannel as updateChannelMocked,
@@ -30,6 +32,23 @@ export const getChannels = (page: number): Promise<ChannelsResource> => {
     return getChannelsMocked(page);
   } else {
     return PortalApi.getChannels(page).then((resources) => resources);
+  }
+};
+
+export const getChannelsMerged = (
+  page: number,
+  brokerCode: string,
+  channelcodefilter?: string,
+  limit?: number,
+  sorting?: string
+): Promise<WrapperChannelsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getChannelsMergedMocked(page, brokerCode, channelcodefilter, limit, sorting);
+  } else {
+    return PortalApi.getChannelsMerged(page, brokerCode, channelcodefilter, limit, sorting).then(
+      (resources) => resources
+    );
   }
 };
 

@@ -37,6 +37,7 @@ import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitu
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
 import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
+import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -145,6 +146,22 @@ export const PortalApi = {
 
   getChannels: async (page: number): Promise<ChannelsResource> => {
     const result = await apiConfigClient.getChannelsUsingGET({ page });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getChannelsMerged: async (
+    page: number,
+    _brokerCode: string,
+    channelcodefilter?: string,
+    limit?: number,
+    sorting?: string
+  ): Promise<WrapperChannelsResource> => {
+    const result = await apiConfigClient.getAllChannelsMergedUsingGET({
+      limit,
+      channelcodefilter,
+      page,
+      sorting,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

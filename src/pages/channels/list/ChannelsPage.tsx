@@ -1,11 +1,12 @@
 import { Alert, Box, Grid } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ChannelsTable from './ChannelsTable';
+import ChannelsTableSearchBar from './ChannelsTableSearchBar';
 
 export const clearLocationState = () => {
   window.history.replaceState({}, document.title);
@@ -14,6 +15,17 @@ export const clearLocationState = () => {
 const Channels = () => {
   const { t } = useTranslation();
   const history = useHistory();
+
+  const [channelCodeInput, setChannelCodeInput] = useState<string>('');
+  const [channelCodeFilter, setChannelCodeFilter] = useState<string>('');
+
+  useEffect(() => {
+    const setSearchValue = setTimeout(() => {
+      setChannelCodeFilter(channelCodeInput);
+    }, 500);
+
+    return () => clearTimeout(setSearchValue);
+  }, [channelCodeInput]);
 
   useEffect(() => {
     window.addEventListener('beforeunload', clearLocationState);
@@ -54,28 +66,13 @@ const Channels = () => {
             {(history.location.state as any).alertSuccessMessage}
           </Alert>
         )}
-        {/*
-        <Box width="100%" display="flex">
-          <TextField
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="disabled" />
-                </InputAdornment>
-              ),
-              sx: { height: 48 },
-            }}
-            fullWidth
-            placeholder={t('channelsPage.searchPlaceholder')}
-          />
-          <Button variant="contained" sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}>
-            {t('channelsPage.createChannelButtonLabel')}
-          </Button>
-        </Box>
-        */}
+        <ChannelsTableSearchBar
+          channelCodeInput={channelCodeInput}
+          setChannelCodeInput={setChannelCodeInput}
+        />
         <Box display="flex" width="100%" mt={3}>
           <Box pt={0} display="flex" width="100%">
-            <ChannelsTable />
+            <ChannelsTable channelCodeFilter={channelCodeFilter} />
           </Box>
         </Box>
       </Grid>

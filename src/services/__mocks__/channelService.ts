@@ -11,6 +11,8 @@ import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesRes
 import { PspChannelPaymentTypes } from '../../api/generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from '../../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
+import { WrapperStatusEnum } from '../../api/generated/portal/WrapperChannelResource';
+import { WrapperChannelsResource } from '../../api/generated/portal/WrapperChannelsResource';
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
 
@@ -96,6 +98,46 @@ export const mockedChannel: ChannelOnCreation = {
   targetPort: 8081,
   targetService: 'target_service',
   paymentType: mockedPaymentTypes.payment_types[0].description,
+};
+export const mockedStationsMerged: WrapperChannelsResource = {
+  page_info: {
+    page: 0,
+    limit: 10,
+    items_found: 5,
+    total_pages: 1,
+  },
+  channels: [
+    {
+      channel_code: '97735020584_01',
+      createdAt: new Date('2023-05-04T17:52:33.993Z'),
+      wrapperStatus: WrapperStatusEnum.APPROVED,
+      broker_description: 'ICONTO S.R.L.',
+    },
+    {
+      channel_code: '97735020584_02',
+      createdAt: new Date('2023-05-04T17:52:33.993Z'),
+      wrapperStatus: WrapperStatusEnum.TO_CHECK,
+      broker_description: 'ICONTO S.R.L.',
+    },
+    {
+      channel_code: '97735020584_03',
+      createdAt: new Date('2023-05-04T17:52:33.993Z'),
+      wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE,
+      broker_description: 'ICONTO S.R.L.',
+    },
+    {
+      channel_code: '97735020584_04',
+      createdAt: new Date('2023-05-04T17:52:33.993Z'),
+      wrapperStatus: WrapperStatusEnum.TO_FIX,
+      broker_description: 'ICONTO S.R.L.',
+    },
+    {
+      channel_code: '97735020584_05',
+      createdAt: new Date('2023-05-04T17:52:33.993Z'),
+      wrapperStatus: WrapperStatusEnum.TO_FIX_UPDATE,
+      broker_description: 'ICONTO S.R.L.',
+    },
+  ],
 };
 
 export const mockedChannelDetail = (channel_code: string): ChannelDetailsResource => ({
@@ -255,6 +297,14 @@ const channelCode: ChannelCodeResource = {
 
 export const getChannels = (_page: number): Promise<ChannelsResource> =>
   new Promise((resolve) => resolve(mockedChannels));
+
+export const getChannelsMerged = (
+  _page: number,
+  _brokerCode: string,
+  _stationcode?: string,
+  _limit?: number,
+  _sorting?: string
+): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedStationsMerged));
 
 export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =>
   new Promise((resolve) => resolve(channelCode));

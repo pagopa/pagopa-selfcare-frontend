@@ -1,4 +1,4 @@
-import { Typography, Grid, Box, Chip } from '@mui/material';
+import { Typography, Grid, Box } from '@mui/material';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
@@ -6,6 +6,7 @@ import { generatePath } from 'react-router';
 import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
+import { StatusChip } from '../../../components/StatusChip';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -200,19 +201,7 @@ export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
     <Box>
-      <Chip
-        label={params.row.enabled ? 'Attivo' : 'In revisione'}
-        aria-label="Status"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 'fontWeightMedium',
-          color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          // backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'grey.200',
-          paddingBottom: '1px',
-          height: '24px',
-        }}
-      />
+      <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} size="small" />
     </Box>,
     {
       textAlign: 'left',

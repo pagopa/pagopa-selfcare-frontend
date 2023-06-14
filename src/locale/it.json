@@ -685,6 +685,13 @@
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
-    "Stations": "Stazioni"
+    "Stations": "Stazioni",
+    "WrapperStatus": {
+      "APPROVED": "Attivo",
+      "TO_FIX": "Da correggere",
+      "TO_FIX_UPDATE": "Da correggere",
+      "TO_CHECK": "In revisione",
+      "TO_CHECK_UPDATE": "In revisione"
+    }
   }
 }

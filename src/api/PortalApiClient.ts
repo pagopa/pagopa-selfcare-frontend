@@ -6,7 +6,6 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { store } from '../redux/store';
 import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
-import { ChannelOnCreation } from '../model/Channel';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
 import { StationOnCreation } from '../model/Station';
@@ -19,7 +18,6 @@ import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PaymentTypesResource } from './generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
-// import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
@@ -38,6 +36,8 @@ import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetails
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
 import { ChannelDetailsDto } from './generated/portal/ChannelDetailsDto';
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
+import { WrapperChannelDetailsDto } from './generated/portal/WrapperChannelDetailsDto';
+import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -165,8 +165,15 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
+  // retrive of channel details on the node
+  getChannelDetails: async (channelcode: string): Promise<ChannelDetailsResource> => {
     const result = await apiConfigClient.getChannelDetailsUsingGET({ channelcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  // retrive of channel detail before on db and then on the node
+  getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
+    const result = await apiConfigClient.getChannelDetailUsingGET({ channelcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -189,21 +196,71 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createChannel: async (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+  getWfespPlugins: async (): Promise<WfespPluginConfs> => {
+    const result = await apiConfigClient.getWfespPluginsUsingGET({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createChannel: async (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
     const result = await apiConfigClient.createChannelUsingPOST({
       body: {
-        broker_psp_code: channel.pspBrokerCode,
-        broker_description: channel.businessName,
-        channel_code: channel.idChannel,
-        redirect_protocol: channel.redirectProtocol,
-        redirect_port: channel.redirectPort,
-        redirect_ip: channel.redirectIp,
-        redirect_path: channel.redirectService,
-        redirect_query_string: channel.redirectParameters,
-        target_host: channel.targetAddress,
-        target_path: channel.targetService,
-        target_port: channel.targetPort,
-        payment_types: channel.paymentType,
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        status: channel.status,
+        primitive_version: channel.primitive_version,
+        password: channel.password,
+        new_password: channel.new_password,
+        protocol: channel.protocol,
+        ip: channel.ip,
+        port: channel.port,
+        service: channel.service,
+        nmp_service: channel.nmp_service,
+        proxy_port: channel.proxy_port,
+        proxy_host: channel.proxy_host,
+        payment_model: channel.payment_model,
+        serv_plugin: channel.serv_plugin,
+        thread_number: channel.thread_number,
+        timeout_a: channel.timeout_a,
+        timeout_b: channel.timeout_b,
+        timeout_c: channel.timeout_c,
+        rt_push: channel.rt_push,
+        card_chart: channel.card_chart,
+        recovery: channel.recovery,
+        digital_stamp_brand: channel.digital_stamp_brand,
+        on_us: channel.on_us,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  createWrapperChannelDetails: async (
+    channel: WrapperChannelDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
+      body: {
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        status: StatusEnum.TO_CHECK,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -211,23 +268,177 @@ export const PortalApi = {
 
   updateChannel: async (
     code: string,
-    channel: ChannelOnCreation
+    channel: ChannelDetailsDto
   ): Promise<ChannelDetailsResource> => {
     const result = await apiConfigClient.updateChannelUsingPUT({
       channelcode: code,
       body: {
-        broker_psp_code: channel.pspBrokerCode,
-        broker_description: channel.businessName,
-        channel_code: channel.idChannel,
-        redirect_protocol: channel.redirectProtocol,
-        redirect_port: channel.redirectPort,
-        redirect_ip: channel.redirectIp,
-        redirect_path: channel.redirectService,
-        redirect_query_string: channel.redirectParameters,
-        target_host: channel.targetAddress,
-        target_path: channel.targetService,
-        target_port: channel.targetPort,
-        payment_types: channel.paymentType,
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        primitive_version: channel.primitive_version,
+        password: channel.password,
+        new_password: channel.new_password,
+        protocol: channel.protocol,
+        ip: channel.ip,
+        port: channel.port,
+        service: channel.service,
+        nmp_service: channel.nmp_service,
+        proxy_port: channel.proxy_port,
+        proxy_host: channel.proxy_host,
+        payment_model: channel.payment_model,
+        serv_plugin: channel.serv_plugin,
+        thread_number: channel.thread_number,
+        timeout_a: channel.timeout_a,
+        timeout_b: channel.timeout_b,
+        timeout_c: channel.timeout_c,
+        rt_push: channel.rt_push,
+        card_chart: channel.card_chart,
+        recovery: channel.recovery,
+        digital_stamp_brand: channel.digital_stamp_brand,
+        on_us: channel.on_us,
+        status: StatusEnum.APPROVED,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperChannelDetailsToCheck: async (
+    channel: ChannelDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
+      body: {
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        primitive_version: channel.primitive_version,
+        status: StatusEnum.TO_CHECK,
+        password: channel.password,
+        new_password: channel.new_password,
+        protocol: channel.protocol,
+        ip: channel.ip,
+        port: channel.port,
+        service: channel.service,
+        nmp_service: channel.nmp_service,
+        proxy_port: channel.proxy_port,
+        proxy_host: channel.proxy_host,
+        payment_model: channel.payment_model,
+        serv_plugin: channel.serv_plugin,
+        thread_number: channel.thread_number,
+        timeout_a: channel.timeout_a,
+        timeout_b: channel.timeout_b,
+        timeout_c: channel.timeout_c,
+        rt_push: channel.rt_push,
+        card_chart: channel.card_chart,
+        recovery: channel.recovery,
+        digital_stamp_brand: channel.digital_stamp_brand,
+        on_us: channel.on_us,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperChannelDetailsToCheckUpdate: async (
+    channel: ChannelDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
+      body: {
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        primitive_version: channel.primitive_version,
+        status: StatusEnum.TO_CHECK_UPDATE,
+        password: channel.password,
+        new_password: channel.new_password,
+        protocol: channel.protocol,
+        ip: channel.ip,
+        port: channel.port,
+        service: channel.service,
+        nmp_service: channel.nmp_service,
+        proxy_port: channel.proxy_port,
+        proxy_host: channel.proxy_host,
+        payment_model: channel.payment_model,
+        serv_plugin: channel.serv_plugin,
+        thread_number: channel.thread_number,
+        timeout_a: channel.timeout_a,
+        timeout_b: channel.timeout_b,
+        timeout_c: channel.timeout_c,
+        rt_push: channel.rt_push,
+        card_chart: channel.card_chart,
+        recovery: channel.recovery,
+        digital_stamp_brand: channel.digital_stamp_brand,
+        on_us: channel.on_us,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperChannelDetailsByOpt: async (
+    channel: ChannelDetailsDto
+  ): Promise<WrapperEntitiesOperations> => {
+    const result = await apiConfigClient.updateWrapperChannelDetailsByOptUsingPUT({
+      body: {
+        broker_psp_code: channel.broker_psp_code,
+        broker_description: channel.broker_description,
+        channel_code: channel.channel_code,
+        redirect_protocol: channel.redirect_protocol,
+        redirect_port: channel.redirect_port,
+        redirect_ip: channel.redirect_ip,
+        redirect_path: channel.redirect_path,
+        redirect_query_string: channel.redirect_query_string,
+        target_host: channel.target_host,
+        target_path: channel.target_path,
+        target_port: channel.target_port,
+        payment_types: channel.payment_types,
+        primitive_version: channel.primitive_version,
+        status: StatusEnum.TO_CHECK_UPDATE,
+        password: channel.password,
+        new_password: channel.new_password,
+        protocol: channel.protocol,
+        ip: channel.ip,
+        port: channel.port,
+        service: channel.service,
+        nmp_service: channel.nmp_service,
+        proxy_port: channel.proxy_port,
+        proxy_host: channel.proxy_host,
+        payment_model: channel.payment_model,
+        serv_plugin: channel.serv_plugin,
+        thread_number: channel.thread_number,
+        timeout_a: channel.timeout_a,
+        timeout_b: channel.timeout_b,
+        timeout_c: channel.timeout_c,
+        rt_push: channel.rt_push,
+        card_chart: channel.card_chart,
+        recovery: channel.recovery,
+        digital_stamp_brand: channel.digital_stamp_brand,
+        on_us: channel.on_us,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -441,101 +652,6 @@ export const PortalApi = {
 
   getWrapperEntities: async (code: string): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.getWrapperEntitiesUsingGET({ code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createWrapperChannelDetails: async (
-    channel: ChannelOnCreation
-  ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
-      body: {
-        broker_psp_code: channel.pspBrokerCode,
-        broker_description: channel.businessName,
-        channel_code: channel.idChannel,
-        redirect_protocol: channel.redirectProtocol,
-        redirect_port: channel.redirectPort,
-        redirect_ip: channel.redirectIp,
-        redirect_path: channel.redirectService,
-        redirect_query_string: channel.redirectParameters,
-        target_host: channel.targetAddress,
-        target_path: channel.targetService,
-        target_port: channel.targetPort,
-        payment_types: channel.paymentType,
-        status: channel.status,
-      },
-    });
-    return extractResponse(result, 201, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetails: async (
-    channel: ChannelDetailsDto
-  ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
-      body: {
-        broker_psp_code: channel.broker_psp_code,
-        broker_description: channel.broker_description,
-        channel_code: channel.channel_code,
-        redirect_protocol: channel.redirect_protocol,
-        redirect_port: channel.redirect_port,
-        redirect_ip: channel.redirect_ip,
-        redirect_path: channel.redirect_path,
-        redirect_query_string: channel.redirect_query_string,
-        target_host: channel.target_host,
-        target_path: channel.target_path,
-        target_port: channel.target_port,
-        payment_types: channel.payment_types,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getWrapperEntities: async (code: string): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.getWrapperEntitiesUsingGET({ code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createWrapperChannelDetails: async (
-    channel: ChannelOnCreation
-  ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
-      body: {
-        broker_psp_code: channel.pspBrokerCode,
-        broker_description: channel.businessName,
-        channel_code: channel.idChannel,
-        redirect_protocol: channel.redirectProtocol,
-        redirect_port: channel.redirectPort,
-        redirect_ip: channel.redirectIp,
-        redirect_path: channel.redirectService,
-        redirect_query_string: channel.redirectParameters,
-        target_host: channel.targetAddress,
-        target_path: channel.targetService,
-        target_port: channel.targetPort,
-        payment_types: channel.paymentType,
-        status: channel.status,
-      },
-    });
-    return extractResponse(result, 201, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetails: async (
-    channel: ChannelDetailsDto
-  ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
-      body: {
-        broker_psp_code: channel.broker_psp_code,
-        broker_description: channel.broker_description,
-        channel_code: channel.channel_code,
-        redirect_protocol: channel.redirect_protocol,
-        redirect_port: channel.redirect_port,
-        redirect_ip: channel.redirect_ip,
-        redirect_path: channel.redirect_path,
-        redirect_query_string: channel.redirect_query_string,
-        target_host: channel.target_host,
-        target_path: channel.target_path,
-        target_port: channel.target_port,
-        payment_types: channel.payment_types,
-      },
-    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

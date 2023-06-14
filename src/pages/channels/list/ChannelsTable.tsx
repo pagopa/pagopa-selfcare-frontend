@@ -112,7 +112,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
       getChannelsMerged(
         page,
         brokerCode,
-        channelCodeFilter ?? channelCodeFilter,
+        '14847241008',
         undefined,
         channelCodeSort ?? channelCodeSort
       )

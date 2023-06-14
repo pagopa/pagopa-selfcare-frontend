@@ -48,10 +48,10 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
           <Grid item xs={6}>
             <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
             <Typography mb={5}>
-              {/* {t('channelDetailPage.createdOn')}{' '}
-            <Typography component={'span'} fontWeight={600}>
-              dd/mm/yyyy
-            </Typography> */}
+              {t('channelDetailPage.createdOn')}{' '}
+              <Typography component={'span'} fontWeight={600}>
+                {/* channelDetWrap.createdAt */ '-'}
+              </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -71,13 +71,13 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              {/* TODO: manage channel state chip */}
               <Chip
                 size="medium"
                 label={
                   channelDetWrap.status === StatusEnum.APPROVED
                     ? t('channelDetailPage.status.active')
-                    : channelDetWrap.status === StatusEnum.TO_CHECK
+                    : channelDetWrap.status === StatusEnum.TO_CHECK ||
+                      channelDetWrap.status === StatusEnum.TO_CHECK_UPDATE
                     ? t('channelDetailPage.status.revision')
                     : t('channelDetailPage.status.needCorrection')
                 }
@@ -86,7 +86,8 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   backgroundColor:
                     channelDetWrap.status === StatusEnum.APPROVED
                       ? '#FFFFFF'
-                      : channelDetWrap.status === StatusEnum.TO_CHECK
+                      : channelDetWrap.status === StatusEnum.TO_CHECK ||
+                        channelDetWrap.status === StatusEnum.TO_CHECK_UPDATE
                       ? '#EEEEEE'
                       : '#FFD25E',
                 }}
@@ -223,31 +224,28 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* TODO: TODO: get from channelDetail when will be available */}
-                    {0}
+                    {/* channelDetWrap.associatedPsp */ '-'}
                   </Typography>
                 </Grid>
-                {/* TODO: get from channelDetail when will be available
-              <Grid item xs={12} mt={2}>
-                <Typography variant="sidenav">{t('channelDetailPage.changes')}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="body2" fontWeight={600}>
-                  {channelId}
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="body2" fontWeight={600}>
-                  {channelId}
-                </Typography>
-              </Grid>
-              */}
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">{t('channelDetailPage.changes')}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {/* channelDetWrap.modifiedAt */ '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {/* channelDetWrap.modifiedBy */ '-'}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Box>

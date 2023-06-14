@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { ArrowBack, ManageAccounts } from '@mui/icons-material';
 import { Grid, Stack, Breadcrumbs, Typography, Alert, Paper, Chip, Divider } from '@mui/material';
 import { Box } from '@mui/system';
@@ -5,42 +6,34 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  /*  ChannelDetailsDto, */ StatusEnum,
-} from '../../../../api/generated/portal/ChannelDetailsDto';
+import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { BASE_ROUTE } from '../../../../routes';
-import { useAppSelector } from '../../../../redux/hooks';
-import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import ChannelDetailValidation from '../../channelDetailValidation/ChannelDetailValidation';
-import { WrapperChannelDetailsDto } from '../../../../api/generated/portal/WrapperChannelDetailsDto';
-import { WrapperEntitiesOperations } from '../../../../api/generated/portal/WrapperEntitiesOperations';
+import { isOperator } from '../../../stations/components/commonFunctions';
 import DetailButtons from './DetailButtons';
 
 type Props = {
-  channelDetail?: WrapperChannelDetailsDto;
-  channelDetailWrapper?: WrapperEntitiesOperations;
+  channelDetail: ChannelDetailsDto;
   channelId: string;
   goBack: () => void;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetails = ({ channelDetail, channelDetailWrapper, channelId, goBack }: Props) => {
+const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   const { t } = useTranslation();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
+  const operator = isOperator();
 
-  const formatedDate = (date: Date | undefined) => {
-    if (date) {
-      return date.toLocaleString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    }
-    return null;
-  };
+  // const formatedDate = (date: Date | undefined) => {
+  //   if (date) {
+  //     return date.toLocaleString('it-IT', {
+  //       day: '2-digit',
+  //       month: '2-digit',
+  //       year: 'numeric',
+  //     });
+  //   }
+  //   return null;
+  // };
 
-  return channelDetail ? (
+  return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
         <Stack direction="row">
@@ -67,17 +60,16 @@ const ChannelDetails = ({ channelDetail, channelDetailWrapper, channelId, goBack
             <Typography mb={5} color="#5C6F82">
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`${formatedDate(channelDetailWrapper?.createdAt)} da ${
-                  channelDetailWrapper?.createdBy
-                }`}
+                {`- da -`}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <DetailButtons channelDetails={channelDetail} goBack={goBack} />
           </Grid>
-          {selectedParty?.roles[0].roleKey === 'operator' &&
-          channelDetail.status === StatusEnum.TO_CHECK ? (
+          {operator &&
+          (channelDetail.status === StatusEnum.TO_CHECK ||
+            channelDetail.status === StatusEnum.TO_CHECK_UPDATE) ? (
             <Grid item xs={12} sx={{ mb: 5 }}>
               <Alert severity="warning" variant="outlined">
                 <Typography sx={{ py: 2 }}>{t('channelDetailPage.alertWarning')}</Typography>
@@ -268,11 +260,7 @@ const ChannelDetails = ({ channelDetail, channelDetailWrapper, channelId, goBack
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {typeof channelDetailWrapper?.wrapperEntityOperationsSortedList !== 'undefined'
-                      ? formatedDate(
-                          channelDetailWrapper?.wrapperEntityOperationsSortedList[0].modifiedAt
-                        )
-                      : undefined}
+                    {/* formatedDate(channelDetail.modifiedAt) */ '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -280,9 +268,277 @@ const ChannelDetails = ({ channelDetail, channelDetailWrapper, channelId, goBack
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {typeof channelDetailWrapper?.wrapperEntityOperationsSortedList !== 'undefined'
-                      ? channelDetailWrapper?.wrapperEntityOperationsSortedList[0].modifiedByOpt
-                      : undefined}
+                    {/* modifiedByOpt */ '-'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+
+        <Paper
+          elevation={8}
+          sx={{
+            mt: 2,
+            borderRadius: 4,
+            p: 4,
+          }}
+        >
+          <Grid container alignItems={'center'} spacing={0} mb={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6" mb={3}>
+                {t('channelDetailValidationPage.title')}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2" mb={3}>
+                {t('channelDetailValidationPage.subtitle')}
+              </Typography>
+              <Divider> </Divider>
+            </Grid>
+          </Grid>
+
+          <Box mt={5}>
+            <Grid container spacing={2}>
+              <Grid container item alignContent="center" spacing={2} pb={4}>
+                <Grid item xs={12}>
+                  <Typography variant="sidenav">
+                    {t('channelDetailValidationPage.registry')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.primitiveVersion')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.primitive_version ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.password')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.password ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.newPassword')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.new_password ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('channelDetailValidationPage.endPoint')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.protocol')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.protocol ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailValidationPage.ip')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.ip ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailValidationPage.port')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.port ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.service')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.service ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.serviceNMP')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.nmp_service ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('channelDetailValidationPage.proxy')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.proxyAddress')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.proxy_host ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.proxyPort')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.proxy_port ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailValidationPage.status')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('channelDetailValidationPage.otherInfo')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.paymentModel')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.payment_model ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.pliugin')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {'-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.threadNumber')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.thread_number ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.timeoutA')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.timeout_a ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.timeoutB')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.timeout_b ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.timeoutC')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {channelDetail?.timeout_c ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.pspNotify')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.electronicReceipt')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailValidationPage.onUs')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.rptSign')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('channelDetailValidationPage.recoveryProcess')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailValidationPage.stamp')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={600}>
+                    {t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
               </Grid>
@@ -290,10 +546,7 @@ const ChannelDetails = ({ channelDetail, channelDetailWrapper, channelId, goBack
           </Box>
         </Paper>
       </Grid>
-      {isOperator ? <ChannelDetailValidation channelDetails={channelDetail} /> : null}
     </Grid>
-  ) : (
-    <></>
   );
 };
 

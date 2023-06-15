@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useTranslation } from 'react-i18next';
 import {
   Box,
@@ -18,6 +19,7 @@ import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-materia
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ProtocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
+import { WfespPluginConf } from '../../../../api/generated/portal/WfespPluginConf';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -26,10 +28,14 @@ type Props = {
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
+  wfespPlugin: WfespPluginConf;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity, complexity
-const AddEditChannelValidationForm = ({ formik, handleChangeNumberOnly }: Props) => {
+const AddEditChannelValidationForm = ({
+  formik,
+  handleChangeNumberOnly /* wfespPlugin */,
+}: // eslint-disable-next-line sonarjs/cognitive-complexity
+Props) => {
   const { t } = useTranslation();
   const inputGroupStyle = {
     borderRadius: 1,

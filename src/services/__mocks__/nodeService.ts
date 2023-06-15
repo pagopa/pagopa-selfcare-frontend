@@ -71,6 +71,10 @@ export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
   new Promise((resolve) => resolve(pspDetails));
 
+export const createECAndBroker = (
+  ec: CreditorInstitutionDto
+): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));
+
 export const createECDirect = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));

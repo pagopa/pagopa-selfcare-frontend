@@ -8,7 +8,7 @@ import { Badge as BadgeIcon } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { createECDirect, updateCreditorInstitution } from '../../../services/nodeService';
+import { createECAndBroker, updateCreditorInstitution } from '../../../services/nodeService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
@@ -108,7 +108,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
       }
     } else {
       try {
-        await createECDirect({
+        await createECAndBroker({
           address: { ...formik.values },
           businessName: selectedParty?.description ?? '',
           creditorInstitutionCode: selectedParty?.fiscalCode ?? '',

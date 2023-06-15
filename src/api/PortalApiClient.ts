@@ -368,6 +368,30 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  createECAndBroker: async (
+    ec: CreditorInstitutionDto
+  ): Promise<CreditorInstitutionDetailsResource> => {
+    const result = await apiConfigClient.createCreditorInstitutionAndBrokerUsingPOST({
+      body: {
+        brokerDto: {
+          broker_code: ec.creditorInstitutionCode,
+          description: ec.businessName,
+        },
+        creditorInstitutionDto: {
+          address: ec.address,
+          businessName: ec.businessName,
+          creditorInstitutionCode: ec.creditorInstitutionCode,
+          enabled: ec.enabled,
+          pspPayment: ec.pspPayment,
+          reportingFtp: ec.reportingFtp,
+          reportingZip: ec.reportingZip,
+        },
+      },
+    });
+
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
   createECDirect: async (
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {

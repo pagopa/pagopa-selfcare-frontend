@@ -118,12 +118,13 @@ export const getStationAvailableEC = (): Promise<Array<any>> =>
   getStationAvailableECMocked();
 
 export const createWrapperStation = (
-  station: WrapperStationDetailsDto
+  station: WrapperStationDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createStationWrap(station);
+    return createStationWrap(station, validationUrl);
   }
-  return PortalApi.createWrapperStation(station).then((resources) => resources);
+  return PortalApi.createWrapperStation(station, validationUrl).then((resources) => resources);
 };
 
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> => {

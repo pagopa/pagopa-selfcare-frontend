@@ -480,7 +480,8 @@ export const getStationCodeMocked = (_code: string): Promise<StationCodeResource
   new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
-  _station: WrapperStationDetailsDto
+  _station: WrapperStationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (

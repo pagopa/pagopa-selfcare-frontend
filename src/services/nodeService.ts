@@ -9,6 +9,7 @@ import { PSPDirectDTO } from '../model/PSP';
 import {
   createPSPDirect as createPSPDirectMocked,
   getPSPDetails as getPSPDetailsMocked,
+  createECAndBroker as createECAndBrokerMocked,
   createECDirect as createECDirectMocked,
   getECDetails as getCreditorInstitutionDetailsMocked,
   updateECDirect,
@@ -29,6 +30,16 @@ export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDe
     return getPSPDetailsMocked(pspcode);
   } else {
     return PortalApi.getPSPDetails(pspcode).then((resources) => resources);
+  }
+};
+
+export const createECAndBroker = (
+  ec: CreditorInstitutionDto
+): Promise<CreditorInstitutionDetailsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createECAndBrokerMocked(ec);
+  } else {
+    return PortalApi.createECAndBroker(ec).then((resources) => resources);
   }
 };
 

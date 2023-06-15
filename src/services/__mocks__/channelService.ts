@@ -446,7 +446,8 @@ export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string)
   new Promise((resolve) => resolve());
 
 export const createWrapperChannel = (
-  _channel: WrapperChannelDetailsDto
+  _channel: WrapperChannelDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
 export const updateWrapperChannel = (

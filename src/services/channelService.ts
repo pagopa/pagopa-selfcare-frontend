@@ -186,12 +186,15 @@ export const getWrapperEntities = (pspCode: string): Promise<WrapperEntitiesOper
 };
 
 export const createWrapperChannelDetails = (
-  channel: WrapperChannelDetailsDto
+  channel: WrapperChannelDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createWrapperChannel(channel);
+    return createWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.createWrapperChannelDetails(channel).then((resources) => resources);
+    return PortalApi.createWrapperChannelDetails(channel, validationUrl).then(
+      (resources) => resources
+    );
   }
 };
 

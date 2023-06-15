@@ -38,6 +38,7 @@ import { ChannelDetailsDto } from './generated/portal/ChannelDetailsDto';
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
 import { WrapperChannelDetailsDto } from './generated/portal/WrapperChannelDetailsDto';
 import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
+import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -244,7 +245,8 @@ export const PortalApi = {
   },
 
   createWrapperChannelDetails: async (
-    channel: WrapperChannelDetailsDto
+    channel: WrapperChannelDetailsDto,
+    validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
       body: {
@@ -260,6 +262,7 @@ export const PortalApi = {
         target_path: channel.target_path,
         target_port: channel.target_port,
         payment_types: channel.payment_types,
+        validationUrl,
         status: StatusEnum.TO_CHECK,
       },
     });

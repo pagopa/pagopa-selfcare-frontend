@@ -59,36 +59,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     },
   ];
 
-  const adminUser: Array<Party> = [
-    {
-      partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-      externalId: '14847241008',
-      originId: 'PSP_14847241008',
-      origin: 'SELC',
-      description: 'PSP S.p.A.',
-      fiscalCode: '14847241008',
-      digitalAddress: 'pspspa@test.dummy',
-      status: 'ACTIVE',
-      registeredOffice: 'VIA DEI PSP 20, ROMA',
-      roles: [
-        {
-          partyRole: 'DELEGATE',
-          roleKey: 'admin',
-        },
-      ],
-      urlLogo:
-        'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
-      institutionType: 'PSP',
-      pspData: {
-        businessRegisterNumber: '00000000000',
-        legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-        legalRegisterNumber: '09878',
-        abiCode: '36042',
-        vatNumberGroup: false,
-      },
-    },
-  ];
-
   const operatorUser: Array<Party> = [
     {
       partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',

@@ -25,7 +25,7 @@ import {
   CreditCard as CreditCardIcon,
   RemoveCircleOutline,
 } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
@@ -279,7 +279,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
     try {
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        await createWrapperChannelDetails(values);
+        const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
+          channelId: formik.values.channel_code,
+        })}`;
+        await createWrapperChannelDetails(values, validationUrl);
         redirect(channelCode4Redirect);
       }
 

@@ -19,7 +19,6 @@ export enum FormAction {
 
 export type StationOnCreation = {
   enabled?: boolean;
-
   brokerCode: string;
   stationCode: string;
   primitiveVersion: number;

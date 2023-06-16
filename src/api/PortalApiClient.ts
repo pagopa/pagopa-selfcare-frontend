@@ -437,7 +437,8 @@ export const PortalApi = {
   },
 
   createWrapperStation: async (
-    station: WrapperStationDetailsDto
+    station: WrapperStationDetailsDto,
+    validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.createWrapperStationDetailsUsingPOST({
       body: {
@@ -458,6 +459,7 @@ export const PortalApi = {
         targetHost: station.targetHost ? station.targetHost : undefined,
         targetPath: station.targetPath ? station.targetPath : undefined,
         targetPort: station.targetPort ? station.targetPort : undefined,
+        validationUrl,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);

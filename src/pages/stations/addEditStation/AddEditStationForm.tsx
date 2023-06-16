@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { useHistory } from 'react-router-dom';
+import { generatePath, useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
@@ -273,7 +273,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values);
+        const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
+          stationId: formik.values.stationCode,
+        })}`;
+        await createWrapperStation(values, validationUrl);
         redirect(stationCode4Redirect);
       }
 

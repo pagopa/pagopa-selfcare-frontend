@@ -120,7 +120,7 @@ variables:
     react_app_features_dashboard_enabled: 'true'
     react_app_features_channels_enabled: 'true'
     react_app_features_stations_enabled: 'true'
-    react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;'
+    react_app_operator_email_addresses: 'stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;pippo@test.email.it'
 
     react_app_one_trust_base_url: 'https://dev.selfcare.pagopa.it/ot/test' # '$(DEV_SELFCARE_HOST)/ot/test'
     react_app_analytics_enabled: 'false'

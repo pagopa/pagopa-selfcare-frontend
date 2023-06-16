@@ -6,13 +6,14 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { BASE_ROUTE } from '../../../../routes';
 import { isOperator } from '../../../stations/components/commonFunctions';
+import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
+import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import DetailButtons from './DetailButtons';
 
 type Props = {
-  channelDetail: ChannelDetailsDto;
+  channelDetail: ChannelDetailsResource;
   channelId: string;
   goBack: () => void;
 };
@@ -22,16 +23,16 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
 
-  // const formatedDate = (date: Date | undefined) => {
-  //   if (date) {
-  //     return date.toLocaleString('it-IT', {
-  //       day: '2-digit',
-  //       month: '2-digit',
-  //       year: 'numeric',
-  //     });
-  //   }
-  //   return null;
-  // };
+  const formatedDate = (date: Date | undefined) => {
+    if (date) {
+      return date.toLocaleString('it-IT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+    }
+    return null;
+  };
 
   return (
     <Grid container justifyContent={'center'}>
@@ -60,7 +61,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
             <Typography mb={5} color="#5C6F82">
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`- da -`}
+                {`${formatedDate(channelDetail.createdAt)} da ${channelDetail.createdBy}`}
               </Typography>
             </Typography>
           </Grid>
@@ -68,8 +69,8 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
             <DetailButtons channelDetails={channelDetail} goBack={goBack} />
           </Grid>
           {operator &&
-          (channelDetail.status === StatusEnum.TO_CHECK ||
-            channelDetail.status === StatusEnum.TO_CHECK_UPDATE) ? (
+          (channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+            channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) ? (
             <Grid item xs={12} sx={{ mb: 5 }}>
               <Alert severity="warning" variant="outlined">
                 <Typography sx={{ py: 2 }}>{t('channelDetailPage.alertWarning')}</Typography>
@@ -94,18 +95,21 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
               <Chip
                 size="medium"
                 label={
-                  channelDetail.status === StatusEnum.APPROVED
+                  channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
                     ? t('channelDetailPage.status.active')
-                    : channelDetail.status === StatusEnum.TO_CHECK
+                    : channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK
                     ? t('channelDetailPage.status.revision')
                     : t('channelDetailPage.status.needCorrection')
                 }
                 sx={{
-                  color: channelDetail.status === StatusEnum.APPROVED ? 'primary.main' : '',
+                  color:
+                    channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
+                      ? 'primary.main'
+                      : '',
                   backgroundColor:
-                    channelDetail.status === StatusEnum.APPROVED
+                    channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
                       ? '#FFFFFF'
-                      : channelDetail.status === StatusEnum.TO_CHECK
+                      : channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK
                       ? '#EEEEEE'
                       : '#FFD25E',
                 }}
@@ -234,7 +238,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <ButtonNaked
                     component={Link}
                     to={generatePath(`${BASE_ROUTE}/channels/${channelId}/psp-list`)}
-                    disabled={!(channelDetail.status === StatusEnum.APPROVED)}
+                    disabled={!(channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED)}
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"
@@ -260,7 +264,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* formatedDate(channelDetail.modifiedAt) */ '-'}
+                    {formatedDate(channelDetail.modifiedAt) ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -268,7 +272,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* modifiedByOpt */ '-'}
+                    {channelDetail.modifiedBy ?? '-'}
                   </Typography>
                 </Grid>
               </Grid>

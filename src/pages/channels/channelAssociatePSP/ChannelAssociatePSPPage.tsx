@@ -113,7 +113,7 @@ function ChannelAssociatePSPPage() {
             <Trans i18nKey="channelAssociatePSPPage.associationForm.subTitle">
               Digita il nome del nuovo PSP da associare al canale
             </Trans>{' '}
-            <Typography component="span" fontWeight={600}>
+            <Typography component="span" fontWeight={'fontWeightMedium'}>
               {channelId}
             </Typography>
           </Typography>

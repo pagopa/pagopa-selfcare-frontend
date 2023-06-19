@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.147"
+    "version": "0.0.155"
   },
   "servers": [
     {
@@ -856,6 +856,16 @@
             "name": "channelcodefilter",
             "in": "query",
             "description": "Channel code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerCode",
+            "in": "query",
+            "description": "Broker code filter for search",
             "required": false,
             "style": "form",
             "schema": {
@@ -4676,6 +4686,11 @@
           "enabled": {
             "type": "boolean"
           },
+          "flagPspCp": {
+            "type": "boolean",
+            "description": "Represents the authorization to carry out the transfer of the information present in additional payment information in the tags relating to payment by card for the PA in V1",
+            "example": false
+          },
           "flag_io": {
             "type": "boolean",
             "description": "flag io",
@@ -4729,8 +4744,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -4869,6 +4885,15 @@
             "type": "string",
             "description": "Channel code"
           },
+          "createdAt": {
+            "type": "string",
+            "description": "creation date",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "created by"
+          },
           "digital_stamp_brand": {
             "type": "boolean",
             "description": "digital stamp brand",
@@ -4885,6 +4910,15 @@
           "ip": {
             "type": "string",
             "description": "channel's ip"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "modification date",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "modified by"
           },
           "new_fault_code": {
             "type": "boolean",
@@ -4926,8 +4960,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -5040,6 +5075,11 @@
             "type": "integer",
             "description": "timeout C",
             "format": "int64"
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "channel's validation status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX", "TO_FIX_UPDATE"]
           }
         }
       },
@@ -6828,6 +6868,10 @@
             "type": "string",
             "description": "Channel code"
           },
+          "createdBy": {
+            "type": "string",
+            "description": "created by"
+          },
           "created_at": {
             "type": "string",
             "description": "creation date",
@@ -6911,8 +6955,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -7030,6 +7075,11 @@
             "type": "string",
             "description": "entities type",
             "enum": ["CHANNEL", "STATION"]
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "channel's validation status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX", "TO_FIX_UPDATE"]
           }
         }
       },

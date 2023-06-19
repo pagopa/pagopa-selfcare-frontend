@@ -1,4 +1,5 @@
 import { ChannelCodeResource } from '../api/generated/portal/ChannelCodeResource';
+import { ChannelDetailsDto } from '../api/generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from '../api/generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from '../api/generated/portal/ChannelPspListResource';
 import { ChannelsResource } from '../api/generated/portal/ChannelsResource';
@@ -7,10 +8,11 @@ import { PspChannelPaymentTypes } from '../api/generated/portal/PspChannelPaymen
 import { PspChannelPaymentTypesResource } from '../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource';
 import { WrapperChannelsResource } from '../api/generated/portal/WrapperChannelsResource';
+import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannelDetailsDto';
+import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { PortalApi } from '../api/PortalApiClient';
-import { ChannelOnCreation } from '../model/Channel';
 import { PSP } from '../model/PSP';
-
+import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -24,6 +26,10 @@ import {
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
   dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
+  getWrapperChannel,
+  createWrapperChannel,
+  updateWrapperChannel,
+  getWfespPlugins as mockedGetWfespPlugins,
 } from './__mocks__/channelService';
 
 export const getChannels = (page: number): Promise<ChannelsResource> => {
@@ -70,7 +76,15 @@ export const getPSPChannels = (pspCode: string): Promise<PspChannelsResource> =>
   }
 };
 
-export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return mockedGetWfespPlugins();
+  } else {
+    return PortalApi.getWfespPlugins().then((resources) => resources);
+  }
+};
+
+export const createChannel = (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createChannelMocked(channel);
@@ -79,12 +93,15 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
   }
 };
 
-export const updateChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
+export const updateChannel = (
+  code: string,
+  channel: ChannelDetailsDto
+): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateChannelMocked(channel);
+    return updateChannelMocked(code, channel);
   } else {
-    return PortalApi.updateChannel(channel).then((resources) => resources);
+    return PortalApi.updateChannel(code, channel).then((resources) => resources);
   }
 };
 
@@ -148,5 +165,65 @@ export const dissociatePSPfromChannel = (channelcode: string, pspcode: string): 
     return dissociatePSPfromChannelMocked(channelcode, pspcode);
   } else {
     return PortalApi.dissociatePSPfromChannel(channelcode, pspcode).then((resources) => resources);
+  }
+};
+
+export const getWrapperEntities = (pspCode: string): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getWrapperChannel(pspCode);
+  } else {
+    return PortalApi.getWrapperEntities(pspCode).then((resources) => resources);
+  }
+};
+
+export const createWrapperChannelDetails = (
+  channel: WrapperChannelDetailsDto,
+  validationUrl: string
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createWrapperChannel(channel, validationUrl);
+  } else {
+    return PortalApi.createWrapperChannelDetails(channel, validationUrl).then(
+      (resources) => resources
+    );
+  }
+};
+
+export const updateWrapperChannelDetailsToCheck = (
+  channel: ChannelDetailsDto,
+  validationUrl: string
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateWrapperChannel(channel, validationUrl);
+  } else {
+    return PortalApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
+      (resources) => resources
+    );
+  }
+};
+
+export const updateWrapperChannelDetailsToCheckUpdate = (
+  channel: ChannelDetailsDto,
+  validationUrl: string
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateWrapperChannel(channel, validationUrl);
+  } else {
+    return PortalApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
+      (resources) => resources
+    );
+  }
+};
+
+export const updateWrapperChannelDetailsByOpt = (
+  channel: ChannelDetailsDto,
+  validationUrl: string
+): Promise<WrapperEntitiesOperations> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updateWrapperChannel(channel, validationUrl);
+  } else {
+    return PortalApi.updateWrapperChannelDetailsByOpt(channel, validationUrl).then(
+      (resources) => resources
+    );
   }
 };

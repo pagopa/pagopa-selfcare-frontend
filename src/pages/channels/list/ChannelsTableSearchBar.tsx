@@ -3,6 +3,7 @@ import { GridSearchIcon } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
+import { isOperator } from '../../stations/components/commonFunctions';
 
 type Props = {
   channelCodeInput: string;
@@ -11,6 +12,7 @@ type Props = {
 
 export default function ChannelsTableSearchBar({ channelCodeInput, setChannelCodeInput }: Props) {
   const { t } = useTranslation();
+  const operator = isOperator();
 
   return (
     <Box width="100%" display="flex">
@@ -34,6 +36,7 @@ export default function ChannelsTableSearchBar({ channelCodeInput, setChannelCod
         to={ROUTES.CHANNEL_ADD}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
+        disabled={operator}
       >
         {t('channelsPage.createChannelButtonLabel')}
       </Button>

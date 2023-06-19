@@ -1,4 +1,4 @@
-import { Alert, Box, Chip, Divider, Grid, IconButton } from '@mui/material';
+import { Alert, Box, Divider, Grid, IconButton } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import {
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
 import { isOperator } from '../../components/commonFunctions';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
@@ -96,30 +97,7 @@ Props) => {
                 </Typography>
               </Grid>
               <Grid item xs={9} textAlign="right">
-                <Chip
-                  size="medium"
-                  sx={{
-                    backgroundColor:
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                        ? 'primary.main'
-                        : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                          stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                        ? '#EEEEEE'
-                        : 'warning.light',
-                    color:
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                        ? 'background.paper'
-                        : 'text.primary',
-                  }}
-                  label={
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? t('stationDetailPage.states.active')
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? t('stationDetailPage.states.revision')
-                      : t('stationDetailPage.states.needCorrection')
-                  }
-                />
+                <StatusChip status={stationDetail?.wrapperStatus ?? ''} />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="h6" mb={1}>

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ROUTES from '../../../../routes';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtons from './DetailButtons';
 
 type Props = {
@@ -68,30 +69,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <Chip
-                size="medium"
-                sx={{
-                  backgroundColor:
-                    channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'primary.main'
-                      : channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? '#EEEEEE'
-                      : 'warning.light',
-                  color:
-                    channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'background.paper'
-                      : 'text.primary',
-                }}
-                label={
-                  channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
-                    ? t('channelDetailPage.status.active')
-                    : channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                      channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                    ? t('channelDetailPage.status.revision')
-                    : t('channelDetailPage.status.needCorrection')
-                }
-              />
+              <StatusChip status={channelDetWrap.wrapperStatus ?? ''} />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={3}>

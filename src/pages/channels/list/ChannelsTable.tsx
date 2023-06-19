@@ -132,7 +132,6 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
   }, [page, channelCodeFilter, brokerCode, channelCodeSort]);
 
   const handleSortModelChange = (sortModel: GridSortModel) => {
-    console.log(sortModel.find((column) => column.field === 'channel_code')?.sort?.toUpperCase());
     setChannelCodeSort(
       sortModel.find((column) => column.field === 'channel_code')?.sort?.toUpperCase()
     );

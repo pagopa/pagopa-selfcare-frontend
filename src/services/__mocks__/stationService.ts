@@ -457,6 +457,18 @@ export const mockedStationAvailableEC: Array<any> = [
     enabled: true,
     extended_fault_bean: true,
   },
+  {
+    broker_ec_code: '81001870922',
+    description: 'Comune di Portoscuso',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_ec_code: '00142300599',
+    description: 'Comune di Gaeta',
+    enabled: true,
+    extended_fault_bean: true,
+  },
 ];
 
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>

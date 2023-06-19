@@ -212,7 +212,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <ButtonNaked
                     component={Link}
                     to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
-                    disabled
+                    disabled={channelDetail.wrapperStatus !== WrapperStatusEnum.APPROVED}
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"

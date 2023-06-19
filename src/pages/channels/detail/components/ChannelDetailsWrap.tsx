@@ -20,17 +20,6 @@ type Props = {
 const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
   const { t } = useTranslation();
 
-  const formatedDate = (date: Date | undefined) => {
-    if (date) {
-      return date.toLocaleString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    }
-    return null;
-  };
-
   return channelDetWrap ? (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -47,7 +36,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{t('general.Channels')}</Typography>
-            <Typography color={'#A2ADB8'}>
+            <Typography color={'text.disaled'}>
               {t('channelDetailPage.detail')} {channelId}
             </Typography>
           </Breadcrumbs>
@@ -57,8 +46,8 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
             <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
             <Typography mb={5}>
               {t('channelDetailPage.createdOn')}{' '}
-              <Typography component={'span'} fontWeight={600}>
-                {formatedDate(channelDetWrap.createdAt) ?? '-'}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {channelDetWrap.createdAt?.toLocaleDateString('en-GB') ?? '-'}
               </Typography>
             </Typography>
           </Grid>
@@ -120,7 +109,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.pspBrokerCode')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.broker_psp_code}
                   </Typography>
                 </Grid>
@@ -128,7 +117,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.companyName')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.broker_description}
                   </Typography>
                 </Grid>
@@ -136,7 +125,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.idChannel')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.channel_code}
                   </Typography>
                 </Grid>
@@ -147,7 +136,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectProtocol')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.redirect_protocol}
                   </Typography>
                 </Grid>
@@ -155,7 +144,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectPort')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.redirect_port}
                   </Typography>
                 </Grid>
@@ -163,7 +152,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectUrl')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.redirect_ip}
                   </Typography>
                 </Grid>
@@ -174,7 +163,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetAddress')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.target_host}
                   </Typography>
                 </Grid>
@@ -182,7 +171,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetService')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.target_path}
                   </Typography>
                 </Grid>
@@ -190,7 +179,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetPort')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.target_port}
                   </Typography>
                 </Grid>
@@ -234,7 +223,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.associated')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {0}
                   </Typography>
                 </Grid>
@@ -245,15 +234,15 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {formatedDate(channelDetWrap.modifiedAt) ?? '-'}
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {channelDetWrap.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetWrap.modifiedBy ?? '-'}
                   </Typography>
                 </Grid>

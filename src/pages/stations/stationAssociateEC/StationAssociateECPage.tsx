@@ -113,7 +113,7 @@ function StationAssociateECPage() {
             <Trans i18nKey="stationAssociateECPage.associationForm.subTitle">
               Digita il nome del nuovo EC da associare al canale
             </Trans>{' '}
-            <Typography component="span" fontWeight={600}>
+            <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>
           </Typography>

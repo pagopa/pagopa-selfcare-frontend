@@ -95,9 +95,9 @@ const AddEditChannelPage = () => {
           <Breadcrumbs>
             <Typography>{t('general.Channels')}</Typography>
             {formAction === FormAction.Edit && (
-              <Typography color={'#A2ADB8'}>{channelId}</Typography>
+              <Typography color={'text.disaled'}>{channelId}</Typography>
             )}
-            <Typography color={'#A2ADB8'}>
+            <Typography color={'text.disaled'}>
               {operator
                 ? t(`addEditChannelPage.config.titleConfiguration`)
                 : t(`addEditChannelPage.${formAction}.breadcrumb`)}

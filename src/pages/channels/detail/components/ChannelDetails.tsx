@@ -23,27 +23,18 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
 
-  const formatedDate = (date: Date | undefined) => {
-    if (date) {
-      return date.toLocaleString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    }
-    return null;
-  };
-
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
-            <Typography mb={5} color="#5C6F82">
+            <Typography mb={5} color="text.secondary">
               {t('channelDetailPage.createdOn')}{' '}
-              <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`${formatedDate(channelDetail.createdAt)} da ${channelDetail.createdBy}`}
+              <Typography component={'span'} color="text.secondary">
+                {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
+                  channelDetail.createdBy
+                }`}
               </Typography>
             </Typography>
           </Grid>
@@ -115,7 +106,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.pspBrokerCode')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.broker_psp_code}
                   </Typography>
                 </Grid>
@@ -123,7 +114,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.companyName')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.broker_description}
                   </Typography>
                 </Grid>
@@ -131,7 +122,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.idChannel')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.channel_code}
                   </Typography>
                 </Grid>
@@ -142,7 +133,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectProtocol')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.redirect_protocol}
                   </Typography>
                 </Grid>
@@ -150,7 +141,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectPort')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.redirect_port}
                   </Typography>
                 </Grid>
@@ -158,7 +149,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.redirectUrl')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.redirect_ip}
                   </Typography>
                 </Grid>
@@ -169,7 +160,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetIp')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.target_host}
                   </Typography>
                 </Grid>
@@ -177,7 +168,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetService')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.target_path}
                   </Typography>
                 </Grid>
@@ -185,7 +176,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.targetPort')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.target_port}
                   </Typography>
                 </Grid>
@@ -221,7 +212,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <ButtonNaked
                     component={Link}
                     to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
-                    disabled={!(channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED)}
+                    disabled
                     color="primary"
                     endIcon={<ManageAccounts />}
                     size="medium"
@@ -233,7 +224,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.associated')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {/* TODO: TODO: get from channelDetail when will be available */}
                     {0}
                   </Typography>
@@ -246,15 +237,15 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {formatedDate(channelDetail.modifiedAt) ?? '-'}
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {channelDetail.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail.modifiedBy ?? '-'}
                   </Typography>
                 </Grid>
@@ -299,7 +290,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.primitive_version ?? '-'}
                   </Typography>
                 </Grid>
@@ -309,7 +300,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.password ?? '-'}
                   </Typography>
                 </Grid>
@@ -319,7 +310,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.new_password ?? '-'}
                   </Typography>
                 </Grid>
@@ -334,7 +325,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.protocol ?? '-'}
                   </Typography>
                 </Grid>
@@ -342,7 +333,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailValidationPage.ip')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.ip ?? '-'}
                   </Typography>
                 </Grid>
@@ -350,7 +341,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailValidationPage.port')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.port ?? '-'}
                   </Typography>
                 </Grid>
@@ -360,7 +351,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.service ?? '-'}
                   </Typography>
                 </Grid>
@@ -370,7 +361,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.nmp_service ?? '-'}
                   </Typography>
                 </Grid>
@@ -385,7 +376,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.proxy_host ?? '-'}
                   </Typography>
                 </Grid>
@@ -395,7 +386,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.proxy_port ?? '-'}
                   </Typography>
                 </Grid>
@@ -403,7 +394,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailValidationPage.status')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.proxy_enabled
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -420,7 +411,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.payment_model
                       ? t(
                           `addEditChannelPage.addForm.validationForm.paymentModel.${channelDetail?.payment_model}`
@@ -434,7 +425,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.serv_plugin ?? '-'}
                   </Typography>
                 </Grid>
@@ -444,7 +435,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.thread_number ?? '-'}
                   </Typography>
                 </Grid>
@@ -454,7 +445,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.timeout_a ?? '-'}
                   </Typography>
                 </Grid>
@@ -464,7 +455,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.timeout_b ?? '-'}
                   </Typography>
                 </Grid>
@@ -474,7 +465,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.timeout_c ?? '-'}
                   </Typography>
                 </Grid>
@@ -484,7 +475,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.flag_io
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -496,7 +487,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.rt_push
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -506,7 +497,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailValidationPage.onUs')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.on_us
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -518,7 +509,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.card_chart
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -530,7 +521,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.recovery
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
@@ -540,7 +531,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2">{t('channelDetailValidationPage.stamp')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.digital_stamp_brand
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}

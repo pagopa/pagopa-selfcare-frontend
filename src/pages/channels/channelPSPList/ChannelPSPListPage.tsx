@@ -74,7 +74,7 @@ const ChannelPSPListPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography fontSize={16}>{channelId}</Typography>
-            <Typography fontWeight={600}>{t('channelPSPList.title')}</Typography>
+            <Typography fontWeight={'fontWeightMedium'}>{t('channelPSPList.title')}</Typography>
           </Breadcrumbs>
         </Stack>
 

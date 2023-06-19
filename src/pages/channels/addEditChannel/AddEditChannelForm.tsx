@@ -349,11 +349,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       setLoadingWfesp(true);
       getWfespPlugins()
         .then((result) => {
-          if (result) {
-            console.log('result', result);
-            if (typeof result.wfesp_plugin_confs !== 'undefined') {
-              setWfespPlugin([...result.wfesp_plugin_confs]);
-            }
+          if (typeof result.wfesp_plugin_confs !== 'undefined') {
+            setWfespPlugin([...result.wfesp_plugin_confs]);
           }
         })
         .catch((reason) => {

@@ -1,14 +1,5 @@
 import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
-import {
-  Grid,
-  Stack,
-  Breadcrumbs,
-  Typography,
-  Paper,
-  Chip,
-  Divider,
-  IconButton,
-} from '@mui/material';
+import { Grid, Stack, Breadcrumbs, Typography, Paper, Divider, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 import { ButtonNaked } from '@pagopa/mui-italia';
@@ -21,6 +12,7 @@ import {
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
 import ROUTES from '../../../../routes';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
@@ -102,30 +94,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
               <Typography variant="subtitle2">{t('stationDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <Chip
-                size="medium"
-                sx={{
-                  backgroundColor:
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'primary.main'
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? '#EEEEEE'
-                      : 'warning.light',
-                  color:
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'background.paper'
-                      : 'text.primary',
-                }}
-                label={
-                  stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                    ? t('stationDetailPage.states.active')
-                    : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                    ? t('stationDetailPage.states.revision')
-                    : t('stationDetailPage.states.needCorrection')
-                }
-              />
+              <StatusChip status={stationDetail?.wrapperStatus ?? ''} size="regular" />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={1}>

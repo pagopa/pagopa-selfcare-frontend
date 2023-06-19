@@ -10,6 +10,7 @@ import ROUTES from '../../../../routes';
 import { isOperator } from '../../../stations/components/commonFunctions';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtons from './DetailButtons';
 
 type Props = {
@@ -64,30 +65,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <Chip
-                size="medium"
-                sx={{
-                  backgroundColor:
-                    channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'primary.main'
-                      : channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? '#EEEEEE'
-                      : 'warning.light',
-                  color:
-                    channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'background.paper'
-                      : 'text.primary',
-                }}
-                label={
-                  channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                    ? t('channelDetailPage.status.active')
-                    : channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                      channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                    ? t('channelDetailPage.status.revision')
-                    : t('channelDetailPage.status.needCorrection')
-                }
-              />
+              <StatusChip status={channelDetail.wrapperStatus ?? ''} size="regular" />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={1}>

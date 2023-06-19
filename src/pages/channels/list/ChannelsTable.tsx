@@ -109,7 +109,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getChannelsMerged(page, brokerCode, '14847241008', 10, channelCodeSort ?? channelCodeSort)
+      getChannelsMerged(page, brokerCode, brokerCode, 10, channelCodeSort ?? channelCodeSort)
         .then((r) => {
           setChannels(r);
           setError(false);

@@ -65,7 +65,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <StatusChip status={channelDetail.wrapperStatus ?? ''} size="regular" />
+              <StatusChip status={channelDetail.wrapperStatus ?? ''} />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={1}>

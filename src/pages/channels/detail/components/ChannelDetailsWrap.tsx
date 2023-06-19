@@ -69,7 +69,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <StatusChip status={channelDetWrap.wrapperStatus ?? ''} size="regular" />
+              <StatusChip status={channelDetWrap.wrapperStatus ?? ''} />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={3}>

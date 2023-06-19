@@ -94,7 +94,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
               <Typography variant="subtitle2">{t('stationDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <StatusChip status={stationDetail?.wrapperStatus ?? ''} size="regular" />
+              <StatusChip status={stationDetail?.wrapperStatus ?? ''} />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={1}>

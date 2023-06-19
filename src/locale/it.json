@@ -267,10 +267,10 @@
           "onUs": "On us"
         },
         "paymentModel": {
-          "activatedAtPsp": "Attivato presso PSP",
-          "multi": "Multibeneficiario",
-          "immediate": "Immediato",
-          "different": "Differito"
+          "ACTIVATED_AT_PSP": "Attivato presso PSP",
+          "IMMEDIATE_MULTIBENEFICIARY": "Multibeneficiario",
+          "IMMEDIATE": "Immediato",
+          "DEFERRED": "Differito"
         }
       }
     },

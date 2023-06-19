@@ -48,18 +48,19 @@ import {
 import {
   ChannelDetailsDto,
   Redirect_protocolEnum,
-  StatusEnum,
 } from '../../../api/generated/portal/ChannelDetailsDto';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
 import { isOperator } from '../../stations/components/commonFunctions';
+import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
 import { WfespPluginConf } from '../../../api/generated/portal/WfespPluginConf';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
 type Props = {
   selectedParty: Party;
-  channelDetail?: ChannelDetailsDto;
+  channelDetail?: ChannelDetailsResource;
   channelCode: string;
   formAction: string;
 };
@@ -74,90 +75,88 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoadingWfesp = useLoading(LOADING_TASK_WFESP_PLUGIN);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
-  const [wfespPlugin, setWfespPlugin] = useState<WfespPluginConf>({});
+  const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
   const operator = isOperator();
   const redirectProtocol = ['HTTP', 'HTTPS'];
   const { channelId } = useParams<{ channelId: string }>();
 
   const initialFormData = (
     channelCode: string,
-    channelDetail?: ChannelDetailsDto,
+    channelDetail?: ChannelDetailsResource,
     selectedParty?: Party
-  ) =>
+  ): ChannelDetailsDto =>
     channelDetail
       ? {
-          broker_psp_code: channelDetail.broker_psp_code ?? '',
           broker_description: channelDetail.broker_description ?? '',
+          broker_psp_code: channelDetail.broker_psp_code ?? '',
           channel_code: channelCode,
-          redirect_protocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
-          redirect_port: channelDetail.redirect_port ?? undefined,
+          digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
+          ip: channelDetail.ip ?? '',
+          new_password: channelDetail.new_password ?? '',
+          nmp_service: channelDetail.nmp_service ?? '',
+          on_us: channelDetail.on_us ?? false,
+          password: channelDetail.password ?? '',
+          payment_model: channelDetail.payment_model ?? undefined,
+          payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
+          port: channelDetail.port ?? 0,
+          primitive_version: channelDetail.primitive_version ?? undefined,
+          protocol: channelDetail.protocol ?? undefined,
+          proxy_host: channelDetail.proxy_host ?? '',
+          proxy_port: channelDetail.proxy_port ?? 0,
+          flag_io: channelDetail.flag_io ?? false,
+          recovery: channelDetail.recovery ?? false,
           redirect_ip: channelDetail.redirect_ip ?? '',
           redirect_path: channelDetail.redirect_path ?? '',
+          redirect_port: channelDetail.redirect_port ?? undefined,
+          redirect_protocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
           redirect_query_string: channelDetail.redirect_query_string ?? '',
+          card_chart: false,
+          rt_push: channelDetail.rt_push ?? false,
+          serv_plugin: channelDetail.serv_plugin ?? '',
+          service: channelDetail.service ?? '',
           target_host: channelDetail.target_host ?? '',
           target_path: channelDetail.target_path ?? '',
           target_port: channelDetail.target_port ?? undefined,
-          payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
-          status: channelDetail.status ?? undefined,
-          primitive_version: channelDetail.primitive_version ?? '',
-          password: channelDetail.password ?? '',
-          new_password: channelDetail.new_password ?? '',
-          protocol: channelDetail.protocol ?? undefined,
-          ip: channelDetail.ip ?? '',
-          port: channelDetail.port ?? 0,
-          service: channelDetail.service ?? '',
-          nmp_service: channelDetail.nmp_service ?? '',
-          proxy_host: channelDetail.proxy_host ?? '',
-          proxy_port: channelDetail.proxy_port ?? 0,
-          payment_model: channelDetail.payment_model ?? undefined,
-          serv_plugin: channelDetail.serv_plugin ?? '',
           thread_number: channelDetail.thread_number ?? 0,
           timeout_a: channelDetail.timeout_a ?? 0,
           timeout_b: channelDetail.timeout_b ?? 0,
           timeout_c: channelDetail.timeout_c ?? 0,
-          psp_notify_payment: false,
-          rt_push: channelDetail.rt_push ?? false,
-          rpt_carousel: false,
-          recovery: channelDetail.recovery ?? false,
-          digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
-          on_us: channelDetail.on_us ?? false,
         }
       : {
-          broker_psp_code: selectedParty?.fiscalCode ?? '',
           broker_description: selectedParty?.description ?? '',
+          broker_psp_code: selectedParty?.fiscalCode ?? '',
           channel_code: channelCode,
-          redirect_protocol: Redirect_protocolEnum.HTTPS,
-          redirect_port: undefined,
+          digital_stamp_brand: false,
+          ip: '',
+          new_password: '',
+          nmp_service: '',
+          on_us: false,
+          password: '',
+          payment_model: undefined,
+          payment_types: [''],
+          port: 0,
+          primitive_version: undefined,
+          protocol: undefined,
+          proxy_host: '',
+          proxy_port: 0,
+          flag_io: false,
+          recovery: false,
           redirect_ip: '',
           redirect_path: '',
+          redirect_port: undefined,
+          redirect_protocol: Redirect_protocolEnum.HTTPS,
           redirect_query_string: '',
+          card_chart: false,
+          rt_push: false,
+          serv_plugin: '',
+          service: '',
           target_host: '',
           target_path: '',
           target_port: undefined,
-          payment_types: [''],
-          status: StatusEnum.TO_CHECK,
-          primitive_version: '',
-          password: '',
-          new_password: '',
-          protocol: undefined,
-          ip: '',
-          port: 0,
-          service: '',
-          nmp_service: '',
-          proxy_host: '',
-          proxy_port: 0,
-          payment_model: undefined,
-          serv_plugin: '',
           thread_number: 0,
           timeout_a: 0,
           timeout_b: 0,
           timeout_c: 0,
-          psp_notify_payment: false,
-          rt_push: false,
-          rpt_carousel: false,
-          recovery: false,
-          digital_stamp_brand: false,
-          on_us: false,
         };
 
   const validatePortRange = (port: number | undefined) => {
@@ -175,12 +174,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     mb: 3,
   };
 
-  // const validatePrimitiveVersion = (primitive_version: number | undefined) => {
-  //   if (primitive_version) {
-  //     return primitive_version > 0 && primitive_version <= 2 ? false : true;
-  //   }
-  //   return false;
-  // };
+  const validatePrimitiveVersion = (primitive_version: number | undefined) => {
+    if (primitive_version) {
+      return primitive_version > 0 && primitive_version <= 2 ? false : true;
+    }
+    return false;
+  };
 
   const validate = (values: Partial<ChannelDetailsDto>) =>
     Object.fromEntries(
@@ -209,11 +208,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         ...(operator && {
           primitive_version: !values.primitive_version
             ? 'Campo obbligatorio'
-            : /* : validatePrimitiveVersion(values.primitive_version)
-            ? t('addEditStationPage.validation.overVersion') */
-              undefined,
+            : validatePrimitiveVersion(values.primitive_version)
+            ? t('addEditStationPage.validation.overVersion')
+            : undefined,
           password: !values.password ? 'Campo obbligatorio' : undefined,
-          new_password: !values.new_password ? 'Campo obbligatorio' : undefined,
           protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
           ip: !values.ip ? 'Campo obbligatorio' : undefined,
           port: !values.port
@@ -261,60 +259,53 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     }
   };
 
-  const redirect = (chCode: string) => {
+  const redirect = () => {
     if (operator) {
-      history.push(ROUTES.CHANNEL_DETAIL, { channelId: chCode });
+      history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code }));
     } else {
-      history.push(ROUTES.CHANNELS, {
-        alertSuccessMessage: t('addEditChannelPage.addForm.successMessage'),
-      });
+      history.push(ROUTES.CHANNELS);
     }
   };
 
-  const submit = async (values: ChannelOnCreation) => {
+  const submit = async (values: ChannelDetailsDto) => {
     setShowConfirmModal(false);
     setLoading(true);
-    const channelCode = channelDetail?.channel_code ? channelDetail.channel_code : '';
-    const channelCode4Redirect = formAction === FormAction.Create ? channelCode : channelId;
 
     try {
+      const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
+        channelId: formik.values.channel_code,
+      })}`;
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
-          channelId: formik.values.channel_code,
-        })}`;
         await createWrapperChannelDetails(values, validationUrl);
-        redirect(channelCode4Redirect);
+        redirect();
       }
 
       if (formAction === FormAction.Edit) {
-        switch (channelDetail?.status) {
-          case StatusEnum.TO_CHECK:
+        // eslint-disable-next-line no-debugger
+        debugger;
+        switch (channelDetail?.wrapperStatus) {
+          case WrapperStatusEnum.TO_CHECK:
             if (operator) {
               await createChannel(values);
-              redirect(channelCode4Redirect);
             } else {
-              await updateWrapperChannelDetailsToCheck(values);
-              redirect(channelCode4Redirect);
+              await updateWrapperChannelDetailsToCheck(values, validationUrl);
             }
             break;
-          case StatusEnum.APPROVED:
-          case StatusEnum.TO_CHECK_UPDATE:
+          case WrapperStatusEnum.APPROVED:
+          case WrapperStatusEnum.TO_CHECK_UPDATE:
             if (operator) {
               await updateChannel(channelCode, values);
-              redirect(channelCode4Redirect);
             } else {
-              await updateWrapperChannelDetailsToCheckUpdate(values);
-              redirect(channelCode4Redirect);
+              await updateWrapperChannelDetailsToCheckUpdate(values, validationUrl);
             }
             break;
-          case StatusEnum.TO_FIX:
-            await updateWrapperChannelDetailsToCheck(values);
-            redirect(channelCode4Redirect);
+          case WrapperStatusEnum.TO_FIX:
+            await updateWrapperChannelDetailsToCheck(values, validationUrl);
             break;
           default:
-            redirect(channelCode4Redirect);
             break;
         }
+        redirect();
       }
     } catch (reason) {
       addError({
@@ -359,7 +350,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       getWfespPlugins()
         .then((result) => {
           if (result) {
-            setWfespPlugin(result);
+            console.log('result', result);
+            if (typeof result.wfesp_plugin_confs !== 'undefined') {
+              setWfespPlugin([...result.wfesp_plugin_confs]);
+            }
           }
         })
         .catch((reason) => {

@@ -1,12 +1,12 @@
 /* eslint-disable complexity */
-import { ArrowBack, ManageAccounts } from '@mui/icons-material';
-import { Grid, Stack, Breadcrumbs, Typography, Alert, Paper, Chip, Divider } from '@mui/material';
+import { ManageAccounts } from '@mui/icons-material';
+import { Grid, Typography, Alert, Paper, Chip, Divider } from '@mui/material';
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BASE_ROUTE } from '../../../../routes';
+import ROUTES from '../../../../routes';
 import { isOperator } from '../../../stations/components/commonFunctions';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
@@ -37,24 +37,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
-        <Stack direction="row">
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px' }}
-            weight="default"
-          >
-            {t('general.exit')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography>{t('general.Channels')}</Typography>
-            <Typography color={'#A2ADB8'}>
-              {t('channelDetailPage.detail')} {channelId}
-            </Typography>
-          </Breadcrumbs>
-        </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
@@ -91,28 +73,29 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
               <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              {/* TODO: manage channel state chip */}
               <Chip
                 size="medium"
+                sx={{
+                  backgroundColor:
+                    channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
+                      ? 'primary.main'
+                      : channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                        channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
+                      ? '#EEEEEE'
+                      : 'warning.light',
+                  color:
+                    channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
+                      ? 'background.paper'
+                      : 'text.primary',
+                }}
                 label={
-                  channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
+                  channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
                     ? t('channelDetailPage.status.active')
-                    : channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK
+                    : channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                      channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
                     ? t('channelDetailPage.status.revision')
                     : t('channelDetailPage.status.needCorrection')
                 }
-                sx={{
-                  color:
-                    channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'primary.main'
-                      : '',
-                  backgroundColor:
-                    channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? '#FFFFFF'
-                      : channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK
-                      ? '#EEEEEE'
-                      : '#FFD25E',
-                }}
               />
             </Grid>
           </Grid>
@@ -237,7 +220,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 >
                   <ButtonNaked
                     component={Link}
-                    to={generatePath(`${BASE_ROUTE}/channels/${channelId}/psp-list`)}
+                    to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
                     disabled={!(channelDetail.wrapperStatus === WrapperStatusEnum.APPROVED)}
                     color="primary"
                     endIcon={<ManageAccounts />}
@@ -421,7 +404,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.proxy_enabled
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -436,7 +421,11 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {channelDetail?.payment_model ?? '-'}
+                    {channelDetail?.payment_model
+                      ? t(
+                          `addEditChannelPage.addForm.validationForm.paymentModel.${channelDetail?.payment_model}`
+                        )
+                      : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -446,7 +435,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {'-'}
+                    {channelDetail?.serv_plugin ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -496,7 +485,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.flag_io
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -506,7 +497,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.rt_push
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -514,7 +507,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.on_us
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -524,7 +519,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.card_chart
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -534,7 +531,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.recovery
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -542,7 +541,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {t('channelDetailValidationPage.disabled')}
+                    {channelDetail?.digital_stamp_brand
+                      ? t('channelDetailValidationPage.enabled')
+                      : t('channelDetailValidationPage.disabled')}
                   </Typography>
                 </Grid>
               </Grid>

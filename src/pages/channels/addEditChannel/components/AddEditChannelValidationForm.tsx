@@ -18,22 +18,27 @@ import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
-import { ProtocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
+import {
+  ChannelDetailsDto,
+  ProtocolEnum,
+} from '../../../../api/generated/portal/ChannelDetailsDto';
 import { WfespPluginConf } from '../../../../api/generated/portal/WfespPluginConf';
+import { Payment_modelEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 
 type Props = {
-  formik: FormikProps<ChannelOnCreation>;
+  formik: FormikProps<ChannelDetailsDto>;
   handleChangeNumberOnly: (
     e: React.ChangeEvent<any>,
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
-  wfespPlugin: WfespPluginConf;
+  wfespPlugin: Array<WfespPluginConf>;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
-  handleChangeNumberOnly /* wfespPlugin */,
+  handleChangeNumberOnly,
+  wfespPlugin,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
@@ -45,10 +50,10 @@ Props) => {
     mb: 3,
   };
   const paymentMethod = [
-    t('addEditChannelPage.addForm.validationForm.paymentModel.activatedAtPsp'),
-    t('addEditChannelPage.addForm.validationForm.paymentModel.multi'),
-    t('addEditChannelPage.addForm.validationForm.paymentModel.immediate'),
-    t('addEditChannelPage.addForm.validationForm.paymentModel.different'),
+    Payment_modelEnum.ACTIVATED_AT_PSP,
+    Payment_modelEnum.DEFERRED,
+    Payment_modelEnum.IMMEDIATE,
+    Payment_modelEnum.IMMEDIATE_MULTIBENEFICIARY,
   ];
   const protocol = ['HTTP', 'HTTPS'];
 
@@ -87,11 +92,11 @@ Props) => {
                 name="primitiveVersion"
                 label={t('addEditChannelPage.addForm.validationForm.fields.primitiveVersion')}
                 size="small"
-                InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
-                value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
-                onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
-                error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
-                helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
+                InputLabelProps={{ shrink: formik.values.primitive_version ? true : false }}
+                value={formik.values.primitive_version === 0 ? '' : formik.values.primitive_version}
+                onChange={(e) => handleChangeNumberOnly(e, 'primitive_version', formik)}
+                error={formik.touched.primitive_version && Boolean(formik.errors.primitive_version)}
+                helperText={formik.touched.primitive_version && formik.errors.primitive_version}
                 inputProps={{
                   step: 1,
                   min: 0,
@@ -154,9 +159,11 @@ Props) => {
                   size="small"
                   defaultValue=""
                   value={
-                    formik.values.protocol === 'HTTPS'
-                      ? ProtocolEnum.HTTPS
-                      : ProtocolEnum.HTTP || ''
+                    formik.values.protocol === undefined
+                      ? ''
+                      : formik.values.protocol === ProtocolEnum.HTTPS
+                      ? 'HTTPS'
+                      : 'HTTP'
                   }
                   onChange={formik.handleChange}
                   error={formik.touched.protocol && Boolean(formik.errors.protocol)}
@@ -311,27 +318,39 @@ Props) => {
                 >
                   {paymentMethod.map((e, i) => (
                     <MenuItem key={i} value={e}>
-                      {e}
+                      {t(`addEditChannelPage.addForm.validationForm.paymentModel.${e}`)}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="serv_plugin"
-                name="serv_plugin"
-                label={t('addEditChannelPage.addForm.validationForm.fields.plugin')}
-                size="small"
-                value={formik.values.serv_plugin}
-                onChange={formik.handleChange}
-                error={formik.touched.serv_plugin && Boolean(formik.errors.serv_plugin)}
-                helperText={formik.touched.serv_plugin && formik.errors.serv_plugin}
-                inputProps={{
-                  'data-testid': 'serv-plugin-test',
-                }}
-              />
+              <FormControl fullWidth>
+                <InputLabel size="small">
+                  {t('addEditChannelPage.addForm.validationForm.fields.plugin')}
+                </InputLabel>
+                <Select
+                  fullWidth
+                  id="serv_plugin"
+                  name="serv_plugin"
+                  label={t('addEditChannelPage.addForm.validationForm.fields.plugin')}
+                  placeholder={t('addEditChannelPage.addForm.validationForm.fields.plugin')}
+                  size="small"
+                  defaultValue=""
+                  value={formik.values.serv_plugin || ''}
+                  onChange={formik.handleChange}
+                  error={formik.touched.serv_plugin && Boolean(formik.errors.serv_plugin)}
+                  inputProps={{
+                    'data-testid': 'serv-plugin-test',
+                  }}
+                >
+                  {wfespPlugin.map((a, b) => (
+                    <MenuItem key={b} value={a.id_serv_plugin}>
+                      {`${a.id_serv_plugin}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid container item xs={6}>
               <TextField
@@ -412,9 +431,9 @@ Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    id="psp_notify_payment"
-                    name="psp_notify_payment"
-                    checked={formik.values.psp_notify_payment}
+                    id="flag_io"
+                    name="flag_io"
+                    checked={formik.values.flag_io}
                     onChange={formik.handleChange}
                   />
                 }
@@ -438,9 +457,9 @@ Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    id="rpt_carousel"
-                    name="rpt_carousel"
-                    checked={formik.values.rpt_carousel}
+                    id="card_chart"
+                    name="card_chart"
+                    checked={formik.values.card_chart}
                     onChange={formik.handleChange}
                   />
                 }

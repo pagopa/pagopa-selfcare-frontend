@@ -12,8 +12,7 @@ import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannel
 import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { PortalApi } from '../api/PortalApiClient';
 import { PSP } from '../model/PSP';
-
-import { WfespPluginConf } from '../api/generated/portal/WfespPluginConf';
+import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -30,6 +29,7 @@ import {
   getWrapperChannel,
   createWrapperChannel,
   updateWrapperChannel,
+  getWfespPlugins as mockedGetWfespPlugins,
 } from './__mocks__/channelService';
 
 export const getChannels = (page: number): Promise<ChannelsResource> => {
@@ -58,15 +58,6 @@ export const getChannelsMerged = (
   }
 };
 
-export const getChannelDetails = (channelcode: string): Promise<ChannelDetailsResource> => {
-  /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getChannelDetailMocked(channelcode);
-  } else {
-    return PortalApi.getChannelDetails(channelcode).then((resources) => resources);
-  }
-};
-
 export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
@@ -85,9 +76,9 @@ export const getPSPChannels = (pspCode: string): Promise<PspChannelsResource> =>
   }
 };
 
-export const getWfespPlugins = (): Promise<WfespPluginConf> => {
+export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getPaymentTypesMocked();
+    return mockedGetWfespPlugins();
   } else {
     return PortalApi.getWfespPlugins().then((resources) => resources);
   }
@@ -199,33 +190,40 @@ export const createWrapperChannelDetails = (
 };
 
 export const updateWrapperChannelDetailsToCheck = (
-  channel: ChannelDetailsDto
+  channel: ChannelDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateWrapperChannel(channel);
+    return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsToCheck(channel).then((resources) => resources);
+    return PortalApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
+      (resources) => resources
+    );
   }
 };
 
 export const updateWrapperChannelDetailsToCheckUpdate = (
-  channel: ChannelDetailsDto
+  channel: ChannelDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateWrapperChannel(channel);
+    return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsToCheckUpdate(channel).then(
+    return PortalApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
       (resources) => resources
     );
   }
 };
 
 export const updateWrapperChannelDetailsByOpt = (
-  channel: ChannelDetailsDto
+  channel: ChannelDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateWrapperChannel(channel);
+    return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsByOpt(channel).then((resources) => resources);
+    return PortalApi.updateWrapperChannelDetailsByOpt(channel, validationUrl).then(
+      (resources) => resources
+    );
   }
 };

@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.150"
+    "version": "0.0.155"
   },
   "servers": [
     {
@@ -4685,6 +4685,11 @@
           },
           "enabled": {
             "type": "boolean"
+          },
+          "flagPspCp": {
+            "type": "boolean",
+            "description": "Represents the authorization to carry out the transfer of the information present in additional payment information in the tags relating to payment by card for the PA in V1",
+            "example": false
           },
           "flag_io": {
             "type": "boolean",

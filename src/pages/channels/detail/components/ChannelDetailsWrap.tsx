@@ -5,16 +5,13 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  StatusEnum,
-  // WrapperChannelDetailsDto,
-} from '../../../../api/generated/portal/WrapperChannelDetailsDto';
-import { BASE_ROUTE } from '../../../../routes';
-import { ChannelDetailsDto } from '../../../../api/generated/portal/ChannelDetailsDto';
+import ROUTES from '../../../../routes';
+import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
+import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import DetailButtons from './DetailButtons';
 
 type Props = {
-  channelDetWrap?: ChannelDetailsDto;
+  channelDetWrap?: ChannelDetailsResource;
   channelId: string;
   goBack: () => void;
 };
@@ -22,6 +19,17 @@ type Props = {
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
   const { t } = useTranslation();
+
+  const formatedDate = (date: Date | undefined) => {
+    if (date) {
+      return date.toLocaleString('it-IT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+    }
+    return null;
+  };
 
   return channelDetWrap ? (
     <Grid container justifyContent={'center'}>
@@ -50,7 +58,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
             <Typography mb={5}>
               {t('channelDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={600}>
-                {/* channelDetWrap.createdAt */ '-'}
+                {formatedDate(channelDetWrap.createdAt) ?? '-'}
               </Typography>
             </Typography>
           </Grid>
@@ -73,24 +81,27 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
             <Grid item xs={9} textAlign="right">
               <Chip
                 size="medium"
+                sx={{
+                  backgroundColor:
+                    channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
+                      ? 'primary.main'
+                      : channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                        channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
+                      ? '#EEEEEE'
+                      : 'warning.light',
+                  color:
+                    channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
+                      ? 'background.paper'
+                      : 'text.primary',
+                }}
                 label={
-                  channelDetWrap.status === StatusEnum.APPROVED
+                  channelDetWrap?.wrapperStatus === WrapperStatusEnum.APPROVED
                     ? t('channelDetailPage.status.active')
-                    : channelDetWrap.status === StatusEnum.TO_CHECK ||
-                      channelDetWrap.status === StatusEnum.TO_CHECK_UPDATE
+                    : channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                      channelDetWrap?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
                     ? t('channelDetailPage.status.revision')
                     : t('channelDetailPage.status.needCorrection')
                 }
-                sx={{
-                  color: channelDetWrap.status === StatusEnum.APPROVED ? 'primary.main' : '',
-                  backgroundColor:
-                    channelDetWrap.status === StatusEnum.APPROVED
-                      ? '#FFFFFF'
-                      : channelDetWrap.status === StatusEnum.TO_CHECK ||
-                        channelDetWrap.status === StatusEnum.TO_CHECK_UPDATE
-                      ? '#EEEEEE'
-                      : '#FFD25E',
-                }}
               />
             </Grid>
           </Grid>
@@ -210,7 +221,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 >
                   <ButtonNaked
                     component={Link}
-                    to={generatePath(`${BASE_ROUTE}/channels/${channelId}/psp-list`)}
+                    to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
                     disabled={true}
                     color="primary"
                     endIcon={<ManageAccounts />}
@@ -224,7 +235,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* channelDetWrap.associatedPsp */ '-'}
+                    {0}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -235,7 +246,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* channelDetWrap.modifiedAt */ '-'}
+                    {formatedDate(channelDetWrap.modifiedAt) ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -243,7 +254,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={600}>
-                    {/* channelDetWrap.modifiedBy */ '-'}
+                    {channelDetWrap.modifiedBy ?? '-'}
                   </Typography>
                 </Grid>
               </Grid>

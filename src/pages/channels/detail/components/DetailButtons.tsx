@@ -3,9 +3,11 @@ import { Link, generatePath, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FormAction } from '../../../../model/Channel';
 import ROUTES from '../../../../routes';
-import { useAppSelector } from '../../../../redux/hooks';
-import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
+import {
+  ChannelDetailsResource,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/ChannelDetailsResource';
+import { isOperator } from '../../../stations/components/commonFunctions';
 
 type Props = {
   channelDetails?: ChannelDetailsResource;
@@ -14,8 +16,7 @@ type Props = {
 
 const DetailButtons = ({ channelDetails, goBack }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const isOperator = selectedParty?.roles[0].roleKey === 'operator';
+  const operator = isOperator();
   const { t } = useTranslation();
 
   return (
@@ -31,11 +32,11 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
               </Button>
               */}
 
-      {isOperator && channelDetails?.enabled ? (
+      {operator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+            to={generatePath(ROUTES.CHANNEL_EDIT, {
               channelId,
               actionId: FormAction.Edit,
             })}
@@ -44,14 +45,21 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
             {t('channelDetailPage.edit')}
           </Button>
         </>
-      ) : isOperator && !channelDetails?.enabled ? (
+      ) : operator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
         <>
-          <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
+          <Button
+            component={Link}
+            to={''}
+            color="error"
+            variant="outlined"
+            disabled={true}
+            onClick={() => ''}
+          >
             {t('channelDetailPage.correctionRequired')}
           </Button>
           <Button
             component={Link}
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+            to={generatePath(ROUTES.CHANNEL_EDIT, {
               channelId,
               actionId: FormAction.Edit,
             })}
@@ -60,14 +68,21 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
             {t('channelDetailPage.configure')}
           </Button>
         </>
-      ) : channelDetails?.enabled ? (
+      ) : channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
-          <Button component={Link} to={''} color="error" variant="outlined" onClick={() => ''}>
+          <Button
+            component={Link}
+            to={''}
+            color="error"
+            variant="outlined"
+            disabled={true}
+            onClick={() => ''}
+          >
             {t('channelDetailPage.deleteRequired')}
           </Button>
           <Button
             component={Link}
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+            to={generatePath(ROUTES.CHANNEL_EDIT, {
               channelId,
               actionId: FormAction.Duplicate,
             })}
@@ -79,7 +94,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
           </Button>
           <Button
             component={Link}
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+            to={generatePath(ROUTES.CHANNEL_EDIT, {
               channelId,
               actionId: FormAction.Edit,
             })}
@@ -92,7 +107,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
         <>
           <Button
             component={Link}
-            to={generatePath(`${ROUTES.CHANNEL_EDIT}`, {
+            to={generatePath(ROUTES.CHANNEL_EDIT, {
               channelId,
               actionId: FormAction.Edit,
             })}

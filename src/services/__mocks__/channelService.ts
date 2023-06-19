@@ -23,6 +23,7 @@ import {
 } from '../../api/generated/portal/WrapperEntitiesOperations';
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
+import { WfespPluginConfs } from '../../api/generated/portal/WfespPluginConfs';
 
 export const mockedChannels: ChannelsResource = {
   channels: [
@@ -100,6 +101,68 @@ export const mockedPaymentTypes: PaymentTypesResource = {
   ],
 };
 
+export const mockedWfespPlugIn: WfespPluginConfs = {
+  wfesp_plugin_confs: [
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'test2',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'wpl02',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile:
+        'profilo=$identificativoIntermediarioPA$~$identificativoStazioneIntermediarioPA$',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'idPsp1',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'myBankForwardProcessor',
+      id_serv_plugin: 'wpl04',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'wpl06',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'wpl05',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: '',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'wpl03',
+    },
+    {
+      pag_const_string_profile: '',
+      pag_soap_rule_profile: 'IDVS=$buyerBank$',
+      pag_rpt_xpath_profile: '',
+      id_bean: 'defaultForwardProcessor',
+      id_serv_plugin: 'wpl07',
+    },
+  ],
+};
+
 export const mockedChannel: ChannelDetailsDto = {
   agid: false,
   broker_description: 'string',
@@ -119,7 +182,7 @@ export const mockedChannel: ChannelDetailsDto = {
   payment_model: undefined,
   payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
   port: 0,
-  primitive_version: 'string',
+  primitive_version: 1,
   protocol: ProtocolEnum.HTTPS,
   proxy_enabled: false,
   proxy_host: 'string',
@@ -221,7 +284,7 @@ export const mockedChannelDetail = (channelId: string): ChannelDetailsResource =
   payment_model: undefined,
   payment_types: mockedPaymentTypes.payment_types.map((e, _i) => e.payment_type),
   port: 8080,
-  primitive_version: 'primitive_version',
+  primitive_version: 1,
   protocol: undefined,
   proxy_enabled: true,
   proxy_host: 'proxy_host',
@@ -451,8 +514,12 @@ export const createWrapperChannel = (
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
 export const updateWrapperChannel = (
-  _channel: WrapperChannelDetailsDto
+  _channel: WrapperChannelDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
 export const getWrapperChannel = (pspCode: string): Promise<WrapperEntitiesOperations> =>
   new Promise((resolve) => resolve(channelWrapperMockedGet(pspCode)));
+
+export const getWfespPlugins = (): Promise<WfespPluginConfs> =>
+  new Promise((resolve) => resolve(mockedWfespPlugIn));

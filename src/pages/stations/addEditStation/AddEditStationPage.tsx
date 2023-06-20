@@ -30,7 +30,6 @@ const AddEditStationPage = () => {
       setLoading(true);
       getStationDetail(stationId)
         .then((response) => {
-          console.log('Response full detail', response);
           setStationDetail(response);
         })
         .catch((reason) => {

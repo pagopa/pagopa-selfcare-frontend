@@ -415,6 +415,12 @@ export const mockedChannelAvailablePSP: Array<PSP> = [
     enabled: true,
     extended_fault_bean: true,
   },
+  {
+    broker_psp_code: '14847241008',
+    description: 'ICONTO S.R.L.',
+    enabled: true,
+    extended_fault_bean: true,
+  },
 ];
 
 export const channelCode: ChannelCodeResource = {

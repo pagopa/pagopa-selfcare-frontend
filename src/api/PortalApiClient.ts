@@ -483,10 +483,11 @@ export const PortalApi = {
     pspcode: string,
     payment_types: PspChannelPaymentTypes
   ): Promise<PspChannelPaymentTypesResource> => {
+    const payment_types_array = payment_types as ReadonlyArray<string>;
     const result = await apiConfigClient.updatePaymentServiceProvidersChannelsUsingPUT({
       channelcode,
       pspcode,
-      body: payment_types,
+      body: { payment_types: payment_types_array },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -580,7 +581,11 @@ export const PortalApi = {
   ): Promise<CreditorInstitutionStationEditResource> => {
     const result = await apiConfigClient.associateStationToCreditorInstitutionUsingPOST({
       ecCode,
-      body: { auxDigit: 0, segregationCode: 0, stationCode: station.stationCode },
+      body: {
+        auxDigit: station.auxDigit,
+        segregationCode: station.segregationCode,
+        stationCode: station.stationCode,
+      },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },

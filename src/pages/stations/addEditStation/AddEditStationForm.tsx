@@ -648,6 +648,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetHostPof"
                   name="targetHostPof"
+                  InputLabelProps={{ shrink: formik.values.targetHostPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetHostPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
                   size="small"
@@ -665,6 +666,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetPathPof"
                   name="targetPathPof"
+                  InputLabelProps={{ shrink: formik.values.targetPathPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetPathPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
                   size="small"

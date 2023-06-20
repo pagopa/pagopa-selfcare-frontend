@@ -237,7 +237,7 @@ Props) => {
                 fullWidth
                 id="nmp_service"
                 name="nmp_service"
-                label={t('addEditChannelPage.addForm.validationForm.fields.npmService')}
+                label={t('addEditChannelPage.addForm.validationForm.fields.nmpService')}
                 size="small"
                 value={formik.values.nmp_service}
                 onChange={formik.handleChange}

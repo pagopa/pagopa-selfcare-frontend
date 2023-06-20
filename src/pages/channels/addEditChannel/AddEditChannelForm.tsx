@@ -159,13 +159,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           timeout_c: 0,
         };
 
-  const validatePortRange = (port: number | undefined) => {
-    if (port) {
-      return port > 0 && port < 65556 ? false : true;
-    }
-    return false;
-  };
-
   const inputGroupStyle = {
     borderRadius: 1,
     border: 1,
@@ -190,8 +183,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           channel_code: !values.channel_code ? 'Campo obbligatorio' : undefined,
           redirect_port: !values.redirect_port
             ? 'Campo obbligatorio'
-            : validatePortRange(values.redirect_port)
-            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : isNaN(values.redirect_port)
+            ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
           redirect_ip: !values.redirect_ip ? 'Campo obbligatorio' : undefined,
           redirect_path: !values.redirect_path ? 'Campo obbligatorio' : undefined,
@@ -200,8 +193,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           target_path: !values.target_path ? 'Campo obbligatorio' : undefined,
           target_port: !values.target_port
             ? 'Campo obbligatorio'
-            : validatePortRange(values.target_port)
-            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : isNaN(values.target_port)
+            ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
           payment_types: values.payment_types?.includes('') ? 'Campo obbligatorio' : undefined,
         },
@@ -216,16 +209,16 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           ip: !values.ip ? 'Campo obbligatorio' : undefined,
           port: !values.port
             ? 'Campo obbligatorio'
-            : validatePortRange(values.port)
-            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : isNaN(values.port)
+            ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
           service: !values.service ? 'Campo obbligatirio' : undefined,
           nmp_service: !values.nmp_service ? 'Campo obbligatirio' : undefined,
           proxy_host: !values.proxy_host ? 'Campo obbligatorio' : undefined,
           proxy_port: !values.proxy_port
             ? 'Campo obbligatorio'
-            : validatePortRange(values.proxy_port)
-            ? 'Non Valido, il numero della porta dev’essere compreso tra 1 e 65555'
+            : isNaN(values.proxy_port)
+            ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
         }),
       }).filter(([_key, value]) => value)

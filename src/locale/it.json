@@ -250,7 +250,7 @@
           "ip": "IP",
           "port": "Porta",
           "service": "Servizio",
-          "npmService": "Servizio NPM",
+          "nmpService": "Servizio NMP",
           "proxyPort": "Porta proxy",
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",

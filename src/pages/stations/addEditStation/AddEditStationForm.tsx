@@ -259,7 +259,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   const redirect = (stCode: string) => {
     if (operator) {
-      history.push(ROUTES.STATION_DETAIL, { stationId: stCode });
+      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
     } else {
       history.push(ROUTES.STATIONS);
     }

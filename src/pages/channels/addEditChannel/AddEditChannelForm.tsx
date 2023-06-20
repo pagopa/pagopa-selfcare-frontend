@@ -749,7 +749,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             variant="outlined"
             onClick={() =>
               operator
-                ? history.push(ROUTES.CHANNEL_DETAIL, { channelId })
+                ? history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId }))
                 : history.push(ROUTES.CHANNELS)
             }
             data-testid="back-btn-test"

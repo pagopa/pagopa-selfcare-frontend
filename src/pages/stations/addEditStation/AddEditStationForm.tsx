@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { useHistory } from 'react-router-dom';
+import { generatePath, useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
@@ -156,13 +156,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     mb: 3,
   };
 
-  const validatePortRange = (redirectPort: number | undefined) => {
-    if (redirectPort) {
-      return redirectPort > 0 && redirectPort < 65556 ? false : true;
-    }
-    return false;
-  };
-
   const validatePrimitiveVersion = (primitiveVersion: number) => {
     if (primitiveVersion) {
       return primitiveVersion > 0 && primitiveVersion <= 2 ? false : true;
@@ -189,8 +182,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
           redirectPort: !values.redirectPort
             ? 'Campo obbligatorio'
-            : validatePortRange(values.redirectPort)
-            ? t('addEditStationPage.validation.overPort')
+            : isNaN(values.redirectPort)
+            ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
           redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
           redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
@@ -215,8 +208,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             !values.targetPathPof &&
             !values.targetPortPof
               ? 'Campo obbligatorio'
-              : validatePortRange(values.targetPort)
-              ? t('addEditStationPage.validation.overPort')
+              : isNaN(values.targetPort)
+              ? 'Non Valido, l’input dev’essere un numero'
               : undefined,
           targetHostPof:
             !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
@@ -229,8 +222,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           targetPortPof:
             !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
               ? 'Campo obbligatorio'
-              : validatePortRange(values.targetPortPof)
-              ? t('addEditStationPage.validation.overPort')
+              : typeof values.targetPortPof !== 'undefined' && isNaN(values.targetPortPof)
+              ? 'Non Valido, l’input dev’essere un numero'
               : undefined,
         },
         ...(operator && formAction !== StationFormAction.Create
@@ -246,8 +239,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               ip: !values.ip ? 'Campo obbligatorio' : undefined,
               port: !values.port
                 ? 'Campo obbligatorio'
-                : validatePortRange(values.targetPort)
-                ? t('addEditStationPage.validation.overPort')
+                : typeof values.port !== 'undefined' && isNaN(values.port)
+                ? 'Non Valido, l’input dev’essere un numero'
                 : undefined,
 
               service: !values.service ? 'Campo obbligatorio' : undefined,
@@ -259,7 +252,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   const redirect = (stCode: string) => {
     if (operator) {
-      history.push(ROUTES.STATION_DETAIL, { stationId: stCode });
+      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
     } else {
       history.push(ROUTES.STATIONS);
     }
@@ -273,7 +266,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
     try {
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values);
+        const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
+          stationId: formik.values.stationCode,
+        })}`;
+        await createWrapperStation(values, validationUrl);
         redirect(stationCode4Redirect);
       }
 
@@ -645,6 +641,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetHostPof"
                   name="targetHostPof"
+                  InputLabelProps={{ shrink: formik.values.targetHostPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetHostPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
                   size="small"
@@ -662,6 +659,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetPathPof"
                   name="targetPathPof"
+                  InputLabelProps={{ shrink: formik.values.targetPathPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetPathPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
                   size="small"
@@ -766,6 +764,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           await submit(formik.values);
           setShowConfirmModal(false);
         }}
+        isOperator={undefined}
       />
     </>
   );

@@ -12,6 +12,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { getChannelCode, getChannelDetail } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
+import { isOperator } from '../../stations/components/commonFunctions';
 import AddEditChannelForm from './AddEditChannelForm';
 
 const AddEditChannelPage = () => {
@@ -21,14 +22,15 @@ const AddEditChannelPage = () => {
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const { channelId, actionId } = useParams<{ channelId: string; actionId: string }>();
   const formAction = actionId ?? FormAction.Create;
-
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-
+  const operator = isOperator();
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
   const [channelCode, setChannelCode] = useState<string>('');
+  const pspCode = selectedParty?.fiscalCode ? selectedParty.fiscalCode : '';
 
   const goBack = () => history.push(ROUTES.CHANNELS);
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     if (formAction !== FormAction.Create) {
       setLoading(true);
@@ -52,13 +54,9 @@ const AddEditChannelPage = () => {
         .finally(() => {
           setLoading(false);
         });
-    }
-    if (
-      (formAction === FormAction.Create || formAction === FormAction.Duplicate) &&
-      selectedParty
-    ) {
+    } else {
       setLoading(true);
-      getChannelCode(selectedParty.fiscalCode)
+      getChannelCode(pspCode)
         .then((result) => {
           setChannelCode(result.channel_code ?? '');
         })
@@ -97,18 +95,26 @@ const AddEditChannelPage = () => {
           <Breadcrumbs>
             <Typography>{t('general.Channels')}</Typography>
             {formAction === FormAction.Edit && (
-              <>
-                <Typography color={'#A2ADB8'}>{channelId}</Typography>
-              </>
+              <Typography color={'text.disaled'}>{channelId}</Typography>
             )}
-            <Typography color={'#A2ADB8'}>
-              {t(`addEditChannelPage.${formAction}.breadcrumb`)}
+            <Typography color={'text.disaled'}>
+              {operator
+                ? t(`addEditChannelPage.config.titleConfiguration`)
+                : t(`addEditChannelPage.${formAction}.breadcrumb`)}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t(`addEditChannelPage.${formAction}.title`)}
-          subTitle={t(`addEditChannelPage.${formAction}.subtitle`)}
+          title={
+            operator
+              ? t(`addEditChannelPage.config.titleConfiguration`)
+              : t(`addEditChannelPage.${formAction}.title`)
+          }
+          subTitle={
+            operator
+              ? t(`addEditChannelPage.config.subtitleConfiguration`)
+              : t(`addEditChannelPage.${formAction}.subtitle`)
+          }
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
@@ -117,7 +123,6 @@ const AddEditChannelPage = () => {
         />
         {selectedParty && (
           <AddEditChannelForm
-            goBack={goBack}
             selectedParty={selectedParty}
             channelCode={channelCode}
             channelDetail={channelDetail}

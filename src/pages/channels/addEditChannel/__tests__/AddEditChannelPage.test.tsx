@@ -8,15 +8,11 @@ import AddEditChannelPage from '../AddEditChannelPage';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import ROUTES from '../../../../routes';
-import { PortalApi } from '../../../../api/PortalApiClient';
 import { FormAction } from '../../../../model/Channel';
-
-// let portalApiGetChannelDetail;
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  // portalApiGetChannelDetail = jest.spyOn(PortalApi, 'getChannelDetail');
 });
 
 afterEach(cleanup);
@@ -35,6 +31,5 @@ describe('<AddEditChannelPage />', () => {
         </ThemeProvider>
       </Provider>
     );
-    // expect(portalApiGetChannelDetail).toHaveBeenCalled();
   });
 });

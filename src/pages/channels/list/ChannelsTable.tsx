@@ -1,7 +1,7 @@
 import { theme } from '@pagopa/mui-italia';
-import { Box, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useState } from 'react';
+import { Box, Pagination, styled, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory } from 'react-router';
@@ -9,19 +9,19 @@ import { generatePath } from 'react-router-dom';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { LOADING_TASK_CHANNELS_LIST } from '../../../utils/constants';
 import ROUTES from '../../../routes';
-import { PspChannelsResource } from '../../../api/generated/portal/PspChannelsResource';
-import { getPSPChannels } from '../../../services/channelService';
+import { getChannelsMerged } from '../../../services/channelService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { WrapperChannelsResource } from '../../../api/generated/portal/WrapperChannelsResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { buildColumnDefs } from './ChannelsTableColumns';
-import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import ChannelTableEmpty from './ChannelTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyChannelsResource: PspChannelsResource = {
+const emptyChannelsResource: WrapperChannelsResource = {
   channels: [],
+  page_info: {},
 };
 
 const CustomDataGrid = styled(DataGrid)({
@@ -80,7 +80,7 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-export default function ChannelsTable() {
+export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter: string }) {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -100,35 +100,42 @@ export default function ChannelsTable() {
     setLoadingOverlay(status);
   };
 
-  const [channels, setChannels] = useState<PspChannelsResource>(emptyChannelsResource);
+  const [channels, setChannels] = useState<WrapperChannelsResource>(emptyChannelsResource);
+  const [page, setPage] = useState(0);
+  const [channelCodeSort, setChannelCodeSort] = useState<string | undefined>(undefined);
 
-  const fetchChannels = (pspcode: string) => {
-    setLoadingStatus(true);
-    getPSPChannels(pspcode)
-      .then((r) => {
-        setChannels(r);
-        setError(false);
-      })
-      .catch((reason) => {
-        handleErrors([
-          {
-            id: `FETCH_CHANNELS_ERROR`,
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while fetching channels`,
-            toNotify: true,
-          },
-        ]);
-        setError(true);
-        setChannels(emptyChannelsResource);
-      })
-      .finally(() => setLoadingStatus(false));
-  };
+  const brokerCode = typeof partySelected !== 'undefined' ? partySelected.fiscalCode : '';
+
   useEffect(() => {
-    if (partySelected) {
-      fetchChannels(partySelected.fiscalCode);
+    if (brokerCode) {
+      setLoadingStatus(true);
+      getChannelsMerged(page, brokerCode, brokerCode, 10, channelCodeSort ?? channelCodeSort)
+        .then((r) => {
+          setChannels(r);
+          setError(false);
+        })
+        .catch((reason) => {
+          handleErrors([
+            {
+              id: `FETCH_CHANNELS_ERROR`,
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while fetching channels`,
+              toNotify: true,
+            },
+          ]);
+          setError(true);
+          setChannels(emptyChannelsResource);
+        })
+        .finally(() => setLoadingStatus(false));
     }
-  }, [partySelected]);
+  }, [page, channelCodeFilter, brokerCode, channelCodeSort]);
+
+  const handleSortModelChange = (sortModel: GridSortModel) => {
+    setChannelCodeSort(
+      sortModel.find((column) => column.field === 'channel_code')?.sort?.toUpperCase()
+    );
+  };
 
   return (
     <React.Fragment>
@@ -158,12 +165,17 @@ export default function ChannelsTable() {
             columnBuffer={5}
             columns={columns}
             components={{
-              Pagination: () => <></>,
-              Toolbar: () => (
+              Pagination: () => (
                 <>
-                  <GridToolbarQuickFilter></GridToolbarQuickFilter>
+                  <Pagination
+                    color="primary"
+                    count={channels.page_info.total_pages ?? 0}
+                    page={page + 1}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                  />
                 </>
               ),
+              Toolbar: () => <></>,
               NoRowsOverlay: () => (
                 <>
                   <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
@@ -207,6 +219,7 @@ export default function ChannelsTable() {
             rowHeight={rowHeight}
             rows={channels.channels}
             sortingMode="server"
+            onSortModelChange={handleSortModelChange}
           />
         )}
       </Box>

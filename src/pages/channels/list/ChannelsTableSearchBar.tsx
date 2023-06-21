@@ -3,19 +3,19 @@ import { GridSearchIcon } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../stations/components/commonFunctions';
 
 type Props = {
-  stationCodeInput: string;
-  setStationCodeInput: (stationCode: string) => void;
+  channelCodeInput: string;
+  setChannelCodeInput: (stationCode: string) => void;
 };
 
-export default function StationsTableSearchBar({ stationCodeInput, setStationCodeInput }: Props) {
+export default function ChannelsTableSearchBar({ channelCodeInput, setChannelCodeInput }: Props) {
   const { t } = useTranslation();
   const operator = isOperator();
 
   return (
-    <Box width="100%" display="flex" sx={{ mt: 1 }}>
+    <Box width="100%" display="flex">
       <TextField
         key="fixed"
         InputProps={{
@@ -26,19 +26,19 @@ export default function StationsTableSearchBar({ stationCodeInput, setStationCod
           ),
           sx: { height: 48 },
         }}
-        value={stationCodeInput}
-        onChange={(event) => setStationCodeInput(event.target.value)}
+        value={channelCodeInput}
+        onChange={(event) => setChannelCodeInput(event.target.value)}
         fullWidth
-        placeholder={t('stationsPage.searchPlaceholder')}
+        placeholder={t('channelsPage.searchPlaceholder')}
       />
       <Button
         component={Link}
-        to={ROUTES.STATION_ADD}
+        to={ROUTES.CHANNEL_ADD}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
         disabled={operator}
       >
-        {t('stationsPage.createStationButtonLabel')}
+        {t('channelsPage.createChannelButtonLabel')}
       </Button>
     </Box>
   );

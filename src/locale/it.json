@@ -230,6 +230,7 @@
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
+      "errorMessageWfespDesc": "Errore durante la ricezione dei metodi wfesp plugin",
       "errorMessageChannelWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato",
       "errorMessageChannelCodeTypesDesc": "Errore durante la generazione del Codice Canale",
       "validationForm": {
@@ -249,7 +250,7 @@
           "ip": "IP",
           "port": "Porta",
           "service": "Servizio",
-          "npmService": "Servizio NPM",
+          "nmpService": "Servizio NMP",
           "proxyPort": "Porta proxy",
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",
@@ -266,10 +267,10 @@
           "onUs": "On us"
         },
         "paymentModel": {
-          "activatedAtPsp": "Attivato presso PSP",
-          "multi": "Multibeneficiario",
-          "immediate": "Immediato",
-          "different": "Differito"
+          "ACTIVATED_AT_PSP": "Attivato presso PSP",
+          "IMMEDIATE_MULTIBENEFICIARY": "Multibeneficiario",
+          "IMMEDIATE": "Immediato",
+          "DEFERRED": "Differito"
         }
       }
     },
@@ -685,6 +686,13 @@
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
-    "Stations": "Stazioni"
+    "Stations": "Stazioni",
+    "WrapperStatus": {
+      "APPROVED": "Attivo",
+      "TO_FIX": "Da correggere",
+      "TO_FIX_UPDATE": "Da correggere",
+      "TO_CHECK": "In revisione",
+      "TO_CHECK_UPDATE": "In revisione"
+    }
   }
 }

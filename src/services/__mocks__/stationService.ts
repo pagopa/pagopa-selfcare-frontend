@@ -504,11 +504,13 @@ export const getECListByStationCode = (
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
 
 export const updateWrapperStation = (
-  _stations: StationDetailsDto
+  _stations: StationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateWrapperStationByOpt = (
-  _stations: StationDetailsDto
+  _stations: StationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateStation = (

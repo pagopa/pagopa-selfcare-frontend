@@ -136,32 +136,41 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperat
 };
 
 export const updateWrapperStationToCheck = (
-  station: StationDetailsDto
+  station: StationDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrap(station);
+    return updateStationWrap(station, validationUrl);
   } else {
-    return PortalApi.updateWrapperStationToCheck(station).then((resources) => resources);
+    return PortalApi.updateWrapperStationToCheck(station, validationUrl).then(
+      (resources) => resources
+    );
   }
 };
 
 export const updateWrapperStationToCheckUpdate = (
-  station: StationDetailsDto
+  station: StationDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrap(station);
+    return updateStationWrap(station, validationUrl);
   } else {
-    return PortalApi.updateWrapperStationToCheckUpdate(station).then((resources) => resources);
+    return PortalApi.updateWrapperStationToCheckUpdate(station, validationUrl).then(
+      (resources) => resources
+    );
   }
 };
 
 export const updateWrapperStationByOpt = (
-  station: StationDetailsDto
+  station: StationDetailsDto,
+  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrapByOpt(station);
+    return updateStationWrapByOpt(station, validationUrl);
   } else {
-    return PortalApi.updateWrapperStationByOpt(station).then((resources) => resources);
+    return PortalApi.updateWrapperStationByOpt(station, validationUrl).then(
+      (resources) => resources
+    );
   }
 };
 

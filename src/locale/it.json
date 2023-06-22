@@ -645,6 +645,26 @@
       "service": "Servizio"
     }
   },
+  "ibanPage": {
+    "title": "IBAN",
+    "subtitle": "Cerca e gestisci tutti gli IBAN",
+    "addIban": "Aggiungi IBAN",
+    "edit": {
+      "title": "Modifica IBAN",
+      "breadcrumb": "Modifica IBAN",
+      "subtitle": ""
+    },
+    "create": {
+      "title": "Aggiungi IBAN",
+      "breadcrumb": "Aggiungi IBAN"
+    }
+  },
+  "ibanDetailPage": {
+    "breadcrumb": "IBAN",
+    "createdOn": "Creato il",
+    "ibanConfiguration": "Configurazione IBAN",
+    "state": "Stato"
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -657,6 +677,9 @@
     },
     "stations": {
       "title": "Stazioni"
+    },
+    "iban": {
+      "title": "IBAN"
     }
   },
   "header": {
@@ -687,6 +710,7 @@
     "Channels": "Canali",
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
+    "Iban": "IBAN",
     "WrapperStatus": {
       "APPROVED": "Attivo",
       "TO_FIX": "Da correggere",

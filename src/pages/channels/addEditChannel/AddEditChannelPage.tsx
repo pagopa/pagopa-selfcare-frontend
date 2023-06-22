@@ -30,7 +30,6 @@ const AddEditChannelPage = () => {
 
   const goBack = () => history.push(ROUTES.CHANNELS);
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
     if (formAction !== FormAction.Create) {
       setLoading(true);

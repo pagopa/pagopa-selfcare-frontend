@@ -19,7 +19,7 @@ export function buildColumnDefs(
       headerName: t('channelsPage.channelsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      width: 403,
+      width: 404,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -28,16 +28,30 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
-      field: 'broker_description',
+      field: 'createdAt',
       cellClassName: 'justifyContentNormal',
-      headerName: t('channelsPage.channelsTableColumns.headerFields.description'),
+      headerName: t('channelsPage.channelsTableColumns.headerFields.creationDate'),
       align: 'left',
       headerAlign: 'left',
       width: 404,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, undefined),
+      renderCell: (params) => showCreationData(params),
+      sortable: false,
+      flex: 4,
+    },
+    {
+      field: 'modifiedAt',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('channelsPage.channelsTableColumns.headerFields.lastEditDate'),
+      align: 'left',
+      headerAlign: 'left',
+      width: 404,
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => showModifiedData(params),
       sortable: false,
       flex: 4,
     },
@@ -188,6 +202,66 @@ export function showChannelCode(params: GridRenderCellParams) {
                 }}
               >
                 {params.row.channel_code}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </React.Fragment>
+  );
+}
+
+export function showCreationData(params: GridRenderCellParams) {
+  return (
+    <React.Fragment>
+      {renderCell(
+        params,
+        <>
+          <Grid container sx={{ width: '100%' }}>
+            <Grid item xs={7} sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                color="#17324D"
+                sx={{
+                  fontWeight: 400,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical' as const,
+                }}
+              >
+                {params.row.createdAt ? params.row.createdAt?.toLocaleDateString('en-GB') : '-'}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </React.Fragment>
+  );
+}
+
+export function showModifiedData(params: GridRenderCellParams) {
+  return (
+    <React.Fragment>
+      {renderCell(
+        params,
+        <>
+          <Grid container sx={{ width: '100%' }}>
+            <Grid item xs={7} sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                color="#17324D"
+                sx={{
+                  fontWeight: 400,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical' as const,
+                }}
+              >
+                {params.row.modifiedAt ? params.row.modifiedAt?.toLocaleDateString('en-GB') : '-'}
               </Typography>
             </Grid>
           </Grid>

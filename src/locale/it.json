@@ -174,7 +174,8 @@
     "channelsTableColumns": {
       "headerFields": {
         "name": "Codice canale",
-        "description": "Descrizione",
+        "creationDate": "Data creazione",
+        "lastEditDate": "Ultima modifica",
         "status": "Stato"
       }
     }
@@ -232,7 +233,8 @@
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
       "errorMessageWfespDesc": "Errore durante la ricezione dei metodi wfesp plugin",
       "errorMessageChannelWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato",
-      "errorMessageChannelCodeTypesDesc": "Errore durante la generazione del Codice Canale",
+      "errorMessageChannelCodeTypesTitle": "Impossibile creare canale",
+      "errorMessageChannelCodeTypesDesc": "Hai un canale ancora in attesa di revisione, attendere approvazione",
       "validationForm": {
         "title": "Informazione da completare",
         "subtitle": "Informazioni a carico di PagoPA.",
@@ -479,9 +481,9 @@
     },
     "successMessage": "La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.",
     "errorMessageTitle": "Errore",
-    "errorMessageDesc": "Errore durante la creazione, Codice stazione duplicato",
-    "errorMessageStationCodeTitle": "Errore",
-    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido",
+    "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
+    "errorMessageStationCodeTitle": "Impossibile creazione stazione",
+    "errorMessageStationCodeDesc": "Hai una stazione ancora in attesa di revisione, attendere approvazione",
     "errorMessageStationWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato"
   },
   "stationsPage": {

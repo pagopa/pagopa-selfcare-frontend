@@ -139,7 +139,6 @@ export const PortalApi = {
         psp_code: psp.pspCode,
         stamp: true,
         tax_code: psp.fiscalCode,
-        transfer: true,
         vat_number: psp.fiscalCode,
       },
     });
@@ -714,7 +713,8 @@ export const PortalApi = {
   },
 
   updateWrapperStationToCheck: async (
-    station: StationDetailsDto
+    station: StationDetailsDto,
+    validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
@@ -748,13 +748,15 @@ export const PortalApi = {
         port4Mod: station.port4Mod ?? undefined,
         service4Mod: station.service4Mod ?? undefined,
         status: StatusEnum.TO_CHECK,
+        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   updateWrapperStationToCheckUpdate: async (
-    station: StationDetailsDto
+    station: StationDetailsDto,
+    validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
@@ -788,13 +790,15 @@ export const PortalApi = {
         port4Mod: station.port4Mod ?? undefined,
         service4Mod: station.service4Mod ?? undefined,
         status: StatusEnum.TO_CHECK_UPDATE,
+        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   updateWrapperStationByOpt: async (
-    station: StationDetailsDto
+    station: StationDetailsDto,
+    validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
       body: {
@@ -828,6 +832,7 @@ export const PortalApi = {
         port4Mod: station.port4Mod ?? undefined,
         service4Mod: station.service4Mod ?? undefined,
         status: StatusEnum.TO_CHECK_UPDATE,
+        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

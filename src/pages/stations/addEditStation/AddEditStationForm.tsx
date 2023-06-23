@@ -250,6 +250,70 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       }).filter(([_key, value]) => value)
     );
 
+  const enableSubmit = (values: StationOnCreation) => {
+    const isTargetSectionComplete =
+      values.targetHost !== '' && values.targetPath !== '' && values.targetPort.toString() !== '';
+
+    const isTargetPofSectionComplete =
+      values.targetHostPof !== '' &&
+      values.targetPathPof !== '' &&
+      values.targetPortPof?.toString() !== '';
+
+    const isTargetSectionEmpty =
+      values.targetHost === '' && values.targetPath === '' && values.targetPort?.toString() === '';
+
+    const isTargetPofSectionEmpty =
+      values.targetHostPof === '' &&
+      values.targetPathPof === '' &&
+      values.targetPortPof?.toString() === '';
+
+    const baseConditions =
+      values.stationCode !== '' &&
+      values.brokerCode !== '' &&
+      values.primitiveVersion.toString() !== '' &&
+      values.redirectProtocol.toString() !== '' &&
+      values.redirectPort.toString() !== '' &&
+      values.redirectIp !== '' &&
+      values.redirectPath !== '' &&
+      values.redirectQueryString !== '';
+
+    const operatorConditions =
+      values.version?.toString() !== '' &&
+      values.password !== '' &&
+      values.threadNumber?.toString() !== '' &&
+      values.protocol?.toString() !== '' &&
+      values.ip !== '' &&
+      values.port?.toString() !== '' &&
+      values.service !== '' &&
+      values.pofService !== '';
+
+    if (!baseConditions) {
+      return false;
+    }
+
+    const targetFields = () => {
+      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+      if (
+        (isTargetSectionComplete && isTargetPofSectionComplete) ||
+        (isTargetSectionComplete && isTargetPofSectionEmpty) ||
+        (isTargetPofSectionComplete && isTargetSectionEmpty)
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    const targetCondition = targetFields();
+
+    if (!operator) {
+      return baseConditions && targetCondition;
+    } else if (operator && baseConditions && targetCondition && operatorConditions) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const redirect = (stCode: string) => {
     if (operator) {
       history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
@@ -265,10 +329,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
 
     try {
+      const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
+        stationId: formik.values.stationCode,
+      })}`;
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
-          stationId: formik.values.stationCode,
-        })}`;
         await createWrapperStation(values, validationUrl);
         redirect(stationCode4Redirect);
       }
@@ -280,7 +344,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await createStation(values);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheck(values);
+              await updateWrapperStationToCheck(values, validationUrl);
               redirect(stationCode4Redirect);
             }
             break;
@@ -290,12 +354,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheckUpdate(values);
+              await updateWrapperStationToCheckUpdate(values, validationUrl);
               redirect(stationCode4Redirect);
             }
             break;
           case WrapperStatusEnum.TO_FIX:
-            await updateWrapperStationToCheck(values);
+            await updateWrapperStationToCheck(values, validationUrl);
             redirect(stationCode4Redirect);
             break;
           default:
@@ -721,7 +785,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={!formik.isValid}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

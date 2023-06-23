@@ -139,7 +139,6 @@ export const PortalApi = {
         psp_code: psp.pspCode,
         stamp: true,
         tax_code: psp.fiscalCode,
-        transfer: true,
         vat_number: psp.fiscalCode,
       },
     });

@@ -15,6 +15,5 @@ export type PSPDirectDTO = {
   psp_code: string;
   stamp: boolean;
   tax_code: string;
-  transfer: boolean;
   vat_number: string;
 };

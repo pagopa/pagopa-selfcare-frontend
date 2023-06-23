@@ -242,26 +242,35 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
-      return true;
+      if (!operator) {
+        return true;
+      } else {
+        if (
+          values.primitive_version?.toString() !== '' &&
+          values.password !== '' &&
+          values.protocol?.toString() !== '' &&
+          values.ip !== '' &&
+          values.port?.toString() !== '' &&
+          values.service !== '' &&
+          values.nmp_service !== '' &&
+          values.proxy_host !== '' &&
+          values.proxy_port?.toString() !== '' &&
+          values.payment_model?.toString() !== '' &&
+          values.serv_plugin !== ''
+        ) {
+          if (operator && values.payment_types && values.payment_types.length > 0) {
+            for (const paymentType of values.payment_types) {
+              if (paymentType === '') {
+                return false;
+              }
+            }
+          }
+          return true;
+        }
+      }
     }
 
-    if (!operator) {
-      return true;
-    }
-
-    return (
-      values.primitive_version?.toString() !== '' &&
-      values.password !== '' &&
-      values.protocol?.toString() !== '' &&
-      values.ip !== '' &&
-      values.port?.toString() !== '' &&
-      values.service !== '' &&
-      values.nmp_service !== '' &&
-      values.proxy_host !== '' &&
-      values.proxy_port?.toString() !== '' &&
-      values.payment_model?.toString() !== '' &&
-      values.serv_plugin !== ''
-    );
+    return false;
   };
 
   const formik = useFormik<ChannelDetailsDto>({

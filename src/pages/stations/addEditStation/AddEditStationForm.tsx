@@ -292,21 +292,15 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     }
 
     const targetFields = () => {
-      if (isTargetPofSectionEmpty && isTargetSectionEmpty) {
-        return false;
-      } else if (isTargetSectionComplete && isTargetPofSectionComplete) {
+      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+      if (
+        (isTargetSectionComplete && isTargetPofSectionComplete) ||
+        (isTargetSectionComplete && isTargetPofSectionEmpty) ||
+        (isTargetPofSectionComplete && isTargetSectionEmpty)
+      ) {
         return true;
-      } else if (isTargetSectionComplete && isTargetPofSectionEmpty) {
-        return true;
-      } else if (isTargetPofSectionComplete && isTargetSectionEmpty) {
-        return true;
-      } else if (isTargetSectionComplete && !isTargetPofSectionEmpty) {
-        return false;
-      } else if (!isTargetSectionEmpty && isTargetPofSectionComplete) {
-        return false;
-      } else {
-        return false;
       }
+      return false;
     };
 
     const targetCondition = targetFields();

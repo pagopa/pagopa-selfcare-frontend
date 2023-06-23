@@ -25,7 +25,7 @@ import {
   CreditCard as CreditCardIcon,
   RemoveCircleOutline,
 } from '@mui/icons-material';
-import { generatePath, useParams } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
@@ -78,7 +78,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
   const operator = isOperator();
   const redirectProtocol = ['HTTP', 'HTTPS'];
-  const { channelId } = useParams<{ channelId: string }>();
 
   const initialFormData = (
     channelCode: string,
@@ -742,7 +741,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             variant="outlined"
             onClick={() =>
               operator
-                ? history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId }))
+                ? history.push(
+                    generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code })
+                  )
                 : history.push(ROUTES.CHANNELS)
             }
             data-testid="back-btn-test"

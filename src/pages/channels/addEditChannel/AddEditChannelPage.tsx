@@ -66,7 +66,7 @@ const AddEditChannelPage = () => {
             error: reason as Error,
             techDescription: `An error occurred while getting payment types`,
             toNotify: true,
-            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+            displayableTitle: t('addEditChannelPage.addForm.errorMessageChannelCodeTypesTitle'),
             displayableDescription: t(
               'addEditChannelPage.addForm.errorMessageChannelCodeTypesDesc'
             ),

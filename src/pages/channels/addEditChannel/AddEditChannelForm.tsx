@@ -219,9 +219,58 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             : isNaN(values.proxy_port)
             ? 'Non Valido, l’input dev’essere un numero'
             : undefined,
+          payment_model: !values.payment_model ? 'Campo obbligatorio' : undefined,
+          serv_plugin: !values.serv_plugin ? 'Campo obbligatorio' : undefined,
         }),
       }).filter(([_key, value]) => value)
     );
+
+  const enableSubmit = (values: ChannelDetailsDto) => {
+    const baseConditions =
+      values.broker_psp_code !== '' &&
+      values.broker_description !== '' &&
+      values.channel_code !== '' &&
+      values.redirect_protocol?.toString() !== '' &&
+      values.redirect_port?.toString() !== '' &&
+      values.redirect_ip !== '' &&
+      values.redirect_path !== '' &&
+      values.redirect_query_string !== '' &&
+      values.target_host !== '' &&
+      values.target_path !== '' &&
+      values.target_port?.toString() !== '' &&
+      values.payment_types?.toString() !== '';
+
+    if (baseConditions) {
+      if (!operator) {
+        return true;
+      } else {
+        if (
+          values.primitive_version?.toString() !== '' &&
+          values.password !== '' &&
+          values.protocol?.toString() !== '' &&
+          values.ip !== '' &&
+          values.port?.toString() !== '' &&
+          values.service !== '' &&
+          values.nmp_service !== '' &&
+          values.proxy_host !== '' &&
+          values.proxy_port?.toString() !== '' &&
+          values.payment_model?.toString() !== '' &&
+          values.serv_plugin !== ''
+        ) {
+          if (operator && values.payment_types && values.payment_types.length > 0) {
+            for (const paymentType of values.payment_types) {
+              if (paymentType === '') {
+                return false;
+              }
+            }
+          }
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
 
   const formik = useFormik<ChannelDetailsDto>({
     initialValues: initialFormData(channelCode, channelDetail, selectedParty),
@@ -757,7 +806,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={!formik.isValid}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

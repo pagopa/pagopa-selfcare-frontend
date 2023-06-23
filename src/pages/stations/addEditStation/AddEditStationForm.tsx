@@ -250,6 +250,70 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       }).filter(([_key, value]) => value)
     );
 
+  const enableSubmit = (values: StationOnCreation) => {
+    const isTargetSectionComplete =
+      values.targetHost !== '' && values.targetPath !== '' && values.targetPort.toString() !== '';
+
+    const isTargetPofSectionComplete =
+      values.targetHostPof !== '' &&
+      values.targetPathPof !== '' &&
+      values.targetPortPof?.toString() !== '';
+
+    const isTargetSectionEmpty =
+      values.targetHost === '' && values.targetPath === '' && values.targetPort?.toString() === '';
+
+    const isTargetPofSectionEmpty =
+      values.targetHostPof === '' &&
+      values.targetPathPof === '' &&
+      values.targetPortPof?.toString() === '';
+
+    const baseConditions =
+      values.stationCode !== '' &&
+      values.brokerCode !== '' &&
+      values.primitiveVersion.toString() !== '' &&
+      values.redirectProtocol.toString() !== '' &&
+      values.redirectPort.toString() !== '' &&
+      values.redirectIp !== '' &&
+      values.redirectPath !== '' &&
+      values.redirectQueryString !== '';
+
+    const operatorConditions =
+      values.version?.toString() !== '' &&
+      values.password !== '' &&
+      values.threadNumber?.toString() !== '' &&
+      values.protocol?.toString() !== '' &&
+      values.ip !== '' &&
+      values.port?.toString() !== '' &&
+      values.service !== '' &&
+      values.pofService !== '';
+
+    if (!baseConditions) {
+      return false;
+    }
+
+    const targetFields = () => {
+      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+      if (
+        (isTargetSectionComplete && isTargetPofSectionComplete) ||
+        (isTargetSectionComplete && isTargetPofSectionEmpty) ||
+        (isTargetPofSectionComplete && isTargetSectionEmpty)
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    const targetCondition = targetFields();
+
+    if (!operator) {
+      return baseConditions && targetCondition;
+    } else if (operator && baseConditions && targetCondition && operatorConditions) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const redirect = (stCode: string) => {
     if (operator) {
       history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
@@ -721,7 +785,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={!formik.isValid}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

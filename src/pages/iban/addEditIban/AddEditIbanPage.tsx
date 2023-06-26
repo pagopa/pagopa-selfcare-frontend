@@ -4,6 +4,7 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+
 import { IbanFormAction } from '../../../model/Iban';
 import ROUTES from '../../../routes';
 import AddEditIbanForm from './AddEditIbanForm';
@@ -52,7 +53,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm formAction={formAction} />
+        <AddEditIbanForm />
       </Grid>
     </Grid>
   );

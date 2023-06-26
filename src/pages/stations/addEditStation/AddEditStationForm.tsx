@@ -775,7 +775,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       )}
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="cancel-button-test"
+          >
             {t('addEditStationPage.addForm.backButton')}
           </Button>
         </Stack>
@@ -789,6 +794,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             color="primary"
             variant="contained"
             type="submit"
+            data-testid="confirm-button-test"
           >
             {operator
               ? t('addEditStationPage.addForm.continueButton')

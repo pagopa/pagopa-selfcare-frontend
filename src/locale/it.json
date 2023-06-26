@@ -716,7 +716,17 @@
           "anotherOne": "Altro soggetto",
           "holderFiscalCode": "Codice Fiscale Intestatario"
         }
+      },
+      "buttons": {
+        "confirm": "Conferma",
+        "back": "Indietro"
       }
+    },
+    "errors": {
+      "getIbanTitle": "Errore",
+      "getIbanMessage": "Errore durante la ricezione dei dati dell'iban selezionato",
+      "createIbanTitle": "Errore",
+      "createIbanMessage": "Errore durante la creazione/modifica dell'iban"
     }
   },
   "sideMenu": {

@@ -659,6 +659,27 @@
     "create": {
       "title": "Aggiungi IBAN",
       "breadcrumb": "Aggiungi IBAN"
+    },
+    "error": {
+      "listErrorTitle": "Errore",
+      "listErrorDesc": "Errore durante la ricezione della lista degli IBAN"
+    },
+    "standIn": "STAND IN",
+    "standInDetail": "Nuova procedura di intervento in caso di problemi",
+    "cup": "Canone unico patrimoniale (CUP)",
+    "cupDetail": "Pagamento del canone unico patrimoniale",
+    "manage": "Gestisci",
+    "list": {
+      "search": "Cerca per Codice IBAN",
+      "column": {
+        "ibanCode": "Codice IBAN",
+        "description": "Descrizione",
+        "activeDate": "Data Attivazione",
+        "status": "Stato"
+      },
+      "loading": "Caricamento...",
+      "noResults": "Nessun Risultato",
+      "noResultsAddIban": "Non sono ancora presenti IBAN in ambiente di collaudo.<1><0> Aggiungi IBAN.</0></1>"
     }
   },
   "ibanDetailPage": {

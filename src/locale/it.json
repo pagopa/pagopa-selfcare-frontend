@@ -688,6 +688,47 @@
     "ibanConfiguration": "Configurazione IBAN",
     "state": "Stato"
   },
+  "addEditIbanPage": {
+    "title": "Aggiungi IBAN",
+    "subtitle": "L’attivazione di un IBAN può richiedere fino a 5 giorni, in base agli step di verifica dei dati inseriti.",
+    "addForm": {
+      "sections": {
+        "ibanDatas": "Dati IBAN",
+        "validityPeriod": "Periodo di validità",
+        "ibanHolder": "Intestatario dell’IBAN"
+      },
+      "fields": {
+        "ibanUploadTypes": {
+          "single": "Caricamento singolo",
+          "multiple": "Caricamento massivo"
+        },
+        "iban": {
+          "ibanCode": "Codice IBAN",
+          "description": "Descrizione",
+          "descPlaceHolder": "Descrizione (es. Servizio tesoreria postale)"
+        },
+        "dates": {
+          "start": "Data inizio",
+          "end": "Data fine"
+        },
+        "holder": {
+          "me": "Sono io",
+          "anotherOne": "Altro soggetto",
+          "holderFiscalCode": "Codice Fiscale Intestatario"
+        }
+      },
+      "buttons": {
+        "confirm": "Conferma",
+        "back": "Indietro"
+      }
+    },
+    "errors": {
+      "getIbanTitle": "Errore",
+      "getIbanMessage": "Errore durante la ricezione dei dati dell'iban selezionato",
+      "createIbanTitle": "Errore",
+      "createIbanMessage": "Errore durante la creazione/modifica dell'iban"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"

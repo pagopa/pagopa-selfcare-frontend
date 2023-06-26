@@ -1,11 +1,14 @@
 import { Grid, Typography, Stack, Breadcrumbs } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import { IbanFormAction } from '../../../model/Iban';
+import { useEffect, useState } from 'react';
+import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import ROUTES from '../../../routes';
+import { getIban } from '../../../services/__mocks__/ibanService';
+import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import AddEditIbanForm from './AddEditIbanForm';
 
 // import { useAppSelector } from '../../redux/hooks';
@@ -14,13 +17,35 @@ import AddEditIbanForm from './AddEditIbanForm';
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const [iban, setIban] = useState<IbanOnCreation>({});
   const goBack = () => history.push(ROUTES.IBAN);
-
+  const addError = useErrorDispatcher();
   const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
   const formAction = actionId ?? IbanFormAction.Create;
+  const setLoading = useLoading(LOADING_TASK_GET_IBAN);
 
   // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  useEffect(() => {
+    setLoading(true);
+    getIban(ibanId)
+      .then((response) => setIban(response))
+      .catch((reason) => {
+        addError({
+          id: 'GET_IBAN',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting iban`,
+          toNotify: true,
+          displayableTitle: t('addEditIbanPage.errors.getIbanTitle'),
+          displayableDescription: t('addEditIbanPage.errors.getIbanMessage'),
+          component: 'Toast',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -52,7 +77,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm formAction={formAction} />
+        <AddEditIbanForm iban={iban} goBack={goBack} />
       </Grid>
     </Grid>
   );

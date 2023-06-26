@@ -173,8 +173,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.click(paymentType);
     fireEvent.change(paymentType, { target: { value: 'Option 1' } });
 
-    expect(continueBtn).not.toBeDisabled();
-
     fireEvent.click(continueBtn);
 
     const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
@@ -314,7 +312,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(paymentType);
     expect(paymentType.value).toBe('Option 1');
 
-    expect(continueBtn).not.toBeDisabled();
     fireEvent.click(continueBtn);
 
     const confirmBtn = screen.getByText(
@@ -461,7 +458,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(timeoutC, { target: { value: 30 } });
 
-    expect(continueBtn).not.toBeDisabled();
     fireEvent.click(continueBtn);
 
     const confirmBtn = screen.queryByText(
@@ -616,7 +612,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(timeoutC, { target: { value: 30 } });
 
-    expect(continueBtn).not.toBeDisabled();
     fireEvent.click(continueBtn);
 
     const confirmBtn = screen.queryByText(

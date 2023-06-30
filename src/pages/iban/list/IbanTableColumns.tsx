@@ -10,7 +10,7 @@ export function buildColumnDefs(
 ) {
   return [
     {
-      field: 'ibanValue',
+      field: 'iban',
       cellClassName: 'justifyContentBold',
       headerName: t('ibanPage.list.column.ibanCode'),
       align: 'left',
@@ -79,8 +79,8 @@ export function buildColumnDefs(
           sx={{ cursor: 'pointer' }}
         >
           <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.ibanValue) : undefined}
-            data-testid={`open-${p.row.ibanValue}`}
+            onClick={onRowClick ? () => onRowClick(p.row.iban) : undefined}
+            data-testid={`open-${p.row.iban}`}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },
@@ -167,7 +167,7 @@ export function showIbanValue(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.ibanValue}
+                {params.row.iban}
               </Typography>
             </Grid>
           </Grid>

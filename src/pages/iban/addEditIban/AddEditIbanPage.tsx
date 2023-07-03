@@ -9,22 +9,30 @@ import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import ROUTES from '../../../routes';
 import { getIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import AddEditIbanForm from './AddEditIbanForm';
 
-// import { useAppSelector } from '../../redux/hooks';
-// import { partiesSelectors } from '../../redux/slices/partiesSlice';
+const emptyIban: IbanOnCreation = {
+  iban: undefined,
+  description: undefined,
+  validityDate: undefined,
+  creditorInstitutionCode: undefined,
+  dueDate: undefined,
+  labels: undefined,
+};
 
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [iban, setIban] = useState<IbanOnCreation>({});
+  const [_iban, setIban] = useState<IbanOnCreation>();
   const goBack = () => history.push(ROUTES.IBAN);
   const addError = useErrorDispatcher();
   const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
   const formAction = actionId ?? IbanFormAction.Create;
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
 
-  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   useEffect(() => {
     setLoading(true);
@@ -45,7 +53,7 @@ const AddEditIbanPage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -77,7 +85,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm iban={iban} goBack={goBack} />
+        <AddEditIbanForm goBack={goBack} ibanBody={emptyIban} />
       </Grid>
     </Grid>
   );

@@ -1,12 +1,17 @@
+import { IbanLabel } from '../api/generated/portal/IbanLabel';
+
 export enum IbanFormAction {
   Create = 'create',
   Edit = 'edit',
 }
 
 export type IbanOnCreation = {
-  ibanCode?: string;
-  ibanDescription?: string;
-  startDate?: Date;
-  endDate?: Date;
-  holderFiscalCode?: string;
+  iban?: string;
+  description?: string;
+  validityDate?: Date;
+  dueDate?: Date;
+  creditorInstitutionCode?: string;
+  publicationDate?: Date;
+  ecOwner?: string;
+  labels?: Readonly<Array<IbanLabel>>;
 };

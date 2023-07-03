@@ -1,32 +1,84 @@
+// import { IbanCreateRequestDto } from '../../api/generated/portal/IbanCreateRequestDto';
+import { IbanResource } from '../../api/generated/portal/IbanResource';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { IbanOnCreation } from '../../model/Iban';
 
 export const ibanList: IbansResource = {
   ibanList: [
     {
-      ibanValue: 'IT99C0222211111000000000001',
+      iban: 'IT99C0222211111000000000001',
       publicationDate: new Date('2023-06-01T23:59:59.999Z'),
       validityDate: new Date('2023-04-01T13:49:19.897Z'),
+      dueDate: new Date('2024-04-01T13:49:19.897Z'),
+      ecOwner: 'RSSMRA98H27F205Q',
+      description: 'Tassa di concorso - servizio tesoreria comunale',
     },
     {
-      ibanValue: 'IT99C0222211111000000000002',
+      iban: 'IT99C0222211111000000000002',
       publicationDate: new Date('2024-06-01T23:59:59.999Z'),
       validityDate: new Date('2024-04-01T13:49:19.897Z'),
+      dueDate: new Date('2024-04-01T13:49:19.897Z'),
+      ecOwner: 'RSSMRA98H27F205Q',
+      description: 'Tassa di concorso - servizio tesoreria comunale',
     },
     {
-      ibanValue: 'IT99C0222211111000000000003',
+      iban: 'IT99C0222211111000000000003',
       publicationDate: new Date('2023-06-01T23:59:59.999Z'),
       validityDate: new Date('2023-04-01T13:49:19.897Z'),
+      dueDate: new Date('2024-04-01T13:49:19.897Z'),
+      ecOwner: 'RSSMRA98H27F205Q',
+      description: 'Tassa di concorso - servizio tesoreria comunale',
+      labels: [
+        {
+          description: 'The IBAN to use for STANDIN process',
+          name: 'STANDIN',
+        },
+        {
+          description: 'The IBAN to use for CUP payments',
+          name: 'CUP',
+        },
+      ],
     },
   ],
 };
 
-export const mockedIban = {
-  ibanCode: 'IT10T0760116200000014700876',
-  ibanDescription: 'Tassa di concorso - servizio tesoreria comunale',
-  startDate: new Date('2023-04-01T13:49:19.897Z'),
-  endDate: new Date('2033-04-01T13:49:19.897Z'),
-  holderFiscalCode: undefined,
+export const mockedIban: IbanOnCreation = {
+  iban: 'IT99C0222211111000000000003',
+  description: 'Tassa di concorso - servizio tesoreria comunale',
+  validityDate: new Date('2023-04-01T13:49:19.897Z'),
+  dueDate: new Date('2033-04-01T13:49:19.897Z'),
+  creditorInstitutionCode: '',
+  labels: [{}],
+};
+
+export const mockedIbanCup: IbanResource = {
+  iban: 'IT99C0222211111000000000003',
+  description: 'Tassa di concorso - servizio tesoreria comunale',
+  validityDate: new Date('2023-04-01T13:49:19.897Z'),
+  dueDate: new Date('2033-04-01T13:49:19.897Z'),
+  publicationDate: new Date('2023-04-01T13:49:19.897Z'),
+  ecOwner: 'RSSMRA98H27F205Q',
+  labels: [
+    {
+      description: 'The IBAN to use for CUP payments',
+      name: 'CUP',
+    },
+  ],
+};
+
+export const mockedIbanStandIn: IbanResource = {
+  iban: 'IT99C0222211111000000000003',
+  description: 'Tassa di concorso - servizio tesoreria comunale',
+  validityDate: new Date('2023-04-01T13:49:19.897Z'),
+  dueDate: new Date('2033-04-01T13:49:19.897Z'),
+  publicationDate: new Date('2023-04-01T13:49:19.897Z'),
+  ecOwner: '',
+  labels: [
+    {
+      description: 'The IBAN to use for STANDIN process',
+      name: 'STANDIN',
+    },
+  ],
 };
 
 export const getCreditorInstitutionIbans = (
@@ -39,7 +91,14 @@ export const getIbanDetail = (_iban: string): Promise<any> =>
 export const getIbanList = (_istitutionId: string): Promise<any> =>
   new Promise((resolve) => resolve(ibanList));
 
-export const getIban = (iban: string): Promise<any> => new Promise((resolve) => resolve(iban));
+export const getIban = (_iban: string): Promise<any> =>
+  new Promise((resolve) => resolve(mockedIban));
 
 export const createIban = (_iban: IbanOnCreation): Promise<any> =>
   new Promise((resolve) => resolve(mockedIban));
+
+export const updateIbanStandIn = (_iban: IbanOnCreation): Promise<IbanResource> =>
+  new Promise((resolve) => resolve(mockedIbanStandIn));
+
+export const updateIbanCup = (_iban: IbanOnCreation): Promise<IbanResource> =>
+  new Promise((resolve) => resolve(mockedIbanCup));

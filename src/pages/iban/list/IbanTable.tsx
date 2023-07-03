@@ -147,7 +147,7 @@ export default function IbanTable({ ibanList, error, loading }: IbanTableProps) 
                   quickFilterProps: { debounceMs: 100 },
                 },
               }}
-              getRowId={(r) => r.ibanValue}
+              getRowId={(r) => r.iban}
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="server"

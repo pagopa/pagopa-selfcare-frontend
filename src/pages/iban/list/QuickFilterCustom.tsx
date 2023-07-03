@@ -14,8 +14,8 @@ import { gridQuickFilterValuesSelector } from '@mui/x-data-grid';
 import { GridFilterModel } from '@mui/x-data-grid';
 import { Box, Button, InputAdornment } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { generatePath, Link } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
+import { useHistory } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ROUTES from '../../../routes';
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
@@ -81,24 +81,24 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   } = props;
 
   const { t } = useTranslation();
-
+  const history = useHistory();
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
 
-  const [searchValue, setSearchValue] = React.useState(() =>
+  const [searchValue, setSearchValue] = useState(() =>
     quickFilterFormatter(quickFilterValues ?? [])
   );
 
-  const [prevQuickFilterValues, setPrevQuickFilterValues] = React.useState(quickFilterValues);
+  const [prevQuickFilterValues, setPrevQuickFilterValues] = useState(quickFilterValues);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isDeepEqual(prevQuickFilterValues, quickFilterValues)) {
       // The model of quick filter value has been updated
       setPrevQuickFilterValues(quickFilterValues);
 
       // Update the input value if needed to match the new model
-      setSearchValue((prevSearchValue) =>
+      setSearchValue((prevSearchValue: any) =>
         isDeepEqual(quickFilterParser(prevSearchValue), quickFilterValues)
           ? prevSearchValue
           : quickFilterFormatter(quickFilterValues ?? [])
@@ -106,19 +106,19 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     }
   }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
-  const updateSearchValue = React.useCallback(
+  const updateSearchValue = useCallback(
     (newSearchValue: string) => {
       apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
     },
     [apiRef, quickFilterParser]
   );
 
-  const debouncedUpdateSearchValue = React.useMemo(
+  const debouncedUpdateSearchValue = useMemo(
     () => debounce(updateSearchValue, debounceMs),
     [updateSearchValue, debounceMs]
   );
 
-  const handleSearchValueChange = React.useCallback(
+  const handleSearchValueChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newSearchValue = event.target.value;
       setSearchValue(newSearchValue);
@@ -127,7 +127,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     [debouncedUpdateSearchValue]
   );
 
-  const handleSearchReset = React.useCallback(() => {
+  const handleSearchReset = useCallback(() => {
     setSearchValue('');
     updateSearchValue('');
   }, [updateSearchValue]);
@@ -164,11 +164,11 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
         {...rootProps.componentsProps?.baseTextField}
       />
       <Button
-        component={Link}
-        to={generatePath(ROUTES.IBAN_ADD, {})}
+        // component={RouterLink}
+        // to={ROUTES.IBAN_ADD}
+        onClick={() => history.push(ROUTES.IBAN_ADD)}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
-        startIcon={<Add />}
       >
         {t('ibanPage.addIban')}
       </Button>

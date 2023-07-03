@@ -731,6 +731,12 @@
       "getIbanMessage": "Errore durante la ricezione dei dati dell'iban selezionato",
       "createIbanTitle": "Errore",
       "createIbanMessage": "Errore durante la creazione/modifica dell'iban"
+    },
+    "modal": {
+      "title": "Modifiche IBAN",
+      "subTitle": "Confermi i nuovi IBAN selezionati per Stand in e CUP?",
+      "backButton": "Annulla",
+      "confirmButton": "Conferma"
     }
   },
   "sideMenu": {

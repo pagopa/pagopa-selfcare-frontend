@@ -11,7 +11,7 @@ import {
   Button,
 } from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
@@ -23,11 +23,16 @@ import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP, LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
-import { getIbanList } from '../../services/ibanService';
+// import { getIbanList } from '../../services/ibanService';
 import { IbanLabel } from '../../api/generated/portal/IbanLabel';
-import { updateIbanCup, updateIbanStandIn } from '../../services/__mocks__/ibanService';
+import {
+  getCreditorInstitutionIbans,
+  updateIbanCup,
+  updateIbanStandIn,
+} from '../../services/__mocks__/ibanService';
 import { IbanOnCreation } from '../../model/Iban';
 import IbanTable from './list/IbanTable';
+import IbanUploadModal from './components/IbanUploadModal';
 
 const emptyIbanList: IbansResource = {
   ibanList: [],
@@ -61,11 +66,12 @@ const IbanPage = () => {
   const [ibanStandInTriggered, setIbanStandInTriggered] = useState(false);
   const [ibanCupTriggered, setIbanCupTriggered] = useState(false);
   const [showMaganeButton, setShowMaganeButton] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
       setLoadingStatus(true);
-      getIbanList(selectedParty.fiscalCode)
+      getCreditorInstitutionIbans(selectedParty.fiscalCode)
         .then((r) => (r ? setIbanList(r) : setIbanList(emptyIbanList)))
         .catch((reason) => {
           handleErrors([
@@ -218,14 +224,20 @@ const IbanPage = () => {
 
   const formikStandIn = useFormik<IbanOnCreation>({
     initialValues: initialFormDataStandIn(selectedIbanStandIn),
-    onSubmit: () => console.log('SUBMIT!'),
+    onSubmit: async () => {
+      setShowConfirmModal(true);
+      console.log('SUBMIT!');
+    },
     enableReinitialize: true,
     validateOnMount: true,
   });
 
   const formikCup = useFormik<IbanOnCreation>({
     initialValues: initialFormDataCup(selectedIbanCup),
-    onSubmit: () => console.log('SUBMIT!'),
+    onSubmit: async () => {
+      setShowConfirmModal(false);
+      console.log('SUBMIT!');
+    },
     enableReinitialize: true,
     validateOnMount: true,
   });
@@ -281,216 +293,233 @@ const IbanPage = () => {
   };
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
-        <Box>
-          <SideMenu />
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={10}
-        sx={{ backgroundColor: '#F5F6F7' }}
-        display="flex"
-        justifyContent="center"
-        pb={8}
-      >
-        <Box width="100%" px={2}>
-          <TitleBox
-            title={t('ibanPage.title')}
-            subTitle={t('ibanPage.subtitle')}
-            mbTitle={2}
-            mtTitle={4}
-            mbSubTitle={3}
-            variantTitle="h4"
-            variantSubTitle="body1"
-          />
-          {history.location.state && (history.location.state as any).alertSuccessMessage && (
-            <Alert severity="success" variant="outlined" sx={{ mb: 4 }}>
-              {(history.location.state as any).alertSuccessMessage}
-            </Alert>
-          )}
+    <>
+      <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
+        <Grid item xs={2}>
+          <Box>
+            <SideMenu />
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={10}
+          sx={{ backgroundColor: '#F5F6F7' }}
+          display="flex"
+          justifyContent="center"
+          pb={8}
+        >
+          <Box width="100%" px={2}>
+            <TitleBox
+              title={t('ibanPage.title')}
+              subTitle={t('ibanPage.subtitle')}
+              mbTitle={2}
+              mtTitle={4}
+              mbSubTitle={3}
+              variantTitle="h4"
+              variantSubTitle="body1"
+            />
+            {history.location.state && (history.location.state as any).alertSuccessMessage && (
+              <Alert severity="success" variant="outlined" sx={{ mb: 4 }}>
+                {(history.location.state as any).alertSuccessMessage}
+              </Alert>
+            )}
 
-          <Grid container spacing={2} mb={4}>
-            <Grid item xs={12}>
-              <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="overline">{t('ibanPage.standIn')}</Typography>
-                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
-                      {t('ibanPage.standInDetail')}
-                    </Typography>
-                    <Box display="flex" alignItems="center" mt={2}>
-                      <Typography
-                        variant="body2"
-                        fontWeight="regular"
-                        component="span"
-                        fontSize="inherit"
-                        mr={4}
-                      >
-                        IBAN
+            <Grid container spacing={2} mb={4}>
+              <Grid item xs={12}>
+                <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="overline">{t('ibanPage.standIn')}</Typography>
+                      <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+                        {t('ibanPage.standInDetail')}
                       </Typography>
-
-                      {showMaganeButton ? (
-                        <>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            component="span"
-                            fontSize="inherit"
-                            mr={4}
-                          >
-                            {selectedIbanStandIn.iban}
-                          </Typography>
-                        </>
-                      ) : (
+                      <Box display="flex" alignItems="center" mt={2}>
                         <Typography
+                          variant="body2"
+                          fontWeight="regular"
                           component="span"
-                          fontSize={'inherit'}
-                          fontWeight="fontWeightMedium"
-                          sx={{ width: '-webkit-fill-available' }}
+                          fontSize="inherit"
+                          mr={4}
                         >
-                          <FormControl sx={{ width: '60%' }}>
-                            <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
-                            <Select
-                              id="ibanStandIn"
-                              name="ibanStandIn"
-                              label={t('ibanPage.selectIban')}
-                              size="small"
-                              value={formikStandIn.values.iban}
-                              onChange={(e) => {
-                                formikStandIn.handleChange(e);
-                                handleIbanStandInSelected(e);
-                              }}
-                              error={
-                                formikStandIn.touched.iban && Boolean(formikStandIn.errors.iban)
-                              }
-                              inputProps={{
-                                'data-testid': 'stand-in-test',
-                              }}
-                            >
-                              {ibanList.ibanList.map((r, i) => (
-                                <MenuItem key={i} value={r.iban}>
-                                  {r.iban}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
+                          IBAN
                         </Typography>
-                      )}
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="overline">{t('ibanPage.cup')}</Typography>
-                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16}>
-                      {t('ibanPage.cupDetail')}
-                    </Typography>
-                    <Box display="flex" alignItems="center" mt={2}>
-                      <Typography
-                        component="span"
-                        mr={4}
-                        fontSize={'inherit'}
-                        variant="body2"
-                        fontWeight="regular"
-                      >
-                        IBAN
-                      </Typography>
-                      {showMaganeButton ? (
-                        <>
-                          <Typography
-                            variant="body2"
-                            fontWeight={600}
-                            component="span"
-                            fontSize="inherit"
-                            mr={4}
-                          >
-                            {selectedIbanCup.iban}
-                          </Typography>
-                        </>
-                      ) : (
-                        <Typography
-                          component="span"
-                          fontSize={'inherit'}
-                          fontWeight="fontWeightMedium"
-                          sx={{ width: '-webkit-fill-available' }}
-                        >
-                          <FormControl sx={{ width: '60%' }}>
-                            <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
-                            <Select
-                              id="ibanCup"
-                              name="ibanCup"
-                              label={t('ibanPage.selectIban')}
-                              size="small"
-                              value={formikCup.values.iban}
-                              onChange={(e) => {
-                                formikCup.handleChange(e);
-                                handleIbanCupSelected(e);
-                              }}
-                              error={formikCup.touched.iban && Boolean(formikCup.errors.iban)}
-                              inputProps={{
-                                'data-testid': 'cup-test',
-                              }}
+
+                        {showMaganeButton ? (
+                          <>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              component="span"
+                              fontSize="inherit"
+                              mr={4}
                             >
-                              {
-                                // eslint-disable-next-line sonarjs/no-identical-functions
-                                ibanList.ibanList.map((r, i) => (
+                              {selectedIbanStandIn.iban}
+                            </Typography>
+                          </>
+                        ) : (
+                          <Typography
+                            component="span"
+                            fontSize={'inherit'}
+                            fontWeight="fontWeightMedium"
+                            sx={{ width: '-webkit-fill-available' }}
+                          >
+                            <FormControl sx={{ width: '60%' }}>
+                              <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                              <Select
+                                id="ibanStandIn"
+                                name="ibanStandIn"
+                                label={t('ibanPage.selectIban')}
+                                size="small"
+                                value={formikStandIn.values.iban}
+                                onChange={(e) => {
+                                  formikStandIn.handleChange(e);
+                                  handleIbanStandInSelected(e);
+                                }}
+                                error={
+                                  formikStandIn.touched.iban && Boolean(formikStandIn.errors.iban)
+                                }
+                                inputProps={{
+                                  'data-testid': 'stand-in-test',
+                                }}
+                              >
+                                {ibanList.ibanList.map((r, i) => (
                                   <MenuItem key={i} value={r.iban}>
                                     {r.iban}
                                   </MenuItem>
-                                ))
-                              }
-                            </Select>
-                          </FormControl>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Typography>
+                        )}
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography variant="overline">{t('ibanPage.cup')}</Typography>
+                      <Typography variant="subtitle1" fontWeight="regular" fontSize={16}>
+                        {t('ibanPage.cupDetail')}
+                      </Typography>
+                      <Box display="flex" alignItems="center" mt={2}>
+                        <Typography
+                          component="span"
+                          mr={4}
+                          fontSize={'inherit'}
+                          variant="body2"
+                          fontWeight="regular"
+                        >
+                          IBAN
                         </Typography>
-                      )}
-                    </Box>
-                  </Grid>
-                  <Grid container xs={12} direction="row" justifyContent="space-between" mt={3}>
-                    <Grid item md={1} display="flex" justifyContent="flex-start" ml={3}>
-                      {showMaganeButton ? (
-                        <ButtonNaked
-                          size="small"
-                          component="button"
-                          disabled={ibanList.ibanList.length <= 0}
-                          onClick={() => setShowMaganeButton(false)}
-                          endIcon={<EditIcon />}
-                          sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}
-                        >
-                          {t('ibanPage.manage')}
-                        </ButtonNaked>
-                      ) : (
-                        <></>
-                      )}
+                        {showMaganeButton ? (
+                          <>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              component="span"
+                              fontSize="inherit"
+                              mr={4}
+                            >
+                              {selectedIbanCup.iban}
+                            </Typography>
+                          </>
+                        ) : (
+                          <Typography
+                            component="span"
+                            fontSize={'inherit'}
+                            fontWeight="fontWeightMedium"
+                            sx={{ width: '-webkit-fill-available' }}
+                          >
+                            <FormControl sx={{ width: '60%' }}>
+                              <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                              <Select
+                                id="ibanCup"
+                                name="ibanCup"
+                                label={t('ibanPage.selectIban')}
+                                size="small"
+                                value={formikCup.values.iban}
+                                onChange={(e) => {
+                                  formikCup.handleChange(e);
+                                  handleIbanCupSelected(e);
+                                }}
+                                error={formikCup.touched.iban && Boolean(formikCup.errors.iban)}
+                                inputProps={{
+                                  'data-testid': 'cup-test',
+                                }}
+                              >
+                                {
+                                  // eslint-disable-next-line sonarjs/no-identical-functions
+                                  ibanList.ibanList.map((r, i) => (
+                                    <MenuItem key={i} value={r.iban}>
+                                      {r.iban}
+                                    </MenuItem>
+                                  ))
+                                }
+                              </Select>
+                            </FormControl>
+                          </Typography>
+                        )}
+                      </Box>
                     </Grid>
-                    <Grid item md={1} display="flex" justifyContent="flex-end">
-                      {showMaganeButton ? (
-                        <></>
-                      ) : (
-                        <Button
-                          onClick={async () => {
-                            handleSubmit();
-                            await submit(formikStandIn.values, formikCup.values);
-                            setShowMaganeButton(true);
-                          }}
-                          color="primary"
-                          variant="contained"
-                          type="submit"
-                        >
-                          {t('ibanPage.upload')}
-                        </Button>
-                      )}
+                    <Grid container xs={12} direction="row" justifyContent="space-between" mt={3}>
+                      <Grid item md={1} display="flex" justifyContent="flex-start" ml={3}>
+                        {showMaganeButton ? (
+                          <ButtonNaked
+                            size="small"
+                            component="button"
+                            disabled={ibanList.ibanList.length <= 0}
+                            onClick={() => setShowMaganeButton(false)}
+                            endIcon={<EditIcon />}
+                            sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}
+                          >
+                            {t('ibanPage.manage')}
+                          </ButtonNaked>
+                        ) : (
+                          <></>
+                        )}
+                      </Grid>
+                      <Grid item md={1} display="flex" justifyContent="flex-end">
+                        {showMaganeButton ? (
+                          <></>
+                        ) : (
+                          <Button
+                            onClick={() => setShowConfirmModal(true)}
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                          >
+                            {t('ibanPage.upload')}
+                          </Button>
+                        )}
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </Card>
-              {selectedParty && (
-                <IbanTable ibanList={ibanList} error={error} loading={loading}></IbanTable>
-              )}
+                </Card>
+                {selectedParty && (
+                  <IbanTable ibanList={ibanList} error={error} loading={loading}></IbanTable>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+      <IbanUploadModal
+        title={t('addEditIbanPage.modal.title')}
+        message={
+          <Trans i18nKey="addEditIbanPage.modal.subTitle">
+            Confermi i nuovi IBAN selezionati per Stand in e CUP?
+            <br />
+          </Trans>
+        }
+        openConfirmModal={showConfirmModal}
+        onConfirmLabel={t('addEditIbanPage.modal.confirmButton')}
+        onCloseLabel={t('addEditIbanPage.modal.backButton')}
+        handleCloseConfirmModal={() => setShowConfirmModal(false)}
+        handleConfrimSubmit={async () => {
+          handleSubmit();
+          await submit(formikStandIn.values, formikCup.values);
+          setShowMaganeButton(true);
+          setShowConfirmModal(false);
+        }}
+      />
+    </>
   );
 };
 

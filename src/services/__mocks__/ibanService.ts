@@ -1,4 +1,4 @@
-import { IbanCreateRequestDto } from '../../api/generated/portal/IbanCreateRequestDto';
+// import { IbanCreateRequestDto } from '../../api/generated/portal/IbanCreateRequestDto';
 import { IbanResource } from '../../api/generated/portal/IbanResource';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { IbanOnCreation } from '../../model/Iban';
@@ -42,7 +42,7 @@ export const ibanList: IbansResource = {
   ],
 };
 
-export const mockedIban: IbanCreateRequestDto = {
+export const mockedIban: IbanOnCreation = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
   validityDate: new Date('2023-04-01T13:49:19.897Z'),
@@ -57,7 +57,7 @@ export const mockedIbanCup: IbanResource = {
   validityDate: new Date('2023-04-01T13:49:19.897Z'),
   dueDate: new Date('2033-04-01T13:49:19.897Z'),
   publicationDate: new Date('2023-04-01T13:49:19.897Z'),
-  ecOwner: '',
+  ecOwner: 'RSSMRA98H27F205Q',
   labels: [
     {
       description: 'The IBAN to use for CUP payments',

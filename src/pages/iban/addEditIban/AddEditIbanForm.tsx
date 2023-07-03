@@ -31,7 +31,7 @@ import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
 import { IbanOnCreation } from '../../../model/Iban';
 
 type Props = {
-  ibanBody?: IbanOnCreation;
+  ibanBody: IbanOnCreation | undefined;
   goBack: () => void;
 };
 
@@ -50,8 +50,8 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
     await formik.setFieldValue('holderFiscalCode', '');
   };
 
-  const initialFormData = (ibanBody?: IbanOnCreation) =>
-    ibanBody
+  const initialFormData = (ibanBody: IbanOnCreation | undefined) =>
+    typeof ibanBody !== 'undefined'
       ? {
           iban: ibanBody.iban,
           description: ibanBody.description,
@@ -66,8 +66,39 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
           validityDate: new Date(),
           dueDate: new Date(),
           creditorInstitutionCode: '',
-          labels: [''],
+          labels: [],
         };
+
+  const ibanFormatValidator = (iban: string) => {
+    if (iban.length !== 27) {
+      return false;
+    }
+
+    const char1and2 = iban.substring(0, 2).toUpperCase();
+    if (char1and2 !== 'IT') {
+      return false;
+    }
+
+    const char3 = /[0-9]/.test(iban[2]);
+    const char4 = /[0-9]/.test(iban[3]);
+    if (!char3 && !char4) {
+      return false;
+    }
+
+    const char5 = /[A-Z]/.test(iban[4].toUpperCase());
+    if (!char5) {
+      return false;
+    }
+
+    const remainingChars = iban.slice(5);
+    const from5To27Characters = /^[0-9]{22}$/.test(remainingChars);
+    // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+    if (!from5To27Characters) {
+      return false;
+    }
+
+    return true;
+  };
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const validate = (values: IbanOnCreation) => {
@@ -75,16 +106,24 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
     if (uploadType === 'single') {
       return Object.fromEntries(
         Object.entries({
-          iban: !values.iban ? 'Campo obbligatorio' : undefined,
+          iban: !values.iban
+            ? 'Campo obbligatorio'
+            : !ibanFormatValidator(values.iban)
+            ? 'l’IBAN inserito non è valido'
+            : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
             ? 'Campo obbligatorio'
-            : values.validityDate && values.validityDate.getTime() > values.dueDate.getTime()
+            : values.validityDate &&
+              values.dueDate &&
+              values.validityDate.getTime() > values.dueDate.getTime()
             ? 'La data di inizio non può essere maggiore di quella finale'
             : undefined,
           endDate: !values.dueDate
             ? 'Campo obbligatorio'
-            : values.dueDate && values.dueDate.getTime() < values.validityDate?.getTime()
+            : values.validityDate &&
+              values.dueDate &&
+              values.dueDate.getTime() < values.validityDate.getTime()
             ? 'La data di fine non può essere minore di quella iniziale'
             : undefined,
           creditorInstitutionCode:

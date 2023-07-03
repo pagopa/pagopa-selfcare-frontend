@@ -13,10 +13,19 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import AddEditIbanForm from './AddEditIbanForm';
 
+const emptyIban: IbanOnCreation = {
+  iban: undefined,
+  description: undefined,
+  validityDate: undefined,
+  creditorInstitutionCode: undefined,
+  dueDate: undefined,
+  labels: undefined,
+};
+
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [iban, setIban] = useState<IbanOnCreation>();
+  const [_iban, setIban] = useState<IbanOnCreation>();
   const goBack = () => history.push(ROUTES.IBAN);
   const addError = useErrorDispatcher();
   const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
@@ -76,7 +85,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm ibanBody={iban} goBack={goBack} />
+        <AddEditIbanForm goBack={goBack} ibanBody={emptyIban} />
       </Grid>
     </Grid>
   );

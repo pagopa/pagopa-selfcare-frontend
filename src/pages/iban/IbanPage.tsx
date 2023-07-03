@@ -353,7 +353,9 @@ const IbanPage = () => {
                               fontSize="inherit"
                               mr={4}
                             >
-                              {selectedIbanStandIn.iban}
+                              {selectedIbanStandIn.iban && selectedIbanStandIn.iban.length > 0
+                                ? selectedIbanStandIn.iban
+                                : '-'}
                             </Typography>
                           </>
                         ) : (
@@ -417,7 +419,9 @@ const IbanPage = () => {
                               fontSize="inherit"
                               mr={4}
                             >
-                              {selectedIbanCup.iban}
+                              {selectedIbanCup.iban && selectedIbanCup.iban.length > 0
+                                ? selectedIbanCup.iban
+                                : '-'}
                             </Typography>
                           </>
                         ) : (

@@ -82,11 +82,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
     const char3 = !/[0-9]/.test(iban[2]);
     const char4 = !/[0-9]/.test(iban[3]);
 
-    if (!char3) {
-      return false;
-    }
-
-    if (!char4) {
+    if (char3 && char4) {
       return false;
     }
 

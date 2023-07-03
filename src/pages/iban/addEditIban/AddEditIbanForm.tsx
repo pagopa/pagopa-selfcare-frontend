@@ -79,9 +79,14 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return false;
     }
 
-    const char3 = /[0-9]/.test(iban[2]);
-    const char4 = /[0-9]/.test(iban[3]);
-    if (!char3 && !char4) {
+    const char3 = !/[0-9]/.test(iban[2]);
+    const char4 = !/[0-9]/.test(iban[3]);
+
+    if (!char3) {
+      return false;
+    }
+
+    if (!char4) {
       return false;
     }
 
@@ -121,8 +126,8 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
             : undefined,
           endDate: !values.dueDate
             ? 'Campo obbligatorio'
-            : values.validityDate &&
-              values.dueDate &&
+            : values.dueDate &&
+              values.validityDate &&
               values.dueDate.getTime() < values.validityDate.getTime()
             ? 'La data di fine non può essere minore di quella iniziale'
             : undefined,
@@ -261,7 +266,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   name="iban"
                   label={t('addEditIbanPage.addForm.fields.iban.ibanCode')}
                   size="small"
-                  value={formik.values.iban}
+                  value={formik.values.iban?.toUpperCase()}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.iban && Boolean(formik.errors.iban)}
                   helperText={formik.touched.iban && formik.errors.iban}
@@ -294,17 +299,22 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
-                    value={formik.values.validityDate}
-                    onChange={(value) => formik.setFieldValue('validityDate', value)}
+                    value={
+                      typeof formik.values.validityDate !== 'undefined'
+                        ? format(new Date(formik.values.validityDate), 'dd/MM/yyyy')
+                        : ''
+                    }
+                    onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
-                          value: formik.values.validityDate
-                            ? format(formik.values.validityDate, 'dd/MM/yyyy')
-                            : '',
+                          value:
+                            typeof formik.values.validityDate !== 'undefined'
+                              ? format(new Date(formik.values.validityDate), 'dd/MM/yyyy')
+                              : '',
                         }}
                         id="validityDate"
                         data-testid="start-date-test"
@@ -322,17 +332,22 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
-                    value={formik.values.dueDate}
-                    onChange={(value) => formik.setFieldValue('dueDate', value)}
+                    value={
+                      typeof formik.values.dueDate !== 'undefined'
+                        ? format(new Date(formik.values.dueDate), 'dd/MM/yyyy')
+                        : ''
+                    }
+                    onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
-                          value: formik.values.dueDate
-                            ? format(formik.values.dueDate, 'dd/MM/yyyy')
-                            : '',
+                          value:
+                            typeof formik.values.dueDate !== 'undefined'
+                              ? format(new Date(formik.values.dueDate), 'dd/MM/yyyy')
+                              : '',
                         }}
                         id="dueDate"
                         data-testid="end-date-test"

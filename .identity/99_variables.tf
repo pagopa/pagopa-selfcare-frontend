@@ -8,6 +8,13 @@ locals {
   domain          = "selfcare"
   location_short  = "weu"
   product         = "${var.prefix}-${var.env_short}"
+
+  app_name = "github-${local.github.org}-${local.github.repository}-${var.prefix}-${local.domain}-${var.env}-aks"
+
+  container_app_environment = {
+    name           = "${local.prefix}-${var.env_short}-${local.location_short}-github-runner-cae",
+    resource_group = "${local.prefix}-${var.env_short}-${local.location_short}-github-runner-rg",
+  }
 }
 
 variable "env" {

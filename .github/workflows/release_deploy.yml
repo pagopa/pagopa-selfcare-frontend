@@ -99,6 +99,7 @@ jobs:
     name: Deploy
     if: ${{ inputs.semver != 'skip' }}
     environment: ${{ inputs.environment }}
+    needs: [ release ]
     steps:
       - name: Checkout
         id: checkout

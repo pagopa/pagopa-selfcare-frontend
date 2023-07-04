@@ -1,17 +1,17 @@
-import { ArrowBack } from '@mui/icons-material';
-import { Grid, Stack, Breadcrumbs, Typography } from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { useTranslation } from 'react-i18next';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import {ArrowBack} from '@mui/icons-material';
+import {Breadcrumbs, Grid, Stack, Typography} from '@mui/material';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {useTranslation} from 'react-i18next';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
-import { getStationDetail } from '../../../services/stationService';
-import { StationFormAction } from '../../../model/Station';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { isOperator } from '../components/commonFunctions';
+import {LOADING_TASK_STATION_ADD_EDIT} from '../../../utils/constants';
+import {getStationDetail} from '../../../services/stationService';
+import {StationFormAction} from '../../../model/Station';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {isOperator} from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {

@@ -1,12 +1,6 @@
-import { GridColumnHeaderParams, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
-import { cleanup } from '@testing-library/react';
-import {
-  buildColumnDefs,
-  renderCell,
-  showPspName,
-  showCustomHeader,
-  showStatus,
-} from '../ChannelPSPTableColumns';
+import {GridColumnHeaderParams, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
+import {cleanup} from '@testing-library/react';
+import {buildColumnDefs, renderCell, showCustomHeader, showPspName, showStatus,} from '../ChannelPSPTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

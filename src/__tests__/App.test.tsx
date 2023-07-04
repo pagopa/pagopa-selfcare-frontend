@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import App from '../App';
 import { Provider } from 'react-redux';
@@ -55,7 +54,6 @@ test('Test rendering', () => {
 });
 
 test('Test routing ', async () => {
-  const { history } = renderApp();
   const panoramica = await screen.getAllByText(/Panoramica/i);
   expect(panoramica.length).toBe(2);
   await waitFor(() => expect(window.location.pathname).toBe('/ui'));

@@ -77,11 +77,11 @@ jobs:
         with:
           node-version: 16.10.0
 
-      - name: Lint
+      - name: Unit Tests
         run: |
           yarn install
           yarn generate
-          yarn test:jest --watchAll=false
+          yarn test:coverage --watchAll=false
 
   sonar:
     name: Sonar

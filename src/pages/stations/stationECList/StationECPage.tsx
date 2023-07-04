@@ -1,10 +1,10 @@
-import { ArrowBack, FileDownload } from '@mui/icons-material';
-import { Alert, Box, Button, Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router';
+import {ArrowBack, FileDownload} from '@mui/icons-material';
+import {Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ROUTES from '../../../routes';

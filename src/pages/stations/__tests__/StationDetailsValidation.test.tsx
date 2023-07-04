@@ -1,17 +1,16 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
-import React from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, render} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../redux/store';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
 import {
-  RedirectProtocolEnum,
-  StationDetailResource,
-  WrapperStatusEnum,
+    RedirectProtocolEnum,
+    StationDetailResource,
+    WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {Protocol4ModEnum, ProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
 
 beforeEach(() => {
@@ -53,7 +52,7 @@ export const mockedFullStation: StationDetailResource = {
 };
 
 describe('<StationDetailsValidation.test />', () => {
-  const history = createMemoryHistory();
+  createMemoryHistory();
 
   test('render component StationDetailsValidation', () => {
     render(

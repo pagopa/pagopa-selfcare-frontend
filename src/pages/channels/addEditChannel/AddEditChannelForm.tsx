@@ -1,45 +1,33 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  TextField,
-  Typography,
+    Box,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Stack,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { FormikProps, useFormik } from 'formik';
-import { Trans, useTranslation } from 'react-i18next';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  Badge as BadgeIcon,
-  MenuBook as MenuBookIcon,
-  CreditCard as CreditCardIcon,
-} from '@mui/icons-material';
+import {FormikProps, useFormik} from 'formik';
+import {Trans, useTranslation} from 'react-i18next';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {Badge as BadgeIcon, CreditCard as CreditCardIcon, MenuBook as MenuBookIcon,} from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
-import {
-  associatePSPtoChannel,
-  createChannel,
-  getPaymentTypes,
-  updateChannel,
-} from '../../../services/channelService';
-import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
-import { Party } from '../../../model/Party';
-import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
-import {
-  ChannelDetailsDto,
-  Redirect_protocolEnum,
-} from '../../../api/generated/portal/ChannelDetailsDto';
-import { sortPaymentType } from '../../../model/PaymentType';
+import {ChannelOnCreation, FormAction} from '../../../model/Channel';
+import {associatePSPtoChannel, createChannel, getPaymentTypes, updateChannel,} from '../../../services/channelService';
+import {PaymentTypesResource} from '../../../api/generated/portal/PaymentTypesResource';
+import {Party} from '../../../model/Party';
+import {LOADING_TASK_CHANNEL_ADD_EDIT} from '../../../utils/constants';
+import {ChannelDetailsDto, Redirect_protocolEnum,} from '../../../api/generated/portal/ChannelDetailsDto';
+import {sortPaymentType} from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 

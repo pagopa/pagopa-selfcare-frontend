@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Link, useTheme, Alert, Button } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useTranslation, Trans } from 'react-i18next';
+import {useEffect, useState} from 'react';
+import {Alert, Box, Button, Grid, Link, Typography, useTheme} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {Trans, useTranslation} from 'react-i18next';
 import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import AddIcon from '@mui/icons-material/Add';
-import { useHistory } from 'react-router-dom';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
-import { getInstitutionApiKeys } from '../../services/apiKeyService';
+import {useHistory} from 'react-router-dom';
+import {useAppSelector} from '../../redux/hooks';
+import {partiesSelectors} from '../../redux/slices/partiesSlice';
+import {LOADING_TASK_API_KEY_GENERATION} from '../../utils/constants';
+import {getInstitutionApiKeys} from '../../services/apiKeyService';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import { ProductKeys } from '../../model/ApiKey';
+import {ProductKeys} from '../../model/ApiKey';
 import ROUTES from '../../routes';
 import ApiKeysCard from './ApiKeysCard';
 

@@ -1,22 +1,22 @@
-import { ArrowBack, ManageAccounts } from '@mui/icons-material';
-import { Box, Chip, Divider, Grid } from '@mui/material';
+import {ArrowBack, ManageAccounts} from '@mui/icons-material';
+import {Box, Chip, Divider, Grid} from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { generatePath, useHistory, useParams } from 'react-router';
-import { Link } from 'react-router-dom';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { FormAction } from '../../../model/Channel';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {generatePath, useHistory, useParams} from 'react-router';
+import {Link} from 'react-router-dom';
+import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
+import {FormAction} from '../../../model/Channel';
 
 import ROUTES from '../../../routes';
-import { getChannelDetail } from '../../../services/channelService';
-import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
+import {getChannelDetail} from '../../../services/channelService';
+import {LOADING_TASK_CHANNEL_DETAIL} from '../../../utils/constants';
 
 const ChannelDetailPage = () => {
   const { t } = useTranslation();

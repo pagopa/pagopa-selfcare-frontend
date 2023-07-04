@@ -1,10 +1,10 @@
 import React from 'react';
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../../../redux/store';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {store} from '../../../../redux/store';
 import ChannelPSPTable from '../ChannelPSPTable';
 import * as channelService from '../../../../services/channelService';
 

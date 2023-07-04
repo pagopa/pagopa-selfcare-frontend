@@ -1,17 +1,17 @@
-import { ArrowBack } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { FormAction } from '../../../model/Channel';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {ArrowBack} from '@mui/icons-material';
+import {Breadcrumbs, Grid, Stack, Typography} from '@mui/material';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router';
+import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
+import {FormAction} from '../../../model/Channel';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { getChannelCode, getChannelDetail } from '../../../services/channelService';
-import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
+import {getChannelCode, getChannelDetail} from '../../../services/channelService';
+import {LOADING_TASK_CHANNEL_ADD_EDIT} from '../../../utils/constants';
 import AddEditChannelForm from './AddEditChannelForm';
 
 const AddEditChannelPage = () => {

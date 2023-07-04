@@ -2,20 +2,22 @@
 /* eslint-disable functional/no-let */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField, {TextFieldProps} from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import { styled } from '@mui/material/styles';
-import { debounce } from '@mui/material/utils';
-import { useGridApiContext } from '@mui/x-data-grid';
-import { useGridRootProps } from '@mui/x-data-grid';
-import { useGridSelector } from '@mui/x-data-grid';
-import { gridQuickFilterValuesSelector } from '@mui/x-data-grid';
-import { GridFilterModel } from '@mui/x-data-grid';
-import { Box, Button, InputAdornment } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { generatePath, Link } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
+import {styled} from '@mui/material/styles';
+import {debounce} from '@mui/material/utils';
+import {
+    GridFilterModel,
+    gridQuickFilterValuesSelector,
+    useGridApiContext,
+    useGridRootProps,
+    useGridSelector
+} from '@mui/x-data-grid';
+import {Box, Button, InputAdornment} from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {generatePath, Link} from 'react-router-dom';
+import {Add} from '@mui/icons-material';
 import ROUTES from '../../../routes';
 
 const GridToolbarQuickFilterRoot = styled(TextField, {

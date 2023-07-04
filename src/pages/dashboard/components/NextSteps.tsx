@@ -1,10 +1,10 @@
-import { ArrowForward } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import {ArrowForward} from '@mui/icons-material';
+import {Alert, Box, Button, Card, Typography} from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {Link} from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { Party } from '../../../model/Party';
-import { SigninData } from '../../../model/Node';
+import {Party} from '../../../model/Party';
+import {SigninData} from '../../../model/Node';
 
 type Props = {
   selectedParty?: Party;

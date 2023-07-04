@@ -1,7 +1,7 @@
-import { Box, Button, InputAdornment, TextField } from '@mui/material';
-import { GridSearchIcon } from '@mui/x-data-grid';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import {Box, Button, InputAdornment, TextField} from '@mui/material';
+import {GridSearchIcon} from '@mui/x-data-grid';
+import {useTranslation} from 'react-i18next';
+import {Link} from 'react-router-dom';
 import ROUTES from '../../../routes';
 
 type Props = {

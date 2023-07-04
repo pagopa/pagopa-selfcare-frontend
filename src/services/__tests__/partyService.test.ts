@@ -13,11 +13,9 @@ import {
 
 jest.mock('../../api/PortalApiClient');
 
-let portalApiGetInstitutionSpy;
-let portalApiGetInstitutionsSpy;
+let portalApiGetInstitutionsSpy: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
-  portalApiGetInstitutionSpy = jest.spyOn(require('../partyService'), 'fetchPartyDetails');
   portalApiGetInstitutionsSpy = jest.spyOn(require('../partyService'), 'fetchParties');
 });
 

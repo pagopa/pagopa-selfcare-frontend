@@ -1,9 +1,9 @@
-import { User } from '@pagopa/selfcare-common-frontend/model/User';
-import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
-import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-frontend/utils/storage';
-import { userFromJwtToken } from '../../hooks/useLogin';
+import {User} from '@pagopa/selfcare-common-frontend/model/User';
+import {trackEvent} from '@pagopa/selfcare-common-frontend/services/analyticsService';
+import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
+import {userFromJwtToken} from '../../hooks/useLogin';
 import ROUTES from '../../routes';
-import { ENV } from '../../utils/env';
+import {ENV} from '../../utils/env';
 
 export const readUserFromToken = (token: string) => {
   const user: User = userFromJwtToken(token);

@@ -1,25 +1,13 @@
-import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
-import {
-  Grid,
-  Stack,
-  Breadcrumbs,
-  Typography,
-  Paper,
-  Chip,
-  Divider,
-  IconButton,
-} from '@mui/material';
-import { Box } from '@mui/system';
-import { useTranslation } from 'react-i18next';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useState } from 'react';
+import {ArrowBack, ManageAccounts, VisibilityOff} from '@mui/icons-material';
+import {Breadcrumbs, Chip, Divider, Grid, IconButton, Paper, Stack, Typography,} from '@mui/material';
+import {Box} from '@mui/system';
+import {useTranslation} from 'react-i18next';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useState} from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link, generatePath, useParams } from 'react-router-dom';
-import {
-  StationDetailResource,
-  WrapperStatusEnum,
-} from '../../../../api/generated/portal/StationDetailResource';
+import {generatePath, Link, useParams} from 'react-router-dom';
+import {StationDetailResource, WrapperStatusEnum,} from '../../../../api/generated/portal/StationDetailResource';
 import ROUTES from '../../../../routes';
 import DetailButtonsStation from './DetailButtonsStation';
 

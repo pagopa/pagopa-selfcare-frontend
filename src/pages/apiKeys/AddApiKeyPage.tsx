@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {
-  Grid,
-  Paper,
-  Typography,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  OutlinedInput,
-  Box,
-  Stack,
-  Button,
+    Box,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Paper,
+    Select,
+    Stack,
+    Typography,
 } from '@mui/material';
-import { theme } from '@pagopa/mui-italia';
-import { useTranslation, Trans } from 'react-i18next';
-import { useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import {theme} from '@pagopa/mui-italia';
+import {Trans, useTranslation} from 'react-i18next';
+import {useFormik} from 'formik';
+import {useHistory} from 'react-router-dom';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import ROUTES from '../../routes';
-import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
+import {LOADING_TASK_API_KEY_GENERATION} from '../../utils/constants';
 import {
-  API_KEY_PSP_PRODUCTS,
-  API_KEY_PRODUCTS,
-  AvailableProductKeys,
-  ConfiguredProductKeys,
-  ProductKeys,
-  NODOAUTH,
+    API_KEY_PRODUCTS,
+    API_KEY_PSP_PRODUCTS,
+    AvailableProductKeys,
+    ConfiguredProductKeys,
+    NODOAUTH,
+    ProductKeys,
 } from '../../model/ApiKey';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { createInstitutionApiKeys, getInstitutionApiKeys } from '../../services/apiKeyService';
+import {useAppSelector} from '../../redux/hooks';
+import {partiesSelectors} from '../../redux/slices/partiesSlice';
+import {createInstitutionApiKeys, getInstitutionApiKeys} from '../../services/apiKeyService';
 
 function AddApiKeyPage() {
   const { t } = useTranslation();

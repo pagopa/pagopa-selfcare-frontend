@@ -1,9 +1,9 @@
-import { Typography, Grid, Box, Chip } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import React, { CSSProperties, ReactNode } from 'react';
-import { TFunction } from 'react-i18next';
-import { generatePath } from 'react-router';
-import { FormAction } from '../../../model/Channel';
+import {Box, Chip, Grid, Typography} from '@mui/material';
+import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
+import React, {CSSProperties, ReactNode} from 'react';
+import {TFunction} from 'react-i18next';
+import {generatePath} from 'react-router';
+import {FormAction} from '../../../model/Channel';
 import ROUTES from '../../../routes';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 

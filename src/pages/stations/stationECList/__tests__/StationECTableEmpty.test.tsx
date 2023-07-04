@@ -1,11 +1,10 @@
-import React from 'react';
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { store } from '../../../../redux/store';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {Router} from 'react-router-dom';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
+import {store} from '../../../../redux/store';
 import StationECTableEmpty from '../StationECTableEmpty';
 
 beforeEach(() => {

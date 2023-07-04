@@ -1,8 +1,8 @@
-import { Alert, Box, Grid } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import {Alert, Box, Grid} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ChannelsTable from './ChannelsTable';

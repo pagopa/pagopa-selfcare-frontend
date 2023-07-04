@@ -1,19 +1,18 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
+import {createMemoryHistory} from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { FormAction } from '../../../../model/Channel';
-import { store } from '../../../../redux/store';
-import { mockedPaymentTypes } from '../../../../services/__mocks__/channelService';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {FormAction} from '../../../../model/Channel';
+import {store} from '../../../../redux/store';
+import {mockedPaymentTypes} from '../../../../services/__mocks__/channelService';
 import AddEditChannelForm from '../AddEditChannelForm';
-import { mockedParties } from '../../../../services/__mocks__/partyService';
-import { Redirect_protocolEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
-import { PortalApi } from '../../../../api/PortalApiClient';
-import { PaymentTypesResource } from '../../../../api/generated/portal/PaymentTypesResource';
+import {mockedParties} from '../../../../services/__mocks__/partyService';
+import {Redirect_protocolEnum} from '../../../../api/generated/portal/ChannelDetailsDto';
+import {PortalApi} from '../../../../api/PortalApiClient';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

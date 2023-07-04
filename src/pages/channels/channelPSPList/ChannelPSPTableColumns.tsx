@@ -1,8 +1,8 @@
-import { Typography, Grid, Box, Chip, IconButton } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import React, { CSSProperties, ReactNode } from 'react';
-import { TFunction } from 'react-i18next';
-import { RemoveCircle } from '@mui/icons-material';
+import {Box, Chip, Grid, IconButton, Typography} from '@mui/material';
+import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
+import React, {CSSProperties, ReactNode} from 'react';
+import {TFunction} from 'react-i18next';
+import {RemoveCircle} from '@mui/icons-material';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,

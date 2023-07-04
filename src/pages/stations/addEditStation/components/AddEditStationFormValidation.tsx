@@ -1,20 +1,11 @@
-import { FormikProps } from 'formik';
-import { useTranslation } from 'react-i18next';
-import {
-  Paper,
-  Typography,
-  Grid,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-import { Box } from '@mui/system';
-import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { StationOnCreation } from '../../../../model/Station';
+import {FormikProps} from 'formik';
+import {useTranslation} from 'react-i18next';
+import {FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography,} from '@mui/material';
+import {Box} from '@mui/system';
+import {Badge as BadgeIcon, MenuBook} from '@mui/icons-material';
+import {StationOnCreation} from '../../../../model/Station';
 import AddEditStationFormSectionTitle from '../AddEditStationFormSectionTitle';
-import { Protocol4ModEnum, ProtocolEnum } from '../../../../api/generated/portal/StationDetailsDto';
+import {Protocol4ModEnum, ProtocolEnum} from '../../../../api/generated/portal/StationDetailsDto';
 
 type Props = {
   formik: FormikProps<StationOnCreation>;

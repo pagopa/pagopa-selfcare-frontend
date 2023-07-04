@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -6,16 +6,16 @@ import Paper from '@mui/material/Paper';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTranslation, Trans } from 'react-i18next';
-import { Box } from '@mui/system';
-import { /* useErrorDispatcher, */ useLoading } from '@pagopa/selfcare-common-frontend';
-import { useFormik } from 'formik';
-import { generatePath, useHistory, useParams } from 'react-router-dom';
-import { theme } from '@pagopa/mui-italia';
+import {Trans, useTranslation} from 'react-i18next';
+import {Box} from '@mui/system';
+import {useLoading} from '@pagopa/selfcare-common-frontend';
+import {useFormik} from 'formik';
+import {generatePath, useHistory, useParams} from 'react-router-dom';
+import {theme} from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
-import { PSP } from '../../../model/PSP';
-import { getChannelAvailablePSP } from '../../../services/channelService';
+import {LOADING_TASK_PSP_AVAILABLE} from '../../../utils/constants';
+import {PSP} from '../../../model/PSP';
+import {getChannelAvailablePSP} from '../../../services/channelService';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {

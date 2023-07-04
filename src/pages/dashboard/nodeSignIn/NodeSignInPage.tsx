@@ -1,16 +1,16 @@
-import { ArrowBack } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {ArrowBack} from '@mui/icons-material';
+import {Breadcrumbs, Grid, Stack, Typography} from '@mui/material';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { getCreditorInstitutionDetails } from '../../../services/nodeService';
-import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../../utils/constants';
+import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import {getCreditorInstitutionDetails} from '../../../services/nodeService';
+import {LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS} from '../../../utils/constants';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInECForm from './NodeSignInECForm';
 

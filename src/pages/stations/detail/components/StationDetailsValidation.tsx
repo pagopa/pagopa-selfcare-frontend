@@ -1,19 +1,16 @@
-import { Alert, Box, Chip, Divider, Grid, IconButton } from '@mui/material';
+import {Alert, Box, Chip, Divider, Grid, IconButton} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { useTranslation } from 'react-i18next';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import {useTranslation} from 'react-i18next';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { VisibilityOff } from '@mui/icons-material';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {useParams} from 'react-router-dom';
+import {useState} from 'react';
+import {VisibilityOff} from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-  StationDetailResource,
-  WrapperStatusEnum,
-} from '../../../../api/generated/portal/StationDetailResource';
-import { isOperator } from '../../components/commonFunctions';
+import {StationDetailResource, WrapperStatusEnum,} from '../../../../api/generated/portal/StationDetailResource';
+import {isOperator} from '../../components/commonFunctions';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {

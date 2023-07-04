@@ -1,20 +1,19 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import React from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../redux/store';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
 import StationDetails from '../detail/components/StationDetails';
 import {
-  RedirectProtocolEnum,
-  StationDetailResource,
-  WrapperStatusEnum,
+    RedirectProtocolEnum,
+    StationDetailResource,
+    WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { mockedParties } from '../../../services/__mocks__/partyService';
-import { isOperator } from '../components/commonFunctions';
+import {partiesActions} from '../../../redux/slices/partiesSlice';
+import {mockedParties} from '../../../services/__mocks__/partyService';
+import {isOperator} from '../components/commonFunctions';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

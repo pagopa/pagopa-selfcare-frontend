@@ -1,21 +1,16 @@
 import React from 'react';
-import { render, waitFor, screen } from '@testing-library/react';
-import * as reduxHooks from '../../../redux/hooks';
+import {render, screen, waitFor} from '@testing-library/react';
 
-import { Provider } from 'react-redux';
-
-import { verifyMockExecution as verifyLoginMockExecution } from '../../../decorators/__mocks__/withLogin';
-import { verifyMockExecution as verifyPartiesMockExecution } from '../../../decorators/__mocks__/withParties';
-import { verifyMockExecution as verifySelectedPartyProductsMockExecution } from '../../../decorators/__mocks__/withSelectedPartyProducts';
-import { createMemoryHistory } from 'history';
+import {Provider} from 'react-redux';
+import {createMemoryHistory} from 'history';
 // import { mockedParties } from '../services/__mocks__/partyService';
-import { ThemeProvider } from '@mui/material';
-import { theme } from '@pagopa/mui-italia';
+import {ThemeProvider} from '@mui/material';
+import {theme} from '@pagopa/mui-italia';
 import '../../../locale';
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
 import DashboardPage from '../DashboardPage';
-import { createStore } from '../../../redux/store';
+import {createStore} from '../../../redux/store';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

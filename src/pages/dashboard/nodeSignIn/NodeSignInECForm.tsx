@@ -1,18 +1,18 @@
-import { useHistory } from 'react-router';
-import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
-import { FormikProps, useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Badge as BadgeIcon } from '@mui/icons-material';
+import {useHistory} from 'react-router';
+import {Box, Button, Grid, Paper, Stack, TextField} from '@mui/material';
+import {FormikProps, useFormik} from 'formik';
+import {useTranslation} from 'react-i18next';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {Badge as BadgeIcon} from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
+import {LOADING_TASK_NODE_SIGN_IN_EC} from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { createECDirect, updateCreditorInstitution } from '../../../services/nodeService';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import {createECDirect, updateCreditorInstitution} from '../../../services/nodeService';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {CreditorInstitutionAddressDto} from '../../../api/generated/portal/CreditorInstitutionAddressDto';
+import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
 type Props = {
   goBack: () => void;

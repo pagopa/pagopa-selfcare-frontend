@@ -1,46 +1,43 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { theme } from '@pagopa/mui-italia';
-import { FormikProps, useFormik } from 'formik';
-import { useEffect, useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import {theme} from '@pagopa/mui-italia';
+import {FormikProps, useFormik} from 'formik';
+import {useEffect, useState} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
 import {
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Stack,
-  TextField,
-  Typography,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Stack,
+    TextField,
+    Typography,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { useHistory } from 'react-router-dom';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {Box} from '@mui/system';
+import {Badge as BadgeIcon, MenuBook} from '@mui/icons-material';
+import {useHistory} from 'react-router-dom';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {RedirectProtocolEnum, StatusEnum} from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
-  createStation,
-  createWrapperStation,
-  getStationCode,
-  updateStation,
-  updateWrapperStationToCheck,
-  updateWrapperStationToCheckUpdate,
+    createStation,
+    createWrapperStation,
+    getStationCode,
+    updateStation,
+    updateWrapperStationToCheck,
+    updateWrapperStationToCheckUpdate,
 } from '../../../services/stationService';
-import {
-  LOADING_TASK_GENERATION_STATION_CODE,
-  LOADING_TASK_STATION_ADD_EDIT,
-} from '../../../utils/constants';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { StationFormAction, StationOnCreation } from '../../../model/Station';
-import { isOperator } from '../components/commonFunctions';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import {LOADING_TASK_GENERATION_STATION_CODE, LOADING_TASK_STATION_ADD_EDIT,} from '../../../utils/constants';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {StationFormAction, StationOnCreation} from '../../../model/Station';
+import {isOperator} from '../components/commonFunctions';
+import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {

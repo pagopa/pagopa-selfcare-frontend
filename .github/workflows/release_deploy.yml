@@ -94,39 +94,52 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/maven-release@v1.5.4
+        uses: pagopa/github-actions-template/node-release@node
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
-          beta: ${{ inputs.beta }}
           skip_ci: false
 
-  image:
-    needs: [ setup, release ]
-    name: Build and Push Docker Image
+  deploy:
     runs-on: ubuntu-latest
+    name: Deploy
     if: ${{ inputs.semver != 'skip' }}
+    environment: ${{ inputs.environment }}
     steps:
-      - name: Build and Push
-        id: semver
-        uses: pagopa/github-actions-template/ghcr-build-push@v1.5.4
+      - name: Checkout
+        id: checkout
+        # from https://github.com/actions/checkout/commits/main
+        uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
         with:
-          branch: ${{ github.ref_name}}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ needs.release.outputs.version }}
+          persist-credentials: false
 
-  deploy_aks:
-    name: Deploy on AKS
-    needs: [ setup, release, image ]
-    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-    strategy:
-      matrix:
-        environment: [ dev, uat, prod ]
-    uses: ./.github/workflows/deploy_with_github_runner.yml
-    with:
-      environment: ${{ matrix.environment }}
-      target: ${{ needs.setup.outputs.environment }}
-    secrets: inherit
+      - name: Set Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.10.0
+
+      - name: Login
+        id: login
+        # from https://github.com/Azure/login/commits/master
+        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+
+      - name: Build
+        run: |
+          yarn install
+          yarn generate
+          yarn build
+
+      - name: Deploy
+        run: |
+          az storage blob sync --container '$(blob_container_name)' --account-name $(storage_account) -s "$(Pipeline.Workspace)/Bundle" --destination '$(basePath)/'
+
+      - name: Purge
+        run: |
+          az cdn endpoint purge -g $(resource_group) -n $(cdn_endpoint) --profile-name $(cdn_profile) --content-paths "/$(basePath)" "/$(basePath)/*" "/"
 
   notify:
     needs: [ setup, release, deploy_aks ]

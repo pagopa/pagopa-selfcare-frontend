@@ -56,3 +56,4 @@ yarn-error.log
 !.release-it.js
 .idea
 .vscode
+/test-report.xml

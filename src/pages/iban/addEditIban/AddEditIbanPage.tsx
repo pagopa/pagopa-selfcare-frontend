@@ -16,9 +16,9 @@ import AddEditIbanForm from './AddEditIbanForm';
 const emptyIban: IbanOnCreation = {
   iban: undefined,
   description: undefined,
-  validityDate: undefined,
+  validityDate: null,
   creditorInstitutionCode: undefined,
-  dueDate: undefined,
+  dueDate: null,
   labels: undefined,
 };
 

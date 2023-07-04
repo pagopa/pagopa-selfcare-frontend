@@ -23,7 +23,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { format } from 'date-fns';
 import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEditIbanFormSectionTitle';
 import ROUTES from '../../../routes';
 import { createIban } from '../../../services/__mocks__/ibanService';
@@ -45,9 +44,11 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
   const changeUploadType = (event: any) => {
     setUploadType(event.target.value);
   };
-  const changeSubject = async (event: any) => {
-    setSubject(event.target.value);
-    await formik.setFieldValue('holderFiscalCode', '');
+
+  const changeSubject = (e: any) => {
+    setSubject(e.target.value);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setFieldValue('creditorInstitutionCode', undefined);
   };
 
   const initialFormData = (ibanBody: IbanOnCreation | undefined) =>
@@ -74,19 +75,23 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return false;
     }
 
-    const char1and2 = iban.substring(0, 2).toUpperCase();
+    const char1and2 = iban.substring(0, 2);
     if (char1and2 !== 'IT') {
       return false;
     }
 
-    const char3 = !/[0-9]/.test(iban[2]);
-    const char4 = !/[0-9]/.test(iban[3]);
+    const char3 = /[0-9]/.test(iban[2]);
+    const char4 = /[0-9]/.test(iban[3]);
 
-    if (char3 && char4) {
+    if (!char3) {
       return false;
     }
 
-    const char5 = /[A-Z]/.test(iban[4].toUpperCase());
+    if (!char4) {
+      return false;
+    }
+
+    const char5 = /[A-Z]/.test(iban[4]);
     if (!char5) {
       return false;
     }
@@ -101,9 +106,19 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
     return true;
   };
 
+  const validateCodiceFiscale = (fiscalCode: string | undefined) => {
+    const cfRegex = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/;
+    if (fiscalCode) {
+      return cfRegex.test(fiscalCode);
+    } else {
+      return false;
+    }
+  };
+
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  const validate = (values: IbanOnCreation) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
+    const minDate = new Date('01/01/1901');
+
     if (uploadType === 'single') {
       return Object.fromEntries(
         Object.entries({
@@ -115,28 +130,30 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
             ? 'Campo obbligatorio'
-            : values.validityDate &&
-              values.dueDate &&
-              values.validityDate.getTime() > values.dueDate.getTime()
-            ? 'La data di inizio non può essere maggiore di quella finale'
+            : values.validityDate.getTime() < minDate.getTime()
+            ? 'La data inserita non è valida'
+            : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
+            ? 'La data di inizio non può essere maggiore di quella di scadenza'
             : undefined,
-          endDate: !values.dueDate
+          dueDate: !values.dueDate
             ? 'Campo obbligatorio'
-            : values.dueDate &&
-              values.validityDate &&
-              values.dueDate.getTime() < values.validityDate.getTime()
-            ? 'La data di fine non può essere minore di quella iniziale'
+            : values.dueDate.getTime() < minDate.getTime()
+            ? 'La data inserita non è valida'
+            : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
+            ? "La data di scadenza non può essere minore di quella d'inizio"
             : undefined,
           creditorInstitutionCode:
             subject === 'me'
               ? undefined
               : !values.creditorInstitutionCode
               ? 'Campo obbligatorio'
+              : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
+              ? 'Codice fiscale non valido'
               : undefined,
         }).filter(([_key, value]) => value)
       );
     } else {
-      return;
+      return {};
     }
   };
 
@@ -262,7 +279,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   name="iban"
                   label={t('addEditIbanPage.addForm.fields.iban.ibanCode')}
                   size="small"
-                  value={formik.values.iban?.toUpperCase()}
+                  value={formik.values.iban}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.iban && Boolean(formik.errors.iban)}
                   helperText={formik.touched.iban && formik.errors.iban}
@@ -295,11 +312,8 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
-                    value={
-                      typeof formik.values.validityDate !== 'undefined'
-                        ? format(new Date(formik.values.validityDate), 'dd/MM/yyyy')
-                        : ''
-                    }
+                    inputFormat="dd/MM/yyyy"
+                    value={formik.values.validityDate ?? null}
                     onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -307,10 +321,6 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
-                          value:
-                            typeof formik.values.validityDate !== 'undefined'
-                              ? format(new Date(formik.values.validityDate), 'dd/MM/yyyy')
-                              : '',
                         }}
                         id="validityDate"
                         data-testid="start-date-test"
@@ -328,11 +338,8 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
-                    value={
-                      typeof formik.values.dueDate !== 'undefined'
-                        ? format(new Date(formik.values.dueDate), 'dd/MM/yyyy')
-                        : ''
-                    }
+                    inputFormat="dd/MM/yyyy"
+                    value={formik.values.dueDate ?? null}
                     onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -340,10 +347,6 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
-                          value:
-                            typeof formik.values.dueDate !== 'undefined'
-                              ? format(new Date(formik.values.dueDate), 'dd/MM/yyyy')
-                              : '',
                         }}
                         id="dueDate"
                         data-testid="end-date-test"
@@ -374,7 +377,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   >
                     <FormControlLabel
                       checked={subject === 'me'}
-                      onChange={changeSubject}
+                      onChange={(e) => changeSubject(e)}
                       value="me"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.me')}
@@ -382,7 +385,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                     />
                     <FormControlLabel
                       checked={subject === 'anotherOne'}
-                      onChange={changeSubject}
+                      onChange={(e) => changeSubject(e)}
                       value="anotherOne"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
@@ -399,7 +402,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
                   placeholder="AAAAAAAAAAAAAAAAAAA"
                   size="small"
-                  value={formik.values.creditorInstitutionCode}
+                  value={formik.values.creditorInstitutionCode ?? ''}
                   onChange={(e) => formik.handleChange(e)}
                   error={
                     formik.touched.creditorInstitutionCode &&

@@ -54,6 +54,7 @@ test('Test rendering', () => {
 });
 
 test('Test routing ', async () => {
+  const { history } = renderApp();
   const panoramica = await screen.getAllByText(/Panoramica/i);
   expect(panoramica.length).toBe(2);
   await waitFor(() => expect(window.location.pathname).toBe('/ui'));

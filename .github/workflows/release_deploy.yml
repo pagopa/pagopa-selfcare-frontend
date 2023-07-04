@@ -16,12 +16,6 @@ on:
           - dev
           - uat
           - prod
-          - all
-      beta:
-        required: false
-        type: boolean
-        description: deploy beta version on AKS
-        default: false
       skip_release:
         required: false
         type: boolean
@@ -129,17 +123,46 @@ jobs:
 
       - name: Build
         run: |
+          export REACT_APP_ENV='${{ inputs.environment }}'
+          export INLINE_RUNTIME_CHUNK='false'
+          
+          export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
+          export REACT_APP_URL_FE_LOGOUT='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
+          export REACT_APP_URL_FE_LANDING='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
+          export REACT_APP_URL_FE_ASSISTANCE='{{ vars.SELFCARE_HOST_FE }}/assistenza'
+          export REACT_APP_URL_FE_SELFCARE='{{ vars.SELFCARE_HOST_FE }}/dashboard/'
+          export REACT_APP_URL_FE_TOKEN_EXCHANGE='{{ vars.SELFCARE_HOST_FE }}/token-exchange'
+          
+          export REACT_APP_URL_API_PORTAL='{{ vars.SELFCARE_API_BE }}/selfcare/pagopa/v1/'
+          export REACT_APP_URL_API_TOKEN='{{ vars.SELFCARE_API_BE }}/api/token/token'
+          export REACT_APP_URL_API_APICONFIG='{{ vars.SELFCARE_API_BE }}/backoffice/apiconfig/auth/v1'
+          
+          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
+          
+          export REACT_APP_ANALYTICS_ENABLE='{{ vars.REACT_APP_ANALYTICS_ENABLED }}'
+          export REACT_APP_ANALYTICS_MOCKED='{{ vars.REACT_APP_ANALYTICS_MOCKED }}'
+          
+          export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
+          export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;'
+          export REACT_APP_MIXPANEL_TOKEN='{{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
+          export REACT_APP_ONE_TRUST_BASE_URL='{{ vars.SELFCARE_HOST_FE }}/ot/test'
+          export REACT_APP_ONETRUST_DOMAIN_ID='{{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
+          
+          export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+          export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+          export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+          
           yarn install
           yarn generate
           yarn build
 
       - name: Deploy
         run: |
-          az storage blob sync --container '$(blob_container_name)' --account-name $(storage_account) -s "$(Pipeline.Workspace)/Bundle" --destination '$(basePath)/'
+          az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/'
 
       - name: Purge
         run: |
-          az cdn endpoint purge -g $(resource_group) -n $(cdn_endpoint) --profile-name $(cdn_profile) --content-paths "/$(basePath)" "/$(basePath)/*" "/"
+          az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n $({{ ars.CDN_ENDPOINT }} --profile-name ${{ CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
 
   notify:
     needs: [ setup, release, deploy_aks ]

@@ -9,7 +9,6 @@ data "github_organization_teams" "all" {
 }
 
 data "azurerm_key_vault" "key_vault" {
-
   name = "pagopa-${var.env_short}-kv"
   resource_group_name = "pagopa-${var.env_short}-sec-rg"
 }
@@ -20,19 +19,26 @@ data "azurerm_key_vault" "domain_key_vault" {
 }
 
 data "azurerm_key_vault_secret" "key_vault_sonar" {
-
   name = "sonar-token"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_bot_token" {
-
   name = "bot-token-github"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_cucumber_token" {
-
   name = "cucumber-token"
   key_vault_id = data.azurerm_key_vault.key_vault.id
+}
+
+data "azurerm_key_vault_secret" "key_vault_mixpanel_token" {
+  name = "react-app-mixpanel-token"
+  key_vault_id = data.azurerm_key_vault.domain_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "key_vault_onetrust_domain" {
+  name = "react-app-onetrust-domain-id"
+  key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }

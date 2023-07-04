@@ -81,7 +81,7 @@ jobs:
         run: |
           yarn install
           yarn generate
-          yarn test:coverage --watchAll=false
+          yarn test:jest --watchAll=false
 
   sonar:
     name: Sonar

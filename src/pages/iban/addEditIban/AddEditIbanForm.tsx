@@ -123,32 +123,32 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return Object.fromEntries(
         Object.entries({
           iban: !values.iban
-            ? t('addEditIbanPage.validation.requiredField')
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : !ibanFormatValidator(values.iban)
-            ? t('addEditIbanPage.validation.ibanNotValid')
+            ? t('addEditIbanPage.validationMessage.ibanNotValid')
             : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
-            ? t('addEditIbanPage.validation.requiredField')
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : values.validityDate.getTime() < minDate.getTime()
-            ? t('addEditIbanPage.validation.dateNotValid')
+            ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
-            ? t('addEditIbanPage.validation.startDateOverEndDate')
+            ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
             : undefined,
           dueDate: !values.dueDate
-            ? t('addEditIbanPage.validation.requiredField')
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : values.dueDate.getTime() < minDate.getTime()
-            ? t('addEditIbanPage.validation.dateNotValid')
+            ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
-            ? t('addEditIbanPage.validation.endDateunderStartDate')
+            ? t('addEditIbanPage.validationMessage.endDateunderStartDate')
             : undefined,
           creditorInstitutionCode:
             subject === 'me'
               ? undefined
               : !values.creditorInstitutionCode
-              ? t('addEditIbanPage.validation.requiredField')
+              ? t('addEditIbanPage.validationMessage.requiredField')
               : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
-              ? t('addEditIbanPage.validation.ecOwnerNotValid')
+              ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
       );

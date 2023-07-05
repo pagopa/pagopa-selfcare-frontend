@@ -1,7 +1,7 @@
 // import { IbanCreateRequestDto } from '../../api/generated/portal/IbanCreateRequestDto';
 import { IbanResource } from '../../api/generated/portal/IbanResource';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
-import { IbanOnCreation } from '../../model/Iban';
+import { IbanOnCreation, IbanStatus } from '../../model/Iban';
 
 export const ibanList: IbansResource = {
   ibanList: [
@@ -35,10 +35,12 @@ export const ibanList: IbansResource = {
 export const mockedIban: IbanOnCreation = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
+  publicationDate: new Date('2023-02-03T13:49:19.897Z'),
   validityDate: new Date('2023-04-01T13:49:19.897Z'),
   dueDate: new Date('2033-04-01T13:49:19.897Z'),
   creditorInstitutionCode: '',
   labels: [{}],
+  status: IbanStatus.ACTIVE,
 };
 
 export const mockedIbanCup: IbanResource = {

@@ -699,7 +699,19 @@
     "breadcrumb": "IBAN",
     "createdOn": "Creato il",
     "ibanConfiguration": "Configurazione IBAN",
-    "state": "Stato"
+    "state": "Stato",
+    "ibanData": "Dati IBAN",
+    "iban": "IBAN",
+    "ibanDesc": "Descrizione",
+    "validityDate": "Inizio validità",
+    "from": "Dal",
+    "ecData": "Dati ente crerditore",
+    "fiscalCode": "Codice Fiscale",
+    "buttons": {
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "deactivate": "Disattiva"
+    }
   },
   "addEditIbanPage": {
     "title": "Aggiungi IBAN",

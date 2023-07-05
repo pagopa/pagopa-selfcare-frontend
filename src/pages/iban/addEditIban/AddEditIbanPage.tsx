@@ -25,7 +25,7 @@ const emptyIban: IbanOnCreation = {
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [_iban, setIban] = useState<IbanOnCreation>();
+  const [iban, setIban] = useState<IbanOnCreation>(emptyIban);
   const goBack = () => history.push(ROUTES.IBAN);
   const addError = useErrorDispatcher();
   const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
@@ -35,24 +35,26 @@ const AddEditIbanPage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   useEffect(() => {
-    setLoading(true);
-    getIban(ibanId)
-      .then((response) => setIban(response))
-      .catch((reason) => {
-        addError({
-          id: 'GET_IBAN',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting iban`,
-          toNotify: true,
-          displayableTitle: t('addEditIbanPage.errors.getIbanTitle'),
-          displayableDescription: t('addEditIbanPage.errors.getIbanMessage'),
-          component: 'Toast',
+    if (formAction === IbanFormAction.Edit) {
+      setLoading(true);
+      getIban(ibanId)
+        .then((response) => setIban(response))
+        .catch((reason) => {
+          addError({
+            id: 'GET_IBAN',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting iban`,
+            toNotify: true,
+            displayableTitle: t('addEditIbanPage.errors.getIbanTitle'),
+            displayableDescription: t('addEditIbanPage.errors.getIbanMessage'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    }
   }, [selectedParty]);
 
   return (
@@ -85,7 +87,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm goBack={goBack} ibanBody={emptyIban} />
+        <AddEditIbanForm goBack={goBack} ibanBody={iban} />
       </Grid>
     </Grid>
   );

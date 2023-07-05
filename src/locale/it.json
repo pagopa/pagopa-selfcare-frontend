@@ -752,7 +752,7 @@
       "ibanNotValid": "l’IBAN inserito non è valido",
       "dateNotValid": "La data inserita non è valida",
       "startDateOverEndDate": "La data di inizio non può essere maggiore di quella di scadenza",
-      "endDateunderStartDate": "La data di scadenza non può essere minore di quella d'inizio",
+      "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio",
       "ecOwnerNotValid": "Codice fiscale non valido"
     }
   },

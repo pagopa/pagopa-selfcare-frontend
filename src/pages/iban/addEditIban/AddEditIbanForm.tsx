@@ -123,32 +123,32 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return Object.fromEntries(
         Object.entries({
           iban: !values.iban
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : !ibanFormatValidator(values.iban)
-            ? 'l’IBAN inserito non è valido'
+            ? t('addEditIbanPage.validationMessage.ibanNotValid')
             : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : values.validityDate.getTime() < minDate.getTime()
-            ? 'La data inserita non è valida'
+            ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
-            ? 'La data di inizio non può essere maggiore di quella di scadenza'
+            ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
             : undefined,
           dueDate: !values.dueDate
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validationMessage.requiredField')
             : values.dueDate.getTime() < minDate.getTime()
-            ? 'La data inserita non è valida'
+            ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
-            ? "La data di scadenza non può essere minore di quella d'inizio"
+            ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
           creditorInstitutionCode:
             subject === 'me'
               ? undefined
               : !values.creditorInstitutionCode
-              ? 'Campo obbligatorio'
+              ? t('addEditIbanPage.validationMessage.requiredField')
               : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
-              ? 'Codice fiscale non valido'
+              ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
       );

@@ -167,63 +167,73 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     Object.fromEntries(
       Object.entries({
         ...{
-          stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
+          stationCode: !values.stationCode
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
           brokerCode:
             operator && formAction !== StationFormAction.Create
               ? ''
               : !values.brokerCode
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : '',
           primitiveVersion: !values.primitiveVersion
-            ? 'Campo obbligatorio'
+            ? t('addEditStationPage.validation.requiredField')
             : validatePrimitiveVersion(values.primitiveVersion)
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
-          redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
-          redirectPort: !values.redirectPort
-            ? 'Campo obbligatorio'
-            : isNaN(values.redirectPort)
-            ? 'Non Valido, l’input dev’essere un numero'
+          redirectProtocol: !values.redirectProtocol
+            ? t('addEditStationPage.validation.requiredField')
             : undefined,
-          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-          redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
-          redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? t('addEditStationPage.validation.requiredField')
+            : isNaN(values.redirectPort)
+            ? t('addEditStationPage.validation.requiredInputNumber')
+            : undefined,
+          redirectIp: !values.redirectIp
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          redirectPath: !values.redirectPath
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          redirectQueryString: !values.redirectQueryString
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
           targetHost:
             !values.targetHost &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPath:
             !values.targetPath &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPort:
             !values.targetPort &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : isNaN(values.targetPort)
-              ? 'Non Valido, l’input dev’essere un numero'
+              ? t('addEditStationPage.validation.requiredInputNumber')
               : undefined,
           targetHostPof:
             !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPathPof:
             !values.targetPathPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPortPof:
             !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : typeof values.targetPortPof !== 'undefined' && isNaN(values.targetPortPof)
-              ? 'Non Valido, l’input dev’essere un numero'
+              ? t('addEditStationPage.validation.requiredInputNumber')
               : undefined,
         },
         ...(operator && formAction !== StationFormAction.Create

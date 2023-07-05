@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "1.0.0-1-gha",
+  "version": "1.0.0-2-gha",
   "homepage": "ui",
   "private": true,
   "scripts": {

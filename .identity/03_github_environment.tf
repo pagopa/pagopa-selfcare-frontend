@@ -29,6 +29,8 @@ locals {
     "REACT_APP_ONETRUST_DOMAIN_ID" : data.azurerm_key_vault_secret.key_vault_onetrust_domain.value
   }
   env_variables = {
+    "CONTAINER_APP_ENVIRONMENT_NAME" : local.container_app_environment.name,
+    "CONTAINER_APP_ENVIRONMENT_RESOURCE_GROUP_NAME" : local.container_app_environment.resource_group,
     "STORAGE_ACCOUNT" : "pagopa${var.env_short}selfcaresa",
     "CDN_RESOURCE_GROUP" : "pagopa-${var.env_short}-fe-rg",
     "CDN_ENDPOINT" : "pagopa-${var.env_short}-selfcare-cdn-endpoint",

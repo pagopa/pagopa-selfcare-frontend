@@ -94,12 +94,35 @@ jobs:
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
 
+  create_runner:
+    name: Create Runner
+    runs-on: ubuntu-22.04
+    needs: [ release ]
+    if: ${{ inputs.semver != 'skip' }}
+    environment:
+      name: ${{ inputs.environment }}
+    outputs:
+      runner_name: ${{ steps.create_github_runner.outputs.runner_name }}
+    steps:
+      - name: Create GitHub Runner
+        id: create_github_runner
+        # from https://github.com/pagopa/eng-github-actions-iac-template/tree/main/azure/github-self-hosted-runner-azure-create-action
+        uses: pagopa/eng-github-actions-iac-template/azure/github-self-hosted-runner-azure-create-action@main
+        with:
+          client_id: ${{ secrets.CLIENT_ID }}
+          tenant_id: ${{ secrets.TENANT_ID }}
+          subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+          container_app_environment_name: ${{ vars.CONTAINER_APP_ENVIRONMENT_NAME }}
+          resource_group_name: ${{ vars.CONTAINER_APP_ENVIRONMENT_RESOURCE_GROUP_NAME }} # RG of the runner
+          pat_token: ${{ secrets.BOT_TOKEN_GITHUB }}
+          self_hosted_runner_image_tag: "v1.4.1"
+
   deploy:
-    runs-on: ubuntu-latest
+    needs: [ create_runner ]
+    runs-on: [ self-hosted, "${{ needs.create_runner.outputs.runner_name }}" ]
     name: Deploy
     if: ${{ inputs.semver != 'skip' }}
     environment: ${{ inputs.environment }}
-    needs: [ release ]
     steps:
       - name: Checkout
         id: checkout
@@ -170,6 +193,26 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n $({{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
+
+  cleanup_runner:
+    name: Cleanup Runner
+    needs: [ create_runner, deploy ]
+    if: ${{ success() || failure() }}
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Cleanup GitHub Runner
+        id: cleanup_github_runner
+        # from https://github.com/pagopa/eng-github-actions-iac-template/tree/main/azure/github-self-hosted-runner-azure-cleanup-action
+        uses: pagopa/eng-github-actions-iac-template/azure/github-self-hosted-runner-azure-cleanup-action@0ee2f58fd46d10ac7f00bce4304b98db3dbdbe9a
+        with:
+          client_id: ${{ secrets.CLIENT_ID }}
+          tenant_id: ${{ secrets.TENANT_ID }}
+          subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+          resource_group_name: ${{ vars.CONTAINER_APP_ENVIRONMENT_RESOURCE_GROUP_NAME }}
+          runner_name: ${{ needs.create_runner.outputs.runner_name }}
+          pat_token: ${{ secrets.BOT_TOKEN_GITHUB }}
+
 
   notify:
     needs: [ setup, release, deploy ]

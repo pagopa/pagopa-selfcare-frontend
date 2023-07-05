@@ -14,4 +14,5 @@ export type IbanOnCreation = {
   publicationDate?: Date | null;
   ecOwner?: string;
   labels?: Readonly<Array<IbanLabel>>;
+  is_active?: boolean;
 };

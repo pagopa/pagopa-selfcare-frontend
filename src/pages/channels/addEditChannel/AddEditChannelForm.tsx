@@ -177,50 +177,76 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     Object.fromEntries(
       Object.entries({
         ...{
-          broker_psp_code: !values.broker_psp_code ? 'Campo obbligatorio' : undefined,
-          broker_description: !values.broker_description ? 'Campo obbligatorio' : undefined,
-          channel_code: !values.channel_code ? 'Campo obbligatorio' : undefined,
+          broker_psp_code: !values.broker_psp_code
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          broker_description: !values.broker_description
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          channel_code: !values.channel_code
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
           redirect_port: !values.redirect_port
-            ? 'Campo obbligatorio'
+            ? t('addEditChannelPage.validationMessage.requiredField')
             : isNaN(values.redirect_port)
-            ? 'Non Valido, l’input dev’essere un numero'
+            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
             : undefined,
-          redirect_ip: !values.redirect_ip ? 'Campo obbligatorio' : undefined,
-          redirect_path: !values.redirect_path ? 'Campo obbligatorio' : undefined,
-          redirect_query_string: !values.redirect_query_string ? 'Campo obbligatorio' : undefined,
-          target_host: !values.target_host ? 'Campo obbligatorio' : undefined,
-          target_path: !values.target_path ? 'Campo obbligatorio' : undefined,
+          redirect_ip: !values.redirect_ip
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          redirect_path: !values.redirect_path
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          redirect_query_string: !values.redirect_query_string
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          target_host: !values.target_host
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          target_path: !values.target_path
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
           target_port: !values.target_port
-            ? 'Campo obbligatorio'
+            ? t('addEditChannelPage.validationMessage.requiredField')
             : isNaN(values.target_port)
-            ? 'Non Valido, l’input dev’essere un numero'
+            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
             : undefined,
-          payment_types: values.payment_types?.includes('') ? 'Campo obbligatorio' : undefined,
+          payment_types: values.payment_types?.includes('')
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
         },
         ...(operator && {
           primitive_version: !values.primitive_version
-            ? 'Campo obbligatorio'
+            ? t('addEditChannelPage.validationMessage.requiredField')
             : validatePrimitiveVersion(values.primitive_version)
-            ? t('addEditStationPage.validation.overVersion')
+            ? t('addEditStationPage.validationMessage.validation.overVersion')
             : undefined,
-          password: !values.password ? 'Campo obbligatorio' : undefined,
-          protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
-          ip: !values.ip ? 'Campo obbligatorio' : undefined,
+          password: !values.password
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          protocol: !values.protocol
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          ip: !values.ip ? t('addEditChannelPage.validationMessage.requiredField') : undefined,
           port: !values.port
-            ? 'Campo obbligatorio'
+            ? t('addEditChannelPage.validationMessage.requiredField')
             : isNaN(values.port)
-            ? 'Non Valido, l’input dev’essere un numero'
+            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
             : undefined,
-          service: !values.service ? 'Campo obbligatirio' : undefined,
-          nmp_service: !values.nmp_service ? 'Campo obbligatirio' : undefined,
-          proxy_host: !values.proxy_host ? 'Campo obbligatorio' : undefined,
+          service: !values.service ? t('addEditChannelPage.requiredField') : undefined,
+          nmp_service: !values.nmp_service ? t('addEditChannelPage.requiredField') : undefined,
+          proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
           proxy_port: !values.proxy_port
-            ? 'Campo obbligatorio'
+            ? t('addEditChannelPage.validationMessage.requiredField')
             : isNaN(values.proxy_port)
-            ? 'Non Valido, l’input dev’essere un numero'
+            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
             : undefined,
-          payment_model: !values.payment_model ? 'Campo obbligatorio' : undefined,
-          serv_plugin: !values.serv_plugin ? 'Campo obbligatorio' : undefined,
+          payment_model: !values.payment_model
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          serv_plugin: !values.serv_plugin
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
         }),
       }).filter(([_key, value]) => value)
     );

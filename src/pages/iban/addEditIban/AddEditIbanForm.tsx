@@ -123,32 +123,32 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return Object.fromEntries(
         Object.entries({
           iban: !values.iban
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validation.requiredField')
             : !ibanFormatValidator(values.iban)
-            ? 'l’IBAN inserito non è valido'
+            ? t('addEditIbanPage.validation.ibanNotValid')
             : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validation.requiredField')
             : values.validityDate.getTime() < minDate.getTime()
-            ? 'La data inserita non è valida'
+            ? t('addEditIbanPage.validation.dateNotValid')
             : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
-            ? 'La data di inizio non può essere maggiore di quella di scadenza'
+            ? t('addEditIbanPage.validation.startDateOverEndDate')
             : undefined,
           dueDate: !values.dueDate
-            ? 'Campo obbligatorio'
+            ? t('addEditIbanPage.validation.requiredField')
             : values.dueDate.getTime() < minDate.getTime()
-            ? 'La data inserita non è valida'
+            ? t('addEditIbanPage.validation.dateNotValid')
             : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
-            ? "La data di scadenza non può essere minore di quella d'inizio"
+            ? t('addEditIbanPage.validation.endDateunderStartDate')
             : undefined,
           creditorInstitutionCode:
             subject === 'me'
               ? undefined
               : !values.creditorInstitutionCode
-              ? 'Campo obbligatorio'
+              ? t('addEditIbanPage.validation.requiredField')
               : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
-              ? 'Codice fiscale non valido'
+              ? t('addEditIbanPage.validation.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
       );

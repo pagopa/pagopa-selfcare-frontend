@@ -4,12 +4,17 @@ locals {
     repository = "pagopa-selfcare-frontend"
   }
 
-  prefix          = "pagopa"
-  domain          = "selfcare"
-  location_short  = "weu"
-  product         = "${var.prefix}-${var.env_short}"
+  prefix         = "pagopa"
+  domain         = "selfcare"
+  location_short = "weu"
+  product        = "${var.prefix}-${var.env_short}"
 
   app_name = "github-${local.github.org}-${local.github.repository}-${var.prefix}-${local.domain}-${var.env}-aks"
+
+  cdn = {
+    name                = "${local.prefix}-${var.env_short}-${local.domain}-cdn-profile"
+    resource_group_name = "${local.prefix}-${var.env_short}-fe-rg"
+  }
 
   container_app_environment = {
     name           = "${local.prefix}-${var.env_short}-${local.location_short}-github-runner-cae",
@@ -43,7 +48,7 @@ variable "github_repository_environment" {
     reviewers_teams        = list(string)
   })
   description = "GitHub Continuous Integration roles"
-  default = {
+  default     = {
     protected_branches     = false
     custom_branch_policies = true
     reviewers_teams        = ["pagopa-team-backoffice"]

@@ -47,3 +47,8 @@ data "azurerm_key_vault_secret" "key_vault_sas_token" {
   name = "sas-token"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
+
+data "azurerm_cdn_profile" "cdn_profile" {
+  name                = local.cdn.name
+  resource_group_name = local.cdn.resource_group_name
+}

@@ -18,6 +18,11 @@ resource "azurerm_role_assignment" "environment_terraform_storage_account" {
   principal_id         = module.github_runner_app.object_id
 }
 
+resource "azurerm_role_assignment" "environment_cdn_profile" {
+  scope                = data.azurerm_cdn_profile.cdn_profile.id
+  role_definition_name = "Contributor"
+  principal_id         = module.github_runner_app.object_id
+}
 
 resource "azurerm_role_assignment" "environment_key_vault" {
   scope                = data.azurerm_key_vault.key_vault.id

@@ -162,7 +162,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --sas-token '${{ secrets.SAS_TOKEN }}'
+            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
 
       - name: Purge
         uses: azure/CLI@v1

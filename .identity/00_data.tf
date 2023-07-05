@@ -42,3 +42,8 @@ data "azurerm_key_vault_secret" "key_vault_onetrust_domain" {
   name = "react-app-onetrust-domain-id"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
+
+data "azurerm_key_vault_secret" "key_vault_sas_token" {
+  name = "sas-token"
+  key_vault_id = data.azurerm_key_vault.domain_key_vault.id
+}

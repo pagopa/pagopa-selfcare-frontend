@@ -140,7 +140,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
             : values.dueDate.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
-            ? t('addEditIbanPage.validationMessage.endDateunderStartDate')
+            ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
           creditorInstitutionCode:
             subject === 'me'

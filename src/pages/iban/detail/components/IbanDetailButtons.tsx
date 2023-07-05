@@ -35,7 +35,7 @@ const IbanDetailButtons = ({ status, iban }: Props) => {
                 actionId: IbanFormAction.Edit,
               })
             }
-            variant="outlined"
+            variant="contained"
             data-testid="button Edit"
           >
             {t('ibanDetailPage.buttons.edit')}
@@ -64,7 +64,7 @@ const IbanDetailButtons = ({ status, iban }: Props) => {
                 actionId: IbanFormAction.Edit,
               })
             }
-            variant="outlined"
+            variant="contained"
             data-testid="button Edit"
           >
             {t('ibanDetailPage.buttons.edit')}

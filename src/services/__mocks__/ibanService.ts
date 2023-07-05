@@ -1,7 +1,7 @@
 // import { IbanCreateRequestDto } from '../../api/generated/portal/IbanCreateRequestDto';
 import { IbanResource } from '../../api/generated/portal/IbanResource';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
-import { IbanOnCreation, IbanStatus } from '../../model/Iban';
+import { IbanOnCreation } from '../../model/Iban';
 
 export const ibanList: IbansResource = {
   ibanList: [
@@ -40,7 +40,7 @@ export const mockedIban: IbanOnCreation = {
   dueDate: new Date('2033-04-01T13:49:19.897Z'),
   creditorInstitutionCode: '',
   labels: [{}],
-  status: IbanStatus.ACTIVE,
+  is_active: true,
 };
 
 export const mockedIbanCup: IbanResource = {

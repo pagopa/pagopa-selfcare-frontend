@@ -76,7 +76,7 @@ const IbanDetailPage = () => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons status={iban?.status} iban={ibanId} />
+            <IbanDetailButtons active={iban?.is_active} iban={ibanId} />
           </Grid>
         </Grid>
 

@@ -3,19 +3,19 @@ import { Stack, Button } from '@mui/material';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ROUTES from '../../../../routes';
-import { IbanStatus, IbanFormAction } from '../../../../model/Iban';
+import { IbanFormAction } from '../../../../model/Iban';
 
 type Props = {
-  status: IbanStatus | undefined;
+  active: boolean | undefined;
   iban: string;
 };
 
-const IbanDetailButtons = ({ status, iban }: Props) => {
+const IbanDetailButtons = ({ active, iban }: Props) => {
   const { t } = useTranslation();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {status !== IbanStatus.ACTIVE ? (
+      {!active ? (
         <>
           <Button
             component={Link}

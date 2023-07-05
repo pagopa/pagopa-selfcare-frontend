@@ -5,13 +5,6 @@ export enum IbanFormAction {
   Edit = 'edit',
 }
 
-export enum IbanStatus {
-  ACTIVE = 'ACTIVE',
-  NOT_ACTIVE = 'NOT_ACTIVE',
-  IN_REVISION = 'IN_REVISION',
-  TO_FIX = 'TO_FIX',
-}
-
 export type IbanOnCreation = {
   iban?: string;
   description?: string;
@@ -21,5 +14,5 @@ export type IbanOnCreation = {
   publicationDate?: Date | null;
   ecOwner?: string;
   labels?: Readonly<Array<IbanLabel>>;
-  status?: IbanStatus;
+  is_active?: boolean;
 };

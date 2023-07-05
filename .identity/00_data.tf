@@ -43,8 +43,8 @@ data "azurerm_key_vault_secret" "key_vault_onetrust_domain" {
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 
-data "azurerm_key_vault_secret" "key_vault_sas_token" {
-  name = "sas-token"
+data "azurerm_key_vault_secret" "key_vault_blob_connection_string" {
+  name = "web-storage-blob-connection-string"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 

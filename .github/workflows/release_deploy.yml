@@ -136,6 +136,9 @@ jobs:
         with:
           node-version: 16.10.0
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Build
         run: |
           export REACT_APP_ENV='${{ inputs.environment }}'

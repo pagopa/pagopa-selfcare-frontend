@@ -12,7 +12,7 @@ export const useSigninData = () => {
 
   return (party: Party) =>
     (party.institutionType === 'PSP'
-      ? getPSPDetails(party.fiscalCode)
+      ? getPSPDetails(party.pspData?.abiCode ?? '')
       : getCreditorInstitutionDetails(party.fiscalCode)
     )
       .then((sd) => {

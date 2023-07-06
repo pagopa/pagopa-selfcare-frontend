@@ -186,13 +186,13 @@ export function showStatus(params: GridRenderCellParams) {
     params,
     <Box>
       <Chip
-        label={isEnabled ? 'Attivo' : 'Disattivo'}
+        label={isEnabled ? 'Attivo' : 'Non attivo'}
         aria-label="Status"
         sx={{
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: isEnabled ? '#FFFFFF' : '#17324D',
-          backgroundColor: isEnabled ? 'primary.main' : 'warning.light',
+          backgroundColor: isEnabled ? 'primary.main' : 'error.light',
           paddingBottom: '1px',
           height: '24px',
         }}

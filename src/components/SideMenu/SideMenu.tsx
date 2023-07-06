@@ -86,7 +86,7 @@ export default function SideMenu() {
               data-testid="stations-test"
             />
           )}
-          {ENV.FEATURES.IBAN.ENABLED && (
+          {ENV.FEATURES.IBAN.ENABLED && selectedParty?.institutionType !== 'PSP' && (
             <SidenavItem
               title={t('sideMenu.iban.title')}
               handleClick={() => onExit(() => history.push(ROUTES.IBAN))}

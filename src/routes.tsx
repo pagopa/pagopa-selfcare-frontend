@@ -28,7 +28,7 @@ const ROUTES = {
   IBAN: `${BASE_ROUTE}/iban`,
   IBAN_DETAIL: `${BASE_ROUTE}/iban/:ibanId`,
   IBAN_EDIT: `${BASE_ROUTE}/iban/:ibanId/:actionId`,
-  IBAN_ADD: `${BASE_ROUTE}/iban/add`,
+  IBAN_ADD: `${BASE_ROUTE}/iban/add-iban/`,
 
   /* TOS: {
     PATH: '/terms-of-service',

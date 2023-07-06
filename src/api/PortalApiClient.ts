@@ -40,6 +40,9 @@ import { WrapperChannelDetailsDto } from './generated/portal/WrapperChannelDetai
 import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
 import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
+import { IbansResource } from './generated/portal/IbansResource';
+import { IbanCreateRequestDto } from './generated/portal/IbanCreateRequestDto';
+import { IbanResource } from './generated/portal/IbanResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -886,16 +889,35 @@ export const PortalApi = {
   },
 
   // before tries to get the detail from the DB, if doesn't finds anything, will try to get the detail form apim
-
   getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
     const result = await apiConfigClient.getStationDetailUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   // get the detail directly from apim
-
   getStation: async (stationId: string): Promise<StationDetailResource> => {
     const result = await apiConfigClient.getStationUsingGET({ stationId });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getCreditorInstitutionIbans: async (creditorInstitutionCode: string): Promise<IbansResource> => {
+    const result = await apiConfigClient.getCreditorInstitutionIbansUsingPOST({
+      body: { creditorInstitutionCode },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
+    const result = await apiConfigClient.createCreditorInstitutionIbansUsingPOST({
+      body: {
+        iban: ibanBody.iban,
+        description: ibanBody.description,
+        validityDate: ibanBody.validityDate,
+        dueDate: ibanBody.dueDate,
+        creditorInstitutionCode: ibanBody.creditorInstitutionCode,
+        labels: ibanBody.labels,
+      },
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

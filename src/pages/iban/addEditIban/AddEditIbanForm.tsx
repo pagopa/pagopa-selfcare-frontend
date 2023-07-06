@@ -25,16 +25,19 @@ import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEditIbanFormSectionTitle';
 import ROUTES from '../../../routes';
-import { createIban } from '../../../services/__mocks__/ibanService';
+import { createIban, updateIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
-import { IbanOnCreation } from '../../../model/Iban';
+import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
 type Props = {
   ibanBody: IbanOnCreation | undefined;
   goBack: () => void;
+  formAction: string;
 };
 
-const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
+const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
   const { t } = useTranslation();
   const [subject, setSubject] = useState('me');
   const [uploadType, setUploadType] = useState('single');
@@ -44,6 +47,8 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
   const changeUploadType = (event: any) => {
     setUploadType(event.target.value);
   };
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
   const changeSubject = (e: any) => {
     setSubject(e.target.value);
@@ -91,7 +96,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
       return false;
     }
 
-    const char5 = /[A-Z]/.test(iban[4]);
+    const char5 = /[A-Za-z]/.test(iban[4]);
     if (!char5) {
       return false;
     }
@@ -107,7 +112,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
   };
 
   const validateCodiceFiscale = (fiscalCode: string | undefined) => {
-    const cfRegex = /^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$/;
+    const cfRegex = /^[A-Za-z]{6}\d{2}[A-Za-z]\d{2}[A-Za-z]\d{3}[A-Za-z]$/;
     if (fiscalCode) {
       return cfRegex.test(fiscalCode);
     } else {
@@ -187,7 +192,13 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
     if (uploadType === 'single') {
       setLoading(true);
       try {
-        await createIban(values);
+        if (formAction === IbanFormAction.Create) {
+          await createIban(values);
+          console.log('SUBMIT CREATE!');
+        } else {
+          await updateIban(values, ecCode);
+          console.log('SUBMIT UPDATE!');
+        }
       } catch (reason) {
         addError({
           id: 'CREATE_IBAN',
@@ -279,7 +290,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   name="iban"
                   label={t('addEditIbanPage.addForm.fields.iban.ibanCode')}
                   size="small"
-                  value={formik.values.iban}
+                  value={formik.values.iban?.toUpperCase()}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.iban && Boolean(formik.errors.iban)}
                   helperText={formik.touched.iban && formik.errors.iban}
@@ -402,7 +413,7 @@ const AddEditIbanForm = ({ ibanBody, goBack }: Props) => {
                   label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
                   placeholder="AAAAAAAAAAAAAAAAAAA"
                   size="small"
-                  value={formik.values.creditorInstitutionCode ?? ''}
+                  value={formik.values.creditorInstitutionCode?.toUpperCase() ?? ''}
                   onChange={(e) => formik.handleChange(e)}
                   error={
                     formik.touched.creditorInstitutionCode &&

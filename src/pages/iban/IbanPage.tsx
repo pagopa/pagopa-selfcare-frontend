@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   Button,
+  Chip,
 } from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation, Trans } from 'react-i18next';
@@ -328,6 +329,24 @@ const IbanPage = () => {
               <Grid item xs={12}>
                 <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
                   <Grid container spacing={3}>
+                    <Grid item xs={12} textAlign={'end'}>
+                      {!showMaganeButton ? (
+                        <Chip
+                          label={t('ibanPage.updateInProgress')}
+                          aria-label="update-in-progress"
+                          size="medium"
+                          sx={{
+                            color: '#17324D',
+                            backgroundColor: 'grey.200',
+                            fontSize: '14px',
+                            paddingBottom: '1px',
+                            height: '32px',
+                          }}
+                        ></Chip>
+                      ) : (
+                        <></>
+                      )}
+                    </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography variant="overline">{t('ibanPage.standIn')}</Typography>
                       <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
@@ -397,7 +416,7 @@ const IbanPage = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography variant="overline">{t('ibanPage.cup')}</Typography>
-                      <Typography variant="subtitle1" fontWeight="regular" fontSize={16}>
+                      <Typography variant="subtitle1" fontWeight="regular" fontSize={16} mt={1}>
                         {t('ibanPage.cupDetail')}
                       </Typography>
                       <Box display="flex" alignItems="center" mt={2}>

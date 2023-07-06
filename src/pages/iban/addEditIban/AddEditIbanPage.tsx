@@ -87,7 +87,7 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm goBack={goBack} ibanBody={iban} />
+        <AddEditIbanForm goBack={goBack} ibanBody={iban} formAction={formAction} />
       </Grid>
     </Grid>
   );

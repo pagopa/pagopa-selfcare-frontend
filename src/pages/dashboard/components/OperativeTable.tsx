@@ -18,7 +18,7 @@ const OperativeTable = () => {
             </Typography>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="body2" fontWeight={'fontWeightMedium'}>
               Marco Rossi
             </Typography>
           </Grid>
@@ -26,7 +26,7 @@ const OperativeTable = () => {
             <Typography variant="body2">{t('dashboardPage.operativeTable.mail')}</Typography>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="body2" fontWeight={'fontWeightMedium'}>
               marco.rossi@regionelombardia.it
             </Typography>
           </Grid>
@@ -34,7 +34,7 @@ const OperativeTable = () => {
             <Typography variant="body2">{t('dashboardPage.operativeTable.deliveryOne')}</Typography>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="body2" fontWeight={'fontWeightMedium'}>
               080 0000000
             </Typography>
           </Grid>
@@ -42,7 +42,7 @@ const OperativeTable = () => {
             <Typography variant="body2">{t('dashboardPage.operativeTable.deliveryTwo')}</Typography>
           </Grid>
           <Grid item xs={8}>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="body2" fontWeight={'fontWeightMedium'}>
               080 0000000
             </Typography>
           </Grid>

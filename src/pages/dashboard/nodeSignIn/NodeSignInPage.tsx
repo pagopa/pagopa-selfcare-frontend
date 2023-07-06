@@ -63,7 +63,7 @@ const NodeSignInPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{t('general.dashboard')}</Typography>
-            <Typography color={'#A2ADB8'}>{t(`nodeSignInPage.breadcrumb`)}</Typography>
+            <Typography color={'text.disaled'}>{t(`nodeSignInPage.breadcrumb`)}</Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox

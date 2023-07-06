@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -6,22 +6,26 @@ import Paper from '@mui/material/Paper';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {Trans, useTranslation} from 'react-i18next';
-import {Box} from '@mui/system';
-import {useLoading} from '@pagopa/selfcare-common-frontend';
-import {useFormik} from 'formik';
-import {generatePath, useHistory, useParams} from 'react-router-dom';
-import {theme} from '@pagopa/mui-italia';
+import { useTranslation, Trans } from 'react-i18next';
+import { Box } from '@mui/system';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useFormik } from 'formik';
+import { generatePath, useHistory, useParams } from 'react-router-dom';
+import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
-import {LOADING_TASK_EC_AVAILABLE} from '../../../utils/constants';
-import {EC} from '../../../model/EC';
-import {getStationAvailableEC} from '../../../services/stationService';
+import { LOADING_TASK_EC_AVAILABLE } from '../../../utils/constants';
+import { EC } from '../../../model/EC';
+import { associateEcToStation, getStationAvailableEC } from '../../../services/stationService';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { Party } from '../../../model/Party';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
   const { t } = useTranslation();
   const setLoading = useLoading(LOADING_TASK_EC_AVAILABLE);
-  // const addError = useErrorDispatcher();
+  const addError = useErrorDispatcher();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   const { stationId } = useParams<{ stationId: string }>();
 
@@ -47,12 +51,21 @@ function StationAssociateECPage() {
 
   const handleSubmit = () => {
     if (selectedEC) {
-      /* setLoading(true);
-      associateECtoStation(selectedEC.id, stationId)
+      setLoading(true);
+      associateEcToStation(selectedEC.broker_ec_code, {
+        auxDigit: 3,
+        segregationCode: 1,
+        stationCode: stationId,
+      })
         .then((_data) => {
-          history.push(ROUTES.STATION_EC_LIST, {
-            alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
-          });
+          history.push(
+            generatePath(ROUTES.STATION_EC_LIST, {
+              stationId,
+            }),
+            {
+              alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
+            }
+          );
         })
         .catch((reason) =>
           addError({
@@ -67,15 +80,6 @@ function StationAssociateECPage() {
           })
         )
         .finally(() => setLoading(false));
-        */
-      history.push(
-        generatePath(ROUTES.STATION_EC_LIST, {
-          stationId,
-        }),
-        {
-          alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
-        }
-      );
     }
   };
 
@@ -83,8 +87,10 @@ function StationAssociateECPage() {
     setLoading(true);
     getStationAvailableEC()
       .then((data) => {
-        if (data) {
-          setAvailableEC(data);
+        if (data && selectedParty) {
+          // TODO:  remove when real service is available
+          const availableECFromService = addCurrentEC(data, selectedParty);
+          setAvailableEC(availableECFromService);
         }
       })
       .catch((reason) => console.error(reason))
@@ -113,7 +119,7 @@ function StationAssociateECPage() {
             <Trans i18nKey="stationAssociateECPage.associationForm.subTitle">
               Digita il nome del nuovo EC da associare al canale
             </Trans>{' '}
-            <Typography component="span" fontWeight={600}>
+            <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>
           </Typography>
@@ -178,3 +184,23 @@ function StationAssociateECPage() {
 }
 
 export default StationAssociateECPage;
+
+const addCurrentEC = (availableEC: Array<EC>, selectedParty: Party) => {
+  const value = {
+    broker_ec_code: selectedParty?.fiscalCode ?? '',
+    description: selectedParty?.description ?? '',
+    enabled: true,
+    extended_fault_bean: true,
+  };
+
+  const index = availableEC.findIndex(
+    (object) => object.broker_ec_code === selectedParty.fiscalCode ?? ''
+  );
+
+  if (index === -1) {
+    // eslint-disable-next-line functional/immutable-data
+    availableEC.push(value);
+  }
+
+  return availableEC;
+};

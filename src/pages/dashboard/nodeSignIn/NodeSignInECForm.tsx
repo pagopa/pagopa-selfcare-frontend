@@ -1,18 +1,21 @@
-import {useHistory} from 'react-router';
-import {Box, Button, Grid, Paper, Stack, TextField} from '@mui/material';
-import {FormikProps, useFormik} from 'formik';
-import {useTranslation} from 'react-i18next';
-import {theme} from '@pagopa/mui-italia';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {Badge as BadgeIcon} from '@mui/icons-material';
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable complexity */
+import { useHistory } from 'react-router';
+import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
+import { FormikProps, useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { Badge as BadgeIcon } from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import {LOADING_TASK_NODE_SIGN_IN_EC} from '../../../utils/constants';
+import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import {createECDirect, updateCreditorInstitution} from '../../../services/nodeService';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {CreditorInstitutionAddressDto} from '../../../api/generated/portal/CreditorInstitutionAddressDto';
-import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { createECAndBroker, updateCreditorInstitution } from '../../../services/nodeService';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
+import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { useSigninData } from '../../../hooks/useSigninData';
 
 type Props = {
   goBack: () => void;
@@ -25,6 +28,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const updateSigninData = useSigninData();
 
   const initialFormData = (ecDetails: CreditorInstitutionDetailsResource | undefined) =>
     ecDetails
@@ -88,6 +92,11 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
             reportingFtp: false,
             reportingZip: false,
           });
+
+          if (selectedParty) {
+            await updateSigninData(selectedParty);
+          }
+
           history.push(ROUTES.HOME, {
             alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
           });
@@ -108,7 +117,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
       }
     } else {
       try {
-        await createECDirect({
+        await createECAndBroker({
           address: { ...formik.values },
           businessName: selectedParty?.description ?? '',
           creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
@@ -117,6 +126,11 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
           reportingFtp: false,
           reportingZip: false,
         });
+
+        if (selectedParty) {
+          await updateSigninData(selectedParty);
+        }
+
         history.push(ROUTES.HOME, {
           alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
         });

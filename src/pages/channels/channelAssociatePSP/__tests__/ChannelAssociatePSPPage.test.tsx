@@ -6,6 +6,10 @@ import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import {Provider} from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
+import {
+  mockedChannelAvailablePSP,
+  mockedChannelDetail,
+} from '../../../../services/__mocks__/channelService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -14,26 +18,9 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-jest.mock('../../../../services/channelService', () => ({
-  getChannelAvailablePSP: jest.fn(),
-}));
-
 describe('<ChannelAssociatePSPPage />', () => {
   const channelId = 'XPAY_03_ONUS';
   test('render component ChannelAssociatePSPPage', async () => {
-    jest
-      .spyOn(require('../../../../services/channelService'), 'getChannelAvailablePSP')
-      .mockResolvedValue([
-        {
-          id: 'psp1',
-          name: 'PSP 1',
-        },
-        {
-          id: 'psp2',
-          name: 'PSP 2',
-        },
-      ]);
-
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/channels/${channelId}/associate-psp`]}>

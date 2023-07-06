@@ -24,7 +24,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.description}
         </Typography>
       </Grid>
@@ -32,7 +32,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.pspData?.legalRegisterName}
         </Typography>
       </Grid>
@@ -40,7 +40,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.fiscalCode}
         </Typography>
       </Grid>
@@ -48,7 +48,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.abiCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.pspData?.abiCode ?? '-'}
         </Typography>
       </Grid>
@@ -56,7 +56,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.pspCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '-'}
         </Typography>
       </Grid>
@@ -64,7 +64,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.bicCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.bic ?? '-'}
         </Typography>
       </Grid>
@@ -72,7 +72,7 @@ const PSPRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.digitalStamp')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.stamp ? stampToString(signinData?.stamp) : '-'}
         </Typography>
       </Grid>

@@ -1,43 +1,46 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import {theme} from '@pagopa/mui-italia';
-import {FormikProps, useFormik} from 'formik';
-import {useEffect, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
+import { theme } from '@pagopa/mui-italia';
+import { FormikProps, useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import {
-    Button,
-    FormControl,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Paper,
-    Select,
-    Stack,
-    TextField,
-    Typography,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  TextField,
+  Typography,
 } from '@mui/material';
-import {Box} from '@mui/system';
-import {Badge as BadgeIcon, MenuBook} from '@mui/icons-material';
-import {useHistory} from 'react-router-dom';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {RedirectProtocolEnum, StatusEnum} from '../../../api/generated/portal/StationDetailsDto';
+import { Box } from '@mui/system';
+import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
+import { generatePath, useHistory } from 'react-router-dom';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
 import {
-    createStation,
-    createWrapperStation,
-    getStationCode,
-    updateStation,
-    updateWrapperStationToCheck,
-    updateWrapperStationToCheckUpdate,
+  createStation,
+  createWrapperStation,
+  getStationCode,
+  updateStation,
+  updateWrapperStationToCheck,
+  updateWrapperStationToCheckUpdate,
 } from '../../../services/stationService';
-import {LOADING_TASK_GENERATION_STATION_CODE, LOADING_TASK_STATION_ADD_EDIT,} from '../../../utils/constants';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {StationFormAction, StationOnCreation} from '../../../model/Station';
-import {isOperator} from '../components/commonFunctions';
-import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
+import {
+  LOADING_TASK_GENERATION_STATION_CODE,
+  LOADING_TASK_STATION_ADD_EDIT,
+} from '../../../utils/constants';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import { isOperator } from '../components/commonFunctions';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
@@ -153,13 +156,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     mb: 3,
   };
 
-  const validatePortRange = (redirectPort: number | undefined) => {
-    if (redirectPort) {
-      return redirectPort > 0 && redirectPort < 65556 ? false : true;
-    }
-    return false;
-  };
-
   const validatePrimitiveVersion = (primitiveVersion: number) => {
     if (primitiveVersion) {
       return primitiveVersion > 0 && primitiveVersion <= 2 ? false : true;
@@ -171,63 +167,73 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     Object.fromEntries(
       Object.entries({
         ...{
-          stationCode: !values.stationCode ? 'Campo obbligatorio' : undefined,
+          stationCode: !values.stationCode
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
           brokerCode:
             operator && formAction !== StationFormAction.Create
               ? ''
               : !values.brokerCode
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : '',
           primitiveVersion: !values.primitiveVersion
-            ? 'Campo obbligatorio'
+            ? t('addEditStationPage.validation.requiredField')
             : validatePrimitiveVersion(values.primitiveVersion)
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
-          redirectProtocol: !values.redirectProtocol ? 'Campo obbligatorio' : undefined,
-          redirectPort: !values.redirectPort
-            ? 'Campo obbligatorio'
-            : validatePortRange(values.redirectPort)
-            ? t('addEditStationPage.validation.overPort')
+          redirectProtocol: !values.redirectProtocol
+            ? t('addEditStationPage.validation.requiredField')
             : undefined,
-          redirectIp: !values.redirectIp ? 'Campo obbligatorio' : undefined,
-          redirectPath: !values.redirectPath ? 'Campo obbligatorio' : undefined,
-          redirectQueryString: !values.redirectQueryString ? 'Campo obbligatorio' : undefined,
+          redirectPort: !values.redirectPort
+            ? t('addEditStationPage.validation.requiredField')
+            : isNaN(values.redirectPort)
+            ? t('addEditStationPage.validation.requiredInputNumber')
+            : undefined,
+          redirectIp: !values.redirectIp
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          redirectPath: !values.redirectPath
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          redirectQueryString: !values.redirectQueryString
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
           targetHost:
             !values.targetHost &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPath:
             !values.targetPath &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPort:
             !values.targetPort &&
             !values.targetHostPof &&
             !values.targetPathPof &&
             !values.targetPortPof
-              ? 'Campo obbligatorio'
-              : validatePortRange(values.targetPort)
-              ? t('addEditStationPage.validation.overPort')
+              ? t('addEditStationPage.validation.requiredField')
+              : isNaN(values.targetPort)
+              ? t('addEditStationPage.validation.requiredInputNumber')
               : undefined,
           targetHostPof:
             !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPathPof:
             !values.targetPathPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
+              ? t('addEditStationPage.validation.requiredField')
               : undefined,
           targetPortPof:
             !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? 'Campo obbligatorio'
-              : validatePortRange(values.targetPortPof)
-              ? t('addEditStationPage.validation.overPort')
+              ? t('addEditStationPage.validation.requiredField')
+              : typeof values.targetPortPof !== 'undefined' && isNaN(values.targetPortPof)
+              ? t('addEditStationPage.validation.requiredInputNumber')
               : undefined,
         },
         ...(operator && formAction !== StationFormAction.Create
@@ -243,8 +249,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               ip: !values.ip ? 'Campo obbligatorio' : undefined,
               port: !values.port
                 ? 'Campo obbligatorio'
-                : validatePortRange(values.targetPort)
-                ? t('addEditStationPage.validation.overPort')
+                : typeof values.port !== 'undefined' && isNaN(values.port)
+                ? 'Non Valido, l’input dev’essere un numero'
                 : undefined,
 
               service: !values.service ? 'Campo obbligatorio' : undefined,
@@ -254,9 +260,73 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       }).filter(([_key, value]) => value)
     );
 
+  const enableSubmit = (values: StationOnCreation) => {
+    const isTargetSectionComplete =
+      values.targetHost !== '' && values.targetPath !== '' && values.targetPort.toString() !== '';
+
+    const isTargetPofSectionComplete =
+      values.targetHostPof !== '' &&
+      values.targetPathPof !== '' &&
+      values.targetPortPof?.toString() !== '';
+
+    const isTargetSectionEmpty =
+      values.targetHost === '' && values.targetPath === '' && values.targetPort?.toString() === '';
+
+    const isTargetPofSectionEmpty =
+      values.targetHostPof === '' &&
+      values.targetPathPof === '' &&
+      values.targetPortPof?.toString() === '';
+
+    const baseConditions =
+      values.stationCode !== '' &&
+      values.brokerCode !== '' &&
+      values.primitiveVersion.toString() !== '' &&
+      values.redirectProtocol.toString() !== '' &&
+      values.redirectPort.toString() !== '' &&
+      values.redirectIp !== '' &&
+      values.redirectPath !== '' &&
+      values.redirectQueryString !== '';
+
+    const operatorConditions =
+      values.version?.toString() !== '' &&
+      values.password !== '' &&
+      values.threadNumber?.toString() !== '' &&
+      values.protocol?.toString() !== '' &&
+      values.ip !== '' &&
+      values.port?.toString() !== '' &&
+      values.service !== '' &&
+      values.pofService !== '';
+
+    if (!baseConditions) {
+      return false;
+    }
+
+    const targetFields = () => {
+      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+      if (
+        (isTargetSectionComplete && isTargetPofSectionComplete) ||
+        (isTargetSectionComplete && isTargetPofSectionEmpty) ||
+        (isTargetPofSectionComplete && isTargetSectionEmpty)
+      ) {
+        return true;
+      }
+      return false;
+    };
+
+    const targetCondition = targetFields();
+
+    if (!operator) {
+      return baseConditions && targetCondition;
+    } else if (operator && baseConditions && targetCondition && operatorConditions) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const redirect = (stCode: string) => {
     if (operator) {
-      history.push(ROUTES.STATION_DETAIL, { stationId: stCode });
+      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
     } else {
       history.push(ROUTES.STATIONS);
     }
@@ -269,8 +339,11 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
 
     try {
+      const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
+        stationId: formik.values.stationCode,
+      })}`;
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values);
+        await createWrapperStation(values, validationUrl);
         redirect(stationCode4Redirect);
       }
 
@@ -281,7 +354,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await createStation(values);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheck(values);
+              await updateWrapperStationToCheck(values, validationUrl);
               redirect(stationCode4Redirect);
             }
             break;
@@ -291,12 +364,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheckUpdate(values);
+              await updateWrapperStationToCheckUpdate(values, validationUrl);
               redirect(stationCode4Redirect);
             }
             break;
           case WrapperStatusEnum.TO_FIX:
-            await updateWrapperStationToCheck(values);
+            await updateWrapperStationToCheck(values, validationUrl);
             redirect(stationCode4Redirect);
             break;
           default:
@@ -642,6 +715,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetHostPof"
                   name="targetHostPof"
+                  InputLabelProps={{ shrink: formik.values.targetHostPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetHostPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
                   size="small"
@@ -659,6 +733,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetPathPof"
                   name="targetPathPof"
+                  InputLabelProps={{ shrink: formik.values.targetPathPof ? true : false }}
                   label={t('addEditStationPage.addForm.fields.targetPathPof')}
                   placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
                   size="small"
@@ -710,7 +785,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       )}
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="cancel-button-test"
+          >
             {t('addEditStationPage.addForm.backButton')}
           </Button>
         </Stack>
@@ -720,10 +800,11 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={!formik.isValid}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"
+            data-testid="confirm-button-test"
           >
             {operator
               ? t('addEditStationPage.addForm.continueButton')
@@ -763,6 +844,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           await submit(formik.values);
           setShowConfirmModal(false);
         }}
+        isOperator={undefined}
       />
     </>
   );

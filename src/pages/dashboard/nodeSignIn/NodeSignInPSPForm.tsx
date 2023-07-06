@@ -19,33 +19,7 @@ type Props = {
   goBack: () => void;
 };
 
-const initialFormData = (selectedParty?: Party) => ({
-  name: selectedParty?.fiscalCode ?? '',
-  businessName: selectedParty?.description ?? '',
-  fiscalCode: selectedParty?.fiscalCode ?? '',
-  abiCode: selectedParty?.pspData?.abiCode ?? '',
-  pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
-  bicCode: '',
-  digitalStamp: false,
-});
-
-const inputGroupStyle = {
-  borderRadius: 1,
-  border: 1,
-  borderColor: theme.palette.divider,
-  p: 3,
-  mb: 3,
-};
-
-const validate = (values: Partial<NodeOnSignInPSP>) =>
-  Object.fromEntries(
-    Object.entries({
-      bicCode: !values.bicCode ? 'Campo obbligatorio' : undefined,
-      digitalStamp: !values.digitalStamp ? 'Campo obbligatorio' : undefined,
-    }).filter(([_key, value]) => value)
-  );
-
-function NodeSignInPSPForm({ goBack }: Props) {
+const NodeSignInPSPForm = ({ goBack }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -53,6 +27,34 @@ function NodeSignInPSPForm({ goBack }: Props) {
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  const initialFormData = (selectedParty?: Party) => ({
+    name: selectedParty?.fiscalCode ?? '',
+    businessName: selectedParty?.description ?? '',
+    fiscalCode: selectedParty?.fiscalCode ?? '',
+    abiCode: selectedParty?.pspData?.abiCode ?? '',
+    pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
+    bicCode: '',
+    digitalStamp: false,
+  });
+
+  const inputGroupStyle = {
+    borderRadius: 1,
+    border: 1,
+    borderColor: theme.palette.divider,
+    p: 3,
+    mb: 3,
+  };
+
+  const validate = (values: Partial<NodeOnSignInPSP>) =>
+    Object.fromEntries(
+      Object.entries({
+        bicCode: !values.bicCode ? t('nodeSignInPage.validationMessage.requiredField') : undefined,
+        digitalStamp: !values.digitalStamp
+          ? t('nodeSignInPage.validationMessage.requiredField')
+          : undefined,
+      }).filter(([_key, value]) => value)
+    );
 
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,
@@ -260,6 +262,6 @@ function NodeSignInPSPForm({ goBack }: Props) {
       </form>
     </>
   );
-}
+};
 
 export default NodeSignInPSPForm;

@@ -15,7 +15,6 @@ const pspDirect: PSPDirectDTO = {
   psp_code: 'psp_code',
   stamp: true,
   tax_code: 'tax_code',
-  transfer: true,
   vat_number: 'vat_number',
 };
 
@@ -26,7 +25,6 @@ const pspDetails: PaymentServiceProviderDetailsResource = {
   my_bank_code: '',
   stamp: true,
   tax_code: '123123',
-  transfer: true,
   vat_number: '12312312',
   business_name: 'PSP S.r.l',
   enabled: true,
@@ -70,6 +68,10 @@ export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 
 export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
   new Promise((resolve) => resolve(pspDetails));
+
+export const createECAndBroker = (
+  ec: CreditorInstitutionDto
+): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));
 
 export const createECDirect = (
   ec: CreditorInstitutionDto

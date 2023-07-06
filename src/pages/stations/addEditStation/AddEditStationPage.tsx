@@ -1,17 +1,17 @@
-import {ArrowBack} from '@mui/icons-material';
-import {Breadcrumbs, Grid, Stack, Typography} from '@mui/material';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {useTranslation} from 'react-i18next';
-import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
+import { ArrowBack } from '@mui/icons-material';
+import { Grid, Stack, Breadcrumbs, Typography } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { useTranslation } from 'react-i18next';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
+import { generatePath, useHistory, useParams } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import {LOADING_TASK_STATION_ADD_EDIT} from '../../../utils/constants';
-import {getStationDetail} from '../../../services/stationService';
-import {StationFormAction} from '../../../model/Station';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {isOperator} from '../components/commonFunctions';
+import { LOADING_TASK_STATION_ADD_EDIT } from '../../../utils/constants';
+import { getStationDetail } from '../../../services/stationService';
+import { StationFormAction } from '../../../model/Station';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { isOperator } from '../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
@@ -24,13 +24,18 @@ const AddEditStationPage = () => {
   const [stationDetail, setStationDetail] = useState<any>();
   const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
-  const goBack2Details = () => history.push(ROUTES.STATION_DETAIL, { stationId });
+
+  const goBack2Details = () =>
+    history.push(
+      generatePath(ROUTES.STATION_DETAIL, {
+        stationId,
+      })
+    );
   useEffect(() => {
     if (formAction !== StationFormAction.Create) {
       setLoading(true);
       getStationDetail(stationId)
         .then((response) => {
-          console.log('Response full detail', response);
           setStationDetail(response);
         })
         .catch((reason) => {
@@ -70,7 +75,7 @@ const AddEditStationPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{t('general.Stations')}</Typography>
-            <Typography color={'#A2ADB8'}>
+            <Typography color={'text.disaled'}>
               {formAction === StationFormAction.Create
                 ? t(`addEditStationPage.create.breadcrumb`)
                 : stationId}

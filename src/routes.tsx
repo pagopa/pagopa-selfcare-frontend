@@ -25,6 +25,11 @@ const ROUTES = {
   STATION_ASSOCIATE_EC: `${BASE_ROUTE}/stations/:stationId/associate-ec`,
   STATION_ADD: `${BASE_ROUTE}/stations/add-station/`,
 
+  IBAN: `${BASE_ROUTE}/iban`,
+  IBAN_DETAIL: `${BASE_ROUTE}/iban/:ibanId`,
+  IBAN_EDIT: `${BASE_ROUTE}/iban/:ibanId/:actionId`,
+  IBAN_ADD: `${BASE_ROUTE}/iban/add-iban/`,
+
   /* TOS: {
     PATH: '/terms-of-service',
     LABEL: { it: 'Termini di servizio', en: 'Terms of service' },

@@ -47,6 +47,9 @@ export const ENV = {
     STATIONS: {
       ENABLED: env.get('REACT_APP_FEATURES_STATIONS_ENABLED').default('false').asBool(),
     },
+    IBAN: {
+      ENABLED: env.get('REACT_APP_FEATURES_IBAN_ENABLED').default('false').asBool(),
+    },
   },
 
   ANALYTCS: {

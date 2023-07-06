@@ -104,6 +104,9 @@
       "ecUpdateErrorMessageDesc": "Errore durante la modifica dei dati",
       "backButton": "Annulla",
       "continueButton": "Conferma"
+    },
+    "validationMessage": {
+      "requiredField": "Campo obbligatorio"
     }
   },
   "apiKeysPage": {
@@ -174,7 +177,8 @@
     "channelsTableColumns": {
       "headerFields": {
         "name": "Codice canale",
-        "description": "Descrizione",
+        "creationDate": "Data creazione",
+        "lastEditDate": "Ultima modifica",
         "status": "Stato"
       }
     }
@@ -227,11 +231,13 @@
         "addPayment": "Aggiunta metodo"
       },
       "errorMessageTitle": "Errore",
-      "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
+      "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
+      "errorMessageWfespDesc": "Errore durante la ricezione dei metodi wfesp plugin",
       "errorMessageChannelWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato",
-      "errorMessageChannelCodeTypesDesc": "Errore durante la generazione del Codice Canale",
+      "errorMessageChannelCodeTypesTitle": "Impossibile creare canale",
+      "errorMessageChannelCodeTypesDesc": "Hai un canale ancora in attesa di revisione, attendere approvazione",
       "validationForm": {
         "title": "Informazione da completare",
         "subtitle": "Informazioni a carico di PagoPA.",
@@ -249,7 +255,7 @@
           "ip": "IP",
           "port": "Porta",
           "service": "Servizio",
-          "npmService": "Servizio NPM",
+          "nmpService": "Servizio NMP",
           "proxyPort": "Porta proxy",
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",
@@ -266,10 +272,10 @@
           "onUs": "On us"
         },
         "paymentModel": {
-          "activatedAtPsp": "Attivato presso PSP",
-          "multi": "Multibeneficiario",
-          "immediate": "Immediato",
-          "different": "Differito"
+          "ACTIVATED_AT_PSP": "Attivato presso PSP",
+          "IMMEDIATE_MULTIBENEFICIARY": "Multibeneficiario",
+          "IMMEDIATE": "Immediato",
+          "DEFERRED": "Differito"
         }
       }
     },
@@ -282,6 +288,10 @@
       "confirmButtonOpe": "Conferma",
       "cancelButton": "Torna indietro",
       "channelConfiguration": "Configurazione canale"
+    },
+    "validationMessage": {
+      "requiredField": "Campo obbligatorio",
+      "requiredInputNumber": "Non Valido, l’input dev’essere un numero"
     }
   },
   "editChannelPage": {
@@ -474,13 +484,15 @@
     },
     "validation": {
       "overPort": "Il numero di porta deve essere compreso tra 1 e 65556",
-      "overVersion": "il numero della Versine deve essere un intero tra 1 e 2"
+      "overVersion": "il numero della Versine deve essere un intero tra 1 e 2",
+      "requiredField": "Campo obbligatorio",
+      "requiredInutNumber": "Non Valido, l’input dev’essere un numero"
     },
     "successMessage": "La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.",
     "errorMessageTitle": "Errore",
-    "errorMessageDesc": "Errore durante la creazione, Codice stazione duplicato",
-    "errorMessageStationCodeTitle": "Errore",
-    "errorMessageStationCodeDesc": "Errore durante la creazione, Codice stazione non valido",
+    "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
+    "errorMessageStationCodeTitle": "Impossibile creare stazione",
+    "errorMessageStationCodeDesc": "Hai una stazione ancora in attesa di revisione, attendere approvazione",
     "errorMessageStationWrapperDetailsDesc": "Errore durante la ricezione dei dettagli del canale wrappato"
   },
   "stationsPage": {
@@ -644,6 +656,118 @@
       "service": "Servizio"
     }
   },
+  "ibanPage": {
+    "title": "IBAN",
+    "subtitle": "Cerca e gestisci tutti gli IBAN",
+    "addIban": "Aggiungi IBAN",
+    "edit": {
+      "title": "Modifica IBAN",
+      "breadcrumb": "Modifica IBAN",
+      "subtitle": ""
+    },
+    "create": {
+      "title": "Aggiungi IBAN",
+      "breadcrumb": "Aggiungi IBAN"
+    },
+    "error": {
+      "listErrorTitle": "Errore",
+      "listErrorDesc": "Errore durante la ricezione della lista degli IBAN",
+      "upladIbanErrorTitle": "Errore",
+      "upladIbanErrorDesc": "Errore durante la modifica degli IBAN"
+    },
+    "standIn": "STAND IN",
+    "standInDetail": "Nuova procedura di intervento in caso di problemi",
+    "cup": "Canone unico patrimoniale (CUP)",
+    "cupDetail": "Pagamento del canone unico patrimoniale",
+    "selectIban": "Seleziona IBAN",
+    "upload": "Salva",
+    "manage": "Gestisci",
+    "list": {
+      "search": "Cerca per Codice IBAN",
+      "column": {
+        "ibanCode": "Codice IBAN",
+        "description": "Descrizione",
+        "activeDate": "Data Attivazione",
+        "status": "Stato"
+      },
+      "loading": "Caricamento...",
+      "noResults": "Nessun Risultato",
+      "noResultsAddIban": "Non sono ancora presenti IBAN in ambiente di collaudo.<1><0> Aggiungi IBAN.</0></1>"
+    }
+  },
+  "ibanDetailPage": {
+    "breadcrumb": "IBAN",
+    "createdOn": "Creato il",
+    "ibanConfiguration": "Configurazione IBAN",
+    "state": "Stato",
+    "ibanData": "Dati IBAN",
+    "iban": "IBAN",
+    "ibanDesc": "Descrizione",
+    "validityDate": "Inizio validità",
+    "from": "Dal",
+    "ecData": "Dati ente crerditore",
+    "fiscalCode": "Codice Fiscale",
+    "buttons": {
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "deactivate": "Disattiva"
+    }
+  },
+  "addEditIbanPage": {
+    "title": "Aggiungi IBAN",
+    "subtitle": "L’attivazione di un IBAN può richiedere fino a 5 giorni, in base agli step di verifica dei dati inseriti.",
+    "addForm": {
+      "sections": {
+        "ibanDatas": "Dati IBAN",
+        "validityPeriod": "Periodo di validità",
+        "ibanHolder": "Intestatario dell’IBAN"
+      },
+      "fields": {
+        "ibanUploadTypes": {
+          "single": "Caricamento singolo",
+          "multiple": "Caricamento massivo"
+        },
+        "iban": {
+          "ibanCode": "Codice IBAN",
+          "description": "Descrizione",
+          "descPlaceHolder": "Descrizione (es. Servizio tesoreria postale)"
+        },
+        "dates": {
+          "start": "Data inizio",
+          "end": "Data fine"
+        },
+        "holder": {
+          "me": "Sono io",
+          "anotherOne": "Altro soggetto",
+          "holderFiscalCode": "Codice Fiscale Intestatario"
+        }
+      },
+      "buttons": {
+        "confirm": "Conferma",
+        "back": "Indietro"
+      }
+    },
+    "errors": {
+      "getIbanTitle": "Errore",
+      "getIbanMessage": "Errore durante la ricezione dei dati dell'iban selezionato",
+      "createIbanTitle": "Errore",
+      "createIbanMessage": "Errore durante la creazione/modifica dell'iban"
+    },
+    "modal": {
+      "title": "Modifiche IBAN",
+      "subTitle": "Confermi i nuovi IBAN selezionati per Stand in e CUP?",
+      "backButton": "Annulla",
+      "confirmButton": "Conferma"
+    },
+    "validationMessage": {
+      "requiredField": "Campo obbligatorio",
+      "ibanNotValid": "l’IBAN inserito non è valido",
+      "dateNotValid": "La data inserita non è valida",
+      "startDateOverEndDate": "La data di inizio non può essere maggiore di quella di scadenza",
+      "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio",
+      "ecOwnerNotValid": "Codice fiscale non valido"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -656,6 +780,9 @@
     },
     "stations": {
       "title": "Stazioni"
+    },
+    "iban": {
+      "title": "IBAN"
     }
   },
   "header": {
@@ -685,6 +812,14 @@
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
-    "Stations": "Stazioni"
+    "Stations": "Stazioni",
+    "Iban": "IBAN",
+    "WrapperStatus": {
+      "APPROVED": "Attivo",
+      "TO_FIX": "Da correggere",
+      "TO_FIX_UPDATE": "Da correggere",
+      "TO_CHECK": "In revisione",
+      "TO_CHECK_UPDATE": "In revisione"
+    }
   }
 }

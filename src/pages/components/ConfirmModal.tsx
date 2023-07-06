@@ -10,6 +10,7 @@ type Props = {
   onCloseLabel: string;
   handleCloseConfirmModal: MouseEventHandler;
   handleConfrimSubmit: MouseEventHandler;
+  isOperator: boolean | undefined;
 };
 
 const ConfirmModal = ({

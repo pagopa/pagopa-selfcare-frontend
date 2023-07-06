@@ -45,21 +45,10 @@ const StationDetailPage = () => {
       .finally(() => setLoadingWrap(false));
   }, [selectedParty]);
 
-  const formatedDate = (date: Date | undefined) => {
-    if (date) {
-      return date.toLocaleString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-    }
-    return null;
-  };
-
   return operator ? (
-    <StationDetailsValidation stationDetail={stationDetail} formatedDate={formatedDate} />
+    <StationDetailsValidation stationDetail={stationDetail} />
   ) : (
-    <StationDetails stationDetail={stationDetail} formatedDate={formatedDate} goBack={goBack} />
+    <StationDetails stationDetail={stationDetail} goBack={goBack} />
   );
 };
 

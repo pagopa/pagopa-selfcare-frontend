@@ -1,11 +1,12 @@
-import {Box, Chip, Grid, Typography} from '@mui/material';
-import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
-import React, {CSSProperties, ReactNode} from 'react';
-import {TFunction} from 'react-i18next';
-import {generatePath} from 'react-router';
-import {FormAction} from '../../../model/Channel';
+import { Typography, Grid, Box } from '@mui/material';
+import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import React, { CSSProperties, ReactNode } from 'react';
+import { TFunction } from 'react-i18next';
+import { generatePath } from 'react-router';
+import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
+import { StatusChip } from '../../../components/StatusChip';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -18,7 +19,7 @@ export function buildColumnDefs(
       headerName: t('channelsPage.channelsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      width: 403,
+      width: 404,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -27,16 +28,30 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
-      field: 'broker_description',
+      field: 'createdAt',
       cellClassName: 'justifyContentNormal',
-      headerName: t('channelsPage.channelsTableColumns.headerFields.description'),
+      headerName: t('channelsPage.channelsTableColumns.headerFields.creationDate'),
       align: 'left',
       headerAlign: 'left',
       width: 404,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, undefined),
+      renderCell: (params) => showCreationData(params),
+      sortable: false,
+      flex: 4,
+    },
+    {
+      field: 'modifiedAt',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('channelsPage.channelsTableColumns.headerFields.lastEditDate'),
+      align: 'left',
+      headerAlign: 'left',
+      width: 404,
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => showModifiedData(params),
       sortable: false,
       flex: 4,
     },
@@ -196,23 +211,71 @@ export function showChannelCode(params: GridRenderCellParams) {
   );
 }
 
+export function showCreationData(params: GridRenderCellParams) {
+  return (
+    <React.Fragment>
+      {renderCell(
+        params,
+        <>
+          <Grid container sx={{ width: '100%' }}>
+            <Grid item xs={7} sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                color="#17324D"
+                sx={{
+                  fontWeight: 400,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical' as const,
+                }}
+              >
+                {params.row.createdAt ? params.row.createdAt?.toLocaleDateString('en-GB') : '-'}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </React.Fragment>
+  );
+}
+
+export function showModifiedData(params: GridRenderCellParams) {
+  return (
+    <React.Fragment>
+      {renderCell(
+        params,
+        <>
+          <Grid container sx={{ width: '100%' }}>
+            <Grid item xs={7} sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                color="#17324D"
+                sx={{
+                  fontWeight: 400,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical' as const,
+                }}
+              >
+                {params.row.modifiedAt ? params.row.modifiedAt?.toLocaleDateString('en-GB') : '-'}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </React.Fragment>
+  );
+}
+
 export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
     <Box>
-      <Chip
-        label={params.row.enabled ? 'Attivo' : 'In revisione'}
-        aria-label="Status"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 'fontWeightMedium',
-          color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          // backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'grey.200',
-          paddingBottom: '1px',
-          height: '24px',
-        }}
-      />
+      <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} size="small" />
     </Box>,
     {
       textAlign: 'left',

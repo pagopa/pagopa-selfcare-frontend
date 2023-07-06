@@ -1,27 +1,29 @@
-import {Alert, Box, Chip, Divider, Grid, IconButton} from '@mui/material';
+import { Alert, Box, Divider, Grid, IconButton } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import {useTranslation} from 'react-i18next';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import { useTranslation } from 'react-i18next';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {useParams} from 'react-router-dom';
-import {useState} from 'react';
-import {VisibilityOff} from '@mui/icons-material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {StationDetailResource, WrapperStatusEnum,} from '../../../../api/generated/portal/StationDetailResource';
-import {isOperator} from '../../components/commonFunctions';
+import {
+  StationDetailResource,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/StationDetailResource';
+import { isOperator } from '../../components/commonFunctions';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
   stationDetail?: StationDetailResource;
-  formatedDate: (date: Date | undefined) => string | null;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 const StationDetailsValidation = ({
   stationDetail,
-  formatedDate,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
@@ -51,10 +53,12 @@ Props) => {
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox title={stationId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
-            <Typography mb={5} color="#5C6F82">
+            <Typography mb={5} color="text.secondary">
               {t('channelDetailPage.createdOn')}{' '}
-              <Typography component={'span'} color="#5C6F82" fontWeight={600}>
-                {`${formatedDate(stationDetail?.createdAt)} da ${stationDetail?.createdBy}`}
+              <Typography component={'span'} color="text.secondary" fontWeight={'fontWeightMedium'}>
+                {`${stationDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
+                  stationDetail?.createdBy
+                }`}
               </Typography>
             </Typography>
           </Grid>
@@ -93,30 +97,7 @@ Props) => {
                 </Typography>
               </Grid>
               <Grid item xs={9} textAlign="right">
-                <Chip
-                  size="medium"
-                  sx={{
-                    backgroundColor:
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                        ? 'primary.main'
-                        : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                          stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                        ? '#EEEEEE'
-                        : 'warning.light',
-                    color:
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                        ? 'background.paper'
-                        : 'text.primary',
-                  }}
-                  label={
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? t('stationDetailPage.states.active')
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? t('stationDetailPage.states.revision')
-                      : t('stationDetailPage.states.needCorrection')
-                  }
-                />
+                <StatusChip status={stationDetail?.wrapperStatus ?? ''} />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="h6" mb={1}>
@@ -145,7 +126,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.stationCode ?? '-'}
                   </Typography>
                 </Grid>
@@ -155,7 +136,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.primitiveVersion ?? '-'}
                   </Typography>
                 </Grid>
@@ -165,7 +146,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.brokerCode ?? '-'}
                   </Typography>
                 </Grid>
@@ -180,7 +161,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.redirectProtocol ?? '-'}
                   </Typography>
                 </Grid>
@@ -190,7 +171,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.redirectPort ?? '-'}
                   </Typography>
                 </Grid>
@@ -200,7 +181,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.redirectIp ?? '-'}
                   </Typography>
                 </Grid>
@@ -210,7 +191,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.redirectPath ?? '-'}
                   </Typography>
                 </Grid>
@@ -220,7 +201,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.redirectQueryString ?? '-'}
                   </Typography>
                 </Grid>
@@ -235,7 +216,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetHost ?? '-'}
                   </Typography>
                 </Grid>
@@ -245,7 +226,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetPath ?? '-'}
                   </Typography>
                 </Grid>
@@ -255,7 +236,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetPort ?? '-'}
                   </Typography>
                 </Grid>
@@ -270,7 +251,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
                   </Typography>
                 </Grid>
@@ -280,7 +261,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
                   </Typography>
                 </Grid>
@@ -290,7 +271,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
                   </Typography>
                 </Grid>
@@ -317,8 +298,8 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
-                    {formatedDate(stationDetail?.modifiedAt) ?? '-'}
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -327,7 +308,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {/* stationDetail?.modifiedByOpt */ '-'}
                   </Typography>
                 </Grid>
@@ -371,7 +352,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.version ?? '-'}
                   </Typography>
                 </Grid>
@@ -463,7 +444,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.threadNumber ?? '-'}
                   </Typography>
                 </Grid>
@@ -478,7 +459,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.protocol ?? '-'}
                   </Typography>
                 </Grid>
@@ -488,7 +469,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.ip ?? '-'}
                   </Typography>
                 </Grid>
@@ -498,7 +479,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.port ?? '-'}
                   </Typography>
                 </Grid>
@@ -508,7 +489,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.pofService ?? '-'}
                   </Typography>
                 </Grid>
@@ -518,7 +499,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.service ?? '-'}
                   </Typography>
                 </Grid>
@@ -533,7 +514,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.protocol4Mod ? stationDetail.protocol4Mod : '-'}
                   </Typography>
                 </Grid>
@@ -543,7 +524,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.ip4Mod ? stationDetail.ip4Mod : '-'}
                   </Typography>
                 </Grid>
@@ -553,7 +534,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.port4Mod ? stationDetail.port4Mod : '-'}
                   </Typography>
                 </Grid>
@@ -563,7 +544,7 @@ Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
                   </Typography>
                 </Grid>

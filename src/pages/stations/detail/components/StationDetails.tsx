@@ -1,24 +1,27 @@
-import {ArrowBack, ManageAccounts, VisibilityOff} from '@mui/icons-material';
-import {Breadcrumbs, Chip, Divider, Grid, IconButton, Paper, Stack, Typography,} from '@mui/material';
-import {Box} from '@mui/system';
-import {useTranslation} from 'react-i18next';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {useState} from 'react';
+import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
+import { Grid, Stack, Breadcrumbs, Typography, Paper, Divider, IconButton } from '@mui/material';
+import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {generatePath, Link, useParams} from 'react-router-dom';
-import {StationDetailResource, WrapperStatusEnum,} from '../../../../api/generated/portal/StationDetailResource';
+import { Link, generatePath, useParams } from 'react-router-dom';
+import {
+  StationDetailResource,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/StationDetailResource';
 import ROUTES from '../../../../routes';
+import { StatusChip } from '../../../../components/StatusChip';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Prop = {
   stationDetail?: StationDetailResource;
-  formatedDate: (date: Date | undefined) => string | null;
   goBack: () => void;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
+const StationDetails = ({ stationDetail, goBack }: Prop) => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
@@ -63,9 +66,14 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
               variantTitle="h4"
               variantSubTitle="body1"
             />
-            <Typography mb={5} component={'span'} fontWeight={'fontWeightMedium'} color={'#5C6F82'}>
+            <Typography
+              mb={5}
+              component={'span'}
+              fontWeight={'fontWeightMedium'}
+              color={'text.secondary'}
+            >
               {t('stationDetailPage.createdAt', {
-                data: formatedDate(stationDetail?.createdAt),
+                data: stationDetail?.createdAt?.toLocaleDateString('en-GB'),
               })}
             </Typography>
           </Grid>
@@ -86,30 +94,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
               <Typography variant="subtitle2">{t('stationDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <Chip
-                size="medium"
-                sx={{
-                  backgroundColor:
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'primary.main'
-                      : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                      ? '#EEEEEE'
-                      : 'warning.light',
-                  color:
-                    stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                      ? 'background.paper'
-                      : 'text.primary',
-                }}
-                label={
-                  stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
-                    ? t('stationDetailPage.states.active')
-                    : stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-                    ? t('stationDetailPage.states.revision')
-                    : t('stationDetailPage.states.needCorrection')
-                }
-              />
+              <StatusChip status={stationDetail?.wrapperStatus ?? ''} />
             </Grid>
           </Grid>
           <Typography variant="h6" mb={1}>
@@ -202,7 +187,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {formatedDate(stationDetail?.activationDate) ?? '-'}
+                    {stationDetail?.activationDate?.toLocaleDateString('en-GB') ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -318,7 +303,7 @@ const StationDetails = ({ stationDetail, formatedDate, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {formatedDate(stationDetail?.modifiedAt)}
+                    {stationDetail?.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

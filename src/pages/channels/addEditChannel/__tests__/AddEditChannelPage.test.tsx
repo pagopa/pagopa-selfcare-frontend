@@ -1,21 +1,18 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render } from '@testing-library/react';
 import React from 'react';
-import {generatePath, Router} from 'react-router-dom';
-import {store} from '../../../../redux/store';
+import { generatePath, Router } from 'react-router-dom';
+import { store } from '../../../../redux/store';
 import AddEditChannelPage from '../AddEditChannelPage';
-import {createMemoryHistory} from 'history';
-import {Provider} from 'react-redux';
+import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
 import ROUTES from '../../../../routes';
-import {FormAction} from '../../../../model/Channel';
-
-// let portalApiGetChannelDetail;
+import { FormAction } from '../../../../model/Channel';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  // portalApiGetChannelDetail = jest.spyOn(PortalApi, 'getChannelDetail');
 });
 
 afterEach(cleanup);
@@ -34,6 +31,5 @@ describe('<AddEditChannelPage />', () => {
         </ThemeProvider>
       </Provider>
     );
-    // expect(portalApiGetChannelDetail).toHaveBeenCalled();
   });
 });

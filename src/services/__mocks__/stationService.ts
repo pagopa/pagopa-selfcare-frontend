@@ -457,6 +457,18 @@ export const mockedStationAvailableEC: Array<any> = [
     enabled: true,
     extended_fault_bean: true,
   },
+  {
+    broker_ec_code: '81001870922',
+    description: 'Comune di Portoscuso',
+    enabled: true,
+    extended_fault_bean: true,
+  },
+  {
+    broker_ec_code: '00142300599',
+    description: 'Comune di Gaeta',
+    enabled: true,
+    extended_fault_bean: true,
+  },
 ];
 
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
@@ -480,7 +492,8 @@ export const getStationCodeMocked = (_code: string): Promise<StationCodeResource
   new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
-  _station: WrapperStationDetailsDto
+  _station: WrapperStationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
@@ -491,11 +504,13 @@ export const getECListByStationCode = (
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
 
 export const updateWrapperStation = (
-  _stations: StationDetailsDto
+  _stations: StationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateWrapperStationByOpt = (
-  _stations: StationDetailsDto
+  _stations: StationDetailsDto,
+  _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateStation = (

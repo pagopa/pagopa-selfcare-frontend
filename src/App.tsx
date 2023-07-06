@@ -30,6 +30,9 @@ import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPa
 import { ENV } from './utils/env';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
+import IbanPage from './pages/iban/IbanPage';
+import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
+import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -97,6 +100,20 @@ const SecuredRoutes = withLogin(
           <Route path={routes.STATION_EDIT} exact={true}>
             <AddEditStationPage />
           </Route>
+
+          <Route path={routes.IBAN} exact={true}>
+            <IbanPage />
+          </Route>
+          <Route path={routes.IBAN_ADD} exact={true}>
+            <AddEditIbanPage />
+          </Route>
+          <Route path={routes.IBAN_DETAIL} exact={true}>
+            <IbanDetailPage />
+          </Route>
+          <Route path={routes.IBAN_EDIT} exact={true}>
+            <AddEditIbanPage />
+          </Route>
+
           <Route path={routes.TOS} exact={true}>
             <TOS />
           </Route>

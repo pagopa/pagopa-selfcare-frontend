@@ -14,8 +14,8 @@ export const mockedParties: Array<Party> = [
     registeredOffice: 'VIA DEI PSP 20, ROMA',
     roles: [
       {
-        partyRole: 'DELEGATE',
-        roleKey: 'admin', // TODO use real product role
+        partyRole: 'OPERATOR',
+        roleKey: 'operator', // TODO use real product role
       },
     ],
     urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',

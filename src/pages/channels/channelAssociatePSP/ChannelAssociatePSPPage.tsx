@@ -8,25 +8,35 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTranslation, Trans } from 'react-i18next';
 import { Box } from '@mui/system';
-import { /* useErrorDispatcher, */ useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
 import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
 import { PSP } from '../../../model/PSP';
-import { getChannelAvailablePSP } from '../../../services/channelService';
+import {
+  associatePSPtoChannel,
+  getChannelAvailablePSP,
+  getChannelDetail,
+} from '../../../services/channelService';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { Party } from '../../../model/Party';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
   const { t } = useTranslation();
   const setLoading = useLoading(LOADING_TASK_PSP_AVAILABLE);
-  // const addError = useErrorDispatcher();
+  const addError = useErrorDispatcher();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   const { channelId } = useParams<{ channelId: string }>();
 
   const [selectedPSP, setSelectedPSP] = useState<PSP | undefined>();
   const [availablePSP, setAvailablePSP] = useState<Array<PSP>>([]);
+  const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
 
   const formik = useFormik({
     initialValues: {
@@ -47,12 +57,21 @@ function ChannelAssociatePSPPage() {
 
   const handleSubmit = () => {
     if (selectedPSP) {
-      /* setLoading(true);
-      associatePSPtoChannel(selectedPSP.id, channelId)
+      setLoading(true);
+      associatePSPtoChannel(
+        channelId,
+        selectedPSP.broker_psp_code,
+        channelDetail?.payment_types ?? []
+      )
         .then((_data) => {
-          history.push(ROUTES.CHANNEL_PSP_LIST, {
-            alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
-          });
+          history.push(
+            generatePath(ROUTES.CHANNEL_PSP_LIST, {
+              channelId,
+            }),
+            {
+              alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
+            }
+          );
         })
         .catch((reason) =>
           addError({
@@ -66,29 +85,31 @@ function ChannelAssociatePSPPage() {
             component: 'Toast',
           })
         )
-        .finally(() => setLoading(false));
-        */
-      history.push(
-        generatePath(ROUTES.CHANNEL_PSP_LIST, {
-          channelId,
-        }),
-        {
-          alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
-        }
-      );
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
   useEffect(() => {
     setLoading(true);
+
+    getChannelDetail(channelId)
+      .then((channel) => setChannelDetail(channel))
+      .catch((reason) => console.error(reason));
+
     getChannelAvailablePSP()
       .then((data) => {
-        if (data) {
-          setAvailablePSP(data);
+        if (data && selectedParty) {
+          // TODO:  remove when real service is available
+          const availablePSPfromService = addCurrentPSP(data, selectedParty);
+
+          setAvailablePSP(availablePSPfromService);
         }
       })
       .catch((reason) => console.error(reason))
       .finally(() => setLoading(false));
+
     setLoading(false);
   }, []);
 
@@ -113,7 +134,7 @@ function ChannelAssociatePSPPage() {
             <Trans i18nKey="channelAssociatePSPPage.associationForm.subTitle">
               Digita il nome del nuovo PSP da associare al canale
             </Trans>{' '}
-            <Typography component="span" fontWeight={600}>
+            <Typography component="span" fontWeight={'fontWeightMedium'}>
               {channelId}
             </Typography>
           </Typography>
@@ -178,3 +199,23 @@ function ChannelAssociatePSPPage() {
 }
 
 export default ChannelAssociatePSPPage;
+
+const addCurrentPSP = (availablePSP: Array<PSP>, selectedParty: Party) => {
+  const value = {
+    broker_psp_code: selectedParty?.fiscalCode ?? '',
+    description: selectedParty?.description ?? '',
+    enabled: true,
+    extended_fault_bean: true,
+  };
+
+  const index = availablePSP.findIndex(
+    (object) => object.broker_psp_code === selectedParty.fiscalCode ?? ''
+  );
+
+  if (index === -1) {
+    // eslint-disable-next-line functional/immutable-data
+    availablePSP.push(value);
+  }
+
+  return availablePSP;
+};

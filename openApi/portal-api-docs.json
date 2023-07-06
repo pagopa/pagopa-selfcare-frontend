@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.0.144"
+    "version": "0.0.167"
   },
   "servers": [
     {
@@ -12,6 +12,10 @@
     }
   ],
   "tags": [
+    {
+      "name": "Ibans",
+      "description": "Iban Controller"
+    },
     {
       "name": "channels",
       "description": "Api config channels operations"
@@ -856,6 +860,16 @@
             "name": "channelcodefilter",
             "in": "query",
             "description": "Channel code",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerCode",
+            "in": "query",
+            "description": "Broker code filter for search",
             "required": false,
             "style": "form",
             "schema": {
@@ -2416,6 +2430,70 @@
         ]
       }
     },
+    "/creditor-institutions/creditor-institution-and-broker": {
+      "post": {
+        "tags": ["creditor-institutions"],
+        "summary": "createCreditorInstitutionAndBroker",
+        "description": "Service to add a Creditor Institution And Broker to Api Config",
+        "operationId": "createCreditorInstitutionAndBrokerUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditorInstitutionAndBrokerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditorInstitutionDetailsResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/creditor-institutions/{ecCode}": {
       "get": {
         "tags": ["creditor-institutions"],
@@ -2551,6 +2629,134 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/creditorinstitutions/ibans": {
+      "post": {
+        "tags": ["Ibans"],
+        "summary": "getCreditorInstitutionIbans",
+        "description": "Get creditor institution ibans",
+        "operationId": "getCreditorInstitutionIbansUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IbanRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IbansResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/creditorinstitutions/ibans/create": {
+      "post": {
+        "tags": ["Ibans"],
+        "summary": "createCreditorInstitutionIbans",
+        "description": "Create creditor institution iban",
+        "operationId": "createCreditorInstitutionIbansUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IbanCreateRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IbanResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -4612,6 +4818,11 @@
           "enabled": {
             "type": "boolean"
           },
+          "flagPspCp": {
+            "type": "boolean",
+            "description": "Represents the authorization to carry out the transfer of the information present in additional payment information in the tags relating to payment by card for the PA in V1",
+            "example": false
+          },
           "flag_io": {
             "type": "boolean",
             "description": "flag io",
@@ -4665,8 +4876,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -4772,6 +4984,10 @@
             "type": "integer",
             "description": "timeout C",
             "format": "int64"
+          },
+          "validationUrl": {
+            "type": "string",
+            "description": "Url jira for ChannelDetail validation"
           }
         }
       },
@@ -4801,6 +5017,15 @@
             "type": "string",
             "description": "Channel code"
           },
+          "createdAt": {
+            "type": "string",
+            "description": "creation date",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "created by"
+          },
           "digital_stamp_brand": {
             "type": "boolean",
             "description": "digital stamp brand",
@@ -4817,6 +5042,15 @@
           "ip": {
             "type": "string",
             "description": "channel's ip"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "description": "modification date",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "modified by"
           },
           "new_fault_code": {
             "type": "boolean",
@@ -4858,8 +5092,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -4972,6 +5207,11 @@
             "type": "integer",
             "description": "timeout C",
             "format": "int64"
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "channel's validation status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX", "TO_FIX_UPDATE"]
           }
         }
       },
@@ -5139,6 +5379,21 @@
           "zipCode": {
             "type": "string",
             "description": "Creditor Institution's zip code"
+          }
+        }
+      },
+      "CreditorInstitutionAndBrokerDto": {
+        "title": "CreditorInstitutionAndBrokerDto",
+        "required": ["brokerDto", "creditorInstitutionDto"],
+        "type": "object",
+        "properties": {
+          "brokerDto": {
+            "description": "Broker",
+            "$ref": "#/components/schemas/BrokerDto"
+          },
+          "creditorInstitutionDto": {
+            "description": "Creditor Institution",
+            "$ref": "#/components/schemas/CreditorInstitutionDto"
           }
         }
       },
@@ -5347,6 +5602,141 @@
           "pec": {
             "type": "string",
             "description": "DPO's PEC"
+          }
+        }
+      },
+      "IbanCreateRequestDto": {
+        "title": "IbanCreateRequestDto",
+        "required": [
+          "creditorInstitutionCode",
+          "description",
+          "dueDate",
+          "iban",
+          "labels",
+          "validityDate"
+        ],
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          },
+          "creditorInstitutionCode": {
+            "type": "string",
+            "description": "Creditor Institution's code(Fiscal Code)"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description the Creditor Institution gives to the iban about its usage"
+          },
+          "dueDate": {
+            "type": "string",
+            "description": "The date on which the iban will expire",
+            "format": "date-time"
+          },
+          "iban": {
+            "type": "string",
+            "description": "The iban code"
+          },
+          "labels": {
+            "type": "array",
+            "description": "The labels array associated with the iban",
+            "items": {
+              "$ref": "#/components/schemas/IbanLabel"
+            }
+          },
+          "validityDate": {
+            "type": "string",
+            "description": "The date the Creditor Institution wants the iban to be used for its payments",
+            "format": "date-time"
+          }
+        }
+      },
+      "IbanLabel": {
+        "title": "IbanLabel",
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "IbanRequestDto": {
+        "title": "IbanRequestDto",
+        "required": ["creditorInstitutionCode"],
+        "type": "object",
+        "properties": {
+          "creditorInstitutionCode": {
+            "type": "string",
+            "description": "Creditor Institution's code(Fiscal Code)"
+          },
+          "label": {
+            "type": "string",
+            "description": "Filter by label"
+          }
+        }
+      },
+      "IbanResource": {
+        "title": "IbanResource",
+        "required": ["dueDate", "ecOwner", "iban", "publicationDate", "validityDate"],
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "The Creditor Institution company name"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description the Creditor Institution gives to the iban about its usage"
+          },
+          "dueDate": {
+            "type": "string",
+            "description": "The date on which the iban will expire",
+            "format": "date-time"
+          },
+          "ecOwner": {
+            "type": "string",
+            "description": "Fiscal code of the Creditor Institution who owns the iban"
+          },
+          "iban": {
+            "type": "string",
+            "description": "The iban code"
+          },
+          "labels": {
+            "type": "array",
+            "description": "The labels array associated with the iban",
+            "items": {
+              "$ref": "#/components/schemas/IbanLabel"
+            }
+          },
+          "publicationDate": {
+            "type": "string",
+            "description": "The date on which the iban has been inserted in the system",
+            "format": "date-time"
+          },
+          "validityDate": {
+            "type": "string",
+            "description": "The date the Creditor Institution wants the iban to be used for its payments",
+            "format": "date-time"
+          }
+        }
+      },
+      "IbansResource": {
+        "title": "IbansResource",
+        "required": ["ibanList"],
+        "type": "object",
+        "properties": {
+          "ibanList": {
+            "type": "array",
+            "description": "Creditor Institution's address object",
+            "items": {
+              "$ref": "#/components/schemas/IbanResource"
+            }
           }
         }
       },
@@ -5575,9 +5965,6 @@
           "tax_code": {
             "type": "string"
           },
-          "transfer": {
-            "type": "boolean"
-          },
           "vat_number": {
             "type": "string"
           }
@@ -5585,16 +5972,7 @@
       },
       "PaymentServiceProviderDetailsResource": {
         "title": "PaymentServiceProviderDetailsResource",
-        "required": [
-          "abi",
-          "agid_psp",
-          "bic",
-          "my_bank_code",
-          "stamp",
-          "tax_code",
-          "transfer",
-          "vat_number"
-        ],
+        "required": ["abi", "agid_psp", "bic", "my_bank_code", "stamp", "tax_code", "vat_number"],
         "type": "object",
         "properties": {
           "abi": {
@@ -5631,11 +6009,6 @@
           "tax_code": {
             "type": "string",
             "description": "tax code of the payment service provider"
-          },
-          "transfer": {
-            "type": "boolean",
-            "description": "transfer  of the payment service provider",
-            "example": false
           },
           "vat_number": {
             "type": "string",
@@ -6470,6 +6843,10 @@
             "description": "Station's timeoutC",
             "format": "int64"
           },
+          "validationUrl": {
+            "type": "string",
+            "description": "Url jira for StationDetail validation"
+          },
           "version": {
             "type": "integer",
             "description": "Station's version",
@@ -6708,6 +7085,10 @@
             "type": "integer",
             "description": "target port",
             "format": "int64"
+          },
+          "validationUrl": {
+            "type": "string",
+            "description": "Url jira for ChannelDetail validation"
           }
         }
       },
@@ -6736,6 +7117,10 @@
           "channel_code": {
             "type": "string",
             "description": "Channel code"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "created by"
           },
           "created_at": {
             "type": "string",
@@ -6820,8 +7205,9 @@
             "format": "int64"
           },
           "primitive_version": {
-            "type": "string",
-            "description": "primitive version"
+            "type": "integer",
+            "description": "primitive version",
+            "format": "int32"
           },
           "protocol": {
             "type": "string",
@@ -6939,6 +7325,11 @@
             "type": "string",
             "description": "entities type",
             "enum": ["CHANNEL", "STATION"]
+          },
+          "wrapperStatus": {
+            "type": "string",
+            "description": "channel's validation status",
+            "enum": ["APPROVED", "TO_CHECK", "TO_CHECK_UPDATE", "TO_FIX", "TO_FIX_UPDATE"]
           }
         }
       },
@@ -7318,6 +7709,10 @@
             "type": "integer",
             "description": "Station's target port POF",
             "format": "int64"
+          },
+          "validationUrl": {
+            "type": "string",
+            "description": "Url jira for StationDetail validation"
           },
           "version": {
             "type": "integer",

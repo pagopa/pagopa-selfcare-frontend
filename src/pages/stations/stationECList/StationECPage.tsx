@@ -61,7 +61,7 @@ const StationECListPage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography fontSize={16}>{stationId}</Typography>
-            <Typography fontWeight={600}>{t('stationECList.title')}</Typography>
+            <Typography fontWeight={'fontWeightMedium'}>{t('stationECList.title')}</Typography>
           </Breadcrumbs>
         </Stack>
 

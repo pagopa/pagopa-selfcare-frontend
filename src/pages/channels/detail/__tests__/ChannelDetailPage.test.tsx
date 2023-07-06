@@ -6,11 +6,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import ChannelDetailPage from '../ChannelDetailPage';
 import { Provider } from 'react-redux';
-// import { PortalApi } from '../../../api/PortalApiClient';
 
-// let portalApiGetChannelDetails;
 beforeEach(() => {
-  // portalApiGetChannelDetails = jest.spyOn(PortalApi, 'getChannelDetail');
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.resetModules();
@@ -31,7 +28,5 @@ describe('<ChannelDetailPage />', () => {
         </MemoryRouter>
       </Provider>
     );
-
-    // expect(portalApiGetChannelDetails).toHaveBeenCalled();
   });
 });

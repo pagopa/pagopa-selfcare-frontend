@@ -22,7 +22,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.description}
         </Typography>
       </Grid>
@@ -30,7 +30,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.description}
         </Typography>
       </Grid>
@@ -38,7 +38,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {selectedParty?.fiscalCode}
         </Typography>
       </Grid>
@@ -46,7 +46,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.interBankCode')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {'-'}
         </Typography>
       </Grid>
@@ -54,7 +54,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.accessionDate')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {'-'}
         </Typography>
       </Grid>
@@ -62,7 +62,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.address')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.address?.location ? signinData.address.location : '-'}
         </Typography>
       </Grid>
@@ -70,7 +70,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.city')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.address?.city ? signinData.address.city : '-'}
         </Typography>
       </Grid>
@@ -78,7 +78,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.province')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.address?.countryCode ? signinData.address.countryCode : '-'}
         </Typography>
       </Grid>
@@ -86,7 +86,7 @@ const ECRegistrationData = () => {
         <Typography variant="body2">{t('dashboardPage.registrationData.CAP')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.address?.zipCode ? signinData.address.zipCode : '-'}
         </Typography>
       </Grid>
@@ -96,7 +96,7 @@ const ECRegistrationData = () => {
         </Typography>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={600}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
           {signinData?.address?.taxDomicile ? signinData.address.taxDomicile : '-'}
         </Typography>
       </Grid>

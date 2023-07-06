@@ -143,6 +143,28 @@ jobs:
           export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
           export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
           export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+  
+  
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+            export REACT_APP_FEATURES_IBAN_ENABLED='true'
+          fi
+          
+          if [ "${{ inputs.environment }}" = "uat" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+            export REACT_APP_FEATURES_IBAN_ENABLED='false'
+          fi
+          
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+            export REACT_APP_FEATURES_IBAN_ENABLED='false'
+          fi
           
           yarn install
           yarn generate

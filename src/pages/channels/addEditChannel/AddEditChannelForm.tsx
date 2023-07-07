@@ -76,14 +76,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [initialTargetHost, setInitialTargetHost] = useState<string>('');
   const operator = isOperator();
 
-  useEffect(() => {
-    if (channelDetail) {
-      setInitialTargetHost(
-        `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}` || ''
-      );
-    }
-  }, [channelDetail]);
-
   const initialFormData = (
     channelCode: string,
     channelDetail?: ChannelDetailsResource,

@@ -1,13 +1,12 @@
 // import { useTranslation } from 'react-i18next';
 import { ArrowBack } from '@mui/icons-material';
-import { Breadcrumbs, Divider, Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Breadcrumbs, Divider, Box, Grid, Paper, Stack, Typography, Chip } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
-import { StatusChip } from '../../../components/StatusChip';
 import { getIban } from '../../../services/__mocks__/ibanService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -93,7 +92,18 @@ const IbanDetailPage = () => {
               <Typography variant="subtitle2">{t('ibanDetailPage.state')}</Typography>
             </Grid>
             <Grid item xs={9} textAlign="right">
-              <StatusChip status={'APPROVED'} />
+              <Chip
+                label={iban?.is_active ? t('ibanPage.active') : t('ibanPage.notActive')}
+                aria-label="update-in-progress"
+                size="medium"
+                sx={{
+                  color: iban?.is_active ? '#FFFFFF' : '#17324D',
+                  backgroundColor: iban?.is_active ? 'primary.main' : 'error.light',
+                  fontSize: '14px',
+                  paddingBottom: '1px',
+                  height: '32px',
+                }}
+              ></Chip>
             </Grid>
           </Grid>
           <Typography variant="h6" mb={3}>

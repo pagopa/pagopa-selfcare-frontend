@@ -660,6 +660,8 @@
     "title": "IBAN",
     "subtitle": "Cerca e gestisci tutti gli IBAN",
     "addIban": "Aggiungi IBAN",
+    "active": "Attivo",
+    "notActive": "Non attivo",
     "edit": {
       "title": "Modifica IBAN",
       "breadcrumb": "Modifica IBAN",
@@ -682,6 +684,7 @@
     "selectIban": "Seleziona IBAN",
     "upload": "Salva",
     "manage": "Gestisci",
+    "updateInProgress": "Modifica in corso",
     "list": {
       "search": "Cerca per Codice IBAN",
       "column": {

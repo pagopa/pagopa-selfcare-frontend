@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 test('Test createWrapperStation', async () => {
-  const station = await createWrapperStation(mockedWrapperStation);
+  const station = await createWrapperStation(mockedWrapperStation, "");
   expect(station).toMatchObject(mockedWrapperStation);
   expect(portalApiCreateWrapSpy).toBeCalledTimes(1);
 });

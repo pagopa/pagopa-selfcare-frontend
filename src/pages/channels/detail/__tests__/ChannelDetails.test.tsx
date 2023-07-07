@@ -47,6 +47,7 @@ describe('<ChannelDetails />', () => {
             <ThemeProvider theme={theme}>
               <ChannelDetails
                 channelDetail={channelDetailWrapper}
+                // @ts-ignore TODO
                 channelDetailWrapper={mockedChannelDetail(`${channelId}`)}
                 channelId={channelId}
                 goBack={jest.fn()}

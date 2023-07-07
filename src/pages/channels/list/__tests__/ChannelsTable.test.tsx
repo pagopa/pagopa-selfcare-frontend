@@ -23,7 +23,7 @@ describe('<ChannelsTable />', () => {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <ChannelsTable />
+            <ChannelsTable  channelCodeFilter={"1"}/>
           </Router>
         </ThemeProvider>
       </Provider>

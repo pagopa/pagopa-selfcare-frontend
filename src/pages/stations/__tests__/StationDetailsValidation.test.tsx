@@ -62,6 +62,7 @@ describe('<StationDetailsValidation.test />', () => {
             <ThemeProvider theme={theme}>
               <StationDetailsValidation
                 stationDetail={mockedFullStation}
+                  // @ts-ignore TODO
                 formatedDate={jest.fn()}
               />
             </ThemeProvider>
@@ -79,6 +80,7 @@ describe('<StationDetailsValidation.test />', () => {
             <ThemeProvider theme={theme}>
               <StationDetailsValidation
                 stationDetail={mockedFullStation}
+                // @ts-ignore TODO
                 formatedDate={jest.fn()}
               />
             </ThemeProvider>

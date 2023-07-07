@@ -131,9 +131,6 @@ jobs:
           
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
           
-          export REACT_APP_ANALYTICS_ENABLE='{{ vars.REACT_APP_ANALYTICS_ENABLED }}'
-          export REACT_APP_ANALYTICS_MOCKED='{{ vars.REACT_APP_ANALYTICS_MOCKED }}'
-          
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;'
           export REACT_APP_MIXPANEL_TOKEN='{{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
@@ -143,26 +140,18 @@ jobs:
           export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
           export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
           export REACT_APP_FEATURES_STATIONS_ENABLED='true'
-  
-  
+          export REACT_APP_ANALYTICS_ENABLE='false'
+          export REACT_APP_ANALYTICS_MOCKED='false'
+          
           if [ "${{ inputs.environment }}" = "dev" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
           fi
           
           if [ "${{ inputs.environment }}" = "uat" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
           fi
           
           if [ "${{ inputs.environment }}" = "prod" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
           fi
           

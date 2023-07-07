@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "1.0.0-3-gha",
+  "version": "1.0.0-4-gha",
   "homepage": "ui",
   "private": true,
   "scripts": {
@@ -33,7 +33,7 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-router-hash-link": "^2.4.5",
     "axios": "^0.23.0",
-    "date-fns" : "^2.30.0",
+    "date-fns": "^2.30.0",
     "formik": "^2.2.9",
     "node-fetch": "^3.3.0",
     "react": "^17.0.2",

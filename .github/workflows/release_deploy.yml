@@ -88,7 +88,7 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@v1.6.0
+        uses: pagopa/github-actions-template/node-release@fix-node
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
@@ -189,7 +189,7 @@ jobs:
     if: always()
     steps:
       - name: Report Status
-        if: ${{ needs.setup.outputs.environment == 'prod' || needs.setup.outputs.environment == 'all'  }}
+        if: ${{ needs.setup.outputs.environment == 'prod' }}
         uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ needs.deploy_aks.result }}

@@ -1,9 +1,5 @@
 import { ChannelCodeResource } from '../../api/generated/portal/ChannelCodeResource';
-import {
-  ChannelDetailsDto,
-  ProtocolEnum,
-  Redirect_protocolEnum,
-} from '../../api/generated/portal/ChannelDetailsDto';
+import { ChannelDetailsDto, ProtocolEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from '../../api/generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from '../../api/generated/portal/ChannelPspListResource';
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
@@ -190,11 +186,6 @@ export const mockedChannel: ChannelDetailsDto = {
   proxy_port: 0,
   proxy_username: 'string',
   recovery: false,
-  redirect_ip: 'string',
-  redirect_path: 'string',
-  redirect_port: 0,
-  redirect_protocol: Redirect_protocolEnum.HTTPS,
-  redirect_query_string: 'string',
   rt_push: false,
   serv_plugin: 'string',
   service: 'string',
@@ -212,11 +203,6 @@ export const mockedWrapperChannel: WrapperChannelDetailsDto = {
   broker_psp_code: 'broker_psp_code',
   broker_description: 'broker_description',
   channel_code: 'id_channel',
-  redirect_protocol: Redirect_protocolEnum.HTTPS,
-  redirect_path: 'reirect_parameters',
-  redirect_ip: 'redirect_ip',
-  redirect_port: 8080,
-  redirect_query_string: 'redirect_service',
   target_path: 'target_path',
   target_port: 8081,
   target_host: 'target_host',
@@ -292,11 +278,6 @@ export const mockedChannelDetail = (channelId: string): ChannelDetailsResource =
   proxy_port: 8080,
   proxy_username: 'proxy_username',
   recovery: true,
-  redirect_ip: 'redirect_ip',
-  redirect_path: 'redirect_path',
-  redirect_port: 8080,
-  redirect_protocol: Redirect_protocolEnum.HTTPS,
-  redirect_query_string: 'redirect_query_string',
   rt_push: true,
   serv_plugin: 'serv_plugin',
   service: 'service',
@@ -445,11 +426,6 @@ export const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations
         broker_psp_code: '97735020584',
         broker_description: 'AgID - Agenzia per l’Italia Digitale',
         channel_code: code,
-        redirect_protocol: Redirect_protocolEnum.HTTPS,
-        redirect_path: 'reirect_parameters',
-        redirect_ip: 'esempiolink.redirect.it',
-        redirect_port: 8080,
-        redirect_query_string: 'redirect_service',
         target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
         target_port: 8081,
         target_host: ' lab.link.it',

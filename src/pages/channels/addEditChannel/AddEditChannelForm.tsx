@@ -45,10 +45,7 @@ import {
   LOADING_TASK_PAYMENT_TYPE,
   LOADING_TASK_WFESP_PLUGIN,
 } from '../../../utils/constants';
-import {
-  ChannelDetailsDto,
-  Redirect_protocolEnum,
-} from '../../../api/generated/portal/ChannelDetailsDto';
+import { ChannelDetailsDto } from '../../../api/generated/portal/ChannelDetailsDto';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
 import { isOperator } from '../../stations/components/commonFunctions';
@@ -77,7 +74,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
   const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
   const operator = isOperator();
-  const redirectProtocol = ['HTTP', 'HTTPS'];
 
   const initialFormData = (
     channelCode: string,
@@ -104,11 +100,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           proxy_port: channelDetail.proxy_port ?? 0,
           flag_io: channelDetail.flag_io ?? false,
           recovery: channelDetail.recovery ?? false,
-          redirect_ip: channelDetail.redirect_ip ?? '',
-          redirect_path: channelDetail.redirect_path ?? '',
-          redirect_port: channelDetail.redirect_port ?? undefined,
-          redirect_protocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
-          redirect_query_string: channelDetail.redirect_query_string ?? '',
           card_chart: false,
           rt_push: channelDetail.rt_push ?? false,
           serv_plugin: channelDetail.serv_plugin ?? '',
@@ -140,11 +131,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           proxy_port: 0,
           flag_io: false,
           recovery: false,
-          redirect_ip: '',
-          redirect_path: '',
-          redirect_port: undefined,
-          redirect_protocol: Redirect_protocolEnum.HTTPS,
-          redirect_query_string: '',
           card_chart: false,
           rt_push: false,
           serv_plugin: '',
@@ -184,20 +170,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
           channel_code: !values.channel_code
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_port: !values.redirect_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.redirect_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          redirect_ip: !values.redirect_ip
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_path: !values.redirect_path
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_query_string: !values.redirect_query_string
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
           target_host: !values.target_host
@@ -256,11 +228,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       values.broker_psp_code !== '' &&
       values.broker_description !== '' &&
       values.channel_code !== '' &&
-      values.redirect_protocol?.toString() !== '' &&
-      values.redirect_port?.toString() !== '' &&
-      values.redirect_ip !== '' &&
-      values.redirect_path !== '' &&
-      values.redirect_query_string !== '' &&
       values.target_host !== '' &&
       values.target_path !== '' &&
       values.target_port?.toString() !== '' &&
@@ -539,122 +506,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             </Grid>
           </Box>
 
-          <Box sx={inputGroupStyle}>
-            <AddEditChannelFormSectionTitle
-              title={t('addEditChannelPage.addForm.sections.redirect')}
-              icon={<MenuBookIcon />}
-            ></AddEditChannelFormSectionTitle>
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel size="small">
-                    {t('addEditChannelPage.addForm.fields.redirectProtocol')}
-                  </InputLabel>
-                  <Select
-                    fullWidth
-                    id="redirect_protocol"
-                    name="redirect_protocol"
-                    label={t('addEditChannelPage.addForm.fields.redirectProtocol')}
-                    size="small"
-                    defaultValue={formik.values.redirect_protocol}
-                    value={
-                      formik.values.redirect_protocol === 'HTTPS'
-                        ? Redirect_protocolEnum.HTTPS
-                        : Redirect_protocolEnum.HTTP
-                    }
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.redirect_protocol && Boolean(formik.errors.redirect_protocol)
-                    }
-                    inputProps={{
-                      'data-testid': 'redirect-protocol-test',
-                    }}
-                  >
-                    {redirectProtocol.map((p) => (
-                      <MenuItem key={p} value={p}>
-                        {p}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_port"
-                  name="redirect_port"
-                  type="number"
-                  InputLabelProps={{ shrink: formik.values.redirect_port ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'redirect-port-test',
-                  }}
-                  label={t('addEditChannelPage.addForm.fields.redirectPort')}
-                  size="small"
-                  value={formik.values.redirect_port === 0 ? '' : formik.values.redirect_port}
-                  onChange={(e) => handleChangeNumberOnly(e, 'redirect_port', formik)}
-                  error={formik.touched.redirect_port && Boolean(formik.errors.redirect_port)}
-                  helperText={formik.touched.redirect_port && formik.errors.redirect_port}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_ip"
-                  name="redirect_ip"
-                  label={t('addEditChannelPage.addForm.fields.redirectIp')}
-                  size="small"
-                  value={formik.values.redirect_ip}
-                  onChange={formik.handleChange}
-                  error={formik.touched.redirect_ip && Boolean(formik.errors.redirect_ip)}
-                  helperText={formik.touched.redirect_ip && formik.errors.redirect_ip}
-                  inputProps={{
-                    'data-testid': 'redirect-ip-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_path"
-                  name="redirect_path"
-                  label={t('addEditChannelPage.addForm.fields.redirectService')}
-                  size="small"
-                  value={formik.values.redirect_path}
-                  onChange={formik.handleChange}
-                  error={formik.touched.redirect_path && Boolean(formik.errors.redirect_path)}
-                  helperText={formik.touched.redirect_path && formik.errors.redirect_path}
-                  inputProps={{
-                    'data-testid': 'redirect-service-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_query_string"
-                  name="redirect_query_string"
-                  label={t('addEditChannelPage.addForm.fields.redirectParameters')}
-                  size="small"
-                  value={formik.values.redirect_query_string}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.redirect_query_string &&
-                    Boolean(formik.errors.redirect_query_string)
-                  }
-                  helperText={
-                    formik.touched.redirect_query_string && formik.errors.redirect_query_string
-                  }
-                  inputProps={{
-                    'data-testid': 'redirect-parameters-test',
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
           <Box sx={inputGroupStyle}>
             <AddEditChannelFormSectionTitle
               title={t('addEditChannelPage.addForm.sections.target')}

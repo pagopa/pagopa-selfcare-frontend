@@ -28,11 +28,6 @@ describe('<ChannelDetails />', () => {
     broker_psp_code: '97735020584',
     broker_description: 'AgID - Agenzia per l’Italia Digitale',
     channel_code: `${channelId}`,
-    redirect_protocol: Redirect_protocolEnum.HTTPS,
-    redirect_path: 'reirect_parameters',
-    redirect_ip: 'esempiolink.redirect.it',
-    redirect_port: 8080,
-    redirect_query_string: 'redirect_service',
     target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
     target_port: 8081,
     target_host: ' lab.link.it',
@@ -47,8 +42,6 @@ describe('<ChannelDetails />', () => {
             <ThemeProvider theme={theme}>
               <ChannelDetails
                 channelDetail={channelDetailWrapper}
-                // @ts-ignore TODO
-                channelDetailWrapper={mockedChannelDetail(`${channelId}`)}
                 channelId={channelId}
                 goBack={jest.fn()}
               />

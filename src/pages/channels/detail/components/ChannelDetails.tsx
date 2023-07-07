@@ -124,33 +124,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
-                  <Typography variant="sidenav">{t('channelDetailPage.redirect')}</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.redirectProtocol')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.redirect_protocol}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.redirectPort')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.redirect_port}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.redirectUrl')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.redirect_ip}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={2}>
                   <Typography variant="sidenav">{t('channelDetailPage.target')}</Typography>
                 </Grid>
                 <Grid item xs={3}>

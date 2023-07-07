@@ -106,11 +106,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
-    const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
-    const redirectService = screen.getByTestId('redirect-service-test') as HTMLInputElement;
-    const redirectIp = screen.getByTestId('redirect-ip-test') as HTMLInputElement;
-    const redirectParameters = screen.getByTestId('redirect-parameters-test') as HTMLInputElement;
     const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
@@ -134,27 +129,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.click(channelCode);
     fireEvent.change(channelCode, { target: { value: 'channelCode' } });
     expect(channelCode.value).toBe('channelCode');
-
-    fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
-
-    fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: '' } });
-
-    fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-
-    fireEvent.click(redirectService);
-    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
-    expect(redirectService.value).toBe('redirectService');
-
-    fireEvent.click(redirectIp);
-    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
-    expect(redirectIp.value).toBe('redirectIp');
-
-    fireEvent.click(redirectParameters);
-    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
-    expect(redirectParameters.value).toBe('redirectParameters');
 
     fireEvent.click(targetAddress);
     fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
@@ -267,11 +241,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
-    const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
-    const redirectService = screen.getByTestId('redirect-service-test') as HTMLInputElement;
-    const redirectIp = screen.getByTestId('redirect-ip-test') as HTMLInputElement;
-    const redirectParameters = screen.getByTestId('redirect-parameters-test') as HTMLInputElement;
     const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
@@ -282,21 +251,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     expect(businessName.value).toBe(mockedParties[0].description);
     expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
     expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
-
-    fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
-
-    fireEvent.change(redirectPort, { target: { value: '0' } });
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-
-    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
-    expect(redirectService.value).toBe('redirectService');
-
-    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
-    expect(redirectIp.value).toBe('redirectIp');
-
-    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
-    expect(redirectParameters.value).toBe('redirectParameters');
 
     fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
     expect(targetAddress.value).toBe('redirectAddress');
@@ -336,11 +290,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
       target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 8081,
       target_host: ' lab.link.it',
@@ -389,11 +338,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
       target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 8081,
       target_host: ' lab.link.it',
@@ -490,11 +434,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
       target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 8081,
       target_host: ' lab.link.it',
@@ -543,11 +482,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
       target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 8081,
       target_host: ' lab.link.it',

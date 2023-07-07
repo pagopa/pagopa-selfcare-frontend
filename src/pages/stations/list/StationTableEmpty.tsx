@@ -1,6 +1,6 @@
-import { Box, Link, Typography } from '@mui/material';
-import { Trans } from 'react-i18next';
-import { generatePath, Link as RouterLink } from 'react-router-dom';
+import {Box, Link, Typography} from '@mui/material';
+import {Trans} from 'react-i18next';
+import {generatePath, Link as RouterLink} from 'react-router-dom';
 import ROUTES from '../../../routes';
 
 const StationTableEmpty = () => (

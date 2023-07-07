@@ -1,8 +1,25 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "1.0.0",
+  "version": "1.0.0-5-gha",
   "homepage": "ui",
   "private": true,
+  "scripts": {
+    "clean": "npm-run-all clean:*",
+    "start": "craco start",
+    "build": "craco build",
+    "clean:build": "rimraf build",
+    "test": "yarn run generate && dotenv -e .env.test.local jest --coverage --ci --testResultsProcessor jest-sonar-reporter",
+    "test:local": "yarn run generate && dotenv -e .env.test.local jest --coverage --ci",
+    "test:craco": "craco test -i",
+    "clean:coverage": "rimraf coverage",
+    "eject": "react-scripts eject",
+    "lint-autofix": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
+    "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx ",
+    "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
+    "generate": "npm-run-all generate:*",
+    "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
+    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
+  },
   "dependencies": {
     "@mui/icons-material": "^5.8.2",
     "@mui/lab": "^5.0.0-alpha.80",
@@ -16,7 +33,7 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-router-hash-link": "^2.4.5",
     "axios": "^0.23.0",
-    "date-fns" : "^2.30.0",
+    "date-fns": "^2.30.0",
     "formik": "^2.2.9",
     "node-fetch": "^3.3.0",
     "react": "^17.0.2",
@@ -27,41 +44,6 @@
     "react-scripts": "5.0.1",
     "react-use-scrollspy": "^3.0.1",
     "url": "^0.11.0"
-  },
-  "scripts": {
-    "clean": "npm-run-all clean:*",
-    "start": "craco start",
-    "build": "craco build",
-    "clean:build": "rimraf build",
-    "test": "craco test -i",
-    "test:coverage": "craco test -i --coverage",
-    "clean:coverage": "rimraf coverage",
-    "eject": "react-scripts eject",
-    "lint-autofix": "eslint . -c .eslintrc.js --ext .ts,.tsx --fix",
-    "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx ",
-    "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
-    "generate": "npm-run-all generate:*",
-    "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
-    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
-    
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
@@ -84,7 +66,16 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.7",
     "regex-replace": "^2.3.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "raw.macro": "^0.4.2",
+    "jest-sonar-reporter": "^2.0.0",
+    "@babel/core": "7.18.6",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "babel-jest": "^27.2.5",
+    "babel-plugin-macros": "^3.1.0",
+    "ts-jest": "^27.0.6",
+    "dotenv-cli": "^3.1.0"
   },
   "resolutions": {
     "static-eval": "^2.0.2",
@@ -94,17 +85,22 @@
     "json-schema-ref-parser": "^7.1.0",
     "z-schema": "^4.2.4"
   },
-  "jest": {
-    "restoreMocks": true,
-    "clearMocks": true,
-    "resetMocks": true,
-    "coveragePathIgnorePatterns": [
-      "src/index.js",
-      "src/bootstrap.tsx",
-      "src/consentAndAnalyticsConfiguration.ts",
-      "src/reportWebVitals.ts",
-      "src/api/generated",
-      "src/locale/it.ts"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }

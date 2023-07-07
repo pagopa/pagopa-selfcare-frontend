@@ -1,0 +1,114 @@
+name: Code Review
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - main
+
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  PROJECT_KEY: pagopa_pagopa-selfcare-frontend
+
+permissions:
+  id-token: write
+  contents: read
+  deployments: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.10.0
+
+      - name: Build
+        run: |
+          yarn install
+          yarn generate
+          yarn build
+
+  static_analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.10.0
+
+      - name: Lint
+        run: |
+          yarn install
+          yarn lint
+
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.10.0
+
+      - name: Unit Tests
+        run: |
+          yarn install
+          yarn generate
+          yarn test --watchAll=false
+
+  sonar:
+    name: Sonar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.organization=pagopa
+            -Dsonar.projectKey=${{env.PROJECT_KEY}}
+            -Dsonar.javascript.file.suffixes=.js,.jsx
+            -Dsonar.typescript.file.suffixes=.ts,.tsx
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/__tests__/**,**/__mocks__/**,**/*.js
+            -Dsonar.tests=**/__tests__
+            -Dsonar.test.inclusions=**/__tests__/**/*.test.tsx
+            -Dsonar.testExecutionReportPaths=test-report.xml
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.verbose=true
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.typescript.tsconfigPath=tsconfig.json
+            -Dsonar.eslint.reportPaths=eslint-report.json
+

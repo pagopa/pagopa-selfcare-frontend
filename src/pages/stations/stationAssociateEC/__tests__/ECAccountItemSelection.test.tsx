@@ -1,10 +1,10 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, render} from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
-import { Provider } from 'react-redux';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../../redux/store';
+import {Provider} from 'react-redux';
 import ECAccountItemSelection from '../ECAccountItemSelection';
 
 beforeEach(() => {

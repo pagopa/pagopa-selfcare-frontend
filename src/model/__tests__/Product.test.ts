@@ -1,8 +1,7 @@
-import { ProductsResource, StatusEnum } from '../../api/generated/portal/ProductsResource';
+import { ProductsResource } from '../../api/generated/portal/ProductsResource';
 import { productResource2Product } from '../Product';
 
 test('Test institutionInfo2Party', () => {
-  const date = new Date();
 
   const productResource: ProductsResource = {
     description: 'Pagamenti pagoPA description',

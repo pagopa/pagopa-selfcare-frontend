@@ -1,11 +1,11 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import { Stack, Button } from '@mui/material';
-import { Link, generatePath } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import {Button, Stack} from '@mui/material';
+import {generatePath, Link} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import ROUTES from '../../../../routes';
-import { StationFormAction } from '../../../../model/Station';
-import { isOperator } from '../../components/commonFunctions';
-import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
+import {StationFormAction} from '../../../../model/Station';
+import {isOperator} from '../../components/commonFunctions';
+import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
 
 type Props = {
   status: WrapperStatusEnum | undefined;

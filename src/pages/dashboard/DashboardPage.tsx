@@ -1,10 +1,10 @@
-import { Box, Grid, Typography, Alert, Card } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import {Alert, Box, Card, Grid, Typography} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import {useAppSelector} from '../../redux/hooks';
+import {partiesSelectors} from '../../redux/slices/partiesSlice';
 // import OperativeTable from './components/OperativeTable';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';

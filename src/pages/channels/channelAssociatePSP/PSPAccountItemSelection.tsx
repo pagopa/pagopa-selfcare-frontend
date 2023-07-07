@@ -1,7 +1,7 @@
-import { PartyAccountItem } from '@pagopa/mui-italia';
-import { Box, IconButton } from '@mui/material';
+import {PartyAccountItem} from '@pagopa/mui-italia';
+import {Box, IconButton} from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { PSP } from '../../../model/PSP';
+import {PSP} from '../../../model/PSP';
 
 type Props = {
   selectedPSP: PSP | null;

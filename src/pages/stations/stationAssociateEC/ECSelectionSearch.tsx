@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Grid, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { EC } from '../../../model/EC';
+import React, {useState} from 'react';
+import {Box, Grid} from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {EC} from '../../../model/EC';
 import ECSelectionSearchInput from './ECSelectionSearchInput';
 import ECSelectionSearchItemContainer from './ECSelectionSearchItemContainer';
 import ECAccountItemSelection from './ECAccountItemSelection';

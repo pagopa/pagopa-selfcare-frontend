@@ -1,22 +1,12 @@
-import { useState } from 'react';
-import { Box, Button, Card, Stack, ToggleButton, Typography } from '@mui/material';
+import {useState} from 'react';
+import {Box, Button, Card, Stack, ToggleButton, Typography, useTheme} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { VisibilityOff } from '@mui/icons-material';
-import { useTheme } from '@mui/material';
-import { useTranslation, Trans } from 'react-i18next';
-import {
-  SessionModal,
-  useErrorDispatcher,
-  useLoading,
-  useUserNotify,
-} from '@pagopa/selfcare-common-frontend';
-import { Party } from '../../model/Party';
-import { ProductKeys } from '../../model/ApiKey';
-import {
-  getInstitutionApiKeys,
-  regeneratePrimaryKey,
-  regenerateSecondaryKey,
-} from '../../services/apiKeyService';
+import {VisibilityOff} from '@mui/icons-material';
+import {Trans, useTranslation} from 'react-i18next';
+import {SessionModal, useErrorDispatcher, useLoading, useUserNotify,} from '@pagopa/selfcare-common-frontend';
+import {Party} from '../../model/Party';
+import {ProductKeys} from '../../model/ApiKey';
+import {getInstitutionApiKeys, regeneratePrimaryKey, regenerateSecondaryKey,} from '../../services/apiKeyService';
 
 type Props = {
   selectedParty?: Party;

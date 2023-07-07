@@ -1,8 +1,10 @@
-import { Grid, Typography, Chip } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import {Chip, Grid, Typography} from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {
+    PaymentServiceProviderDetailsResource
+} from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();

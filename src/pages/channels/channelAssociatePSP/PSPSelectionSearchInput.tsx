@@ -1,8 +1,8 @@
-import { Grid, TextField, IconButton, styled } from '@mui/material';
+import {Grid, IconButton, styled, TextField} from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import InputAdornment from '@mui/material/InputAdornment';
-import React, { ChangeEventHandler } from 'react';
+import React, {ChangeEventHandler} from 'react';
 
 const CustomIconButton = styled(IconButton)({
   '&:hover': {

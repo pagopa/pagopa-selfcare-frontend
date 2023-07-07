@@ -1,14 +1,14 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {createMemoryHistory} from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {store} from '../../../redux/store';
 import NodeSignInECForm from '../nodeSignIn/NodeSignInECForm';
-import { PortalApi } from '../../../api/PortalApiClient';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import {PortalApi} from '../../../api/PortalApiClient';
+import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

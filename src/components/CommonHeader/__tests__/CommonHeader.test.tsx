@@ -1,6 +1,5 @@
 import { JwtUser } from '@pagopa/mui-italia';
 import { render } from '@testing-library/react';
-import React from 'react';
 import CommonHeader from '../CommonHeader';
 
 beforeEach(() => {

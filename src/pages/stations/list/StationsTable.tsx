@@ -1,15 +1,15 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { WrapperStationsResource } from '../../../api/generated/portal/WrapperStationsResource';
-import { getStationsMerged } from '../../../services/stationService';
-import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { buildColumnDefs } from './StationsTableColumns';
+import {theme} from '@pagopa/mui-italia';
+import {Box, Pagination, styled, Typography} from '@mui/material';
+import {DataGrid, GridColDef, GridSortModel} from '@mui/x-data-grid';
+import React, {ChangeEvent, useEffect, useState} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {WrapperStationsResource} from '../../../api/generated/portal/WrapperStationsResource';
+import {getStationsMerged} from '../../../services/stationService';
+import {LOADING_TASK_RETRIEVE_STATIONS} from '../../../utils/constants';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {buildColumnDefs} from './StationsTableColumns';
 import StationTableEmpty from './StationTableEmpty';
 
 const rowHeight = 64;

@@ -1,17 +1,14 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {store} from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
-import { mockedFullStation } from '../../../services/__mocks__/stationService';
-import { StationFormAction, StationOnCreation } from '../../../model/Station';
-import { mockedFullStationApproved } from './StationDetails.test';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
-import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {StationFormAction, StationOnCreation} from '../../../model/Station';
+import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
+import {RedirectProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

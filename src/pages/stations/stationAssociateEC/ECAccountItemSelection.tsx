@@ -1,7 +1,7 @@
-import { PartyAccountItem } from '@pagopa/mui-italia';
-import { Box, IconButton } from '@mui/material';
+import {PartyAccountItem} from '@pagopa/mui-italia';
+import {Box, IconButton} from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { EC } from '../../../model/EC';
+import {EC} from '../../../model/EC';
 
 type Props = {
   selectedEC: EC | null;

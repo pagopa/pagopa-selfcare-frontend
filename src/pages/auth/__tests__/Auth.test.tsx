@@ -1,11 +1,10 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import {render} from '@testing-library/react';
 import Auth from '../Auth';
-import { ENV } from '../../../utils/env';
-import { User } from '../../../models/User';
-import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-frontend/utils/storage';
+import {ENV} from '../../../utils/env';
+import { User } from '@pagopa/selfcare-common-frontend/model/User';
+import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import ROUTES from '../../../routes';
-import { testToken } from '../../../utils/constants';
+import {testToken} from '../../../utils/constants';
 
 const token = testToken;
 
@@ -35,6 +34,7 @@ test('test login success', () => {
 });
 
 test('test login success no token', () => {
+  // @ts-ignore
   mockedLocation.hash = undefined;
   const requestedPath = 'prova?';
 

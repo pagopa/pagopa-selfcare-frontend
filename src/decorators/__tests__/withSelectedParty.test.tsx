@@ -7,13 +7,8 @@ import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage'
 import { testToken } from '../../utils/constants';
 
 jest.mock('../../services/partyService');
-
-const expectedPartyId: string = '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944';
-
 let fetchPartyDetailsSpy: jest.SpyInstance;
-
-const mockWinAssign = jest.fn();
-
+jest.fn();
 const savedLocation = window.location;
 
 beforeEach(() => {

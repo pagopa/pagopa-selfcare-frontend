@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Alert, Box, Grid } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {Alert, Box, Grid} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import StationsTable from './StationsTable';
 import StationsTableSearchBar from './StationsTableSearchBar';

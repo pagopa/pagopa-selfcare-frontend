@@ -1,12 +1,6 @@
-import { GridColumnHeaderParams, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
-import { cleanup } from '@testing-library/react';
-import {
-  buildColumnDefs,
-  renderCell,
-  showEcName,
-  showCustomHeader,
-  showStatus,
-} from '../StationECTableColumns';
+import {GridColumnHeaderParams, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
+import {cleanup} from '@testing-library/react';
+import {buildColumnDefs, renderCell, showCustomHeader, showEcName, showStatus,} from '../StationECTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

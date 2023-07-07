@@ -1,29 +1,19 @@
-import { useHistory } from 'react-router';
-import {
-  Box,
-  Button,
-  FormControlLabel,
-  Grid,
-  Paper,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { FormikProps, useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
+import {useHistory} from 'react-router';
+import {Box, Button, FormControlLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField,} from '@mui/material';
+import {FormikProps, useFormik} from 'formik';
+import {useTranslation} from 'react-i18next';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon} from '@mui/icons-material';
 import ROUTES from '../../../routes';
 
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { Party } from '../../../model/Party';
-import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {Party} from '../../../model/Party';
+import {LOADING_TASK_CHANNEL_ADD_EDIT} from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { NodeOnSignInPSP } from '../../../model/Node';
-import { createPSPDirect } from '../../../services/nodeService';
+import {NodeOnSignInPSP} from '../../../model/Node';
+import {createPSPDirect} from '../../../services/nodeService';
 
 type Props = {
   goBack: () => void;

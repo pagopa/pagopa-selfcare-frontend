@@ -1,6 +1,5 @@
 import {
   InstitutionResource,
-  InstitutionTypeEnum,
 } from '../../api/generated/portal/InstitutionResource';
 import { institutionResource2Party } from '../Party';
 

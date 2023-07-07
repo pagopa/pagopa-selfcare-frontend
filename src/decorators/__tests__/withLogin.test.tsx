@@ -47,6 +47,7 @@ const mockUser = (): User => {
     name: 'Anselmo',
     surname: 'Sartori',
     email: 'furiovitale@martino.it',
+    // @ts-ignore
     taxCode: undefined,
   };
 

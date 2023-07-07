@@ -1,11 +1,10 @@
 import { mockedProductResources } from '../../api/__mocks__/PortalApiClient';
-import { PortalApi } from '../../api/PortalApiClient';
 import { fetchProducts } from '../productService';
 import { productResource2Product } from '../../model/Product';
 
 jest.mock('../../api/PortalApiClient');
 
-let fetchProductsSpy;
+let fetchProductsSpy: any;
 
 beforeEach(() => {
   fetchProductsSpy = jest.spyOn(require('../productService'), 'fetchProducts');

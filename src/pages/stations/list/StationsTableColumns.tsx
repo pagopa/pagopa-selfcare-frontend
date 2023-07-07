@@ -1,11 +1,11 @@
-import { Typography, Grid, Box, Chip } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import {Box, Chip, Grid, Typography} from '@mui/material';
+import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
-import { TFunction } from 'react-i18next';
-import React, { CSSProperties, ReactNode } from 'react';
-import { generatePath } from 'react-router-dom';
+import {TFunction} from 'react-i18next';
+import React, {CSSProperties, ReactNode} from 'react';
+import {generatePath} from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
-import { FormAction } from '../../../model/Station';
+import {FormAction} from '../../../model/Station';
 import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {

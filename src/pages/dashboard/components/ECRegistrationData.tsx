@@ -1,12 +1,12 @@
-import { Grid, Typography, Chip } from '@mui/material';
+import {Chip, Grid, Typography} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTranslation } from 'react-i18next';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { useHistory } from 'react-router';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useTranslation} from 'react-i18next';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {useHistory} from 'react-router';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();

@@ -4,8 +4,8 @@ import { mockedWrapperStation, mockedStations } from '../__mocks__/stationServic
 
 jest.mock('../../api/PortalApiClient');
 
-let portalApiGetStationSpy;
-let portalApiCreateWrapSpy;
+let portalApiGetStationSpy: jest.SpyInstance<any, unknown[]>;
+let portalApiCreateWrapSpy: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
   portalApiCreateWrapSpy = jest.spyOn(require('../stationService'), 'createWrapperStation');
@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 test('Test createWrapperStation', async () => {
-  const station = await createWrapperStation(mockedWrapperStation);
+  const station = await createWrapperStation(mockedWrapperStation, "");
   expect(station).toMatchObject(mockedWrapperStation);
   expect(portalApiCreateWrapSpy).toBeCalledTimes(1);
 });

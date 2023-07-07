@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 // import axios from 'axios';
-import { Grid } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
+import {Grid} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useTranslation} from 'react-i18next';
 // import { ENV } from '../../utils/env';
 // import { getReplacedAssetsPaths } from '../../lib/guides-utils';
 import tosJson from '../../data/tos.json';

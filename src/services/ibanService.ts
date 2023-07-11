@@ -1,6 +1,7 @@
 import { PortalApi } from '../api/PortalApiClient';
 import { IbanCreateRequestDto } from '../api/generated/portal/IbanCreateRequestDto';
 import { IbansResource } from '../api/generated/portal/IbansResource';
+import { IbanOnCreation } from '../model/Iban';
 import {
   getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
   createIban as createIbanMocked,

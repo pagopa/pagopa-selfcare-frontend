@@ -25,11 +25,12 @@ import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEditIbanFormSectionTitle';
 import ROUTES from '../../../routes';
-import { createIban, updateIban } from '../../../services/__mocks__/ibanService';
+import { updateIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
 import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { createIban } from '../../../services/ibanService';
 
 type Props = {
   ibanBody: IbanOnCreation | undefined;
@@ -56,7 +57,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
     formik.setFieldValue('creditorInstitutionCode', undefined);
   };
 
-  const initialFormData = (ibanBody: IbanOnCreation | undefined) =>
+  const initialFormData = (ibanBody?: IbanOnCreation) =>
     typeof ibanBody !== 'undefined'
       ? {
           iban: ibanBody.iban,
@@ -193,7 +194,14 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          await createIban(values);
+          await createIban({
+            iban: values.iban,
+            description: values.description,
+            validityDate: values.validityDate,
+            dueDate: values.dueDate,
+            creditorInstitutionCode: ecCode,
+            labels: values.labels,
+          });
           console.log('SUBMIT CREATE!');
         } else {
           await updateIban(values, ecCode);
@@ -324,7 +332,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.validityDate ?? null}
+                    value={formik.values.validityDate}
                     onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -350,7 +358,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.dueDate ?? null}
+                    value={formik.values.dueDate}
                     onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField

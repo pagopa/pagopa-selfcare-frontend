@@ -14,12 +14,12 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import AddEditIbanForm from './AddEditIbanForm';
 
 const emptyIban: IbanOnCreation = {
-  iban: undefined,
-  description: undefined,
-  validityDate: null,
-  creditorInstitutionCode: undefined,
-  dueDate: null,
-  labels: undefined,
+  iban: '',
+  description: '',
+  validityDate: new Date(),
+  creditorInstitutionCode: '',
+  dueDate: new Date(),
+  labels: [],
 };
 
 const AddEditIbanPage = () => {

@@ -24,14 +24,10 @@ import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP, LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
-// import { getIbanList } from '../../services/ibanService';
 import { IbanLabel } from '../../api/generated/portal/IbanLabel';
-import {
-  getCreditorInstitutionIbans,
-  updateIbanCup,
-  updateIbanStandIn,
-} from '../../services/__mocks__/ibanService';
+import { updateIbanCup, updateIbanStandIn } from '../../services/__mocks__/ibanService';
 import { IbanOnCreation } from '../../model/Iban';
+import { getIbanList } from '../../services/ibanService';
 import IbanTable from './list/IbanTable';
 import IbanUploadModal from './components/IbanUploadModal';
 
@@ -39,7 +35,7 @@ const emptyIbanList: IbansResource = {
   ibanList: [],
 };
 
-const emptyIban: IbanOnCreation = {
+export const emptyIban: IbanOnCreation = {
   iban: '',
   description: '',
   validityDate: new Date(),
@@ -72,7 +68,7 @@ const IbanPage = () => {
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
       setLoadingStatus(true);
-      getCreditorInstitutionIbans(selectedParty.fiscalCode)
+      getIbanList(selectedParty.fiscalCode)
         .then((r) => (r ? setIbanList(r) : setIbanList(emptyIbanList)))
         .catch((reason) => {
           handleErrors([

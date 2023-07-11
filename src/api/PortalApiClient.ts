@@ -36,7 +36,10 @@ import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetails
 import { WrapperEntitiesOperations } from './generated/portal/WrapperEntitiesOperations';
 import { ChannelDetailsDto } from './generated/portal/ChannelDetailsDto';
 import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
-import { WrapperChannelDetailsDto } from './generated/portal/WrapperChannelDetailsDto';
+import {
+  Redirect_protocolEnum,
+  WrapperChannelDetailsDto,
+} from './generated/portal/WrapperChannelDetailsDto';
 import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
 import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
@@ -225,11 +228,11 @@ export const PortalApi = {
         proxy_host: channel.proxy_host,
         proxy_port: channel.proxy_port,
         recovery: channel.recovery,
-        redirect_ip: channel.redirect_ip,
-        redirect_path: channel.redirect_path,
-        redirect_port: channel.redirect_port,
-        redirect_protocol: channel.redirect_protocol,
-        redirect_query_string: channel.redirect_query_string,
+        redirect_protocol: Redirect_protocolEnum.HTTPS,
+        redirect_port: undefined,
+        redirect_ip: '',
+        redirect_path: '',
+        redirect_query_string: '',
         rt_push: channel.rt_push,
         serv_plugin: channel.serv_plugin,
         service: channel.service,
@@ -255,11 +258,11 @@ export const PortalApi = {
         broker_psp_code: channel.broker_psp_code,
         broker_description: channel.broker_description,
         channel_code: channel.channel_code,
-        redirect_protocol: channel.redirect_protocol,
-        redirect_port: channel.redirect_port,
-        redirect_ip: channel.redirect_ip,
-        redirect_path: channel.redirect_path,
-        redirect_query_string: channel.redirect_query_string,
+        redirect_protocol: Redirect_protocolEnum.HTTPS,
+        redirect_port: undefined,
+        redirect_ip: '',
+        redirect_path: '',
+        redirect_query_string: '',
         target_host: channel.target_host,
         target_path: channel.target_path,
         target_port: channel.target_port,

@@ -73,7 +73,16 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
   const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
+  const [initialTargetHost, setInitialTargetHost] = useState<string>('');
   const operator = isOperator();
+
+  useEffect(() => {
+    if (channelDetail) {
+      setInitialTargetHost(
+        `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}` || ''
+      );
+    }
+  }, [channelDetail]);
 
   const initialFormData = (
     channelCode: string,
@@ -159,6 +168,32 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     return false;
   };
 
+  const splitURL = (url: string | undefined) => {
+    if (url) {
+      const urlObj = new URL(url);
+      const host = urlObj.hostname;
+      const path = urlObj.pathname;
+      const port = urlObj.port || undefined;
+
+      return {
+        host,
+        path,
+        port,
+      };
+    } else {
+      return;
+    }
+  };
+
+  const isValidURL = (url: string): boolean => {
+    try {
+      new URL(url);
+      return true; // L'URL è valido
+    } catch (error) {
+      return false; // L'URL non è valido
+    }
+  };
+
   const validate = (values: Partial<ChannelDetailsDto>) =>
     Object.fromEntries(
       Object.entries({
@@ -174,14 +209,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             : undefined,
           target_host: !values.target_host
             ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          target_path: !values.target_path
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          target_port: !values.target_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.target_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
+            : !isValidURL(values.target_host)
+            ? 'URL non valido'
             : undefined,
           payment_types: values.payment_types?.includes('')
             ? t('addEditChannelPage.validationMessage.requiredField')
@@ -229,8 +258,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       values.broker_description !== '' &&
       values.channel_code !== '' &&
       values.target_host !== '' &&
-      values.target_path !== '' &&
-      values.target_port?.toString() !== '' &&
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
@@ -309,7 +336,21 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
         channelId: formik.values.channel_code,
       })}`;
+
+      const splitUrl = splitURL(values.target_host);
+
+      if (splitUrl) {
+        const { host, path, port } = splitUrl;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_host = host;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_path = path;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_port = port ? parseInt(port, 10) : undefined;
+      }
+
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
+        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }
@@ -352,6 +393,13 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       });
     } finally {
       setLoading(false);
+      const splitUrl = splitURL(values.target_host);
+
+      if (splitUrl) {
+        const { host, path, port } = splitUrl;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_host = `${host}${path}${port}`;
+      }
     }
   };
 
@@ -517,52 +565,15 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                   fullWidth
                   id="target_host"
                   name="target_host"
-                  label={t('addEditChannelPage.addForm.fields.targetIp')}
+                  label={t('addEditChannelPage.addForm.fields.endPoint')}
                   size="small"
-                  value={formik.values.target_host}
-                  onChange={formik.handleChange}
+                  value={initialTargetHost || formik.values.target_host}
+                  onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.target_host && Boolean(formik.errors.target_host)}
                   helperText={formik.touched.target_host && formik.errors.target_host}
                   inputProps={{
-                    'data-testid': 'target-address-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="target_path"
-                  name="target_path"
-                  label={t('addEditChannelPage.addForm.fields.targetService')}
-                  size="small"
-                  value={formik.values.target_path}
-                  onChange={formik.handleChange}
-                  error={formik.touched.target_path && Boolean(formik.errors.target_path)}
-                  helperText={formik.touched.target_path && formik.errors.target_path}
-                  inputProps={{
                     'data-testid': 'target-service-test',
                   }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="target_port"
-                  name="target_port"
-                  type="number"
-                  InputLabelProps={{ shrink: formik.values.target_port ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'target-port-test',
-                  }}
-                  label={t('addEditChannelPage.addForm.fields.targetPort')}
-                  size="small"
-                  value={formik.values.target_port === 0 ? '' : formik.values.target_port}
-                  onChange={(e) => handleChangeNumberOnly(e, 'target_port', formik)}
-                  error={formik.touched.target_port && Boolean(formik.errors.target_port)}
-                  helperText={formik.touched.target_port && formik.errors.target_port}
                 />
               </Grid>
             </Grid>

@@ -1,0 +1,16 @@
+{
+  "name": "integration-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "login_ec.js",
+  "scripts": {
+    "start": "sh run_integration.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^20.8.0",
+    "puppeteer-extra-plugin-session": "^1.0.1"
+  }
+}

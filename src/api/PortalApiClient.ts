@@ -155,7 +155,7 @@ export const PortalApi = {
 
   getChannelsMerged: async (
     page: number,
-    _brokerCode: string,
+    brokerCode: string,
     channelcodefilter?: string,
     limit?: number,
     sorting?: string
@@ -163,6 +163,7 @@ export const PortalApi = {
     const result = await apiConfigClient.getAllChannelsMergedUsingGET({
       limit,
       channelcodefilter,
+      brokerCode,
       page,
       sorting,
     });

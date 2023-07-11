@@ -111,28 +111,31 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                   <Typography variant="sidenav">{t('channelDetailPage.target')}</Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetAddress')}</Typography>
+                  <Typography variant="body2">{t('channelDetailPage.endPoint')}</Typography>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={6}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetWrap.target_host}
+                    {`${channelDetWrap.target_host}${channelDetWrap.target_port}${channelDetWrap.target_path}`}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetService')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetWrap.target_path}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetPort')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetWrap.target_port}
-                  </Typography>
+                <Grid
+                  item
+                  textAlign={'right'}
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'flex-end'}
+                  xs={3}
+                >
+                  <ButtonNaked
+                    component={Link}
+                    to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
+                    disabled={channelDetWrap.wrapperStatus !== WrapperStatusEnum.APPROVED}
+                    color="primary"
+                    endIcon={<ManageAccounts />}
+                    size="medium"
+                  >
+                    {t('channelDetailPage.managePsp')}
+                  </ButtonNaked>
                 </Grid>
                 <Grid item xs={12} mt={2}>
                   <Typography variant="sidenav">{t('channelDetailPage.paymentType')}</Typography>
@@ -147,55 +150,6 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                         </Grid>
                       ))
                     : ''}
-                </Grid>
-                <Grid item xs={6} alignItems={'center'}>
-                  <Typography variant="sidenav">{t('channelDetailPage.associatedPsp')}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  textAlign={'right'}
-                  display={'flex'}
-                  alignItems={'center'}
-                  justifyContent={'flex-end'}
-                  xs={6}
-                >
-                  <ButtonNaked
-                    component={Link}
-                    to={generatePath(ROUTES.CHANNEL_PSP_LIST, { channelId })}
-                    disabled={channelDetWrap.wrapperStatus !== WrapperStatusEnum.APPROVED}
-                    color="primary"
-                    endIcon={<ManageAccounts />}
-                    size="medium"
-                  >
-                    {t('channelDetailPage.managePsp')}
-                  </ButtonNaked>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.associated')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {0}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={2}>
-                  <Typography variant="sidenav">{t('channelDetailPage.changes')}</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetWrap.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetWrap.modifiedBy ?? '-'}
-                  </Typography>
                 </Grid>
               </Grid>
             </Grid>

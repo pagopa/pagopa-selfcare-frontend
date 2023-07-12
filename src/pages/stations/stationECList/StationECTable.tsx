@@ -1,16 +1,16 @@
-import {theme} from '@pagopa/mui-italia';
-import {Box, Pagination, styled, Typography} from '@mui/material';
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import {ChangeEvent, useEffect, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {useParams} from 'react-router';
-import {SessionModal, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {handleErrors} from '@pagopa/selfcare-common-frontend/services/errorService';
-import {LOADING_TASK_STATION_EC_TABLE} from '../../../utils/constants';
-import {dissociateECfromStation, getECListByStationCode} from '../../../services/stationService';
-import {CreditorInstitutionsResource} from '../../../api/generated/portal/CreditorInstitutionsResource';
-import {buildColumnDefs} from './StationECTableColumns';
-import {GridToolbarQuickFilter} from './QuickFilterCustom';
+import { theme } from '@pagopa/mui-italia';
+import { Box, Pagination, styled, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useParams } from 'react-router';
+import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
+import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
+import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
+import { buildColumnDefs } from './StationECTableColumns';
+import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import StationECTableEmpty from './StationECTableEmpty';
 
 const rowHeight = 64;
@@ -110,30 +110,29 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
 
-  const dissociateEC = () => {
+  const dissociateEC = async () => {
     setShowConfirmModal(false);
     setLoading(true);
-    dissociateECfromStation(selectedECCode, stationId)
-      .then(() => {
-        setAlertMessage(t('stationECList.dissociateEcSuccessMessage'));
-        fetchStationECs(page);
-      })
-      .catch((reason) => {
-        addError({
-          id: 'STATION_DELETE_RELATIONSHIP',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while deleting relationship between EC and Station`,
-          toNotify: true,
-          displayableTitle: t('stationECList.dissociateEcErrorTitle'),
-          displayableDescription: t('stationECList.dissociateEcErrorMessage'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => {
-        setSelectedECCode('');
-        setLoading(false);
+
+    try {
+      await dissociateECfromStation(selectedECCode, stationId);
+      setAlertMessage(t('stationECList.dissociateEcSuccessMessage'));
+      fetchStationECs(page);
+    } catch (reason) {
+      addError({
+        id: 'STATION_DELETE_RELATIONSHIP',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while deleting relationship between EC and Station`,
+        toNotify: true,
+        displayableTitle: t('stationECList.dissociateEcErrorTitle'),
+        displayableDescription: t('stationECList.dissociateEcErrorMessage'),
+        component: 'Toast',
       });
+    } finally {
+      setSelectedECCode('');
+      setLoading(false);
+    }
   };
 
   const fetchStationECs = (currentPage: number) => {

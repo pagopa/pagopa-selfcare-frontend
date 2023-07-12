@@ -791,9 +791,9 @@
   "header": {
     "envLabel": {
       "LOCAL_DEV": "Sviluppo locale",
-      "DEV": "Sviluppo",
-      "UAT": "Collaudo",
-      "PROD": "Produzione"
+      "dev": "Sviluppo",
+      "uat": "Collaudo",
+      "prod": "Produzione"
     }
   },
   "subHeader": {

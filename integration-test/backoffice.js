@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 const fs = require('fs');
 
 (async () => {
-    const browser = await puppeteer.launch({headless: "new", userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: false, userDataDir: './user-data'});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -30,19 +30,6 @@ const fs = require('fs');
         await page.click(searchResultSelector);
         console.log('Waiting for')
 
-    }
-    {
-        const targetPage = page;
-        await waitForElement({
-            type: 'waitForElement',
-            target: 'main',
-            selectors: [
-                'div.Mui-selected span',
-                'xpath///*[@id="root"]/div[2]/div[2]/div/div[1]/div/div/div/ul/div[1]/div[2]/span',
-                'pierce/div.Mui-selected span'
-            ],
-            visible: true
-        }, targetPage, timeout);
     }
 
     await browser.close();

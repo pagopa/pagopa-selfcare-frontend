@@ -1,16 +1,16 @@
-import {theme} from '@pagopa/mui-italia';
-import {Box, Pagination, styled, Typography} from '@mui/material';
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import {ChangeEvent, useEffect, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {useParams} from 'react-router';
-import {SessionModal, useLoading} from '@pagopa/selfcare-common-frontend';
-import {handleErrors} from '@pagopa/selfcare-common-frontend/services/errorService';
-import {LOADING_TASK_CHANNEL_PSP_TABLE} from '../../../utils/constants';
-import {dissociatePSPfromChannel, getChannelPSPs} from '../../../services/channelService';
-import {ChannelPspListResource} from '../../../api/generated/portal/ChannelPspListResource';
-import {buildColumnDefs} from './ChannelPSPTableColumns';
-import {GridToolbarQuickFilter} from './QuickFilterCustom';
+import { theme } from '@pagopa/mui-italia';
+import { Box, Pagination, styled, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useParams } from 'react-router';
+import { SessionModal, useLoading } from '@pagopa/selfcare-common-frontend';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
+import { dissociatePSPfromChannel, getChannelPSPs } from '../../../services/channelService';
+import { ChannelPspListResource } from '../../../api/generated/portal/ChannelPspListResource';
+import { buildColumnDefs } from './ChannelPSPTableColumns';
+import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 
 const rowHeight = 64;
@@ -121,31 +121,30 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
     );
   }, [pspListPage.page_info?.total_pages, setRowCountState]);
 
-  const dissociatePSP = () => {
+  const dissociatePSP = async () => {
     setShowConfirmModal(false);
     setLoading(true);
-    dissociatePSPfromChannel(channelId, selectedPSPCode)
-      .then(() => {
-        setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
-        fetchChannelPSPs(page);
-      })
-      .catch((reason) => {
-        console.error('reason', reason);
-        handleErrors([
-          {
-            id: `FETCH_CHANNELS_ERROR`,
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while fetching channels`,
-            toNotify: false,
-          },
-        ]);
-        setError(true);
-      })
-      .finally(() => {
-        setSelectedPSPCode('');
-        setLoading(false);
-      });
+
+    try {
+      await dissociatePSPfromChannel(channelId, selectedPSPCode);
+      setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
+      fetchChannelPSPs(page);
+    } catch (reason) {
+      console.error('reason', reason);
+      handleErrors([
+        {
+          id: `FETCH_CHANNELS_ERROR`,
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while fetching channels`,
+          toNotify: false,
+        },
+      ]);
+      setError(true);
+    } finally {
+      setSelectedPSPCode('');
+      setLoading(false);
+    }
   };
 
   const fetchChannelPSPs = (currentPage: number) => {

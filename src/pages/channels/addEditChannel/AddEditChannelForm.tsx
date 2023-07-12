@@ -348,8 +348,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       }
 
       if (formAction === FormAction.Edit) {
-        // eslint-disable-next-line no-debugger
-        debugger;
         switch (channelDetail?.wrapperStatus) {
           case WrapperStatusEnum.TO_CHECK:
             if (operator) {

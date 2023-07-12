@@ -1,12 +1,21 @@
-import {useState} from 'react';
-import {Box, Button, Card, Stack, ToggleButton, Typography, useTheme} from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, Card, Stack, ToggleButton, Typography, useTheme } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {VisibilityOff} from '@mui/icons-material';
-import {Trans, useTranslation} from 'react-i18next';
-import {SessionModal, useErrorDispatcher, useLoading, useUserNotify,} from '@pagopa/selfcare-common-frontend';
-import {Party} from '../../model/Party';
-import {ProductKeys} from '../../model/ApiKey';
-import {getInstitutionApiKeys, regeneratePrimaryKey, regenerateSecondaryKey,} from '../../services/apiKeyService';
+import { VisibilityOff } from '@mui/icons-material';
+import { Trans, useTranslation } from 'react-i18next';
+import {
+  SessionModal,
+  useErrorDispatcher,
+  useLoading,
+  useUserNotify,
+} from '@pagopa/selfcare-common-frontend';
+import { Party } from '../../model/Party';
+import { ProductKeys } from '../../model/ApiKey';
+import {
+  getInstitutionApiKeys,
+  regeneratePrimaryKey,
+  regenerateSecondaryKey,
+} from '../../services/apiKeyService';
 
 type Props = {
   selectedParty?: Party;
@@ -153,7 +162,7 @@ export default function ApiKeysCard({ selectedParty, apiKey }: Props) {
     <>
       <Card variant="outlined" sx={{ p: 3, mb: 1 }}>
         <Box mb={2}>
-          <Typography variant="h6">{t(`apiKeysPage.apiKey.${apiKey.displayName}`)}</Typography>
+          <Typography variant="h6">{apiKey.displayName}</Typography>
         </Box>
         <Box mb={2}>
           <Typography sx={{ fontWeight: 'fontWeightMedium', fontSize: 'fontSize' }}>

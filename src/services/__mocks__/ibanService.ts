@@ -19,6 +19,7 @@ export const ibanList: IbansResource = {
           name: 'CUP',
         },
       ],
+      active: true,
     },
     {
       iban: 'IT99C0222211111000000000002',
@@ -33,7 +34,9 @@ export const ibanList: IbansResource = {
           name: 'STANDIN',
         },
       ],
+      active: true,
     },
+
     {
       iban: 'IT99C0222211111000000000003',
       publicationDate: new Date('2023-06-01T23:59:59.999Z'),
@@ -41,6 +44,7 @@ export const ibanList: IbansResource = {
       dueDate: new Date('2024-04-01T13:49:19.897Z'),
       ecOwner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
+      active: false,
     },
   ],
 };

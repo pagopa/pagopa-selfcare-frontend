@@ -13,7 +13,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { IbanOnCreation } from '../../../model/Iban';
 import { getIbanList } from '../../../services/ibanService';
-import { IbanResource } from '../../../api/generated/portal/IbanResource';
+import { emptyIban } from '../IbanPage';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -21,8 +21,7 @@ const IbanDetailPage = () => {
   const history = useHistory();
   const goBack = () => history.push(ROUTES.IBAN);
   const { ibanId } = useParams<{ ibanId: string }>();
-  const [iban, setIban] = useState<IbanResource>();
-  const [error, setError] = useState(false);
+  const [iban, setIban] = useState<IbanOnCreation>(emptyIban);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
@@ -33,7 +32,14 @@ const IbanDetailPage = () => {
       getIbanList(selectedParty.fiscalCode)
         .then((response) => {
           const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
-          setIban(fileterdIban[0]);
+          setIban({
+            iban: fileterdIban[0].iban,
+            description: fileterdIban[0].description ?? '',
+            creditorInstitutionCode: fileterdIban[0].ecOwner,
+            validityDate: fileterdIban[0].validityDate,
+            dueDate: fileterdIban[0].dueDate,
+            labels: fileterdIban[0].labels ?? [],
+          });
         })
         .catch((reason) => {
           handleErrors([
@@ -45,7 +51,6 @@ const IbanDetailPage = () => {
               toNotify: false,
             },
           ]);
-          setError(true);
           addError({
             id: 'GET_IBAN_LIST',
             blocking: false,
@@ -56,11 +61,11 @@ const IbanDetailPage = () => {
             displayableDescription: t('ibanPage.error.listErrorDesc'),
             component: 'Toast',
           });
-          setIban(undefined);
+          setIban(emptyIban);
         })
         .finally(() => setLoading(false));
     }
-  }, [selectedParty]);
+  }, [selectedParty, ibanId]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -161,6 +166,14 @@ const IbanDetailPage = () => {
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                   {iban?.validityDate?.toLocaleDateString('en-GB')}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('ibanDetailPage.to')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {iban?.dueDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
             </Grid>

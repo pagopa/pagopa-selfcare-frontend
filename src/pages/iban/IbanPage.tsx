@@ -25,7 +25,7 @@ import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP, LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
 import { IbanLabel } from '../../api/generated/portal/IbanLabel';
-import { updateIbanCup, updateIbanStandIn } from '../../services/__mocks__/ibanService';
+import { updateIbanCup, updateIbanStandIn } from '../../services/ibanService';
 import { IbanOnCreation } from '../../model/Iban';
 import { getIbanList } from '../../services/ibanService';
 import IbanTable from './list/IbanTable';

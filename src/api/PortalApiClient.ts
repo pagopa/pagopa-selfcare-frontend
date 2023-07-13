@@ -921,4 +921,18 @@ export const PortalApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  updateIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
+    const result = await apiConfigClient.putCreditorInstitutionIbansUsingPUT({
+      body: {
+        iban: ibanBody.iban,
+        description: ibanBody.description,
+        validityDate: ibanBody.validityDate,
+        dueDate: ibanBody.dueDate,
+        creditorInstitutionCode: ibanBody.creditorInstitutionCode,
+        labels: ibanBody.labels,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
 };

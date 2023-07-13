@@ -106,8 +106,7 @@ export const getIban = (_iban: string): Promise<any> =>
 export const createIban = (_iban: IbanCreateRequestDto): Promise<any> =>
   new Promise((resolve) => resolve(mockedIban));
 
-export const updateIban = (_iban: IbanOnCreation, _ecCode: string) =>
-  new Promise((resolve) => resolve(mockedIban));
+export const updateIban = (_iban: IbanOnCreation) => new Promise((resolve) => resolve(mockedIban));
 
 export const updateIbanStandIn = (_iban: IbanOnCreation): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIbanStandIn));

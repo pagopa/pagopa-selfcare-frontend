@@ -24,12 +24,11 @@ import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import ROUTES from '../../../routes';
-import { updateIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
 import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { createIban } from '../../../services/ibanService';
+import { createIban, updateIban } from '../../../services/ibanService';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -213,7 +212,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           });
           console.log('SUBMIT CREATE!');
         } else if (formAction === IbanFormAction.Edit) {
-          await updateIban(values, ecCode); // Utilizza l'ID dell'IBAN per l'aggiornamento
+          await updateIban(values); // Utilizza l'ID dell'IBAN per l'aggiornamento
           console.log('SUBMIT UPDATE!');
         }
       } catch (reason) {

@@ -42,6 +42,7 @@ export const emptyIban: IbanOnCreation = {
   dueDate: new Date(),
   creditorInstitutionCode: '',
   labels: [],
+  active: false,
 };
 
 const IbanPage = () => {

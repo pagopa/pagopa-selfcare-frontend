@@ -707,7 +707,8 @@
     "iban": "IBAN",
     "ibanDesc": "Descrizione",
     "validityDate": "Inizio validità",
-    "from": "Dal",
+    "from": "Data inizio",
+    "to": "Data fine",
     "ecData": "Dati ente crerditore",
     "fiscalCode": "Codice Fiscale",
     "buttons": {

@@ -12,12 +12,13 @@ import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getIbanList } from '../../../services/ibanService';
+import { emptyIban } from '../IbanPage';
 import AddEditIbanForm from './AddEditIbanForm';
 
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [iban, setIban] = useState<IbanOnCreation>();
+  const [iban, setIban] = useState<IbanOnCreation>(emptyIban);
   const goBack = () => history.push(ROUTES.IBAN);
   const addError = useErrorDispatcher();
   const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
@@ -28,7 +29,7 @@ const AddEditIbanPage = () => {
   const creditorInstitutionCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
-    if (formAction === IbanFormAction.Edit) {
+    if (formAction !== IbanFormAction.Create) {
       setLoading(true);
       getIbanList(creditorInstitutionCode)
         .then((response) => {
@@ -62,7 +63,7 @@ const AddEditIbanPage = () => {
             displayableDescription: t('ibanPage.error.listErrorDesc'),
             component: 'Toast',
           });
-          setIban(undefined);
+          setIban(emptyIban);
         })
         .finally(() => setLoading(false));
     }
@@ -98,7 +99,9 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm goBack={goBack} ibanBody={iban} formAction={formAction} />
+        {selectedParty && (
+          <AddEditIbanForm goBack={goBack} ibanBody={iban} formAction={formAction} />
+        )}
       </Grid>
     </Grid>
   );

@@ -29,7 +29,7 @@ export const ibanList: IbansResource = {
       description: 'Tassa di concorso - servizio tesoreria comunale',
       labels: [
         {
-          description: 'The IBAN to use for CUP payments',
+          description: 'The IBAN to use for STANDIN payments',
           name: 'STANDIN',
         },
       ],

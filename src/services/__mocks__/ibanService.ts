@@ -13,6 +13,12 @@ export const ibanList: IbansResource = {
       dueDate: new Date('2024-04-01T13:49:19.897Z'),
       ecOwner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
+      labels: [
+        {
+          description: 'The IBAN to use for CUP payments',
+          name: 'CUP',
+        },
+      ],
     },
     {
       iban: 'IT99C0222211111000000000002',
@@ -21,6 +27,12 @@ export const ibanList: IbansResource = {
       dueDate: new Date('2024-04-01T13:49:19.897Z'),
       ecOwner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
+      labels: [
+        {
+          description: 'The IBAN to use for STANDIN payments',
+          name: 'STANDIN',
+        },
+      ],
     },
     {
       iban: 'IT99C0222211111000000000003',

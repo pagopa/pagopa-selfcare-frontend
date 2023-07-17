@@ -13,9 +13,8 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
-import { t } from 'i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { Trans } from 'react-i18next';
 import EditIcon from '@mui/icons-material/Edit';
 import { IbanLabel } from '../../../api/generated/portal/IbanLabel';
 import { IbansResource } from '../../../api/generated/portal/IbansResource';
@@ -26,12 +25,15 @@ import { emptyIban } from '../IbanPage';
 import IbanUploadModal from '../components/IbanUploadModal';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import IbanTable from '../list/IbanTable';
 
 type Props = {
   ibanList: IbansResource;
+  error: boolean;
+  loading: boolean;
 };
 
-const StandInAndCupForm = ({ ibanList }: Props) => {
+const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [selectedIbanCup, setSelectedIbanCup] = useState<IbanOnCreation>(emptyIban);
@@ -41,6 +43,7 @@ const StandInAndCupForm = ({ ibanList }: Props) => {
   const [showMaganeButton, setShowMaganeButton] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (ibanList.ibanList.length > 0) {
@@ -147,7 +150,7 @@ const StandInAndCupForm = ({ ibanList }: Props) => {
     setIbanCupTriggered(true);
     const newLabel: IbanLabel = {
       description: 'The IBAN to use for CUP payments',
-      name: 'CUP',
+      name: '0201138TS ',
     };
 
     const selectedIndex = ibanList.ibanList.findIndex((e) => e.iban === event.target.value);
@@ -311,6 +314,7 @@ const StandInAndCupForm = ({ ibanList }: Props) => {
                           inputProps={{
                             'data-testid': 'stand-in-test',
                           }}
+                          disabled
                         >
                           {ibanList.ibanList.map((r, i) => (
                             <MenuItem key={i} value={r.iban}>
@@ -424,6 +428,9 @@ const StandInAndCupForm = ({ ibanList }: Props) => {
               </Grid>
             </Grid>
           </Card>
+          <Grid item xs={12}>
+            {selectedParty && <IbanTable ibanList={ibanList} error={error} loading={loading} />}
+          </Grid>
         </Grid>
       </Grid>
 

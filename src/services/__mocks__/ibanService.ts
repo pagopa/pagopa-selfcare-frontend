@@ -55,9 +55,9 @@ export const mockedIban: IbanOnCreation = {
   validityDate: new Date('2023-04-01T13:49:19.897Z'),
   dueDate: new Date('2033-04-01T13:49:19.897Z'),
   creditorInstitutionCode: '1234567890',
-  labels: [{}],
   active: true,
   ecOwner: '1234567890',
+  labels: undefined,
 };
 
 export const mockedIbanCup: IbanResource = {

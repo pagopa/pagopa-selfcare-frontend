@@ -34,11 +34,11 @@ const IbanDetailPage = () => {
           const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
           setIban({
             iban: fileterdIban[0].iban,
-            description: fileterdIban[0].description ?? '',
+            description: fileterdIban[0].description ?? undefined,
             creditorInstitutionCode: fileterdIban[0].ecOwner,
             validityDate: fileterdIban[0].validityDate,
             dueDate: fileterdIban[0].dueDate,
-            labels: fileterdIban[0].labels ?? [],
+            labels: fileterdIban[0].labels ?? undefined,
           });
         })
         .catch((reason) => {
@@ -97,7 +97,7 @@ const IbanDetailPage = () => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons active={iban?.active} iban={ibanId} />
+            <IbanDetailButtons active={iban.active} iban={ibanId} />
           </Grid>
         </Grid>
 
@@ -115,12 +115,12 @@ const IbanDetailPage = () => {
             </Grid>
             <Grid item xs={9} textAlign="right">
               <Chip
-                label={iban?.active ? t('ibanPage.active') : t('ibanPage.notActive')}
+                label={iban.active ? t('ibanPage.active') : t('ibanPage.notActive')}
                 aria-label="update-in-progress"
                 size="medium"
                 sx={{
-                  color: iban?.active ? '#FFFFFF' : '#17324D',
-                  backgroundColor: iban?.active ? 'primary.main' : 'error.light',
+                  color: iban.active ? '#FFFFFF' : '#17324D',
+                  backgroundColor: iban.active ? 'primary.main' : 'error.light',
                   fontSize: '14px',
                   paddingBottom: '1px',
                   height: '32px',
@@ -143,7 +143,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.iban ?? '-'}
+                  {iban.iban ?? '-'}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -151,7 +151,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.description ?? '-'}
+                  {iban.description ?? '-'}
                 </Typography>
               </Grid>
             </Grid>
@@ -165,7 +165,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.validityDate?.toLocaleDateString('en-GB')}
+                  {iban.validityDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -173,7 +173,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.dueDate?.toLocaleDateString('en-GB')}
+                  {iban.dueDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
             </Grid>
@@ -187,7 +187,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.ecOwner ?? '-'}
+                  {iban.creditorInstitutionCode ?? '-'}
                 </Typography>
               </Grid>
             </Grid>

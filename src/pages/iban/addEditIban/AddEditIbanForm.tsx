@@ -74,14 +74,15 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           dueDate: ibanBody.dueDate,
           creditorInstitutionCode: ibanBody.creditorInstitutionCode,
           labels: ibanBody.labels,
+          active: ibanBody.active,
         }
       : {
           iban: '',
           description: '',
           validityDate: new Date(),
           dueDate: new Date(),
-          creditorInstitutionCode: ecCode,
-          labels: [],
+          creditorInstitutionCode: '',
+          active: true,
         };
 
   const ibanFormatValidator = (iban: string) => {
@@ -207,12 +208,19 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             description: values.description,
             validityDate: values.validityDate,
             dueDate: values.dueDate,
-            creditorInstitutionCode: ecCode,
-            labels: values.labels,
+            creditorInstitutionCode: values.creditorInstitutionCode,
+            active: true,
           });
           console.log('SUBMIT CREATE!');
         } else if (formAction === IbanFormAction.Edit) {
-          await updateIban(values); // Utilizza l'ID dell'IBAN per l'aggiornamento
+          await updateIban({
+            iban: values.iban,
+            description: values.description,
+            validityDate: values.validityDate,
+            dueDate: values.dueDate,
+            creditorInstitutionCode: values.creditorInstitutionCode,
+            active: true,
+          });
           console.log('SUBMIT UPDATE!');
         }
       } catch (reason) {

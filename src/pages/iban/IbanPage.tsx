@@ -24,8 +24,7 @@ export const emptyIban: IbanOnCreation = {
   validityDate: new Date(),
   dueDate: new Date(),
   creditorInstitutionCode: '',
-  labels: [],
-  active: false,
+  active: true,
 };
 
 const IbanPage = () => {
@@ -106,14 +105,7 @@ const IbanPage = () => {
               </Alert>
             )}
 
-            <Grid container spacing={2} mb={4}>
-              <StandInAndCupForm ibanList={ibanList} />
-              <Grid item xs={12}>
-                {selectedParty && (
-                  <IbanTable ibanList={ibanList} error={error} loading={loading}></IbanTable>
-                )}
-              </Grid>
-            </Grid>
+            <StandInAndCupForm ibanList={ibanList} error={error} loading={loading} />
           </Box>
         </Grid>
       </Grid>

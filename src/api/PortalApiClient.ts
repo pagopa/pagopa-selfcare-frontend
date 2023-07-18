@@ -771,6 +771,7 @@ export const PortalApi = {
         validityDate: ibanBody.validityDate,
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
+        labels: ibanBody.labels,
         active: true,
       },
     });

@@ -57,7 +57,7 @@ export const mockedIban: IbanOnCreation = {
   creditorInstitutionCode: '1234567890',
   active: true,
   ecOwner: '1234567890',
-  labels: undefined,
+  labels: [],
 };
 
 export const mockedIbanCup: IbanResource = {

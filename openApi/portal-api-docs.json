@@ -1607,6 +1607,112 @@
         ]
       }
     },
+    "/channels/sendEmail": {
+      "get": {
+        "tags": ["channels"],
+        "summary": "sendMail",
+        "operationId": "sendMailUsingGET",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "from",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "to",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subject",
+            "in": "query",
+            "description": "subject",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "body",
+            "in": "query",
+            "description": "body",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/channels/update-wrapperChannel": {
       "put": {
         "tags": ["channels"],
@@ -6333,7 +6439,14 @@
       },
       "IbanCreateRequestDto": {
         "title": "IbanCreateRequestDto",
-        "required": ["creditorInstitutionCode", "dueDate", "iban", "validityDate"],
+        "required": [
+          "creditorInstitutionCode",
+          "description",
+          "dueDate",
+          "iban",
+          "labels",
+          "validityDate"
+        ],
         "type": "object",
         "properties": {
           "active": {
@@ -6372,16 +6485,13 @@
       },
       "IbanLabel": {
         "title": "IbanLabel",
-        "required": ["description", "name"],
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "description": "Label description"
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "description": "Label name"
+            "type": "string"
           }
         }
       },

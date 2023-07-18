@@ -34,11 +34,12 @@ const IbanDetailPage = () => {
           const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
           setIban({
             iban: fileterdIban[0].iban,
-            description: fileterdIban[0].description ?? undefined,
+            description: fileterdIban[0].description ?? '',
             creditorInstitutionCode: fileterdIban[0].ecOwner,
             validityDate: fileterdIban[0].validityDate,
             dueDate: fileterdIban[0].dueDate,
-            labels: fileterdIban[0].labels ?? undefined,
+            labels: fileterdIban[0].labels ?? [],
+            active: fileterdIban[0].active,
           });
         })
         .catch((reason) => {

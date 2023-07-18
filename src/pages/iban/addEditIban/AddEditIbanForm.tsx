@@ -82,6 +82,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           validityDate: new Date(),
           dueDate: new Date(),
           creditorInstitutionCode: '',
+          labels: [],
           active: true,
         };
 
@@ -122,9 +123,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   const validateCodiceFiscale = (fiscalCode: string | undefined) => {
-    const cfRegex = /^[A-Za-z]{6}\d{2}[A-Za-z]\d{2}[A-Za-z]\d{3}[A-Za-z]$/;
     if (fiscalCode) {
-      return cfRegex.test(fiscalCode);
+      const fiscalCodeNumber = parseInt(fiscalCode, 10);
+      return !isNaN(fiscalCodeNumber);
     } else {
       return false;
     }
@@ -132,7 +133,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
-    const minDate = new Date('01/01/1901');
+    const minDate = new Date();
 
     if (uploadType === 'single') {
       return Object.fromEntries(
@@ -162,14 +163,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               ? undefined
               : !values.creditorInstitutionCode
               ? t('addEditIbanPage.validationMessage.requiredField')
-              : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
+              : !validateCodiceFiscale(values.creditorInstitutionCode)
               ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
       );
-    } else {
-      return {};
     }
+
+    return undefined;
   };
 
   const enableSubmit = (values: IbanOnCreation) => {
@@ -209,9 +210,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
+            labels: values.labels,
             active: true,
           });
-          console.log('SUBMIT CREATE!');
         } else if (formAction === IbanFormAction.Edit) {
           await updateIban({
             iban: values.iban,
@@ -219,9 +220,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
+            labels: values.labels,
             active: true,
           });
-          console.log('SUBMIT UPDATE!');
         }
       } catch (reason) {
         addError({
@@ -243,7 +244,10 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const formik = useFormik<IbanOnCreation>({
     initialValues: initialFormData(ibanBody),
     validate,
-    onSubmit: async () => history.push(ROUTES.IBAN),
+    onSubmit: async (values) => {
+      await submit(values);
+      history.push(ROUTES.IBAN);
+    },
     enableReinitialize: true,
     validateOnMount: true,
   });
@@ -257,7 +261,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   return (
-    <>
+    <form onSubmit={formik.handleSubmit}>
       <FormControl>
         <RadioGroup
           row
@@ -459,11 +463,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
           <Button
-            onClick={async () => {
-              formik.handleSubmit();
-              await submit(formik.values);
-              history.push(ROUTES.IBAN);
-            }}
+            onClick={() => formik.handleSubmit()}
             disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
@@ -473,7 +473,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           </Button>
         </Stack>
       </Stack>
-    </>
+    </form>
   );
 };
 

@@ -11,7 +11,6 @@ import { IbansResource } from '../../api/generated/portal/IbansResource';
 import { LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
 import { IbanOnCreation } from '../../model/Iban';
 import { getIbanList } from '../../services/ibanService';
-import IbanTable from './list/IbanTable';
 import StandInAndCupForm from './StandInAndCupForm/StandInAndCupForm';
 
 const emptyIbanList: IbansResource = {
@@ -25,6 +24,7 @@ export const emptyIban: IbanOnCreation = {
   dueDate: new Date(),
   creditorInstitutionCode: '',
   active: true,
+  labels: [],
 };
 
 const IbanPage = () => {

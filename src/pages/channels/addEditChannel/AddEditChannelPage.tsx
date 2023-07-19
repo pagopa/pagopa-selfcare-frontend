@@ -12,7 +12,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { getChannelCode, getChannelDetail } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
-import { isOperator } from '../../stations/components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 import AddEditChannelForm from './AddEditChannelForm';
 
 const AddEditChannelPage = () => {

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ROUTES from '../../../../routes';
-import { isOperator } from '../../../stations/components/commonFunctions';
+import { isOperator } from '../../../components/commonFunctions';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import { StatusChip } from '../../../../components/StatusChip';
@@ -305,96 +305,19 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                     '-'
                   )}
                 </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.newPassword')}
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={9}
-                  sx={{
-                    display: 'flex',
-                    height: '38px',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  {channelDetail?.new_password ? (
-                    <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {showOrHideNewPassword(channelDetail?.new_password)}
-                      </Typography>
-                      <IconButton
-                        style={{
-                          border: 'none !important',
-                          marginLeft: '42px',
-                        }}
-                        onClick={() => {
-                          setShowNewPassword(!showNewPassword);
-                        }}
-                        data-testid="show-ps2-test"
-                      >
-                        {showNewPassword ? (
-                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                        ) : (
-                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                        )}
-                      </IconButton>
-                    </>
-                  ) : (
-                    '-'
-                  )}
-                </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('channelDetailValidationPage.endPoint')}
+                    {t('channelDetailValidationPage.connection')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('channelDetailValidationPage.protocol')}
+                    {t('channelDetailValidationPage.newConnection')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.protocol ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailValidationPage.ip')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.ip ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailValidationPage.port')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.port ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.service')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.service ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.serviceNMP')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.nmp_service ?? '-'}
+                    {t('channelDetailValidationPage.forwarder01')}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -412,63 +335,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                     {channelDetail?.proxy_host ?? '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.proxyPort')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.proxy_port ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailValidationPage.status')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.proxy_enabled
-                      ? t('channelDetailValidationPage.enabled')
-                      : t('channelDetailValidationPage.disabled')}
-                  </Typography>
-                </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
                     {t('channelDetailValidationPage.otherInfo')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.paymentModel')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.payment_model
-                      ? t(
-                          `addEditChannelPage.addForm.validationForm.paymentModel.${channelDetail?.payment_model}`
-                        )
-                      : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.pliugin')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.serv_plugin ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.threadNumber')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.thread_number ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -509,52 +378,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {channelDetail?.flag_io
-                      ? t('channelDetailValidationPage.enabled')
-                      : t('channelDetailValidationPage.disabled')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.electronicReceipt')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.rt_push
-                      ? t('channelDetailValidationPage.enabled')
-                      : t('channelDetailValidationPage.disabled')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailValidationPage.onUs')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.on_us
-                      ? t('channelDetailValidationPage.enabled')
-                      : t('channelDetailValidationPage.disabled')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.rptSign')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.card_chart
-                      ? t('channelDetailValidationPage.enabled')
-                      : t('channelDetailValidationPage.disabled')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('channelDetailValidationPage.recoveryProcess')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.recovery
                       ? t('channelDetailValidationPage.enabled')
                       : t('channelDetailValidationPage.disabled')}
                   </Typography>

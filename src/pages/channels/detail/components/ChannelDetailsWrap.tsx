@@ -113,10 +113,28 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('channelDetailPage.endPoint')}</Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {`${channelDetWrap.target_host}${channelDetWrap.target_port}${channelDetWrap.target_path}`}
                   </Typography>
+                </Grid>
+
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">{t('channelDetailPage.paymentType')}</Typography>
+                </Grid>
+                <Grid container xs={12} mb={3} mt={2}>
+                  {channelDetWrap.payment_types && channelDetWrap.payment_types.length > 0
+                    ? // eslint-disable-next-line sonarjs/no-identical-functions
+                      channelDetWrap.payment_types.map((e, i) => (
+                        // eslint-disable-next-line react/jsx-key
+                        <Grid key={`grid${i}_wrap`} item xs={3} sx={i === 0 ? { ml: 2 } : null}>
+                          <Chip key={`chip${i}_wrap`} color="primary" label={`${e}`} />
+                        </Grid>
+                      ))
+                    : ''}
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="sidenav">{t('channelDetailPage.associatedPsp')}</Typography>
                 </Grid>
                 <Grid
                   item
@@ -137,19 +155,32 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                     {t('channelDetailPage.managePsp')}
                   </ButtonNaked>
                 </Grid>
-                <Grid item xs={12} mt={2}>
-                  <Typography variant="sidenav">{t('channelDetailPage.paymentType')}</Typography>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailPage.associated')}</Typography>
                 </Grid>
-                <Grid container xs={12} mb={3} mt={2}>
-                  {channelDetWrap.payment_types && channelDetWrap.payment_types.length > 0
-                    ? // eslint-disable-next-line sonarjs/no-identical-functions
-                      channelDetWrap.payment_types.map((e, i) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <Grid key={`grid${i}_wrap`} item xs={3} sx={i === 0 ? { ml: 2 } : null}>
-                          <Chip key={`chip${i}_wrap`} color="primary" label={`${e}`} />
-                        </Grid>
-                      ))
-                    : ''}
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    0
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                  <Typography variant="sidenav">{t('channelDetailPage.changes')}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailPage.lastChange')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {channelDetWrap.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {channelDetWrap.modifiedBy}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>

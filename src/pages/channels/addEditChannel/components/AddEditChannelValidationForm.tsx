@@ -9,6 +9,8 @@ import {
   InputLabel,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -18,30 +20,23 @@ import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
-import {
-  ChannelDetailsDto,
-  ProtocolEnum,
-} from '../../../../api/generated/portal/ChannelDetailsDto';
-import { WfespPluginConf } from '../../../../api/generated/portal/WfespPluginConf';
-import { Payment_modelEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 
 type Props = {
-  formik: FormikProps<ChannelDetailsDto>;
+  formik: FormikProps<ChannelOnCreation>;
   handleChangeNumberOnly: (
     e: React.ChangeEvent<any>,
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
-  wfespPlugin: Array<WfespPluginConf>;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
   handleChangeNumberOnly,
-  wfespPlugin,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+
   const inputGroupStyle = {
     borderRadius: 1,
     border: 1,
@@ -49,13 +44,6 @@ Props) => {
     p: 3,
     mb: 3,
   };
-  const paymentMethod = [
-    Payment_modelEnum.ACTIVATED_AT_PSP,
-    Payment_modelEnum.DEFERRED,
-    Payment_modelEnum.IMMEDIATE,
-    Payment_modelEnum.IMMEDIATE_MULTIBENEFICIARY,
-  ];
-  const protocol = ['HTTP', 'HTTPS'];
 
   return (
     <Paper
@@ -121,132 +109,47 @@ Props) => {
                 }}
               />
             </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="new_password"
-                name="new_password"
-                label={t('addEditChannelPage.addForm.validationForm.fields.newPassword')}
-                size="small"
-                value={formik.values.new_password}
-                onChange={formik.handleChange}
-                error={formik.touched.new_password && Boolean(formik.errors.new_password)}
-                helperText={formik.touched.new_password && formik.errors.new_password}
-                inputProps={{
-                  'data-testid': 'new-password-code-test',
-                }}
-              />
-            </Grid>
           </Grid>
         </Box>
 
         <Box sx={inputGroupStyle}>
           <AddEditChannelFormSectionTitle
-            title={t('addEditChannelPage.addForm.validationForm.sections.endPoint')}
+            title={t('addEditChannelPage.addForm.validationForm.sections.configuration')}
             icon={<MenuBookIcon />}
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel size="small">
-                  {t('addEditChannelPage.addForm.validationForm.fields.protocol')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  id="protocol"
-                  name="protocol"
-                  label={t('addEditChannelPage.addForm.validationForm.fields.protocol')}
-                  size="small"
-                  defaultValue=""
-                  value={
-                    formik.values.protocol === undefined
-                      ? ''
-                      : formik.values.protocol === ProtocolEnum.HTTPS
-                      ? 'HTTPS'
-                      : 'HTTP'
-                  }
-                  onChange={formik.handleChange}
-                  error={formik.touched.protocol && Boolean(formik.errors.protocol)}
-                  inputProps={{
-                    'data-testid': 'protocol-test',
-                  }}
-                >
-                  {protocol.map((p, i) => (
-                    <MenuItem key={i} value={p}>
-                      {p}
-                    </MenuItem>
-                  ))}
-                </Select>
+            <Grid container item xs={12}>
+              <FormControl>
+                <RadioGroup row name="connection" defaultValue="newConnection">
+                  <FormControlLabel
+                    value="newConnection"
+                    control={<Radio />}
+                    label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
+                  />
+                </RadioGroup>
               </FormControl>
             </Grid>
             <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="ip"
-                name="ip"
-                label={t('addEditChannelPage.addForm.validationForm.fields.ip')}
-                size="small"
-                value={formik.values.ip}
-                onChange={formik.handleChange}
-                error={formik.touched.ip && Boolean(formik.errors.ip)}
-                helperText={formik.touched.ip && formik.errors.ip}
-                inputProps={{
-                  'data-testid': 'ip-test',
-                }}
-              />
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="port"
-                name="port"
-                type="number"
-                InputLabelProps={{ shrink: formik.values.port ? true : false }}
-                inputProps={{
-                  step: 1,
-                  min: 0,
-                  max: 65556,
-                  'data-testid': 'port-test',
-                }}
-                label={t('addEditChannelPage.addForm.validationForm.fields.port')}
-                size="small"
-                value={formik.values.port === 0 ? '' : formik.values.port}
-                onChange={(e) => handleChangeNumberOnly(e, 'port', formik)}
-                error={formik.touched.port && Boolean(formik.errors.port)}
-                helperText={formik.touched.port && formik.errors.port}
-              />
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="service"
-                name="service"
-                label={t('addEditChannelPage.addForm.validationForm.fields.service')}
-                size="small"
-                value={formik.values.service}
-                onChange={formik.handleChange}
-                error={formik.touched.service && Boolean(formik.errors.service)}
-                helperText={formik.touched.service && formik.errors.service}
-                inputProps={{
-                  'data-testid': 'service-test',
-                }}
-              />
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="nmp_service"
-                name="nmp_service"
-                label={t('addEditChannelPage.addForm.validationForm.fields.nmpService')}
-                size="small"
-                value={formik.values.nmp_service}
-                onChange={formik.handleChange}
-                error={formik.touched.nmp_service && Boolean(formik.errors.nmp_service)}
-                helperText={formik.touched.nmp_service && formik.errors.nmp_service}
-                inputProps={{
-                  'data-testid': 'npm-service-test',
-                }}
-              />
+              <FormControl fullWidth>
+                <InputLabel size="small">
+                  {t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
+                </InputLabel>
+                <Select
+                  fullWidth
+                  id="newConnectionChannel"
+                  name="newConnectionChannel"
+                  label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
+                  size="small"
+                  value={formik.values.ipUnion}
+                  inputProps={{
+                    'data-testid': 'new-connection-channel',
+                  }}
+                >
+                  <MenuItem key={'forwarder01'} value={formik.values.ipUnion}>
+                    {t('addEditChannelPage.addForm.validationForm.fields.forwarder01')}
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </Box>
@@ -257,36 +160,29 @@ Props) => {
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="proxy_port"
-                name="proxy_port"
-                label={t('addEditChannelPage.addForm.validationForm.fields.proxyPort')}
-                size="small"
-                value={formik.values.proxy_port === 0 ? '' : formik.values.proxy_port}
-                onChange={(e) => handleChangeNumberOnly(e, 'proxy_port', formik)}
-                error={formik.touched.proxy_port && Boolean(formik.errors.proxy_port)}
-                helperText={formik.touched.proxy_port && formik.errors.proxy_port}
-                inputProps={{
-                  'data-testid': 'proxy-port-test',
-                }}
-              />
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="proxy_host"
-                name="proxy_host"
-                label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
-                size="small"
-                value={formik.values.proxy_host}
-                onChange={formik.handleChange}
-                error={formik.touched.proxy_host && Boolean(formik.errors.proxy_host)}
-                helperText={formik.touched.proxy_host && formik.errors.proxy_host}
-                inputProps={{
-                  'data-testid': 'proxy-host-test',
-                }}
-              />
+              <FormControl fullWidth>
+                <InputLabel size="small">
+                  {t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
+                </InputLabel>
+                <Select
+                  fullWidth
+                  id="proxyUnion"
+                  name="proxyUnion"
+                  label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
+                  size="small"
+                  value={formik.values.proxyUnion}
+                  inputProps={{
+                    'data-testid': 'proxy-union-test',
+                  }}
+                >
+                  <MenuItem key={'forwarder01'} value={formik.values.proxyUnion}>
+                    {'10.79.20.35 (label)'}
+                  </MenuItem>
+                  <MenuItem key={'forwarder01'} value={formik.values.proxyUnion}>
+                    {'10.102.1.85 (label)'}
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </Box>
@@ -297,79 +193,6 @@ Props) => {
             icon={<MenuBookIcon />}
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel size="small">
-                  {t('addEditChannelPage.addForm.validationForm.fields.paymentModel')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  id="payment_model"
-                  name="payment_model"
-                  label={t('addEditChannelPage.addForm.validationForm.fields.paymentModel')}
-                  size="small"
-                  defaultValue=""
-                  value={formik.values.payment_model || ''}
-                  onChange={formik.handleChange}
-                  error={formik.touched.payment_model && Boolean(formik.errors.payment_model)}
-                  inputProps={{
-                    'data-testid': 'payment-model-test',
-                  }}
-                >
-                  {paymentMethod.map((e, i) => (
-                    <MenuItem key={i} value={e}>
-                      {t(`addEditChannelPage.addForm.validationForm.paymentModel.${e}`)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid container item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel size="small">
-                  {t('addEditChannelPage.addForm.validationForm.fields.plugin')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  id="serv_plugin"
-                  name="serv_plugin"
-                  label={t('addEditChannelPage.addForm.validationForm.fields.plugin')}
-                  placeholder={t('addEditChannelPage.addForm.validationForm.fields.plugin')}
-                  size="small"
-                  defaultValue=""
-                  value={formik.values.serv_plugin || ''}
-                  onChange={formik.handleChange}
-                  error={formik.touched.serv_plugin && Boolean(formik.errors.serv_plugin)}
-                  inputProps={{
-                    'data-testid': 'serv-plugin-test',
-                  }}
-                >
-                  {wfespPlugin.map((a, b) => (
-                    <MenuItem key={b} value={a.id_serv_plugin}>
-                      {`${a.id_serv_plugin}`}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="thread_number"
-                name="thread_number"
-                type="number"
-                InputLabelProps={{ shrink: formik.values.thread_number ? true : false }}
-                inputProps={{
-                  'data-testid': 'thread-number-test',
-                }}
-                label={t('addEditChannelPage.addForm.validationForm.fields.threadNumber')}
-                size="small"
-                value={formik.values.thread_number === 0 ? '' : formik.values.thread_number}
-                onChange={(e) => handleChangeNumberOnly(e, 'thread_number', formik)}
-                error={formik.touched.thread_number && Boolean(formik.errors.port)}
-                helperText={formik.touched.thread_number && formik.errors.thread_number}
-              />
-            </Grid>
             <Grid container item xs={6}>
               <TextField
                 fullWidth
@@ -408,9 +231,9 @@ Props) => {
               />
             </Grid>
 
-            <Grid container item xs={6}>
+            <Grid container item xs={12}>
               <TextField
-                fullWidth
+                sx={{ width: '49.5%' }}
                 id="timeout_c"
                 name="timeout_c"
                 type="number"
@@ -440,45 +263,7 @@ Props) => {
                 label={t('addEditChannelPage.addForm.validationForm.fields.pspNotify')}
               />
             </Grid>
-            <Grid container item xs={4} sx={{ mt: 3, mb: 4 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id="rt_push"
-                    name="rt_push"
-                    checked={formik.values.rt_push}
-                    onChange={formik.handleChange}
-                  />
-                }
-                label={t('addEditChannelPage.addForm.validationForm.fields.telematicReceipt')}
-              />
-            </Grid>
-            <Grid container item xs={4} sx={{ mt: 3, mb: 4 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id="card_chart"
-                    name="card_chart"
-                    checked={formik.values.card_chart}
-                    onChange={formik.handleChange}
-                  />
-                }
-                label={t('addEditChannelPage.addForm.validationForm.fields.rptCard')}
-              />
-            </Grid>
-            <Grid container item xs={4}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id="recovery"
-                    name="recovery"
-                    checked={formik.values.recovery}
-                    onChange={formik.handleChange}
-                  />
-                }
-                label={t('addEditChannelPage.addForm.validationForm.fields.recoveryPull')}
-              />
-            </Grid>
+
             <Grid container item xs={4}>
               <FormControlLabel
                 control={
@@ -490,19 +275,6 @@ Props) => {
                   />
                 }
                 label={t('addEditChannelPage.addForm.validationForm.fields.digitalStamp')}
-              />
-            </Grid>
-            <Grid container item xs={4}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    id="on_us"
-                    name="on_us"
-                    checked={formik.values.on_us}
-                    onChange={formik.handleChange}
-                  />
-                }
-                label={t('addEditChannelPage.addForm.validationForm.fields.onUs')}
               />
             </Grid>
           </Grid>

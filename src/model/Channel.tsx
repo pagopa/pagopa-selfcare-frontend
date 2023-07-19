@@ -1,4 +1,5 @@
 import {
+  ChannelDetailsDto,
   Payment_modelEnum,
   ProtocolEnum,
   Redirect_protocolEnum,
@@ -13,44 +14,13 @@ export enum FormAction {
   Duplicate = 'duplicate',
 }
 
-export type ChannelOnCreation = {
-  pspBrokerCode?: string;
-  businessName?: string;
-  idChannel?: string;
-  redirectProtocol?: Redirect_protocolEnum | undefined;
-  redirectPort?: number | undefined;
-  redirectIp?: string;
-  redirectService?: string;
-  redirectParameters?: string;
-  targetAddress?: string;
-  targetService?: string;
-  targetPort?: number | undefined;
-  paymentType?: Readonly<Array<string>>;
-  status?: StatusEnum | undefined;
-  primitiveVersion?: number;
-  password?: string;
-  new_password?: string;
-  protocol?: ProtocolEnum | undefined;
-  ip?: string;
-  port?: number | undefined;
-  service?: string;
-  nmp_service?: string;
-  proxy_host?: string;
-  proxy_port?: number | undefined;
-  payment_model?: Payment_modelEnum | undefined;
-  serv_plugin?: string;
-  thread_number?: number | undefined;
-  timeout_a?: number | undefined;
-  timeout_b?: number | undefined;
-  timeout_c?: number | undefined;
-  psp_notify_payment?: boolean;
-  rt_push?: boolean;
-  rpt_carousel?: boolean;
-  recovery?: boolean;
-  digital_stamp_brand?: boolean;
-  on_us?: boolean;
-  enabled?: boolean;
+export type ChannelExtraInfo = {
+  targetUnion: string;
+  ipUnion: string;
+  proxyUnion: string;
 };
+
+export type ChannelOnCreation = ChannelDetailsDto & ChannelExtraInfo;
 
 export type Channel = {
   channel_code: string;

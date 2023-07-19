@@ -11,7 +11,7 @@ import { getStationDetail } from '../../../services/stationService';
 import { StationFormAction } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {

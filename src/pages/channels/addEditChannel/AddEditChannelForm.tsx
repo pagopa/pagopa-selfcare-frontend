@@ -27,31 +27,28 @@ import {
 } from '@mui/icons-material';
 import { generatePath } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
   // associatePSPtoChannel,
   createChannel,
   createWrapperChannelDetails,
   getPaymentTypes,
-  getWfespPlugins,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
 } from '../../../services/channelService';
 import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import { Party } from '../../../model/Party';
-import {
-  LOADING_TASK_CHANNEL_ADD_EDIT,
-  LOADING_TASK_PAYMENT_TYPE,
-  LOADING_TASK_WFESP_PLUGIN,
-} from '../../../utils/constants';
-import { ChannelDetailsDto } from '../../../api/generated/portal/ChannelDetailsDto';
+import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
-import { isOperator } from '../../stations/components/commonFunctions';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { isOperator, isValidURL, splitURL } from '../../components/commonFunctions';
+import {
+  ChannelDetailsResource,
+  ProtocolEnum,
+} from '../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
-import { WfespPluginConf } from '../../../api/generated/portal/WfespPluginConf';
+import { ChannelOnCreation, FormAction } from '../../../model/Channel';
+import { ENV } from '../../../utils/env';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -69,89 +66,79 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
-  const setLoadingWfesp = useLoading(LOADING_TASK_WFESP_PLUGIN);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
-  const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
-  const [initialTargetHost, setInitialTargetHost] = useState<string>('');
   const operator = isOperator();
-
-  useEffect(() => {
-    if (channelDetail) {
-      setInitialTargetHost(
-        `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}` || ''
-      );
-    }
-  }, [channelDetail]);
 
   const initialFormData = (
     channelCode: string,
     channelDetail?: ChannelDetailsResource,
     selectedParty?: Party
-  ): ChannelDetailsDto =>
-    channelDetail
-      ? {
-          broker_description: channelDetail.broker_description ?? '',
-          broker_psp_code: channelDetail.broker_psp_code ?? '',
-          channel_code: channelCode,
-          digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
-          ip: channelDetail.ip ?? '',
-          new_password: channelDetail.new_password ?? '',
-          nmp_service: channelDetail.nmp_service ?? '',
-          on_us: channelDetail.on_us ?? false,
-          password: channelDetail.password ?? '',
-          payment_model: channelDetail.payment_model ?? undefined,
-          payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
-          port: channelDetail.port ?? 0,
-          primitive_version: channelDetail.primitive_version ?? undefined,
-          protocol: channelDetail.protocol ?? undefined,
-          proxy_host: channelDetail.proxy_host ?? '',
-          proxy_port: channelDetail.proxy_port ?? 0,
-          flag_io: channelDetail.flag_io ?? false,
-          recovery: channelDetail.recovery ?? false,
-          card_chart: false,
-          rt_push: channelDetail.rt_push ?? false,
-          serv_plugin: channelDetail.serv_plugin ?? '',
-          service: channelDetail.service ?? '',
-          target_host: channelDetail.target_host ?? '',
-          target_path: channelDetail.target_path ?? '',
-          target_port: channelDetail.target_port ?? undefined,
-          thread_number: channelDetail.thread_number ?? 0,
-          timeout_a: channelDetail.timeout_a ?? 0,
-          timeout_b: channelDetail.timeout_b ?? 0,
-          timeout_c: channelDetail.timeout_c ?? 0,
-        }
-      : {
-          broker_description: selectedParty?.description ?? '',
-          broker_psp_code: selectedParty?.fiscalCode ?? '',
-          channel_code: channelCode,
-          digital_stamp_brand: false,
-          ip: '',
-          new_password: '',
-          nmp_service: '',
-          on_us: false,
-          password: '',
-          payment_model: undefined,
-          payment_types: [''],
-          port: 0,
-          primitive_version: undefined,
-          protocol: undefined,
-          proxy_host: '',
-          proxy_port: 0,
-          flag_io: false,
-          recovery: false,
-          card_chart: false,
-          rt_push: false,
-          serv_plugin: '',
-          service: '',
-          target_host: '',
-          target_path: '',
-          target_port: undefined,
-          thread_number: 0,
-          timeout_a: 0,
-          timeout_b: 0,
-          timeout_c: 0,
-        };
+  ): ChannelOnCreation => {
+    if (channelDetail) {
+      return {
+        broker_description: channelDetail.broker_description ?? '',
+        broker_psp_code: channelDetail.broker_psp_code ?? '',
+        card_chart: false,
+        channel_code: channelCode,
+        digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
+        flag_io: channelDetail.flag_io ?? false,
+        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https:' : 'http:'}${
+          channelDetail.ip
+        }${channelDetail.port}`,
+        ip: channelDetail.ip ?? '',
+        new_password: channelDetail.new_password ?? '',
+        nmp_service: channelDetail.nmp_service ?? '',
+        on_us: channelDetail.on_us ?? false,
+        password: channelDetail.password ?? '',
+        payment_model: channelDetail.payment_model ?? undefined,
+        payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
+        port: channelDetail.port ?? 0,
+        primitive_version: channelDetail.primitive_version ?? undefined,
+        protocol: channelDetail.protocol ?? undefined,
+        proxyUnion: `${channelDetail.proxy_host}${channelDetail.proxy_port}`,
+        proxy_host: channelDetail.proxy_host ?? '',
+        proxy_port: channelDetail.proxy_port ?? 0,
+        recovery: channelDetail.recovery ?? false,
+        rt_push: channelDetail.rt_push ?? false,
+        serv_plugin: channelDetail.serv_plugin ?? '',
+        service: channelDetail.service ?? '',
+        target_host: channelDetail.target_host ?? '',
+        target_path: channelDetail.target_path ?? '',
+        target_port: channelDetail.target_port ?? undefined,
+        targetUnion: `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`,
+        thread_number: channelDetail.thread_number ?? 0,
+        timeout_a: channelDetail.timeout_a ?? 0,
+        timeout_b: channelDetail.timeout_b ?? 0,
+        timeout_c: channelDetail.timeout_c ?? 0,
+      };
+    } else {
+      return {
+        broker_description: selectedParty?.description ?? '',
+        broker_psp_code: selectedParty?.fiscalCode ?? '',
+        channel_code: channelCode,
+        digital_stamp_brand: false,
+        flag_io: false,
+        ip: '',
+        ipUnion: '',
+        password: '',
+        payment_model: undefined,
+        payment_types: [''],
+        primitive_version: undefined,
+        protocol: undefined,
+        proxyUnion: '',
+        proxy_host: '',
+        proxy_port: undefined,
+        target_host: '',
+        target_path: '',
+        target_port: undefined,
+        targetUnion: '',
+        timeout_a: 0,
+        timeout_b: 0,
+        timeout_c: 0,
+      };
+    }
+  };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -161,6 +148,11 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     mb: 3,
   };
 
+  const forwarder01 =
+    ENV.ENV === 'UAT'
+      ? 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
+
   const validatePrimitiveVersion = (primitive_version: number | undefined) => {
     if (primitive_version) {
       return primitive_version > 0 && primitive_version <= 2 ? false : true;
@@ -168,33 +160,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     return false;
   };
 
-  const splitURL = (url: string | undefined) => {
-    if (url) {
-      const urlObj = new URL(url);
-      const host = urlObj.hostname;
-      const path = urlObj.pathname;
-      const port = urlObj.port || undefined;
-
-      return {
-        host,
-        path,
-        port,
-      };
-    } else {
-      return;
-    }
-  };
-
-  const isValidURL = (url: string): boolean => {
-    try {
-      new URL(url);
-      return true; // L'URL è valido
-    } catch (error) {
-      return false; // L'URL non è valido
-    }
-  };
-
-  const validate = (values: Partial<ChannelDetailsDto>) =>
+  const validate = (values: Partial<ChannelOnCreation>) =>
     Object.fromEntries(
       Object.entries({
         ...{
@@ -207,10 +173,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           channel_code: !values.channel_code
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
-          target_host: !values.target_host
+          targetUnion: !values.targetUnion
             ? t('addEditChannelPage.validationMessage.requiredField')
-            : !isValidURL(values.target_host)
-            ? 'URL non valido'
+            : !isValidURL(values.targetUnion)
+            ? t('addEditChannelPage.validationMessage.urlNotValid')
             : undefined,
           payment_types: values.payment_types?.includes('')
             ? t('addEditChannelPage.validationMessage.requiredField')
@@ -225,39 +191,23 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           password: !values.password
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
-          protocol: !values.protocol
+          ip: !values.ip
             ? t('addEditChannelPage.validationMessage.requiredField')
+            : !isValidURL(values.ip)
+            ? t('addEditChannelPage.validationMessage.urlNotValid')
             : undefined,
-          ip: !values.ip ? t('addEditChannelPage.validationMessage.requiredField') : undefined,
-          port: !values.port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          service: !values.service ? t('addEditChannelPage.requiredField') : undefined,
-          nmp_service: !values.nmp_service ? t('addEditChannelPage.requiredField') : undefined,
+
           proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
-          proxy_port: !values.proxy_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.proxy_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          payment_model: !values.payment_model
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          serv_plugin: !values.serv_plugin
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
         }),
       }).filter(([_key, value]) => value)
     );
 
-  const enableSubmit = (values: ChannelDetailsDto) => {
+  const enableSubmit = (values: ChannelOnCreation) => {
     const baseConditions =
       values.broker_psp_code !== '' &&
       values.broker_description !== '' &&
       values.channel_code !== '' &&
-      values.target_host !== '' &&
+      values.targetUnion !== '' &&
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
@@ -267,15 +217,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         if (
           values.primitive_version?.toString() !== '' &&
           values.password !== '' &&
-          values.protocol?.toString() !== '' &&
           values.ip !== '' &&
-          values.port?.toString() !== '' &&
-          values.service !== '' &&
-          values.nmp_service !== '' &&
-          values.proxy_host !== '' &&
-          values.proxy_port?.toString() !== '' &&
-          values.payment_model?.toString() !== '' &&
-          values.serv_plugin !== ''
+          values.proxy_host !== ''
         ) {
           if (operator && values.payment_types && values.payment_types.length > 0) {
             for (const paymentType of values.payment_types) {
@@ -292,7 +235,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     return false;
   };
 
-  const formik = useFormik<ChannelDetailsDto>({
+  const formik = useFormik<ChannelOnCreation>({
     initialValues: initialFormData(channelCode, channelDetail, selectedParty),
     validate,
     onSubmit: () => {
@@ -328,7 +271,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     }
   };
 
-  const submit = async (values: ChannelDetailsDto) => {
+  const submit = async (values: ChannelOnCreation) => {
     setShowConfirmModal(false);
     setLoading(true);
 
@@ -337,7 +280,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         channelId: formik.values.channel_code,
       })}`;
 
-      const splitUrl = splitURL(values.target_host);
+      const splitUrl = splitURL(values.targetUnion);
 
       if (splitUrl) {
         const { host, path, port } = splitUrl;
@@ -350,12 +293,30 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       }
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }
 
       if (formAction === FormAction.Edit) {
+        // eslint-disable-next-line functional/immutable-data
+        values.ipUnion = forwarder01;
+
+        const splitUrl = splitURL(values.ipUnion);
+
+        if (splitUrl) {
+          const { protocol, host, path, port } = splitUrl;
+          // eslint-disable-next-line functional/immutable-data
+          values.protocol = protocol === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+          // eslint-disable-next-line functional/immutable-data
+          values.ip = host;
+          // eslint-disable-next-line functional/immutable-data
+          values.port = port ? parseInt(port, 10) : undefined;
+          // eslint-disable-next-line functional/immutable-data
+          values.service = path;
+          // eslint-disable-next-line functional/immutable-data
+          values.nmp_service = path;
+        }
+
         switch (channelDetail?.wrapperStatus) {
           case WrapperStatusEnum.TO_CHECK:
             if (operator) {
@@ -393,13 +354,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       });
     } finally {
       setLoading(false);
-      const splitUrl = splitURL(values.target_host);
-
-      if (splitUrl) {
-        const { host, path, port } = splitUrl;
-        // eslint-disable-next-line functional/immutable-data
-        values.target_host = `${host}${path}${port}`;
-      }
     }
   };
 
@@ -424,29 +378,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         });
       })
       .finally(() => setLoadingPayment(false));
-
-    if (operator) {
-      setLoadingWfesp(true);
-      getWfespPlugins()
-        .then((result) => {
-          if (typeof result.wfesp_plugin_confs !== 'undefined') {
-            setWfespPlugin([...result.wfesp_plugin_confs]);
-          }
-        })
-        .catch((reason) => {
-          addError({
-            id: 'GET_WFESP_PLUGIN',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while getting wfesp plugin`,
-            toNotify: true,
-            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-            displayableDescription: t('addEditChannelPage.addForm.errorMessageWfespDesc'),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoadingWfesp(false));
-    }
   }, []);
 
   const handleChangeNumberOnly = (
@@ -563,16 +494,16 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="target_host"
-                  name="target_host"
+                  id="targetUnion"
+                  name="targetUnion"
                   label={t('addEditChannelPage.addForm.fields.endPoint')}
                   size="small"
-                  value={initialTargetHost || formik.values.target_host}
+                  value={formik.values.targetUnion}
                   onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.target_host && Boolean(formik.errors.target_host)}
-                  helperText={formik.touched.target_host && formik.errors.target_host}
+                  error={formik.touched.targetUnion && Boolean(formik.errors.targetUnion)}
+                  helperText={formik.touched.targetUnion && formik.errors.targetUnion}
                   inputProps={{
-                    'data-testid': 'target-service-test',
+                    'data-testid': 'target-union-test',
                   }}
                 />
               </Grid>
@@ -665,7 +596,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          wfespPlugin={wfespPlugin}
         />
       ) : null}
 

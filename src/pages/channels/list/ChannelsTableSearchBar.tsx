@@ -3,7 +3,7 @@ import { GridSearchIcon } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { isOperator } from '../../stations/components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 
 type Props = {
   channelCodeInput: string;

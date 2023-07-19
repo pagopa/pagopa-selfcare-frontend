@@ -106,9 +106,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
-    const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
-    const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
     const continueBtn = screen.getByText(
       'addEditChannelPage.addForm.continueButton'
@@ -130,19 +128,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(channelCode, { target: { value: 'channelCode' } });
     expect(channelCode.value).toBe('channelCode');
 
-    fireEvent.click(targetAddress);
-    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
-    expect(targetAddress.value).toBe('redirectAddress');
-
-    fireEvent.click(targetService);
-    fireEvent.change(targetService, { target: { value: 'redirectService' } });
-    expect(targetService.value).toBe('redirectService');
-
-    fireEvent.click(targetPort);
-    fireEvent.change(targetPort, { target: { value: undefined } });
-
-    fireEvent.click(targetPort);
-    fireEvent.change(targetPort, { target: { value: 555 } });
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
     fireEvent.click(paymentType);
     fireEvent.change(paymentType, { target: { value: 'Option 1' } });
@@ -241,9 +229,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
-    const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
-    const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
     const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
     const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
@@ -252,14 +238,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
     expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
 
-    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
-    expect(targetAddress.value).toBe('redirectAddress');
-
-    fireEvent.change(targetService, { target: { value: 'redirectService' } });
-    expect(targetService.value).toBe('redirectService');
-
-    fireEvent.change(targetPort, { target: { value: '0' } });
-    fireEvent.change(targetPort, { target: { value: '555' } });
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
     paymentType.value = 'Option 1';
 
@@ -290,9 +271,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 443,
+      target_host: 'www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
@@ -338,9 +319,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 443,
+      target_host: 'www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
@@ -362,13 +343,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
-    const newPassword = getByTestId('new-password-code-test') as HTMLInputElement;
-    const protocol = getByTestId('protocol-test') as HTMLInputElement;
-    const ip = getByTestId('ip-test') as HTMLInputElement;
-    const port = getByTestId('port-test') as HTMLInputElement;
-    const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
-    const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
-    const threadNumber = getByTestId('thread-number-test') as HTMLInputElement;
+    const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
     const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
@@ -380,21 +355,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(password, { target: { value: 1 } });
 
-    fireEvent.change(newPassword, { target: { value: 1 } });
-
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: ProtocolEnum.HTTP } });
-
-    fireEvent.change(ip, { target: { value: 1 } });
-
-    fireEvent.change(port, { target: { value: 1000 } });
-
-    fireEvent.click(paymentModel);
-    fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
-
-    fireEvent.change(servPlugIn, { target: { value: 'abc' } });
-
-    fireEvent.change(threadNumber, { target: { value: 1 } });
+    fireEvent.change(newConnection, {
+      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });
 
@@ -434,9 +397,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 443,
+      target_host: 'www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
@@ -506,13 +469,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
-    const newPassword = getByTestId('new-password-code-test') as HTMLInputElement;
-    const protocol = getByTestId('protocol-test') as HTMLInputElement;
-    const ip = getByTestId('ip-test') as HTMLInputElement;
-    const port = getByTestId('port-test') as HTMLInputElement;
-    const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
-    const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
-    const threadNumber = getByTestId('thread-number-test') as HTMLInputElement;
+    const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
     const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
@@ -524,21 +481,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(password, { target: { value: 1 } });
 
-    fireEvent.change(newPassword, { target: { value: 1 } });
-
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: ProtocolEnum.HTTP } });
-
-    fireEvent.change(ip, { target: { value: 1 } });
-
-    fireEvent.change(port, { target: { value: 1000 } });
-
-    fireEvent.click(paymentModel);
-    fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
-
-    fireEvent.change(servPlugIn, { target: { value: 'abc' } });
-
-    fireEvent.change(threadNumber, { target: { value: 1 } });
+    fireEvent.change(newConnection, {
+      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });
 

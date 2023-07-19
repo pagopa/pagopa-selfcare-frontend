@@ -13,6 +13,7 @@ import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntiti
 import { PortalApi } from '../api/PortalApiClient';
 import { PSP } from '../model/PSP';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
+import { ChannelOnCreation } from '../model/Channel';
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -84,7 +85,7 @@ export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
   }
 };
 
-export const createChannel = (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
+export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createChannelMocked(channel);
@@ -95,7 +96,7 @@ export const createChannel = (channel: ChannelDetailsDto): Promise<ChannelDetail
 
 export const updateChannel = (
   code: string,
-  channel: ChannelDetailsDto
+  channel: ChannelOnCreation
 ): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {

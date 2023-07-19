@@ -7,7 +7,7 @@ import {
   ChannelDetailsResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/ChannelDetailsResource';
-import { isOperator } from '../../../stations/components/commonFunctions';
+import { isOperator } from '../../../components/commonFunctions';
 
 type Props = {
   channelDetails?: ChannelDetailsResource;

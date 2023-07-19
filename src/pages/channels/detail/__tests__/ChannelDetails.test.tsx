@@ -6,14 +6,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import ChannelDetails from '../components/ChannelDetails';
-import {
-  Redirect_protocolEnum,
-  StatusEnum,
-} from '../../../../api/generated/portal/ChannelDetailsDto';
-import {
-  mockedPaymentTypes,
-  mockedChannelDetail,
-} from '../../../../services/__mocks__/channelService';
+import { StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
+import { mockedPaymentTypes } from '../../../../services/__mocks__/channelService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

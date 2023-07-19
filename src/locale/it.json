@@ -235,19 +235,16 @@
         "subtitle": "Informazioni a carico di PagoPA.",
         "sections": {
           "registry": "Anagrafica",
-          "endPoint": "Endpoint",
+          "configuration": "Configurazione",
           "proxy": "Proxy",
           "otherInfo": "Altre informazioni"
         },
         "fields": {
           "primitiveVersion": "Versioni primitive",
           "password": "Password",
-          "newPassword": "Nuova password",
-          "protocol": "Protocollo",
-          "ip": "IP",
-          "port": "Porta",
-          "service": "Servizio",
-          "nmpService": "Servizio NMP",
+          "newConnection": "Nuova connettività",
+          "newConnectionChannel": "Nuova connettività canali",
+          "forwarder01": "forwarder01",
           "proxyPort": "Porta proxy",
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",
@@ -282,7 +279,8 @@
     },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",
-      "requiredInputNumber": "Non Valido, l’input dev’essere un numero"
+      "requiredInputNumber": "Non Valido, l’input dev’essere un numero",
+      "urlNotValid": "URL non valido"
     }
   },
   "editChannelPage": {
@@ -329,30 +327,18 @@
     "registry": "Anagrafica",
     "primitiveVersion": "Versione primitive",
     "password": "Password",
-    "newPassword": "Nuova password",
-    "endPoint": "Endpoint",
-    "protocol": "Protocollo",
-    "ip": "IP",
-    "port": "Porta",
-    "service": "Servizio",
-    "serviceNMP": "Servizio NMP",
+    "connection": "Connettività",
+    "forwarder01": "forwarder01",
+    "newConnection": "Nuova connettività",
     "proxy": "Proxy",
     "proxyAddress": "Indirizzo proxy",
-    "proxyPort": "Porta proxy",
-    "status": "Stato",
     "enabled": "Abilitato",
     "disabled": "Non abilitato",
     "otherInfo": "Altre informazioni",
-    "paymentModel": "Modello di pagamento",
-    "pliugin": "Plugin WFESP",
     "timeoutA": "Timeout A",
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
     "pspNotify": "PSP Notify Payment",
-    "electronicReceipt": "Push Ricevuta Telematica",
-    "onUs": "On Us",
-    "rptSign": "Carello RPT",
-    "recoveryProcess": "Processo di Recovery Pull",
     "stamp": "Marca da bollo"
   },
   "channelPSPList": {

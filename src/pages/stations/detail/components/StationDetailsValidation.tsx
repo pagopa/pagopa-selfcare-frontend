@@ -13,7 +13,7 @@ import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
-import { isOperator } from '../../components/commonFunctions';
+import { isOperator } from '../../../components/commonFunctions';
 import { StatusChip } from '../../../../components/StatusChip';
 import {
   GPDConfigs,

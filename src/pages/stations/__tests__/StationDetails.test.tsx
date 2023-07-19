@@ -14,7 +14,7 @@ import {
 } from '../../../api/generated/portal/StationDetailResource';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -94,6 +94,7 @@ describe('<StationDetails />', () => {
             <ThemeProvider theme={theme}>
               <StationDetails
                 stationDetail={mockedFullStationApproved}
+                // @ts-ignore TODO
                 formatedDate={jest.fn()}
                 goBack={() => jest.fn()}
               />

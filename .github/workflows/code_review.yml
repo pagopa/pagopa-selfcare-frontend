@@ -102,6 +102,7 @@ jobs:
             -Dsonar.typescript.file.suffixes=.ts,.tsx
             -Dsonar.sources=.
             -Dsonar.exclusions=**/__tests__/**,**/__mocks__/**,**/*.js
+            -Dsonar.coverage.exclusions=*.test.tsx
             -Dsonar.tests=**/__tests__
             -Dsonar.test.inclusions=**/__tests__/**/*.test.tsx
             -Dsonar.testExecutionReportPaths=test-report.xml

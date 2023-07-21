@@ -105,7 +105,6 @@ jobs:
             -Dsonar.coverage.exclusions=*.test.tsx
             -Dsonar.tests=**/__tests__
             -Dsonar.test.inclusions=**/__tests__/**/*.test.tsx
-            -Dsonar.testExecutionReportPaths=test-report.xml
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.verbose=true
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info

@@ -34,7 +34,6 @@ export type StationOnCreation = {
   modifiedAt?: Date | undefined;
   newPassword?: string | undefined;
   password?: string | undefined;
-  pofService?: string | undefined;
   port?: number | undefined;
   port4Mod?: number | undefined;
   primitiveVersion: number;
@@ -55,11 +54,8 @@ export type StationOnCreation = {
   service4Mod?: string | undefined;
   stationCode: string;
   targetHost: string;
-  targetHostPof?: string | undefined;
   targetPath: string;
-  targetPathPof?: string | undefined;
   targetPort: number;
-  targetPortPof?: number | undefined;
   threadNumber?: number | undefined;
   timeoutA?: number | undefined;
   timeoutB?: number | undefined;

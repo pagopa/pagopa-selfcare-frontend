@@ -33,9 +33,6 @@ const mockedStation: StationDetailResource = {
   targetHost: 'Esempio indirizzo',
   targetPath: 'Esempio Pat',
   targetPort: 3001,
-  targetHostPof: 'Valore',
-  targetPathPof: 'Valore',
-  targetPortPof: 1001,
 };
 
 export const mockedWrapperStation: WrapperStationDetailsDto = {
@@ -74,9 +71,6 @@ export const mockedFullStation: StationDetailResource = {
   targetHost: '1www',
   targetPort: 11,
   targetPath: 'www',
-  targetHostPof: 'www',
-  targetPortPof: 111,
-  targetPathPof: '11',
   primitiveVersion: 1,
 };
 
@@ -403,9 +397,6 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
         targetHost: 'Esempio indirizzo',
         targetPath: 'Esempio Pat',
         targetPort: 3001,
-        targetHostPof: 'Valore',
-        targetPathPof: 'Valore',
-        targetPortPof: 1001,
       },
       id: 'string',
       modifiedAt: new Date(),

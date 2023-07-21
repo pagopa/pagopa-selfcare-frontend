@@ -431,8 +431,7 @@
       "sections": {
         "registry": "Anagrafica",
         "redirect": "Redirect",
-        "targetService": "Target Servizio",
-        "targetServicePof": "Target Servizio POF"
+        "targetService": "Target Servizio"
       },
       "fields": {
         "stationCode": "Codice stazione",
@@ -445,10 +444,7 @@
         "redirectParameters": "Parametri",
         "targetHost": "IP",
         "targetPath": "Path",
-        "targetPort": "Porta",
-        "targetHostPof": "IP",
-        "targetPathPof": "Path",
-        "targetPortPof": "Port"
+        "targetPort": "Porta"
       }
     },
     "addFormValidation": {
@@ -457,7 +453,6 @@
       "sections": {
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
-        "targetEndPointPof": "Target (endpoint servizio POF)",
         "model4": "Modello 4"
       },
       "fields": {
@@ -469,7 +464,6 @@
         "path": "Path",
         "password": "Password",
         "newPassword": "Nuova password",
-        "servicePof": "Servizio POF",
         "service": "Servizio"
       }
     },
@@ -542,7 +536,6 @@
     "target": "Target",
     "address": "IP",
     "service": "Path",
-    "POFTargetService": "Target Servizio POF",
     "port": "Porta",
     "associatesEC": "EC associati",
     "manageEC": "Gestisci EC",
@@ -633,7 +626,6 @@
       "path": "Path",
       "parameters": "Parametri",
       "targetService": "Target Servizio",
-      "POFTargetService": "Target Servizio POF",
       "modify": "Modifiche",
       "lastUpgrade": "Ultima modifica",
       "operatedBy": "Operata da",
@@ -651,7 +643,6 @@
       "protocol": "Protocollo",
       "ip": "IP",
       "port": "Porta",
-      "POFService": "Servizio POF",
       "model4": "Modello 4",
       "service": "Servizio"
     }

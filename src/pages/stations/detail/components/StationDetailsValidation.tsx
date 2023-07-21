@@ -240,41 +240,7 @@ Props) => {
                     {stationDetail?.targetPort ?? '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.configuration.POFTargetService')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
-                  </Typography>
-                </Grid>
+
                 <Grid item xs={3} mt={4}>
                   <Typography variant="sidenav">
                     {t('stationDetailPageValidation.configuration.modify')}
@@ -481,16 +447,6 @@ Props) => {
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.port ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.POFService')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.pofService ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

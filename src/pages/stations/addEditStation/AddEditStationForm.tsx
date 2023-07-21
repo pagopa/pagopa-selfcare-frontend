@@ -102,9 +102,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           targetHost: detail.targetHost ?? '',
           targetPath: detail.targetPath ?? '',
           targetPort: detail.targetPort ?? undefined,
-          targetHostPof: detail.targetHostPof ?? '',
-          targetPathPof: detail.targetPathPof ?? '',
-          targetPortPof: detail.targetPortPof ?? undefined,
           version: detail.version ?? undefined,
           password: detail.password ?? '',
           newPassword: detail.newPassword ?? '',
@@ -113,7 +110,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           port: detail.port ?? undefined,
           ip: detail.ip ?? '',
           service: detail.service ?? '',
-          pofService: detail.pofService ?? '',
           protocol4Mod: detail.protocol4Mod ?? undefined,
           ip4Mod: detail.ip4Mod ?? '',
           port4Mod: detail.port4Mod ?? undefined,
@@ -141,7 +137,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           port: 0,
           ip: '',
           service: '',
-          pofService: '',
           protocol4Mod: undefined,
           ip4Mod: '',
           port4Mod: 0,
@@ -198,43 +193,17 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           redirectQueryString: !values.redirectQueryString
             ? t('addEditStationPage.validation.requiredField')
             : undefined,
-          targetHost:
-            !values.targetHost &&
-            !values.targetHostPof &&
-            !values.targetPathPof &&
-            !values.targetPortPof
-              ? t('addEditStationPage.validation.requiredField')
-              : undefined,
-          targetPath:
-            !values.targetPath &&
-            !values.targetHostPof &&
-            !values.targetPathPof &&
-            !values.targetPortPof
-              ? t('addEditStationPage.validation.requiredField')
-              : undefined,
-          targetPort:
-            !values.targetPort &&
-            !values.targetHostPof &&
-            !values.targetPathPof &&
-            !values.targetPortPof
-              ? t('addEditStationPage.validation.requiredField')
-              : isNaN(values.targetPort)
-              ? t('addEditStationPage.validation.requiredInputNumber')
-              : undefined,
-          targetHostPof:
-            !values.targetHostPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? t('addEditStationPage.validation.requiredField')
-              : undefined,
-          targetPathPof:
-            !values.targetPathPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? t('addEditStationPage.validation.requiredField')
-              : undefined,
-          targetPortPof:
-            !values.targetPortPof && !values.targetHost && !values.targetPath && !values.targetPort
-              ? t('addEditStationPage.validation.requiredField')
-              : typeof values.targetPortPof !== 'undefined' && isNaN(values.targetPortPof)
-              ? t('addEditStationPage.validation.requiredInputNumber')
-              : undefined,
+          targetHost: !values.targetHost
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          targetPath: !values.targetPath
+            ? t('addEditStationPage.validation.requiredField')
+            : undefined,
+          targetPort: !values.targetPort
+            ? t('addEditStationPage.validation.requiredField')
+            : isNaN(values.targetPort)
+            ? t('addEditStationPage.validation.requiredInputNumber')
+            : undefined,
         },
         ...(operator && formAction !== StationFormAction.Create
           ? {
@@ -254,7 +223,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                 : undefined,
 
               service: !values.service ? 'Campo obbligatorio' : undefined,
-              pofService: !values.pofService ? 'Campo obbligatorio' : undefined,
             }
           : null),
       }).filter(([_key, value]) => value)
@@ -264,18 +232,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     const isTargetSectionComplete =
       values.targetHost !== '' && values.targetPath !== '' && values.targetPort.toString() !== '';
 
-    const isTargetPofSectionComplete =
-      values.targetHostPof !== '' &&
-      values.targetPathPof !== '' &&
-      values.targetPortPof?.toString() !== '';
-
     const isTargetSectionEmpty =
       values.targetHost === '' && values.targetPath === '' && values.targetPort?.toString() === '';
-
-    const isTargetPofSectionEmpty =
-      values.targetHostPof === '' &&
-      values.targetPathPof === '' &&
-      values.targetPortPof?.toString() === '';
 
     const baseConditions =
       values.stationCode !== '' &&
@@ -294,24 +252,13 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       values.protocol?.toString() !== '' &&
       values.ip !== '' &&
       values.port?.toString() !== '' &&
-      values.service !== '' &&
-      values.pofService !== '';
+      values.service !== '';
 
     if (!baseConditions) {
       return false;
     }
 
-    const targetFields = () => {
-      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-      if (
-        (isTargetSectionComplete && isTargetPofSectionComplete) ||
-        (isTargetSectionComplete && isTargetPofSectionEmpty) ||
-        (isTargetPofSectionComplete && isTargetSectionEmpty)
-      ) {
-        return true;
-      }
-      return false;
-    };
+    const targetFields = () => (isTargetSectionComplete ? true : false);
 
     const targetCondition = targetFields();
 
@@ -698,75 +645,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   onChange={(e) => handleChangeNumberOnly(e, 'targetPort', formik)}
                   error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
                   helperText={formik.touched.targetPort && formik.errors.targetPort}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-
-          <Box sx={inputGroupStyle}>
-            <AddEditStationFormSectionTitle
-              title={t('addEditStationPage.addForm.sections.targetServicePof')}
-              icon={<MenuBook />}
-              isRequired
-            />
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="targetHostPof"
-                  name="targetHostPof"
-                  InputLabelProps={{ shrink: formik.values.targetHostPof ? true : false }}
-                  label={t('addEditStationPage.addForm.fields.targetHostPof')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetHostPof')}
-                  size="small"
-                  value={formik.values.targetHostPof}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetHostPof && Boolean(formik.errors.targetHostPof)}
-                  helperText={formik.touched.targetHostPof && formik.errors.targetHostPof}
-                  inputProps={{
-                    'data-testid': 'target-address-pof-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="targetPathPof"
-                  name="targetPathPof"
-                  InputLabelProps={{ shrink: formik.values.targetPathPof ? true : false }}
-                  label={t('addEditStationPage.addForm.fields.targetPathPof')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetPathPof')}
-                  size="small"
-                  value={formik.values.targetPathPof}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetPathPof && Boolean(formik.errors.targetPathPof)}
-                  helperText={formik.touched.targetPathPof && formik.errors.targetPathPof}
-                  inputProps={{
-                    'data-testid': 'target-service-pof-test',
-                  }}
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  type="number"
-                  fullWidth
-                  id="targetPortPof"
-                  name="targetPortPof"
-                  InputLabelProps={{ shrink: formik.values.targetPortPof ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'target-port-pof-test',
-                  }}
-                  label={t('addEditStationPage.addForm.fields.targetPortPof')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetPortPof')}
-                  size="small"
-                  value={formik.values.targetPortPof === 0 ? '' : formik.values.targetPortPof}
-                  onChange={(e) => handleChangeNumberOnly(e, 'targetPortPof', formik)}
-                  error={formik.touched.targetPortPof && Boolean(formik.errors.targetPortPof)}
-                  helperText={formik.touched.targetPortPof && formik.errors.targetPortPof}
                 />
               </Grid>
             </Grid>

@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.3.3"
+    "version": "0.3.5"
   },
   "servers": [
     {
@@ -1581,112 +1581,6 @@
           },
           "401": {
             "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": ["global"]
-          }
-        ]
-      }
-    },
-    "/channels/sendEmail": {
-      "get": {
-        "tags": ["channels"],
-        "summary": "sendMail",
-        "operationId": "sendMailUsingGET",
-        "parameters": [
-          {
-            "name": "from",
-            "in": "query",
-            "description": "from",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "to",
-            "in": "query",
-            "description": "to",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "subject",
-            "in": "query",
-            "description": "subject",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "body",
-            "in": "query",
-            "description": "body",
-            "required": true,
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -6439,14 +6333,7 @@
       },
       "IbanCreateRequestDto": {
         "title": "IbanCreateRequestDto",
-        "required": [
-          "creditorInstitutionCode",
-          "description",
-          "dueDate",
-          "iban",
-          "labels",
-          "validityDate"
-        ],
+        "required": ["creditorInstitutionCode", "dueDate", "iban", "validityDate"],
         "type": "object",
         "properties": {
           "active": {
@@ -6485,13 +6372,16 @@
       },
       "IbanLabel": {
         "title": "IbanLabel",
+        "required": ["description", "name"],
         "type": "object",
         "properties": {
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Label description"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Label name"
           }
         }
       },

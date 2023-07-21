@@ -93,7 +93,7 @@ const IbanDetailPage = () => {
             <Typography mb={5}>
               {t('ibanDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                {/* {iban?.publicationDate?.toLocaleDateString('en-GB')} */}
+                {iban.publicationDate?.toLocaleDateString('en-GB')}
               </Typography>
             </Typography>
           </Grid>

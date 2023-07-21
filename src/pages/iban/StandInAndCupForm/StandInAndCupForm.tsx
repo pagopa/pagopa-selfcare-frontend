@@ -56,7 +56,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       (e) => e.labels && e.labels.find((label) => label.name === 'STANDIN')
     );
     const ibanCupFiltered = ibanList.ibanList.find(
-      (e) => e.labels && e.labels.find((label) => label.name === 'CUP')
+      (e) => e.labels && e.labels.find((label) => label.name === '0201138TS')
     );
 
     if (ibanStandInFiltered) {
@@ -149,8 +149,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const handleIbanCupSelected = (event: any) => {
     setIbanCupTriggered(true);
     const newLabel: IbanLabel = {
-      description: 'The IBAN to use for CUP payments',
-      name: '0201138TS ',
+      description: '',
+      name: '0201138TS',
     };
 
     const selectedIndex = ibanList.ibanList.findIndex((e) => e.iban === event.target.value);

@@ -7,11 +7,12 @@ export enum IbanFormAction {
 
 export type IbanOnCreation = {
   iban: string;
-  description: string;
+  description?: string;
   validityDate: Date;
   dueDate: Date;
   creditorInstitutionCode: string;
   ecOwner?: string;
-  labels: Readonly<Array<IbanLabel>>;
+  labels?: Readonly<Array<IbanLabel>>;
   active?: boolean;
+  publicationDate?: Date;
 };

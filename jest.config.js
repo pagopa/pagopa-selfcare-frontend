@@ -38,6 +38,7 @@ module.exports = {
     "src/reportWebVitals.ts",
     "src/api/generated",
     "src/locale/it.ts",
+    "*.test.tsx"
   ],
 
   // Indicates which provider should be used to instrument code for coverage

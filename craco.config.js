@@ -23,7 +23,11 @@ module.exports = {
         "src/reportWebVitals.ts",
         "src/api/generated",
         "src/locale/it.ts",
-        "*.test.tsx"
+      ],
+      collectCoverageFrom: [
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!src/index.js",
+        "!*.test.tsx"
       ],
     }
   }

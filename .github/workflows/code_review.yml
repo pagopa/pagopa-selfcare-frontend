@@ -64,7 +64,7 @@ jobs:
           yarn lint
 
   test:
-    name: Unit Test
+    name: Unit Test & Sonar
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -76,23 +76,6 @@ jobs:
         with:
           node-version: 16.10.0
 
-      - name: Unit Tests
-        run: |
-          yarn install
-          yarn generate
-          yarn test:coverage --watchAll=false
-
-  sonar:
-    name: Sonar
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.10.0
       - name: Unit Tests
         run: |
           yarn install

@@ -104,10 +104,9 @@ jobs:
             -Dsonar.tests=src
             -Dsonar.test.inclusions=src/**/__tests__/**
             -Dsonar.exclusions=src/**/__tests__/**
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
             -Dsonar.coverage.exclusions=__test__/**,.storybook/**,src/stories/**,src/types/**
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.verbose=true
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov2.info
+            -Dsonar.typescript.lcov.reportPaths=./coverage/lcov.info
             -Dsonar.typescript.tsconfigPath=tsconfig.json
             -Dsonar.eslint.reportPaths=eslint-report.json

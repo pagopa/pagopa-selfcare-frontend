@@ -95,18 +95,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          args: >
-            -Dsonar.organization=pagopa
-            -Dsonar.projectKey=${{env.PROJECT_KEY}}
-            -Dsonar.javascript.file.suffixes=.js,.jsx
-            -Dsonar.typescript.file.suffixes=.ts,.tsx
-            -Dsonar.sources=src/
-            -Dsonar.tests=src/
-            -Dsonar.test.inclusions=src/**/__tests__/**
-            -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx
-            -Dsonar.coverage.exclusions=**/*.test.ts,**/*.test.tsx
-            -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.verbose=true
-            -Dsonar.typescript.lcov.reportPaths=./coverage/lcov.info
-            -Dsonar.typescript.tsconfigPath=tsconfig.json
-            -Dsonar.eslint.reportPaths=eslint-report.json

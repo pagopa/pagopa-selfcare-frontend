@@ -100,11 +100,11 @@ jobs:
             -Dsonar.projectKey=${{env.PROJECT_KEY}}
             -Dsonar.javascript.file.suffixes=.js,.jsx
             -Dsonar.typescript.file.suffixes=.ts,.tsx
-            -Dsonar.sources=src
-            -Dsonar.tests=src
+            -Dsonar.sources=src/
+            -Dsonar.tests=src/
             -Dsonar.test.inclusions=src/**/__tests__/**
-            -Dsonar.exclusions=src/**/__tests__/**
-            -Dsonar.coverage.exclusions=__test__/**,.storybook/**,src/stories/**,src/types/**
+            -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx
+            -Dsonar.coverage.exclusions=**/*.test.ts,**/*.test.tsx
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.verbose=true
             -Dsonar.typescript.lcov.reportPaths=./coverage/lcov.info

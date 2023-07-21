@@ -23,8 +23,7 @@ module.exports = {
   // collectCoverageFrom: undefined,
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
-    "!src/index.js",
-    "!*.test.tsx"
+    "!src/index.js"
   ],
 
   // The directory where Jest should output its coverage files
@@ -37,8 +36,7 @@ module.exports = {
     "src/consentAndAnalyticsConfiguration.ts",
     "src/reportWebVitals.ts",
     "src/api/generated",
-    "src/locale/it.ts",
-    "*.test.tsx"
+    "src/locale/it.ts"
   ],
 
   // Indicates which provider should be used to instrument code for coverage

@@ -8,7 +8,7 @@
     "start": "craco start",
     "build": "craco build",
     "clean:build": "rimraf build",
-    "test":"craco test -i",
+    "test": "craco test -i",
     "test:jest": "yarn run generate && dotenv -e .env.test.local jest --coverage --ci --testResultsProcessor jest-sonar-reporter",
     "test:jest-local": "yarn run generate && dotenv -e .env.test.local jest --coverage --ci",
     "test:craco": "craco test -i",

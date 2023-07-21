@@ -104,7 +104,6 @@ jobs:
             -Dsonar.exclusions=**/__tests__/**,**/__mocks__/**,**/*.js,*.test.tsx
             -Dsonar.coverage.exclusions=*.test.tsx
             -Dsonar.tests=**/__tests__
-            -Dsonar.test.inclusions=**/__tests__/**/*.test.tsx
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.verbose=true
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info

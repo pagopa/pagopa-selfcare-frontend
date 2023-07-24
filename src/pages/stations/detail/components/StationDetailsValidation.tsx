@@ -152,61 +152,6 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.configuration.redirect')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.protocol')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectProtocol ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectPort ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectIp ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectPath ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.parameters')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectQueryString ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
                     {t('stationDetailPageValidation.configuration.targetService')}
                   </Typography>
                 </Grid>

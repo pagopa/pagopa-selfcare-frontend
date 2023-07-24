@@ -1,3 +1,4 @@
+import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
@@ -65,11 +66,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
-    const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
-    const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
-    const redirectService = screen.getByTestId('redirect-service-test') as HTMLInputElement;
-    const redirectIp = screen.getByTestId('redirect-ip-test') as HTMLInputElement;
-    const redirectParameters = screen.getByTestId('redirect-parameters-test') as HTMLInputElement;
     const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
@@ -78,25 +74,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect(stationCode.value).toBe('station Code');
 
     fireEvent.change(primitiveVersion, { target: { value: 1 } });
-
-    fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: 'HTTPS' } });
-
-    fireEvent.change(redirectPort, { target: { value: '' } });
-    expect(redirectPort.value).toBe('');
-
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-    expect(redirectPort.value).toBe('555');
-
-    expect(redirectService.value).toBe('');
-    fireEvent.change(redirectService, { target: { value: 'redirect Service' } });
-    expect(redirectService.value).toBe('redirect Service');
-
-    fireEvent.change(redirectIp, { target: { value: 'redirect Ip' } });
-    expect(redirectIp.value).toBe('redirect Ip');
-
-    fireEvent.change(redirectParameters, { target: { value: 'redirect Parameters' } });
-    expect(redirectParameters.value).toBe('redirect Parameters');
 
     fireEvent.change(targetAddress, { target: { value: 'redirect Address' } });
     expect(targetAddress.value).toBe('redirect Address');

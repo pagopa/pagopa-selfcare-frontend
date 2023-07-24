@@ -176,23 +176,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             : validatePrimitiveVersion(values.primitiveVersion)
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
-          redirectProtocol: !values.redirectProtocol
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
-          redirectPort: !values.redirectPort
-            ? t('addEditStationPage.validation.requiredField')
-            : isNaN(values.redirectPort)
-            ? t('addEditStationPage.validation.requiredInputNumber')
-            : undefined,
-          redirectIp: !values.redirectIp
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
-          redirectPath: !values.redirectPath
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
-          redirectQueryString: !values.redirectQueryString
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
           targetHost: !values.targetHost
             ? t('addEditStationPage.validation.requiredField')
             : undefined,
@@ -238,12 +221,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     const baseConditions =
       values.stationCode !== '' &&
       values.brokerCode !== '' &&
-      values.primitiveVersion.toString() !== '' &&
-      values.redirectProtocol.toString() !== '' &&
-      values.redirectPort.toString() !== '' &&
-      values.redirectIp !== '' &&
-      values.redirectPath !== '' &&
-      values.redirectQueryString !== '';
+      values.primitiveVersion.toString() !== '';
 
     const operatorConditions =
       values.version?.toString() !== '' &&
@@ -454,129 +432,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     min: 1,
                     max: 2,
                     'data-testid': 'primitive-version-test',
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box sx={inputGroupStyle}>
-            <AddEditStationFormSectionTitle
-              title={t('addEditStationPage.addForm.sections.redirect')}
-              icon={<MenuBook />}
-              isRequired
-            />
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel size="small">
-                    {t('addEditStationPage.addForm.fields.redirectProtocol')}
-                  </InputLabel>
-                  <Select
-                    fullWidth
-                    id="redirectProtocol"
-                    name="redirectProtocol"
-                    label={t('addEditStationPage.addForm.fields.redirectProtocol')}
-                    size="small"
-                    defaultValue={formik.values.protocol}
-                    value={
-                      formik.values.redirectProtocol === RedirectProtocolEnum.HTTPS
-                        ? 'HTTPS'
-                        : 'HTTP'
-                    }
-                    onChange={(e) => formik.handleChange(e)}
-                    error={
-                      formik.touched.redirectProtocol && Boolean(formik.errors.redirectProtocol)
-                    }
-                    inputProps={{
-                      'data-testid': 'redirect-protocol-test',
-                    }}
-                  >
-                    {['HTTPS', 'HTTP'].map((r) => (
-                      <MenuItem key={r} value={r}>
-                        {r}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirectPort"
-                  name="redirectPort"
-                  InputLabelProps={{ shrink: formik.values.redirectPort ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'redirect-port-test',
-                  }}
-                  label={t('addEditStationPage.addForm.fields.redirectPort')}
-                  placeholder={t('addEditStationPage.addForm.fields.redirectPort')}
-                  size="small"
-                  value={formik.values.redirectPort === 0 ? '' : formik.values.redirectPort}
-                  onChange={(e) => handleChangeNumberOnly(e, 'redirectPort', formik)}
-                  error={formik.touched.redirectPort && Boolean(formik.errors.redirectPort)}
-                  helperText={
-                    formik.touched.redirectPort &&
-                    formik.errors.redirectPort &&
-                    t('addEditStationPage.validation.overPort')
-                  }
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirectIp"
-                  name="redirectIp"
-                  label={t('addEditStationPage.addForm.fields.redirectIp')}
-                  size="small"
-                  value={formik.values.redirectIp}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.redirectIp && Boolean(formik.errors.redirectIp)}
-                  helperText={formik.touched.redirectIp && formik.errors.redirectIp}
-                  inputProps={{
-                    'data-testid': 'redirect-ip-test',
-                  }}
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirectPath"
-                  name="redirectPath"
-                  label={t('addEditStationPage.addForm.fields.redirectService')}
-                  size="small"
-                  value={formik.values.redirectPath}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.redirectPath && Boolean(formik.errors.redirectPath)}
-                  helperText={formik.touched.redirectPath && formik.errors.redirectPath}
-                  inputProps={{
-                    'data-testid': 'redirect-service-test',
-                  }}
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirectQueryString"
-                  name="redirectQueryString"
-                  label={t('addEditStationPage.addForm.fields.redirectParameters')}
-                  size="small"
-                  value={formik.values.redirectQueryString}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={
-                    formik.touched.redirectQueryString && Boolean(formik.errors.redirectQueryString)
-                  }
-                  helperText={
-                    formik.touched.redirectQueryString && formik.errors.redirectQueryString
-                  }
-                  inputProps={{
-                    'data-testid': 'redirect-parameters-test',
                   }}
                 />
               </Grid>

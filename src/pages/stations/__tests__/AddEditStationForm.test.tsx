@@ -1,14 +1,17 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {createMemoryHistory} from 'history';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router-dom';
-import {store} from '../../../redux/store';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { store } from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
-import {StationFormAction, StationOnCreation} from '../../../model/Station';
-import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
-import {RedirectProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
+import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import { isOperator } from '../components/commonFunctions';
+
+jest.mock('../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -48,6 +51,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   };
 
   test('Test rendering AddEditStationForm with operator true and without stationDetail', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -68,9 +73,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
     const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
     const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
-    const targetAddressPof = screen.getByTestId('target-address-pof-test') as HTMLInputElement;
-    const targetServicePof = screen.getByTestId('target-service-pof-test') as HTMLInputElement;
-    const targetPortPof = screen.getByTestId('target-port-pof-test') as HTMLInputElement;
 
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
     expect(stationCode.value).toBe('station Code');
@@ -86,6 +88,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(redirectPort, { target: { value: '555' } });
     expect(redirectPort.value).toBe('555');
 
+    expect(redirectService.value).toBe('');
     fireEvent.change(redirectService, { target: { value: 'redirect Service' } });
     expect(redirectService.value).toBe('redirect Service');
 
@@ -104,15 +107,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(targetPort, { target: { value: '555' } });
     expect(targetPort.value).toBe('555');
 
-    fireEvent.change(targetAddressPof, { target: { value: 'targetAddressPof' } });
-    expect(targetAddressPof.value).toBe('targetAddressPof');
-
-    fireEvent.change(targetServicePof, { target: { value: 'targetServicePof' } });
-    expect(targetServicePof.value).toBe('targetServicePof');
-
-    fireEvent.change(targetPortPof, { target: { value: '555' } });
-    expect(targetPortPof.value).toBe('555');
-
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);
 
@@ -126,6 +120,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test rendering AddEditStationForm with operator true', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -146,7 +142,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const protocol = screen.getByTestId('protocol-test') as HTMLSelectElement;
     const ip = screen.getByTestId('ip-test') as HTMLInputElement;
     const port = screen.getByTestId('port-test') as HTMLInputElement;
-    const servicePof = screen.getByTestId('pof-service-test') as HTMLInputElement;
     const serviceNmp = screen.getByTestId('nmp-service-test') as HTMLInputElement;
     const protocol4Mod = screen.getByTestId('protocol-4Mod-test') as HTMLSelectElement;
     const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
@@ -174,9 +169,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(port, { target: { value: 555 } });
     expect(port.value).toBe('555');
 
-    fireEvent.change(servicePof, { target: { value: 'servicePof' } });
-    expect(servicePof.value).toBe('servicePof');
-
     fireEvent.change(serviceNmp, { target: { value: 'serviceNmp' } });
     expect(serviceNmp.value).toBe('serviceNmp');
 
@@ -195,12 +187,12 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);
 
-    const confirmBtn = screen.getByTestId('confirm-button-test');
-    fireEvent.click(confirmBtn);
+    const backBtn = screen.getByText('addEditStationPage.confirmModal.cancelButton');
+    fireEvent.click(backBtn);
 
     fireEvent.click(continueBtn);
 
-    const backBtn = screen.getByTestId('cancel-button-test');
-    fireEvent.click(backBtn);
+    const confirmBtn = screen.getByText('addEditStationPage.confirmModal.confirmButtonOpe');
+    fireEvent.click(confirmBtn);
   });
 });

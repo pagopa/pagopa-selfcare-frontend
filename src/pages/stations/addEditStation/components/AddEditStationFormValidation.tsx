@@ -1,11 +1,20 @@
-import {FormikProps} from 'formik';
-import {useTranslation} from 'react-i18next';
-import {FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography,} from '@mui/material';
-import {Box} from '@mui/system';
-import {Badge as BadgeIcon, MenuBook} from '@mui/icons-material';
-import {StationOnCreation} from '../../../../model/Station';
+import { FormikProps } from 'formik';
+import { useTranslation } from 'react-i18next';
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { Box } from '@mui/system';
+import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
+import { StationOnCreation } from '../../../../model/Station';
 import AddEditStationFormSectionTitle from '../AddEditStationFormSectionTitle';
-import {Protocol4ModEnum, ProtocolEnum} from '../../../../api/generated/portal/StationDetailsDto';
+import { Protocol4ModEnum, ProtocolEnum } from '../../../../api/generated/portal/StationDetailsDto';
 
 type Props = {
   formik: FormikProps<StationOnCreation>;
@@ -227,94 +236,8 @@ Props) => {
                 }}
               />
             </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="pofService"
-                name="pofService"
-                label={t('addEditStationPage.addFormValidation.fields.servicePof')}
-                size="small"
-                value={formik.values.pofService}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.pofService && Boolean(formik.errors.pofService)}
-                helperText={formik.touched.pofService && formik.errors.pofService}
-                inputProps={{
-                  'data-testid': 'pof-service-test',
-                }}
-              />
-            </Grid>
           </Grid>
         </Box>
-
-        {/* <Box sx={inputGroupStyle}>
-          <AddEditStationFormSectionTitle
-            title={t('addEditStationPage.addFormValidation.sections.targetEndPointPof')}
-            icon={<MenuBook />}
-          />
-          <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="endpointIp"
-                name="endpointIp"
-                label={t('addEditStationPage.addFormValidation.fields.ip')}
-                size="small"
-                value={formik.values.endpointIp}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.endpointIp && Boolean(formik.errors.endpointIp)}
-                helperText={formik.touched.endpointIp && formik.errors.endpointIp}
-                inputProps={{
-                  'data-testid': 'endpoint-ip-test',
-                }}
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="endpointPath"
-                name="endpointPath"
-                label={t('addEditStationPage.addFormValidation.fields.path')}
-                size="small"
-                value={formik.values.endpointPath}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.endpointPath && Boolean(formik.errors.endpointPath)}
-                helperText={formik.touched.endpointPath && formik.errors.endpointPath}
-                inputProps={{
-                  'data-testid': 'endpoint-path-test',
-                }}
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="endpointPort"
-                name="endpointPort"
-                InputLabelProps={{ shrink: formik.values.endpointPort ? true : false }}
-                inputProps={{
-                  type: 'number',
-                  step: 1,
-                  min: 0,
-                  max: 65556,
-                  'data-testid': 'endpoint-port-test',
-                }}
-                label={t('addEditStationPage.addFormValidation.fields.port')}
-                placeholder={t('addEditStationPage.addForm.fields.port')}
-                size="small"
-                value={formik.values.endpointPort === 0 ? '' : formik.values.endpointPort}
-                onChange={(e) => handleChangeNumberOnly(e, 'endpointPort', formik)}
-                error={formik.touched.endpointPort && Boolean(formik.errors.endpointPort)}
-                helperText={
-                  formik.touched.endpointPort &&
-                  formik.errors.endpointPort &&
-                  t('addEditStationPage.validation.overPort')
-                }
-              />
-            </Grid>
-          </Grid>
-        </Box> */}
 
         <Box sx={inputGroupStyle}>
           <AddEditStationFormSectionTitle

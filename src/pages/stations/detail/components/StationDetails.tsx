@@ -244,35 +244,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                     {stationDetail?.targetPort}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} mt={2}>
-                  <Typography variant="sidenav">
-                    {t('stationDetailPage.POFTargetService')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.address')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.service')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.port')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
-                  </Typography>
-                </Grid>
+
                 <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                   <ButtonNaked

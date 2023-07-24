@@ -1,6 +1,7 @@
+import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { createMemoryHistory } from 'history';
@@ -12,6 +13,9 @@ import {
 } from '../../../api/generated/portal/StationDetailResource';
 import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
+import { isOperator } from '../components/commonFunctions';
+
+jest.mock('../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -53,7 +57,7 @@ describe('<StationDetailsValidation.test />', () => {
   test('render component StationDetailsValidation', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStation.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetailsValidation
@@ -66,9 +70,13 @@ describe('<StationDetailsValidation.test />', () => {
         </MemoryRouter>
       </Provider>
     );
+    const title = screen.getAllByText('97735020584_01');
+    expect(title[0]).toBeInTheDocument();
   });
 
   test('Test edit Button with StationDetails in role operator and status approved', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/station/${mockedFullStation.stationCode}`]}>

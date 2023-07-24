@@ -453,7 +453,8 @@
       "sections": {
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
-        "model4": "Modello 4"
+        "model4": "Modello 4",
+        "otherInfo": "Altre informazioni"
       },
       "fields": {
         "version": "Versione",
@@ -464,7 +465,10 @@
         "path": "Path",
         "password": "Password",
         "newPassword": "Nuova password",
-        "service": "Servizio"
+        "service": "Servizio",
+        "timeoutA": "Timeout A",
+        "timeoutB": "Timeout B",
+        "timeoutC": "Timeout C"
       }
     },
     "confirmModal": {
@@ -631,20 +635,24 @@
       "operatedBy": "Operata da",
       "changeHistory": "Storico modifiche"
     },
-    "infoToCompltete": {
-      "title": "Informazioni da completare",
-      "subtitle": "Informazioni a carico di PagoPA.",
-      "registry": "Anagrafica",
-      "version": "Versione",
-      "password": "Password",
-      "newPassword": "Nuova password",
-      "threadNumber": "Numero Thread",
+    "infoToComplete": {
       "endpoint": "Endpoint",
-      "protocol": "Protocollo",
       "ip": "IP",
-      "port": "Porta",
       "model4": "Modello 4",
-      "service": "Servizio"
+      "newPassword": "Nuova password",
+      "otherInfo": "Altre informazioni",
+      "password": "Password",
+      "port": "Porta",
+      "protocol": "Protocollo",
+      "registry": "Anagrafica",
+      "service": "Servizio",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "threadNumber": "Numero Thread",
+      "timeoutA": "Timeout A",
+      "timeoutB": "Timeout B",
+      "timeoutC": "Timeout C",
+      "title": "Informazioni da completare",
+      "version": "Versione"
     }
   },
   "ibanPage": {

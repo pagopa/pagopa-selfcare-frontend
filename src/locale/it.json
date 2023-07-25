@@ -430,18 +430,12 @@
       "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
-        "redirect": "Redirect",
         "targetService": "Target Servizio"
       },
       "fields": {
         "stationCode": "Codice stazione",
         "brokerCode": "Codice intermediario",
         "primitiveVersion": "Versione primitive",
-        "redirectProtocol": "Protocollo",
-        "redirectPort": "Porta",
-        "redirectIp": "IP",
-        "redirectService": "Path",
-        "redirectParameters": "Parametri",
         "targetHost": "IP",
         "targetPath": "Path",
         "targetPort": "Porta"
@@ -529,9 +523,7 @@
     "version": "Versione",
     "primitiveVersion": "Versione Primitive",
     "password": "Password",
-    "redirectUrl": "URL di redirezione",
     "activationDate": "Data di attivazione",
-    "redirect": "Redirect",
     "protocol": "Protocollo",
     "target": "Target",
     "address": "IP",
@@ -619,7 +611,6 @@
       "stationCode": "Codice stazione",
       "primitiveVersion": "Versione Primitive",
       "intermediaryCode": "Codice intermediario",
-      "redirect": "Redirect",
       "protocol": "Protocollo",
       "port": "Porta",
       "ip": "IP",

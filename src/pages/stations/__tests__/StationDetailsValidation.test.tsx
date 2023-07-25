@@ -31,7 +31,6 @@ export const mockedFullStation: StationDetailResource = {
   brokerCode: '97735020584',
   ip: 'Valore',
   ip4Mod: 'Valore',
-  newPassword: 'Valore',
   password: 'Valore',
   port: 100,
   port4Mod: 100,

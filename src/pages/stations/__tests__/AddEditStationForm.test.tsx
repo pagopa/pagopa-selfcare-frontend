@@ -115,7 +115,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
-    const newPassword = screen.getByTestId('new-password-test') as HTMLInputElement;
     const protocol = screen.getByTestId('protocol-test') as HTMLSelectElement;
     const ip = screen.getByTestId('ip-test') as HTMLInputElement;
     const port = screen.getByTestId('port-test') as HTMLInputElement;
@@ -133,9 +132,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(password, { target: { value: 'password' } });
     expect(password.value).toBe('password');
-
-    fireEvent.change(newPassword, { target: { value: 'newPassword' } });
-    expect(newPassword.value).toBe('newPassword');
 
     fireEvent.click(protocol);
     fireEvent.change(protocol, { target: { value: 'HTTPS' } });

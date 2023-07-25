@@ -97,23 +97,6 @@ Props) => {
             </Grid>
             <Grid container item xs={6}>
               <TextField
-                fullWidth
-                id="newPassword"
-                name="newPassword"
-                label={t('addEditStationPage.addFormValidation.fields.newPassword')}
-                placeholder={t('addEditStationPage.addFormValidation.fields.newPassword')}
-                size="small"
-                value={formik.values.newPassword}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
-                helperText={formik.touched.newPassword && formik.errors.newPassword}
-                inputProps={{
-                  'data-testid': 'new-password-test',
-                }}
-              />
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
                 type="number"
                 fullWidth
                 id="threadNumber"

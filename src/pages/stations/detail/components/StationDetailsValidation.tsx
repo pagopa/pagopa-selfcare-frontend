@@ -30,19 +30,11 @@ Props) => {
   const operator = isOperator();
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
 
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
       return password;
-    }
-    return hidePassword;
-  };
-
-  const showOrHideNewPassword = (newPassword?: string) => {
-    if (showNewPassword) {
-      return newPassword;
     }
     return hidePassword;
   };
@@ -298,47 +290,6 @@ Props) => {
                         data-testid="show-ps2-test"
                       >
                         {showPassword ? (
-                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                        ) : (
-                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                        )}
-                      </IconButton>
-                    </>
-                  ) : (
-                    '-'
-                  )}
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.newPassword')}
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={9}
-                  sx={{
-                    display: 'flex',
-                    height: '38px',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  {stationDetail?.newPassword ? (
-                    <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {showOrHideNewPassword(stationDetail?.newPassword)}
-                      </Typography>
-                      <IconButton
-                        style={{
-                          border: 'none !important',
-                          marginLeft: '42px',
-                        }}
-                        onClick={() => {
-                          setShowNewPassword(!showNewPassword);
-                        }}
-                        data-testid="show-ps2-test"
-                      >
-                        {showNewPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />
                         ) : (
                           <VisibilityOff color="primary" sx={{ width: '80%' }} />

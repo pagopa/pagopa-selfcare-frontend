@@ -94,11 +94,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           enabled: detail.enabled,
           ip: detail.ip ?? '',
           ip4Mod: detail.ip4Mod ?? '',
-          newPassword: detail.newPassword ?? '',
           password: detail.password ?? '',
           port: detail.port ?? undefined,
           port4Mod: detail.port4Mod ?? undefined,
-          primitiveVersion: detail.primitiveVersion ?? undefined,
+          primitiveVersion: detail.primitiveVersion ?? 2,
           protocol: detail.protocol ?? undefined,
           protocol4Mod: detail.protocol4Mod ?? undefined,
           redirectIp: detail.redirectIp ?? '',
@@ -123,11 +122,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           brokerCode: brokerCodeCleaner,
           ip: '',
           ip4Mod: '',
-          newPassword: '',
           password: '',
           port: 0,
           port4Mod: 0,
-          primitiveVersion: 0,
+          primitiveVersion: 2,
           protocol: undefined,
           protocol4Mod: undefined,
           redirectIp: '',
@@ -430,7 +428,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   label={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
                   size="small"
-                  disabled={formAction !== StationFormAction.Create || operator}
+                  disabled={!operator}
                   InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
                   value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                   onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}

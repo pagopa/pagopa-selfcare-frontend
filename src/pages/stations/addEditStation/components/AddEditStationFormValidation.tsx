@@ -343,6 +343,74 @@ Props) => {
             </Grid>
           </Grid>
         </Box>
+
+        <Box sx={inputGroupStyle}>
+          <AddEditStationFormSectionTitle
+            title={t('addEditStationPage.addFormValidation.sections.otherInfo')}
+            icon={<BadgeIcon />}
+          />
+          <Grid container spacing={2} mt={1}>
+            <Grid container item xs={6}>
+              <TextField
+                type="number"
+                fullWidth
+                id="timeoutA"
+                name="timeoutA"
+                InputLabelProps={{
+                  shrink: formik.values.timeoutA ? true : false,
+                }}
+                inputProps={{
+                  'data-testid': 'timeoutA-test',
+                }}
+                label={t('addEditStationPage.addFormValidation.fields.timeoutA')}
+                placeholder={t('addEditStationPage.addForm.fields.timeoutA')}
+                size="small"
+                value={formik.values.timeoutA === 0 ? '' : formik.values.timeoutA}
+                onChange={(e) => handleChangeNumberOnly(e, 'timeoutA', formik)}
+                error={formik.touched.timeoutA && Boolean(formik.errors.timeoutA)}
+                helperText={formik.touched.timeoutA && formik.errors.timeoutA}
+              />
+            </Grid>
+            <Grid container item xs={6}>
+              <TextField
+                type="number"
+                fullWidth
+                id="timeoutB"
+                name="timeoutB"
+                InputLabelProps={{ shrink: formik.values.timeoutB ? true : false }}
+                inputProps={{
+                  'data-testid': 'timeoutB-test',
+                }}
+                label={t('addEditStationPage.addFormValidation.fields.timeoutB')}
+                placeholder={t('addEditStationPage.addForm.fields.timeoutB')}
+                size="small"
+                value={formik.values.timeoutB === 0 ? '' : formik.values.timeoutB}
+                onChange={(e) => handleChangeNumberOnly(e, 'timeoutB', formik)}
+                error={formik.touched.timeoutB && Boolean(formik.errors.timeoutB)}
+                helperText={formik.touched.timeoutB && formik.errors.timeoutB}
+              />
+            </Grid>
+            <Grid container item xs={6}>
+              <TextField
+                type="number"
+                fullWidth
+                id="timeoutC"
+                name="timeoutC"
+                InputLabelProps={{ shrink: formik.values.timeoutC !== 0 ? true : false }}
+                inputProps={{
+                  'data-testid': 'timeoutC-test',
+                }}
+                label={t('addEditStationPage.addFormValidation.fields.timeoutC')}
+                placeholder={t('addEditStationPage.addForm.fields.timeoutC')}
+                size="small"
+                value={formik.values.timeoutC === 0 ? '' : formik.values.timeoutC}
+                onChange={(e) => handleChangeNumberOnly(e, 'timeoutC', formik)}
+                error={formik.touched.timeoutC && Boolean(formik.errors.timeoutC)}
+                helperText={formik.touched.timeoutC && formik.errors.timeoutC}
+              />
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     </Paper>
   );

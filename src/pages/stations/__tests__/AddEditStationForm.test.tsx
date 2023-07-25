@@ -124,6 +124,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
     const port4Mod = screen.getByTestId('port-4Mod-test') as HTMLInputElement;
     const service4Mod = screen.getByTestId('service-4Mod-test') as HTMLInputElement;
+    const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
+    const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
+    const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
 
     fireEvent.change(version, { target: { value: 1 } });
     expect(version.value).toBe('1');
@@ -160,6 +163,18 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(service4Mod, { target: { value: 'service4Mod' } });
     expect(service4Mod.value).toBe('service4Mod');
+
+    expect(timeoutA.value).toBe('15');
+    fireEvent.change(timeoutA, { target: { value: 16 } });
+    expect(timeoutA.value).toBe('16');
+
+    expect(timeoutB.value).toBe('30');
+    fireEvent.change(timeoutB, { target: { value: 31 } });
+    expect(timeoutB.value).toBe('31');
+
+    expect(timeoutC.value).toBe('120');
+    fireEvent.change(timeoutC, { target: { value: 121 } });
+    expect(timeoutC.value).toBe('121');
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);

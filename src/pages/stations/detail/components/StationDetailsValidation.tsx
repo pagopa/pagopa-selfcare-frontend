@@ -239,12 +239,12 @@ Props) => {
           <Grid container alignItems={'center'} spacing={0} mb={2}>
             <Grid item xs={12}>
               <Typography variant="h6" mb={3}>
-                {t('stationDetailPageValidation.infoToCompltete.title')}
+                {t('stationDetailPageValidation.infoToComplete.title')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body2" mb={3}>
-                {t('stationDetailPageValidation.infoToCompltete.subtitle')}
+                {t('stationDetailPageValidation.infoToComplete.subtitle')}
               </Typography>
               <Divider> </Divider>
             </Grid>
@@ -254,12 +254,12 @@ Props) => {
               <Grid container item alignContent="center" spacing={2} pb={4}>
                 <Grid item xs={12}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.registry')}
+                    {t('stationDetailPageValidation.infoToComplete.registry')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.version')}
+                    {t('stationDetailPageValidation.infoToComplete.version')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -269,7 +269,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.password')}
+                    {t('stationDetailPageValidation.infoToComplete.password')}
                   </Typography>
                 </Grid>
                 <Grid
@@ -310,7 +310,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.newPassword')}
+                    {t('stationDetailPageValidation.infoToComplete.newPassword')}
                   </Typography>
                 </Grid>
                 <Grid
@@ -351,7 +351,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.threadNumber')}
+                    {t('stationDetailPageValidation.infoToComplete.threadNumber')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -361,12 +361,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.endpoint')}
+                    {t('stationDetailPageValidation.infoToComplete.endpoint')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.protocol')}
+                    {t('stationDetailPageValidation.infoToComplete.protocol')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -376,7 +376,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.ip')}
+                    {t('stationDetailPageValidation.infoToComplete.ip')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -386,7 +386,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.port')}
+                    {t('stationDetailPageValidation.infoToComplete.port')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -396,7 +396,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.service')}
+                    {t('stationDetailPageValidation.infoToComplete.service')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -406,12 +406,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.model4')}
+                    {t('stationDetailPageValidation.infoToComplete.model4')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.protocol')}
+                    {t('stationDetailPageValidation.infoToComplete.protocol')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -421,7 +421,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.ip')}
+                    {t('stationDetailPageValidation.infoToComplete.ip')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -431,7 +431,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.port')}
+                    {t('stationDetailPageValidation.infoToComplete.port')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -441,12 +441,47 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.service')}
+                    {t('stationDetailPageValidation.infoToComplete.service')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.infoToComplete.otherInfo')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutA')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutA ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutB')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutB ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutC')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutC ?? '-'}
                   </Typography>
                 </Grid>
               </Grid>

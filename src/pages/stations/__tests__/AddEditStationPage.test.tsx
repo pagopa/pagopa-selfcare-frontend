@@ -1,10 +1,10 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render} from '@testing-library/react';
-import {Router} from 'react-router-dom';
-import {store} from '../../../redux/store';
-import {createMemoryHistory} from 'history';
-import {Provider} from 'react-redux';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render } from '@testing-library/react';
+import { Router } from 'react-router-dom';
+import { store } from '../../../redux/store';
+import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
 import AddEditStationPage from '../addEditStation/AddEditStationPage';
 
 beforeEach(() => {
@@ -14,10 +14,10 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<AddEditChannelPage />', () => {
+describe('<AddEditStationPage />', () => {
   const history = createMemoryHistory();
 
-  test('render component AddEditChannelPage', () => {
+  test('render component AddEditStationPage', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>

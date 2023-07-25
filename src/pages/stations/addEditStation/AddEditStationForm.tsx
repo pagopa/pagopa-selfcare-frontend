@@ -112,6 +112,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           targetHost: detail.targetHost ?? '',
           targetPath: detail.targetPath ?? '',
           targetPort: detail.targetPort ?? undefined,
+          targetConcat: `${detail.targetHost ?? ''}${
+            detail.targetPort ? ':'.concat(detail.targetPort.toString()) : ''
+          }${detail.targetPath ?? ''}`,
+
           threadNumber: detail.threadNumber ?? undefined,
           timeoutA: detail.timeoutA ?? 15,
           timeoutB: detail.timeoutB ?? 30,
@@ -137,6 +141,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           service4Mod: '',
           stationCode: stationCodeGenerated,
           status: StatusEnum.TO_CHECK,
+          targetConcat: '',
           targetHost: '',
           targetPath: '',
           targetPort: 0,
@@ -162,6 +167,38 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     return false;
   };
 
+  const validateURL = (urlToValidate: string) => {
+    try {
+      const url = new URL(urlToValidate);
+      // eslint-disable-next-line sonarjs/prefer-single-boolean-return
+      if (!(url.protocol.toString() === 'http:' || url.protocol.toString() === 'https:')) {
+        return 'Protocollo non valido';
+      }
+      return undefined;
+    } catch (e) {
+      console.error(e);
+      return 'URL non valido';
+    }
+  };
+
+  const splitTargetURL = (targetURL: string) => {
+    try {
+      const url = new URL(targetURL);
+      return {
+        targetHostSplit: `${url.protocol ? url.protocol + '//' : ''}${url.hostname}`,
+        targetPortSplit: Number(url.port),
+        targetPathSplit: url.pathname + url.search + url.hash,
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      targetHostSplit: '',
+      targetPortSplit: 0,
+      targetPathSplit: '',
+    };
+  };
+
   const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
@@ -180,17 +217,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             : validatePrimitiveVersion(values.primitiveVersion)
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
-          targetHost: !values.targetHost
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
-          targetPath: !values.targetPath
-            ? t('addEditStationPage.validation.requiredField')
-            : undefined,
-          targetPort: !values.targetPort
-            ? t('addEditStationPage.validation.requiredField')
-            : isNaN(values.targetPort)
-            ? t('addEditStationPage.validation.requiredInputNumber')
-            : undefined,
+          targetConcat: validateURL(values.targetConcat),
         },
         ...(operator && formAction !== StationFormAction.Create
           ? {
@@ -219,15 +246,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     );
 
   const enableSubmit = (values: StationOnCreation) => {
-    const isTargetSectionComplete =
-      values.targetHost !== '' && values.targetPath !== '' && values.targetPort.toString() !== '';
-
-    const isTargetSectionEmpty =
-      values.targetHost === '' && values.targetPath === '' && values.targetPort?.toString() === '';
-
     const baseConditions =
       values.stationCode !== '' &&
       values.brokerCode !== '' &&
+      values.targetConcat !== '' &&
       values.primitiveVersion.toString() !== '';
 
     const operatorConditions =
@@ -243,13 +265,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       return false;
     }
 
-    const targetFields = () => (isTargetSectionComplete ? true : false);
-
-    const targetCondition = targetFields();
-
     if (!operator) {
-      return baseConditions && targetCondition;
-    } else if (operator && baseConditions && targetCondition && operatorConditions) {
+      return baseConditions;
+    } else if (operator && baseConditions && operatorConditions) {
       return true;
     } else {
       return false;
@@ -333,6 +351,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     },
     enableReinitialize: true,
     validateOnMount: true,
+    validateOnBlur: true,
+    validateOnChange: true,
   });
 
   const handleChangeNumberOnly = (
@@ -353,6 +373,23 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       setShowConfirmModal(false);
     }
   };
+
+  useEffect(() => {
+    if (formik.values.targetConcat && formik.values.targetConcat !== '') {
+      const { targetHostSplit, targetPortSplit, targetPathSplit } = splitTargetURL(
+        formik.values.targetConcat
+      );
+
+      formik
+        .setValues({
+          ...formik.values,
+          targetHost: targetHostSplit,
+          targetPort: targetPortSplit,
+          targetPath: targetPathSplit,
+        })
+        .catch((e) => console.error(e));
+    }
+  }, [formik.values.targetConcat]);
 
   return (
     <>
@@ -455,58 +492,19 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="targetHost"
-                  name="targetHost"
-                  label={t('addEditStationPage.addForm.fields.targetHost')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetHost')}
+                  id="targetConcat"
+                  name="targetConcat"
+                  label={t('addEditStationPage.addForm.fields.targetConcat')}
+                  placeholder={t('addEditStationPage.addForm.fields.targetConcat')}
                   size="small"
-                  value={formik.values.targetHost}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetHost && Boolean(formik.errors.targetHost)}
-                  helperText={formik.touched.targetHost && formik.errors.targetHost}
+                  value={formik.values.targetConcat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.targetConcat && Boolean(formik.errors.targetConcat)}
+                  helperText={formik.touched.targetConcat && formik.errors.targetConcat}
                   inputProps={{
-                    'data-testid': 'target-address-test',
+                    'data-testid': 'target-targetConcat-test',
                   }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="targetPath"
-                  name="targetPath"
-                  label={t('addEditStationPage.addForm.fields.targetPath')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetPath')}
-                  size="small"
-                  value={formik.values.targetPath}
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.targetPath && Boolean(formik.errors.targetPath)}
-                  helperText={formik.touched.targetPath && formik.errors.targetPath}
-                  inputProps={{
-                    'data-testid': 'target-service-test',
-                  }}
-                />
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  type="number"
-                  fullWidth
-                  id="targetPort"
-                  name="targetPort"
-                  InputLabelProps={{ shrink: formik.values.targetPort ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'target-port-test',
-                  }}
-                  label={t('addEditStationPage.addForm.fields.targetPort')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetPort')}
-                  size="small"
-                  value={formik.values.targetPort === 0 ? '' : formik.values.targetPort}
-                  onChange={(e) => handleChangeNumberOnly(e, 'targetPort', formik)}
-                  error={formik.touched.targetPort && Boolean(formik.errors.targetPort)}
-                  helperText={formik.touched.targetPort && formik.errors.targetPort}
                 />
               </Grid>
             </Grid>

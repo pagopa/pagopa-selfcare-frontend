@@ -149,32 +149,16 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
+                    {t('stationDetailPageValidation.configuration.endpoint')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPath ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPort ?? '-'}
+                    {stationDetail?.targetHost}
+                    {stationDetail?.targetPort && stationDetail?.targetPort > 0
+                      ? `:${stationDetail.targetPort}`
+                      : ''}
+                    {stationDetail?.targetPath}
                   </Typography>
                 </Grid>
 

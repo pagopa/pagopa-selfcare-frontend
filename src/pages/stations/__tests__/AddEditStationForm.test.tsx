@@ -43,9 +43,10 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     timeoutA: 15,
     timeoutB: 30,
     timeoutC: 120,
-    targetHost: '33.55.66',
-    targetPort: 4443,
-    targetPath: 'Stazione/path/target/prova',
+    targetConcat: 'https://www.google.it/path?params=test#hash',
+    targetHost: 'https://www.google.it',
+    targetPort: 0,
+    targetPath: '/path?params=test#hash',
     primitiveVersion: 1,
     wrapperStatus: WrapperStatusEnum.APPROVED,
     password: 'password',
@@ -66,23 +67,16 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
-    const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
-    const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
-    const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
 
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
     expect(stationCode.value).toBe('station Code');
 
     fireEvent.change(primitiveVersion, { target: { value: 1 } });
 
-    fireEvent.change(targetAddress, { target: { value: 'redirect Address' } });
-    expect(targetAddress.value).toBe('redirect Address');
-
-    fireEvent.change(targetService, { target: { value: 'redirect Service' } });
-    expect(targetService.value).toBe('redirect Service');
-
-    fireEvent.change(targetPort, { target: { value: '555' } });
-    expect(targetPort.value).toBe('555');
+    expect(targetConcat.value).toBe('');
+    fireEvent.change(targetConcat, { target: { value: 'https://www.pagopa.it:8080/pathTest' } });
+    expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest');
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);
@@ -126,6 +120,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
     const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+
+    expect(targetConcat.value).toBe('https://www.google.it/path?params=test#hash');
 
     fireEvent.change(version, { target: { value: 1 } });
     expect(version.value).toBe('1');

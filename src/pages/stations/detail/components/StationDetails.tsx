@@ -194,27 +194,15 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                   <Typography variant="sidenav">{t('stationDetailPage.target')}</Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.address')}</Typography>
+                  <Typography variant="body2">{t('stationDetailPage.endpoint')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.targetHost}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.service')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetPort && stationDetail?.targetPort > 0
+                      ? `:${stationDetail.targetPort}`
+                      : ''}
                     {stationDetail?.targetPath}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.port')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPort}
                   </Typography>
                 </Grid>
 

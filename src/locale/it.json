@@ -663,7 +663,9 @@
       "listErrorTitle": "Errore",
       "listErrorDesc": "Errore durante la ricezione della lista degli IBAN",
       "upladIbanErrorTitle": "Errore",
-      "upladIbanErrorDesc": "Errore durante la modifica degli IBAN"
+      "upladIbanErrorDesc": "Errore durante la modifica degli IBAN",
+      "deleteIbanErrorTitle": "Errore",
+      "deleteIbanErrorDesc": "Errore durante l'eliminazione dell'iban"
     },
     "standIn": "STAND IN",
     "standInDetail": "Nuova procedura di intervento in caso di problemi",
@@ -671,6 +673,7 @@
     "cupDetail": "Pagamento del canone unico patrimoniale",
     "selectIban": "Seleziona IBAN",
     "upload": "Salva",
+    "delete": "Annulla",
     "manage": "Gestisci",
     "updateInProgress": "Modifica in corso",
     "list": {

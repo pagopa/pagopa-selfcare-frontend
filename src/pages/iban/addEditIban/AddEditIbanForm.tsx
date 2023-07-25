@@ -73,7 +73,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           validityDate: ibanBody.validityDate,
           dueDate: ibanBody.dueDate,
           creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-          labels: ibanBody.labels,
+          labels: ibanBody.labels ?? undefined,
           active: ibanBody.active,
         }
       : {
@@ -82,7 +82,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           validityDate: new Date(),
           dueDate: new Date(),
           creditorInstitutionCode: '',
-          labels: [],
           active: true,
         };
 
@@ -210,23 +209,22 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
-            labels: values.labels,
             active: true,
           });
-        } else if (formAction === IbanFormAction.Edit) {
+        } else {
           await updateIban({
             iban: values.iban,
             description: values.description,
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
-            labels: values.labels,
+            labels: values.labels ?? undefined,
             active: true,
           });
         }
       } catch (reason) {
         addError({
-          id: 'CREATE_IBAN',
+          id: 'CREATE_UPDATE_IBAN',
           blocking: false,
           error: reason as Error,
           techDescription: `An error occurred while adding/editing iban`,
@@ -440,7 +438,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
                   placeholder="AAAAAAAAAAAAAAAAAAA"
                   size="small"
-                  value={formik.values.creditorInstitutionCode?.toUpperCase()}
+                  value={formik.values.creditorInstitutionCode}
                   onChange={(e) => formik.handleChange(e)}
                   error={
                     formik.touched.creditorInstitutionCode &&
@@ -449,6 +447,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   helperText={
                     formik.touched.creditorInstitutionCode && formik.errors.creditorInstitutionCode
                   }
+                  InputLabelProps={{ shrink: subject === 'me' ? true : false }}
                 />
               </Grid>
             </Grid>

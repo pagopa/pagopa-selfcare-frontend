@@ -73,6 +73,7 @@ export const mockedIbanCup: IbanResource = {
       name: 'CUP',
     },
   ],
+  active: true,
 };
 
 export const mockedIbanStandIn: IbanResource = {
@@ -88,10 +89,12 @@ export const mockedIbanStandIn: IbanResource = {
       name: 'STANDIN',
     },
   ],
+  active: true,
 };
 
 export const getCreditorInstitutionIbans = (
-  _creditorInstitutionCode: string
+  _creditorInstitutionCode: string,
+  _labelName?: string
 ): Promise<IbansResource> => new Promise((resolve) => resolve(ibanList));
 
 export const getIbanDetail = (_iban: string): Promise<any> =>
@@ -113,3 +116,6 @@ export const updateIbanStandIn = (_iban: IbanOnCreation): Promise<IbanResource> 
 
 export const updateIbanCup = (_iban: IbanOnCreation): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIbanCup));
+
+export const deleteIban = (_creditorInstitutionCode: string, _ibanValue: string): Promise<void> =>
+  new Promise((resolve) => resolve);

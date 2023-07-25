@@ -13,6 +13,6 @@ export type IbanOnCreation = {
   creditorInstitutionCode: string;
   ecOwner?: string;
   labels?: Readonly<Array<IbanLabel>>;
-  active?: boolean;
+  active: boolean;
   publicationDate?: Date;
 };

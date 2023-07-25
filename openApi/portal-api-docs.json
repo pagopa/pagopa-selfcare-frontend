@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.3.5"
+    "version": "0.3.6"
   },
   "servers": [
     {
@@ -15,6 +15,10 @@
     {
       "name": "Ibans",
       "description": "Iban Controller"
+    },
+    {
+      "name": "Utils",
+      "description": "Utils Controller"
     },
     {
       "name": "channels",
@@ -286,7 +290,7 @@
       "get": {
         "tags": ["channels"],
         "summary": "getBrokersPsp",
-        "description": "Create a PSP broker",
+        "description": "Get list of psp brokers",
         "operationId": "getBrokersPspUsingGET",
         "parameters": [
           {
@@ -3055,70 +3059,6 @@
         ]
       }
     },
-    "/creditorinstitutions/ibans": {
-      "post": {
-        "tags": ["Ibans"],
-        "summary": "getCreditorInstitutionIbans",
-        "description": "Get creditor institution ibans",
-        "operationId": "getCreditorInstitutionIbansUsingPOST",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IbanRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IbansResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": ["global"]
-          }
-        ]
-      }
-    },
     "/creditorinstitutions/ibans/create": {
       "post": {
         "tags": ["Ibans"],
@@ -3186,9 +3126,9 @@
     "/creditorinstitutions/ibans/update": {
       "put": {
         "tags": ["Ibans"],
-        "summary": "putCreditorInstitutionIbans",
+        "summary": "updateCreditorInstitutionIbans",
         "description": "Update creditor institution ibans",
-        "operationId": "putCreditorInstitutionIbansUsingPUT",
+        "operationId": "updateCreditorInstitutionIbansUsingPUT",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3231,6 +3171,163 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/creditorinstitutions/ibans/{creditorinstitutioncode}": {
+      "get": {
+        "tags": ["Ibans"],
+        "summary": "getCreditorInstitutionIbans",
+        "description": "Get creditor institution ibans",
+        "operationId": "getCreditorInstitutionIbansUsingGET",
+        "parameters": [
+          {
+            "name": "creditorinstitutioncode",
+            "in": "path",
+            "description": "Creditor institution code",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labelName",
+            "in": "query",
+            "description": "Label name",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IbansResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/creditorinstitutions/ibans/{creditorinstitutioncode}/delete/{ibanValue}": {
+      "delete": {
+        "tags": ["Ibans"],
+        "summary": "deleteCreditorInstitutionIbans",
+        "description": "Delete a creditor institution iban",
+        "operationId": "deleteCreditorInstitutionIbansUsingDELETE",
+        "parameters": [
+          {
+            "name": "creditorinstitutioncode",
+            "in": "path",
+            "description": "Creditor institution code",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ibanValue",
+            "in": "path",
+            "description": "Code of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -5291,6 +5388,83 @@
           }
         ]
       }
+    },
+    "/utils/broker-or-psp-details": {
+      "get": {
+        "tags": ["Utils"],
+        "summary": "getBrokerOrPspDetails",
+        "description": "Get PSP broker details",
+        "operationId": "getBrokerOrPspDetailsUsingGET",
+        "parameters": [
+          {
+            "name": "brokerpspcode",
+            "in": "query",
+            "description": "swagger.request.brokerpspcode",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerOrPspDetailsResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -5399,6 +5573,18 @@
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "BrokerOrPspDetailsResource": {
+        "title": "BrokerOrPspDetailsResource",
+        "type": "object",
+        "properties": {
+          "brokerPspDetailsResource": {
+            "$ref": "#/components/schemas/BrokerPspDetailsResource"
+          },
+          "paymentServiceProviderDetailsResource": {
+            "$ref": "#/components/schemas/PaymentServiceProviderDetailsResource"
           }
         }
       },
@@ -5632,6 +5818,10 @@
           "proxy_username": {
             "type": "string",
             "description": "proxy Username"
+          },
+          "psp_email": {
+            "type": "string",
+            "description": "email of the payment service provider"
           },
           "recovery": {
             "type": "boolean",
@@ -6333,11 +6523,13 @@
       },
       "IbanCreateRequestDto": {
         "title": "IbanCreateRequestDto",
-        "required": ["creditorInstitutionCode", "dueDate", "iban", "validityDate"],
+        "required": ["active", "creditorInstitutionCode", "dueDate", "iban", "validityDate"],
         "type": "object",
         "properties": {
           "active": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "True if the iban is active",
+            "example": false
           },
           "creditorInstitutionCode": {
             "type": "string",
@@ -6385,28 +6577,15 @@
           }
         }
       },
-      "IbanRequestDto": {
-        "title": "IbanRequestDto",
-        "required": ["creditorInstitutionCode"],
-        "type": "object",
-        "properties": {
-          "creditorInstitutionCode": {
-            "type": "string",
-            "description": "Creditor Institution's code(Fiscal Code)"
-          },
-          "label": {
-            "type": "string",
-            "description": "Filter by label"
-          }
-        }
-      },
       "IbanResource": {
         "title": "IbanResource",
-        "required": ["dueDate", "ecOwner", "iban", "publicationDate", "validityDate"],
+        "required": ["active", "dueDate", "ecOwner", "iban", "publicationDate", "validityDate"],
         "type": "object",
         "properties": {
           "active": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "True if the iban is active",
+            "example": false
           },
           "companyName": {
             "type": "string",

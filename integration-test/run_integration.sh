@@ -1,3 +1,3 @@
 rm -rf ./user-data/
-node login_ec.js
-node backoffice.js
+node 00_login_ec.js
+node add_iban.js

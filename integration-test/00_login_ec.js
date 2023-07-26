@@ -776,6 +776,95 @@ const login = (async () => {
     }
 
     console.log("logged");
+
+    {
+        const targetPage = page;
+        const promises = [];
+        promises.push(targetPage.waitForNavigation());
+        await targetPage.goto('https://selfcare.dev.platform.pagopa.it/ui');
+        await Promise.all(promises);
+    }
+    {
+        const targetPage = page;
+        await scrollIntoViewIfNeeded([
+            [
+                'div.css-1abzdwk span'
+            ],
+            [
+                'xpath///*[@id="root"]/div[2]/div[1]/nav/div/div/div/div[1]/div[2]/span'
+            ],
+            [
+                'pierce/div.css-1abzdwk span'
+            ],
+            [
+                'text/Sviluppo'
+            ]
+        ], targetPage, timeout);
+        const element = await waitForSelectors([
+            [
+                'div.css-1abzdwk span'
+            ],
+            [
+                'xpath///*[@id="root"]/div[2]/div[1]/nav/div/div/div/div[1]/div[2]/span'
+            ],
+            [
+                'pierce/div.css-1abzdwk span'
+            ],
+            [
+                'text/Sviluppo'
+            ]
+        ], targetPage, { timeout, visible: true });
+        await element.click({
+            offset: {
+                x: 36.78125,
+                y: 15.09375,
+            },
+        });
+    }
+    {
+        const targetPage = page;
+        await scrollIntoViewIfNeeded([
+            [
+                'aria/Accedi'
+            ],
+            [
+                'div.MuiGrid-root button'
+            ],
+            [
+                'xpath///*[@id="root"]/div[2]/div[2]/div/div/div/div[3]/button'
+            ],
+            [
+                'pierce/div.MuiGrid-root button'
+            ],
+            [
+                'text/Accedi'
+            ]
+        ], targetPage, timeout);
+        const element = await waitForSelectors([
+            [
+                'aria/Accedi'
+            ],
+            [
+                'div.MuiGrid-root button'
+            ],
+            [
+                'xpath///*[@id="root"]/div[2]/div[2]/div/div/div/div[3]/button'
+            ],
+            [
+                'pierce/div.MuiGrid-root button'
+            ],
+            [
+                'text/Accedi'
+            ]
+        ], targetPage, { timeout, visible: true });
+        await element.click({
+            offset: {
+                x: 59.5625,
+                y: 21.203125,
+            },
+        });
+    }
+
     await browser.close();
 
     async function waitForSelectors(selectors, frame, options) {

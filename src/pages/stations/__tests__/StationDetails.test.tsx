@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, getByText, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { createMemoryHistory } from 'history';
@@ -47,7 +47,7 @@ export const mockedFullStationApproved: StationDetailResource = {
   targetPath: 'Stazione/path/target/prova',
   primitiveVersion: 1,
   wrapperStatus: WrapperStatusEnum.APPROVED,
-  password: 'password',
+  password: 'hiddenPassword',
 };
 
 export const mockedFullStationToCheck: StationDetailResource = {
@@ -83,12 +83,11 @@ describe('<StationDetails />', () => {
     store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStationToCheck.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStationToCheck.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetails
                 stationDetail={mockedFullStationApproved}
-                // @ts-ignore TODO
                 formatedDate={jest.fn()}
                 goBack={() => jest.fn()}
               />
@@ -111,7 +110,7 @@ describe('<StationDetails />', () => {
     store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStationApproved.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStationApproved.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetails
@@ -134,7 +133,7 @@ describe('<StationDetails />', () => {
   test('render component StationDetails', async () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStationToCheck.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStationToCheck.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetails
@@ -152,5 +151,34 @@ describe('<StationDetails />', () => {
       const editBtn = await screen.findByTestId('edit-ope-sts-chk');
       fireEvent.click(editBtn);
     }
+  });
+
+  test('render component StationDetails and test ShowHidePassword button', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStationApproved.stationCode}`]}>
+          <Route path="/stations/:stationId">
+            <ThemeProvider theme={theme}>
+              <StationDetails
+                stationDetail={mockedFullStationApproved}
+                // @ts-ignore TODO
+                formatedDate={jest.fn()}
+                goBack={() => jest.fn()}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const showPasswordBtn = screen.getByTestId('show-psw-test') as HTMLInputElement;
+
+    expect(screen.getAllByText('XXXXXXXXXXXXXX')[0]).toBeInTheDocument();
+    expect(screen.queryByText('hiddenPassword')).toBeNull();
+
+    fireEvent.click(showPasswordBtn);
+    await waitFor(() => {
+      expect(screen.getAllByText('hiddenPassword')[0]).toBeInTheDocument();
+    });
   });
 });

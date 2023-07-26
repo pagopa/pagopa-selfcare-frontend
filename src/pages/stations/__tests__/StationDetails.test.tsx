@@ -23,6 +23,8 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
+const genPassword = (Math.random() + 1).toString(36).substring(2);
+
 export const mockedFullStationApproved: StationDetailResource = {
   stationCode: '81001870922_06',
   enabled: true,
@@ -47,7 +49,7 @@ export const mockedFullStationApproved: StationDetailResource = {
   targetPath: 'Stazione/path/target/prova',
   primitiveVersion: 1,
   wrapperStatus: WrapperStatusEnum.APPROVED,
-  password: 'hiddenPassword',
+  password: genPassword,
 };
 
 export const mockedFullStationToCheck: StationDetailResource = {
@@ -174,11 +176,11 @@ describe('<StationDetails />', () => {
     const showPasswordBtn = screen.getByTestId('show-psw-test') as HTMLInputElement;
 
     expect(screen.getAllByText('XXXXXXXXXXXXXX')[0]).toBeInTheDocument();
-    expect(screen.queryByText('hiddenPassword')).toBeNull();
+    expect(screen.queryByText(genPassword)).toBeNull();
 
     fireEvent.click(showPasswordBtn);
     await waitFor(() => {
-      expect(screen.getAllByText('hiddenPassword')[0]).toBeInTheDocument();
+      expect(screen.getAllByText(genPassword)[0]).toBeInTheDocument();
     });
   });
 });

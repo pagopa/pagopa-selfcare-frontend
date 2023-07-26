@@ -53,6 +53,7 @@ export type StationOnCreation = {
   service?: string | undefined;
   service4Mod?: string | undefined;
   stationCode: string;
+  targetConcat: string;
   targetHost: string;
   targetPath: string;
   targetPort: number;

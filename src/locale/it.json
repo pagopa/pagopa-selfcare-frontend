@@ -430,15 +430,13 @@
       "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
-        "targetService": "Target Servizio"
+        "targetService": "Target"
       },
       "fields": {
         "stationCode": "Codice stazione",
         "brokerCode": "Codice intermediario",
-        "primitiveVersion": "Versione primitive",
-        "targetHost": "IP",
-        "targetPath": "Path",
-        "targetPort": "Porta"
+        "targetConcat": "Endpoint",
+        "primitiveVersion": "Versione primitive"
       }
     },
     "addFormValidation": {
@@ -524,6 +522,7 @@
     "anagraphic": "Anagrafica",
     "stationId": "Codice stazione",
     "version": "Versione",
+    "endpoint": "Endpoint",
     "primitiveVersion": "Versione Primitive",
     "password": "Password",
     "activationDate": "Data di attivazione",
@@ -612,6 +611,7 @@
       "subtitle": "Informazioni a carico dell’ente.",
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
+      "endpoint": "Endpoint",
       "primitiveVersion": "Versione Primitive",
       "intermediaryCode": "Codice intermediario",
       "protocol": "Protocollo",
@@ -619,7 +619,7 @@
       "ip": "IP",
       "path": "Path",
       "parameters": "Parametri",
-      "targetService": "Target Servizio",
+      "targetService": "Target",
       "modify": "Modifiche",
       "lastUpgrade": "Ultima modifica",
       "operatedBy": "Operata da",

@@ -44,6 +44,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
   const { t } = useTranslation();
+  const ecCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
     if (ibanList.ibanList.length > 0) {
@@ -65,7 +66,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         description: ibanStandInFiltered.description,
         validityDate: ibanStandInFiltered.validityDate,
         dueDate: ibanStandInFiltered.dueDate,
-        creditorInstitutionCode: ibanStandInFiltered.ecOwner,
+        creditorInstitutionCode: ibanStandInFiltered.ecOwner ?? ecCode,
         labels: ibanStandInFiltered.labels,
         active: ibanStandInFiltered.active,
       });
@@ -79,7 +80,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         description: ibanCupFiltered.description,
         validityDate: ibanCupFiltered.validityDate,
         dueDate: ibanCupFiltered.dueDate,
-        creditorInstitutionCode: ibanCupFiltered.ecOwner,
+        creditorInstitutionCode: ibanCupFiltered.ecOwner ?? ecCode,
         labels: ibanCupFiltered.labels,
         active: ibanCupFiltered.active,
       });
@@ -147,7 +148,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       description: selectedIban.description,
       validityDate: selectedIban.validityDate,
       dueDate: selectedIban.dueDate,
-      creditorInstitutionCode: selectedIban.ecOwner,
+      creditorInstitutionCode: selectedIban.ecOwner ?? ecCode,
       labels: updatedLabels,
       active: selectedIban.active,
     });
@@ -169,7 +170,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       description: selectedIban.description,
       validityDate: selectedIban.validityDate,
       dueDate: selectedIban.dueDate,
-      creditorInstitutionCode: selectedIban.ecOwner,
+      creditorInstitutionCode: selectedIban.ecOwner ?? ecCode,
       labels: updatedLabels,
       active: selectedIban.active,
     });

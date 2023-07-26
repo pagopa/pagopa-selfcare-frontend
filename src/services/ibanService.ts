@@ -2,8 +2,6 @@ import { PortalApi } from '../api/PortalApiClient';
 import { IbanCreateRequestDto } from '../api/generated/portal/IbanCreateRequestDto';
 import { IbanResource } from '../api/generated/portal/IbanResource';
 import { IbansResource } from '../api/generated/portal/IbansResource';
-import { IbanOnCreation } from '../model/Iban';
-import { emptyIban } from '../pages/iban/IbanPage';
 import {
   getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
   createIban as createIbanMocked,
@@ -27,7 +25,7 @@ export const getIbanList = (
   }
 };
 
-export const createIban = (iban: IbanCreateRequestDto): Promise<any> => {
+export const createIban = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createIbanMocked(iban);
@@ -36,7 +34,7 @@ export const createIban = (iban: IbanCreateRequestDto): Promise<any> => {
   }
 };
 
-export const updateIban = (iban: IbanCreateRequestDto): Promise<any> => {
+export const updateIban = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateIbanMocked(iban);
@@ -45,7 +43,7 @@ export const updateIban = (iban: IbanCreateRequestDto): Promise<any> => {
   }
 };
 
-export const updateIbanStandIn = (iban: IbanCreateRequestDto): Promise<any> => {
+export const updateIbanStandIn = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateIbanStandInMocked(iban);
@@ -54,7 +52,7 @@ export const updateIbanStandIn = (iban: IbanCreateRequestDto): Promise<any> => {
   }
 };
 
-export const updateIbanCup = (iban: IbanCreateRequestDto): Promise<any> => {
+export const updateIbanCup = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateIbanCupMocked(iban);

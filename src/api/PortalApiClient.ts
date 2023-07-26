@@ -778,7 +778,7 @@ export const PortalApi = {
         active: true,
       },
     });
-    return extractResponse(result, 200, onRedirectToLogin);
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 
   updateIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {

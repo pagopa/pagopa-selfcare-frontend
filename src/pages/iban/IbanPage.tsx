@@ -71,7 +71,7 @@ const IbanPage = () => {
         })
         .finally(() => setLoadingStatus(false));
     }
-  }, [selectedParty]);
+  }, [selectedParty?.fiscalCode]);
 
   return (
     <>

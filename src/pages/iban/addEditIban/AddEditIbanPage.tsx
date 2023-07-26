@@ -37,7 +37,7 @@ const AddEditIbanPage = () => {
           setIban({
             iban: filteredIban[0].iban,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ecOwner,
+            creditorInstitutionCode: filteredIban[0].ecOwner ?? creditorInstitutionCode,
             validityDate: filteredIban[0].validityDate,
             dueDate: filteredIban[0].dueDate,
             labels: filteredIban[0].labels,

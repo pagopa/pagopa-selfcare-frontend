@@ -47,10 +47,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
-  const changeSubject = (e: any) => {
-    setSubject(e.target.value);
-  };
-
   useEffect(() => {
     if (subject === 'me') {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -65,6 +61,15 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     setUploadType(event.target.value);
   };
 
+  const changeSubject = (e: any) => {
+    setSubject(e.target.value);
+  };
+
+  const getTomorrowDate = () => {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    return currentDate;
+  };
   const initialFormData = (ibanBody?: IbanOnCreation) =>
     ibanBody
       ? {
@@ -79,8 +84,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       : {
           iban: '',
           description: '',
-          validityDate: new Date(),
-          dueDate: new Date(),
+          validityDate: getTomorrowDate(),
+          dueDate: getTomorrowDate(),
           creditorInstitutionCode: '',
           active: true,
         };
@@ -199,6 +204,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   const submit = async (values: IbanOnCreation) => {
+    // // eslint-disable-next-line no-debugger
+    // debugger;
     if (uploadType === 'single') {
       setLoading(true);
       try {
@@ -222,7 +229,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             active: true,
           });
         }
-      } catch (reason) {
+        history.push(ROUTES.IBAN);
+      } catch (reason: any) {
+        if (reason.httpStatus === 409) {
+          formik.setFieldError('iban', t('addEditIbanPage.validationMessage.ibanConflict'));
+        }
         addError({
           id: 'CREATE_UPDATE_IBAN',
           blocking: false,
@@ -244,11 +255,12 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     validate,
     onSubmit: async (values) => {
       await submit(values);
-      history.push(ROUTES.IBAN);
     },
     enableReinitialize: true,
     validateOnMount: true,
   });
+
+  const shouldDisableDate = (date: Date) => date < new Date();
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -311,6 +323,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
                 <TextField
+                  disabled={formAction === IbanFormAction.Edit}
                   fullWidth
                   id="iban"
                   name="iban"
@@ -368,6 +381,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         helperText={formik.touched.validityDate && formik.errors.validityDate}
                       />
                     )}
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -394,6 +408,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         helperText={formik.touched.dueDate && formik.errors.dueDate}
                       />
                     )}
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -462,7 +477,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
           <Button
-            onClick={() => formik.handleSubmit()}
             disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"

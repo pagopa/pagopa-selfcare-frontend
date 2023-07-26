@@ -36,7 +36,7 @@ const IbanDetailPage = () => {
           setIban({
             iban: filteredIban[0].iban,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ecOwner,
+            creditorInstitutionCode: filteredIban[0].ecOwner ?? selectedParty.fiscalCode,
             validityDate: filteredIban[0].validityDate,
             publicationDate: filteredIban[0].publicationDate,
             dueDate: filteredIban[0].dueDate,
@@ -91,7 +91,7 @@ const IbanDetailPage = () => {
         techDescription: `An error occurred while deleting an iban`,
         toNotify: true,
         displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
-        displayableDescription: t('ibanPage.error.deleteIbanErrorTitle'),
+        displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
         component: 'Toast',
       });
     } finally {

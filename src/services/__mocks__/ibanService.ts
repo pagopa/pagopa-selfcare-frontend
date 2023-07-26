@@ -49,12 +49,12 @@ export const ibanList: IbansResource = {
   ],
 };
 
-export const mockedIban: IbanOnCreation = {
+export const mockedIban: IbanResource = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
   validityDate: new Date('2023-04-01T13:49:19.897Z'),
   dueDate: new Date('2033-04-01T13:49:19.897Z'),
-  creditorInstitutionCode: '1234567890',
+  publicationDate: new Date('2023-04-01T13:49:19.897Z'),
   active: true,
   ecOwner: '1234567890',
   labels: [],
@@ -106,10 +106,11 @@ export const getIbanList = (_istitutionId: string): Promise<any> =>
 export const getIban = (_iban: string): Promise<any> =>
   new Promise((resolve) => resolve(mockedIban));
 
-export const createIban = (_iban: IbanCreateRequestDto): Promise<any> =>
+export const createIban = (_iban: IbanCreateRequestDto): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIban));
 
-export const updateIban = (_iban: IbanOnCreation) => new Promise((resolve) => resolve(mockedIban));
+export const updateIban = (_iban: IbanOnCreation): Promise<IbanResource> =>
+  new Promise((resolve) => resolve(mockedIban));
 
 export const updateIbanStandIn = (_iban: IbanOnCreation): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIbanStandIn));

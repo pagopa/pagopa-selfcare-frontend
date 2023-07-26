@@ -6,14 +6,6 @@ on:
 
   workflow_dispatch:
     inputs:
-      environment:
-        required: true
-        type: choice
-        description: Select the Environment
-        options:
-          - dev
-          - uat
-          - prod
       notify:
         required: false
         type: boolean
@@ -29,7 +21,7 @@ permissions:
 
 jobs:
   integration_test:
-    name: Test ${{(github.event.inputs == null && 'dev') || inputs.environment }}
+    name: Test in DEV
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

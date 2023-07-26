@@ -23,7 +23,13 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const genPassword = (Math.random() + 1).toString(36).substring(2);
+const nodeCrypto = require('crypto');
+window.crypto = {
+  getRandomValues: function (buffer) {
+    return nodeCrypto.randomFillSync(buffer);
+  },
+};
+const genPassword = crypto.getRandomValues(new Uint32Array(1)).toString();
 
 export const mockedFullStationApproved: StationDetailResource = {
   stationCode: '81001870922_06',

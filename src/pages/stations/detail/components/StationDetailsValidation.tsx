@@ -274,7 +274,7 @@ Props) => {
                         onClick={() => {
                           setShowPassword(!showPassword);
                         }}
-                        data-testid="show-ps2-test"
+                        data-testid="show-pwd-validation-test"
                       >
                         {showPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />

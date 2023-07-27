@@ -201,7 +201,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       const url = new URL(targetURL);
       return {
         protocolSplit: url.protocol,
-        hostSplit: `${url.protocol ? url.protocol + '//' : ''}${url.hostname}`,
+        hostSplit: url.hostname,
         portSplit: Number(url.port),
         pathSplit: url.pathname + url.search + url.hash,
       };
@@ -415,7 +415,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       formik
         .setValues({
           ...formik.values,
-          proxyHost: hostSplit,
+          proxyHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
           proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
         })
         .catch((e) => console.error(e));

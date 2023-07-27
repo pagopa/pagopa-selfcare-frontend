@@ -6,7 +6,6 @@ import { theme } from '@pagopa/mui-italia';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
-import { createMemoryHistory } from 'history';
 import { mockedIban } from '../../../../services/__mocks__/ibanService';
 
 let getIbanListSpy: jest.SpyInstance;
@@ -17,9 +16,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-describe('AddEditIbanPage', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
+describe('AddEditIbanPage', () => {
   it('Test render AddEditIbanPage', () => {
     render(
       <Provider store={store}>

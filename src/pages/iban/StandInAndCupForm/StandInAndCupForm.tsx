@@ -237,7 +237,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   };
 
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <Grid container spacing={2} mb={4}>
         <Grid item xs={12}>
           <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
@@ -423,7 +423,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         onClick={() => setShowMaganeButton(true)}
                         color="primary"
                         variant="outlined"
-                        type="submit"
                         sx={{ mr: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}
                         data-testid="back-button-test"
                       >
@@ -464,14 +463,13 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         onCloseLabel={t('addEditIbanPage.modal.backButton')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
         handleConfrimSubmit={async () => {
-          handleSubmit();
           await submit(formikStandIn.values, formikCup.values);
           setShowMaganeButton(true);
           setShowConfirmModal(false);
         }}
         data-testId="upload-ibans-modal"
       />
-    </>
+    </form>
   );
 };
 

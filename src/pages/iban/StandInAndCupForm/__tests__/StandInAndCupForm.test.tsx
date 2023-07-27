@@ -83,6 +83,14 @@ describe('StandInAndCupForm', () => {
 
     const uploadIbans = screen.getByTestId('upload-iban-test');
     fireEvent.click(uploadIbans);
+
+    const confirmBtn = await screen.findByTestId('confirm-button-test');
+    fireEvent.click(confirmBtn);
+
+    fireEvent.submit(confirmBtn);
+
+    const backBtn = screen.getByTestId('back-button-test');
+    fireEvent.click(backBtn);
   });
 
   it('Input test with manageButton true', () => {

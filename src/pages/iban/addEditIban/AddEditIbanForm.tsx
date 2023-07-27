@@ -126,7 +126,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     return true;
   };
 
-  const validateCodiceFiscale = (fiscalCode: string | undefined) => {
+  const validateFiscalCode = (fiscalCode: string | undefined) => {
     if (fiscalCode) {
       const fiscalCodeNumber = parseInt(fiscalCode, 10);
       return !isNaN(fiscalCodeNumber);
@@ -167,7 +167,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               ? undefined
               : !values.creditorInstitutionCode
               ? t('addEditIbanPage.validationMessage.requiredField')
-              : !validateCodiceFiscale(values.creditorInstitutionCode)
+              : !validateFiscalCode(values.creditorInstitutionCode)
               ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
@@ -204,8 +204,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   const submit = async (values: IbanOnCreation) => {
-    // // eslint-disable-next-line no-debugger
-    // debugger;
     if (uploadType === 'single') {
       setLoading(true);
       try {
@@ -271,29 +269,30 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} data-testid="iban-form">
       <FormControl>
         <RadioGroup
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
           name="upload-type-iban"
           sx={{ mt: 3, mb: 2 }}
+          onChange={(e) => changeUploadType(e)}
         >
           <FormControlLabel
             checked={uploadType === 'single'}
-            onChange={changeUploadType}
             value="single"
             control={<Radio />}
             label={t('addEditIbanPage.addForm.fields.ibanUploadTypes.single')}
             sx={{ mr: 5 }}
+            data-testid="upload-single-test"
           />
           <FormControlLabel
             checked={uploadType === 'multiple'}
-            onChange={changeUploadType}
             value="multiple"
             control={<Radio />}
             disabled
             label={t('addEditIbanPage.addForm.fields.ibanUploadTypes.multiple')}
+            data-testid="upload-multiple-test"
           />
         </RadioGroup>
       </FormControl>
@@ -440,12 +439,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.me')}
                       sx={{ mr: 5 }}
+                      data-testid="holder-me-test"
                     />
                     <FormControlLabel
                       checked={subject === 'anotherOne'}
                       value="anotherOne"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
+                      data-testid="holder-anotherOne-test"
                     />
                   </RadioGroup>
                 </FormControl>

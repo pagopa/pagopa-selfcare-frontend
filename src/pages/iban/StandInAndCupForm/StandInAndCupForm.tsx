@@ -284,6 +284,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         component="span"
                         fontSize="inherit"
                         mr={4}
+                        data-testid="iban-standin-with-manage-btn-false"
                       >
                         {selectedIbanStandIn.iban && selectedIbanStandIn.iban.length > 0
                           ? selectedIbanStandIn.iban
@@ -338,6 +339,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     fontSize={'inherit'}
                     variant="body2"
                     fontWeight="regular"
+                    data-testid="iban-cup-with-manage-btn-false"
                   >
                     IBAN
                   </Typography>
@@ -403,6 +405,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                       onClick={() => setShowMaganeButton(false)}
                       endIcon={<EditIcon />}
                       sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}
+                      data-testid="iban-manage-btn"
                     >
                       {t('ibanPage.manage')}
                     </ButtonNaked>
@@ -422,6 +425,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         variant="outlined"
                         type="submit"
                         sx={{ mr: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}
+                        data-testid="back-button-test"
                       >
                         {t('ibanPage.delete')}
                       </Button>
@@ -431,6 +435,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         variant="contained"
                         type="submit"
                         sx={{ whiteSpace: 'nowrap', minWidth: 'auto' }}
+                        data-testid="upload-iban-test"
                       >
                         {t('ibanPage.upload')}
                       </Button>
@@ -464,6 +469,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
           setShowMaganeButton(true);
           setShowConfirmModal(false);
         }}
+        data-testId="upload-ibans-modal"
       />
     </>
   );

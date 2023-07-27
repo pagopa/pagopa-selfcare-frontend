@@ -333,6 +333,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.iban && Boolean(formik.errors.iban)}
                   helperText={formik.touched.iban && formik.errors.iban}
+                  inputProps={{
+                    'data-testid': 'iban-test',
+                  }}
                 />
               </Grid>
 
@@ -348,6 +351,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.description && Boolean(formik.errors.description)}
                   helperText={formik.touched.description && formik.errors.description}
+                  inputProps={{
+                    'data-testid': 'description-test',
+                  }}
                 />
               </Grid>
             </Grid>
@@ -371,9 +377,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
+                          'data-testid': 'start-date-test',
                         }}
                         id="validityDate"
-                        data-testid="start-date-test"
                         name="validityDate"
                         type="date"
                         size="small"
@@ -398,9 +404,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
+                          'data-testid': 'end-date-test',
                         }}
                         id="dueDate"
-                        data-testid="end-date-test"
                         name="dueDate"
                         type="date"
                         size="small"
@@ -455,6 +461,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   size="small"
                   value={formik.values.creditorInstitutionCode}
                   onChange={(e) => formik.handleChange(e)}
+                  inputProps={{
+                    'data-testid': 'holder-fiscal-code-test',
+                  }}
                   error={
                     formik.touched.creditorInstitutionCode &&
                     Boolean(formik.errors.creditorInstitutionCode)
@@ -471,7 +480,12 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       </Paper>
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="back-button-test"
+          >
             {t('addEditIbanPage.addForm.buttons.back')}
           </Button>
         </Stack>
@@ -481,6 +495,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             color="primary"
             variant="contained"
             type="submit"
+            data-testid="submit-button-test"
           >
             {t('addEditIbanPage.addForm.buttons.confirm')}
           </Button>

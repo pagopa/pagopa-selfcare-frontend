@@ -24,6 +24,7 @@ const IbanDetailButtons = ({ active, iban, deleteIbans }: Props) => {
             color="error"
             variant="outlined"
             onClick={() => deleteIbans()}
+            data-testid="delete-button-test"
           >
             {t('ibanDetailPage.buttons.delete')}
           </Button>
@@ -49,6 +50,7 @@ const IbanDetailButtons = ({ active, iban, deleteIbans }: Props) => {
             color="error"
             variant="outlined"
             onClick={() => deleteIbans()}
+            data-testid="delete-button-test"
           >
             {t('ibanDetailPage.buttons.delete')}
           </Button>

@@ -48,10 +48,9 @@ jobs:
     needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
-    if: ${{ always() && inputs.notify == 'true' }}
+    if: ${{ always() }}
     steps:
       - name: Report Status
-        if: ${{ inputs.notify }}
         uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ needs.integration_test.result }}

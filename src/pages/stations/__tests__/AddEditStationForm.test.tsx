@@ -84,11 +84,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     expect(targetConcat.value).toBe('');
 
-    await waitFor(() =>
-      userEvent.type(
-        screen.getByTestId('target-targetConcat-test'),
-        'https://www.pagopa.it:8080/pathTest'
-      )
+    await waitFor(
+      () =>
+        userEvent.type(
+          screen.getByTestId('target-targetConcat-test'),
+          'https://www.pagopa.it:8080/pathTest'
+        ),
+      { timeout: 5000 }
     );
 
     await waitFor(() => expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest'));

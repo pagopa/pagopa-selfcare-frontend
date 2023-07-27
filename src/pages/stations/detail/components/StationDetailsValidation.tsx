@@ -15,6 +15,8 @@ import {
 } from '../../../../api/generated/portal/StationDetailResource';
 import { isOperator } from '../../components/commonFunctions';
 import { StatusChip } from '../../../../components/StatusChip';
+import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
+import { ENV } from '../../../../utils/env';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
@@ -31,6 +33,7 @@ Props) => {
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
+  const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
 
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
@@ -382,6 +385,27 @@ Props) => {
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.infoToComplete.proxy')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.proxyAddress')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.proxyHost ?? '-'}
+                    {stationDetail?.proxyPort ? `:${stationDetail.proxyPort}` : '-'}
+                    {Object.entries(proxyAddresses).map(([key, value]) =>
+                      value.includes(stationDetail?.proxyHost && stationDetail.proxyHost.toString())
+                        ? ` (${t('stationDetailPageValidation.infoToComplete.proxyLabels.' + key)})`
+                        : ''
+                    )}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>

@@ -38,9 +38,15 @@ import {
 } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { StationFormAction, StationOnCreation } from '../../../model/Station';
+import {
+  ProxyConfigs,
+  StationFormAction,
+  StationOnCreation,
+  IProxyConfig,
+} from '../../../model/Station';
 import { isOperator } from '../components/commonFunctions';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { ENV } from '../../../utils/env';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
@@ -61,6 +67,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const operator = isOperator();
+  const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
 
   useEffect(() => {
     if (formAction !== StationFormAction.Edit) {
@@ -100,6 +107,11 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           primitiveVersion: detail.primitiveVersion ?? 2,
           protocol: detail.protocol ?? undefined,
           protocol4Mod: detail.protocol4Mod ?? undefined,
+          proxyConcat: `${detail.proxyHost ?? ''}${
+            detail.proxyPort ? ':'.concat(detail.proxyPort.toString()) : ''
+          }`,
+          proxyHost: detail.proxyHost ?? '',
+          proxyPort: detail.proxyPort ?? 0,
           redirectIp: detail.redirectIp ?? '',
           redirectPath: detail.redirectPath ?? '',
           redirectPort: detail.redirectPort ?? undefined,
@@ -132,6 +144,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           primitiveVersion: 2,
           protocol: undefined,
           protocol4Mod: undefined,
+          proxyConcat: '',
+          proxyHost: '',
+          proxyPort: 0,
           redirectIp: '',
           redirectPath: '',
           redirectPort: 0,
@@ -181,21 +196,23 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     }
   };
 
-  const splitTargetURL = (targetURL: string) => {
+  const splitURL = (targetURL: string) => {
     try {
       const url = new URL(targetURL);
       return {
-        targetHostSplit: `${url.protocol ? url.protocol + '//' : ''}${url.hostname}`,
-        targetPortSplit: Number(url.port),
-        targetPathSplit: url.pathname + url.search + url.hash,
+        protocolSplit: url.protocol,
+        hostSplit: `${url.protocol ? url.protocol + '//' : ''}${url.hostname}`,
+        portSplit: Number(url.port),
+        pathSplit: url.pathname + url.search + url.hash,
       };
     } catch (e) {
       console.error(e);
     }
     return {
-      targetHostSplit: '',
-      targetPortSplit: 0,
-      targetPathSplit: '',
+      protocolSplit: '',
+      hostSplit: '',
+      portSplit: 0,
+      pathSplit: '',
     };
   };
 
@@ -376,20 +393,34 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   useEffect(() => {
     if (formik.values.targetConcat && formik.values.targetConcat !== '') {
-      const { targetHostSplit, targetPortSplit, targetPathSplit } = splitTargetURL(
+      const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.targetConcat
       );
 
       formik
         .setValues({
           ...formik.values,
-          targetHost: targetHostSplit,
-          targetPort: targetPortSplit,
-          targetPath: targetPathSplit,
+          targetHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
+          targetPort: portSplit,
+          targetPath: pathSplit,
         })
         .catch((e) => console.error(e));
     }
   }, [formik.values.targetConcat]);
+
+  useEffect(() => {
+    if (formik.values.proxyConcat && formik.values.proxyConcat !== '') {
+      const { protocolSplit, hostSplit, portSplit } = splitURL(formik.values.proxyConcat);
+
+      formik
+        .setValues({
+          ...formik.values,
+          proxyHost: hostSplit,
+          proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+        })
+        .catch((e) => console.error(e));
+    }
+  }, [formik.values.proxyConcat]);
 
   return (
     <>
@@ -517,6 +548,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
           inputGroupStyle={inputGroupStyle}
+          proxyAddresses={proxyAddresses}
         />
       ) : (
         <></>

@@ -120,14 +120,14 @@ describe('<StationDetailsValidation.test />', () => {
       </Provider>
     );
 
-    const showPasswordBtn = screen.getByTestId('show-pwd-validation-test') as HTMLInputElement;
+    const showPasswordButton = screen.getByTestId('show-pwd-validation-test') as HTMLInputElement;
 
-    expect(screen.getAllByText('XXXXXXXXXXXXXX')[0]).toBeInTheDocument();
+    expect(screen.getByText('XXXXXXXXXXXXXX')).toBeInTheDocument();
     expect(screen.queryByText(genPassword)).toBeNull();
 
-    fireEvent.click(showPasswordBtn);
+    fireEvent.click(showPasswordButton);
     await waitFor(() => {
-      expect(screen.getAllByText(genPassword)[0]).toBeInTheDocument();
+      expect(screen.getByText(genPassword)).toBeInTheDocument();
     });
   });
 });

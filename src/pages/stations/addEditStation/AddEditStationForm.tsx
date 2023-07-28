@@ -44,7 +44,7 @@ import {
   StationOnCreation,
   IProxyConfig,
 } from '../../../model/Station';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import { ENV } from '../../../utils/env';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';

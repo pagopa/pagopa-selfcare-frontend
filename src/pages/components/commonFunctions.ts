@@ -7,23 +7,24 @@ export const isOperator = (): boolean => {
   return ENV.PAGOPA_OPERATOR.MAIL_ADDRESSES.split(';').includes(email);
 };
 
-export const splitURL = (url: string | undefined) => {
-  if (url) {
-    const urlObj = new URL(url);
-    const protocol = urlObj.protocol;
-    const host = urlObj.hostname;
-    const path = urlObj.pathname;
-    const port = urlObj.port || undefined;
-
+export const splitURL = (targetURL: string) => {
+  try {
+    const url = new URL(targetURL);
     return {
-      protocol,
-      host,
-      path,
-      port,
+      protocolSplit: url.protocol,
+      hostSplit: url.hostname,
+      portSplit: Number(url.port),
+      pathSplit: url.pathname + url.search + url.hash,
     };
-  } else {
-    return;
+  } catch (e) {
+    console.error(e);
   }
+  return {
+    protocolSplit: '',
+    hostSplit: '',
+    portSplit: 0,
+    pathSplit: '',
+  };
 };
 
 export const isValidURL = (url: string): boolean => {
@@ -33,4 +34,19 @@ export const isValidURL = (url: string): boolean => {
   } catch (error) {
     return false; // L'URL non è valido
   }
+};
+
+export const extractStringAndNumber = (input: string): { host: string; port: number } | null => {
+  const regex = /'([^']+)'\s*(\d+)/;
+
+  const matches = input.match(regex);
+
+  if (matches && matches.length === 3) {
+    const host = matches[1];
+    const port = parseInt(matches[2], 10);
+
+    return { host, port };
+  }
+
+  return null;
 };

@@ -20,6 +20,7 @@ import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
+import { ENV } from '../../../../utils/env';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -44,6 +45,22 @@ Props) => {
     p: 3,
     mb: 3,
   };
+
+  const proxyOptions = [
+    {
+      label: 'Nuova Connettività',
+      value: ENV.ENV === 'PROD' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`,
+    },
+    {
+      label: 'Vecchia Connettività',
+      value: ENV.ENV === 'PROD' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`,
+    },
+  ];
+
+  const forwarder01 =
+    ENV.ENV === 'PROD'
+      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
   return (
     <Paper
@@ -76,8 +93,8 @@ Props) => {
             <Grid container item xs={6}>
               <TextField
                 fullWidth
-                id="primitiveVersion"
-                name="primitiveVersion"
+                id="primitive_version"
+                name="primitive_version"
                 label={t('addEditChannelPage.addForm.validationForm.fields.primitiveVersion')}
                 size="small"
                 InputLabelProps={{ shrink: formik.values.primitive_version ? true : false }}
@@ -136,16 +153,21 @@ Props) => {
                 </InputLabel>
                 <Select
                   fullWidth
-                  id="newConnectionChannel"
-                  name="newConnectionChannel"
+                  id="ipUnion"
+                  name="ipUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
                   value={formik.values.ipUnion}
+                  onChange={(e) => formik.handleChange(e)}
                   inputProps={{
                     'data-testid': 'new-connection-channel',
                   }}
                 >
-                  <MenuItem key={'forwarder01'} value={formik.values.ipUnion}>
+                  <MenuItem
+                    key={'forwarder01'}
+                    value={forwarder01}
+                    selected={formik.values.ipUnion.includes(forwarder01)}
+                  >
                     {t('addEditChannelPage.addForm.validationForm.fields.forwarder01')}
                   </MenuItem>
                 </Select>
@@ -171,16 +193,16 @@ Props) => {
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
                   value={formik.values.proxyUnion}
+                  onChange={(e) => formik.handleChange(e)}
                   inputProps={{
                     'data-testid': 'proxy-union-test',
                   }}
                 >
-                  <MenuItem key={'forwarder01'} value={formik.values.proxyUnion}>
-                    {'10.79.20.35 (label)'}
-                  </MenuItem>
-                  <MenuItem key={'forwarder01'} value={formik.values.proxyUnion}>
-                    {'10.102.1.85 (label)'}
-                  </MenuItem>
+                  {proxyOptions.map((option: any) => (
+                    <MenuItem key={option.label} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>

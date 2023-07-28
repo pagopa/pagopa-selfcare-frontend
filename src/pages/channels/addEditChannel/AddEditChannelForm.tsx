@@ -80,12 +80,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         broker_description: channelDetail.broker_description ?? '',
         broker_psp_code: channelDetail.broker_psp_code ?? '',
         card_chart: false,
-        channel_code: channelCode,
+        channel_code: channelDetail.channel_code,
         digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
         flag_io: channelDetail.flag_io ?? false,
-        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https:' : 'http:'}${
+        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
           channelDetail.ip
-        }${channelDetail.port}`,
+        }${channelDetail.port}${channelDetail.service}`,
         ip: channelDetail.ip ?? '',
         new_password: channelDetail.new_password ?? '',
         nmp_service: channelDetail.nmp_service ?? '',
@@ -98,7 +98,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         protocol: channelDetail.protocol ?? undefined,
         proxyUnion: `${channelDetail.proxy_host}${channelDetail.proxy_port}`,
         proxy_host: channelDetail.proxy_host ?? '',
-        proxy_port: channelDetail.proxy_port ?? 0,
+        proxy_port: channelDetail.proxy_port ?? undefined,
         recovery: channelDetail.recovery ?? false,
         rt_push: channelDetail.rt_push ?? false,
         serv_plugin: channelDetail.serv_plugin ?? '',
@@ -140,26 +140,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     }
   };
 
-  const inputGroupStyle = {
-    borderRadius: 1,
-    border: 1,
-    borderColor: theme.palette.divider,
-    p: 3,
-    mb: 3,
-  };
-
-  const forwarder01 =
-    ENV.ENV === 'UAT'
-      ? 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
-      : 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
-
-  const validatePrimitiveVersion = (primitive_version: number | undefined) => {
-    if (primitive_version) {
-      return primitive_version > 0 && primitive_version <= 2 ? false : true;
-    }
-    return false;
-  };
-
   const validate = (values: Partial<ChannelOnCreation>) =>
     Object.fromEntries(
       Object.entries({
@@ -186,7 +166,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           primitive_version: !values.primitive_version
             ? t('addEditChannelPage.validationMessage.requiredField')
             : validatePrimitiveVersion(values.primitive_version)
-            ? t('addEditStationPage.validationMessage.validation.overVersion')
+            ? t('addEditStationPage.validation.overVersion')
             : undefined,
           password: !values.password
             ? t('addEditChannelPage.validationMessage.requiredField')
@@ -201,6 +181,116 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         }),
       }).filter(([_key, value]) => value)
     );
+
+  const formik = useFormik<ChannelOnCreation>({
+    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
+    validate,
+    onSubmit: () => {
+      setShowConfirmModal(true);
+    },
+    enableReinitialize: true,
+    validateOnMount: true,
+  });
+
+  useEffect(() => {
+    console.log('FORMIK', formik.values);
+    console.log('FORMIK VALID', formik.isValid);
+    splitTarget();
+    splitNewConnection();
+    splitProxy();
+  }, [formik.values.targetUnion, formik.values.ipUnion, formik.values.proxyUnion]);
+
+  useEffect(() => {
+    setLoadingPayment(true);
+    getPaymentTypes()
+      .then((results) => {
+        if (results) {
+          setPaymentOptions(results);
+        }
+      })
+      .catch((reason) => {
+        addError({
+          id: 'GET_PAYMENT_TYPES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting payment types`,
+          toNotify: true,
+          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+          component: 'Toast',
+        });
+      })
+      .finally(() => setLoadingPayment(false));
+  }, []);
+
+  const splitTarget = () => {
+    if (formik.values.targetUnion && formik.values.targetUnion !== '') {
+      const splitTargetUnion = splitURL(formik.values.targetUnion);
+
+      if (splitTargetUnion) {
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
+
+        formik
+          .setValues({
+            ...formik.values,
+            target_host: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
+            target_path: pathSplit,
+            target_port: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+          })
+          .catch((e) => console.error(e));
+      }
+    }
+  };
+
+  const splitProxy = () => {
+    if (formik.values.proxyUnion && formik.values.proxyUnion !== '') {
+      const splitProxyUnion = splitURL(formik.values.proxyUnion);
+      if (splitProxyUnion) {
+        const { protocolSplit, hostSplit, portSplit } = splitProxyUnion;
+
+        formik
+          .setValues({
+            ...formik.values,
+            proxy_host: `${protocolSplit + '//'}${hostSplit}`,
+            proxy_port: portSplit,
+          })
+          .catch((e) => console.error(e));
+      }
+    }
+  };
+
+  const splitNewConnection = () => {
+    const splitUrl = splitURL(formik.values.ipUnion);
+    if (splitUrl) {
+      const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+
+      formik
+        .setValues({
+          ...formik.values,
+          protocol: protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP,
+          ip: hostSplit,
+          port: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+          service: pathSplit,
+          serv_plugin: pathSplit,
+        })
+        .catch((e) => console.error(e));
+    }
+  };
+
+  const inputGroupStyle = {
+    borderRadius: 1,
+    border: 1,
+    borderColor: theme.palette.divider,
+    p: 3,
+    mb: 3,
+  };
+
+  const validatePrimitiveVersion = (primitive_version: number | undefined) => {
+    if (primitive_version) {
+      return primitive_version > 0 && primitive_version <= 2 ? false : true;
+    }
+    return false;
+  };
 
   const enableSubmit = (values: ChannelOnCreation) => {
     const baseConditions =
@@ -217,8 +307,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         if (
           values.primitive_version?.toString() !== '' &&
           values.password !== '' &&
-          values.ip !== '' &&
-          values.proxy_host !== ''
+          values.ipUnion !== '' &&
+          values.proxyUnion !== ''
         ) {
           if (operator && values.payment_types && values.payment_types.length > 0) {
             for (const paymentType of values.payment_types) {
@@ -234,16 +324,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
     return false;
   };
-
-  const formik = useFormik<ChannelOnCreation>({
-    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
-    validate,
-    onSubmit: () => {
-      setShowConfirmModal(true);
-    },
-    enableReinitialize: true,
-    validateOnMount: true,
-  });
 
   const addPaymentMethod = async () => {
     if (operator && formik.values.payment_types) {
@@ -280,43 +360,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         channelId: formik.values.channel_code,
       })}`;
 
-      const splitUrl = splitURL(values.targetUnion);
-
-      if (splitUrl) {
-        const { host, path, port } = splitUrl;
-        // eslint-disable-next-line functional/immutable-data
-        values.target_host = host;
-        // eslint-disable-next-line functional/immutable-data
-        values.target_path = path;
-        // eslint-disable-next-line functional/immutable-data
-        values.target_port = port ? parseInt(port, 10) : undefined;
-      }
-
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }
 
       if (formAction === FormAction.Edit) {
-        // eslint-disable-next-line functional/immutable-data
-        values.ipUnion = forwarder01;
-
-        const splitUrl = splitURL(values.ipUnion);
-
-        if (splitUrl) {
-          const { protocol, host, path, port } = splitUrl;
-          // eslint-disable-next-line functional/immutable-data
-          values.protocol = protocol === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-          // eslint-disable-next-line functional/immutable-data
-          values.ip = host;
-          // eslint-disable-next-line functional/immutable-data
-          values.port = port ? parseInt(port, 10) : undefined;
-          // eslint-disable-next-line functional/immutable-data
-          values.service = path;
-          // eslint-disable-next-line functional/immutable-data
-          values.nmp_service = path;
-        }
-
         switch (channelDetail?.wrapperStatus) {
           case WrapperStatusEnum.TO_CHECK:
             if (operator) {
@@ -356,29 +405,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setLoadingPayment(true);
-    getPaymentTypes()
-      .then((results) => {
-        if (results) {
-          setPaymentOptions(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_PAYMENT_TYPES',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting payment types`,
-          toNotify: true,
-          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingPayment(false));
-  }, []);
 
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,

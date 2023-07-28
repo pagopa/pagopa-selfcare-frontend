@@ -446,6 +446,7 @@
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
         "model4": "Modello 4",
+        "proxy": "Proxy",
         "otherInfo": "Altre informazioni"
       },
       "fields": {
@@ -455,6 +456,11 @@
         "port": "Porta",
         "ip": "IP",
         "path": "Path",
+        "proxy": "Indirizzo",
+        "proxyValues": {
+          "newConnectivity": "Nuova Connettività",
+          "oldConnectivity": "Vecchia Connettività"
+        },
         "password": "Password",
         "service": "Servizio",
         "timeoutA": "Timeout A",
@@ -633,6 +639,12 @@
       "password": "Password",
       "port": "Porta",
       "protocol": "Protocollo",
+      "proxy": "Proxy",
+      "proxyAddress": "indirizzo",
+      "proxyLabels": {
+        "newConnectivity": "Nuova Connettività",
+        "oldConnectivity": "Vecchia Connettività"
+      },
       "registry": "Anagrafica",
       "service": "Servizio",
       "subtitle": "Informazioni a carico di PagoPA.",

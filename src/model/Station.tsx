@@ -39,6 +39,7 @@ export type StationOnCreation = {
   primitiveVersion: number;
   protocol?: ProtocolEnum | undefined;
   protocol4Mod?: Protocol4ModEnum | undefined;
+  proxyConcat: string;
   proxyEnabled?: boolean | undefined;
   proxyHost?: string | undefined;
   proxyPassword?: string | undefined;
@@ -87,4 +88,30 @@ export type StationDetail = {
     lastChangesDate: string;
     operatedBy: string;
   };
+};
+
+export interface IProxyConfigItem {
+  newConnectivity: string;
+  oldConnectivity: string;
+}
+export interface IProxyConfig {
+  LOCAL_DEV: IProxyConfigItem;
+  TEST: IProxyConfigItem;
+  DEV: IProxyConfigItem;
+  UAT: IProxyConfigItem;
+  PROD: IProxyConfigItem;
+}
+
+export const ProxyConfigs: IProxyConfig = {
+  LOCAL_DEV: {
+    newConnectivity: 'http://10.79.20.33:80',
+    oldConnectivity: 'http://10.101.1.95:8080',
+  },
+  TEST: {
+    newConnectivity: 'http://10.79.20.33:80',
+    oldConnectivity: 'http://10.101.1.95:8080',
+  },
+  DEV: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
+  UAT: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
+  PROD: { newConnectivity: 'http://10.79.20.35:80', oldConnectivity: 'http://10.102.1.85:8080' },
 };

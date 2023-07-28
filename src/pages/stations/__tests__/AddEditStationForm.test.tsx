@@ -1,7 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -11,6 +12,8 @@ import { StationFormAction, StationOnCreation } from '../../../model/Station';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { isOperator } from '../components/commonFunctions';
+import { partiesActions } from '../../../redux/slices/partiesSlice';
+import { mockedParties } from '../../../services/__mocks__/partyService';
 
 jest.mock('../components/commonFunctions');
 
@@ -50,10 +53,14 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     primitiveVersion: 1,
     wrapperStatus: WrapperStatusEnum.APPROVED,
     password: 'password',
+    proxyConcat: '',
+    proxyHost: 'http://10.79.20.33',
+    proxyPort: 80,
   };
 
-  test('Test rendering AddEditStationForm with operator true and without stationDetail', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
+  test('Test rendering AddEditStationForm with operator false', async () => {
+    (isOperator as jest.Mock).mockReturnValue(false);
+    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
 
     render(
       <Provider store={store}>
@@ -69,6 +76,58 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
     const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
 
+    expect(stationCode.value).toBe('');
+    fireEvent.change(stationCode, { target: { value: 'station Code' } });
+    expect(stationCode.value).toBe('station Code');
+
+    expect(primitiveVersion.value).toBe('2');
+
+    expect(targetConcat.value).toBe('');
+
+    await waitFor(
+      () =>
+        userEvent.type(
+          screen.getByTestId('target-targetConcat-test'),
+          'https://www.pagopa.it:8080/pathTest'
+        ),
+      { timeout: 5000 }
+    );
+
+    await waitFor(() => expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest'));
+
+    const continueBtn = screen.getByText('addEditStationPage.addForm.confirmButton');
+    fireEvent.click(continueBtn);
+
+    const backBtn = screen.getByText('addEditStationPage.addForm.backButton');
+    fireEvent.click(backBtn);
+
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.getByText('addEditStationPage.addForm.confirmButton');
+    fireEvent.click(confirmBtn);
+
+    const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButton');
+    fireEvent.click(confirmModalBtn);
+  });
+
+  test('Test rendering AddEditStationForm with operator true and without stationDetail, action Edit', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm goBack={jest.fn()} formAction={StationFormAction.Edit} />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
+    const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+    const proxyConcat = screen.getByTestId('proxy-proxyConcat-test') as HTMLInputElement;
+
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
     expect(stationCode.value).toBe('station Code');
 
@@ -77,6 +136,10 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect(targetConcat.value).toBe('');
     fireEvent.change(targetConcat, { target: { value: 'https://www.pagopa.it:8080/pathTest' } });
     expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest');
+
+    expect(proxyConcat.value).toBe('');
+    fireEvent.change(proxyConcat, { target: { value: 'http://10.79.20.33:80' } });
+    expect(proxyConcat.value).toBe('http://10.79.20.33:80');
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     fireEvent.click(continueBtn);

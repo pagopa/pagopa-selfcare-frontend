@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { StationOnCreation } from '../../../../model/Station';
+import { IProxyConfigItem, StationOnCreation } from '../../../../model/Station';
 import AddEditStationFormSectionTitle from '../AddEditStationFormSectionTitle';
 import { Protocol4ModEnum, ProtocolEnum } from '../../../../api/generated/portal/StationDetailsDto';
 
@@ -24,6 +24,7 @@ type Props = {
     formik: FormikProps<StationOnCreation>
   ) => void;
   inputGroupStyle: any;
+  proxyAddresses: IProxyConfigItem;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
@@ -31,6 +32,7 @@ const AddEditStationFormValidation = ({
   formik,
   handleChangeNumberOnly,
   inputGroupStyle,
+  proxyAddresses,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
@@ -323,6 +325,46 @@ Props) => {
                   'data-testid': 'service-4Mod-test',
                 }}
               />
+            </Grid>
+          </Grid>
+        </Box>
+        <Box sx={inputGroupStyle}>
+          <AddEditStationFormSectionTitle
+            title={t('addEditStationPage.addFormValidation.sections.proxy')}
+            icon={<BadgeIcon />}
+          />
+          <Grid container spacing={2} mt={1}>
+            <Grid container item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel size="small">
+                  {t('addEditStationPage.addFormValidation.fields.proxy')}
+                </InputLabel>
+                <Select
+                  fullWidth
+                  id="proxyConcat"
+                  name="proxyConcat"
+                  label={t('addEditStationPage.addFormValidation.fields.proxy')}
+                  placeholder={t('addEditStationPage.addFormValidation.fields.proxy')}
+                  size="small"
+                  defaultValue=""
+                  value={formik.values.proxyConcat || ''}
+                  onChange={formik.handleChange}
+                  error={formik.touched.proxyConcat && Boolean(formik.errors.proxyConcat)}
+                  inputProps={{
+                    'data-testid': 'proxy-proxyConcat-test',
+                  }}
+                >
+                  {Object.entries(proxyAddresses).map(([key, value]) => (
+                    <MenuItem
+                      key={key}
+                      selected={formik.values.proxyConcat.toString().includes(value)}
+                      value={value}
+                    >{`${value} (${t(
+                      'addEditStationPage.addFormValidation.fields.proxyValues.' + key
+                    )})`}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </Box>

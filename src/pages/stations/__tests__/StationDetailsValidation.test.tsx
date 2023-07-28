@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { createMemoryHistory } from 'history';
@@ -14,6 +14,14 @@ import {
 import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
 import { isOperator } from '../components/commonFunctions';
+
+const nodeCrypto = require('crypto');
+window.crypto = {
+  getRandomValues: function (buffer) {
+    return nodeCrypto.randomFillSync(buffer);
+  },
+};
+const genPassword = crypto.getRandomValues(new Uint32Array(1)).toString();
 
 jest.mock('../components/commonFunctions');
 
@@ -31,7 +39,7 @@ export const mockedFullStation: StationDetailResource = {
   brokerCode: '97735020584',
   ip: 'Valore',
   ip4Mod: 'Valore',
-  password: 'Valore',
+  password: genPassword,
   port: 100,
   port4Mod: 100,
   primitiveVersion: 1,
@@ -78,7 +86,7 @@ describe('<StationDetailsValidation.test />', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStation.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetailsValidation
@@ -91,5 +99,35 @@ describe('<StationDetailsValidation.test />', () => {
         </MemoryRouter>
       </Provider>
     );
+  });
+
+  test('Test show password button', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
+          <Route path="/stations/:stationId">
+            <ThemeProvider theme={theme}>
+              <StationDetailsValidation
+                stationDetail={mockedFullStation}
+                // @ts-ignore TODO
+                formatedDate={jest.fn()}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const showPasswordButton = screen.getByTestId('show-pwd-validation-test') as HTMLInputElement;
+
+    expect(screen.getByText('XXXXXXXXXXXXXX')).toBeInTheDocument();
+    expect(screen.queryByText(genPassword)).toBeNull();
+
+    fireEvent.click(showPasswordButton);
+    await waitFor(() => {
+      expect(screen.getByText(genPassword)).toBeInTheDocument();
+    });
   });
 });

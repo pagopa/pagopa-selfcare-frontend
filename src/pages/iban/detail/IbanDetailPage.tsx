@@ -6,12 +6,14 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { useHistory, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import ROUTES from '../../../routes';
-import { getIban } from '../../../services/__mocks__/ibanService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { IbanOnCreation } from '../../../model/Iban';
+import { getIbanList } from '../../../services/ibanService';
+import { emptyIban } from '../IbanPage';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -19,31 +21,51 @@ const IbanDetailPage = () => {
   const history = useHistory();
   const goBack = () => history.push(ROUTES.IBAN);
   const { ibanId } = useParams<{ ibanId: string }>();
-  const [iban, setIban] = useState<IbanOnCreation>();
+  const [iban, setIban] = useState<IbanOnCreation>(emptyIban);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
 
   useEffect(() => {
-    setLoading(true);
-    getIban(ibanId)
-      .then((response) => setIban(response))
-      .catch((reason) => {
-        addError({
-          id: 'GET_IBAN',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting iban`,
-          toNotify: true,
-          displayableTitle: t('addEditIbanPage.errors.getIbanTitle'),
-          displayableDescription: t('addEditIbanPage.errors.getIbanMessage'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [selectedParty]);
+    if (selectedParty && selectedParty.fiscalCode) {
+      setLoading(true);
+      getIbanList(selectedParty.fiscalCode)
+        .then((response) => {
+          const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
+          setIban({
+            iban: fileterdIban[0].iban,
+            description: fileterdIban[0].description ?? '',
+            creditorInstitutionCode: fileterdIban[0].ecOwner,
+            validityDate: fileterdIban[0].validityDate,
+            dueDate: fileterdIban[0].dueDate,
+            labels: fileterdIban[0].labels ?? [],
+          });
+        })
+        .catch((reason) => {
+          handleErrors([
+            {
+              id: `FETCH_STATIONS_ERROR`,
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while fetching stations`,
+              toNotify: false,
+            },
+          ]);
+          addError({
+            id: 'GET_IBAN_LIST',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while retrieving iban list`,
+            toNotify: true,
+            displayableTitle: t('ibanPage.error.listErrorTitle'),
+            displayableDescription: t('ibanPage.error.listErrorDesc'),
+            component: 'Toast',
+          });
+          setIban(emptyIban);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [selectedParty, ibanId]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -70,12 +92,12 @@ const IbanDetailPage = () => {
             <Typography mb={5}>
               {t('ibanDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                {iban?.publicationDate?.toLocaleDateString('en-GB')}
+                {/* {iban?.publicationDate?.toLocaleDateString('en-GB')} */}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons active={iban?.is_active} iban={ibanId} />
+            <IbanDetailButtons active={iban?.active} iban={ibanId} />
           </Grid>
         </Grid>
 
@@ -93,12 +115,12 @@ const IbanDetailPage = () => {
             </Grid>
             <Grid item xs={9} textAlign="right">
               <Chip
-                label={iban?.is_active ? t('ibanPage.active') : t('ibanPage.notActive')}
+                label={iban?.active ? t('ibanPage.active') : t('ibanPage.notActive')}
                 aria-label="update-in-progress"
                 size="medium"
                 sx={{
-                  color: iban?.is_active ? '#FFFFFF' : '#17324D',
-                  backgroundColor: iban?.is_active ? 'primary.main' : 'error.light',
+                  color: iban?.active ? '#FFFFFF' : '#17324D',
+                  backgroundColor: iban?.active ? 'primary.main' : 'error.light',
                   fontSize: '14px',
                   paddingBottom: '1px',
                   height: '32px',
@@ -144,6 +166,14 @@ const IbanDetailPage = () => {
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                   {iban?.validityDate?.toLocaleDateString('en-GB')}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('ibanDetailPage.to')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {iban?.dueDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
             </Grid>

@@ -5,22 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import ROUTES from '../../../routes';
-import { getIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { getIbanList } from '../../../services/ibanService';
+import { emptyIban } from '../IbanPage';
 import AddEditIbanForm from './AddEditIbanForm';
-
-const emptyIban: IbanOnCreation = {
-  iban: undefined,
-  description: undefined,
-  validityDate: null,
-  creditorInstitutionCode: undefined,
-  dueDate: null,
-  labels: undefined,
-};
 
 const AddEditIbanPage = () => {
   const { t } = useTranslation();
@@ -33,27 +26,46 @@ const AddEditIbanPage = () => {
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const creditorInstitutionCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
-    if (formAction === IbanFormAction.Edit) {
+    if (formAction !== IbanFormAction.Create) {
       setLoading(true);
-      getIban(ibanId)
-        .then((response) => setIban(response))
-        .catch((reason) => {
-          addError({
-            id: 'GET_IBAN',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while getting iban`,
-            toNotify: true,
-            displayableTitle: t('addEditIbanPage.errors.getIbanTitle'),
-            displayableDescription: t('addEditIbanPage.errors.getIbanMessage'),
-            component: 'Toast',
+      getIbanList(creditorInstitutionCode)
+        .then((response) => {
+          const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
+          setIban({
+            iban: fileterdIban[0].iban,
+            description: fileterdIban[0].description ?? '',
+            creditorInstitutionCode: fileterdIban[0].ecOwner,
+            validityDate: fileterdIban[0].validityDate,
+            dueDate: fileterdIban[0].dueDate,
+            labels: fileterdIban[0].labels ?? [],
           });
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch((reason) => {
+          handleErrors([
+            {
+              id: `FETCH_STATIONS_ERROR`,
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while fetching stations`,
+              toNotify: false,
+            },
+          ]);
+          addError({
+            id: 'GET_IBAN_LIST',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while retrieving iban list`,
+            toNotify: true,
+            displayableTitle: t('ibanPage.error.listErrorTitle'),
+            displayableDescription: t('ibanPage.error.listErrorDesc'),
+            component: 'Toast',
+          });
+          setIban(emptyIban);
+        })
+        .finally(() => setLoading(false));
     }
   }, [selectedParty]);
 
@@ -87,7 +99,9 @@ const AddEditIbanPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <AddEditIbanForm goBack={goBack} ibanBody={iban} formAction={formAction} />
+        {selectedParty && (
+          <AddEditIbanForm goBack={goBack} ibanBody={iban} formAction={formAction} />
+        )}
       </Grid>
     </Grid>
   );

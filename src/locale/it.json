@@ -430,25 +430,13 @@
       "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
-        "redirect": "Redirect",
-        "targetService": "Target Servizio",
-        "targetServicePof": "Target Servizio POF"
+        "targetService": "Target"
       },
       "fields": {
         "stationCode": "Codice stazione",
         "brokerCode": "Codice intermediario",
-        "primitiveVersion": "Versione primitive",
-        "redirectProtocol": "Protocollo",
-        "redirectPort": "Porta",
-        "redirectIp": "IP",
-        "redirectService": "Path",
-        "redirectParameters": "Parametri",
-        "targetHost": "IP",
-        "targetPath": "Path",
-        "targetPort": "Porta",
-        "targetHostPof": "IP",
-        "targetPathPof": "Path",
-        "targetPortPof": "Port"
+        "targetConcat": "Endpoint",
+        "primitiveVersion": "Versione primitive"
       }
     },
     "addFormValidation": {
@@ -457,8 +445,8 @@
       "sections": {
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
-        "targetEndPointPof": "Target (endpoint servizio POF)",
-        "model4": "Modello 4"
+        "model4": "Modello 4",
+        "otherInfo": "Altre informazioni"
       },
       "fields": {
         "version": "Versione",
@@ -468,9 +456,10 @@
         "ip": "IP",
         "path": "Path",
         "password": "Password",
-        "newPassword": "Nuova password",
-        "servicePof": "Servizio POF",
-        "service": "Servizio"
+        "service": "Servizio",
+        "timeoutA": "Timeout A",
+        "timeoutB": "Timeout B",
+        "timeoutC": "Timeout C"
       }
     },
     "confirmModal": {
@@ -533,16 +522,14 @@
     "anagraphic": "Anagrafica",
     "stationId": "Codice stazione",
     "version": "Versione",
+    "endpoint": "Endpoint",
     "primitiveVersion": "Versione Primitive",
     "password": "Password",
-    "redirectUrl": "URL di redirezione",
     "activationDate": "Data di attivazione",
-    "redirect": "Redirect",
     "protocol": "Protocollo",
     "target": "Target",
     "address": "IP",
     "service": "Path",
-    "POFTargetService": "Target Servizio POF",
     "port": "Porta",
     "associatesEC": "EC associati",
     "manageEC": "Gestisci EC",
@@ -624,36 +611,37 @@
       "subtitle": "Informazioni a carico dell’ente.",
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
+      "endpoint": "Endpoint",
       "primitiveVersion": "Versione Primitive",
       "intermediaryCode": "Codice intermediario",
-      "redirect": "Redirect",
       "protocol": "Protocollo",
       "port": "Porta",
       "ip": "IP",
       "path": "Path",
       "parameters": "Parametri",
-      "targetService": "Target Servizio",
-      "POFTargetService": "Target Servizio POF",
+      "targetService": "Target",
       "modify": "Modifiche",
       "lastUpgrade": "Ultima modifica",
       "operatedBy": "Operata da",
       "changeHistory": "Storico modifiche"
     },
-    "infoToCompltete": {
-      "title": "Informazioni da completare",
-      "subtitle": "Informazioni a carico di PagoPA.",
-      "registry": "Anagrafica",
-      "version": "Versione",
-      "password": "Password",
-      "newPassword": "Nuova password",
-      "threadNumber": "Numero Thread",
+    "infoToComplete": {
       "endpoint": "Endpoint",
-      "protocol": "Protocollo",
       "ip": "IP",
-      "port": "Porta",
-      "POFService": "Servizio POF",
       "model4": "Modello 4",
-      "service": "Servizio"
+      "otherInfo": "Altre informazioni",
+      "password": "Password",
+      "port": "Porta",
+      "protocol": "Protocollo",
+      "registry": "Anagrafica",
+      "service": "Servizio",
+      "subtitle": "Informazioni a carico di PagoPA.",
+      "threadNumber": "Numero Thread",
+      "timeoutA": "Timeout A",
+      "timeoutB": "Timeout B",
+      "timeoutC": "Timeout C",
+      "title": "Informazioni da completare",
+      "version": "Versione"
     }
   },
   "ibanPage": {
@@ -707,7 +695,8 @@
     "iban": "IBAN",
     "ibanDesc": "Descrizione",
     "validityDate": "Inizio validità",
-    "from": "Dal",
+    "from": "Data inizio",
+    "to": "Data fine",
     "ecData": "Dati ente crerditore",
     "fiscalCode": "Codice Fiscale",
     "buttons": {
@@ -791,9 +780,9 @@
   "header": {
     "envLabel": {
       "LOCAL_DEV": "Sviluppo locale",
-      "DEV": "Sviluppo",
-      "UAT": "Collaudo",
-      "PROD": "Produzione"
+      "dev": "Sviluppo",
+      "uat": "Collaudo",
+      "prod": "Produzione"
     }
   },
   "subHeader": {

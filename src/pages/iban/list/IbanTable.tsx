@@ -70,7 +70,7 @@ const CustomDataGrid = styled(DataGrid)({
 
 type IbanTableProps = { ibanList: IbansResource; error: boolean; loading: boolean };
 
-export default function IbanTable({ ibanList, error, loading }: IbanTableProps) {
+const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -164,4 +164,6 @@ export default function IbanTable({ ibanList, error, loading }: IbanTableProps) 
       </Box>
     </>
   );
-}
+};
+
+export default IbanTable;

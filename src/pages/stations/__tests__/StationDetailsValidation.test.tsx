@@ -1,17 +1,21 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../redux/store';
-import {createMemoryHistory} from 'history';
-import {Provider} from 'react-redux';
+import React from 'react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render, screen } from '@testing-library/react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { store } from '../../../redux/store';
+import { createMemoryHistory } from 'history';
+import { Provider } from 'react-redux';
 import {
-    RedirectProtocolEnum,
-    StationDetailResource,
-    WrapperStatusEnum,
+  RedirectProtocolEnum,
+  StationDetailResource,
+  WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import {Protocol4ModEnum, ProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
+import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
+import { isOperator } from '../components/commonFunctions';
+
+jest.mock('../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -27,9 +31,7 @@ export const mockedFullStation: StationDetailResource = {
   brokerCode: '97735020584',
   ip: 'Valore',
   ip4Mod: 'Valore',
-  newPassword: 'Valore',
   password: 'Valore',
-  pofService: 'Valore',
   port: 100,
   port4Mod: 100,
   primitiveVersion: 1,
@@ -43,11 +45,8 @@ export const mockedFullStation: StationDetailResource = {
   service: 'Valore',
   service4Mod: 'Valore',
   targetHost: 'Valore',
-  targetHostPof: 'Valore',
   targetPath: 'Valore',
-  targetPathPof: 'Valore',
   targetPort: 1000,
-  targetPortPof: 1001,
   version: 2,
 };
 
@@ -57,12 +56,12 @@ describe('<StationDetailsValidation.test />', () => {
   test('render component StationDetailsValidation', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/station/${mockedFullStation.stationCode}`]}>
+        <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationDetailsValidation
                 stationDetail={mockedFullStation}
-                  // @ts-ignore TODO
+                // @ts-ignore TODO
                 formatedDate={jest.fn()}
               />
             </ThemeProvider>
@@ -70,9 +69,13 @@ describe('<StationDetailsValidation.test />', () => {
         </MemoryRouter>
       </Provider>
     );
+    const title = screen.getAllByText('97735020584_01');
+    expect(title[0]).toBeInTheDocument();
   });
 
   test('Test edit Button with StationDetails in role operator and status approved', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/station/${mockedFullStation.stationCode}`]}>

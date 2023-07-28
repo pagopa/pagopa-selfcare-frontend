@@ -30,19 +30,11 @@ Props) => {
   const operator = isOperator();
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
 
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
       return password;
-    }
-    return hidePassword;
-  };
-
-  const showOrHideNewPassword = (newPassword?: string) => {
-    if (showNewPassword) {
-      return newPassword;
     }
     return hidePassword;
   };
@@ -152,129 +144,24 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.configuration.redirect')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.protocol')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectProtocol ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectPort ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectIp ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectPath ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.parameters')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectQueryString ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
                     {t('stationDetailPageValidation.configuration.targetService')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
+                    {t('stationDetailPageValidation.configuration.endpoint')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost ?? '-'}
+                    {stationDetail?.targetHost}
+                    {stationDetail?.targetPort && stationDetail?.targetPort > 0
+                      ? `:${stationDetail.targetPort}`
+                      : ''}
+                    {stationDetail?.targetPath}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPath ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPort ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.configuration.POFTargetService')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof ? stationDetail.targetHostPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.path')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPathPof ? stationDetail.targetPathPof : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetPortPof ? stationDetail.targetPortPof : '-'}
-                  </Typography>
-                </Grid>
+
                 <Grid item xs={3} mt={4}>
                   <Typography variant="sidenav">
                     {t('stationDetailPageValidation.configuration.modify')}
@@ -328,12 +215,12 @@ Props) => {
           <Grid container alignItems={'center'} spacing={0} mb={2}>
             <Grid item xs={12}>
               <Typography variant="h6" mb={3}>
-                {t('stationDetailPageValidation.infoToCompltete.title')}
+                {t('stationDetailPageValidation.infoToComplete.title')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body2" mb={3}>
-                {t('stationDetailPageValidation.infoToCompltete.subtitle')}
+                {t('stationDetailPageValidation.infoToComplete.subtitle')}
               </Typography>
               <Divider> </Divider>
             </Grid>
@@ -343,12 +230,12 @@ Props) => {
               <Grid container item alignContent="center" spacing={2} pb={4}>
                 <Grid item xs={12}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.registry')}
+                    {t('stationDetailPageValidation.infoToComplete.registry')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.version')}
+                    {t('stationDetailPageValidation.infoToComplete.version')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -358,7 +245,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.password')}
+                    {t('stationDetailPageValidation.infoToComplete.password')}
                   </Typography>
                 </Grid>
                 <Grid
@@ -399,48 +286,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.newPassword')}
-                  </Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={9}
-                  sx={{
-                    display: 'flex',
-                    height: '38px',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  {stationDetail?.newPassword ? (
-                    <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {showOrHideNewPassword(stationDetail?.newPassword)}
-                      </Typography>
-                      <IconButton
-                        style={{
-                          border: 'none !important',
-                          marginLeft: '42px',
-                        }}
-                        onClick={() => {
-                          setShowNewPassword(!showNewPassword);
-                        }}
-                        data-testid="show-ps2-test"
-                      >
-                        {showNewPassword ? (
-                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                        ) : (
-                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                        )}
-                      </IconButton>
-                    </>
-                  ) : (
-                    '-'
-                  )}
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.threadNumber')}
+                    {t('stationDetailPageValidation.infoToComplete.threadNumber')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -450,12 +296,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.endpoint')}
+                    {t('stationDetailPageValidation.infoToComplete.endpoint')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.protocol')}
+                    {t('stationDetailPageValidation.infoToComplete.protocol')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -465,7 +311,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.ip')}
+                    {t('stationDetailPageValidation.infoToComplete.ip')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -475,7 +321,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.port')}
+                    {t('stationDetailPageValidation.infoToComplete.port')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -485,17 +331,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.POFService')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.pofService ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.service')}
+                    {t('stationDetailPageValidation.infoToComplete.service')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -505,12 +341,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToCompltete.model4')}
+                    {t('stationDetailPageValidation.infoToComplete.model4')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.protocol')}
+                    {t('stationDetailPageValidation.infoToComplete.protocol')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -520,7 +356,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.ip')}
+                    {t('stationDetailPageValidation.infoToComplete.ip')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -530,7 +366,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.port')}
+                    {t('stationDetailPageValidation.infoToComplete.port')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -540,12 +376,47 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToCompltete.service')}
+                    {t('stationDetailPageValidation.infoToComplete.service')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.infoToComplete.otherInfo')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutA')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutA ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutB')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutB ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.timeoutC')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.timeoutC ?? '-'}
                   </Typography>
                 </Grid>
               </Grid>

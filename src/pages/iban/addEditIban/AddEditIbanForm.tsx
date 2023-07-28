@@ -17,47 +17,56 @@ import { Box } from '@mui/system';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEditIbanFormSectionTitle';
 import ROUTES from '../../../routes';
-import { createIban, updateIban } from '../../../services/__mocks__/ibanService';
 import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
 import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { createIban, updateIban } from '../../../services/ibanService';
+import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
-  ibanBody: IbanOnCreation | undefined;
   goBack: () => void;
+  ibanBody?: IbanOnCreation;
   formAction: string;
 };
 
-const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
+const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const { t } = useTranslation();
   const [subject, setSubject] = useState('me');
   const [uploadType, setUploadType] = useState('single');
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
-  const changeUploadType = (event: any) => {
-    setUploadType(event.target.value);
-  };
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
   const changeSubject = (e: any) => {
     setSubject(e.target.value);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setFieldValue('creditorInstitutionCode', undefined);
   };
 
-  const initialFormData = (ibanBody: IbanOnCreation | undefined) =>
-    typeof ibanBody !== 'undefined'
+  useEffect(() => {
+    if (subject === 'me') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('creditorInstitutionCode', ecCode);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('creditorInstitutionCode', '');
+    }
+  }, [subject, ecCode]);
+
+  const changeUploadType = (event: any) => {
+    setUploadType(event.target.value);
+  };
+
+  const initialFormData = (ibanBody?: IbanOnCreation) =>
+    ibanBody
       ? {
           iban: ibanBody.iban,
           description: ibanBody.description,
@@ -71,7 +80,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
           description: '',
           validityDate: new Date(),
           dueDate: new Date(),
-          creditorInstitutionCode: '',
+          creditorInstitutionCode: ecCode,
           labels: [],
         };
 
@@ -193,10 +202,17 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          await createIban(values);
+          await createIban({
+            iban: values.iban,
+            description: values.description,
+            validityDate: values.validityDate,
+            dueDate: values.dueDate,
+            creditorInstitutionCode: ecCode,
+            labels: values.labels,
+          });
           console.log('SUBMIT CREATE!');
-        } else {
-          await updateIban(values, ecCode);
+        } else if (formAction === IbanFormAction.Edit) {
+          await updateIban(values); // Utilizza l'ID dell'IBAN per l'aggiornamento
           console.log('SUBMIT UPDATE!');
         }
       } catch (reason) {
@@ -324,7 +340,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.validityDate ?? null}
+                    value={formik.values.validityDate}
                     onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -350,7 +366,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.dueDate ?? null}
+                    value={formik.values.dueDate}
                     onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -385,10 +401,10 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="iban-holder"
+                    onChange={(e) => changeSubject(e)}
                   >
                     <FormControlLabel
                       checked={subject === 'me'}
-                      onChange={(e) => changeSubject(e)}
                       value="me"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.me')}
@@ -396,7 +412,6 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                     />
                     <FormControlLabel
                       checked={subject === 'anotherOne'}
-                      onChange={(e) => changeSubject(e)}
                       value="anotherOne"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
@@ -413,7 +428,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
                   label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
                   placeholder="AAAAAAAAAAAAAAAAAAA"
                   size="small"
-                  value={formik.values.creditorInstitutionCode?.toUpperCase() ?? ''}
+                  value={formik.values.creditorInstitutionCode?.toUpperCase()}
                   onChange={(e) => formik.handleChange(e)}
                   error={
                     formik.touched.creditorInstitutionCode &&
@@ -439,6 +454,7 @@ const AddEditIbanForm = ({ ibanBody, goBack, formAction }: Props) => {
             onClick={async () => {
               formik.handleSubmit();
               await submit(formik.values);
+              history.push(ROUTES.IBAN);
             }}
             disabled={!enableSubmit(formik.values)}
             color="primary"

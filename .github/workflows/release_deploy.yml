@@ -3,7 +3,7 @@ name: Release And Deploy
 # Controls when the workflow will run
 on:
   pull_request:
-    types: [ closed ]
+    types: [closed]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,14 +22,12 @@ on:
         description: skip the release. Only deploy
         default: false
 
-
 permissions:
   packages: write
   contents: write
   issues: write
   id-token: write
   actions: read
-
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -78,7 +76,6 @@ jobs:
         name: Set Output
         run: echo "environment=${{env.ENVIRNOMENT}}" >> $GITHUB_OUTPUT
 
-
   release:
     name: Create a New Release
     runs-on: ubuntu-latest
@@ -88,7 +85,7 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@v1.6.1
+        uses: pagopa/github-actions-template/node-release@v1.6.4
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
@@ -99,7 +96,7 @@ jobs:
     name: Deploy
     if: ${{ inputs.semver != 'skip' }}
     environment: ${{ inputs.environment }}
-    needs: [ release ]
+    needs: [release]
     steps:
       - name: Checkout
         id: checkout
@@ -117,44 +114,50 @@ jobs:
         run: |
           export REACT_APP_ENV='${{ inputs.environment }}'
           export INLINE_RUNTIME_CHUNK='false'
-          
+
           export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
           export REACT_APP_URL_FE_LOGOUT='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
           export REACT_APP_URL_FE_LANDING='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
           export REACT_APP_URL_FE_ASSISTANCE='${{ vars.SELFCARE_HOST_FE }}/assistenza'
           export REACT_APP_URL_FE_SELFCARE='${{ vars.SELFCARE_HOST_FE }}/dashboard/'
           export REACT_APP_URL_FE_TOKEN_EXCHANGE='${{ vars.SELFCARE_HOST_FE }}/token-exchange'
-          
+
           export REACT_APP_URL_API_PORTAL='${{ vars.SELFCARE_API_BE }}/selfcare/pagopa/v1/'
           export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
           export REACT_APP_URL_API_APICONFIG='${{ vars.SELFCARE_API_BE }}/backoffice/apiconfig/auth/v1'
-          
+
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
-          
+
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;'
           export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
           export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
           export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
-          
-          export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-          export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-          export REACT_APP_FEATURES_STATIONS_ENABLED='true'
+
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
-          
+
           if [ "${{ inputs.environment }}" = "dev" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
           fi
-          
+
           if [ "${{ inputs.environment }}" = "uat" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
           fi
-          
+
           if [ "${{ inputs.environment }}" = "prod" ]; then
+            export REACT_APP_FEATURES_DASHBOARD_ENABLED='false'
+            export REACT_APP_FEATURES_CHANNELS_ENABLED='false'
+            export REACT_APP_FEATURES_STATIONS_ENABLED='false'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
           fi
-          
+
           yarn install
           yarn generate
           yarn build
@@ -183,7 +186,7 @@ jobs:
             az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n ${{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
 
   notify:
-    needs: [ setup, release, deploy ]
+    needs: [setup, release, deploy]
     runs-on: ubuntu-latest
     name: Notify
     if: always()

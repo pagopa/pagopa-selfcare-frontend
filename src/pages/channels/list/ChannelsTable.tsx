@@ -102,14 +102,30 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
 
   const [channels, setChannels] = useState<WrapperChannelsResource>(emptyChannelsResource);
   const [page, setPage] = useState(0);
+  const [pagePaginator, setPagePaginator] = useState(0);
   const [channelCodeSort, setChannelCodeSort] = useState<string | undefined>(undefined);
 
   const brokerCode = typeof partySelected !== 'undefined' ? partySelected.fiscalCode : '';
 
   useEffect(() => {
+    fetchChannels(page);
+  }, [page, brokerCode, channelCodeSort]);
+
+  useEffect(() => {
+    setPagePaginator(0);
+    fetchChannels(0);
+  }, [channelCodeFilter]);
+
+  const fetchChannels = (pageParam: number) => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getChannelsMerged(page, brokerCode, brokerCode, 10, channelCodeSort ?? channelCodeSort)
+      getChannelsMerged(
+        pageParam,
+        brokerCode,
+        channelCodeFilter,
+        10,
+        channelCodeSort ?? channelCodeSort
+      )
         .then((r) => {
           setChannels(r);
           setError(false);
@@ -129,7 +145,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
         })
         .finally(() => setLoadingStatus(false));
     }
-  }, [page, channelCodeFilter, brokerCode, channelCodeSort]);
+  };
 
   const handleSortModelChange = (sortModel: GridSortModel) => {
     setChannelCodeSort(
@@ -170,8 +186,11 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
                   <Pagination
                     color="primary"
                     count={channels.page_info.total_pages ?? 0}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                    page={pagePaginator + 1}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) => {
+                      setPage(value - 1);
+                      setPagePaginator(value - 1);
+                    }}
                   />
                 </>
               ),

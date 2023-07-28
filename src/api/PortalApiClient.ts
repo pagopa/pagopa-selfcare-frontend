@@ -155,7 +155,7 @@ export const PortalApi = {
 
   getChannelsMerged: async (
     page: number,
-    _brokerCode: string,
+    brokerCode: string,
     channelcodefilter?: string,
     limit?: number,
     sorting?: string
@@ -163,6 +163,7 @@ export const PortalApi = {
     const result = await apiConfigClient.getAllChannelsMergedUsingGET({
       limit,
       channelcodefilter,
+      brokerCode,
       page,
       sorting,
     });
@@ -505,34 +506,7 @@ export const PortalApi = {
   createStation: async (station: StationOnCreation): Promise<StationDetailResource> => {
     const result = await apiConfigClient.createStationUsingPOST({
       body: {
-        brokerCode: station.brokerCode,
-        stationCode: station.stationCode,
-        primitiveVersion: station.primitiveVersion,
-        redirectProtocol: station.redirectProtocol,
-        redirectPort: station.redirectPort,
-        redirectIp: station.redirectIp,
-        redirectPath: station.redirectPath,
-        redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost ?? undefined,
-        targetPort: station.targetPort ?? undefined,
-        targetPath: station.targetPath ?? undefined,
-        targetHostPof: station.targetHostPof ?? undefined,
-        targetPortPof: station.targetPortPof ?? undefined,
-        targetPathPof: station.targetPathPof ?? undefined,
-        version: station.version,
-        threadNumber: station.threadNumber,
-        enabled: true,
-        password: station.password,
-        newPassword: station.newPassword ?? undefined,
-        protocol: station.protocol,
-        port: station.port,
-        ip: station.ip,
-        service: station.service,
-        pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod ?? undefined,
-        ip4Mod: station.ip4Mod ?? undefined,
-        port4Mod: station.port4Mod ?? undefined,
-        service4Mod: station.service4Mod ?? undefined,
+        ...station,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -703,9 +677,6 @@ export const PortalApi = {
         redirectIp: station.redirectIp,
         redirectPath: station.redirectPath,
         redirectQueryString: station.redirectQueryString,
-        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
-        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
-        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
         targetHost: station.targetHost ? station.targetHost : undefined,
         targetPath: station.targetPath ? station.targetPath : undefined,
         targetPort: station.targetPort ? station.targetPort : undefined,
@@ -721,37 +692,8 @@ export const PortalApi = {
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
-        brokerDescription: station.brokerDescription,
-        brokerCode: station.brokerCode,
-        enabled: station.enabled,
-        stationCode: station.stationCode,
-        primitiveVersion: station.primitiveVersion,
-        redirectProtocol: station.redirectProtocol,
-        redirectPort: station.redirectPort,
-        redirectIp: station.redirectIp,
-        redirectPath: station.redirectPath,
-        redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPath: station.targetPath,
-        targetPort: station.targetPort,
-        targetHostPof: station.targetHostPof ?? undefined,
-        targetPortPof: station.targetPortPof ?? undefined,
-        targetPathPof: station.targetPathPof ?? undefined,
-        version: station.version,
-        threadNumber: station.threadNumber,
-        password: station.password,
-        newPassword: station.newPassword ?? undefined,
-        protocol: station.protocol,
-        port: station.port,
-        ip: station.ip,
-        service: station.service,
-        pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod ?? undefined,
-        ip4Mod: station.ip4Mod ?? undefined,
-        port4Mod: station.port4Mod ?? undefined,
-        service4Mod: station.service4Mod ?? undefined,
+        ...station,
         status: StatusEnum.TO_CHECK,
-        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -763,37 +705,8 @@ export const PortalApi = {
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
       body: {
-        brokerDescription: station.brokerDescription,
-        brokerCode: station.brokerCode,
-        enabled: station.enabled,
-        stationCode: station.stationCode,
-        primitiveVersion: station.primitiveVersion,
-        redirectProtocol: station.redirectProtocol,
-        redirectPort: station.redirectPort,
-        redirectIp: station.redirectIp,
-        redirectPath: station.redirectPath,
-        redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPath: station.targetPath,
-        targetPort: station.targetPort,
-        targetHostPof: station.targetHostPof ?? undefined,
-        targetPortPof: station.targetPortPof ?? undefined,
-        targetPathPof: station.targetPathPof ?? undefined,
-        version: station.version,
-        threadNumber: station.threadNumber,
-        password: station.password,
-        newPassword: station.newPassword ?? undefined,
-        protocol: station.protocol,
-        port: station.port,
-        ip: station.ip,
-        service: station.service,
-        pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod ?? undefined,
-        ip4Mod: station.ip4Mod ?? undefined,
-        port4Mod: station.port4Mod ?? undefined,
-        service4Mod: station.service4Mod ?? undefined,
+        ...station,
         status: StatusEnum.TO_CHECK_UPDATE,
-        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -805,37 +718,8 @@ export const PortalApi = {
   ): Promise<WrapperEntitiesOperations> => {
     const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
       body: {
-        brokerDescription: station.brokerDescription,
-        brokerCode: station.brokerCode,
-        enabled: station.enabled,
-        stationCode: station.stationCode,
-        primitiveVersion: station.primitiveVersion,
-        redirectProtocol: station.redirectProtocol,
-        redirectPort: station.redirectPort,
-        redirectIp: station.redirectIp,
-        redirectPath: station.redirectPath,
-        redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPath: station.targetPath,
-        targetPort: station.targetPort,
-        targetHostPof: station.targetHostPof ? station.targetHostPof : undefined,
-        targetPortPof: station.targetPortPof ? station.targetPortPof : undefined,
-        targetPathPof: station.targetPathPof ? station.targetPathPof : undefined,
-        version: station.version,
-        threadNumber: station.threadNumber,
-        password: station.password,
-        newPassword: station.newPassword ?? undefined,
-        protocol: station.protocol,
-        port: station.port,
-        ip: station.ip,
-        service: station.service,
-        pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod ?? undefined,
-        ip4Mod: station.ip4Mod ?? undefined,
-        port4Mod: station.port4Mod ?? undefined,
-        service4Mod: station.service4Mod ?? undefined,
+        ...station,
         status: StatusEnum.TO_CHECK_UPDATE,
-        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -847,35 +731,7 @@ export const PortalApi = {
   ): Promise<StationDetailResource> => {
     const result = await apiConfigClient.updateStationUsingPUT({
       body: {
-        brokerDescription: station.brokerDescription,
-        brokerCode: station.brokerCode,
-        enabled: station.enabled,
-        stationCode: station.stationCode,
-        primitiveVersion: station.primitiveVersion,
-        redirectProtocol: station.redirectProtocol,
-        redirectPort: station.redirectPort,
-        redirectIp: station.redirectIp,
-        redirectPath: station.redirectPath,
-        redirectQueryString: station.redirectQueryString,
-        targetHost: station.targetHost,
-        targetPath: station.targetPath,
-        targetPort: station.targetPort,
-        targetHostPof: station.targetHostPof ?? undefined,
-        targetPortPof: station.targetPortPof ?? undefined,
-        targetPathPof: station.targetPathPof ?? undefined,
-        version: station.version,
-        threadNumber: station.threadNumber,
-        password: station.password,
-        newPassword: station.newPassword ?? undefined,
-        protocol: station.protocol,
-        port: station.port,
-        ip: station.ip,
-        service: station.service,
-        pofService: station.pofService,
-        protocol4Mod: station.protocol4Mod ?? undefined,
-        ip4Mod: station.ip4Mod ?? undefined,
-        port4Mod: station.port4Mod ?? undefined,
-        service4Mod: station.service4Mod ?? undefined,
+        ...station,
         status: StatusEnum.APPROVED,
       },
       stationcode,
@@ -909,6 +765,20 @@ export const PortalApi = {
 
   createIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
     const result = await apiConfigClient.createCreditorInstitutionIbansUsingPOST({
+      body: {
+        iban: ibanBody.iban,
+        description: ibanBody.description,
+        validityDate: ibanBody.validityDate,
+        dueDate: ibanBody.dueDate,
+        creditorInstitutionCode: ibanBody.creditorInstitutionCode,
+        labels: ibanBody.labels,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
+    const result = await apiConfigClient.putCreditorInstitutionIbansUsingPUT({
       body: {
         iban: ibanBody.iban,
         description: ibanBody.description,

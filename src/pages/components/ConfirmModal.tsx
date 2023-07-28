@@ -1,6 +1,6 @@
-import {Backdrop, Box, Button, Fade, Modal, Typography} from '@mui/material';
-import {MouseEventHandler} from 'react';
-import {isOperator} from '../stations/components/commonFunctions';
+import { Backdrop, Box, Button, Fade, Modal, Typography } from '@mui/material';
+import { MouseEventHandler } from 'react';
+import { isOperator } from './commonFunctions';
 
 type Props = {
   title: string;

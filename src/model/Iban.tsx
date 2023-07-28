@@ -1,4 +1,6 @@
+import { IbanCreateRequestDto } from '../api/generated/portal/IbanCreateRequestDto';
 import { IbanLabel } from '../api/generated/portal/IbanLabel';
+import { IbanResource } from '../api/generated/portal/IbanResource';
 
 export enum IbanFormAction {
   Create = 'create',
@@ -7,11 +9,12 @@ export enum IbanFormAction {
 
 export type IbanOnCreation = {
   iban: string;
-  description: string;
+  description?: string;
   validityDate: Date;
   dueDate: Date;
   creditorInstitutionCode: string;
   ecOwner?: string;
-  labels: Readonly<Array<IbanLabel>>;
-  active?: boolean;
+  labels?: Readonly<Array<IbanLabel>>;
+  active: boolean;
+  publicationDate?: Date;
 };

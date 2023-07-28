@@ -33,14 +33,15 @@ const AddEditIbanPage = () => {
       setLoading(true);
       getIbanList(creditorInstitutionCode)
         .then((response) => {
-          const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
+          const filteredIban = response.ibanList.filter((e) => e.iban === ibanId);
           setIban({
-            iban: fileterdIban[0].iban,
-            description: fileterdIban[0].description ?? '',
-            creditorInstitutionCode: fileterdIban[0].ecOwner,
-            validityDate: fileterdIban[0].validityDate,
-            dueDate: fileterdIban[0].dueDate,
-            labels: fileterdIban[0].labels ?? [],
+            iban: filteredIban[0].iban,
+            description: filteredIban[0].description,
+            creditorInstitutionCode: filteredIban[0].ecOwner ?? creditorInstitutionCode,
+            validityDate: filteredIban[0].validityDate,
+            dueDate: filteredIban[0].dueDate,
+            labels: filteredIban[0].labels,
+            active: filteredIban[0].active,
           });
         })
         .catch((reason) => {
@@ -49,7 +50,7 @@ const AddEditIbanPage = () => {
               id: `FETCH_STATIONS_ERROR`,
               blocking: false,
               error: reason,
-              techDescription: `An error occurred while fetching stations`,
+              techDescription: `An error occurred while fetching iban detail`,
               toNotify: false,
             },
           ]);
@@ -57,7 +58,7 @@ const AddEditIbanPage = () => {
             id: 'GET_IBAN_LIST',
             blocking: false,
             error: reason,
-            techDescription: `An error occurred while retrieving iban list`,
+            techDescription: `An error occurred while retrieving iban detail`,
             toNotify: true,
             displayableTitle: t('ibanPage.error.listErrorTitle'),
             displayableDescription: t('ibanPage.error.listErrorDesc'),

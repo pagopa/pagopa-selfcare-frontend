@@ -756,9 +756,13 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionIbans: async (creditorInstitutionCode: string): Promise<IbansResource> => {
-    const result = await apiConfigClient.getCreditorInstitutionIbansUsingPOST({
-      body: { creditorInstitutionCode },
+  getCreditorInstitutionIbans: async (
+    creditorinstitutioncode: string,
+    labelName?: string
+  ): Promise<IbansResource> => {
+    const result = await apiConfigClient.getCreditorInstitutionIbansUsingGET({
+      creditorinstitutioncode,
+      labelName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -771,22 +775,31 @@ export const PortalApi = {
         validityDate: ibanBody.validityDate,
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-        labels: ibanBody.labels,
+        active: true,
       },
     });
-    return extractResponse(result, 200, onRedirectToLogin);
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 
   updateIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
-    const result = await apiConfigClient.putCreditorInstitutionIbansUsingPUT({
+    const result = await apiConfigClient.updateCreditorInstitutionIbansUsingPUT({
       body: {
         iban: ibanBody.iban,
         description: ibanBody.description,
         validityDate: ibanBody.validityDate,
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-        labels: ibanBody.labels,
+        labels: ibanBody.labels?.length === 0 ? undefined : ibanBody.labels,
+        active: true,
       },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  deleteIban: async (creditorinstitutioncode: string, ibanValue: string): Promise<void> => {
+    const result = await apiConfigClient.deleteCreditorInstitutionIbansUsingDELETE({
+      creditorinstitutioncode,
+      ibanValue,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

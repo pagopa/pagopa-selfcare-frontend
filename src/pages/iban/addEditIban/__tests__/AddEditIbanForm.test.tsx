@@ -163,6 +163,7 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
+    fireEvent.submit(submitBtn);
   });
 
   it('test iban validator function and fiscalCode validation function', async () => {
@@ -216,7 +217,7 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     fireEvent.click(holderMe);
 
     fireEvent.change(holderFiscalCodeInput, { target: { value: parseInt('123456', 10) } });
-    fireEvent.change(holderFiscalCodeInput, { target: { value: '123456' } });
+    fireEvent.change(holderFiscalCodeInput, { target: { value: undefined } });
 
     const uploadTypeSingle = screen.getByTestId('upload-single-test');
     fireEvent.click(uploadTypeSingle);

@@ -42,7 +42,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     redirectQueryString: 'nessuno',
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     brokerCode: '81001870922',
-    threadNumber: 1,
     timeoutA: 15,
     timeoutB: 30,
     timeoutC: 120,

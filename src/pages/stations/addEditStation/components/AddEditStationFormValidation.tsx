@@ -159,6 +159,7 @@ Props) => {
                     <FormControlLabel
                       value="newConn"
                       checked={newConn}
+                      data-testid="radio-button-newConn"
                       control={<Radio />}
                       label={t('addEditStationPage.addFormValidation.fields.newConnLabel')}
                     />
@@ -173,6 +174,7 @@ Props) => {
                         fullWidth
                         id="newConnConcat"
                         name="newConnConcat"
+                        data-testid="newConnConcat"
                         label={'newConnConcat'}
                         placeholder={'newConnConcat'}
                         size="small"
@@ -210,6 +212,7 @@ Props) => {
                   <Grid container item xs={12} pt={2}>
                     <FormControlLabel
                       value="GDP"
+                      data-testid="radio-button-gdp"
                       control={<Radio />}
                       checked={gdp}
                       label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
@@ -225,6 +228,7 @@ Props) => {
                         fullWidth
                         id="gdpConcat"
                         name="gdpConcat"
+                        data-testid="gdpConcat-select"
                         label={'gdpConcat'}
                         placeholder={'gdpConcat'}
                         size="small"

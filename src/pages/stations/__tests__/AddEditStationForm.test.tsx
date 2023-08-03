@@ -1,7 +1,15 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  getByRole,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
@@ -206,5 +214,46 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const confirmBtn = screen.getByText('addEditStationPage.confirmModal.confirmButtonOpe');
     fireEvent.click(confirmBtn);
+  });
+
+  test('Test gdpConcat select handleChange with operator true', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
+    const container = render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              goBack={jest.fn()}
+              stationDetail={stationDetail}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const version = screen.getByTestId('version-test') as HTMLInputElement;
+    const password = screen.getByTestId('password-test') as HTMLInputElement;
+    const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
+    const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
+    const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+    const gdpConcatSelect = screen.getByTestId('gdpConcat-select') as HTMLInputElement;
+    const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
+    const newConnRadio = screen.getByTestId('radio-button-newConn') as HTMLInputElement;
+
+    await waitFor(() => userEvent.click(gdpRadio));
+    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    fireEvent.mouseDown(gdpConcatSelectbutton);
+    await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
+
+    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
+      'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
+    );
+
+    await waitFor(() => userEvent.click(newConnRadio));
+
+    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe('');
   });
 });

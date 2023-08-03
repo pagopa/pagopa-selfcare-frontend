@@ -210,7 +210,7 @@ test('Test Sync GAD', () => {
     targetPort: 0,
     targetPortPof: undefined,
     proxyConcat: '',
-    targetConcat: 'https://test.it:8080/test',
+    targetConcat: 'http://test.it:8080/test',
     gdpConcat: '',
     newConnConcat: '',
   };

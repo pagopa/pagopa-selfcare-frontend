@@ -26,7 +26,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
   const { stationId } = useParams<{ stationId: string }>();
 
   const endpoint =
-    stationDetail?.targetHost === ''
+    stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
       ? '-'
       : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
           stationDetail?.targetPort && stationDetail?.targetPort > 0

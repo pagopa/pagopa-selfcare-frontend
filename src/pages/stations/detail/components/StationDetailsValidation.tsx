@@ -48,7 +48,7 @@ Props) => {
   const [isNewConn, setIsNewConn] = useState<boolean>(false);
 
   const endpoint =
-    stationDetail?.targetHost === ''
+    stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
       ? '-'
       : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
           stationDetail?.targetPort && stationDetail?.targetPort > 0

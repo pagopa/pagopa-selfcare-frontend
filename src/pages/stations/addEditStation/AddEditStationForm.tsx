@@ -39,13 +39,21 @@ import {
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import {
-  ProxyConfigs,
+  GPDConfigs,
+  IGPDConfig,
+  INewConnConfig,
+  NewConnConfigs,
+  StationCategory,
   StationFormAction,
   StationOnCreation,
-  IProxyConfig,
 } from '../../../model/Station';
 import { isOperator } from '../components/commonFunctions';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import {
+  alterStationValuesToFitCategories,
+  getStationCategoryFromDetail,
+  splitURL,
+} from '../../../utils/station-utils';
 import { ENV } from '../../../utils/env';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
@@ -67,7 +75,11 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const operator = isOperator();
-  const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
+  const env: string = ENV.ENV;
+  const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
+  const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
+  const [newConn, setNewConn] = useState<boolean>(false);
+  const [gdp, setGDP] = useState<boolean>(false);
 
   useEffect(() => {
     if (formAction !== StationFormAction.Edit) {
@@ -92,7 +104,19 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           setLoadingGeneration(false);
         });
     }
-  }, []);
+  }, [stationCodeCleaner]);
+
+  useEffect(() => {
+    if (stationDetail) {
+      const category = getStationCategoryFromDetail(stationDetail, env);
+      if (category === StationCategory.AsyncGPD) {
+        setGDP(true);
+      }
+      if (category === StationCategory.SyncNewConn) {
+        setNewConn(true);
+      }
+    }
+  }, [stationDetail]);
 
   const initialFormData = (detail?: StationOnCreation) =>
     detail
@@ -100,71 +124,75 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           brokerCode: detail.brokerCode ?? '',
           enabled: detail.enabled,
           ip: detail.ip ?? '',
-          ip4Mod: detail.ip4Mod ?? '',
           password: detail.password ?? '',
-          port: detail.port ?? undefined,
-          port4Mod: detail.port4Mod ?? undefined,
+          port: detail.port ?? 443,
           primitiveVersion: detail.primitiveVersion ?? 2,
           protocol: detail.protocol ?? undefined,
-          protocol4Mod: detail.protocol4Mod ?? undefined,
           proxyConcat: `${detail.proxyHost ?? ''}${
             detail.proxyPort ? ':'.concat(detail.proxyPort.toString()) : ''
           }`,
           proxyHost: detail.proxyHost ?? '',
-          proxyPort: detail.proxyPort ?? 0,
+          proxyPort: detail.proxyPort ?? undefined,
           redirectIp: detail.redirectIp ?? '',
           redirectPath: detail.redirectPath ?? '',
-          redirectPort: detail.redirectPort ?? undefined,
+          redirectPort: detail.redirectPort ?? 443,
           redirectProtocol: detail.redirectProtocol ?? '',
           redirectQueryString: detail.redirectQueryString ?? '',
           service: detail.service ?? '',
-          service4Mod: detail.service4Mod ?? '',
           stationCode: detail.stationCode ?? '',
           status: detail?.wrapperStatus,
           targetHost: detail.targetHost ?? '',
           targetPath: detail.targetPath ?? '',
           targetPort: detail.targetPort ?? undefined,
           targetConcat: `${detail.targetHost ?? ''}${
-            detail.targetPort ? ':'.concat(detail.targetPort.toString()) : ''
+            detail.targetPort && detail.targetPort !== 443
+              ? ':'.concat(detail.targetPort.toString())
+              : ''
           }${detail.targetPath ?? ''}`,
 
-          threadNumber: detail.threadNumber ?? undefined,
           timeoutA: detail.timeoutA ?? 15,
           timeoutB: detail.timeoutB ?? 30,
           timeoutC: detail.timeoutC ?? 120,
           version: detail.version ?? undefined,
+          newConnConcat:
+            Object.entries(forwarderAddresses)
+              .map(([key, value]) => value)
+              .find((d) => (detail.service ? d.includes(detail.service) : false)) ?? '',
+          gdpConcat:
+            Object.entries(gpdAddresses)
+              .map(([key, value]) => value)
+              .find((d) => (detail.service ? d.includes(detail.service) : false)) ?? '',
+          threadNumber: 1,
         }
       : {
           brokerCode: brokerCodeCleaner,
           ip: '',
-          ip4Mod: '',
           password: '',
-          port: 0,
-          port4Mod: 0,
+          port: 443,
           primitiveVersion: 2,
           protocol: undefined,
-          protocol4Mod: undefined,
           proxyConcat: '',
           proxyHost: '',
-          proxyPort: 0,
+          proxyPort: undefined,
           redirectIp: '',
           redirectPath: '',
-          redirectPort: 0,
+          redirectPort: 443,
           redirectProtocol: RedirectProtocolEnum.HTTPS,
           redirectQueryString: '',
           service: '',
-          service4Mod: '',
           stationCode: stationCodeGenerated,
           status: StatusEnum.TO_CHECK,
           targetConcat: '',
           targetHost: '',
           targetPath: '',
-          targetPort: 0,
-          threadNumber: 0,
+          targetPort: 443,
           timeoutA: 15,
           timeoutB: 30,
           timeoutC: 120,
           version: stationDetail?.version ?? 0,
+          newConnConcat: '',
+          gdpConcat: '',
+          threadNumber: 1,
         };
 
   const inputGroupStyle = {
@@ -183,6 +211,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   };
 
   const validateURL = (urlToValidate: string) => {
+    if (urlToValidate === '') {
+      return undefined;
+    }
     try {
       const url = new URL(urlToValidate);
       // eslint-disable-next-line sonarjs/prefer-single-boolean-return
@@ -194,26 +225,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       console.error(e);
       return 'URL non valido';
     }
-  };
-
-  const splitURL = (targetURL: string) => {
-    try {
-      const url = new URL(targetURL);
-      return {
-        protocolSplit: url.protocol,
-        hostSplit: url.hostname,
-        portSplit: Number(url.port),
-        pathSplit: url.pathname + url.search + url.hash,
-      };
-    } catch (e) {
-      console.error(e);
-    }
-    return {
-      protocolSplit: '',
-      hostSplit: '',
-      portSplit: 0,
-      pathSplit: '',
-    };
   };
 
   const validate = (values: StationOnCreation) =>
@@ -244,19 +255,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                 ? t('addEditStationPage.validation.overVersion')
                 : undefined,
               password: !values.password ? 'Campo obbligatorio' : undefined,
-              threadNumber: !values.threadNumber ? 'Campo obbligatorio' : undefined,
-              protocol: !values.protocol ? 'Campo obbligatorio' : undefined,
-              ip: !values.ip ? 'Campo obbligatorio' : undefined,
-              port: !values.port
-                ? 'Campo obbligatorio'
-                : typeof values.port !== 'undefined' && isNaN(values.port)
-                ? 'Non Valido, l’input dev’essere un numero'
-                : undefined,
-
-              service: !values.service ? 'Campo obbligatorio' : undefined,
               timeoutA: !values.timeoutA ? 'Campo obbligatorio' : undefined,
               timeoutB: !values.timeoutB ? 'Campo obbligatorio' : undefined,
               timeoutC: !values.timeoutC ? 'Campo obbligatorio' : undefined,
+              gdpConcat: gdp && values.gdpConcat === '' ? 'Campo obbligatorio' : undefined,
+              newConnConcat:
+                newConn && values.newConnConcat === '' ? 'Campo obbligatorio' : undefined,
             }
           : null),
       }).filter(([_key, value]) => value)
@@ -266,17 +270,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     const baseConditions =
       values.stationCode !== '' &&
       values.brokerCode !== '' &&
-      values.targetConcat !== '' &&
       values.primitiveVersion.toString() !== '';
 
-    const operatorConditions =
-      values.version?.toString() !== '' &&
-      values.password !== '' &&
-      values.threadNumber?.toString() !== '' &&
-      values.protocol?.toString() !== '' &&
-      values.ip !== '' &&
-      values.port?.toString() !== '' &&
-      values.service !== '';
+    const operatorConditions = values.version?.toString() !== '' && values.password !== '';
 
     if (!baseConditions) {
       return false;
@@ -299,11 +295,13 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     }
   };
 
-  const submit = async (values: StationOnCreation) => {
+  const submit = async (valuesFromForm: StationOnCreation) => {
     setLoading(true);
     const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
     const stationCode4Redirect =
       formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
+
+    const values = alterStationValuesToFitCategories(valuesFromForm, env);
 
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
@@ -401,8 +399,19 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         .setValues({
           ...formik.values,
           targetHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
-          targetPort: portSplit,
+          targetPort: portSplit > 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
           targetPath: pathSplit,
+        })
+        .catch((e) => console.error(e));
+    }
+
+    if (formik.values.targetConcat === '') {
+      formik
+        .setValues({
+          ...formik.values,
+          targetHost: '',
+          targetPort: 443,
+          targetPath: '',
         })
         .catch((e) => console.error(e));
     }
@@ -421,6 +430,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         .catch((e) => console.error(e));
     }
   }, [formik.values.proxyConcat]);
+
+  useEffect(() => {
+    void formik.validateForm();
+  }, [gdp, newConn]);
 
   return (
     <>
@@ -517,7 +530,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             <AddEditStationFormSectionTitle
               title={t('addEditStationPage.addForm.sections.targetService')}
               icon={<MenuBook />}
-              isRequired
             />
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
@@ -548,7 +560,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
           inputGroupStyle={inputGroupStyle}
-          proxyAddresses={proxyAddresses}
+          newConn={newConn}
+          setNewConn={setNewConn}
+          gdp={gdp}
+          setGDP={setGDP}
         />
       ) : (
         <></>

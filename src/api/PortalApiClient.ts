@@ -694,6 +694,7 @@ export const PortalApi = {
       body: {
         ...station,
         status: StatusEnum.TO_CHECK,
+        validationUrl,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

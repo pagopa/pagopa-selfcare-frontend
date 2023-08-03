@@ -260,7 +260,6 @@
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",
           "plugin": "Plugin WFESP",
-          "threadNumber": "Numero Thread",
           "timeoutA": "Timeout A",
           "timeoutB": "Timeout B",
           "timeoutC": "Timeout C",
@@ -361,7 +360,6 @@
     "otherInfo": "Altre informazioni",
     "paymentModel": "Modello di pagamento",
     "pliugin": "Plugin WFESP",
-    "threadNumber": "Numero Thread",
     "timeoutA": "Timeout A",
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
@@ -445,18 +443,19 @@
       "sections": {
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
-        "model4": "Modello 4",
+        "configuration": "Configurazione",
         "proxy": "Proxy",
         "otherInfo": "Altre informazioni"
       },
       "fields": {
         "version": "Versione",
-        "threadNumber": "Numero Thread",
         "protocol": "Protocollo",
         "port": "Porta",
         "ip": "IP",
         "path": "Path",
         "proxy": "Indirizzo",
+        "newConnLabel": "Nuova connettività",
+        "GDPLabel": "GDP",
         "proxyValues": {
           "newConnectivity": "Nuova Connettività",
           "oldConnectivity": "Vecchia Connettività"
@@ -465,7 +464,8 @@
         "service": "Servizio",
         "timeoutA": "Timeout A",
         "timeoutB": "Timeout B",
-        "timeoutC": "Timeout C"
+        "timeoutC": "Timeout C",
+        "select": "Seleziona"
       }
     },
     "confirmModal": {
@@ -640,7 +640,10 @@
       "port": "Porta",
       "protocol": "Protocollo",
       "proxy": "Proxy",
-      "proxyAddress": "indirizzo",
+      "proxyAddress": "Indirizzo",
+      "configuration": "Configurazione",
+      "GDP": "GDP",
+      "newConn": "Nuova Connettività",
       "proxyLabels": {
         "newConnectivity": "Nuova Connettività",
         "oldConnectivity": "Vecchia Connettività"
@@ -648,7 +651,6 @@
       "registry": "Anagrafica",
       "service": "Servizio",
       "subtitle": "Informazioni a carico di PagoPA.",
-      "threadNumber": "Numero Thread",
       "timeoutA": "Timeout A",
       "timeoutB": "Timeout B",
       "timeoutC": "Timeout C",

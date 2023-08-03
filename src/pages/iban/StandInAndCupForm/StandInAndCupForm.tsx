@@ -432,7 +432,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         onClick={() => setShowConfirmModal(true)}
                         color="primary"
                         variant="contained"
-                        type="submit"
                         sx={{ whiteSpace: 'nowrap', minWidth: 'auto' }}
                         data-testid="upload-iban-test"
                       >

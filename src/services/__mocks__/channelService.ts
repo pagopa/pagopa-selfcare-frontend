@@ -285,7 +285,7 @@ export const mockedChannelDetail = (channelId: string): ChannelDetailsResource =
   payment_types: mockedPaymentTypes.payment_types.map((e, _i) => e.payment_type),
   port: 8080,
   primitive_version: 1,
-  protocol: undefined,
+  protocol: ProtocolEnum.HTTPS,
   proxy_enabled: true,
   proxy_host: 'proxy_host',
   proxy_password: 'proxy_password',

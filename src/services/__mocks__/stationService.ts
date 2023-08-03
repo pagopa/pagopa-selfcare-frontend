@@ -64,7 +64,6 @@ export const mockedFullStation: StationDetailResource = {
   redirectQueryString: 'www',
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   brokerCode: '81001870922',
-  threadNumber: 1,
   timeoutA: 15,
   timeoutB: 30,
   timeoutC: 120,

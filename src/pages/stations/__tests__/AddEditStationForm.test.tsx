@@ -1,7 +1,15 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  getByRole,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
@@ -42,7 +50,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     redirectQueryString: 'nessuno',
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     brokerCode: '81001870922',
-    threadNumber: 1,
     timeoutA: 15,
     timeoutB: 30,
     timeoutC: 120,
@@ -172,14 +179,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
-    const protocol = screen.getByTestId('protocol-test') as HTMLSelectElement;
-    const ip = screen.getByTestId('ip-test') as HTMLInputElement;
-    const port = screen.getByTestId('port-test') as HTMLInputElement;
-    const serviceNmp = screen.getByTestId('nmp-service-test') as HTMLInputElement;
-    const protocol4Mod = screen.getByTestId('protocol-4Mod-test') as HTMLSelectElement;
-    const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
-    const port4Mod = screen.getByTestId('port-4Mod-test') as HTMLInputElement;
-    const service4Mod = screen.getByTestId('service-4Mod-test') as HTMLInputElement;
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
     const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
@@ -192,33 +191,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(password, { target: { value: 'password' } });
     expect(password.value).toBe('password');
-
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: 'HTTPS' } });
-
-    fireEvent.change(ip, { target: { value: 'ip' } });
-    expect(ip.value).toBe('ip');
-
-    fireEvent.change(port, { target: { value: '' } });
-    expect(port.value).toBe('');
-
-    fireEvent.change(port, { target: { value: 555 } });
-    expect(port.value).toBe('555');
-
-    fireEvent.change(serviceNmp, { target: { value: 'serviceNmp' } });
-    expect(serviceNmp.value).toBe('serviceNmp');
-
-    fireEvent.click(protocol4Mod);
-    fireEvent.change(protocol4Mod, { target: { value: 'HTTPS' } });
-
-    fireEvent.change(ip4Mod, { target: { value: 'ip4Mod' } });
-    expect(ip4Mod.value).toBe('ip4Mod');
-
-    fireEvent.change(port4Mod, { target: { value: 555 } });
-    expect(port4Mod.value).toBe('555');
-
-    fireEvent.change(service4Mod, { target: { value: 'service4Mod' } });
-    expect(service4Mod.value).toBe('service4Mod');
 
     expect(timeoutA.value).toBe('15');
     fireEvent.change(timeoutA, { target: { value: 16 } });
@@ -242,5 +214,46 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const confirmBtn = screen.getByText('addEditStationPage.confirmModal.confirmButtonOpe');
     fireEvent.click(confirmBtn);
+  });
+
+  test('Test gdpConcat select handleChange with operator true', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
+    const container = render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              goBack={jest.fn()}
+              stationDetail={stationDetail}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const version = screen.getByTestId('version-test') as HTMLInputElement;
+    const password = screen.getByTestId('password-test') as HTMLInputElement;
+    const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
+    const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
+    const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+    const gdpConcatSelect = screen.getByTestId('gdpConcat-select') as HTMLInputElement;
+    const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
+    const newConnRadio = screen.getByTestId('radio-button-newConn') as HTMLInputElement;
+
+    await waitFor(() => userEvent.click(gdpRadio));
+    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    fireEvent.mouseDown(gdpConcatSelectbutton);
+    await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
+
+    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
+      'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
+    );
+
+    await waitFor(() => userEvent.click(newConnRadio));
+
+    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe('');
   });
 });

@@ -23,8 +23,6 @@ type Prop = {
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const StationDetails = ({ stationDetail, goBack }: Prop) => {
   const { t } = useTranslation();
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const hidePassword = 'XXXXXXXXXXXXXX';
   const { stationId } = useParams<{ stationId: string }>();
 
   const endpoint =
@@ -35,13 +33,6 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
             ? `:${stationDetail.targetPort}`
             : ''
         }${stationDetail?.targetPath}`;
-
-  const showOrHidePassword = () => {
-    if (showPassword) {
-      return stationDetail?.password;
-    }
-    return hidePassword;
-  };
 
   return (
     <Grid container justifyContent={'center'} mb={5}>

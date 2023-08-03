@@ -176,15 +176,5 @@ describe('<StationDetails />', () => {
         </MemoryRouter>
       </Provider>
     );
-
-    const showPasswordBtn = screen.getByTestId('show-psw-test') as HTMLInputElement;
-
-    expect(screen.getAllByText('XXXXXXXXXXXXXX')[0]).toBeInTheDocument();
-    expect(screen.queryByText(genPassword)).toBeNull();
-
-    fireEvent.click(showPasswordBtn);
-    await waitFor(() => {
-      expect(screen.getAllByText(genPassword)[0]).toBeInTheDocument();
-    });
   });
 });

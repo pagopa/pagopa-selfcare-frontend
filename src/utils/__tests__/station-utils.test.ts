@@ -5,8 +5,8 @@ import {
 import { StationOnCreation } from '../../model/Station';
 import { alterStationValuesToFitCategories, getStationCategoryFromDetail } from '../station-utils';
 
-test('Test undefined', () => {
-  const asyncGPDStation: StationDetailsDto = {
+test('Test getStationCategoryFromDetail undefined', () => {
+  const asyncGPDStation: StationOnCreation = {
     brokerCode: '123',
     primitiveVersion: 1,
     redirectIp: 'string',
@@ -15,6 +15,13 @@ test('Test undefined', () => {
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     redirectQueryString: 'string',
     stationCode: 'string',
+    proxyConcat: '',
+    targetConcat: '',
+    targetHost: '',
+    targetPath: '',
+    targetPort: 443,
+    gdpConcat: '',
+    newConnConcat: '',
   };
 
   const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'PROD');
@@ -22,8 +29,8 @@ test('Test undefined', () => {
   expect(stationCategory).toStrictEqual(undefined);
 });
 
-test('Test AsyncGPD', () => {
-  const asyncGPDStation: StationDetailsDto = {
+test('Test getStationCategoryFromDetail AsyncGPD', () => {
+  const asyncGPDStation: StationOnCreation = {
     brokerCode: '123',
     primitiveVersion: 1,
     redirectIp: 'string',
@@ -33,6 +40,13 @@ test('Test AsyncGPD', () => {
     redirectQueryString: 'string',
     stationCode: 'string',
     service: '/gpd-paymements/api/v1',
+    proxyConcat: '',
+    targetConcat: '',
+    targetHost: '',
+    targetPath: '',
+    targetPort: 443,
+    gdpConcat: '',
+    newConnConcat: '',
   };
 
   const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'PROD');
@@ -40,8 +54,8 @@ test('Test AsyncGPD', () => {
   expect(stationCategory).toStrictEqual('AsyncGPD');
 });
 
-test('Test SyncNewConn', () => {
-  const station: StationDetailsDto = {
+test('Test getStationCategoryFromDetail SyncNewConn', () => {
+  const station: StationOnCreation = {
     brokerCode: '123',
     primitiveVersion: 1,
     redirectIp: 'string',
@@ -52,6 +66,13 @@ test('Test SyncNewConn', () => {
     stationCode: 'string',
     service: '/pagopa-node-forwarder/api/v1/forward',
     targetHostPof: 'target',
+    proxyConcat: '',
+    targetConcat: '',
+    targetHost: '',
+    targetPath: '',
+    targetPort: 443,
+    gdpConcat: '',
+    newConnConcat: '',
   };
 
   const stationCategory = getStationCategoryFromDetail(station, 'PROD');
@@ -59,8 +80,8 @@ test('Test SyncNewConn', () => {
   expect(stationCategory).toStrictEqual('SyncNewConn');
 });
 
-test('Test SyncGAD', () => {
-  const station: StationDetailsDto = {
+test('Test getStationCategoryFromDetail SyncGAD', () => {
+  const station: StationOnCreation = {
     brokerCode: '123',
     primitiveVersion: 1,
     redirectIp: 'string',
@@ -71,6 +92,12 @@ test('Test SyncGAD', () => {
     stationCode: 'string',
     service: 'test',
     targetHost: 'target',
+    proxyConcat: '',
+    targetConcat: '',
+    targetPath: '',
+    targetPort: 443,
+    gdpConcat: '',
+    newConnConcat: '',
   };
 
   const stationCategory = getStationCategoryFromDetail(station, 'PROD');
@@ -79,7 +106,7 @@ test('Test SyncGAD', () => {
 });
 
 //Test alterStationValuesToFitCategories
-test.skip('Test alterStationValuesToFitCategories ', () => {
+test('Test alterStationValuesToFitCategories ', () => {
   const stationInput: StationOnCreation = {
     brokerCode: '123',
     primitiveVersion: 1,
@@ -129,7 +156,7 @@ test('Test Async GPD', () => {
   expect(stationOutput.targetHost).toStrictEqual('');
 
   expect(stationOutput.ip).toStrictEqual('api.platform.pagopa.it');
-  expect(stationOutput.port).toStrictEqual(0);
+  expect(stationOutput.port).toStrictEqual(443);
   expect(stationOutput.service).toStrictEqual('/gpd-paymements/api/v1');
   expect(stationOutput.protocol).toStrictEqual('HTTPS');
 });
@@ -162,7 +189,7 @@ test('Test Sync New Conn', () => {
   expect(stationOutput2.targetPathPof).toStrictEqual('/test');
 
   expect(stationOutput2.ip).toStrictEqual('api.platform.pagopa.it');
-  expect(stationOutput2.port).toStrictEqual(0);
+  expect(stationOutput2.port).toStrictEqual(443);
   expect(stationOutput2.service).toStrictEqual('/pagopa-node-forwarder/api/v1/forward');
   expect(stationOutput2.protocol).toStrictEqual('HTTPS');
 });

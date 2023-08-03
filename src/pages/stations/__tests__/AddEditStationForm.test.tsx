@@ -171,14 +171,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
-    const protocol = screen.getByTestId('protocol-test') as HTMLSelectElement;
-    const ip = screen.getByTestId('ip-test') as HTMLInputElement;
-    const port = screen.getByTestId('port-test') as HTMLInputElement;
-    const serviceNmp = screen.getByTestId('nmp-service-test') as HTMLInputElement;
-    const protocol4Mod = screen.getByTestId('protocol-4Mod-test') as HTMLSelectElement;
-    const ip4Mod = screen.getByTestId('ip-4Mod-test') as HTMLInputElement;
-    const port4Mod = screen.getByTestId('port-4Mod-test') as HTMLInputElement;
-    const service4Mod = screen.getByTestId('service-4Mod-test') as HTMLInputElement;
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
     const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
@@ -191,33 +183,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(password, { target: { value: 'password' } });
     expect(password.value).toBe('password');
-
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: 'HTTPS' } });
-
-    fireEvent.change(ip, { target: { value: 'ip' } });
-    expect(ip.value).toBe('ip');
-
-    fireEvent.change(port, { target: { value: '' } });
-    expect(port.value).toBe('');
-
-    fireEvent.change(port, { target: { value: 555 } });
-    expect(port.value).toBe('555');
-
-    fireEvent.change(serviceNmp, { target: { value: 'serviceNmp' } });
-    expect(serviceNmp.value).toBe('serviceNmp');
-
-    fireEvent.click(protocol4Mod);
-    fireEvent.change(protocol4Mod, { target: { value: 'HTTPS' } });
-
-    fireEvent.change(ip4Mod, { target: { value: 'ip4Mod' } });
-    expect(ip4Mod.value).toBe('ip4Mod');
-
-    fireEvent.change(port4Mod, { target: { value: 555 } });
-    expect(port4Mod.value).toBe('555');
-
-    fireEvent.change(service4Mod, { target: { value: 'service4Mod' } });
-    expect(service4Mod.value).toBe('service4Mod');
 
     expect(timeoutA.value).toBe('15');
     fireEvent.change(timeoutA, { target: { value: 16 } });

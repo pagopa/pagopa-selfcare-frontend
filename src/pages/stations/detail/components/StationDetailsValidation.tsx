@@ -46,7 +46,6 @@ Props) => {
 
   const [isGDP, setIsGDP] = useState<boolean>(false);
   const [isNewConn, setIsNewConn] = useState<boolean>(false);
-  // const [isGAD, setIsGAD] = useState<boolean>(false);
 
   const endpoint =
     stationDetail?.targetHost === ''

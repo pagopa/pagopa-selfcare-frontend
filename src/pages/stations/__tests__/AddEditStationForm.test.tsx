@@ -152,9 +152,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
     const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
 
-    fireEvent.change(targetConcat, { target: { value: 'http://www.test.it:8080/pathTest' } });
+    fireEvent.change(targetConcat, { target: { value: 'https://www.test.it:8080/pathTest' } });
 
-    await waitFor(() => expect(targetConcat.value).toBe('http://www.test.it:8080/pathTest'));
+    await waitFor(() => expect(targetConcat.value).toBe('https://www.test.it:8080/pathTest'));
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.confirmButton');
     fireEvent.click(continueBtn);

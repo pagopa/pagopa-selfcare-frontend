@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import {
@@ -22,6 +22,7 @@ import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetai
 import { isOperator } from '../components/commonFunctions';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
+import * as stationService from '../../../services/stationService';
 
 jest.mock('../components/commonFunctions');
 
@@ -63,11 +64,14 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     proxyConcat: '',
     proxyHost: 'http://10.79.20.33',
     proxyPort: 80,
+    gdpConcat: '',
+    newConnConcat: '',
   };
 
   test('Test rendering AddEditStationForm with operator false', async () => {
     (isOperator as jest.Mock).mockReturnValue(false);
     store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
 
     render(
       <Provider store={store}>
@@ -115,16 +119,25 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButton');
     fireEvent.click(confirmModalBtn);
+
+    expect(createWrapperStation).toBeCalledTimes(1);
   });
 
-  test('Test rendering AddEditStationForm with operator true and without stationDetail, action Edit', async () => {
+  test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
+    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     (isOperator as jest.Mock).mockReturnValue(true);
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+    const createStation = jest.spyOn(stationService, 'createStation');
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm goBack={jest.fn()} formAction={StationFormAction.Edit} />
+            <AddEditStationForm
+              stationDetail={{ ...stationDetail, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
+              goBack={jest.fn()}
+              formAction={StationFormAction.Edit}
+            />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -134,30 +147,24 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
     const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
     const proxyConcat = screen.getByTestId('proxy-proxyConcat-test') as HTMLInputElement;
+    const password = screen.getByTestId('password-test') as HTMLInputElement;
 
-    fireEvent.change(stationCode, { target: { value: 'station Code' } });
-    expect(stationCode.value).toBe('station Code');
+    fireEvent.change(password, { target: { value: 123 } });
 
-    fireEvent.change(primitiveVersion, { target: { value: 1 } });
-
-    expect(targetConcat.value).toBe('');
     fireEvent.change(targetConcat, { target: { value: 'https://www.pagopa.it:8080/pathTest' } });
     expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest');
 
-    expect(proxyConcat.value).toBe('');
     fireEvent.change(proxyConcat, { target: { value: 'http://10.79.20.33:80' } });
     expect(proxyConcat.value).toBe('http://10.79.20.33:80');
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
-    fireEvent.click(continueBtn);
+    await waitFor(() => fireEvent.click(continueBtn));
 
-    const confirmBtn = screen.getByTestId('confirm-button-test');
-    fireEvent.click(confirmBtn);
+    const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButtonOpe');
+    await waitFor(() => fireEvent.click(confirmModalBtn));
 
-    fireEvent.click(continueBtn);
-
-    const backBtn = screen.getByTestId('cancel-button-test');
-    fireEvent.click(backBtn);
+    expect(createWrapperStation).toBeCalledTimes(0);
+    expect(createStation).toBeCalledTimes(1);
   });
 
   test('Test rendering AddEditStationForm with operator true', async () => {

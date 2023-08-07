@@ -123,6 +123,53 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect(createWrapperStation).toBeCalledTimes(1);
   });
 
+  test('Test Edit AddEditStationForm with operator false', async () => {
+    (isOperator as jest.Mock).mockReturnValue(false);
+    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    const updateWrapperStationToCheckUpdate = jest.spyOn(
+      stationService,
+      'updateWrapperStationToCheckUpdate'
+    );
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              goBack={jest.fn()}
+              stationDetail={stationDetail}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
+    const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+
+    fireEvent.change(targetConcat, { target: { value: 'http://www.test.it:8080/pathTest' } });
+
+    await waitFor(() => expect(targetConcat.value).toBe('http://www.test.it:8080/pathTest'));
+
+    const continueBtn = screen.getByText('addEditStationPage.addForm.confirmButton');
+    fireEvent.click(continueBtn);
+
+    const backBtn = screen.getByText('addEditStationPage.addForm.backButton');
+    fireEvent.click(backBtn);
+
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.getByText('addEditStationPage.addForm.confirmButton');
+    fireEvent.click(confirmBtn);
+
+    const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButton');
+    fireEvent.click(confirmModalBtn);
+
+    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
+  });
+
   test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
     store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
     (isOperator as jest.Mock).mockReturnValue(true);

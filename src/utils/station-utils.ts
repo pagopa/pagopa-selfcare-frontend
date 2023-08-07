@@ -46,11 +46,19 @@ export const getStationCategoryFromDetail = (station: StationOnCreation, env: st
 
   const isForwarder = Object.entries(forwarderAddresses)
     .map(([key, value]) => value)
-    .some((d) => (station.service ? d.includes(station.service) : false));
+    .some((d) =>
+      station.service && station.service !== '/' && station.service !== ''
+        ? d.includes(station.service)
+        : false
+    );
 
   const isGPD = Object.entries(gpdAddresses)
     .map(([key, value]) => value)
-    .some((d) => (station.service ? d.includes(station.service) : false));
+    .some((gpd) =>
+      station.service && station.service !== '/' && station.service !== ''
+        ? gpd.includes(station.service)
+        : false
+    );
 
   if (isGPD && station.targetHost === '') {
     return StationCategory.AsyncGPD;

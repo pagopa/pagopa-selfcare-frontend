@@ -157,11 +157,19 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           newConnConcat:
             Object.entries(forwarderAddresses)
               .map(([key, value]) => value)
-              .find((d) => (detail.service ? d.includes(detail.service) : false)) ?? '',
+              .find((d) =>
+                detail.service && detail.service !== '' && detail.service !== '/'
+                  ? d.includes(detail.service)
+                  : false
+              ) ?? '',
           gdpConcat:
             Object.entries(gpdAddresses)
               .map(([key, value]) => value)
-              .find((d) => (detail.service ? d.includes(detail.service) : false)) ?? '',
+              .find((gpd) =>
+                detail.service && detail.service !== '' && detail.service !== '/'
+                  ? gpd.includes(detail.service)
+                  : false
+              ) ?? '',
           threadNumber: 1,
         }
       : {

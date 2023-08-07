@@ -48,7 +48,7 @@ Props) => {
   const [isNewConn, setIsNewConn] = useState<boolean>(false);
 
   const endpoint =
-    stationDetail?.targetHost === ''
+    stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
       ? '-'
       : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
           stationDetail?.targetPort && stationDetail?.targetPort > 0
@@ -61,12 +61,20 @@ Props) => {
       setIsNewConn(
         Object.entries(forwarderAddresses)
           .map(([key, value]) => value)
-          .some((d) => (stationDetail.service ? d.includes(stationDetail.service) : false))
+          .some((d) =>
+            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
+              ? d.includes(stationDetail.service)
+              : false
+          )
       );
       setIsGDP(
         Object.entries(gpdAddresses)
           .map(([key, value]) => value)
-          .some((d) => (stationDetail.service ? d.includes(stationDetail.service) : false))
+          .some((gpd) =>
+            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
+              ? gpd.includes(stationDetail.service)
+              : false
+          )
       );
     }
   }, [stationDetail]);

@@ -109,9 +109,9 @@ export interface IProxyConfigItem {
 export interface IProxyConfig {
   LOCAL_DEV: IProxyConfigItem;
   TEST: IProxyConfigItem;
-  DEV: IProxyConfigItem;
-  UAT: IProxyConfigItem;
-  PROD: IProxyConfigItem;
+  dev: IProxyConfigItem;
+  uat: IProxyConfigItem;
+  prod: IProxyConfigItem;
 }
 
 export const ProxyConfigs: IProxyConfig = {
@@ -123,9 +123,9 @@ export const ProxyConfigs: IProxyConfig = {
     newConnectivity: 'http://10.79.20.33:80',
     oldConnectivity: 'http://10.101.1.95:8080',
   },
-  DEV: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
-  UAT: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
-  PROD: { newConnectivity: 'http://10.79.20.35:80', oldConnectivity: 'http://10.102.1.85:8080' },
+  dev: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
+  uat: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
+  prod: { newConnectivity: 'http://10.79.20.35:80', oldConnectivity: 'http://10.102.1.85:8080' },
 };
 
 export interface INewConnConfigItem {
@@ -134,9 +134,9 @@ export interface INewConnConfigItem {
 export interface INewConnConfig {
   LOCAL_DEV: INewConnConfigItem;
   TEST: INewConnConfigItem;
-  DEV: INewConnConfigItem;
-  UAT: INewConnConfigItem;
-  PROD: INewConnConfigItem;
+  dev: INewConnConfigItem;
+  uat: INewConnConfigItem;
+  prod: INewConnConfigItem;
 }
 
 export const NewConnConfigs: INewConnConfig = {
@@ -146,9 +146,9 @@ export const NewConnConfigs: INewConnConfig = {
   TEST: {
     forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
   },
-  DEV: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
-  UAT: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
-  PROD: { forwarder01: 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+  dev: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+  uat: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+  prod: { forwarder01: 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
 };
 
 export interface IGPDConfigItem {
@@ -157,9 +157,9 @@ export interface IGPDConfigItem {
 export interface IGPDConfig {
   LOCAL_DEV: IGPDConfigItem;
   TEST: IGPDConfigItem;
-  DEV: IGPDConfigItem;
-  UAT: IGPDConfigItem;
-  PROD: IGPDConfigItem;
+  dev: IGPDConfigItem;
+  uat: IGPDConfigItem;
+  prod: IGPDConfigItem;
 }
 
 export const GPDConfigs = {
@@ -169,7 +169,7 @@ export const GPDConfigs = {
   TEST: {
     gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1',
   },
-  DEV: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
-  UAT: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
-  PROD: { gdp01: 'https://api.platform.pagopa.it/gpd-paymements/api/v1' },
+  dev: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
+  uat: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
+  prod: { gdp01: 'https://api.platform.pagopa.it/gpd-paymements/api/v1' },
 };

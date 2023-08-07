@@ -24,7 +24,7 @@ test('Test getStationCategoryFromDetail undefined', () => {
     newConnConcat: '',
   };
 
-  const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'PROD');
+  const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'prod');
 
   expect(stationCategory).toStrictEqual(undefined);
 });
@@ -49,7 +49,7 @@ test('Test getStationCategoryFromDetail AsyncGPD', () => {
     newConnConcat: '',
   };
 
-  const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'PROD');
+  const stationCategory = getStationCategoryFromDetail(asyncGPDStation, 'prod');
 
   expect(stationCategory).toStrictEqual('AsyncGPD');
 });
@@ -75,7 +75,7 @@ test('Test getStationCategoryFromDetail SyncNewConn', () => {
     newConnConcat: '',
   };
 
-  const stationCategory = getStationCategoryFromDetail(station, 'PROD');
+  const stationCategory = getStationCategoryFromDetail(station, 'prod');
 
   expect(stationCategory).toStrictEqual('SyncNewConn');
 });
@@ -100,7 +100,7 @@ test('Test getStationCategoryFromDetail SyncGAD', () => {
     newConnConcat: '',
   };
 
-  const stationCategory = getStationCategoryFromDetail(station, 'PROD');
+  const stationCategory = getStationCategoryFromDetail(station, 'prod');
 
   expect(stationCategory).toStrictEqual('SyncGAD');
 });
@@ -126,7 +126,7 @@ test('Test alterStationValuesToFitCategories ', () => {
     newConnConcat: '',
   };
 
-  const stationOutput = alterStationValuesToFitCategories(stationInput, 'PROD');
+  const stationOutput = alterStationValuesToFitCategories(stationInput, 'prod');
 
   expect(stationOutput).toStrictEqual(stationOutput);
 });
@@ -151,7 +151,7 @@ test('Test Async GPD', () => {
     newConnConcat: '',
   };
 
-  const stationOutput = alterStationValuesToFitCategories(stationInput, 'PROD');
+  const stationOutput = alterStationValuesToFitCategories(stationInput, 'prod');
 
   expect(stationOutput.targetHost).toStrictEqual('');
 
@@ -182,7 +182,7 @@ test('Test Sync New Conn', () => {
     newConnConcat: 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
   };
 
-  const stationOutput2 = alterStationValuesToFitCategories(stationInput, 'PROD');
+  const stationOutput2 = alterStationValuesToFitCategories(stationInput, 'prod');
 
   expect(stationOutput2.targetPortPof).toStrictEqual(8080);
   expect(stationOutput2.targetHostPof).toStrictEqual('https://test.it');
@@ -215,7 +215,7 @@ test('Test Sync GAD', () => {
     newConnConcat: '',
   };
 
-  const stationOutput2 = alterStationValuesToFitCategories(stationInput, 'PROD');
+  const stationOutput2 = alterStationValuesToFitCategories(stationInput, 'prod');
 
   expect(stationOutput2.ip).toStrictEqual('test.it');
   expect(stationOutput2.port).toStrictEqual(8080);

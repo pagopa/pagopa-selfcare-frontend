@@ -12,6 +12,7 @@ import {
 import { PartySwitchItem } from '@pagopa/mui-italia/dist/components/PartySwitch';
 import { buildAssistanceURI } from '@pagopa/selfcare-common-frontend/services/assistanceService';
 import { useTranslation } from 'react-i18next';
+import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ENV } from '../../utils/env';
 
 type PartyEntity = PartySwitchItem;
@@ -96,7 +97,13 @@ const CommonHeader = ({
             onExit(() => window.location.assign(buildAssistanceURI(assistanceEmail)))
           }
           onLogin={() => onExit(() => window.location.assign(ENV.URL_FE.LOGIN))}
-          onLogout={() => onExit(() => window.location.assign(ENV.URL_FE.LOGOUT))}
+          onLogout={() =>
+            onExit(() => {
+              storageTokenOps.delete();
+              storageUserOps.delete();
+              window.location.assign(ENV.URL_FE.LOGOUT);
+            })
+          }
           enableLogin={enableLogin}
           userActions={userActions}
           enableDropdown={enableDropdown}
@@ -106,9 +113,9 @@ const CommonHeader = ({
       {withSecondHeader === true ? (
         <nav>
           <HeaderProduct
-            borderBottom={ENV.ENV !== 'PROD' ? 3 : undefined}
-            borderColor={ENV.ENV !== 'PROD' ? theme.palette.warning.main : undefined}
-            chipColor={ENV.ENV !== 'PROD' ? 'warning' : undefined}
+            borderBottom={ENV.ENV !== 'prod' ? 3 : undefined}
+            borderColor={ENV.ENV !== 'prod' ? theme.palette.warning.main : undefined}
+            chipColor={ENV.ENV !== 'prod' ? 'warning' : undefined}
             chipLabel={t(`header.envLabel.${ENV.ENV}`)}
             productId={selectedProductId}
             productsList={

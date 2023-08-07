@@ -18,7 +18,10 @@ import { store } from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
 import { StationFormAction, StationOnCreation } from '../../../model/Station';
 import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
-import { RedirectProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {
+  ProtocolEnum,
+  RedirectProtocolEnum,
+} from '../../../api/generated/portal/StationDetailsDto';
 import { isOperator } from '../components/commonFunctions';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
@@ -268,6 +271,48 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const confirmBtn = screen.getByText('addEditStationPage.confirmModal.confirmButtonOpe');
     fireEvent.click(confirmBtn);
+  });
+
+  test('Test rendering AddEditStationForm with operator true', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              goBack={jest.fn()}
+              stationDetail={{
+                ...stationDetail,
+                ip: '/api.uat.platform.pagopa.it',
+                protocol: ProtocolEnum.HTTPS,
+                service: '/gpd-paymements/api/v1',
+                port: 443,
+                targetHost: '',
+              }}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const version = screen.getByTestId('version-test') as HTMLInputElement;
+    const password = screen.getByTestId('password-test') as HTMLInputElement;
+    const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
+    const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
+    const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
+    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
+
+    const radioGPD = document.querySelector(
+      '[data-testId="radio-button-gdp"] input[type="radio"]'
+    ) as HTMLInputElement;
+
+    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
+      'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
+    );
+    expect(radioGPD.checked).toBeTruthy();
+    // console.log('checked', test.checked);
   });
 
   test('Test gdpConcat select handleChange with operator true', async () => {

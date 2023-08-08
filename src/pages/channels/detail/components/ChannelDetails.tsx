@@ -127,27 +127,11 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="sidenav">{t('channelDetailPage.target')}</Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetIp')}</Typography>
+                  <Typography variant="body2">{t('channelDetailPage.endPoint')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.target_host}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetService')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.target_path}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('channelDetailPage.targetPort')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail.target_port}
+                    {`${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -332,7 +316,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {channelDetail?.proxy_host ?? '-'}
+                    {`${channelDetail?.proxy_host}:${channelDetail?.proxy_port}` ?? '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>

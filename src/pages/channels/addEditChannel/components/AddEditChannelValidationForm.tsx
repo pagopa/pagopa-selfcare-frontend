@@ -18,9 +18,14 @@ import {
 import { theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
+import { useEffect } from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ENV } from '../../../../utils/env';
+import {
+  ChannelDetailsResource,
+  ProtocolEnum,
+} from '../../../../api/generated/portal/ChannelDetailsResource';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -29,14 +34,20 @@ type Props = {
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
+  channelDet?: ChannelDetailsResource;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
   handleChangeNumberOnly,
+  channelDet,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    console.log('PROXY UNION', formik.values.proxyUnion);
+  }, []);
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -61,6 +72,10 @@ Props) => {
     ENV.ENV === 'PROD'
       ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
       : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
+
+  const initialIpUnionValue = `${
+    channelDet?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+  }${channelDet?.ip}${channelDet?.port}${channelDet?.service}`;
 
   return (
     <Paper
@@ -157,17 +172,20 @@ Props) => {
                   name="ipUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
-                  value={formik.values.ipUnion}
-                  onChange={(e) => formik.handleChange(e)}
+                  value={
+                    formik.values.ipUnion === initialIpUnionValue
+                      ? forwarder01
+                      : formik.values.ipUnion
+                  }
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    formik.setFieldValue('ipUnion', e.target.value);
+                  }}
                   inputProps={{
                     'data-testid': 'new-connection-channel',
                   }}
                 >
-                  <MenuItem
-                    key={'forwarder01'}
-                    value={forwarder01}
-                    selected={formik.values.ipUnion.includes(forwarder01)}
-                  >
+                  <MenuItem key={'forwarder01'} value={forwarder01}>
                     {t('addEditChannelPage.addForm.validationForm.fields.forwarder01')}
                   </MenuItem>
                 </Select>
@@ -193,13 +211,20 @@ Props) => {
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
                   value={formik.values.proxyUnion}
-                  onChange={(e) => formik.handleChange(e)}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    formik.setFieldValue('proxyUnion', e.target.value);
+                  }}
                   inputProps={{
                     'data-testid': 'proxy-union-test',
                   }}
                 >
                   {proxyOptions.map((option: any) => (
-                    <MenuItem key={option.label} value={option.value}>
+                    <MenuItem
+                      key={option.label}
+                      value={option.value}
+                      selected={formik.values.proxyUnion === option.value} // Imposta 'selected' in base al valore
+                    >
                       {option.label}
                     </MenuItem>
                   ))}

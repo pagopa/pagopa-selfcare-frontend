@@ -41,7 +41,7 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
-import { isOperator, isValidURL, splitURL } from '../../components/commonFunctions';
+import { isOperator, isValidURL } from '../../components/commonFunctions';
 import {
   ChannelDetailsResource,
   ProtocolEnum,
@@ -96,7 +96,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         port: channelDetail.port ?? 0,
         primitive_version: channelDetail.primitive_version ?? undefined,
         protocol: channelDetail.protocol ?? undefined,
-        proxyUnion: `${channelDetail.proxy_host}${channelDetail.proxy_port}`,
+        proxyUnion: `${channelDetail.proxy_host}:${channelDetail.proxy_port}`,
         proxy_host: channelDetail.proxy_host ?? '',
         proxy_port: channelDetail.proxy_port ?? undefined,
         recovery: channelDetail.recovery ?? false,
@@ -171,9 +171,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           password: !values.password
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
-          ip: !values.ip
+          ipUnion: !values.ipUnion
             ? t('addEditChannelPage.validationMessage.requiredField')
-            : !isValidURL(values.ip)
+            : !isValidURL(values.ipUnion)
             ? t('addEditChannelPage.validationMessage.urlNotValid')
             : undefined,
 
@@ -193,12 +193,25 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   });
 
   useEffect(() => {
-    console.log('FORMIK', formik.values);
-    console.log('FORMIK VALID', formik.isValid);
-    splitTarget();
-    splitNewConnection();
-    splitProxy();
-  }, [formik.values.targetUnion, formik.values.ipUnion, formik.values.proxyUnion]);
+    const updatedValues = { ...formik.values };
+    splitTarget(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.targetUnion]);
+
+  useEffect(() => {
+    const updatedValues = { ...formik.values };
+    splitNewConnection(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.ipUnion]);
+
+  useEffect(() => {
+    const updatedValues = { ...formik.values };
+    splitProxy(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.proxyUnion]);
 
   useEffect(() => {
     setLoadingPayment(true);
@@ -223,57 +236,81 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       .finally(() => setLoadingPayment(false));
   }, []);
 
-  const splitTarget = () => {
-    if (formik.values.targetUnion && formik.values.targetUnion !== '') {
+  const splitURL = (targetURL: string) => {
+    try {
+      const url = new URL(targetURL);
+      return {
+        protocolSplit: url.protocol,
+        hostSplit: url.hostname,
+        portSplit:
+          Number(url.port) !== 0 && Number(url.port) !== 80
+            ? Number(url.port)
+            : url.protocol === 'https:'
+            ? 443
+            : 80,
+        pathSplit: url.pathname + url.search + url.hash,
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      protocolSplit: '',
+      hostSplit: '',
+      portSplit: 0,
+      pathSplit: '',
+    };
+  };
+
+  const splitTarget = (values: ChannelOnCreation) => {
+    const normalizedTargetUnion = formik.values.targetUnion.trim(); // Normalizza il valore rimuovendo spazi iniziali e finali
+
+    if (normalizedTargetUnion && normalizedTargetUnion !== '') {
       const splitTargetUnion = splitURL(formik.values.targetUnion);
 
       if (splitTargetUnion) {
         const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
 
-        formik
-          .setValues({
-            ...formik.values,
-            target_host: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
-            target_path: pathSplit,
-            target_port: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
-          })
-          .catch((e) => console.error(e));
+        // eslint-disable-next-line functional/immutable-data
+        values.target_host = `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_path = pathSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
       }
     }
   };
 
-  const splitProxy = () => {
+  const splitProxy = (values: ChannelOnCreation) => {
     if (formik.values.proxyUnion && formik.values.proxyUnion !== '') {
       const splitProxyUnion = splitURL(formik.values.proxyUnion);
       if (splitProxyUnion) {
         const { protocolSplit, hostSplit, portSplit } = splitProxyUnion;
 
-        formik
-          .setValues({
-            ...formik.values,
-            proxy_host: `${protocolSplit + '//'}${hostSplit}`,
-            proxy_port: portSplit,
-          })
-          .catch((e) => console.error(e));
+        // eslint-disable-next-line functional/immutable-data
+        values.proxy_host = `${protocolSplit + '//'}${hostSplit}`;
+        // eslint-disable-next-line functional/immutable-data
+        values.proxy_port = portSplit;
       }
     }
   };
 
-  const splitNewConnection = () => {
-    const splitUrl = splitURL(formik.values.ipUnion);
-    if (splitUrl) {
-      const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+  const splitNewConnection = (values: ChannelOnCreation) => {
+    if (formik.values.ipUnion && formik.values.ipUnion !== '') {
+      const splitUrl = splitURL(formik.values.ipUnion);
+      if (splitUrl) {
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
 
-      formik
-        .setValues({
-          ...formik.values,
-          protocol: protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP,
-          ip: hostSplit,
-          port: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
-          service: pathSplit,
-          serv_plugin: pathSplit,
-        })
-        .catch((e) => console.error(e));
+        // eslint-disable-next-line functional/immutable-data
+        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        // eslint-disable-next-line functional/immutable-data
+        values.ip = hostSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+        // eslint-disable-next-line functional/immutable-data
+        values.service = pathSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.serv_plugin = pathSplit;
+      }
     }
   };
 
@@ -623,6 +660,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
+          channelDet={channelDetail}
         />
       ) : null}
 

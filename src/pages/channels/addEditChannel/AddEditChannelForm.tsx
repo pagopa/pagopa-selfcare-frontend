@@ -398,6 +398,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       })}`;
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
+        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }

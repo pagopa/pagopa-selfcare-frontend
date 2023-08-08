@@ -13,7 +13,7 @@ import {
 } from '../../../api/generated/portal/StationDetailResource';
 import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 
 const nodeCrypto = require('crypto');
 window.crypto = {
@@ -23,7 +23,7 @@ window.crypto = {
 };
 const genPassword = crypto.getRandomValues(new Uint32Array(1)).toString();
 
-jest.mock('../components/commonFunctions');
+jest.mock('../../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

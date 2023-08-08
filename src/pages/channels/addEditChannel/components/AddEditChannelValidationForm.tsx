@@ -45,10 +45,6 @@ const AddEditChannelValidationForm = ({
 Props) => {
   const { t } = useTranslation();
 
-  useEffect(() => {
-    console.log('PROXY UNION', formik.values.proxyUnion);
-  }, []);
-
   const inputGroupStyle = {
     borderRadius: 1,
     border: 1,

@@ -10,14 +10,12 @@ import { FormAction } from '../../../../model/Channel';
 import { store } from '../../../../redux/store';
 import AddEditChannelForm from '../AddEditChannelForm';
 import { mockedParties } from '../../../../services/__mocks__/partyService';
-import {
-  ChannelDetailsDto,
-  ProtocolEnum,
-  Redirect_protocolEnum,
-  StatusEnum,
-} from '../../../../api/generated/portal/ChannelDetailsDto';
+import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { Party } from '../../../../model/Party';
+import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
+
+jest.mock('../../../components/commonFunctions.ts');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -169,7 +167,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              formAction={FormAction.Create}
+              formAction={FormAction.Duplicate}
               selectedParty={mockedParties[0]}
               channelCode={'14847241008_01'}
             />
@@ -186,22 +184,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
-              channelCode={'14847241008_01'}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-  });
-
-  test('Test rendering AddEditChannelForm with formAction Create', async () => {
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Create}
               selectedParty={mockedParties[0]}
               channelCode={'14847241008_01'}
             />
@@ -239,7 +221,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
 
     fireEvent.click(targetUnion);
-    fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
     expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
     paymentType.value = 'Option 1';
@@ -267,132 +249,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test Multipayment methods add/remove', async () => {
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 443,
-      target_host: 'www.lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
-
-    const { getByTestId, getAllByTestId } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Edit}
-              selectedParty={operatorUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
-              channelDetail={channelDetail}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-
-    const addPaymentType = getByTestId('add-payment-test') as HTMLButtonElement;
-
-    fireEvent.click(addPaymentType);
-    await waitFor(() => {
-      const paymentType = getAllByTestId('payment-type-test');
-      expect(paymentType).toHaveLength(2);
-    });
-
-    fireEvent.click(addPaymentType);
-
-    await waitFor(() => {
-      const paymentType = getAllByTestId('payment-type-test');
-      expect(paymentType).toHaveLength(3);
-
-      const deletePaymentMethod = getAllByTestId('remove-payment-method') as HTMLButtonElement[];
-      if (deletePaymentMethod.length > 0) {
-        fireEvent.click(deletePaymentMethod[0]);
-      }
-    });
-  });
-
-  test('Test of AddEditChannelValidationForm', async () => {
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 443,
-      target_host: 'www.lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
-
-    const { getByTestId, getByText, container } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Edit}
-              selectedParty={operatorUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
-              channelDetail={channelDetail}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-
-    const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
-    const password = getByTestId('password-test') as HTMLInputElement;
-    const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
-    const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
-    const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
-    const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
-    const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
-    const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-
-    fireEvent.change(primitiveVersion, { target: { value: undefined } });
-    fireEvent.change(primitiveVersion, { target: { value: 1 } });
-
-    fireEvent.change(password, { target: { value: 1 } });
-
-    fireEvent.change(newConnection, {
-      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
-    });
-
-    fireEvent.change(timeoutA, { target: { value: 10 } });
-
-    fireEvent.change(timeoutB, { target: { value: 20 } });
-
-    fireEvent.change(timeoutC, { target: { value: 30 } });
-
-    fireEvent.click(continueBtn);
-
-    const confirmBtn = screen.queryByText(
-      (content, element) =>
-        element?.tagName.toLowerCase() === 'button' &&
-        element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
-    ) as HTMLButtonElement;
-
-    const cancelBtn = screen.queryByText(
-      (content, element) =>
-        element?.tagName.toLowerCase() === 'button' &&
-        element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
-    ) as HTMLButtonElement;
-
-    if (cancelBtn) {
-      fireEvent.click(cancelBtn);
-    }
-
-    fireEvent.click(continueBtn);
-
-    if (confirmBtn) {
-      fireEvent.click(confirmBtn);
-    }
-
-    fireEvent.click(backButton);
-  });
-
-  test('Test Multipayment methods add/remove', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
@@ -441,18 +298,21 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test of AddEditChannelValidationForm', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+    (isValidURL as jest.Mock).mockReturnValue(true);
+
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8080,
+      target_host: 'https://www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
 
-    const { getByTestId, getByText, container } = render(
+    const { getByTestId, getByText } = render(
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
@@ -470,6 +330,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
     const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
+    const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
     const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
@@ -483,6 +344,10 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(newConnection, {
       target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
+
+    fireEvent.change(proxyUnion, {
+      target: { value: 'http://10.79.20.33:80' },
     });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });

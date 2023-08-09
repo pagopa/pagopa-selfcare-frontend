@@ -35,16 +35,3 @@ export const isValidURL = (url: string): boolean => {
     return false; // L'URL non è valido
   }
 };
-
-export const extractStringAndNumber = (input: string): { host: string; port: number } | null => {
-  const matches = input.match(/'([^']+)'\s*(\d+)/);
-
-  if (matches && matches.length === 3) {
-    const host = matches[1];
-    const port = parseInt(matches[2], 10);
-
-    return { host, port };
-  }
-
-  return null;
-};

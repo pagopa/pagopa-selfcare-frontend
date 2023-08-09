@@ -1,6 +1,4 @@
-import { User } from '@pagopa/selfcare-common-frontend/model/User';
-import { store } from '../../../redux/store';
-import { extractStringAndNumber, isOperator, isValidURL, splitURL } from '../commonFunctions';
+import { isOperator, isValidURL, splitURL } from '../commonFunctions';
 
 describe('common function test', () => {
   test('returns true if user is an operator', () => {
@@ -39,21 +37,5 @@ describe('common function test', () => {
 
   test('invalid URL returns false', () => {
     expect(isValidURL('invalid-url')).toBe(false);
-  });
-
-  test('extracts string and number correctly', () => {
-    const input = "'example.com' 8080";
-
-    const result = extractStringAndNumber(input);
-
-    expect(result).toEqual({ host: 'example.com', port: 8080 });
-  });
-
-  test('returns null for invalid input', () => {
-    const invalidInput = 'invalid-input';
-
-    const result = extractStringAndNumber(invalidInput);
-
-    expect(result).toBeNull();
   });
 });

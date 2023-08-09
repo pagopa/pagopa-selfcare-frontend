@@ -347,7 +347,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     });
 
     fireEvent.change(proxyUnion, {
-      target: { value: 'http://10.79.20.33:80' },
+      target: { value: 'https://10.79.20.33:80' },
     });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });

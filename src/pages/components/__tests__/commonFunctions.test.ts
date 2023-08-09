@@ -57,6 +57,3 @@ describe('common function test', () => {
     expect(result).toBeNull();
   });
 });
-function mockUser() {
-  throw new Error('Function not implemented.');
-}

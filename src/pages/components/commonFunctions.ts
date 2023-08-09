@@ -37,9 +37,7 @@ export const isValidURL = (url: string): boolean => {
 };
 
 export const extractStringAndNumber = (input: string): { host: string; port: number } | null => {
-  const regex = /'([^']+)'\s*(\d+)/;
-
-  const matches = input.match(regex);
+  const matches = input.match(/'([^']+)'\s*(\d+)/);
 
   if (matches && matches.length === 3) {
     const host = matches[1];

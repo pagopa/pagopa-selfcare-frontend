@@ -53,14 +53,18 @@ Props) => {
     mb: 3,
   };
 
+  const oldConnectionValue =
+    ENV.ENV === 'PROD' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
+  const newConnectionValue = ENV.ENV === 'PROD' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
+
   const proxyOptions = [
     {
-      label: 'Nuova Connettività',
-      value: ENV.ENV === 'PROD' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`,
+      label: `${newConnectionValue} - (Nuova Connettività)`,
+      value: newConnectionValue,
     },
     {
-      label: 'Vecchia Connettività',
-      value: ENV.ENV === 'PROD' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`,
+      label: `${oldConnectionValue} - (Vecchia Connettività)`,
+      value: oldConnectionValue,
     },
   ];
 
@@ -69,9 +73,9 @@ Props) => {
       ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
       : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
-  const initialIpUnionValue = `${
-    channelDet?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
-  }${channelDet?.ip}${channelDet?.port}${channelDet?.service}`;
+  const ipUnionValue = `${channelDet?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+    channelDet?.ip
+  }${channelDet?.service}`;
 
   return (
     <Paper
@@ -168,11 +172,7 @@ Props) => {
                   name="ipUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
-                  value={
-                    formik.values.ipUnion === initialIpUnionValue
-                      ? forwarder01
-                      : formik.values.ipUnion
-                  }
+                  value={formik.values.ipUnion === forwarder01 ? forwarder01 : ''}
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue('ipUnion', e.target.value);
@@ -206,7 +206,12 @@ Props) => {
                   name="proxyUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
-                  value={formik.values.proxyUnion}
+                  value={
+                    formik.values.proxyUnion === oldConnectionValue ||
+                    formik.values.proxyUnion === newConnectionValue
+                      ? formik.values.proxyUnion
+                      : ''
+                  }
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue('proxyUnion', e.target.value);

@@ -11,8 +11,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ROUTES from '../../../../routes';
 import { isOperator } from '../../../components/commonFunctions';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
-import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
+import {
+  ProtocolEnum,
+  WrapperStatusEnum,
+} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import { StatusChip } from '../../../../components/StatusChip';
+import { ENV } from '../../../../utils/env';
 import DetailButtons from './DetailButtons';
 
 type Props = {
@@ -26,7 +30,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
 
   const showOrHidePassword = (password?: string) => {
@@ -36,12 +39,14 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
     return hidePassword;
   };
 
-  const showOrHideNewPassword = (newPassword?: string) => {
-    if (showNewPassword) {
-      return newPassword;
-    }
-    return hidePassword;
-  };
+  const forwarder01 =
+    ENV.ENV === 'PROD'
+      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
+
+  const newConnectionValue = `${
+    channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+  }${channelDetail.ip}${channelDetail.service}`;
 
   return (
     <Grid container justifyContent={'center'}>
@@ -301,7 +306,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {t('channelDetailValidationPage.forwarder01')}
+                    {forwarder01 === newConnectionValue
+                      ? t('channelDetailValidationPage.forwarder01')
+                      : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
@@ -316,7 +323,9 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {`${channelDetail?.proxy_host}:${channelDetail?.proxy_port}` ?? '-'}
+                    {channelDetail?.proxy_host && channelDetail?.proxy_port
+                      ? `${channelDetail?.proxy_host}:${channelDetail?.proxy_port}`
+                      : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>

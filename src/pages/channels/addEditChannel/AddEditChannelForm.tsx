@@ -85,7 +85,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         flag_io: channelDetail.flag_io ?? false,
         ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
           channelDetail.ip
-        }${channelDetail.port}${channelDetail.service}`,
+        }${channelDetail.service}`,
         ip: channelDetail.ip ?? '',
         new_password: channelDetail.new_password ?? '',
         nmp_service: channelDetail.nmp_service ?? '',
@@ -200,6 +200,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   }, [formik.values.targetUnion]);
 
   useEffect(() => {
+    console.log(
+      'ipUnion',
+      `${channelDetail?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+        channelDetail?.ip
+      }${channelDetail?.port}${channelDetail?.service}`
+    );
     const updatedValues = { ...formik.values };
     splitNewConnection(updatedValues);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -398,7 +404,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       })}`;
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }

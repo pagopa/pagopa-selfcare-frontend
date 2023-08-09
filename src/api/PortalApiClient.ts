@@ -251,7 +251,7 @@ export const PortalApi = {
   createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await apiConfigClient.createChannelUsingPOST({
-      body: channelBody2Send,
+      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },

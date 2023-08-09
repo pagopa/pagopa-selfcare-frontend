@@ -126,13 +126,13 @@ export const getIban = (_iban: string): Promise<any> =>
 export const createIban = (_iban: IbanCreateRequestDto): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIban));
 
-export const updateIban = (_iban: IbanOnCreation): Promise<IbanResource> =>
+export const updateIban = (_iban: IbanCreateRequestDto): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIban));
 
-export const updateIbanStandIn = (_iban: IbanOnCreation): Promise<IbanResource> =>
+export const updateIbanStandIn = (_iban: IbanCreateRequestDto): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIbanStandIn));
 
-export const updateIbanCup = (_iban: IbanOnCreation): Promise<IbanResource> =>
+export const updateIbanCup = (_iban: IbanCreateRequestDto): Promise<IbanResource> =>
   new Promise((resolve) => resolve(mockedIbanCup));
 
 export const deleteIban = (_creditorInstitutionCode: string, _ibanValue: string): Promise<void> =>

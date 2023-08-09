@@ -27,34 +27,28 @@ import {
 } from '@mui/icons-material';
 import { generatePath } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import {
   // associatePSPtoChannel,
   createChannel,
   createWrapperChannelDetails,
   getPaymentTypes,
-  getWfespPlugins,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
 } from '../../../services/channelService';
 import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
 import { Party } from '../../../model/Party';
-import {
-  LOADING_TASK_CHANNEL_ADD_EDIT,
-  LOADING_TASK_PAYMENT_TYPE,
-  LOADING_TASK_WFESP_PLUGIN,
-} from '../../../utils/constants';
-import {
-  ChannelDetailsDto,
-  Redirect_protocolEnum,
-} from '../../../api/generated/portal/ChannelDetailsDto';
+import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
 import { sortPaymentType } from '../../../model/PaymentType';
 import ConfirmModal from '../../components/ConfirmModal';
-import { isOperator } from '../../stations/components/commonFunctions';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { isOperator, isValidURL } from '../../components/commonFunctions';
+import {
+  ChannelDetailsResource,
+  ProtocolEnum,
+} from '../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
-import { WfespPluginConf } from '../../../api/generated/portal/WfespPluginConf';
+import { ChannelOnCreation, FormAction } from '../../../model/Channel';
+import { ENV } from '../../../utils/env';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -72,91 +66,253 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
-  const setLoadingWfesp = useLoading(LOADING_TASK_WFESP_PLUGIN);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
-  const [wfespPlugin, setWfespPlugin] = useState<Array<WfespPluginConf>>([]);
   const operator = isOperator();
-  const redirectProtocol = ['HTTP', 'HTTPS'];
 
   const initialFormData = (
     channelCode: string,
     channelDetail?: ChannelDetailsResource,
     selectedParty?: Party
-  ): ChannelDetailsDto =>
-    channelDetail
-      ? {
-          broker_description: channelDetail.broker_description ?? '',
-          broker_psp_code: channelDetail.broker_psp_code ?? '',
-          channel_code: channelCode,
-          digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
-          ip: channelDetail.ip ?? '',
-          new_password: channelDetail.new_password ?? '',
-          nmp_service: channelDetail.nmp_service ?? '',
-          on_us: channelDetail.on_us ?? false,
-          password: channelDetail.password ?? '',
-          payment_model: channelDetail.payment_model ?? undefined,
-          payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
-          port: channelDetail.port ?? 0,
-          primitive_version: channelDetail.primitive_version ?? undefined,
-          protocol: channelDetail.protocol ?? undefined,
-          proxy_host: channelDetail.proxy_host ?? '',
-          proxy_port: channelDetail.proxy_port ?? 0,
-          flag_io: channelDetail.flag_io ?? false,
-          recovery: channelDetail.recovery ?? false,
-          redirect_ip: channelDetail.redirect_ip ?? '',
-          redirect_path: channelDetail.redirect_path ?? '',
-          redirect_port: channelDetail.redirect_port ?? undefined,
-          redirect_protocol: Redirect_protocolEnum.HTTPS, // channelDetail.redirect_protocol,
-          redirect_query_string: channelDetail.redirect_query_string ?? '',
-          card_chart: false,
-          rt_push: channelDetail.rt_push ?? false,
-          serv_plugin: channelDetail.serv_plugin ?? '',
-          service: channelDetail.service ?? '',
-          target_host: channelDetail.target_host ?? '',
-          target_path: channelDetail.target_path ?? '',
-          target_port: channelDetail.target_port ?? undefined,
-          thread_number: channelDetail.thread_number ?? 0,
-          timeout_a: channelDetail.timeout_a ?? 0,
-          timeout_b: channelDetail.timeout_b ?? 0,
-          timeout_c: channelDetail.timeout_c ?? 0,
+  ): ChannelOnCreation => {
+    if (channelDetail) {
+      return {
+        broker_description: channelDetail.broker_description ?? '',
+        broker_psp_code: channelDetail.broker_psp_code ?? '',
+        card_chart: false,
+        channel_code: channelDetail.channel_code,
+        digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
+        flag_io: channelDetail.flag_io ?? false,
+        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+          channelDetail.ip
+        }${channelDetail.port}${channelDetail.service}`,
+        ip: channelDetail.ip ?? '',
+        new_password: channelDetail.new_password ?? '',
+        nmp_service: channelDetail.nmp_service ?? '',
+        on_us: channelDetail.on_us ?? false,
+        password: channelDetail.password ?? '',
+        payment_model: channelDetail.payment_model ?? undefined,
+        payment_types: channelDetail.payment_types ? [...channelDetail.payment_types] : [''],
+        port: channelDetail.port ?? 0,
+        primitive_version: channelDetail.primitive_version ?? undefined,
+        protocol: channelDetail.protocol ?? undefined,
+        proxyUnion: `${channelDetail.proxy_host}:${channelDetail.proxy_port}`,
+        proxy_host: channelDetail.proxy_host ?? '',
+        proxy_port: channelDetail.proxy_port ?? undefined,
+        recovery: channelDetail.recovery ?? false,
+        rt_push: channelDetail.rt_push ?? false,
+        serv_plugin: channelDetail.serv_plugin ?? '',
+        service: channelDetail.service ?? '',
+        target_host: channelDetail.target_host ?? '',
+        target_path: channelDetail.target_path ?? '',
+        target_port: channelDetail.target_port ?? undefined,
+        targetUnion: `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`,
+        thread_number: channelDetail.thread_number ?? 0,
+        timeout_a: channelDetail.timeout_a ?? 0,
+        timeout_b: channelDetail.timeout_b ?? 0,
+        timeout_c: channelDetail.timeout_c ?? 0,
+      };
+    } else {
+      return {
+        broker_description: selectedParty?.description ?? '',
+        broker_psp_code: selectedParty?.fiscalCode ?? '',
+        channel_code: channelCode,
+        digital_stamp_brand: false,
+        flag_io: false,
+        ip: '',
+        ipUnion: '',
+        password: '',
+        payment_model: undefined,
+        payment_types: [''],
+        primitive_version: undefined,
+        protocol: undefined,
+        proxyUnion: '',
+        proxy_host: '',
+        proxy_port: undefined,
+        target_host: '',
+        target_path: '',
+        target_port: undefined,
+        targetUnion: '',
+        timeout_a: 0,
+        timeout_b: 0,
+        timeout_c: 0,
+      };
+    }
+  };
+
+  const validate = (values: Partial<ChannelOnCreation>) =>
+    Object.fromEntries(
+      Object.entries({
+        ...{
+          broker_psp_code: !values.broker_psp_code
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          broker_description: !values.broker_description
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          channel_code: !values.channel_code
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          targetUnion: !values.targetUnion
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : !isValidURL(values.targetUnion)
+            ? t('addEditChannelPage.validationMessage.urlNotValid')
+            : undefined,
+          payment_types: values.payment_types?.includes('')
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+        },
+        ...(operator && {
+          primitive_version: !values.primitive_version
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : validatePrimitiveVersion(values.primitive_version)
+            ? t('addEditStationPage.validation.overVersion')
+            : undefined,
+          password: !values.password
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : undefined,
+          ipUnion: !values.ipUnion
+            ? t('addEditChannelPage.validationMessage.requiredField')
+            : !isValidURL(values.ipUnion)
+            ? t('addEditChannelPage.validationMessage.urlNotValid')
+            : undefined,
+
+          proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
+        }),
+      }).filter(([_key, value]) => value)
+    );
+
+  const formik = useFormik<ChannelOnCreation>({
+    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
+    validate,
+    onSubmit: () => {
+      setShowConfirmModal(true);
+    },
+    enableReinitialize: true,
+    validateOnMount: true,
+  });
+
+  useEffect(() => {
+    const updatedValues = { ...formik.values };
+    splitTarget(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.targetUnion]);
+
+  useEffect(() => {
+    const updatedValues = { ...formik.values };
+    splitNewConnection(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.ipUnion]);
+
+  useEffect(() => {
+    const updatedValues = { ...formik.values };
+    splitProxy(updatedValues);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setValues(updatedValues);
+  }, [formik.values.proxyUnion]);
+
+  useEffect(() => {
+    setLoadingPayment(true);
+    getPaymentTypes()
+      .then((results) => {
+        if (results) {
+          setPaymentOptions(results);
         }
-      : {
-          broker_description: selectedParty?.description ?? '',
-          broker_psp_code: selectedParty?.fiscalCode ?? '',
-          channel_code: channelCode,
-          digital_stamp_brand: false,
-          ip: '',
-          new_password: '',
-          nmp_service: '',
-          on_us: false,
-          password: '',
-          payment_model: undefined,
-          payment_types: [''],
-          port: 0,
-          primitive_version: undefined,
-          protocol: undefined,
-          proxy_host: '',
-          proxy_port: 0,
-          flag_io: false,
-          recovery: false,
-          redirect_ip: '',
-          redirect_path: '',
-          redirect_port: undefined,
-          redirect_protocol: Redirect_protocolEnum.HTTPS,
-          redirect_query_string: '',
-          card_chart: false,
-          rt_push: false,
-          serv_plugin: '',
-          service: '',
-          target_host: '',
-          target_path: '',
-          target_port: undefined,
-          thread_number: 0,
-          timeout_a: 0,
-          timeout_b: 0,
-          timeout_c: 0,
-        };
+      })
+      .catch((reason) => {
+        addError({
+          id: 'GET_PAYMENT_TYPES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting payment types`,
+          toNotify: true,
+          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+          component: 'Toast',
+        });
+      })
+      .finally(() => setLoadingPayment(false));
+  }, []);
+
+  const splitURL = (targetURL: string) => {
+    try {
+      const url = new URL(targetURL);
+      return {
+        protocolSplit: url.protocol,
+        hostSplit: url.hostname,
+        portSplit:
+          Number(url.port) !== 0 && Number(url.port) !== 80
+            ? Number(url.port)
+            : url.protocol === 'https:'
+            ? 443
+            : 80,
+        pathSplit: url.pathname + url.search + url.hash,
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return {
+      protocolSplit: '',
+      hostSplit: '',
+      portSplit: 0,
+      pathSplit: '',
+    };
+  };
+
+  const splitTarget = (values: ChannelOnCreation) => {
+    const normalizedTargetUnion = formik.values.targetUnion.trim(); // Normalizza il valore rimuovendo spazi iniziali e finali
+
+    if (normalizedTargetUnion && normalizedTargetUnion !== '') {
+      const splitTargetUnion = splitURL(formik.values.targetUnion);
+
+      if (splitTargetUnion) {
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
+
+        // eslint-disable-next-line functional/immutable-data
+        values.target_host = `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_path = pathSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.target_port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+      }
+    }
+  };
+
+  const splitProxy = (values: ChannelOnCreation) => {
+    if (formik.values.proxyUnion && formik.values.proxyUnion !== '') {
+      const splitProxyUnion = splitURL(formik.values.proxyUnion);
+      if (splitProxyUnion) {
+        const { protocolSplit, hostSplit, portSplit } = splitProxyUnion;
+
+        // eslint-disable-next-line functional/immutable-data
+        values.proxy_host = `${protocolSplit + '//'}${hostSplit}`;
+        // eslint-disable-next-line functional/immutable-data
+        values.proxy_port = portSplit;
+      }
+    }
+  };
+
+  const splitNewConnection = (values: ChannelOnCreation) => {
+    if (formik.values.ipUnion && formik.values.ipUnion !== '') {
+      const splitUrl = splitURL(formik.values.ipUnion);
+      if (splitUrl) {
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+
+        // eslint-disable-next-line functional/immutable-data
+        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        // eslint-disable-next-line functional/immutable-data
+        values.ip = hostSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+        // eslint-disable-next-line functional/immutable-data
+        values.service = pathSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.serv_plugin = pathSplit;
+      }
+    }
+  };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -173,97 +329,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     return false;
   };
 
-  const validate = (values: Partial<ChannelDetailsDto>) =>
-    Object.fromEntries(
-      Object.entries({
-        ...{
-          broker_psp_code: !values.broker_psp_code
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          broker_description: !values.broker_description
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          channel_code: !values.channel_code
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_port: !values.redirect_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.redirect_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          redirect_ip: !values.redirect_ip
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_path: !values.redirect_path
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          redirect_query_string: !values.redirect_query_string
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          target_host: !values.target_host
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          target_path: !values.target_path
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          target_port: !values.target_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.target_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          payment_types: values.payment_types?.includes('')
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-        },
-        ...(operator && {
-          primitive_version: !values.primitive_version
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : validatePrimitiveVersion(values.primitive_version)
-            ? t('addEditStationPage.validationMessage.validation.overVersion')
-            : undefined,
-          password: !values.password
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          protocol: !values.protocol
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          ip: !values.ip ? t('addEditChannelPage.validationMessage.requiredField') : undefined,
-          port: !values.port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          service: !values.service ? t('addEditChannelPage.requiredField') : undefined,
-          nmp_service: !values.nmp_service ? t('addEditChannelPage.requiredField') : undefined,
-          proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
-          proxy_port: !values.proxy_port
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : isNaN(values.proxy_port)
-            ? t('addEditChannelPage.validationMessage.requiredInputNumber')
-            : undefined,
-          payment_model: !values.payment_model
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-          serv_plugin: !values.serv_plugin
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : undefined,
-        }),
-      }).filter(([_key, value]) => value)
-    );
-
-  const enableSubmit = (values: ChannelDetailsDto) => {
+  const enableSubmit = (values: ChannelOnCreation) => {
     const baseConditions =
       values.broker_psp_code !== '' &&
       values.broker_description !== '' &&
       values.channel_code !== '' &&
-      values.redirect_protocol?.toString() !== '' &&
-      values.redirect_port?.toString() !== '' &&
-      values.redirect_ip !== '' &&
-      values.redirect_path !== '' &&
-      values.redirect_query_string !== '' &&
-      values.target_host !== '' &&
-      values.target_path !== '' &&
-      values.target_port?.toString() !== '' &&
+      values.targetUnion !== '' &&
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
@@ -273,15 +344,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         if (
           values.primitive_version?.toString() !== '' &&
           values.password !== '' &&
-          values.protocol?.toString() !== '' &&
-          values.ip !== '' &&
-          values.port?.toString() !== '' &&
-          values.service !== '' &&
-          values.nmp_service !== '' &&
-          values.proxy_host !== '' &&
-          values.proxy_port?.toString() !== '' &&
-          values.payment_model?.toString() !== '' &&
-          values.serv_plugin !== ''
+          values.ipUnion !== '' &&
+          values.proxyUnion !== ''
         ) {
           if (operator && values.payment_types && values.payment_types.length > 0) {
             for (const paymentType of values.payment_types) {
@@ -297,16 +361,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
     return false;
   };
-
-  const formik = useFormik<ChannelDetailsDto>({
-    initialValues: initialFormData(channelCode, channelDetail, selectedParty),
-    validate,
-    onSubmit: () => {
-      setShowConfirmModal(true);
-    },
-    enableReinitialize: true,
-    validateOnMount: true,
-  });
 
   const addPaymentMethod = async () => {
     if (operator && formik.values.payment_types) {
@@ -334,7 +388,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     }
   };
 
-  const submit = async (values: ChannelDetailsDto) => {
+  const submit = async (values: ChannelOnCreation) => {
     setShowConfirmModal(false);
     setLoading(true);
 
@@ -342,7 +396,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
         channelId: formik.values.channel_code,
       })}`;
+
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
+        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }
@@ -387,52 +443,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setLoadingPayment(true);
-    getPaymentTypes()
-      .then((results) => {
-        if (results) {
-          setPaymentOptions(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_PAYMENT_TYPES',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting payment types`,
-          toNotify: true,
-          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingPayment(false));
-
-    if (operator) {
-      setLoadingWfesp(true);
-      getWfespPlugins()
-        .then((result) => {
-          if (typeof result.wfesp_plugin_confs !== 'undefined') {
-            setWfespPlugin([...result.wfesp_plugin_confs]);
-          }
-        })
-        .catch((reason) => {
-          addError({
-            id: 'GET_WFESP_PLUGIN',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while getting wfesp plugin`,
-            toNotify: true,
-            displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-            displayableDescription: t('addEditChannelPage.addForm.errorMessageWfespDesc'),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoadingWfesp(false));
-    }
-  }, []);
 
   const handleChangeNumberOnly = (
     e: React.ChangeEvent<any>,
@@ -541,122 +551,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
           <Box sx={inputGroupStyle}>
             <AddEditChannelFormSectionTitle
-              title={t('addEditChannelPage.addForm.sections.redirect')}
-              icon={<MenuBookIcon />}
-            ></AddEditChannelFormSectionTitle>
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel size="small">
-                    {t('addEditChannelPage.addForm.fields.redirectProtocol')}
-                  </InputLabel>
-                  <Select
-                    fullWidth
-                    id="redirect_protocol"
-                    name="redirect_protocol"
-                    label={t('addEditChannelPage.addForm.fields.redirectProtocol')}
-                    size="small"
-                    defaultValue={formik.values.redirect_protocol}
-                    value={
-                      formik.values.redirect_protocol === 'HTTPS'
-                        ? Redirect_protocolEnum.HTTPS
-                        : Redirect_protocolEnum.HTTP
-                    }
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.redirect_protocol && Boolean(formik.errors.redirect_protocol)
-                    }
-                    inputProps={{
-                      'data-testid': 'redirect-protocol-test',
-                    }}
-                  >
-                    {redirectProtocol.map((p) => (
-                      <MenuItem key={p} value={p}>
-                        {p}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_port"
-                  name="redirect_port"
-                  type="number"
-                  InputLabelProps={{ shrink: formik.values.redirect_port ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'redirect-port-test',
-                  }}
-                  label={t('addEditChannelPage.addForm.fields.redirectPort')}
-                  size="small"
-                  value={formik.values.redirect_port === 0 ? '' : formik.values.redirect_port}
-                  onChange={(e) => handleChangeNumberOnly(e, 'redirect_port', formik)}
-                  error={formik.touched.redirect_port && Boolean(formik.errors.redirect_port)}
-                  helperText={formik.touched.redirect_port && formik.errors.redirect_port}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_ip"
-                  name="redirect_ip"
-                  label={t('addEditChannelPage.addForm.fields.redirectIp')}
-                  size="small"
-                  value={formik.values.redirect_ip}
-                  onChange={formik.handleChange}
-                  error={formik.touched.redirect_ip && Boolean(formik.errors.redirect_ip)}
-                  helperText={formik.touched.redirect_ip && formik.errors.redirect_ip}
-                  inputProps={{
-                    'data-testid': 'redirect-ip-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_path"
-                  name="redirect_path"
-                  label={t('addEditChannelPage.addForm.fields.redirectService')}
-                  size="small"
-                  value={formik.values.redirect_path}
-                  onChange={formik.handleChange}
-                  error={formik.touched.redirect_path && Boolean(formik.errors.redirect_path)}
-                  helperText={formik.touched.redirect_path && formik.errors.redirect_path}
-                  inputProps={{
-                    'data-testid': 'redirect-service-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="redirect_query_string"
-                  name="redirect_query_string"
-                  label={t('addEditChannelPage.addForm.fields.redirectParameters')}
-                  size="small"
-                  value={formik.values.redirect_query_string}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.redirect_query_string &&
-                    Boolean(formik.errors.redirect_query_string)
-                  }
-                  helperText={
-                    formik.touched.redirect_query_string && formik.errors.redirect_query_string
-                  }
-                  inputProps={{
-                    'data-testid': 'redirect-parameters-test',
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box sx={inputGroupStyle}>
-            <AddEditChannelFormSectionTitle
               title={t('addEditChannelPage.addForm.sections.target')}
               icon={<MenuBookIcon />}
             ></AddEditChannelFormSectionTitle>
@@ -664,54 +558,17 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
               <Grid container item xs={6}>
                 <TextField
                   fullWidth
-                  id="target_host"
-                  name="target_host"
-                  label={t('addEditChannelPage.addForm.fields.targetIp')}
+                  id="targetUnion"
+                  name="targetUnion"
+                  label={t('addEditChannelPage.addForm.fields.endPoint')}
                   size="small"
-                  value={formik.values.target_host}
-                  onChange={formik.handleChange}
-                  error={formik.touched.target_host && Boolean(formik.errors.target_host)}
-                  helperText={formik.touched.target_host && formik.errors.target_host}
+                  value={formik.values.targetUnion}
+                  onChange={(e) => formik.handleChange(e)}
+                  error={formik.touched.targetUnion && Boolean(formik.errors.targetUnion)}
+                  helperText={formik.touched.targetUnion && formik.errors.targetUnion}
                   inputProps={{
-                    'data-testid': 'target-address-test',
+                    'data-testid': 'target-union-test',
                   }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="target_path"
-                  name="target_path"
-                  label={t('addEditChannelPage.addForm.fields.targetService')}
-                  size="small"
-                  value={formik.values.target_path}
-                  onChange={formik.handleChange}
-                  error={formik.touched.target_path && Boolean(formik.errors.target_path)}
-                  helperText={formik.touched.target_path && formik.errors.target_path}
-                  inputProps={{
-                    'data-testid': 'target-service-test',
-                  }}
-                />
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  id="target_port"
-                  name="target_port"
-                  type="number"
-                  InputLabelProps={{ shrink: formik.values.target_port ? true : false }}
-                  inputProps={{
-                    step: 1,
-                    min: 0,
-                    max: 65556,
-                    'data-testid': 'target-port-test',
-                  }}
-                  label={t('addEditChannelPage.addForm.fields.targetPort')}
-                  size="small"
-                  value={formik.values.target_port === 0 ? '' : formik.values.target_port}
-                  onChange={(e) => handleChangeNumberOnly(e, 'target_port', formik)}
-                  error={formik.touched.target_port && Boolean(formik.errors.target_port)}
-                  helperText={formik.touched.target_port && formik.errors.target_port}
                 />
               </Grid>
             </Grid>
@@ -803,7 +660,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          wfespPlugin={wfespPlugin}
+          channelDet={channelDetail}
         />
       ) : null}
 

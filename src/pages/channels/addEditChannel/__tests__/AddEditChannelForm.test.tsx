@@ -10,14 +10,12 @@ import { FormAction } from '../../../../model/Channel';
 import { store } from '../../../../redux/store';
 import AddEditChannelForm from '../AddEditChannelForm';
 import { mockedParties } from '../../../../services/__mocks__/partyService';
-import {
-  ChannelDetailsDto,
-  ProtocolEnum,
-  Redirect_protocolEnum,
-  StatusEnum,
-} from '../../../../api/generated/portal/ChannelDetailsDto';
+import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { Party } from '../../../../model/Party';
+import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
+
+jest.mock('../../../components/commonFunctions.ts');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -106,14 +104,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
-    const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
-    const redirectService = screen.getByTestId('redirect-service-test') as HTMLInputElement;
-    const redirectIp = screen.getByTestId('redirect-ip-test') as HTMLInputElement;
-    const redirectParameters = screen.getByTestId('redirect-parameters-test') as HTMLInputElement;
-    const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
-    const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
-    const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
     const continueBtn = screen.getByText(
       'addEditChannelPage.addForm.continueButton'
@@ -135,40 +126,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(channelCode, { target: { value: 'channelCode' } });
     expect(channelCode.value).toBe('channelCode');
 
-    fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
-
-    fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: '' } });
-
-    fireEvent.click(redirectPort);
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-
-    fireEvent.click(redirectService);
-    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
-    expect(redirectService.value).toBe('redirectService');
-
-    fireEvent.click(redirectIp);
-    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
-    expect(redirectIp.value).toBe('redirectIp');
-
-    fireEvent.click(redirectParameters);
-    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
-    expect(redirectParameters.value).toBe('redirectParameters');
-
-    fireEvent.click(targetAddress);
-    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
-    expect(targetAddress.value).toBe('redirectAddress');
-
-    fireEvent.click(targetService);
-    fireEvent.change(targetService, { target: { value: 'redirectService' } });
-    expect(targetService.value).toBe('redirectService');
-
-    fireEvent.click(targetPort);
-    fireEvent.change(targetPort, { target: { value: undefined } });
-
-    fireEvent.click(targetPort);
-    fireEvent.change(targetPort, { target: { value: 555 } });
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
     fireEvent.click(paymentType);
     fireEvent.change(paymentType, { target: { value: 'Option 1' } });
@@ -207,7 +167,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         <Router history={history}>
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
-              formAction={FormAction.Create}
+              formAction={FormAction.Duplicate}
               selectedParty={mockedParties[0]}
               channelCode={'14847241008_01'}
             />
@@ -240,22 +200,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Create}
-              selectedParty={mockedParties[0]}
-              channelCode={'14847241008_01'}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-  });
-
-  test('Test rendering AddEditChannelForm with formAction Create', async () => {
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Create}
               selectedParty={adminUser[0]}
               channelCode={`${mockedParties[0].fiscalCode}_01`}
             />
@@ -267,14 +211,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-    const redirectProtocol = screen.getByTestId('redirect-protocol-test') as HTMLSelectElement;
-    const redirectPort = screen.getByTestId('redirect-port-test') as HTMLInputElement;
-    const redirectService = screen.getByTestId('redirect-service-test') as HTMLInputElement;
-    const redirectIp = screen.getByTestId('redirect-ip-test') as HTMLInputElement;
-    const redirectParameters = screen.getByTestId('redirect-parameters-test') as HTMLInputElement;
-    const targetAddress = screen.getByTestId('target-address-test') as HTMLInputElement;
-    const targetService = screen.getByTestId('target-service-test') as HTMLInputElement;
-    const targetPort = screen.getByTestId('target-port-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
     const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
     const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
@@ -283,29 +220,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
     expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
 
-    fireEvent.click(redirectProtocol);
-    fireEvent.change(redirectProtocol, { target: { value: Redirect_protocolEnum.HTTP } });
-
-    fireEvent.change(redirectPort, { target: { value: '0' } });
-    fireEvent.change(redirectPort, { target: { value: '555' } });
-
-    fireEvent.change(redirectService, { target: { value: 'redirectService' } });
-    expect(redirectService.value).toBe('redirectService');
-
-    fireEvent.change(redirectIp, { target: { value: 'redirectIp' } });
-    expect(redirectIp.value).toBe('redirectIp');
-
-    fireEvent.change(redirectParameters, { target: { value: 'redirectParameters' } });
-    expect(redirectParameters.value).toBe('redirectParameters');
-
-    fireEvent.change(targetAddress, { target: { value: 'redirectAddress' } });
-    expect(targetAddress.value).toBe('redirectAddress');
-
-    fireEvent.change(targetService, { target: { value: 'redirectService' } });
-    expect(targetService.value).toBe('redirectService');
-
-    fireEvent.change(targetPort, { target: { value: '0' } });
-    fireEvent.change(targetPort, { target: { value: '555' } });
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
     paymentType.value = 'Option 1';
 
@@ -332,172 +249,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test Multipayment methods add/remove', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
-
-    const { getByTestId, getAllByTestId } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Edit}
-              selectedParty={operatorUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
-              channelDetail={channelDetail}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-
-    const addPaymentType = getByTestId('add-payment-test') as HTMLButtonElement;
-
-    fireEvent.click(addPaymentType);
-    await waitFor(() => {
-      const paymentType = getAllByTestId('payment-type-test');
-      expect(paymentType).toHaveLength(2);
-    });
-
-    fireEvent.click(addPaymentType);
-
-    await waitFor(() => {
-      const paymentType = getAllByTestId('payment-type-test');
-      expect(paymentType).toHaveLength(3);
-
-      const deletePaymentMethod = getAllByTestId('remove-payment-method') as HTMLButtonElement[];
-      if (deletePaymentMethod.length > 0) {
-        fireEvent.click(deletePaymentMethod[0]);
-      }
-    });
-  });
-
-  test('Test of AddEditChannelValidationForm', async () => {
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
-
-    const { getByTestId, getByText, container } = render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <AddEditChannelForm
-              formAction={FormAction.Edit}
-              selectedParty={operatorUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
-              channelDetail={channelDetail}
-            />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
-
-    const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
-    const password = getByTestId('password-test') as HTMLInputElement;
-    const newPassword = getByTestId('new-password-code-test') as HTMLInputElement;
-    const protocol = getByTestId('protocol-test') as HTMLInputElement;
-    const ip = getByTestId('ip-test') as HTMLInputElement;
-    const port = getByTestId('port-test') as HTMLInputElement;
-    const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
-    const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
-    const threadNumber = getByTestId('thread-number-test') as HTMLInputElement;
-    const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
-    const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
-    const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
-    const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
-    const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-
-    fireEvent.change(primitiveVersion, { target: { value: undefined } });
-    fireEvent.change(primitiveVersion, { target: { value: 1 } });
-
-    fireEvent.change(password, { target: { value: 1 } });
-
-    fireEvent.change(newPassword, { target: { value: 1 } });
-
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: ProtocolEnum.HTTP } });
-
-    fireEvent.change(ip, { target: { value: 1 } });
-
-    fireEvent.change(port, { target: { value: 1000 } });
-
-    fireEvent.click(paymentModel);
-    fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
-
-    fireEvent.change(servPlugIn, { target: { value: 'abc' } });
-
-    fireEvent.change(threadNumber, { target: { value: 1 } });
-
-    fireEvent.change(timeoutA, { target: { value: 10 } });
-
-    fireEvent.change(timeoutB, { target: { value: 20 } });
-
-    fireEvent.change(timeoutC, { target: { value: 30 } });
-
-    fireEvent.click(continueBtn);
-
-    const confirmBtn = screen.queryByText(
-      (content, element) =>
-        element?.tagName.toLowerCase() === 'button' &&
-        element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
-    ) as HTMLButtonElement;
-
-    const cancelBtn = screen.queryByText(
-      (content, element) =>
-        element?.tagName.toLowerCase() === 'button' &&
-        element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
-    ) as HTMLButtonElement;
-
-    if (cancelBtn) {
-      fireEvent.click(cancelBtn);
-    }
-
-    fireEvent.click(continueBtn);
-
-    if (confirmBtn) {
-      fireEvent.click(confirmBtn);
-    }
-
-    fireEvent.click(backButton);
-  });
-
-  test('Test Multipayment methods add/remove', async () => {
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 443,
+      target_host: 'www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
@@ -539,23 +298,21 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test of AddEditChannelValidationForm', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+    (isValidURL as jest.Mock).mockReturnValue(true);
+
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
       channel_code: `${mockedParties[0].fiscalCode}_01`,
-      redirect_protocol: Redirect_protocolEnum.HTTPS,
-      redirect_path: 'reirect_parameters',
-      redirect_ip: 'esempiolink.redirect.it',
-      redirect_port: 8080,
-      redirect_query_string: 'redirect_service',
-      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8081,
-      target_host: ' lab.link.it',
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8080,
+      target_host: 'https://www.lab.link.it',
       payment_types: ['PPAY'],
       status: StatusEnum.TO_CHECK,
     };
 
-    const { getByTestId, getByText, container } = render(
+    const { getByTestId, getByText } = render(
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
@@ -572,13 +329,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
-    const newPassword = getByTestId('new-password-code-test') as HTMLInputElement;
-    const protocol = getByTestId('protocol-test') as HTMLInputElement;
-    const ip = getByTestId('ip-test') as HTMLInputElement;
-    const port = getByTestId('port-test') as HTMLInputElement;
-    const paymentModel = getByTestId('payment-model-test') as HTMLInputElement;
-    const servPlugIn = getByTestId('serv-plugin-test') as HTMLInputElement;
-    const threadNumber = getByTestId('thread-number-test') as HTMLInputElement;
+    const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
+    const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
     const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
@@ -590,21 +342,13 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(password, { target: { value: 1 } });
 
-    fireEvent.change(newPassword, { target: { value: 1 } });
+    fireEvent.change(newConnection, {
+      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
 
-    fireEvent.click(protocol);
-    fireEvent.change(protocol, { target: { value: ProtocolEnum.HTTP } });
-
-    fireEvent.change(ip, { target: { value: 1 } });
-
-    fireEvent.change(port, { target: { value: 1000 } });
-
-    fireEvent.click(paymentModel);
-    fireEvent.change(paymentModel, { target: { value: 'Multibeneficiario' } });
-
-    fireEvent.change(servPlugIn, { target: { value: 'abc' } });
-
-    fireEvent.change(threadNumber, { target: { value: 1 } });
+    fireEvent.change(proxyUnion, {
+      target: { value: 'https://10.79.20.33:80' },
+    });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });
 

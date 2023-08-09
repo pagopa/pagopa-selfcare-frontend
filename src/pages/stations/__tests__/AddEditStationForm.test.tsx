@@ -22,12 +22,12 @@ import {
   ProtocolEnum,
   RedirectProtocolEnum,
 } from '../../../api/generated/portal/StationDetailsDto';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
 import * as stationService from '../../../services/stationService';
 
-jest.mock('../components/commonFunctions');
+jest.mock('../../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

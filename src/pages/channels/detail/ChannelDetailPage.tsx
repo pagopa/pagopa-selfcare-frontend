@@ -9,7 +9,7 @@ import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { isOperator } from '../../stations/components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 import ChannelDetails from './components/ChannelDetails';
 import ChannelDetailsWrap from './components/ChannelDetailsWrap';
 

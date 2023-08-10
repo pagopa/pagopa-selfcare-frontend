@@ -68,7 +68,14 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+  const [initialIpUnion, setInitialIpUnion] = useState('');
+  const [isSelected, setIsSelected] = useState(false);
   const operator = isOperator();
+
+  const forwarder01 =
+    ENV.ENV === 'PROD'
+      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
   const initialFormData = (
     channelCode: string,
@@ -193,6 +200,16 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   });
 
   useEffect(() => {
+    if (channelDetail) {
+      const ipUnionValue = `${
+        channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+      }${channelDetail.ip}${channelDetail.service}`;
+      setInitialIpUnion(ipUnionValue);
+      setIsSelected(ipUnionValue === forwarder01);
+    }
+  }, [channelDetail]);
+
+  useEffect(() => {
     const updatedValues = { ...formik.values };
     splitTarget(updatedValues);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -200,17 +217,11 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   }, [formik.values.targetUnion]);
 
   useEffect(() => {
-    console.log(
-      'ipUnion',
-      `${channelDetail?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
-        channelDetail?.ip
-      }${channelDetail?.port}${channelDetail?.service}`
-    );
     const updatedValues = { ...formik.values };
     splitNewConnection(updatedValues);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     formik.setValues(updatedValues);
-  }, [formik.values.ipUnion]);
+  }, [formik.values.ipUnion, isSelected]);
 
   useEffect(() => {
     const updatedValues = { ...formik.values };
@@ -301,11 +312,26 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const splitNewConnection = (values: ChannelOnCreation) => {
-    if (formik.values.ipUnion && formik.values.ipUnion !== '') {
+    if (isSelected && formik.values.ipUnion.trim() !== '') {
       const splitUrl = splitURL(formik.values.ipUnion);
       if (splitUrl) {
         const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+        // eslint-disable-next-line functional/immutable-data
+        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        // eslint-disable-next-line functional/immutable-data
+        values.ip = hostSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+        // eslint-disable-next-line functional/immutable-data
+        values.service = pathSplit;
+        // eslint-disable-next-line functional/immutable-data
+        values.serv_plugin = pathSplit;
+      }
+    } else {
+      const splitTargetUnion = splitURL(formik.values.targetUnion);
 
+      if (splitTargetUnion) {
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
         // eslint-disable-next-line functional/immutable-data
         values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
         // eslint-disable-next-line functional/immutable-data
@@ -665,7 +691,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          channelDet={channelDetail}
+          setIsSelected={setIsSelected}
+          isSelected={isSelected}
+          initialIpUnion={initialIpUnion}
+          forwarder01={forwarder01}
         />
       ) : null}
 

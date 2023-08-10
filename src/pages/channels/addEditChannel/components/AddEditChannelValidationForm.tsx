@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
@@ -18,14 +19,10 @@ import {
 import { theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ENV } from '../../../../utils/env';
-import {
-  ChannelDetailsResource,
-  ProtocolEnum,
-} from '../../../../api/generated/portal/ChannelDetailsResource';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -34,16 +31,28 @@ type Props = {
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
-  channelDet?: ChannelDetailsResource;
+  setIsSelected: Dispatch<SetStateAction<boolean>>;
+  isSelected: boolean;
+  initialIpUnion: string;
+  forwarder01: string;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
   handleChangeNumberOnly,
-  channelDet,
+  setIsSelected,
+  isSelected,
+  initialIpUnion,
+  forwarder01,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+
+  const handleChange = () => {
+    console.log('clicked');
+    setIsSelected(!isSelected);
+    console.log('isSelected value', isSelected);
+  };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -67,15 +76,6 @@ Props) => {
       value: oldConnectionValue,
     },
   ];
-
-  const forwarder01 =
-    ENV.ENV === 'PROD'
-      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
-      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
-
-  const ipUnionValue = `${channelDet?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
-    channelDet?.ip
-  }${channelDet?.service}`;
 
   return (
     <Paper
@@ -151,15 +151,10 @@ Props) => {
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={12}>
-              <FormControl>
-                <RadioGroup row name="connection" defaultValue="newConnection">
-                  <FormControlLabel
-                    value="newConnection"
-                    control={<Radio />}
-                    label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
-                  />
-                </RadioGroup>
-              </FormControl>
+              <FormControlLabel
+                control={<Checkbox checked={isSelected} onChange={handleChange} />}
+                label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
+              />
             </Grid>
             <Grid container item xs={6}>
               <FormControl fullWidth>
@@ -167,12 +162,15 @@ Props) => {
                   {t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                 </InputLabel>
                 <Select
+                  disabled={!isSelected}
                   fullWidth
                   id="ipUnion"
                   name="ipUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
-                  value={formik.values.ipUnion === forwarder01 ? forwarder01 : ''}
+                  value={
+                    isSelected ? (formik.values.ipUnion === forwarder01 ? forwarder01 : '') : ''
+                  }
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue('ipUnion', e.target.value);
@@ -219,6 +217,7 @@ Props) => {
                   inputProps={{
                     'data-testid': 'proxy-union-test',
                   }}
+                  error={formik.touched.proxyUnion && Boolean(formik.errors.proxyUnion)}
                 >
                   {proxyOptions.map((option: any) => (
                     <MenuItem

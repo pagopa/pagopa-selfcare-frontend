@@ -6,19 +6,21 @@ import { theme } from '@pagopa/mui-italia';
 import { Provider } from 'react-redux';
 import { store } from '../../../../redux/store';
 import { MemoryRouter, Route } from 'react-router';
+import { mockedIban } from '../../../../services/__mocks__/ibanService';
+
+let getIbanListSpy: jest.SpyInstance;
 
 beforeEach(() => {
+  getIbanListSpy = jest.spyOn(require('../../../../services/ibanService'), 'getIbanList');
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('IbanDetailPage', () => {
-  const ibanId = 'IT99C0222211111000000000002';
-
   it('Test render IbanDetailPage', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/iban/${ibanId}`]}>
+        <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}`]}>
           <Route path="/iban/:ibanId">
             <ThemeProvider theme={theme}>
               <IbanDetailPage />

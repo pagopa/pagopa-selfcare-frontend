@@ -14,7 +14,7 @@ import {
 } from '../../../api/generated/portal/StationDetailResource';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
 import { mockedParties } from '../../../services/__mocks__/partyService';
-import { isOperator } from '../components/commonFunctions';
+import { isOperator } from '../../components/commonFunctions';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -46,7 +46,6 @@ export const mockedFullStationApproved: StationDetailResource = {
   redirectQueryString: 'nessuno',
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   brokerCode: '81001870922',
-  threadNumber: 1,
   timeoutA: 15,
   timeoutB: 30,
   timeoutC: 120,
@@ -73,7 +72,6 @@ export const mockedFullStationToCheck: StationDetailResource = {
   redirectQueryString: 'nessuno',
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   brokerCode: '81001870922',
-  threadNumber: 1,
   timeoutA: 15,
   timeoutB: 30,
   timeoutC: 120,
@@ -96,6 +94,7 @@ describe('<StationDetails />', () => {
             <ThemeProvider theme={theme}>
               <StationDetails
                 stationDetail={mockedFullStationApproved}
+                // @ts-ignore TODO
                 formatedDate={jest.fn()}
                 goBack={() => jest.fn()}
               />
@@ -178,15 +177,5 @@ describe('<StationDetails />', () => {
         </MemoryRouter>
       </Provider>
     );
-
-    const showPasswordBtn = screen.getByTestId('show-psw-test') as HTMLInputElement;
-
-    expect(screen.getAllByText('XXXXXXXXXXXXXX')[0]).toBeInTheDocument();
-    expect(screen.queryByText(genPassword)).toBeNull();
-
-    fireEvent.click(showPasswordBtn);
-    await waitFor(() => {
-      expect(screen.getAllByText(genPassword)[0]).toBeInTheDocument();
-    });
   });
 });

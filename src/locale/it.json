@@ -210,7 +210,6 @@
       "successMessage": "Il canale è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.",
       "sections": {
         "registry": "Anagrafica",
-        "redirect": "Redirect",
         "target": "Target",
         "paymentType": "Tipo di versamento"
       },
@@ -218,14 +217,7 @@
         "pspBrokerCode": "Codice intermediario PSP",
         "businessName": "Ragione sociale intermediario",
         "idChannel": "Codice canale",
-        "redirectProtocol": "Protocollo",
-        "redirectPort": "Porta",
-        "redirectIp": "IP",
-        "redirectService": "Path",
-        "redirectParameters": "Parametri",
-        "targetAddress": "IP",
-        "targetIp": "IP",
-        "targetService": "Path",
+        "endPoint": "Endpoint",
         "targetPort": "Porta",
         "paymentType": "Seleziona tipo di versamento",
         "addPayment": "Aggiunta metodo"
@@ -243,24 +235,20 @@
         "subtitle": "Informazioni a carico di PagoPA.",
         "sections": {
           "registry": "Anagrafica",
-          "endPoint": "Endpoint",
+          "configuration": "Configurazione",
           "proxy": "Proxy",
           "otherInfo": "Altre informazioni"
         },
         "fields": {
           "primitiveVersion": "Versioni primitive",
           "password": "Password",
-          "newPassword": "Nuova password",
-          "protocol": "Protocollo",
-          "ip": "IP",
-          "port": "Porta",
-          "service": "Servizio",
-          "nmpService": "Servizio NMP",
+          "newConnection": "Nuova connettività",
+          "newConnectionChannel": "Nuova connettività canali",
+          "forwarder01": "forwarder01",
           "proxyPort": "Porta proxy",
           "proxyAddress": "Indirizzo proxy",
           "paymentModel": "Modello di pagamento",
           "plugin": "Plugin WFESP",
-          "threadNumber": "Numero Thread",
           "timeoutA": "Timeout A",
           "timeoutB": "Timeout B",
           "timeoutC": "Timeout C",
@@ -291,7 +279,8 @@
     },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",
-      "requiredInputNumber": "Non Valido, l’input dev’essere un numero"
+      "requiredInputNumber": "Non Valido, l’input dev’essere un numero",
+      "urlNotValid": "URL non valido"
     }
   },
   "editChannelPage": {
@@ -321,15 +310,8 @@
     "pspBrokerCode": "Codice intermediario PSP",
     "companyName": "Ragione sociale",
     "idChannel": "Codice canale",
-    "redirect": "Redirect",
-    "redirectProtocol": "Protocollo",
-    "redirectPort": "Porta",
-    "redirectUrl": "URL di redirect",
     "target": "Target",
-    "targetAddress": "IP",
-    "targetIp": "IP",
-    "targetService": "Path",
-    "targetPort": "Porta",
+    "endPoint": "Endpoint",
     "paymentType": "Tipo di versamento",
     "associatedPsp": "PSP associati",
     "changeHistory": "Storico modifiche",
@@ -345,31 +327,18 @@
     "registry": "Anagrafica",
     "primitiveVersion": "Versione primitive",
     "password": "Password",
-    "newPassword": "Nuova password",
-    "endPoint": "Endpoint",
-    "protocol": "Protocollo",
-    "ip": "IP",
-    "port": "Porta",
-    "service": "Servizio",
-    "serviceNMP": "Servizio NMP",
+    "connection": "Connettività",
+    "forwarder01": "forwarder01",
+    "newConnection": "Nuova connettività",
     "proxy": "Proxy",
     "proxyAddress": "Indirizzo proxy",
-    "proxyPort": "Porta proxy",
-    "status": "Stato",
     "enabled": "Abilitato",
     "disabled": "Non abilitato",
     "otherInfo": "Altre informazioni",
-    "paymentModel": "Modello di pagamento",
-    "pliugin": "Plugin WFESP",
-    "threadNumber": "Numero Thread",
     "timeoutA": "Timeout A",
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
     "pspNotify": "PSP Notify Payment",
-    "electronicReceipt": "Push Ricevuta Telematica",
-    "onUs": "On Us",
-    "rptSign": "Carello RPT",
-    "recoveryProcess": "Processo di Recovery Pull",
     "stamp": "Marca da bollo"
   },
   "channelPSPList": {
@@ -445,21 +414,29 @@
       "sections": {
         "registry": "Anagrafica",
         "endpoint": "Endpoint",
-        "model4": "Modello 4",
+        "configuration": "Configurazione",
+        "proxy": "Proxy",
         "otherInfo": "Altre informazioni"
       },
       "fields": {
         "version": "Versione",
-        "threadNumber": "Numero Thread",
         "protocol": "Protocollo",
         "port": "Porta",
         "ip": "IP",
         "path": "Path",
+        "proxy": "Indirizzo",
+        "newConnLabel": "Nuova connettività",
+        "GDPLabel": "GDP",
+        "proxyValues": {
+          "newConnectivity": "Nuova Connettività",
+          "oldConnectivity": "Vecchia Connettività"
+        },
         "password": "Password",
         "service": "Servizio",
         "timeoutA": "Timeout A",
         "timeoutB": "Timeout B",
-        "timeoutC": "Timeout C"
+        "timeoutC": "Timeout C",
+        "select": "Seleziona"
       }
     },
     "confirmModal": {
@@ -633,10 +610,18 @@
       "password": "Password",
       "port": "Porta",
       "protocol": "Protocollo",
+      "proxy": "Proxy",
+      "proxyAddress": "Indirizzo",
+      "configuration": "Configurazione",
+      "GDP": "GDP",
+      "newConn": "Nuova Connettività",
+      "proxyLabels": {
+        "newConnectivity": "Nuova Connettività",
+        "oldConnectivity": "Vecchia Connettività"
+      },
       "registry": "Anagrafica",
       "service": "Servizio",
       "subtitle": "Informazioni a carico di PagoPA.",
-      "threadNumber": "Numero Thread",
       "timeoutA": "Timeout A",
       "timeoutB": "Timeout B",
       "timeoutC": "Timeout C",
@@ -663,7 +648,9 @@
       "listErrorTitle": "Errore",
       "listErrorDesc": "Errore durante la ricezione della lista degli IBAN",
       "upladIbanErrorTitle": "Errore",
-      "upladIbanErrorDesc": "Errore durante la modifica degli IBAN"
+      "upladIbanErrorDesc": "Errore durante la modifica degli IBAN",
+      "deleteIbanErrorTitle": "Errore",
+      "deleteIbanErrorDesc": "Errore durante l'eliminazione dell'iban"
     },
     "standIn": "STAND IN",
     "standInDetail": "Nuova procedura di intervento in caso di problemi",
@@ -671,6 +658,7 @@
     "cupDetail": "Pagamento del canone unico patrimoniale",
     "selectIban": "Seleziona IBAN",
     "upload": "Salva",
+    "delete": "Annulla",
     "manage": "Gestisci",
     "updateInProgress": "Modifica in corso",
     "list": {
@@ -757,7 +745,8 @@
       "dateNotValid": "La data inserita non è valida",
       "startDateOverEndDate": "La data di inizio non può essere maggiore di quella di scadenza",
       "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio",
-      "ecOwnerNotValid": "Codice fiscale non valido"
+      "ecOwnerNotValid": "Codice fiscale non valido",
+      "ibanConflict": "IBAN postale già censito"
     }
   },
   "sideMenu": {

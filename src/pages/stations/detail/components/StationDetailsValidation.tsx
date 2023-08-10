@@ -6,15 +6,24 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import HistoryIcon from '@mui/icons-material/History';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
-import { isOperator } from '../../components/commonFunctions';
+import { isOperator } from '../../../components/commonFunctions';
 import { StatusChip } from '../../../../components/StatusChip';
+import {
+  GPDConfigs,
+  IGPDConfig,
+  INewConnConfig,
+  IProxyConfig,
+  NewConnConfigs,
+  ProxyConfigs,
+} from '../../../../model/Station';
+import { ENV } from '../../../../utils/env';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
@@ -31,6 +40,44 @@ Props) => {
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
+  const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
+  const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
+  const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
+
+  const [isGDP, setIsGDP] = useState<boolean>(false);
+  const [isNewConn, setIsNewConn] = useState<boolean>(false);
+
+  const endpoint =
+    stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
+      ? '-'
+      : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
+          stationDetail?.targetPort && stationDetail?.targetPort > 0
+            ? `:${stationDetail.targetPort}`
+            : ''
+        }${stationDetail?.targetPath}`;
+
+  useEffect(() => {
+    if (stationDetail) {
+      setIsNewConn(
+        Object.entries(forwarderAddresses)
+          .map(([key, value]) => value)
+          .some((d) =>
+            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
+              ? d.includes(stationDetail.service)
+              : false
+          )
+      );
+      setIsGDP(
+        Object.entries(gpdAddresses)
+          .map(([key, value]) => value)
+          .some((gpd) =>
+            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
+              ? gpd.includes(stationDetail.service)
+              : false
+          )
+      );
+    }
+  }, [stationDetail]);
 
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
@@ -154,11 +201,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost}
-                    {stationDetail?.targetPort && stationDetail?.targetPort > 0
-                      ? `:${stationDetail.targetPort}`
-                      : ''}
-                    {stationDetail?.targetPath}
+                    {endpoint}
                   </Typography>
                 </Grid>
 
@@ -271,7 +314,7 @@ Props) => {
                         onClick={() => {
                           setShowPassword(!showPassword);
                         }}
-                        data-testid="show-ps2-test"
+                        data-testid="show-pwd-validation-test"
                       >
                         {showPassword ? (
                           <VisibilityIcon color="primary" sx={{ width: '80%' }} />
@@ -284,104 +327,69 @@ Props) => {
                     '-'
                   )}
                 </Grid>
+
+                <Grid item xs={12} mt={4}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.infoToComplete.configuration')}
+                  </Typography>
+                </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.threadNumber')}
+                    {t('stationDetailPageValidation.infoToComplete.newConn')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.threadNumber ?? '-'}
+                    {stationDetail && stationDetail.ip && isNewConn
+                      ? `${stationDetail.protocol === 'HTTPS' ? 'https://' : 'http://'}${
+                          stationDetail.ip
+                        }${stationDetail.port ? `:${stationDetail.port}` : ''}${
+                          stationDetail.service
+                        }`
+                      : '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.infoToComplete.GDP')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail && stationDetail.ip && isGDP
+                      ? `${stationDetail.protocol === 'HTTPS' ? 'https://' : 'http://'}${
+                          stationDetail.ip
+                        }${stationDetail.port ? `:${stationDetail.port}` : ''}${
+                          stationDetail.service
+                        }`
+                      : '-'}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToComplete.endpoint')}
+                    {t('stationDetailPageValidation.infoToComplete.proxy')}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.protocol')}
+                    {t('stationDetailPageValidation.infoToComplete.proxyAddress')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.protocol ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.ip ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.port ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.service')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.service ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.infoToComplete.model4')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.protocol')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.protocol4Mod ? stationDetail.protocol4Mod : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.ip')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.ip4Mod ? stationDetail.ip4Mod : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.port')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.port4Mod ? stationDetail.port4Mod : '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.service')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.service4Mod ? stationDetail.service4Mod : '-'}
+                    {stationDetail?.proxyHost ?? '-'}
+                    {stationDetail?.proxyPort ? `:${stationDetail.proxyPort}` : '-'}
+
+                    {stationDetail?.proxyHost !== '' &&
+                      Object.entries(proxyAddresses).map(([key, value]) =>
+                        value.includes(
+                          stationDetail?.proxyHost && stationDetail.proxyHost.toString()
+                        )
+                          ? ` (${t(
+                              'stationDetailPageValidation.infoToComplete.proxyLabels.' + key
+                            )})`
+                          : ''
+                      )}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>

@@ -4,26 +4,30 @@ import IbanPage from '../IbanPage';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
-import { createMemoryHistory } from 'history';
+
+let getIbanListSpy: jest.SpyInstance;
+let setLoadingSpy: jest.SpyInstance;
 
 beforeEach(() => {
+  getIbanListSpy = jest.spyOn(require('../../../services/ibanService'), 'getIbanList');
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-describe('IbanPage', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
+describe('IbanPage', () => {
   it('Test render IbanPage', () => {
+    getIbanListSpy.mockReturnValue;
     render(
       <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <IbanPage />
-          </ThemeProvider>
-        </Router>
+        <MemoryRouter initialEntries={[`/iban`]}>
+          <Route path="/iban">
+            <ThemeProvider theme={theme}>
+              <IbanPage />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
       </Provider>
     );
   });

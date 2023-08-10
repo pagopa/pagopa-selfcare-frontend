@@ -10,10 +10,10 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
+import { LOADING_TASK_DELETE_IBAN, LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { IbanOnCreation } from '../../../model/Iban';
-import { getIbanList } from '../../../services/ibanService';
 import { emptyIban } from '../IbanPage';
+import { deleteIban, getIbanList } from '../../../services/ibanService';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -25,20 +25,23 @@ const IbanDetailPage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
+  const setLoadingDelete = useLoading(LOADING_TASK_DELETE_IBAN);
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
       setLoading(true);
       getIbanList(selectedParty.fiscalCode)
         .then((response) => {
-          const fileterdIban = response.ibanList.filter((e) => e.iban === ibanId);
+          const filteredIban = response.ibanList.filter((e) => e.iban === ibanId);
           setIban({
-            iban: fileterdIban[0].iban,
-            description: fileterdIban[0].description ?? '',
-            creditorInstitutionCode: fileterdIban[0].ecOwner,
-            validityDate: fileterdIban[0].validityDate,
-            dueDate: fileterdIban[0].dueDate,
-            labels: fileterdIban[0].labels ?? [],
+            iban: filteredIban[0].iban,
+            description: filteredIban[0].description,
+            creditorInstitutionCode: filteredIban[0].ecOwner ?? selectedParty.fiscalCode,
+            validityDate: filteredIban[0].validityDate,
+            publicationDate: filteredIban[0].publicationDate,
+            dueDate: filteredIban[0].dueDate,
+            labels: filteredIban[0].labels,
+            active: filteredIban[0].active,
           });
         })
         .catch((reason) => {
@@ -67,6 +70,35 @@ const IbanDetailPage = () => {
     }
   }, [selectedParty, ibanId]);
 
+  const deleteIbans = async () => {
+    setLoadingDelete(true);
+    try {
+      await deleteIban(selectedParty?.fiscalCode ?? '', ibanId);
+    } catch (reason) {
+      handleErrors([
+        {
+          id: `FETCH_IBANS_ERROR`,
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while fetching ibans`,
+          toNotify: false,
+        },
+      ]);
+      addError({
+        id: 'DELETE_IBAN',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while deleting an iban`,
+        toNotify: true,
+        displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
+        displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
+        component: 'Toast',
+      });
+    } finally {
+      setLoadingDelete(false);
+    }
+  };
+
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -92,12 +124,12 @@ const IbanDetailPage = () => {
             <Typography mb={5}>
               {t('ibanDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                {/* {iban?.publicationDate?.toLocaleDateString('en-GB')} */}
+                {iban.publicationDate?.toLocaleDateString('en-GB') ?? '-'}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons active={iban?.active} iban={ibanId} />
+            <IbanDetailButtons active={iban.active} iban={ibanId} deleteIbans={deleteIbans} />
           </Grid>
         </Grid>
 
@@ -115,12 +147,12 @@ const IbanDetailPage = () => {
             </Grid>
             <Grid item xs={9} textAlign="right">
               <Chip
-                label={iban?.active ? t('ibanPage.active') : t('ibanPage.notActive')}
+                label={iban.active ? t('ibanPage.active') : t('ibanPage.notActive')}
                 aria-label="update-in-progress"
                 size="medium"
                 sx={{
-                  color: iban?.active ? '#FFFFFF' : '#17324D',
-                  backgroundColor: iban?.active ? 'primary.main' : 'error.light',
+                  color: iban.active ? '#FFFFFF' : '#17324D',
+                  backgroundColor: iban.active ? 'primary.main' : 'error.light',
                   fontSize: '14px',
                   paddingBottom: '1px',
                   height: '32px',
@@ -143,7 +175,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.iban ?? '-'}
+                  {iban.iban ?? '-'}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -151,7 +183,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.description ?? '-'}
+                  {iban.description ?? '-'}
                 </Typography>
               </Grid>
             </Grid>
@@ -165,7 +197,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.validityDate?.toLocaleDateString('en-GB')}
+                  {iban.validityDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -173,7 +205,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.dueDate?.toLocaleDateString('en-GB')}
+                  {iban.dueDate?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
             </Grid>
@@ -187,7 +219,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban?.ecOwner ?? '-'}
+                  {iban.creditorInstitutionCode}
                 </Typography>
               </Grid>
             </Grid>

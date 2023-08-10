@@ -47,10 +47,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
-  const changeSubject = (e: any) => {
-    setSubject(e.target.value);
-  };
-
   useEffect(() => {
     if (subject === 'me') {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -65,6 +61,15 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     setUploadType(event.target.value);
   };
 
+  const changeSubject = (e: any) => {
+    setSubject(e.target.value);
+  };
+
+  const getTomorrowDate = () => {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    return currentDate;
+  };
   const initialFormData = (ibanBody?: IbanOnCreation) =>
     ibanBody
       ? {
@@ -73,15 +78,16 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           validityDate: ibanBody.validityDate,
           dueDate: ibanBody.dueDate,
           creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-          labels: ibanBody.labels,
+          labels: ibanBody.labels ?? undefined,
+          active: ibanBody.active,
         }
       : {
           iban: '',
           description: '',
-          validityDate: new Date(),
-          dueDate: new Date(),
-          creditorInstitutionCode: ecCode,
-          labels: [],
+          validityDate: getTomorrowDate(),
+          dueDate: getTomorrowDate(),
+          creditorInstitutionCode: '',
+          active: true,
         };
 
   const ibanFormatValidator = (iban: string) => {
@@ -120,10 +126,10 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     return true;
   };
 
-  const validateCodiceFiscale = (fiscalCode: string | undefined) => {
-    const cfRegex = /^[A-Za-z]{6}\d{2}[A-Za-z]\d{2}[A-Za-z]\d{3}[A-Za-z]$/;
+  const validateFiscalCode = (fiscalCode: string | undefined) => {
     if (fiscalCode) {
-      return cfRegex.test(fiscalCode);
+      const fiscalCodeNumber = parseInt(fiscalCode, 10);
+      return !isNaN(fiscalCodeNumber);
     } else {
       return false;
     }
@@ -131,7 +137,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
-    const minDate = new Date('01/01/1901');
+    const minDate = new Date();
 
     if (uploadType === 'single') {
       return Object.fromEntries(
@@ -161,14 +167,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               ? undefined
               : !values.creditorInstitutionCode
               ? t('addEditIbanPage.validationMessage.requiredField')
-              : !validateCodiceFiscale(formik.values.creditorInstitutionCode)
+              : !validateFiscalCode(values.creditorInstitutionCode)
               ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
               : undefined,
         }).filter(([_key, value]) => value)
       );
-    } else {
-      return {};
     }
+
+    return undefined;
   };
 
   const enableSubmit = (values: IbanOnCreation) => {
@@ -207,17 +213,27 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             description: values.description,
             validityDate: values.validityDate,
             dueDate: values.dueDate,
-            creditorInstitutionCode: ecCode,
-            labels: values.labels,
+            creditorInstitutionCode: values.creditorInstitutionCode,
+            active: true,
           });
-          console.log('SUBMIT CREATE!');
-        } else if (formAction === IbanFormAction.Edit) {
-          await updateIban(values); // Utilizza l'ID dell'IBAN per l'aggiornamento
-          console.log('SUBMIT UPDATE!');
+        } else {
+          await updateIban({
+            iban: values.iban,
+            description: values.description,
+            validityDate: values.validityDate,
+            dueDate: values.dueDate,
+            creditorInstitutionCode: values.creditorInstitutionCode,
+            labels: values.labels ?? undefined,
+            active: true,
+          });
         }
-      } catch (reason) {
+        history.push(ROUTES.IBAN);
+      } catch (reason: any) {
+        if (reason.httpStatus === 409) {
+          formik.setFieldError('iban', t('addEditIbanPage.validationMessage.ibanConflict'));
+        }
         addError({
-          id: 'CREATE_IBAN',
+          id: 'CREATE_UPDATE_IBAN',
           blocking: false,
           error: reason as Error,
           techDescription: `An error occurred while adding/editing iban`,
@@ -235,10 +251,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const formik = useFormik<IbanOnCreation>({
     initialValues: initialFormData(ibanBody),
     validate,
-    onSubmit: async () => history.push(ROUTES.IBAN),
+    onSubmit: async (values) => {
+      await submit(values);
+    },
     enableReinitialize: true,
     validateOnMount: true,
   });
+
+  const shouldDisableDate = (date: Date) => date < new Date();
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -249,29 +269,30 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   };
 
   return (
-    <>
+    <form onSubmit={formik.handleSubmit} data-testid="iban-form">
       <FormControl>
         <RadioGroup
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
           name="upload-type-iban"
           sx={{ mt: 3, mb: 2 }}
+          onChange={(e) => changeUploadType(e)}
         >
           <FormControlLabel
             checked={uploadType === 'single'}
-            onChange={changeUploadType}
             value="single"
             control={<Radio />}
             label={t('addEditIbanPage.addForm.fields.ibanUploadTypes.single')}
             sx={{ mr: 5 }}
+            data-testid="upload-single-test"
           />
           <FormControlLabel
             checked={uploadType === 'multiple'}
-            onChange={changeUploadType}
             value="multiple"
             control={<Radio />}
             disabled
             label={t('addEditIbanPage.addForm.fields.ibanUploadTypes.multiple')}
+            data-testid="upload-multiple-test"
           />
         </RadioGroup>
       </FormControl>
@@ -301,6 +322,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
                 <TextField
+                  disabled={formAction === IbanFormAction.Edit}
                   fullWidth
                   id="iban"
                   name="iban"
@@ -310,6 +332,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.iban && Boolean(formik.errors.iban)}
                   helperText={formik.touched.iban && formik.errors.iban}
+                  inputProps={{
+                    'data-testid': 'iban-test',
+                  }}
                 />
               </Grid>
 
@@ -325,6 +350,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.description && Boolean(formik.errors.description)}
                   helperText={formik.touched.description && formik.errors.description}
+                  inputProps={{
+                    'data-testid': 'description-test',
+                  }}
                 />
               </Grid>
             </Grid>
@@ -348,9 +376,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
+                          'data-testid': 'start-date-test',
                         }}
                         id="validityDate"
-                        data-testid="start-date-test"
                         name="validityDate"
                         type="date"
                         size="small"
@@ -358,6 +386,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         helperText={formik.touched.validityDate && formik.errors.validityDate}
                       />
                     )}
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -374,9 +403,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         inputProps={{
                           ...params.inputProps,
                           placeholder: 'dd/mm/aaaa',
+                          'data-testid': 'end-date-test',
                         }}
                         id="dueDate"
-                        data-testid="end-date-test"
                         name="dueDate"
                         type="date"
                         size="small"
@@ -384,6 +413,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         helperText={formik.touched.dueDate && formik.errors.dueDate}
                       />
                     )}
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -409,12 +439,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.me')}
                       sx={{ mr: 5 }}
+                      data-testid="holder-me-test"
                     />
                     <FormControlLabel
                       checked={subject === 'anotherOne'}
                       value="anotherOne"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
+                      data-testid="holder-anotherOne-test"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -428,8 +460,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
                   placeholder="AAAAAAAAAAAAAAAAAAA"
                   size="small"
-                  value={formik.values.creditorInstitutionCode?.toUpperCase()}
+                  value={formik.values.creditorInstitutionCode}
                   onChange={(e) => formik.handleChange(e)}
+                  inputProps={{
+                    'data-testid': 'holder-fiscal-code-test',
+                  }}
                   error={
                     formik.touched.creditorInstitutionCode &&
                     Boolean(formik.errors.creditorInstitutionCode)
@@ -437,6 +472,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   helperText={
                     formik.touched.creditorInstitutionCode && formik.errors.creditorInstitutionCode
                   }
+                  InputLabelProps={{ shrink: subject === 'me' ? true : false }}
                 />
               </Grid>
             </Grid>
@@ -445,27 +481,28 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       </Paper>
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="back-button-test"
+          >
             {t('addEditIbanPage.addForm.buttons.back')}
           </Button>
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
           <Button
-            onClick={async () => {
-              formik.handleSubmit();
-              await submit(formik.values);
-              history.push(ROUTES.IBAN);
-            }}
             disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"
+            data-testid="submit-button-test"
           >
             {t('addEditIbanPage.addForm.buttons.confirm')}
           </Button>
         </Stack>
       </Stack>
-    </>
+    </form>
   );
 };
 

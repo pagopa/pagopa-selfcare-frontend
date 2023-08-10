@@ -23,16 +23,16 @@ type Prop = {
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const StationDetails = ({ stationDetail, goBack }: Prop) => {
   const { t } = useTranslation();
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const hidePassword = 'XXXXXXXXXXXXXX';
   const { stationId } = useParams<{ stationId: string }>();
 
-  const showOrHidePassword = () => {
-    if (showPassword) {
-      return stationDetail?.password;
-    }
-    return hidePassword;
-  };
+  const endpoint =
+    stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
+      ? '-'
+      : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
+          stationDetail?.targetPort && stationDetail?.targetPort > 0
+            ? `:${stationDetail.targetPort}`
+            : ''
+        }${stationDetail?.targetPath}`;
 
   return (
     <Grid container justifyContent={'center'} mb={5}>
@@ -120,14 +120,6 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.version')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.version ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.primitiveVersion')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -135,53 +127,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                     {stationDetail?.primitiveVersion}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.password')}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={9}
-                  sx={{
-                    display: 'flex',
-                    height: '38px',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  {stationDetail?.password ? (
-                    <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {showOrHidePassword()}
-                      </Typography>
-                      <IconButton
-                        style={{
-                          border: 'none !important',
-                          marginLeft: '42px',
-                        }}
-                        onClick={() => {
-                          setShowPassword(!showPassword);
-                        }}
-                        data-testid="show-psw-test"
-                      >
-                        {showPassword ? (
-                          <VisibilityIcon color="primary" sx={{ width: '80%' }} />
-                        ) : (
-                          <VisibilityOff color="primary" sx={{ width: '80%' }} />
-                        )}
-                      </IconButton>
-                    </>
-                  ) : (
-                    '-'
-                  )}
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">{t('stationDetailPage.redirectUrl')}</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectPath}
-                  </Typography>
-                </Grid>
+
                 <Grid item xs={3}>
                   <Typography variant="body2">{t('stationDetailPage.activationDate')}</Typography>
                 </Grid>
@@ -198,11 +144,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost}
-                    {stationDetail?.targetPort && stationDetail?.targetPort > 0
-                      ? `:${stationDetail.targetPort}`
-                      : ''}
-                    {stationDetail?.targetPath}
+                    {endpoint}
                   </Typography>
                 </Grid>
 

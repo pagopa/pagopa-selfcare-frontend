@@ -1,20 +1,37 @@
+/* eslint-disable sonarjs/no-identical-functions */
 import { FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
 import {
   FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
   Grid,
   InputLabel,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { Badge as BadgeIcon, MenuBook } from '@mui/icons-material';
-import { StationOnCreation } from '../../../../model/Station';
+import { useEffect, useState } from 'react';
+import {
+  IProxyConfig,
+  IProxyConfigItem,
+  NewConnConfigs,
+  INewConnConfig,
+  ProxyConfigs,
+  StationOnCreation,
+  IGPDConfig,
+  GPDConfigs,
+} from '../../../../model/Station';
 import AddEditStationFormSectionTitle from '../AddEditStationFormSectionTitle';
 import { Protocol4ModEnum, ProtocolEnum } from '../../../../api/generated/portal/StationDetailsDto';
+import { ENV } from '../../../../utils/env';
 
 type Props = {
   formik: FormikProps<StationOnCreation>;
@@ -24,6 +41,10 @@ type Props = {
     formik: FormikProps<StationOnCreation>
   ) => void;
   inputGroupStyle: any;
+  newConn: boolean;
+  setNewConn: React.Dispatch<React.SetStateAction<boolean>>;
+  gdp: boolean;
+  setGDP: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
@@ -31,9 +52,29 @@ const AddEditStationFormValidation = ({
   formik,
   handleChangeNumberOnly,
   inputGroupStyle,
+  newConn,
+  setNewConn,
+  gdp,
+  setGDP,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+  const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
+  const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
+  const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = (event.target as HTMLInputElement).value;
+    if (value === 'GDP') {
+      setNewConn(false);
+      formik.setFieldValue('newConnConcat', '');
+      setGDP(true);
+    } else {
+      setNewConn(true);
+      setGDP(false);
+      formik.setFieldValue('gdpConcat', '');
+    }
+  };
 
   return (
     <Paper
@@ -83,6 +124,7 @@ Props) => {
                 fullWidth
                 id="password"
                 name="password"
+                required
                 label={t('addEditStationPage.addFormValidation.fields.password')}
                 placeholder={t('addEditStationPage.addFormValidation.fields.password')}
                 size="small"
@@ -95,234 +137,166 @@ Props) => {
                 }}
               />
             </Grid>
+          </Grid>
+        </Box>
+
+        <Box sx={inputGroupStyle}>
+          <AddEditStationFormSectionTitle
+            title={t('addEditStationPage.addFormValidation.sections.configuration')}
+            icon={<BadgeIcon />}
+          />
+          <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
-              <TextField
-                type="number"
-                fullWidth
-                id="threadNumber"
-                name="threadNumber"
-                InputLabelProps={{ shrink: formik.values.threadNumber ? true : false }}
-                inputProps={{
-                  type: 'number',
-                  step: 1,
-                  min: 0,
-                  'data-testid': 'thread-number-test',
-                }}
-                label={t('addEditStationPage.addFormValidation.fields.threadNumber')}
-                placeholder={t('addEditStationPage.addForm.fields.threadNumber')}
-                size="small"
-                value={formik.values.threadNumber === 0 ? '' : formik.values.threadNumber}
-                onChange={(e) => handleChangeNumberOnly(e, 'threadNumber', formik)}
-                error={formik.touched.threadNumber && Boolean(formik.errors.threadNumber)}
-                helperText={formik.touched.threadNumber && formik.errors.threadNumber}
-              />
+              <FormControl fullWidth>
+                <RadioGroup
+                  sx={{ display: 'block' }}
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue=""
+                  onChange={handleChange}
+                  name="radio-buttons-group"
+                >
+                  <Grid container item xs={12}>
+                    <FormControlLabel
+                      value="newConn"
+                      checked={newConn}
+                      data-testid="radio-button-newConn"
+                      control={<Radio />}
+                      label={t('addEditStationPage.addFormValidation.fields.newConnLabel')}
+                    />
+                  </Grid>
+
+                  <Grid container item xs={12} pt={1}>
+                    <FormControl fullWidth>
+                      <InputLabel size="small">
+                        {t('addEditStationPage.addFormValidation.fields.select')}
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        id="newConnConcat"
+                        name="newConnConcat"
+                        data-testid="newConnConcat"
+                        label={'newConnConcat'}
+                        placeholder={'newConnConcat'}
+                        size="small"
+                        disabled={!newConn}
+                        defaultValue=""
+                        value={formik.values.newConnConcat}
+                        onChange={formik.handleChange}
+                        error={formik.touched.newConnConcat && Boolean(formik.errors.newConnConcat)}
+                        inputProps={{
+                          'data-testid': 'newConnConcat-test',
+                        }}
+                      >
+                        {Object.entries(forwarderAddresses).map(([key, value]) => (
+                          <MenuItem
+                            key={key}
+                            selected={
+                              formik.values.service && value.includes(formik.values.service)
+                                ? true
+                                : false
+                            }
+                            value={value}
+                          >
+                            {`${key.toUpperCase()} - ${value}`}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {formik.touched.newConnConcat && formik.errors.newConnConcat ? (
+                        <FormHelperText sx={{ color: '#bf3333' }}>
+                          {formik.touched.newConnConcat && formik.errors.newConnConcat}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+
+                  <Grid container item xs={12} pt={2}>
+                    <FormControlLabel
+                      value="GDP"
+                      data-testid="radio-button-gdp"
+                      control={<Radio />}
+                      checked={gdp}
+                      label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
+                    />
+                  </Grid>
+
+                  <Grid container item xs={12} pt={1}>
+                    <FormControl fullWidth>
+                      <InputLabel size="small">
+                        {t('addEditStationPage.addFormValidation.fields.select')}
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        id="gdpConcat"
+                        name="gdpConcat"
+                        data-testid="gdpConcat-select"
+                        label={'gdpConcat'}
+                        placeholder={'gdpConcat'}
+                        size="small"
+                        defaultValue={''}
+                        disabled={!gdp}
+                        value={formik.values.gdpConcat}
+                        onChange={formik.handleChange}
+                        error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
+                        inputProps={{
+                          'data-testid': 'gdpConcat-test',
+                        }}
+                      >
+                        {Object.entries(gpdAddresses).map(([key, value]) => (
+                          <MenuItem key={key} selected={true} value={value}>
+                            {`${key.toUpperCase()} - ${value}`}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
+                        <FormHelperText sx={{ color: '#bf3333' }}>
+                          {formik.touched.gdpConcat && formik.errors.gdpConcat}
+                        </FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
             </Grid>
           </Grid>
         </Box>
+
         <Box sx={inputGroupStyle}>
           <AddEditStationFormSectionTitle
-            title={t('addEditStationPage.addFormValidation.sections.endpoint')}
-            icon={<MenuBook />}
+            title={t('addEditStationPage.addFormValidation.sections.proxy')}
+            icon={<BadgeIcon />}
           />
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
               <FormControl fullWidth>
                 <InputLabel size="small">
-                  {t('addEditStationPage.addFormValidation.fields.protocol')}
+                  {t('addEditStationPage.addFormValidation.fields.proxy')}
                 </InputLabel>
                 <Select
                   fullWidth
-                  id="protocol"
-                  name="protocol"
-                  label={t('addEditStationPage.addFormValidation.fields.protocol')}
+                  id="proxyConcat"
+                  name="proxyConcat"
+                  label={t('addEditStationPage.addFormValidation.fields.proxy')}
+                  placeholder={t('addEditStationPage.addFormValidation.fields.proxy')}
                   size="small"
-                  defaultValue={formik.values.protocol}
-                  value={
-                    formik.values.protocol === undefined
-                      ? ''
-                      : formik.values.protocol === ProtocolEnum.HTTPS
-                      ? 'HTTPS'
-                      : 'HTTP'
-                  }
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.protocol && Boolean(formik.errors.protocol)}
+                  defaultValue=""
+                  value={formik.values.proxyConcat || ''}
+                  onChange={formik.handleChange}
+                  error={formik.touched.proxyConcat && Boolean(formik.errors.proxyConcat)}
                   inputProps={{
-                    'data-testid': 'protocol-test',
+                    'data-testid': 'proxy-proxyConcat-test',
                   }}
                 >
-                  {['HTTPS', 'HTTP'].map((r) => (
-                    <MenuItem key={r} value={r}>
-                      {r}
-                    </MenuItem>
+                  {Object.entries(proxyAddresses).map(([key, value]) => (
+                    <MenuItem
+                      key={key}
+                      selected={formik.values.proxyConcat.toString().includes(value)}
+                      value={value}
+                    >{`${value} (${t(
+                      'addEditStationPage.addFormValidation.fields.proxyValues.' + key
+                    )})`}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="ip"
-                name="ip"
-                label={t('addEditStationPage.addFormValidation.fields.ip')}
-                size="small"
-                value={formik.values.ip}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.ip && Boolean(formik.errors.ip)}
-                helperText={formik.touched.ip && formik.errors.ip}
-                inputProps={{
-                  'data-testid': 'ip-test',
-                }}
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="port"
-                name="port"
-                InputLabelProps={{ shrink: formik.values.port ? true : false }}
-                inputProps={{
-                  type: 'number',
-                  step: 1,
-                  min: 0,
-                  max: 65556,
-                  'data-testid': 'port-test',
-                }}
-                label={t('addEditStationPage.addFormValidation.fields.port')}
-                placeholder={t('addEditStationPage.addForm.fields.port')}
-                size="small"
-                value={formik.values.port === 0 ? '' : formik.values.port}
-                onChange={(e) => handleChangeNumberOnly(e, 'port', formik)}
-                error={formik.touched.port && Boolean(formik.errors.port)}
-                helperText={
-                  formik.touched.port &&
-                  formik.errors.port &&
-                  t('addEditStationPage.validation.overPort')
-                }
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="service"
-                name="service"
-                label={t('addEditStationPage.addFormValidation.fields.service')}
-                size="small"
-                value={formik.values.service}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.service && Boolean(formik.errors.service)}
-                helperText={formik.touched.service && formik.errors.service}
-                inputProps={{
-                  'data-testid': 'nmp-service-test',
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Box>
-
-        <Box sx={inputGroupStyle}>
-          <AddEditStationFormSectionTitle
-            title={t('addEditStationPage.addFormValidation.sections.model4')}
-            icon={<MenuBook />}
-          />
-          <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel size="small">
-                  {t('addEditStationPage.addFormValidation.fields.protocol')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  id="protocol4Mod"
-                  name="protocol4Mod"
-                  label={t('addEditStationPage.addFormValidation.fields.protocol')}
-                  size="small"
-                  defaultValue={formik.values.protocol4Mod}
-                  value={
-                    formik.values.protocol4Mod === undefined
-                      ? ''
-                      : formik.values.protocol4Mod === Protocol4ModEnum.HTTPS
-                      ? 'HTTPS'
-                      : 'HTTP'
-                  }
-                  onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.protocol4Mod && Boolean(formik.errors.protocol4Mod)}
-                  inputProps={{
-                    'data-testid': 'protocol-4Mod-test',
-                  }}
-                >
-                  {
-                    // eslint-disable-next-line sonarjs/no-identical-functions
-                    ['HTTPS', 'HTTP'].map((r) => (
-                      <MenuItem key={r} value={r}>
-                        {r}
-                      </MenuItem>
-                    ))
-                  }
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="ip4Mod"
-                name="ip4Mod"
-                label={t('addEditStationPage.addFormValidation.fields.ip')}
-                size="small"
-                value={formik.values.ip4Mod}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.ip4Mod && Boolean(formik.errors.ip4Mod)}
-                helperText={formik.touched.ip4Mod && formik.errors.ip4Mod}
-                inputProps={{
-                  'data-testid': 'ip-4Mod-test',
-                }}
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="port4Mod"
-                name="port4Mod"
-                InputLabelProps={{ shrink: formik.values.port4Mod ? true : false }}
-                inputProps={{
-                  type: 'number',
-                  step: 1,
-                  min: 0,
-                  max: 65556,
-                  'data-testid': 'port-4Mod-test',
-                }}
-                label={t('addEditStationPage.addFormValidation.fields.port')}
-                placeholder={t('addEditStationPage.addForm.fields.port')}
-                size="small"
-                value={formik.values.port4Mod === 0 ? '' : formik.values.port4Mod}
-                onChange={(e) => handleChangeNumberOnly(e, 'port4Mod', formik)}
-                error={formik.touched.port4Mod && Boolean(formik.errors.port4Mod)}
-                helperText={
-                  formik.touched.port4Mod &&
-                  formik.errors.port4Mod &&
-                  t('addEditStationPage.validation.overPort')
-                }
-              />
-            </Grid>
-
-            <Grid container item xs={6}>
-              <TextField
-                fullWidth
-                id="service4Mod"
-                name="service4Mod"
-                label={t('addEditStationPage.addFormValidation.fields.path')}
-                size="small"
-                value={formik.values.service4Mod}
-                onChange={(e) => formik.handleChange(e)}
-                error={formik.touched.service4Mod && Boolean(formik.errors.service4Mod)}
-                helperText={formik.touched.service4Mod && formik.errors.service4Mod}
-                inputProps={{
-                  'data-testid': 'service-4Mod-test',
-                }}
-              />
             </Grid>
           </Grid>
         </Box>

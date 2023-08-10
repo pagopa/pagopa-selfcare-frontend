@@ -12,7 +12,7 @@ import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
 import { useSigninData } from '../hooks/useSigninData';
-import { isOperator } from '../pages/stations/components/commonFunctions';
+import { isOperator } from '../pages/components/commonFunctions';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 

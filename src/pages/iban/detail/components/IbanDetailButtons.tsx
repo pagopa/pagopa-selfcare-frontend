@@ -8,9 +8,10 @@ import { IbanFormAction } from '../../../../model/Iban';
 type Props = {
   active: boolean | undefined;
   iban: string;
+  deleteIbans: () => Promise<void>;
 };
 
-const IbanDetailButtons = ({ active, iban }: Props) => {
+const IbanDetailButtons = ({ active, iban, deleteIbans }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -19,11 +20,11 @@ const IbanDetailButtons = ({ active, iban }: Props) => {
         <>
           <Button
             component={Link}
-            to={''}
+            to={() => generatePath(ROUTES.IBAN)}
             color="error"
             variant="outlined"
-            disabled={true}
-            // onClick={() => ''}
+            onClick={() => deleteIbans()}
+            data-testid="delete-button-test"
           >
             {t('ibanDetailPage.buttons.delete')}
           </Button>
@@ -45,11 +46,11 @@ const IbanDetailButtons = ({ active, iban }: Props) => {
         <>
           <Button
             component={Link}
-            to={''}
+            to={() => generatePath(ROUTES.IBAN)}
             color="error"
             variant="outlined"
-            disabled={true}
-            // onClick={() => ''}
+            onClick={() => deleteIbans()}
+            data-testid="delete-button-test"
           >
             {t('ibanDetailPage.buttons.delete')}
           </Button>

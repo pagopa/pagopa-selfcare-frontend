@@ -58,5 +58,6 @@ yarn-error.log
 .vscode
 /test-report.xml
 /.identity/.terraform.lock.hcl
+/.identity/.terraform
 /integration-test/package-lock.json
 /integration-test/user-data/

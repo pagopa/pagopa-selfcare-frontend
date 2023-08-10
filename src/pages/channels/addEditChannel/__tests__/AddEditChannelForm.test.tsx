@@ -329,6 +329,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
+    const selectNewConnection = screen.getByTestId('select-new-connection-test');
     const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
     const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
@@ -339,8 +340,11 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(primitiveVersion, { target: { value: undefined } });
     fireEvent.change(primitiveVersion, { target: { value: 1 } });
+    fireEvent.change(primitiveVersion, { target: { value: 3 } });
 
     fireEvent.change(password, { target: { value: 1 } });
+
+    fireEvent.click(selectNewConnection);
 
     fireEvent.change(newConnection, {
       target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
@@ -348,6 +352,10 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(proxyUnion, {
       target: { value: 'https://10.79.20.33:80' },
+    });
+
+    fireEvent.change(proxyUnion, {
+      target: { value: 'https://10.101.1.95:8080' },
     });
 
     fireEvent.change(timeoutA, { target: { value: 10 } });

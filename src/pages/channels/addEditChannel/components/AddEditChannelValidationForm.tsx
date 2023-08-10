@@ -49,9 +49,7 @@ Props) => {
   const { t } = useTranslation();
 
   const handleChange = () => {
-    console.log('clicked');
     setIsSelected(!isSelected);
-    console.log('isSelected value', isSelected);
   };
 
   const inputGroupStyle = {
@@ -152,7 +150,13 @@ Props) => {
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={12}>
               <FormControlLabel
-                control={<Checkbox checked={isSelected} onChange={handleChange} />}
+                control={
+                  <Checkbox
+                    checked={isSelected}
+                    onChange={handleChange}
+                    data-testid="select-new-connection-test"
+                  />
+                }
                 label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
               />
             </Grid>

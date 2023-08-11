@@ -285,12 +285,27 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       const splitTargetUnion = splitURL(formik.values.targetUnion);
 
       if (splitTargetUnion) {
-        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
+        const { protocolSplit, hostSplit, pathSplit } = splitTargetUnion;
+        // eslint-disable-next-line functional/no-let
+        let { portSplit } = splitTargetUnion;
 
         // eslint-disable-next-line functional/immutable-data
         values.target_host = `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`;
-        // eslint-disable-next-line functional/immutable-data
-        values.target_path = pathSplit;
+
+        const pathParts = pathSplit.split('/');
+        const lastPathPart = pathParts[pathParts.length - 1];
+
+        if (!isNaN(parseInt(lastPathPart, 10))) {
+          portSplit = parseInt(lastPathPart, 10);
+          // eslint-disable-next-line functional/immutable-data
+          pathParts.pop();
+          // eslint-disable-next-line functional/immutable-data
+          values.target_path = pathParts.join('/');
+        } else {
+          // eslint-disable-next-line functional/immutable-data
+          values.target_path = pathSplit;
+        }
+
         // eslint-disable-next-line functional/immutable-data
         values.target_port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
       }

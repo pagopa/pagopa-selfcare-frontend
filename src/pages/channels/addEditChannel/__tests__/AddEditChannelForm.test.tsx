@@ -224,10 +224,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
     expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
-    paymentType.value = 'Option 1';
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path/3000` } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path/3000');
+
+    paymentType.value = 'PPAY';
 
     fireEvent.change(paymentType);
-    expect(paymentType.value).toBe('Option 1');
+    expect(paymentType.value).toBe('PPAY');
 
     fireEvent.click(continueBtn);
 
@@ -297,7 +301,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     });
   });
 
-  test('Test of AddEditChannelValidationForm', async () => {
+  test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
     (isOperator as jest.Mock).mockReturnValue(true);
     (isValidURL as jest.Mock).mockReturnValue(true);
 
@@ -329,8 +333,100 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
     const password = getByTestId('password-test') as HTMLInputElement;
+    const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
+    const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
+    const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
+    const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
+    const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
+    const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
     const selectNewConnection = screen.getByTestId('select-new-connection-test');
     const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
+
+    fireEvent.click(selectNewConnection);
+
+    fireEvent.change(newConnection, {
+      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
+
+    fireEvent.change(primitiveVersion, { target: { value: undefined } });
+    fireEvent.change(primitiveVersion, { target: { value: 1 } });
+    fireEvent.change(primitiveVersion, { target: { value: 'aaa' } });
+
+    fireEvent.change(password, { target: { value: 1 } });
+
+    fireEvent.change(proxyUnion, {
+      target: { value: 'https://10.79.20.33:80' },
+    });
+
+    fireEvent.change(proxyUnion, {
+      target: { value: 'https://10.101.1.95:8080' },
+    });
+
+    fireEvent.change(timeoutA, { target: { value: 10 } });
+
+    fireEvent.change(timeoutB, { target: { value: 20 } });
+
+    fireEvent.change(timeoutC, { target: { value: 30 } });
+
+    fireEvent.click(continueBtn);
+
+    const confirmBtn = screen.queryByText(
+      (content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
+    ) as HTMLButtonElement;
+
+    const cancelBtn = screen.queryByText(
+      (content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
+    ) as HTMLButtonElement;
+
+    if (cancelBtn) {
+      fireEvent.click(cancelBtn);
+    }
+
+    fireEvent.click(continueBtn);
+
+    if (confirmBtn) {
+      fireEvent.click(confirmBtn);
+    }
+
+    fireEvent.click(backButton);
+  });
+
+  test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag false', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+    (isValidURL as jest.Mock).mockReturnValue(true);
+
+    const channelDetail: ChannelDetailsDto = {
+      broker_psp_code: '97735020584',
+      broker_description: 'AgID - Agenzia per l’Italia Digitale',
+      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8080,
+      target_host: 'https://www.lab.link.it',
+      payment_types: ['PPAY'],
+      status: StatusEnum.TO_CHECK,
+    };
+
+    const { getByTestId, getByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={operatorUser[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+
+    const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
+    const password = getByTestId('password-test') as HTMLInputElement;
     const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
@@ -340,15 +436,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.change(primitiveVersion, { target: { value: undefined } });
     fireEvent.change(primitiveVersion, { target: { value: 1 } });
-    fireEvent.change(primitiveVersion, { target: { value: 3 } });
+    fireEvent.change(primitiveVersion, { target: { value: 'aaa' } });
 
     fireEvent.change(password, { target: { value: 1 } });
-
-    fireEvent.click(selectNewConnection);
-
-    fireEvent.change(newConnection, {
-      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
-    });
 
     fireEvent.change(proxyUnion, {
       target: { value: 'https://10.79.20.33:80' },

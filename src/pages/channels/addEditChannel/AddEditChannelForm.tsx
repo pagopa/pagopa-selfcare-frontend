@@ -68,8 +68,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
-  const [initialIpUnion, setInitialIpUnion] = useState('');
-  const [isSelected, setIsSelected] = useState(false);
   const operator = isOperator();
 
   const forwarder01 =
@@ -90,10 +88,13 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         channel_code: channelDetail.channel_code,
         digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
         flag_io: channelDetail.flag_io ?? false,
-        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
-          channelDetail.ip
-        }${channelDetail.service}`,
         ip: channelDetail.ip ?? '',
+        newConnection:
+          `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+            channelDetail.ip
+          }${channelDetail.service}` === forwarder01
+            ? forwarder01
+            : '',
         new_password: channelDetail.new_password ?? '',
         nmp_service: channelDetail.nmp_service ?? '',
         on_us: channelDetail.on_us ?? false,
@@ -113,7 +114,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         target_host: channelDetail.target_host ?? '',
         target_path: channelDetail.target_path ?? '',
         target_port: channelDetail.target_port ?? undefined,
-        targetUnion: `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`,
+        targetUnion:
+          channelDetail.target_host !== ''
+            ? `${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`
+            : `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+                channelDetail.ip
+              }:${channelDetail.port}${channelDetail.service}`,
         thread_number: channelDetail.thread_number ?? 0,
         timeout_a: channelDetail.timeout_a ?? 0,
         timeout_b: channelDetail.timeout_b ?? 0,
@@ -127,7 +133,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         digital_stamp_brand: false,
         flag_io: false,
         ip: '',
-        ipUnion: '',
+        newConnection: '',
         password: '',
         payment_model: undefined,
         payment_types: [''],
@@ -178,11 +184,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           password: !values.password
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
-          ipUnion: !values.ipUnion
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : !isValidURL(values.ipUnion)
-            ? t('addEditChannelPage.validationMessage.urlNotValid')
-            : undefined,
 
           proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
         }),
@@ -199,35 +200,18 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     validateOnMount: true,
   });
 
-  useEffect(() => {
-    if (channelDetail) {
-      const ipUnionValue = `${
-        channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
-      }${channelDetail.ip}${channelDetail.service}`;
-      setInitialIpUnion(ipUnionValue);
-      setIsSelected(ipUnionValue === forwarder01);
-    }
-  }, [channelDetail]);
+  const [isNewConnectivity, setIsNewConnectivity] = useState(!!formik.values.newConnection);
 
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitTarget(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
+    splitTarget(formik.values);
   }, [formik.values.targetUnion]);
 
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitNewConnection(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
-  }, [formik.values.ipUnion, isSelected]);
+    splitNewConnection(formik.values);
+  }, [isNewConnectivity, formik.values.newConnection]);
 
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitProxy(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
+    splitProxy(formik.values);
   }, [formik.values.proxyUnion]);
 
   useEffect(() => {
@@ -327,37 +311,23 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const splitNewConnection = (values: ChannelOnCreation) => {
-    if (isSelected && formik.values.ipUnion.trim() !== '') {
-      const splitUrl = splitURL(formik.values.ipUnion);
-      if (splitUrl) {
-        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
-        // eslint-disable-next-line functional/immutable-data
-        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        // eslint-disable-next-line functional/immutable-data
-        values.ip = hostSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
-        // eslint-disable-next-line functional/immutable-data
-        values.service = pathSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.serv_plugin = pathSplit;
-      }
-    } else {
-      const splitTargetUnion = splitURL(formik.values.targetUnion);
+    const splitUrl =
+      formik.values.newConnection.trim() !== ''
+        ? splitURL(formik.values.newConnection)
+        : splitURL(formik.values.targetUnion);
 
-      if (splitTargetUnion) {
-        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
-        // eslint-disable-next-line functional/immutable-data
-        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        // eslint-disable-next-line functional/immutable-data
-        values.ip = hostSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
-        // eslint-disable-next-line functional/immutable-data
-        values.service = pathSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.serv_plugin = pathSplit;
-      }
+    if (splitUrl) {
+      const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+      // eslint-disable-next-line functional/immutable-data
+      values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+      // eslint-disable-next-line functional/immutable-data
+      values.ip = hostSplit;
+      // eslint-disable-next-line functional/immutable-data
+      values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+      // eslint-disable-next-line functional/immutable-data
+      values.service = pathSplit;
+      // eslint-disable-next-line functional/immutable-data
+      values.serv_plugin = pathSplit;
     }
   };
 
@@ -391,7 +361,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         if (
           values.primitive_version?.toString() !== '' &&
           values.password !== '' &&
-          values.ipUnion !== '' &&
           values.proxyUnion !== ''
         ) {
           if (operator && values.payment_types && values.payment_types.length > 0) {
@@ -706,9 +675,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          setIsSelected={setIsSelected}
-          isSelected={isSelected}
-          initialIpUnion={initialIpUnion}
+          setIsNewConnectivity={setIsNewConnectivity}
+          isNewConnectivity={isNewConnectivity}
           forwarder01={forwarder01}
         />
       ) : null}

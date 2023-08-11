@@ -10,8 +10,6 @@ import {
   InputLabel,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -19,7 +17,7 @@ import {
 import { theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ENV } from '../../../../utils/env';
@@ -31,25 +29,26 @@ type Props = {
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
-  setIsSelected: Dispatch<SetStateAction<boolean>>;
-  isSelected: boolean;
-  initialIpUnion: string;
+  setIsNewConnectivity: Dispatch<SetStateAction<boolean>>;
+  isNewConnectivity: boolean;
   forwarder01: string;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
   handleChangeNumberOnly,
-  setIsSelected,
-  isSelected,
-  initialIpUnion,
+  setIsNewConnectivity,
+  isNewConnectivity,
   forwarder01,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
 
   const handleChange = () => {
-    setIsSelected(!isSelected);
+    setIsNewConnectivity(!isNewConnectivity);
+    if (!isNewConnectivity) {
+      formik.setFieldValue('newConnection', '');
+    }
   };
 
   const inputGroupStyle = {
@@ -152,7 +151,7 @@ Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={isSelected}
+                    checked={isNewConnectivity}
                     onChange={handleChange}
                     data-testid="select-new-connection-test"
                   />
@@ -166,18 +165,22 @@ Props) => {
                   {t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                 </InputLabel>
                 <Select
-                  disabled={!isSelected}
+                  disabled={!isNewConnectivity}
                   fullWidth
-                  id="ipUnion"
-                  name="ipUnion"
+                  id="newConnection"
+                  name="newConnection"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
                   value={
-                    isSelected ? (formik.values.ipUnion === forwarder01 ? forwarder01 : '') : ''
+                    isNewConnectivity
+                      ? formik.values.newConnection === forwarder01
+                        ? forwarder01
+                        : ''
+                      : ''
                   }
                   onChange={(e) => {
                     formik.handleChange(e);
-                    formik.setFieldValue('ipUnion', e.target.value);
+                    formik.setFieldValue('newConnection', e.target.value);
                   }}
                   inputProps={{
                     'data-testid': 'new-connection-channel',

@@ -136,7 +136,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {`${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`}
+                    {`${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>

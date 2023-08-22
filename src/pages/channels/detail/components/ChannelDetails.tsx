@@ -40,13 +40,23 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
   };
 
   const forwarder01 =
-    ENV.ENV === 'PROD'
+    ENV.ENV === 'prod'
       ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
       : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
   const newConnectionValue = `${
     channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
   }${channelDetail.ip}${channelDetail.service}`;
+
+  const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`;
+
+  const endPoindValue = () => {
+    if (newConnectionValue === forwarder01) {
+      return targetValue;
+    } else {
+      return '-';
+    }
+  };
 
   return (
     <Grid container justifyContent={'center'}>
@@ -136,7 +146,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {`${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`}
+                    {endPoindValue()}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
@@ -308,7 +318,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                     {forwarder01 === newConnectionValue
                       ? t('channelDetailValidationPage.forwarder01')
-                      : '-'}
+                      : targetValue}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={4}>

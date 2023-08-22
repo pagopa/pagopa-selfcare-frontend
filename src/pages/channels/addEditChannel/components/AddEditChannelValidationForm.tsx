@@ -17,10 +17,14 @@ import {
 import { theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ENV } from '../../../../utils/env';
+import {
+  ChannelDetailsResource,
+  ProtocolEnum,
+} from '../../../../api/generated/portal/ChannelDetailsResource';
 
 type Props = {
   formik: FormikProps<ChannelOnCreation>;
@@ -32,6 +36,7 @@ type Props = {
   setIsNewConnectivity: Dispatch<SetStateAction<boolean>>;
   isNewConnectivity: boolean;
   forwarder01: string;
+  channelDetail?: ChannelDetailsResource;
 };
 
 const AddEditChannelValidationForm = ({
@@ -40,15 +45,23 @@ const AddEditChannelValidationForm = ({
   setIsNewConnectivity,
   isNewConnectivity,
   forwarder01,
+  channelDetail,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+  const newConnectivity = `${
+    channelDetail?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+  }${channelDetail?.ip}${channelDetail?.service}`;
 
-  const handleChange = () => {
-    setIsNewConnectivity(!isNewConnectivity);
-    if (!isNewConnectivity) {
-      formik.setFieldValue('newConnection', '');
+  useEffect(() => {
+    if (forwarder01 === newConnectivity) {
+      setIsNewConnectivity(true);
     }
+  }, [newConnectivity]);
+
+  const changeCheckBoxValue = () => {
+    formik.setFieldValue('newConnection', '');
+    setIsNewConnectivity(!isNewConnectivity);
   };
 
   const inputGroupStyle = {
@@ -60,8 +73,8 @@ Props) => {
   };
 
   const oldConnectionValue =
-    ENV.ENV === 'PROD' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
-  const newConnectionValue = ENV.ENV === 'PROD' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
+    ENV.ENV === 'prod' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
+  const newConnectionValue = ENV.ENV === 'prod' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
 
   const proxyOptions = [
     {
@@ -151,8 +164,9 @@ Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
+                    name="new-connectivity-checkbox"
                     checked={isNewConnectivity}
-                    onChange={handleChange}
+                    onChange={() => changeCheckBoxValue()}
                     data-testid="select-new-connection-test"
                   />
                 }
@@ -171,13 +185,7 @@ Props) => {
                   name="newConnection"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
-                  value={
-                    isNewConnectivity
-                      ? formik.values.newConnection === forwarder01
-                        ? forwarder01
-                        : ''
-                      : ''
-                  }
+                  value={formik.values.newConnection}
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue('newConnection', e.target.value);

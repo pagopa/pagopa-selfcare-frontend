@@ -222,7 +222,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.click(targetUnion);
     fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
-    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.itpath/3000` } });
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it:3000/path` } });
 
     paymentType.value = 'PPAY';
 

@@ -208,7 +208,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   useEffect(() => {
     splitNewConnection(formik.values);
-  }, [isNewConnectivity, formik.values.newConnection]);
+  }, [formik.values.newConnection]);
 
   useEffect(() => {
     splitProxy(formik.values);
@@ -269,26 +269,13 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       const splitTargetUnion = splitURL(formik.values.targetUnion);
 
       if (splitTargetUnion) {
-        const { protocolSplit, hostSplit, pathSplit } = splitTargetUnion;
-        // eslint-disable-next-line functional/no-let
-        let { portSplit } = splitTargetUnion;
+        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitTargetUnion;
 
         // eslint-disable-next-line functional/immutable-data
         values.target_host = `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`;
 
-        const pathParts = pathSplit.split('/');
-        const lastPathPart = pathParts[pathParts.length - 1];
-
-        if (!isNaN(parseInt(lastPathPart, 10))) {
-          portSplit = parseInt(lastPathPart, 10);
-          // eslint-disable-next-line functional/immutable-data
-          pathParts.pop();
-          // eslint-disable-next-line functional/immutable-data
-          values.target_path = pathParts.join('/');
-        } else {
-          // eslint-disable-next-line functional/immutable-data
-          values.target_path = pathSplit;
-        }
+        // eslint-disable-next-line functional/immutable-data
+        values.target_path = pathSplit;
 
         // eslint-disable-next-line functional/immutable-data
         values.target_port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
@@ -312,7 +299,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   const splitNewConnection = (values: ChannelOnCreation) => {
     const splitUrl =
-      formik.values.newConnection.trim() !== ''
+      formik.values.newConnection.trim() !== '' && isNewConnectivity
         ? splitURL(formik.values.newConnection)
         : splitURL(formik.values.targetUnion);
 
@@ -327,7 +314,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       // eslint-disable-next-line functional/immutable-data
       values.service = pathSplit;
       // eslint-disable-next-line functional/immutable-data
-      values.serv_plugin = pathSplit;
+      values.nmp_service = pathSplit;
     }
   };
 
@@ -678,6 +665,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           setIsNewConnectivity={setIsNewConnectivity}
           isNewConnectivity={isNewConnectivity}
           forwarder01={forwarder01}
+          channelDetail={channelDetail}
         />
       ) : null}
 

@@ -389,4 +389,33 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     fireEvent.click(backButton);
   });
+
+  test('test targetUnion condition', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+    const channelDetail: ChannelDetailsDto = {
+      broker_psp_code: '97735020584',
+      broker_description: 'AgID - Agenzia per l’Italia Digitale',
+      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 443,
+      target_host: '',
+      payment_types: ['PPAY'],
+      status: StatusEnum.TO_CHECK,
+    };
+
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={mockedParties[0]}
+              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
 });

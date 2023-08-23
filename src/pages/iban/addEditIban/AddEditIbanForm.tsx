@@ -230,8 +230,18 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
         history.push(ROUTES.IBAN);
       } catch (reason: any) {
         if (reason.httpStatus === 409) {
-          formik.setFieldError('iban', t('addEditIbanPage.validationMessage.ibanConflict'));
+          // eslint-disable-next-line functional/no-let
+          let errorKey = '';
+
+          if (formik.values.iban.includes('07601')) {
+            errorKey = 'postalIbanConflict';
+          } else {
+            errorKey = 'bankIbanConflict';
+          }
+
+          formik.setFieldError('iban', t(`addEditIbanPage.validationMessage.${errorKey}`));
         }
+
         addError({
           id: 'CREATE_UPDATE_IBAN',
           blocking: false,
@@ -472,7 +482,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   helperText={
                     formik.touched.creditorInstitutionCode && formik.errors.creditorInstitutionCode
                   }
-                  InputLabelProps={{ shrink: subject === 'me' ? true : false }}
                 />
               </Grid>
             </Grid>

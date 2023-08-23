@@ -50,14 +50,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
 
   const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`;
 
-  const endPoindValue = () => {
-    if (newConnectionValue === forwarder01) {
-      return targetValue;
-    } else {
-      return '-';
-    }
-  };
-
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -146,7 +138,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {endPoindValue()}
+                    {targetValue}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>

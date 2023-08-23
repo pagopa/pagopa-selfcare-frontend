@@ -16,7 +16,7 @@ export enum FormAction {
 
 export type ChannelExtraInfo = {
   targetUnion: string;
-  ipUnion: string;
+  newConnection: string;
   proxyUnion: string;
 };
 

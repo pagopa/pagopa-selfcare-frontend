@@ -70,6 +70,11 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
   const operator = isOperator();
 
+  const forwarder01 =
+    ENV.ENV === 'PROD'
+      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
+
   const initialFormData = (
     channelCode: string,
     channelDetail?: ChannelDetailsResource,
@@ -83,10 +88,13 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         channel_code: channelDetail.channel_code,
         digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
         flag_io: channelDetail.flag_io ?? false,
-        ipUnion: `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
-          channelDetail.ip
-        }${channelDetail.port}${channelDetail.service}`,
         ip: channelDetail.ip ?? '',
+        newConnection:
+          `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+            channelDetail.ip
+          }${channelDetail.service}` === forwarder01
+            ? forwarder01
+            : '',
         new_password: channelDetail.new_password ?? '',
         nmp_service: channelDetail.nmp_service ?? '',
         on_us: channelDetail.on_us ?? false,
@@ -106,7 +114,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         target_host: channelDetail.target_host ?? '',
         target_path: channelDetail.target_path ?? '',
         target_port: channelDetail.target_port ?? undefined,
-        targetUnion: `${channelDetail.target_host}${channelDetail.target_path}${channelDetail.target_port}`,
+        targetUnion:
+          channelDetail.target_host !== ''
+            ? `${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`
+            : `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
+                channelDetail.ip
+              }:${channelDetail.port}${channelDetail.service}`,
         thread_number: channelDetail.thread_number ?? 0,
         timeout_a: channelDetail.timeout_a ?? 0,
         timeout_b: channelDetail.timeout_b ?? 0,
@@ -120,7 +133,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         digital_stamp_brand: false,
         flag_io: false,
         ip: '',
-        ipUnion: '',
+        newConnection: '',
         password: '',
         payment_model: undefined,
         payment_types: [''],
@@ -171,11 +184,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           password: !values.password
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
-          ipUnion: !values.ipUnion
-            ? t('addEditChannelPage.validationMessage.requiredField')
-            : !isValidURL(values.ipUnion)
-            ? t('addEditChannelPage.validationMessage.urlNotValid')
-            : undefined,
 
           proxy_host: !values.proxy_host ? t('addEditChannelPage.requiredField') : undefined,
         }),
@@ -192,25 +200,18 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     validateOnMount: true,
   });
 
+  const [isNewConnectivity, setIsNewConnectivity] = useState(!!formik.values.newConnection);
+
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitTarget(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
+    splitTarget(formik.values);
   }, [formik.values.targetUnion]);
 
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitNewConnection(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
-  }, [formik.values.ipUnion]);
+    splitNewConnection(formik.values);
+  }, [formik.values.newConnection]);
 
   useEffect(() => {
-    const updatedValues = { ...formik.values };
-    splitProxy(updatedValues);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setValues(updatedValues);
+    splitProxy(formik.values);
   }, [formik.values.proxyUnion]);
 
   useEffect(() => {
@@ -272,8 +273,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
         // eslint-disable-next-line functional/immutable-data
         values.target_host = `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`;
+
         // eslint-disable-next-line functional/immutable-data
         values.target_path = pathSplit;
+
         // eslint-disable-next-line functional/immutable-data
         values.target_port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
       }
@@ -295,22 +298,23 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const splitNewConnection = (values: ChannelOnCreation) => {
-    if (formik.values.ipUnion && formik.values.ipUnion !== '') {
-      const splitUrl = splitURL(formik.values.ipUnion);
-      if (splitUrl) {
-        const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+    const splitUrl =
+      formik.values.newConnection.trim() !== '' && isNewConnectivity
+        ? splitURL(formik.values.newConnection)
+        : splitURL(formik.values.targetUnion);
 
-        // eslint-disable-next-line functional/immutable-data
-        values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        // eslint-disable-next-line functional/immutable-data
-        values.ip = hostSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
-        // eslint-disable-next-line functional/immutable-data
-        values.service = pathSplit;
-        // eslint-disable-next-line functional/immutable-data
-        values.serv_plugin = pathSplit;
-      }
+    if (splitUrl) {
+      const { protocolSplit, hostSplit, pathSplit, portSplit } = splitUrl;
+      // eslint-disable-next-line functional/immutable-data
+      values.protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+      // eslint-disable-next-line functional/immutable-data
+      values.ip = hostSplit;
+      // eslint-disable-next-line functional/immutable-data
+      values.port = portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+      // eslint-disable-next-line functional/immutable-data
+      values.service = pathSplit;
+      // eslint-disable-next-line functional/immutable-data
+      values.nmp_service = pathSplit;
     }
   };
 
@@ -344,7 +348,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         if (
           values.primitive_version?.toString() !== '' &&
           values.password !== '' &&
-          values.ipUnion !== '' &&
           values.proxyUnion !== ''
         ) {
           if (operator && values.payment_types && values.payment_types.length > 0) {
@@ -398,7 +401,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       })}`;
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        console.log('VALUES', values);
         await createWrapperChannelDetails(values, validationUrl);
         redirect();
       }
@@ -660,7 +662,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          channelDet={channelDetail}
+          setIsNewConnectivity={setIsNewConnectivity}
+          isNewConnectivity={isNewConnectivity}
+          forwarder01={forwarder01}
+          channelDetail={channelDetail}
         />
       ) : null}
 

@@ -65,11 +65,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     setSubject(e.target.value);
   };
 
-  const getTomorrowDate = () => {
-    const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 1);
-    return currentDate;
-  };
+  const getTomorrowDate = (currentDate: Date) =>
+    new Date(currentDate.setDate(currentDate.getDate() + 1));
+
   const initialFormData = (ibanBody?: IbanOnCreation) =>
     ibanBody
       ? {
@@ -84,8 +82,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       : {
           iban: '',
           description: '',
-          validityDate: getTomorrowDate(),
-          dueDate: getTomorrowDate(),
+          validityDate: new Date(),
+          dueDate: new Date(),
           creditorInstitutionCode: '',
           active: true,
         };
@@ -150,16 +148,16 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.validityDate.getTime() < minDate.getTime()
+            : values.validityDate.getDate() < minDate.getDate()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
+            : values.dueDate && values.validityDate.getDate() > values.dueDate.getDate()
             ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
             : undefined,
           dueDate: !values.dueDate
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.dueDate.getTime() < minDate.getTime()
+            : values.dueDate.getDate() < minDate.getDate()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
+            : values.validityDate && values.dueDate.getDate() < values.validityDate.getDate()
             ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
           creditorInstitutionCode:
@@ -378,7 +376,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.validityDate}
+                    value={
+                      formik.values.validityDate.getDate() === new Date().getDate()
+                        ? getTomorrowDate(formik.values.validityDate)
+                        : formik.values.validityDate
+                    }
                     onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -405,7 +407,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.dueDate}
+                    value={
+                      formik.values.dueDate.getDate() === new Date().getDate()
+                        ? getTomorrowDate(formik.values.dueDate)
+                        : formik.values.dueDate
+                    }
                     onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField

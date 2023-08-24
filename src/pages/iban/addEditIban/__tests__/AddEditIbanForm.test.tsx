@@ -204,9 +204,11 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
 
     const startDateInput = screen.getByTestId('start-date-test');
     fireEvent.change(startDateInput, { target: { value: '2023-07-28' } });
+    fireEvent.change(startDateInput, { target: { value: new Date() } });
 
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
+    fireEvent.change(endDateInput, { target: { value: new Date() } });
 
     const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
     fireEvent.click(holderAnotherOne);

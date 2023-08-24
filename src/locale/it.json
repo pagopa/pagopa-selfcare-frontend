@@ -682,7 +682,7 @@
     "ibanData": "Dati IBAN",
     "iban": "IBAN",
     "ibanDesc": "Descrizione",
-    "validityDate": "Inizio validità",
+    "validityDate": "Periodo di validità",
     "from": "Data inizio",
     "to": "Data fine",
     "ecData": "Dati ente crerditore",

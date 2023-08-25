@@ -493,6 +493,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             <AddEditChannelFormSectionTitle
               title={t('addEditChannelPage.addForm.sections.registry')}
               icon={<BadgeIcon fontSize="small" />}
+              isRequired
             ></AddEditChannelFormSectionTitle>
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
@@ -510,6 +511,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                   inputProps={{
                     'data-testid': 'psp-brokercode-test',
                   }}
+                  required
                 />
               </Grid>
               <Grid container item xs={6}>
@@ -529,6 +531,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                   inputProps={{
                     'data-testid': 'business-name-test',
                   }}
+                  required
                 />
               </Grid>
               <Grid container item xs={6} direction="column">
@@ -546,6 +549,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                   inputProps={{
                     'data-testid': 'channel-code-test',
                   }}
+                  required
                 />
               </Grid>
             </Grid>
@@ -555,6 +559,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             <AddEditChannelFormSectionTitle
               title={t('addEditChannelPage.addForm.sections.target')}
               icon={<MenuBookIcon />}
+              isRequired
             ></AddEditChannelFormSectionTitle>
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
@@ -571,6 +576,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                   inputProps={{
                     'data-testid': 'target-union-test',
                   }}
+                  required
                 />
               </Grid>
             </Grid>
@@ -579,6 +585,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             <AddEditChannelFormSectionTitle
               title={t('addEditChannelPage.addForm.sections.paymentType')}
               icon={<CreditCardIcon />}
+              isRequired
             ></AddEditChannelFormSectionTitle>
             <Grid container spacing={2} mt={1}>
               {formik.values.payment_types?.map((_pT, i) => (
@@ -623,6 +630,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         inputProps={{
                           'data-testid': 'payment-type-test',
                         }}
+                        required
                       >
                         {paymentOptions &&
                           sortPaymentType(paymentOptions.payment_types).map((option: any) => (

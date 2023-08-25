@@ -139,7 +139,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           redirectProtocol: detail.redirectProtocol ?? '',
           redirectQueryString: detail.redirectQueryString ?? '',
           service: detail.service ?? '',
-          stationCode: detail.stationCode ?? '',
+          stationCode:
+            formAction === StationFormAction.Duplicate
+              ? stationCodeGenerated
+              : detail.stationCode ?? '',
           status: detail?.wrapperStatus,
           targetHost: detail.targetHost ?? '',
           targetPath: detail.targetPath ?? '',
@@ -307,7 +310,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     setLoading(true);
     const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
     const stationCode4Redirect =
-      formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
+      formAction !== StationFormAction.Edit ? stationCodeGenerated : stationCode;
 
     const values = alterStationValuesToFitCategories(valuesFromForm, env);
 
@@ -486,6 +489,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   inputProps={{
                     'data-testid': 'station-code-test',
                   }}
+                  required
                 />
               </Grid>
               {operator && formAction !== StationFormAction.Create ? (
@@ -505,6 +509,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     inputProps={{
                       'data-testid': 'broker-code-test',
                     }}
+                    required
                   />
                 </Grid>
               ) : null}
@@ -529,6 +534,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
+                  required
                 />
               </Grid>
             </Grid>

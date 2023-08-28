@@ -178,26 +178,17 @@ export function showIbanValue(params: GridRenderCellParams) {
 }
 
 export function showStatus(params: GridRenderCellParams) {
-  const currentDate = new Date();
-
-  const isIbanActive = () =>
-    !!(
-      params.row.active &&
-      params.row.validityDate.getTime() <= currentDate.getTime() &&
-      params.row.dueDate.getTime() > currentDate.getTime()
-    );
-
   return renderCell(
     params,
     <Box>
       <Chip
-        label={isIbanActive() ? 'Attivo' : 'Non attivo'}
+        label={params.row.active ? 'Attivo' : 'Non attivo'}
         aria-label="Status"
         sx={{
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
-          color: isIbanActive() ? '#FFFFFF' : '#17324D',
-          backgroundColor: isIbanActive() ? 'primary.main' : 'error.light',
+          color: params.row.active ? '#FFFFFF' : '#17324D',
+          backgroundColor: params.row.active ? 'primary.main' : 'error.light',
           paddingBottom: '1px',
           height: '24px',
         }}

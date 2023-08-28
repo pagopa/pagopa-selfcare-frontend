@@ -148,16 +148,16 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.validityDate.getDate() < minDate.getDate()
+            : values.validityDate.getTime() < minDate.getTime() && !values.active
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.dueDate && values.validityDate.getDate() > values.dueDate.getDate()
+            : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
             ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
             : undefined,
           dueDate: !values.dueDate
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.dueDate.getDate() < minDate.getDate()
+            : values.dueDate.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.validityDate && values.dueDate.getDate() < values.validityDate.getDate()
+            : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
             ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
           creditorInstitutionCode:
@@ -201,7 +201,9 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     }
   };
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async (values: IbanOnCreation) => {
+    const currentDate = new Date();
     if (uploadType === 'single') {
       setLoading(true);
       try {
@@ -212,7 +214,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
-            active: true,
+            active: values.validityDate.getTime() > currentDate.getTime() ? false : true,
           });
         } else {
           await updateIban({
@@ -222,7 +224,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
             labels: values.labels ?? undefined,
-            active: true,
+            active: values.validityDate.getTime() > currentDate.getTime() ? false : true,
           });
         }
         history.push(ROUTES.IBAN);

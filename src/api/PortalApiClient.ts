@@ -642,7 +642,7 @@ export const PortalApi = {
         validityDate: ibanBody.validityDate,
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-        active: true,
+        active: ibanBody.active,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -657,7 +657,7 @@ export const PortalApi = {
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
         labels: ibanBody.labels?.length === 0 ? undefined : ibanBody.labels,
-        active: true,
+        active: ibanBody.active,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

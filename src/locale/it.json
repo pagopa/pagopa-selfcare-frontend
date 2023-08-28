@@ -615,6 +615,8 @@
       "configuration": "Configurazione",
       "GDP": "GDP",
       "newConn": "Nuova Connettività",
+      "forwarderNewConn": "FORWARDER01",
+      "gdpDetail": "GDP01",
       "proxyLabels": {
         "newConnectivity": "Nuova Connettività",
         "oldConnectivity": "Vecchia Connettività"

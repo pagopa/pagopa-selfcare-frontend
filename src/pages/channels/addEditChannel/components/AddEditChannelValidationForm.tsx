@@ -113,6 +113,7 @@ Props) => {
           <AddEditChannelFormSectionTitle
             title={t('addEditChannelPage.addForm.validationForm.sections.registry')}
             icon={<BadgeIcon fontSize="small" />}
+            isRequired
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -133,6 +134,7 @@ Props) => {
                   max: 2,
                   'data-testid': 'primitive-version-test',
                 }}
+                required
               />
             </Grid>
             <Grid container item xs={6}>
@@ -149,6 +151,7 @@ Props) => {
                 inputProps={{
                   'data-testid': 'password-test',
                 }}
+                required
               />
             </Grid>
           </Grid>
@@ -206,6 +209,7 @@ Props) => {
           <AddEditChannelFormSectionTitle
             title={t('addEditChannelPage.addForm.validationForm.sections.proxy')}
             icon={<MenuBookIcon />}
+            isRequired
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>

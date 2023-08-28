@@ -239,7 +239,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {/* stationDetail?.modifiedByOpt */ '-'}
+                    {stationDetail?.modifiedBy}
                   </Typography>
                 </Grid>
               </Grid>
@@ -333,7 +333,36 @@ Props) => {
                     {t('stationDetailPageValidation.infoToComplete.configuration')}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                {stationDetail && stationDetail.ip && isNewConn ? (
+                  <>
+                    <Grid item xs={3}>
+                      <Typography variant="body2">
+                        {t('stationDetailPageValidation.infoToComplete.newConn')}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography variant="body2">
+                        {t('stationDetailPageValidation.infoToComplete.forwarderNewConn')}
+                      </Typography>
+                    </Grid>
+                  </>
+                ) : stationDetail && stationDetail.ip && isGDP ? (
+                  <>
+                    <Grid item xs={3}>
+                      <Typography variant="body2">
+                        {t('stationDetailPageValidation.infoToComplete.GDP')}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography variant="body2">
+                        {t('stationDetailPageValidation.infoToComplete.gdpDetail')}
+                      </Typography>
+                    </Grid>
+                  </>
+                ) : (
+                  '-'
+                )}
+                {/* <Grid item xs={3}>
                   <Typography variant="body2">
                     {t('stationDetailPageValidation.infoToComplete.newConn')}
                   </Typography>
@@ -364,7 +393,7 @@ Props) => {
                         }`
                       : '-'}
                   </Typography>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} mt={4}>
                   <Typography variant="sidenav">
                     {t('stationDetailPageValidation.infoToComplete.proxy')}

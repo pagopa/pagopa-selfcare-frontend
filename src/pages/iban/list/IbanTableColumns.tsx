@@ -45,7 +45,7 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params, params.row.publicationDate.toLocaleDateString('en-GB')),
+        renderCell(params, params.row.validityDate.toLocaleDateString('en-GB')),
       sortable: false,
       flex: 3,
     },
@@ -178,17 +178,26 @@ export function showIbanValue(params: GridRenderCellParams) {
 }
 
 export function showStatus(params: GridRenderCellParams) {
+  const currentDate = new Date();
+
+  const isIbanActive = () =>
+    !!(
+      params.row.active &&
+      params.row.validityDate.getTime() <= currentDate.getTime() &&
+      params.row.dueDate.getTime() > currentDate.getTime()
+    );
+
   return renderCell(
     params,
     <Box>
       <Chip
-        label={params.row.active ? 'Attivo' : 'Non attivo'}
+        label={isIbanActive() ? 'Attivo' : 'Non attivo'}
         aria-label="Status"
         sx={{
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
-          color: params.row.active ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.active ? 'primary.main' : 'error.light',
+          color: isIbanActive() ? '#FFFFFF' : '#17324D',
+          backgroundColor: isIbanActive() ? 'primary.main' : 'error.light',
           paddingBottom: '1px',
           height: '24px',
         }}

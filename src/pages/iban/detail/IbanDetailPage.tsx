@@ -26,6 +26,7 @@ const IbanDetailPage = () => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
   const setLoadingDelete = useLoading(LOADING_TASK_DELETE_IBAN);
+  const currentDate = new Date();
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
@@ -99,6 +100,13 @@ const IbanDetailPage = () => {
     }
   };
 
+  const isIbanActive = () =>
+    !!(
+      iban.active &&
+      iban.validityDate.getTime() <= currentDate.getTime() &&
+      iban.dueDate.getTime() > currentDate.getTime()
+    );
+
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -147,12 +155,12 @@ const IbanDetailPage = () => {
             </Grid>
             <Grid item xs={9} textAlign="right">
               <Chip
-                label={iban.active ? t('ibanPage.active') : t('ibanPage.notActive')}
+                label={isIbanActive() ? t('ibanPage.active') : t('ibanPage.notActive')}
                 aria-label="update-in-progress"
                 size="medium"
                 sx={{
-                  color: iban.active ? '#FFFFFF' : '#17324D',
-                  backgroundColor: iban.active ? 'primary.main' : 'error.light',
+                  color: isIbanActive() ? '#FFFFFF' : '#17324D',
+                  backgroundColor: isIbanActive() ? 'primary.main' : 'error.light',
                   fontSize: '14px',
                   paddingBottom: '1px',
                   height: '32px',

@@ -45,25 +45,25 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const ecCode = selectedParty ? selectedParty.fiscalCode : '';
+  // const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
-  useEffect(() => {
-    if (subject === 'me') {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('creditorInstitutionCode', ecCode);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('creditorInstitutionCode', '');
-    }
-  }, [subject, ecCode]);
+  // useEffect(() => {
+  //   if (subject === 'me') {
+  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //     formik.setFieldValue('creditorInstitutionCode', ecCode);
+  //   } else {
+  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //     formik.setFieldValue('creditorInstitutionCode', '');
+  //   }
+  // }, [subject, ecCode]);
 
   const changeUploadType = (event: any) => {
     setUploadType(event.target.value);
   };
 
-  const changeSubject = (e: any) => {
-    setSubject(e.target.value);
-  };
+  // const changeSubject = (e: any) => {
+  //   setSubject(e.target.value);
+  // };
 
   const getTomorrowDate = (currentDate: Date) =>
     new Date(currentDate.setDate(currentDate.getDate() + 1));
@@ -124,14 +124,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     return true;
   };
 
-  const validateFiscalCode = (fiscalCode: string | undefined) => {
-    if (fiscalCode) {
-      const fiscalCodeNumber = parseInt(fiscalCode, 10);
-      return !isNaN(fiscalCodeNumber);
-    } else {
-      return false;
-    }
-  };
+  // const validateFiscalCode = (fiscalCode: string | undefined) => {
+  //   if (fiscalCode) {
+  //     const fiscalCodeNumber = parseInt(fiscalCode, 10);
+  //     return !isNaN(fiscalCodeNumber);
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
@@ -160,14 +160,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
             ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
-          creditorInstitutionCode:
-            subject === 'me'
-              ? undefined
-              : !values.creditorInstitutionCode
-              ? t('addEditIbanPage.validationMessage.requiredField')
-              : !validateFiscalCode(values.creditorInstitutionCode)
-              ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
-              : undefined,
+          // creditorInstitutionCode:
+          //   subject === 'me'
+          //     ? undefined
+          //     : !values.creditorInstitutionCode
+          //     ? t('addEditIbanPage.validationMessage.requiredField')
+          //     : !validateFiscalCode(values.creditorInstitutionCode)
+          //     ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
+          //     : undefined,
         }).filter(([_key, value]) => value)
       );
     }
@@ -450,7 +450,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="iban-holder"
-                    onChange={(e) => changeSubject(e)}
+                    // onChange={(e) => changeSubject(e)}
                   >
                     <FormControlLabel
                       checked={subject === 'me'}

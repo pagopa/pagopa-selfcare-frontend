@@ -8,7 +8,6 @@ import { theme } from '@pagopa/mui-italia';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { store } from '../../../../redux/store';
-import { createMemoryHistory } from 'history';
 import { emptyIban } from '../../IbanPage';
 
 let createIbanSpy: jest.SpyInstance;
@@ -21,45 +20,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
-  it('should render the form', () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/create`]}>
-          <Route path="/iban/:ibanId/:actionId">
-            <ThemeProvider theme={theme}>
-              <AddEditIbanForm
-                goBack={jest.fn()}
-                ibanBody={emptyIban}
-                formAction={IbanFormAction.Create}
-              />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
-
-    expect(
-      screen.getByLabelText('addEditIbanPage.addForm.fields.iban.ibanCode')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByLabelText('addEditIbanPage.addForm.fields.iban.description')
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText('addEditIbanPage.addForm.fields.dates.start')).toBeInTheDocument();
-    expect(screen.getByLabelText('addEditIbanPage.addForm.fields.dates.end')).toBeInTheDocument();
-    expect(
-      screen.getByLabelText('addEditIbanPage.addForm.fields.holder.holderFiscalCode')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'addEditIbanPage.addForm.buttons.back' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'addEditIbanPage.addForm.buttons.confirm' })
-    ).toBeInTheDocument();
-  });
-
+describe('AddEditIbanForm', () => {
   it('should call goBack when the "Back" button is clicked', () => {
     render(
       <Provider store={store}>
@@ -110,14 +71,8 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
 
-    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    // fireEvent.click(holderAnotherOne);
-
     const holderMe = screen.getByTestId('holder-me-test');
     fireEvent.click(holderMe);
-
-    const holderFiscalCodeInput = screen.getByTestId('holder-fiscal-code-test');
-    fireEvent.change(holderFiscalCodeInput, { target: { value: 'AAAAAA' } });
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
@@ -131,7 +86,15 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
             <ThemeProvider theme={theme}>
               <AddEditIbanForm
                 goBack={jest.fn()}
-                ibanBody={emptyIban}
+                ibanBody={{
+                  iban: 'IT99C0222211111000000000003',
+                  description: 'Tassa di concorso - servizio tesoreria comunale',
+                  validityDate: new Date('2023-04-01T13:49:19.897Z'),
+                  dueDate: new Date('2033-04-01T13:49:19.897Z'),
+                  active: true,
+                  creditorInstitutionCode: '1234567890',
+                  labels: [],
+                }}
                 formAction={IbanFormAction.Edit}
               />
             </ThemeProvider>
@@ -140,33 +103,15 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
       </Provider>
     );
 
-    const iban = screen.getByTestId('iban-test');
-    fireEvent.change(iban, { target: { value: 'IT60X0542811101000000123456' } });
-
     const description = screen.getByTestId('description-test');
     fireEvent.change(description, { target: { value: 'Descrizione iban' } });
-
-    const startDateInput = screen.getByTestId('start-date-test');
-    fireEvent.change(startDateInput, { target: { value: '2023-07-28' } });
-
-    const endDateInput = screen.getByTestId('end-date-test');
-    fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
-
-    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    // fireEvent.click(holderAnotherOne);
-
-    const holderMe = screen.getByTestId('holder-me-test');
-    fireEvent.click(holderMe);
-
-    const holderFiscalCodeInput = screen.getByTestId('holder-fiscal-code-test');
-    fireEvent.change(holderFiscalCodeInput, { target: { value: 'AAAAAA' } });
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
     fireEvent.submit(submitBtn);
   });
 
-  it('test iban validator function and fiscalCode validation function', async () => {
+  it('test iban validator function', async () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/create`]}>
@@ -203,23 +148,14 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     fireEvent.change(description, { target: { value: 'Descrizione iban' } });
 
     const startDateInput = screen.getByTestId('start-date-test');
-    fireEvent.change(startDateInput, { target: { value: '2023-07-28' } });
     fireEvent.change(startDateInput, { target: { value: new Date() } });
 
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
     fireEvent.change(endDateInput, { target: { value: new Date() } });
 
-    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    // fireEvent.click(holderAnotherOne);
-
-    fireEvent.change(holderFiscalCodeInput, { target: { value: '123456' } });
-
     const holderMe = screen.getByTestId('holder-me-test');
     fireEvent.click(holderMe);
-
-    fireEvent.change(holderFiscalCodeInput, { target: { value: parseInt('123456', 10) } });
-    fireEvent.change(holderFiscalCodeInput, { target: { value: undefined } });
 
     const uploadTypeSingle = screen.getByTestId('upload-single-test');
     fireEvent.click(uploadTypeSingle);

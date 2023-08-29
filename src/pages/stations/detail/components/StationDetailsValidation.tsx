@@ -360,7 +360,14 @@ Props) => {
                     </Grid>
                   </>
                 ) : (
-                  '-'
+                  <>
+                    <Grid item xs={3}>
+                      <Typography variant="body2">{'-'}</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography variant="body2">{'-'}</Typography>
+                    </Grid>
+                  </>
                 )}
                 {/* <Grid item xs={3}>
                   <Typography variant="body2">
@@ -406,8 +413,9 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.proxyHost ?? '-'}
-                    {stationDetail?.proxyPort ? `:${stationDetail.proxyPort}` : '-'}
+                    {stationDetail?.proxyHost && stationDetail?.proxyPort
+                      ? `${stationDetail.proxyHost}:${stationDetail.proxyPort}`
+                      : '-'}
 
                     {stationDetail?.proxyHost !== '' &&
                       Object.entries(proxyAddresses).map(([key, value]) =>

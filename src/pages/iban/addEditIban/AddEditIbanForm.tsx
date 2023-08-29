@@ -376,10 +376,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               <Grid container item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
+                    disabled={ibanBody?.active && formAction === IbanFormAction.Edit}
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
                     value={
-                      formik.values.validityDate.getDate() === new Date().getDate()
+                      formik.values.validityDate.getTime() === new Date().getTime()
                         ? getTomorrowDate(formik.values.validityDate)
                         : formik.values.validityDate
                     }
@@ -410,7 +411,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
                     value={
-                      formik.values.dueDate.getDate() === new Date().getDate()
+                      formik.values.dueDate.getTime() === new Date().getTime()
                         ? getTomorrowDate(formik.values.dueDate)
                         : formik.values.dueDate
                     }
@@ -459,13 +460,13 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                       sx={{ mr: 5 }}
                       data-testid="holder-me-test"
                     />
-                    <FormControlLabel
+                    {/* <FormControlLabel
                       checked={subject === 'anotherOne'}
                       value="anotherOne"
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
                       data-testid="holder-anotherOne-test"
-                    />
+                    /> */}
                   </RadioGroup>
                 </FormControl>
               </Grid>

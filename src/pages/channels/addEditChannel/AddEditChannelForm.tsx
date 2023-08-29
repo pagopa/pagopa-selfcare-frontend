@@ -107,6 +107,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         proxyUnion: `${channelDetail.proxy_host}:${channelDetail.proxy_port}`,
         proxy_host: channelDetail.proxy_host ?? '',
         proxy_port: channelDetail.proxy_port ?? undefined,
+        proxy_enabled: channelDetail.proxy_enabled ?? false,
         recovery: channelDetail.recovery ?? false,
         rt_push: channelDetail.rt_push ?? false,
         serv_plugin: channelDetail.serv_plugin ?? '',
@@ -142,6 +143,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         proxyUnion: '',
         proxy_host: '',
         proxy_port: undefined,
+        proxy_enabled: false,
         target_host: '',
         target_path: '',
         target_port: undefined,
@@ -212,6 +214,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   useEffect(() => {
     splitProxy(formik.values);
+    if (formik.values.proxy_host !== '' && formik.values.proxy_port !== 0) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setValues({ ...formik.values, proxy_enabled: true });
+    }
   }, [formik.values.proxyUnion]);
 
   useEffect(() => {

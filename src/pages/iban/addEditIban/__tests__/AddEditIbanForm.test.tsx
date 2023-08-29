@@ -110,8 +110,8 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
 
-    const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    fireEvent.click(holderAnotherOne);
+    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
+    // fireEvent.click(holderAnotherOne);
 
     const holderMe = screen.getByTestId('holder-me-test');
     fireEvent.click(holderMe);
@@ -152,8 +152,8 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
 
-    const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    fireEvent.click(holderAnotherOne);
+    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
+    // fireEvent.click(holderAnotherOne);
 
     const holderMe = screen.getByTestId('holder-me-test');
     fireEvent.click(holderMe);
@@ -210,8 +210,8 @@ describe('AddEditIbanForm', (injectedHistory?: ReturnType<typeof createMemoryHis
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
     fireEvent.change(endDateInput, { target: { value: new Date() } });
 
-    const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
-    fireEvent.click(holderAnotherOne);
+    // const holderAnotherOne = screen.getByTestId('holder-anotherOne-test');
+    // fireEvent.click(holderAnotherOne);
 
     fireEvent.change(holderFiscalCodeInput, { target: { value: '123456' } });
 

@@ -133,6 +133,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           }`,
           proxyHost: detail.proxyHost ?? '',
           proxyPort: detail.proxyPort ?? undefined,
+          proxyEnabled: detail.proxyEnabled ?? false,
           redirectIp: detail.redirectIp ?? '',
           redirectPath: detail.redirectPath ?? '',
           redirectPort: detail.redirectPort ?? 443,
@@ -185,6 +186,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           proxyConcat: '',
           proxyHost: '',
           proxyPort: undefined,
+          proxyEnabled: false,
           redirectIp: '',
           redirectPath: '',
           redirectPort: 443,
@@ -437,6 +439,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           ...formik.values,
           proxyHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
           proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+          proxyEnabled: true,
         })
         .catch((e) => console.error(e));
     }

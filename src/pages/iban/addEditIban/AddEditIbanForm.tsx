@@ -45,17 +45,17 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  // const ecCode = selectedParty ? selectedParty.fiscalCode : '';
+  const ecCode = selectedParty ? selectedParty.fiscalCode : '';
 
-  // useEffect(() => {
-  //   if (subject === 'me') {
-  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //     formik.setFieldValue('creditorInstitutionCode', ecCode);
-  //   } else {
-  //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //     formik.setFieldValue('creditorInstitutionCode', '');
-  //   }
-  // }, [subject, ecCode]);
+  useEffect(() => {
+    if (subject === 'me') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('creditorInstitutionCode', ecCode);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('creditorInstitutionCode', '');
+    }
+  }, [subject, ecCode]);
 
   const changeUploadType = (event: any) => {
     setUploadType(event.target.value);

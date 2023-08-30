@@ -108,6 +108,7 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   protocol: ProtocolEnum.HTTPS,
   proxy_host: channel.proxy_host,
   proxy_port: channel.proxy_port,
+  proxy_enabled: channel.proxy_enabled,
   recovery: false,
   redirect_protocol: Redirect_protocolEnum.HTTPS,
   redirect_port: undefined,

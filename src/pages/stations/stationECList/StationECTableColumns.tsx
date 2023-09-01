@@ -1,8 +1,8 @@
-import {Box, Chip, Grid, IconButton, Typography} from '@mui/material';
-import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
-import React, {CSSProperties, ReactNode} from 'react';
-import {TFunction} from 'react-i18next';
-import {RemoveCircle} from '@mui/icons-material';
+import { Box, Chip, Grid, IconButton, Typography } from '@mui/material';
+import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import React, { CSSProperties, ReactNode } from 'react';
+import { TFunction } from 'react-i18next';
+import { RemoveCircle } from '@mui/icons-material';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -23,35 +23,48 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
-      field: 'referent',
+      field: 'auxDigit',
       cellClassName: 'justifyContentNormal',
-      headerName: t('stationECList.stationsTableColumns.headerFields.referent'),
+      headerName: t('stationECList.stationsTableColumns.headerFields.auxdigit'),
       align: 'left',
       headerAlign: 'left',
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.referent_name),
+      renderCell: (params) => renderCell(params, params.row.auxDigit),
       sortable: false,
       flex: 3,
     },
     {
-      field: 'contact',
+      field: 'segregationCode',
       cellClassName: 'justifyContentNormal',
-      headerName: t('stationECList.stationsTableColumns.headerFields.contact'),
+      headerName: t('stationECList.stationsTableColumns.headerFields.segregationCode'),
       align: 'left',
       headerAlign: 'left',
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.referent_mail),
+      renderCell: (params) => renderCell(params, params.row.segregationCode),
       sortable: false,
       flex: 3,
     },
     {
-      field: 'enabled',
+      field: 'applicationCode',
       cellClassName: 'justifyContentNormal',
-      headerName: t('stationECList.stationsTableColumns.headerFields.status'),
+      headerName: t('stationECList.stationsTableColumns.headerFields.appCode'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => renderCell(params, params.row.applicationCode),
+      sortable: false,
+      flex: 3,
+    },
+    {
+      field: 'broadcast',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationECList.stationsTableColumns.headerFields.broadcast'),
       align: 'left',
       headerAlign: 'left',
       editable: false,
@@ -181,13 +194,13 @@ export function showStatus(params: GridRenderCellParams) {
     params,
     <Box>
       <Chip
-        label={params.row.enabled ? 'Attivo' : 'Disattivo'}
+        label={params.row.broadcast ? 'Attivo' : 'Disattivo'}
         aria-label="Status"
         sx={{
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
-          color: params.row.enabled ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          color: params.row.broadcast ? '#FFFFFF' : '#17324D',
+          backgroundColor: params.row.broadcast ? 'primary.main' : 'warning.light',
           paddingBottom: '1px',
           height: '24px',
         }}

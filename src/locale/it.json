@@ -555,9 +555,10 @@
     "stationsTableColumns": {
       "headerFields": {
         "name": "Nome EC",
-        "referent": "Referente",
-        "contact": "Contatto",
-        "status": "Stato"
+        "auxdigit": "Auxdigit",
+        "segregationCode": "Segregation code",
+        "appCode": "Application code",
+        "broadcast": "Broadcast"
       }
     },
     "dissociateModal": {
@@ -570,11 +571,17 @@
   "stationAssociateECPage": {
     "title": "Associa EC",
     "subTitle": "Digita il nome del nuovo EC da associare alla stazione",
+    "institutionToAssociate": "Ente da associare",
+    "associationParams": "Parametri di associazione",
+    "broadcast": "Broadcast",
     "associationForm": {
       "ECSelectionInputPlaceholder": "Cerca EC",
+      "segregationCode": "Codice segregazione",
+      "auxDigit": "Aux digit",
       "successMessage": "EC associato con successo.",
       "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
+      "errorMessageSegregationCodesGet": "Errore durante la ricezione della lista dei codici di segregazione",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
     }

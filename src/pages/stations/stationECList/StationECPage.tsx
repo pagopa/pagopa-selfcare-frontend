@@ -1,10 +1,10 @@
-import {ArrowBack, FileDownload} from '@mui/icons-material';
-import {Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router';
+import { ArrowBack, FileDownload } from '@mui/icons-material';
+import { Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ROUTES from '../../../routes';
@@ -17,6 +17,7 @@ const StationECListPage = () => {
   const { stationId } = useParams<{ stationId: string }>();
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.STATIONS);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (history.location.state && (history.location.state as any).alertSuccessMessage) {
@@ -24,6 +25,8 @@ const StationECListPage = () => {
       window.history.replaceState({}, document.title);
     }
   }, []);
+
+  setTimeout(() => setAlertMessage(''), 6000);
 
   const downloadCSV = () => {
     // TODO: fetch form station service
@@ -89,7 +92,16 @@ const StationECListPage = () => {
         </Stack>
 
         {alertMessage && (
-          <Alert sx={{ mb: 3 }} severity="success" variant="outlined">
+          <Alert
+            sx={{
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              zIndex: 1000,
+            }}
+            severity="success"
+            variant="outlined"
+          >
             {alertMessage}
           </Alert>
         )}

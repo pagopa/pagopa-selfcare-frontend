@@ -16,6 +16,7 @@ import {
   updateWrapperStationByOpt as updateStationWrapByOpt,
   getWrapperStation as getStationWrap,
   updateStation as UpdateStationMocked,
+  getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -188,6 +189,15 @@ export const updateStation = (
 export const getStationDetail = (stationId: string): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationDetailMock(stationId);
+  } else {
+    return PortalApi.getStationDetail(stationId).then((resource) => resource);
   }
-  return PortalApi.getStationDetail(stationId).then((resource) => resource);
+};
+
+export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getCreditorInstitutionSegregationcodesMocked(ecCode);
+  } else {
+    return PortalApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
+  }
 };

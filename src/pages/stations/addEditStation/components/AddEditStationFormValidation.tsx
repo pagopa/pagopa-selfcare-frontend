@@ -98,6 +98,7 @@ Props) => {
           <AddEditStationFormSectionTitle
             title={t('addEditStationPage.addFormValidation.sections.registry')}
             icon={<BadgeIcon />}
+            isRequired
           />
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -117,6 +118,7 @@ Props) => {
                 onChange={(e) => handleChangeNumberOnly(e, 'version', formik)}
                 error={formik.touched.version && Boolean(formik.errors.version)}
                 helperText={formik.touched.version && formik.errors.version}
+                required
               />
             </Grid>
             <Grid container item xs={6}>
@@ -305,6 +307,7 @@ Props) => {
           <AddEditStationFormSectionTitle
             title={t('addEditStationPage.addFormValidation.sections.otherInfo')}
             icon={<BadgeIcon />}
+            isRequired
           />
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -326,6 +329,7 @@ Props) => {
                 onChange={(e) => handleChangeNumberOnly(e, 'timeoutA', formik)}
                 error={formik.touched.timeoutA && Boolean(formik.errors.timeoutA)}
                 helperText={formik.touched.timeoutA && formik.errors.timeoutA}
+                required
               />
             </Grid>
             <Grid container item xs={6}>
@@ -345,6 +349,7 @@ Props) => {
                 onChange={(e) => handleChangeNumberOnly(e, 'timeoutB', formik)}
                 error={formik.touched.timeoutB && Boolean(formik.errors.timeoutB)}
                 helperText={formik.touched.timeoutB && formik.errors.timeoutB}
+                required
               />
             </Grid>
             <Grid container item xs={6}>
@@ -364,6 +369,7 @@ Props) => {
                 onChange={(e) => handleChangeNumberOnly(e, 'timeoutC', formik)}
                 error={formik.touched.timeoutC && Boolean(formik.errors.timeoutC)}
                 helperText={formik.touched.timeoutC && formik.errors.timeoutC}
+                required
               />
             </Grid>
           </Grid>

@@ -133,13 +133,17 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           }`,
           proxyHost: detail.proxyHost ?? '',
           proxyPort: detail.proxyPort ?? undefined,
+          proxyEnabled: detail.proxyEnabled ?? false,
           redirectIp: detail.redirectIp ?? '',
           redirectPath: detail.redirectPath ?? '',
           redirectPort: detail.redirectPort ?? 443,
           redirectProtocol: detail.redirectProtocol ?? '',
           redirectQueryString: detail.redirectQueryString ?? '',
           service: detail.service ?? '',
-          stationCode: detail.stationCode ?? '',
+          stationCode:
+            formAction === StationFormAction.Duplicate
+              ? stationCodeGenerated
+              : detail.stationCode ?? '',
           status: detail?.wrapperStatus,
           targetHost: detail.targetHost ?? '',
           targetPath: detail.targetPath ?? '',
@@ -182,6 +186,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           proxyConcat: '',
           proxyHost: '',
           proxyPort: undefined,
+          proxyEnabled: false,
           redirectIp: '',
           redirectPath: '',
           redirectPort: 443,
@@ -307,7 +312,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     setLoading(true);
     const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
     const stationCode4Redirect =
-      formAction === StationFormAction.Create ? stationCodeGenerated : stationCode;
+      formAction !== StationFormAction.Edit ? stationCodeGenerated : stationCode;
 
     const values = alterStationValuesToFitCategories(valuesFromForm, env);
 
@@ -434,6 +439,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           ...formik.values,
           proxyHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
           proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+          proxyEnabled: true,
         })
         .catch((e) => console.error(e));
     }
@@ -486,6 +492,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   inputProps={{
                     'data-testid': 'station-code-test',
                   }}
+                  required
                 />
               </Grid>
               {operator && formAction !== StationFormAction.Create ? (
@@ -505,6 +512,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     inputProps={{
                       'data-testid': 'broker-code-test',
                     }}
+                    required
                   />
                 </Grid>
               ) : null}
@@ -529,6 +537,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                     max: 2,
                     'data-testid': 'primitive-version-test',
                   }}
+                  required
                 />
               </Grid>
             </Grid>

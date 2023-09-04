@@ -45,7 +45,7 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params, params.row.publicationDate.toLocaleDateString('en-GB')),
+        renderCell(params, params.row.validityDate.toLocaleDateString('en-GB')),
       sortable: false,
       flex: 3,
     },

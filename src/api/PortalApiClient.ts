@@ -108,6 +108,7 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   protocol: ProtocolEnum.HTTPS,
   proxy_host: channel.proxy_host,
   proxy_port: channel.proxy_port,
+  proxy_enabled: channel.proxy_enabled,
   recovery: false,
   redirect_protocol: Redirect_protocolEnum.HTTPS,
   redirect_port: undefined,
@@ -251,7 +252,7 @@ export const PortalApi = {
   createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await apiConfigClient.createChannelUsingPOST({
-      body: channelBody2Send,
+      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
@@ -642,7 +643,7 @@ export const PortalApi = {
         validityDate: ibanBody.validityDate,
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
-        active: true,
+        active: ibanBody.active,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -657,7 +658,7 @@ export const PortalApi = {
         dueDate: ibanBody.dueDate,
         creditorInstitutionCode: ibanBody.creditorInstitutionCode,
         labels: ibanBody.labels?.length === 0 ? undefined : ibanBody.labels,
-        active: true,
+        active: ibanBody.active,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

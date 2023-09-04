@@ -26,6 +26,7 @@ const IbanDetailPage = () => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
   const setLoadingDelete = useLoading(LOADING_TASK_DELETE_IBAN);
+  const currentDate = new Date();
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {

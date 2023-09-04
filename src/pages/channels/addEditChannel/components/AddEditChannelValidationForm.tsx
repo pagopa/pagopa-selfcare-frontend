@@ -5,12 +5,11 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
   Paper,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
@@ -18,7 +17,7 @@ import {
 import { theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
 import { Badge as BadgeIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import { ChannelOnCreation } from '../../../../model/Channel';
 import { ENV } from '../../../../utils/env';
@@ -34,16 +33,36 @@ type Props = {
     field: string,
     formik: FormikProps<ChannelOnCreation>
   ) => void;
-  channelDet?: ChannelDetailsResource;
+  setIsNewConnectivity: Dispatch<SetStateAction<boolean>>;
+  isNewConnectivity: boolean;
+  forwarder01: string;
+  channelDetail?: ChannelDetailsResource;
 };
 
 const AddEditChannelValidationForm = ({
   formik,
   handleChangeNumberOnly,
-  channelDet,
+  setIsNewConnectivity,
+  isNewConnectivity,
+  forwarder01,
+  channelDetail,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
+  const newConnectivity = `${
+    channelDetail?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+  }${channelDetail?.ip}${channelDetail?.service}`;
+
+  useEffect(() => {
+    if (forwarder01 === newConnectivity) {
+      setIsNewConnectivity(true);
+    }
+  }, [newConnectivity]);
+
+  const changeCheckBoxValue = () => {
+    formik.setFieldValue('newConnection', '');
+    setIsNewConnectivity(!isNewConnectivity);
+  };
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -53,25 +72,20 @@ Props) => {
     mb: 3,
   };
 
+  const oldConnectionValue =
+    ENV.ENV === 'prod' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
+  const newConnectionValue = ENV.ENV === 'prod' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
+
   const proxyOptions = [
     {
-      label: 'Nuova Connettività',
-      value: ENV.ENV === 'PROD' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`,
+      label: `${newConnectionValue} - (Nuova Connettività)`,
+      value: newConnectionValue,
     },
     {
-      label: 'Vecchia Connettività',
-      value: ENV.ENV === 'PROD' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`,
+      label: `${oldConnectionValue} - (Vecchia Connettività)`,
+      value: oldConnectionValue,
     },
   ];
-
-  const forwarder01 =
-    ENV.ENV === 'PROD'
-      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
-      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
-
-  const initialIpUnionValue = `${
-    channelDet?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
-  }${channelDet?.ip}${channelDet?.port}${channelDet?.service}`;
 
   return (
     <Paper
@@ -99,6 +113,7 @@ Props) => {
           <AddEditChannelFormSectionTitle
             title={t('addEditChannelPage.addForm.validationForm.sections.registry')}
             icon={<BadgeIcon fontSize="small" />}
+            isRequired
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -119,6 +134,7 @@ Props) => {
                   max: 2,
                   'data-testid': 'primitive-version-test',
                 }}
+                required
               />
             </Grid>
             <Grid container item xs={6}>
@@ -135,6 +151,7 @@ Props) => {
                 inputProps={{
                   'data-testid': 'password-test',
                 }}
+                required
               />
             </Grid>
           </Grid>
@@ -147,15 +164,17 @@ Props) => {
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={12}>
-              <FormControl>
-                <RadioGroup row name="connection" defaultValue="newConnection">
-                  <FormControlLabel
-                    value="newConnection"
-                    control={<Radio />}
-                    label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="new-connectivity-checkbox"
+                    checked={isNewConnectivity}
+                    onChange={() => changeCheckBoxValue()}
+                    data-testid="select-new-connection-test"
                   />
-                </RadioGroup>
-              </FormControl>
+                }
+                label={t('addEditChannelPage.addForm.validationForm.fields.newConnection')}
+              />
             </Grid>
             <Grid container item xs={6}>
               <FormControl fullWidth>
@@ -163,19 +182,16 @@ Props) => {
                   {t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                 </InputLabel>
                 <Select
+                  disabled={!isNewConnectivity}
                   fullWidth
-                  id="ipUnion"
-                  name="ipUnion"
+                  id="newConnection"
+                  name="newConnection"
                   label={t('addEditChannelPage.addForm.validationForm.fields.newConnectionChannel')}
                   size="small"
-                  value={
-                    formik.values.ipUnion === initialIpUnionValue
-                      ? forwarder01
-                      : formik.values.ipUnion
-                  }
+                  value={formik.values.newConnection}
                   onChange={(e) => {
                     formik.handleChange(e);
-                    formik.setFieldValue('ipUnion', e.target.value);
+                    formik.setFieldValue('newConnection', e.target.value);
                   }}
                   inputProps={{
                     'data-testid': 'new-connection-channel',
@@ -193,6 +209,7 @@ Props) => {
           <AddEditChannelFormSectionTitle
             title={t('addEditChannelPage.addForm.validationForm.sections.proxy')}
             icon={<MenuBookIcon />}
+            isRequired
           ></AddEditChannelFormSectionTitle>
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
@@ -206,7 +223,12 @@ Props) => {
                   name="proxyUnion"
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
-                  value={formik.values.proxyUnion}
+                  value={
+                    formik.values.proxyUnion === oldConnectionValue ||
+                    formik.values.proxyUnion === newConnectionValue
+                      ? formik.values.proxyUnion
+                      : ''
+                  }
                   onChange={(e) => {
                     formik.handleChange(e);
                     formik.setFieldValue('proxyUnion', e.target.value);
@@ -214,6 +236,7 @@ Props) => {
                   inputProps={{
                     'data-testid': 'proxy-union-test',
                   }}
+                  error={formik.touched.proxyUnion && Boolean(formik.errors.proxyUnion)}
                 >
                   {proxyOptions.map((option: any) => (
                     <MenuItem

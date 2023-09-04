@@ -31,7 +31,7 @@ const AddEditChannelPage = () => {
   const goBack = () => history.push(ROUTES.CHANNELS);
 
   useEffect(() => {
-    if (formAction !== FormAction.Create) {
+    if (formAction === FormAction.Edit) {
       setLoading(true);
       getChannelDetail(channelId)
         .then((response) => {

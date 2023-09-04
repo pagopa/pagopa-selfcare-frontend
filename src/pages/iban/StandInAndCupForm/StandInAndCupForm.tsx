@@ -42,6 +42,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const [ibanCupTriggered, setIbanCupTriggered] = useState(false);
   const [showMaganeButton, setShowMaganeButton] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [ibanActiveList, setIbanActiveList] = useState<IbansResource>({ ibanList: [] });
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
   const { t } = useTranslation();
   const ecCode = selectedParty?.fiscalCode ?? '';
@@ -49,6 +50,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   useEffect(() => {
     if (ibanList.ibanList.length > 0) {
       filterListStandInAndCup();
+      const ibanListFiltered = ibanList.ibanList.filter((list) => list.active === true);
+      setIbanActiveList({ ibanList: [...ibanListFiltered] });
     }
   }, [selectedParty, ibanList]);
 
@@ -316,7 +319,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           }}
                           disabled
                         >
-                          {ibanList.ibanList.map((r, i) => (
+                          {ibanActiveList.ibanList.map((r, i) => (
                             <MenuItem key={i} value={r.iban}>
                               {r.iban}
                             </MenuItem>
@@ -383,7 +386,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         >
                           {
                             // eslint-disable-next-line sonarjs/no-identical-functions
-                            ibanList.ibanList.map((r, i) => (
+                            ibanActiveList.ibanList.map((r, i) => (
                               <MenuItem key={i} value={r.iban}>
                                 {r.iban}
                               </MenuItem>

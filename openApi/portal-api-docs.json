@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.3.18"
+    "version": "0.3.21"
   },
   "servers": [
     {
@@ -3115,6 +3115,83 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/creditor-institutions/{ecCode}/segregationcodes": {
+      "get": {
+        "tags": ["creditor-institutions"],
+        "summary": "getCreditorInstitutionSegregationcodes",
+        "description": "Get segregation code associations with creditor institution",
+        "operationId": "getCreditorInstitutionSegregationcodesUsingGET",
+        "parameters": [
+          {
+            "name": "ecCode",
+            "in": "path",
+            "description": "Creditor institution code",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditorInstitutionAssociatedCodeList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -6472,6 +6549,36 @@
           "creditorInstitutionDto": {
             "description": "Creditor Institution",
             "$ref": "#/components/schemas/CreditorInstitutionDto"
+          }
+        }
+      },
+      "CreditorInstitutionAssociatedCode": {
+        "title": "CreditorInstitutionAssociatedCode",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreditorInstitutionAssociatedCodeList": {
+        "title": "CreditorInstitutionAssociatedCodeList",
+        "type": "object",
+        "properties": {
+          "unused": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditorInstitutionAssociatedCode"
+            }
+          },
+          "used": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditorInstitutionAssociatedCode"
+            }
           }
         }
       },

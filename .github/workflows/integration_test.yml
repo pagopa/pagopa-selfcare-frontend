@@ -28,7 +28,7 @@ jobs:
       - name: Run Integration Tests
         shell: bash
         run: |
-          npm install
+          yarn install
           cd ./integration-test
 
           chmod +x ./run_integration.sh
@@ -38,7 +38,8 @@ jobs:
     needs: [integration_test]
     runs-on: ubuntu-latest
     name: Notify
-    if: ${{ always() }}
+    #if: ${{ always() }}
+    if: false
     steps:
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v2

@@ -39,7 +39,7 @@ jobs:
       - name: Check Size
         uses: actions/github-script@v6.3.3
         env:
-          IGNORED_FILES: openapi.json, openapi-node.json
+          IGNORED_FILES: portal-api-docs.json, yarn.lock
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

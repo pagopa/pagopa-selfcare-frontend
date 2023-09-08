@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.0.1-1-fix-pipeline-make-release-version",
+  "version": "0.0.1-2-fix-pipeline-make-release-version",
   "homepage": "ui",
   "private": true,
   "scripts": {

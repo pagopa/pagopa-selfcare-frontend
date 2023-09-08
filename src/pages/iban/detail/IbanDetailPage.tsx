@@ -71,10 +71,11 @@ const IbanDetailPage = () => {
     }
   }, [selectedParty, ibanId]);
 
-  const deleteIbans = async () => {
+  const deleteIbanHandler = async () => {
     setLoadingDelete(true);
     try {
       await deleteIban(selectedParty?.fiscalCode ?? '', ibanId);
+      history.push(ROUTES.IBAN);
     } catch (reason) {
       handleErrors([
         {
@@ -130,7 +131,7 @@ const IbanDetailPage = () => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons active={iban.active} iban={ibanId} deleteIbans={deleteIbans} />
+            <IbanDetailButtons active={iban.active} iban={ibanId} deleteIban={deleteIbanHandler} />
           </Grid>
         </Grid>
 

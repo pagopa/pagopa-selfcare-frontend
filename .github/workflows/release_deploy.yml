@@ -20,7 +20,7 @@ on:
         required: false
         type: boolean
         description: skip the release. Only deploy
-        default: true
+        default: false
 
 permissions:
   packages: write

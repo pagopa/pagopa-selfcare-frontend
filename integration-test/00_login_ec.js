@@ -647,6 +647,8 @@ const login = (async () => {
     }
     {
         const targetPage = page;
+
+
         await waitForElement({
             type: 'waitForElement',
             target: 'main',
@@ -684,12 +686,18 @@ const login = (async () => {
                 'pierce/div.css-1jp97fw path'
             ]
         ], targetPage, {timeout, visible: true});
-        await element.click({
+        /* await element.click({
             offset: {
                 x: 11.8515625,
                 y: 5.4296875,
             },
-        });
+        }); */
+
+
+        const elementBtn = await page.waitForSelector('#prod-pagopa button');
+        await elementBtn.click(); 
+        
+
     }
     {
         const targetPage = page;

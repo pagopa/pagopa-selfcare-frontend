@@ -1,10 +1,17 @@
 const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 (async () => {
-    const browser = await puppeteer.launch({headless: "new", userDataDir: './user-data'});
+    const browser = await puppeteer.launch({
+        headless: "new", 
+        userDataDir: './user-data',
+        // slowMo: 50,
+        // dumpio: true,
+        // devtools: true
+    });
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
+    console.log("Iban add - start");
 
     {
         const targetPage = page;
@@ -36,6 +43,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
                 'pierce/div.MuiGrid-grid-xs-2 div:nth-of-type(4)'
             ]
         ], targetPage, timeout);
+        await targetPage.waitForNetworkIdle();
         const element = await waitForSelectors([
             [
                 'aria/IBAN'
@@ -59,90 +67,16 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     }
     {
         const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Aggiungi IBAN'
-            ],
-            [
-                '#StationsSearchTableBox > div > div:nth-of-type(1) > div > div > button'
-            ],
-            [
-                'xpath///*[@id="StationsSearchTableBox"]/div/div[1]/div/div/button'
-            ],
-            [
-                'pierce/#StationsSearchTableBox > div > div:nth-of-type(1) > div > div > button'
-            ],
-            [
-                'text/Aggiungi IBAN'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Aggiungi IBAN'
-            ],
-            [
-                '#StationsSearchTableBox > div > div:nth-of-type(1) > div > div > button'
-            ],
-            [
-                'xpath///*[@id="StationsSearchTableBox"]/div/div[1]/div/div/button'
-            ],
-            [
-                'pierce/#StationsSearchTableBox > div > div:nth-of-type(1) > div > div > button'
-            ],
-            [
-                'text/Aggiungi IBAN'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 1176,
-                y: 394.6666717529297,
-            },
-        });
-        await element.click({
-            clickCount: 2,
-            offset: {
-                x: 1176,
-                y: 394.6666717529297,
-            },
-        });
+        await targetPage.waitForNetworkIdle();
     }
     {
         const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Codice IBAN'
-            ],
-            [
-                '#iban'
-            ],
-            [
-                'xpath///*[@id="iban"]'
-            ],
-            [
-                'pierce/#iban'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Codice IBAN'
-            ],
-            [
-                '#iban'
-            ],
-            [
-                'xpath///*[@id="iban"]'
-            ],
-            [
-                'pierce/#iban'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 276.78125,
-                y: 16.822906494140625,
-            },
-        });
+        const element = await waitForSelector('[id="StationsSearchTableBox"] button.MuiButton-root', targetPage, { timeout, visible: true });
+        await element.click();
+    }
+    {
+        const targetPage = page;
+        await targetPage.waitForNetworkIdle({idleTime:3000});
     }
     {
         const targetPage = page;
@@ -229,6 +163,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             },
         });
     }
+
     {
         const targetPage = page;
         await scrollIntoViewIfNeeded([
@@ -261,7 +196,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         ], targetPage, { timeout, visible: true });
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-            await changeSelectElement(element, 'Servizio di tesoreria comunale')
+            await changeSelectElement(element, 'Created by Puppeteer')
         } else if ([
             'textarea',
             'text',
@@ -272,11 +207,14 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-            await typeIntoElement(element, 'Servizio di tesoreria comunale');
+            await typeIntoElement(element, 'Created by Puppeteer');
         } else {
-            await changeElementValue(element, 'Servizio di tesoreria comunale');
+            await changeElementValue(element, 'Created by Puppeteer');
         }
     }
+
+    /* datePicking startDate - START */
+
     {
         const targetPage = page;
         await scrollIntoViewIfNeeded([
@@ -284,13 +222,13 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
                 'aria/Data inizio'
             ],
             [
-                '#validityDate'
+                "[data-testid='start-date-test']"
             ],
             [
-                'xpath///*[@id="validityDate"]'
+                'xpath///*[@data-testid="start-date-test"]'
             ],
             [
-                'pierce/#validityDate'
+                "pierce/[data-testid='start-date-test']"
             ]
         ], targetPage, timeout);
         const element = await waitForSelectors([
@@ -298,429 +236,55 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
                 'aria/Data inizio'
             ],
             [
-                '#validityDate'
+                "[data-testid='start-date-test']"
             ],
             [
-                'xpath///*[@id="validityDate"]'
+                'xpath///*[@data-testid="start-date-test"]'
             ],
             [
-                'pierce/#validityDate'
+                "pierce/[data-testid='start-date-test']"
             ]
         ], targetPage, { timeout, visible: true });
         await element.click({
-            offset: {
-                x: 101.78125,
-                y: 17.1875,
-            },
+          offset: {
+            x: 8.5,
+            y: 18.875,
+          },
         });
     }
     {
         const targetPage = page;
         await scrollIntoViewIfNeeded([
             [
-                "div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) [data-testid='CalendarIcon']"
+                'aria/Data inizio'
             ],
             [
-                'xpath///*[@data-testid="CalendarIcon"]'
+                "[data-testid='start-date-test']"
             ],
             [
-                "pierce/div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) [data-testid='CalendarIcon']"
+                'xpath///*[@data-testid="start-date-test"]'
+            ],
+            [
+                "pierce/[data-testid='start-date-test']"
             ]
         ], targetPage, timeout);
         const element = await waitForSelectors([
             [
-                "div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) [data-testid='CalendarIcon']"
+                'aria/Data inizio'
             ],
             [
-                'xpath///*[@data-testid="CalendarIcon"]'
+                "[data-testid='start-date-test']"
             ],
             [
-                "pierce/div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) [data-testid='CalendarIcon']"
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 10.98956298828125,
-                y: 9.46875,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/11'
-            ],
-            [
-                'button.MuiPickersDay-today'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[3]/button[3]'
-            ],
-            [
-                'pierce/button.MuiPickersDay-today'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/11'
-            ],
-            [
-                'button.MuiPickersDay-today'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[3]/button[3]'
-            ],
-            [
-                'pierce/button.MuiPickersDay-today'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 25.666656494140625,
-                y: 13,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Choose date, selected date is Jul 11, 2023',
-                'aria/[role="graphics-symbol"]'
-            ],
-            [
-                'div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) path'
-            ],
-            [
-                'xpath///*[@data-testid="CalendarIcon"]/path'
-            ],
-            [
-                'pierce/div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) path'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Choose date, selected date is Jul 11, 2023',
-                'aria/[role="graphics-symbol"]'
-            ],
-            [
-                'div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) path'
-            ],
-            [
-                'xpath///*[@data-testid="CalendarIcon"]/path'
-            ],
-            [
-                'pierce/div.MuiPaper-root > div > div:nth-of-type(2) > div.MuiGrid-root > div:nth-of-type(1) path'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 7.561187744140625,
-                y: 21.325958251953125,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/15'
-            ],
-            [
-                'div:nth-of-type(3) > button:nth-of-type(7)'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[3]/button[7]'
-            ],
-            [
-                'pierce/div:nth-of-type(3) > button:nth-of-type(7)'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/15'
-            ],
-            [
-                'div:nth-of-type(3) > button:nth-of-type(7)'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[3]/button[7]'
-            ],
-            [
-                'pierce/div:nth-of-type(3) > button:nth-of-type(7)'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 22.666656494140625,
-                y: 14,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Choose date',
-                'aria/[role="graphics-symbol"]'
-            ],
-            [
-                'div.MuiGrid-root > div:nth-of-type(2) path'
-            ],
-            [
-                'xpath///*[@data-testid="CalendarIcon"]/path'
-            ],
-            [
-                'pierce/div.MuiGrid-root > div:nth-of-type(2) path'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Choose date',
-                'aria/[role="graphics-symbol"]'
-            ],
-            [
-                'div.MuiGrid-root > div:nth-of-type(2) path'
-            ],
-            [
-                'xpath///*[@data-testid="CalendarIcon"]/path'
-            ],
-            [
-                'pierce/div.MuiGrid-root > div:nth-of-type(2) path'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 10.3424072265625,
-                y: 7.6592864990234375,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                '#mui-21-grid-label'
-            ],
-            [
-                'xpath///*[@id="mui-21-grid-label"]'
-            ],
-            [
-                'pierce/#mui-21-grid-label'
-            ],
-            [
-                'text/July 2023'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                '#mui-21-grid-label'
-            ],
-            [
-                'xpath///*[@id="mui-21-grid-label"]'
-            ],
-            [
-                'pierce/#mui-21-grid-label'
-            ],
-            [
-                'text/July 2023'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 54,
-                y: 20.833328247070312,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/2025'
-            ],
-            [
-                'div:nth-of-type(126) > button'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[126]/button'
-            ],
-            [
-                'pierce/div:nth-of-type(126) > button'
-            ],
-            [
-                'text/2025'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/2025'
-            ],
-            [
-                'div:nth-of-type(126) > button'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[126]/button'
-            ],
-            [
-                'pierce/div:nth-of-type(126) > button'
-            ],
-            [
-                'text/2025'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 27.25,
-                y: 24,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/4'
-            ],
-            [
-                'div:nth-of-type(1) > button:nth-of-type(4)'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[1]/button[4]'
-            ],
-            [
-                'pierce/div:nth-of-type(1) > button:nth-of-type(4)'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/4'
-            ],
-            [
-                'div:nth-of-type(1) > button:nth-of-type(4)'
-            ],
-            [
-                'xpath//html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div[1]/button[4]'
-            ],
-            [
-                'pierce/div:nth-of-type(1) > button:nth-of-type(4)'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 11,
-                y: 16,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Altro soggetto'
-            ],
-            [
-                'div.MuiPaper-root label.css-pd0fjv input'
-            ],
-            [
-                'xpath///*[@id="root"]/div[2]/div[2]/div/div/div[4]/div/div[3]/div[2]/div[1]/div/div/label[2]/span[1]/input'
-            ],
-            [
-                'pierce/div.MuiPaper-root label.css-pd0fjv input'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Altro soggetto'
-            ],
-            [
-                'div.MuiPaper-root label.css-pd0fjv input'
-            ],
-            [
-                'xpath///*[@id="root"]/div[2]/div[2]/div/div/div[4]/div/div[3]/div[2]/div[1]/div/div/label[2]/span[1]/input'
-            ],
-            [
-                'pierce/div.MuiPaper-root label.css-pd0fjv input'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 36.510406494140625,
-                y: 17.552078247070312,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Codice Fiscale Intestatario'
-            ],
-            [
-                '#creditorInstitutionCode'
-            ],
-            [
-                'xpath///*[@id="creditorInstitutionCode"]'
-            ],
-            [
-                'pierce/#creditorInstitutionCode'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Codice Fiscale Intestatario'
-            ],
-            [
-                '#creditorInstitutionCode'
-            ],
-            [
-                'xpath///*[@id="creditorInstitutionCode"]'
-            ],
-            [
-                'pierce/#creditorInstitutionCode'
-            ]
-        ], targetPage, { timeout, visible: true });
-        await element.click({
-            offset: {
-                x: 180.78125,
-                y: 27.125,
-            },
-        });
-    }
-    {
-        const targetPage = page;
-        await scrollIntoViewIfNeeded([
-            [
-                'aria/Codice Fiscale Intestatario'
-            ],
-            [
-                '#creditorInstitutionCode'
-            ],
-            [
-                'xpath///*[@id="creditorInstitutionCode"]'
-            ],
-            [
-                'pierce/#creditorInstitutionCode'
-            ]
-        ], targetPage, timeout);
-        const element = await waitForSelectors([
-            [
-                'aria/Codice Fiscale Intestatario'
-            ],
-            [
-                '#creditorInstitutionCode'
-            ],
-            [
-                'xpath///*[@id="creditorInstitutionCode"]'
+                'xpath///*[@data-testid="start-date-test"]'
             ],
             [
-                'pierce/#creditorInstitutionCode'
+                "pierce/[data-testid='start-date-test']"
             ]
         ], targetPage, { timeout, visible: true });
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-            await changeSelectElement(element, 'CRLBDT94H48F839K')
+          await changeSelectElement(element, '10/10/2030')
         } else if ([
             'textarea',
             'text',
@@ -731,11 +295,84 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-            await typeIntoElement(element, 'CRLBDT94H48F839K');
+          await typeIntoElement(element, '10/10/2030');
         } else {
-            await changeElementValue(element, 'CRLBDT94H48F839K');
+          await changeElementValue(element, '10/10/2030');
         }
     }
+   
+
+
+    /* datePicking startDate - END */
+
+    /* datePicking endDate - START */
+    {
+        const targetPage = page;
+        await targetPage.keyboard.down('Tab');
+    }
+    {
+        const targetPage = page;
+        await targetPage.keyboard.up('Tab');
+    }
+    {
+        const targetPage = page;
+        await targetPage.keyboard.down('Tab');
+    }
+    {
+        const targetPage = page;
+        await targetPage.keyboard.up('Tab');
+    }
+    {
+        const targetPage = page;
+        await scrollIntoViewIfNeeded([
+            [
+                'aria/Data fine'
+            ],
+            [
+                "[data-testid='end-date-test']"
+            ],
+            [
+                'xpath///*[@data-testid="end-date-test"]'
+            ],
+            [
+                "pierce/[data-testid='end-date-test']"
+            ]
+        ], targetPage, timeout);
+        const element = await waitForSelectors([
+            [
+                'aria/Data fine'
+            ],
+            [
+                "[data-testid='end-date-test']"
+            ],
+            [
+                'xpath///*[@data-testid="end-date-test"]'
+            ],
+            [
+                "pierce/[data-testid='end-date-test']"
+            ]
+        ], targetPage, { timeout, visible: true });
+        const inputType = await element.evaluate(el => el.type);
+        if (inputType === 'select-one') {
+          await changeSelectElement(element, '11/10/2030')
+        } else if ([
+            'textarea',
+            'text',
+            'url',
+            'tel',
+            'search',
+            'password',
+            'number',
+            'email'
+        ].includes(inputType)) {
+          await typeIntoElement(element, '11/10/2030');
+        } else {
+          await changeElementValue(element, '11/10/2030');
+        }
+    }
+    
+    /* datePicking endDate - END */
+
     {
         const targetPage = page;
         await scrollIntoViewIfNeeded([
@@ -780,7 +417,31 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         });
     }
 
+    {
+        const targetPage = page;
+        await targetPage.waitForNetworkIdle();
+        await scrollIntoViewIfNeeded([
+            [
+                'div[data-id="IT60X0542811101000000123456"]'
+            ],
+            [
+                'text/IT60X0542811101000000123456'
+            ]
+        ], targetPage, timeout);
+        const element = await waitForSelectors([
+            [
+                'div[data-id="IT60X0542811101000000123456"]'
+            ],
+            [
+                'text/IT60X0542811101000000123456'
+            ]
+        ], targetPage, { timeout, visible: true });
+    }
+       
+
     await browser.close();
+
+    console.log("Iban add - end");
 
     async function waitForSelectors(selectors, frame, options) {
         for (const selector of selectors) {

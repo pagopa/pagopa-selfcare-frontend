@@ -1,8 +1,8 @@
 name: Integration Tests
 
 on:
-  schedule:
-    - cron: '00 08 * * *'
+  #schedule:
+  #  - cron: '00 08 * * *'
 
   workflow_dispatch:
 
@@ -10,7 +10,6 @@ permissions:
   id-token: write
   contents: read
   deployments: write
-
 
 jobs:
   integration_test:
@@ -21,24 +20,22 @@ jobs:
         id: checkout
         uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
 
-
       - name: Set Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: 16.10.0
 
-
       - name: Run Integration Tests
         shell: bash
         run: |
-          cd ./integration-test
           npm install
-          
+          cd ./integration-test
+
           chmod +x ./run_integration.sh
           ./run_integration.sh
 
   notify:
-    needs: [ integration_test ]
+    needs: [integration_test]
     runs-on: ubuntu-latest
     name: Notify
     if: ${{ always() }}

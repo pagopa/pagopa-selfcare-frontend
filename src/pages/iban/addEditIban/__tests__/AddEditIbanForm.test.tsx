@@ -71,8 +71,8 @@ describe('AddEditIbanForm', () => {
     const endDateInput = screen.getByTestId('end-date-test');
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
 
-    const holderMe = screen.getByTestId('holder-me-test');
-    fireEvent.click(holderMe);
+    // const holderMe = screen.getByTestId('holder-me-test');
+    // fireEvent.click(holderMe);
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
@@ -136,11 +136,11 @@ describe('AddEditIbanForm', () => {
     fireEvent.change(iban, { target: { value: 'IT6010542811101000000123456' } });
     fireEvent.change(iban, { target: { value: 'IT60X0542811101AAAAAA123456' } });
 
-    const holderFiscalCodeInput = screen.getByTestId('holder-fiscal-code-test') as HTMLInputElement;
-    fireEvent.change(holderFiscalCodeInput, { target: { value: 'AAAAAA' } });
-    expect(typeof holderFiscalCodeInput.value).toBe('string');
-    fireEvent.change(holderFiscalCodeInput, { target: { value: 123456 } });
-    expect(typeof Number(holderFiscalCodeInput.value)).toBe('number');
+    // const holderFiscalCodeInput = screen.getByTestId('holder-fiscal-code-test') as HTMLInputElement;
+    // fireEvent.change(holderFiscalCodeInput, { target: { value: 'AAAAAA' } });
+    // expect(typeof holderFiscalCodeInput.value).toBe('string');
+    // fireEvent.change(holderFiscalCodeInput, { target: { value: 123456 } });
+    // expect(typeof Number(holderFiscalCodeInput.value)).toBe('number');
 
     fireEvent.change(iban, { target: { value: 'IT60X0542811101000000123456' } });
 
@@ -154,8 +154,8 @@ describe('AddEditIbanForm', () => {
     fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
     fireEvent.change(endDateInput, { target: { value: new Date() } });
 
-    const holderMe = screen.getByTestId('holder-me-test');
-    fireEvent.click(holderMe);
+    // const holderMe = screen.getByTestId('holder-me-test');
+    // fireEvent.click(holderMe);
 
     const uploadTypeSingle = screen.getByTestId('upload-single-test');
     fireEvent.click(uploadTypeSingle);

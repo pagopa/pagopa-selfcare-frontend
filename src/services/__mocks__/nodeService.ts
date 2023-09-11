@@ -45,9 +45,10 @@ const ecDirect: CreditorInstitutionDetailsResource = {
   pspPayment: false,
   reportingFtp: false,
   reportingZip: false,
+  broadcast: true,
 };
 
-const ecDirectUpdated: UpdateCreditorInstitutionDto = {
+const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   address: {
     city: 'Monza',
     countryCode: 'Via Liberta 64',
@@ -61,6 +62,7 @@ const ecDirectUpdated: UpdateCreditorInstitutionDto = {
   pspPayment: false,
   reportingFtp: false,
   reportingZip: false,
+  broadcast: false,
 };
 
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
@@ -71,11 +73,13 @@ export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderD
 
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
-): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));
+): Promise<CreditorInstitutionDetailsResource> =>
+  new Promise((resolve) => resolve({ ...ec, broadcast: true }));
 
 export const createECDirect = (
   ec: CreditorInstitutionDto
-): Promise<CreditorInstitutionDetailsResource> => new Promise((resolve) => resolve(ec));
+): Promise<CreditorInstitutionDetailsResource> =>
+  new Promise((resolve) => resolve({ ...ec, broadcast: true }));
 
 export const getECDetails = (_ecCode: string): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve(ecDirect));

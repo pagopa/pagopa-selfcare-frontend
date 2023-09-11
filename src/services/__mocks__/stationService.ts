@@ -18,6 +18,8 @@ import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEnt
 import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
 import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../../model/Station';
+import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
+import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
 
 const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
@@ -348,23 +350,108 @@ export const mockedStationsMerged2: WrapperStationsResource = {
 
 export const mockedStationECs: CreditorInstitutionsResource = {
   creditor_institutions: [
-    { creditorInstitutionCode: '12345678901', enabled: true, businessName: 'EC1 S.p.A' },
-    { creditorInstitutionCode: '12345678902', enabled: true, businessName: 'EC2 S.p.A' },
-    { creditorInstitutionCode: '12345678903', enabled: false, businessName: 'EC3 S.p.A' },
-    { creditorInstitutionCode: '12345678904', enabled: true, businessName: 'EC4 S.p.A' },
-    { creditorInstitutionCode: '12345678905', enabled: true, businessName: 'EC5 S.p.A' },
-    { creditorInstitutionCode: '12345678906', enabled: true, businessName: 'EC6 S.p.A' },
-    { creditorInstitutionCode: '12345678907', enabled: true, businessName: 'EC7 S.p.A' },
-    { creditorInstitutionCode: '12345678908', enabled: true, businessName: 'EC8 S.p.A' },
-    { creditorInstitutionCode: '12345678909', enabled: true, businessName: 'EC9 S.p.A' },
-    { creditorInstitutionCode: '12345678910', enabled: true, businessName: 'EC10 S.p.A' },
+    {
+      creditorInstitutionCode: '12345678901',
+      enabled: true,
+      businessName: 'EC1 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '02',
+    },
+    {
+      creditorInstitutionCode: '12345678902',
+      enabled: true,
+      businessName: 'EC2 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '03',
+    },
+    {
+      creditorInstitutionCode: '12345678903',
+      enabled: false,
+      businessName: 'EC3 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '04',
+    },
+    {
+      creditorInstitutionCode: '12345678904',
+      enabled: true,
+      businessName: 'EC4 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '05',
+    },
+    {
+      creditorInstitutionCode: '12345678905',
+      enabled: true,
+      businessName: 'EC5 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '06',
+    },
+    {
+      creditorInstitutionCode: '12345678906',
+      enabled: true,
+      businessName: 'EC6 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '07',
+    },
+    {
+      creditorInstitutionCode: '12345678907',
+      enabled: true,
+      businessName: 'EC7 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '08',
+    },
+    {
+      creditorInstitutionCode: '12345678908',
+      enabled: true,
+      businessName: 'EC8 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '09',
+    },
+    {
+      creditorInstitutionCode: '12345678909',
+      enabled: true,
+      businessName: 'EC9 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '10',
+    },
+    {
+      creditorInstitutionCode: '12345678910',
+      enabled: true,
+      businessName: 'EC10 S.p.A',
+      auxDigit: '3',
+      broadcast: true,
+      applicationCode: 'Value',
+      segregationCode: '11',
+    },
   ],
   page_info: { page: 0, limit: 10, items_found: 11, total_pages: 2 },
 };
 
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
   creditor_institutions: [
-    { creditorInstitutionCode: '12345678911', enabled: true, businessName: 'EC11 S.p.A' },
+    {
+      creditorInstitutionCode: '12345678911',
+      enabled: true,
+      businessName: 'EC11 S.p.A',
+      broadcast: false,
+    },
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
@@ -461,6 +548,49 @@ export const mockedStationAvailableEC: Array<any> = [
   },
 ];
 
+// const createFormattedArray = () => {
+//   // const unusedArray: CreditorInstitutionAssociatedCode = [];
+//   // const usedArray: CreditorInstitutionAssociatedCode = [];
+//   // const segregationCodeArray: CreditorInstitutionAssociatedCodeList = [
+//   //   {
+//   //     used: usedArray,
+//   //     unused: unusedArray,
+//   //   },
+//   // ];
+
+//   const segregationCodeArray: CreditorInstitutionAssociatedCodeList = {
+//     used: [],
+//     unused: [],
+//   };
+//   // eslint-disable-next-line functional/no-let
+//   for (let i = 0; i <= 48; i++) {
+//     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+//     const n = (i < 10 ? '0' : '') + i;
+//     // eslint-disable-next-line functional/immutable-data
+//     segregationCodeArray.used?.push({ name: n, code: (i + 1).toString() });
+//   }
+
+//   return segregationCodeArray;
+// };
+
+// const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = [
+//   { used: createFormattedArray(), unused: createFormattedArray() },
+// ];
+
+const createFormattedArray = (): CreditorInstitutionAssociatedCode[] => {
+  const segregationCodeArray: CreditorInstitutionAssociatedCode[] = [];
+  for (let i = 0; i <= 48; i++) {
+    const n = (i < 10 ? '0' : '') + i;
+    segregationCodeArray.push({ name: n, code: (i + 1).toString() });
+  }
+  return segregationCodeArray;
+};
+
+export const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = {
+  used: createFormattedArray(),
+  unused: createFormattedArray(),
+};
+
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
@@ -522,3 +652,8 @@ export const associateEcToStation = (
 
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
+
+export const getCreditorInstitutionSegregationcodes = (
+  _ecCode: string
+): Promise<CreditorInstitutionAssociatedCodeList> =>
+  new Promise((resolve) => resolve(mockedSegregationCodeList));

@@ -16,6 +16,7 @@ import {
   updateWrapperStationByOpt as updateStationWrapByOpt,
   getWrapperStation as getStationWrap,
   updateStation as UpdateStationMocked,
+  getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -26,6 +27,7 @@ import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStation
 import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
+import { DelegationResource } from '../api/generated/portal/DelegationResource';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
@@ -107,15 +109,16 @@ export const associateEcToStation = (
   return PortalApi.associateEcToStation(code, station).then((resource) => resource);
 };
 
-export const getStationAvailableEC = (): Promise<Array<any>> =>
-  /* istanbul ignore if */
-  /* if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    TODO: fix when real service rollout
-    return getChannelAvailablePSPMocked(page);
+export const getStationAvailableEC = (
+  institutionId?: string,
+  brokerId?: string
+): Promise<DelegationResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getStationAvailableECMocked();
   } else {
-    return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
-  } */
-  getStationAvailableECMocked();
+    return PortalApi.getStationAvailableEc(institutionId, brokerId).then((resource) => resource);
+  }
+};
 
 export const createWrapperStation = (
   station: WrapperStationDetailsDto,
@@ -188,6 +191,15 @@ export const updateStation = (
 export const getStationDetail = (stationId: string): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getStationDetailMock(stationId);
+  } else {
+    return PortalApi.getStationDetail(stationId).then((resource) => resource);
   }
-  return PortalApi.getStationDetail(stationId).then((resource) => resource);
+};
+
+export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getCreditorInstitutionSegregationcodesMocked(ecCode);
+  } else {
+    return PortalApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
+  }
 };

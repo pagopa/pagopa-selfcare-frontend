@@ -50,6 +50,8 @@ import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannel
 import { IbansResource } from './generated/portal/IbansResource';
 import { IbanCreateRequestDto } from './generated/portal/IbanCreateRequestDto';
 import { IbanResource } from './generated/portal/IbanResource';
+import { CreditorInstitutionAssociatedCodeList } from './generated/portal/CreditorInstitutionAssociatedCodeList';
+import { DelegationResource } from './generated/portal/DelegationResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -428,6 +430,7 @@ export const PortalApi = {
         auxDigit: station.auxDigit,
         segregationCode: station.segregationCode,
         stationCode: station.stationCode,
+        broadcast: station.broadcast,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -669,6 +672,23 @@ export const PortalApi = {
       creditorinstitutioncode,
       ibanValue,
     });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getCreditorInstitutionSegregationcodes: async (
+    ecCode: string
+  ): Promise<CreditorInstitutionAssociatedCodeList> => {
+    const result = await apiConfigClient.getCreditorInstitutionSegregationcodesUsingGET({
+      ecCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getStationAvailableEc: async (
+    institutionId?: string,
+    brokerId?: string
+  ): Promise<DelegationResource> => {
+    const result = await apiConfigClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

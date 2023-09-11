@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.3.21"
+    "version": "0.4.0"
   },
   "servers": [
     {
@@ -3591,6 +3591,96 @@
         ]
       }
     },
+    "/institutions/delegations": {
+      "get": {
+        "tags": ["institution"],
+        "summary": "getBrokerDelegation",
+        "description": "retrieve all active products for given institution and logged user",
+        "operationId": "getBrokerDelegationUsingGET",
+        "parameters": [
+          {
+            "name": "institutionId",
+            "in": "query",
+            "description": "Institution's unique internal identifier",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brokerId",
+            "in": "query",
+            "description": "Broker's unique id",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DelegationResource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/institutions/{institutionId}": {
       "get": {
         "tags": ["institution"],
@@ -6599,6 +6689,19 @@
             "description": "Creditor Institution's address object",
             "$ref": "#/components/schemas/CreditorInstitutionAddressResource"
           },
+          "applicationCode": {
+            "type": "string",
+            "description": "ApplicationCode"
+          },
+          "auxDigit": {
+            "type": "string",
+            "description": "AuxDigit maximum:3 minimum:0"
+          },
+          "broadcast": {
+            "type": "boolean",
+            "description": "Broadcast",
+            "example": false
+          },
           "businessName": {
             "type": "string",
             "description": "Creditor Institution's business name"
@@ -6611,6 +6714,10 @@
             "type": "boolean",
             "description": "Creditor Institution activation state on ApiConfig",
             "example": false
+          },
+          "mod4": {
+            "type": "string",
+            "description": "Mod4"
           },
           "pspPayment": {
             "type": "boolean",
@@ -6626,6 +6733,10 @@
             "type": "boolean",
             "description": "Enables the zipping of the content that goes through fstp",
             "example": false
+          },
+          "segregationCode": {
+            "type": "string",
+            "description": "SegregationCode"
           }
         }
       },
@@ -6681,6 +6792,19 @@
         "required": ["businessName", "creditorInstitutionCode", "enabled"],
         "type": "object",
         "properties": {
+          "applicationCode": {
+            "type": "string",
+            "description": "ApplicationCode"
+          },
+          "auxDigit": {
+            "type": "string",
+            "description": "AuxDigit maximum:3 minimum:0"
+          },
+          "broadcast": {
+            "type": "boolean",
+            "description": "Broadcast",
+            "example": false
+          },
           "businessName": {
             "type": "string",
             "description": "Creditor Institution's business name"
@@ -6693,23 +6817,45 @@
             "type": "boolean",
             "description": "Creditor Institution activation state on ApiConfig",
             "example": false
+          },
+          "mod4": {
+            "type": "string",
+            "description": "Mod4"
+          },
+          "segregationCode": {
+            "type": "string",
+            "description": "SegregationCode"
           }
         }
       },
       "CreditorInstitutionStationDto": {
         "title": "CreditorInstitutionStationDto",
-        "required": ["auxDigit", "segregationCode", "stationCode"],
+        "required": ["auxDigit", "broadcast", "segregationCode", "stationCode"],
         "type": "object",
         "properties": {
+          "applicationCode": {
+            "type": "integer",
+            "description": "Station's application code",
+            "format": "int64"
+          },
           "auxDigit": {
             "type": "integer",
             "description": "Station's auxiliary digit",
             "format": "int64"
           },
+          "broadcast": {
+            "type": "boolean",
+            "description": "Station's broadcast enabled",
+            "example": false
+          },
+          "mod4": {
+            "type": "boolean",
+            "description": "Station's mod 4 enabled",
+            "example": false
+          },
           "segregationCode": {
-            "type": "integer",
-            "description": "Station's segregation code number",
-            "format": "int64"
+            "type": "string",
+            "description": "Station's segregation code number"
           },
           "stationCode": {
             "type": "string",
@@ -6743,9 +6889,8 @@
             "example": false
           },
           "segregationCode": {
-            "type": "integer",
-            "description": "Station's segregation code number",
-            "format": "int64"
+            "type": "string",
+            "description": "Station's segregation code number"
           },
           "stationCode": {
             "type": "string",
@@ -6768,6 +6913,60 @@
           "page_info": {
             "description": "info pageable",
             "$ref": "#/components/schemas/PageInfo"
+          }
+        }
+      },
+      "DelegationResource": {
+        "title": "DelegationResource",
+        "type": "object",
+        "properties": {
+          "brokerId": {
+            "type": "string",
+            "description": "id borker"
+          },
+          "brokerName": {
+            "type": "string",
+            "description": "broker's name"
+          },
+          "brokerTaxCode": {
+            "type": "string",
+            "description": "broker tax code"
+          },
+          "brokerType": {
+            "type": "string",
+            "description": "broker type"
+          },
+          "id": {
+            "type": "string",
+            "description": "delegation Id"
+          },
+          "institutionId": {
+            "type": "string",
+            "description": "institution Id"
+          },
+          "institutionName": {
+            "type": "string",
+            "description": "institution name"
+          },
+          "institutionRootName": {
+            "type": "string",
+            "description": "institution root name"
+          },
+          "institutionType": {
+            "type": "string",
+            "description": "institution type"
+          },
+          "productId": {
+            "type": "string",
+            "description": "id product"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "tax code"
+          },
+          "type": {
+            "type": "string",
+            "description": "delegation type"
           }
         }
       },
@@ -7841,6 +8040,10 @@
             "type": "integer",
             "description": "Station's broker object id",
             "format": "int64"
+          },
+          "ec_email": {
+            "type": "string",
+            "description": "email of the ec"
           },
           "enabled": {
             "type": "boolean",

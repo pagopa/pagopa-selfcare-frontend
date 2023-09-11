@@ -446,7 +446,12 @@ export const mockedStationECs: CreditorInstitutionsResource = {
 
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
   creditor_institutions: [
-    { creditorInstitutionCode: '12345678911', enabled: true, businessName: 'EC11 S.p.A' },
+    {
+      creditorInstitutionCode: '12345678911',
+      enabled: true,
+      businessName: 'EC11 S.p.A',
+      broadcast: false,
+    },
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
@@ -581,7 +586,7 @@ const createFormattedArray = (): CreditorInstitutionAssociatedCode[] => {
   return segregationCodeArray;
 };
 
-const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = {
+export const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = {
   used: createFormattedArray(),
   unused: createFormattedArray(),
 };

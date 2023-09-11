@@ -22,13 +22,13 @@ import { EC } from '../../../model/EC';
 import {
   associateEcToStation,
   getCreditorInstitutionSegregationcodes,
-  getStationAvailableEC,
 } from '../../../services/stationService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Party } from '../../../model/Party';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionAssociatedCodeList } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
+import { getStationAvailableEC } from '../../../services/__mocks__/stationService';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -70,9 +70,7 @@ function StationAssociateECPage() {
       setLoadingList(true);
       getCreditorInstitutionSegregationcodes(selectedEC.broker_ec_code)
         .then((res) => {
-          console.log('resposne', res);
           if (res && Array.isArray(res.unused)) {
-            console.log('Unused segregation codes:', res.unused);
             setSegregationCodeList(res);
           }
         })
@@ -96,6 +94,8 @@ function StationAssociateECPage() {
 
   const handleChange = (event: any) => {
     setChecked(event.target.checked);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setFieldValue('broadcast', event.target.checked);
   };
 
   const formik = useFormik<CreditorInstitutionStationDto>({
@@ -126,9 +126,8 @@ function StationAssociateECPage() {
   const submit = (values: CreditorInstitutionStationDto) => {
     if (selectedEC) {
       setLoading(true);
-      associateEcToStation(selectedEC.broker_ec_code, values)
+      associateEcToStation(selectedEC.broker_ec_code, { ...values, stationCode: stationId })
         .then((_data) => {
-          console.log('submit value', values);
           history.push(
             generatePath(ROUTES.STATION_EC_LIST, {
               stationId,
@@ -303,10 +302,14 @@ function StationAssociateECPage() {
                       sx={{ width: '100%' }}
                       control={
                         <Switch
+                          name="broadcast"
                           checked={checked}
                           onChange={handleChange}
                           value={formik.values.broadcast}
-                          inputProps={{ 'aria-label': 'controlled' }}
+                          inputProps={{
+                            'aria-label': 'controlled',
+                          }}
+                          data-testid="broadcast-test"
                         />
                       }
                       label={checked ? 'Attivo' : 'Non attivo'}

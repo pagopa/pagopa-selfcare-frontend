@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.3.27"
+    "version": "0.4.0"
   },
   "servers": [
     {
@@ -6690,13 +6690,17 @@
             "$ref": "#/components/schemas/CreditorInstitutionAddressResource"
           },
           "applicationCode": {
-            "type": "string"
+            "type": "string",
+            "description": "ApplicationCode"
           },
           "auxDigit": {
-            "type": "string"
+            "type": "string",
+            "description": "AuxDigit maximum:3 minimum:0"
           },
           "broadcast": {
-            "type": "string"
+            "type": "boolean",
+            "description": "Broadcast",
+            "example": false
           },
           "businessName": {
             "type": "string",
@@ -6712,7 +6716,8 @@
             "example": false
           },
           "mod4": {
-            "type": "string"
+            "type": "string",
+            "description": "Mod4"
           },
           "pspPayment": {
             "type": "boolean",
@@ -6730,7 +6735,8 @@
             "example": false
           },
           "segregationCode": {
-            "type": "string"
+            "type": "string",
+            "description": "SegregationCode"
           }
         }
       },
@@ -6787,13 +6793,17 @@
         "type": "object",
         "properties": {
           "applicationCode": {
-            "type": "string"
+            "type": "string",
+            "description": "ApplicationCode"
           },
           "auxDigit": {
-            "type": "string"
+            "type": "string",
+            "description": "AuxDigit maximum:3 minimum:0"
           },
           "broadcast": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Broadcast",
+            "example": false
           },
           "businessName": {
             "type": "string",
@@ -6809,10 +6819,12 @@
             "example": false
           },
           "mod4": {
-            "type": "string"
+            "type": "string",
+            "description": "Mod4"
           },
           "segregationCode": {
-            "type": "string"
+            "type": "string",
+            "description": "SegregationCode"
           }
         }
       },
@@ -6821,6 +6833,11 @@
         "required": ["auxDigit", "broadcast", "segregationCode", "stationCode"],
         "type": "object",
         "properties": {
+          "applicationCode": {
+            "type": "integer",
+            "description": "Station's application code",
+            "format": "int64"
+          },
           "auxDigit": {
             "type": "integer",
             "description": "Station's auxiliary digit",
@@ -6829,6 +6846,11 @@
           "broadcast": {
             "type": "boolean",
             "description": "Station's broadcast enabled",
+            "example": false
+          },
+          "mod4": {
+            "type": "boolean",
+            "description": "Station's mod 4 enabled",
             "example": false
           },
           "segregationCode": {
@@ -6906,6 +6928,14 @@
             "type": "string",
             "description": "broker's name"
           },
+          "brokerTaxCode": {
+            "type": "string",
+            "description": "broker tax code"
+          },
+          "brokerType": {
+            "type": "string",
+            "description": "broker type"
+          },
           "id": {
             "type": "string",
             "description": "delegation Id"
@@ -6922,9 +6952,17 @@
             "type": "string",
             "description": "institution root name"
           },
+          "institutionType": {
+            "type": "string",
+            "description": "institution type"
+          },
           "productId": {
             "type": "string",
             "description": "id product"
+          },
+          "taxCode": {
+            "type": "string",
+            "description": "tax code"
           },
           "type": {
             "type": "string",

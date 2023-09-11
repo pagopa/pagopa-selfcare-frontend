@@ -84,7 +84,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           description: '',
           validityDate: new Date(),
           dueDate: new Date(),
-          creditorInstitutionCode: '',
+          creditorInstitutionCode: ecCode,
           active: true,
         };
 
@@ -438,8 +438,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               </Grid>
             </Grid>
           </Box>
-          <Box sx={inputGroupStyle}>
-            <AddEditIbanFormSectionTitle
+          {/* <Box sx={inputGroupStyle}>
+             <AddEditIbanFormSectionTitle
               title={t('addEditIbanPage.addForm.sections.ibanHolder')}
               icon={<MenuBookIcon />}
             />
@@ -466,7 +466,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                       control={<Radio />}
                       label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
                       data-testid="holder-anotherOne-test"
-                    /> */}
+                    /> 
                   </RadioGroup>
                 </FormControl>
               </Grid>
@@ -493,8 +493,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   }
                 />
               </Grid>
-            </Grid>
-          </Box>
+            </Grid> 
+          </Box> */}
         </Box>
       </Paper>
       <Stack direction="row" justifyContent="space-between" mt={5}>

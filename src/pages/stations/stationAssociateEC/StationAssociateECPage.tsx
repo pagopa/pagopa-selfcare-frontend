@@ -19,10 +19,8 @@ import {
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
 import { EC } from '../../../model/EC';
-import {
-  associateEcToStation,
-  getCreditorInstitutionSegregationcodes,
-} from '../../../services/stationService';
+import { associateEcToStation } from '../../../services/stationService';
+import { getCreditorInstitutionSegregationcodes } from '../../../services/__mocks__/stationService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Party } from '../../../model/Party';

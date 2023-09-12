@@ -642,8 +642,8 @@
     "title": "IBAN",
     "subtitle": "Cerca e gestisci tutti gli IBAN",
     "addIban": "Aggiungi IBAN",
-    "active": "Attivo",
-    "notActive": "Non attivo",
+    "active": "Abilitato",
+    "notActive": "Disabilitato",
     "edit": {
       "title": "Modifica IBAN",
       "breadcrumb": "Modifica IBAN",
@@ -675,7 +675,7 @@
       "column": {
         "ibanCode": "Codice IBAN",
         "description": "Descrizione",
-        "activeDate": "Data Attivazione",
+        "activeDate": "Data Inizio Validità",
         "status": "Stato"
       },
       "loading": "Caricamento...",

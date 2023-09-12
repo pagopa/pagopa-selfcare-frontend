@@ -182,7 +182,7 @@ export function showStatus(params: GridRenderCellParams) {
     params,
     <Box>
       <Chip
-        label={params.row.active ? 'Attivo' : 'Non attivo'}
+        label={params.row.active ? 'Abilitato' : 'Disabilitato'}
         aria-label="Status"
         sx={{
           fontSize: '14px',

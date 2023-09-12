@@ -7,7 +7,12 @@
   },
   "roles": {
     "admin": "Amministratore",
-    "operator": "Referente Tecnico"
+    "operator": "Referente Tecnico",
+    "pspAdmin": "Responsabile Amministrativo",
+    "pspOperator": "Responsabile Tecnico",
+    "ecAdmin": "Referente dei Pagamenti",
+    "ecOperator": "Referente Tecnico",
+    "pagopaOperator": "Operatore PagoPA"
   },
   "dashboardPage": {
     "title": "Panoramica",

@@ -43,6 +43,26 @@ const selfcareProduct: Product = {
   urlPublic: ENV.URL_FE.SELFCARE,
 };
 
+const roleKey2LanguageKey = (party: Party): string => {
+  const roleKey = party.roles[0].roleKey;
+  if (isOperator()) {
+    return 'roles.pagopaOperator';
+  }
+  if (party.institutionType === 'PSP' && roleKey === 'operator') {
+    return 'roles.pspOperator';
+  }
+  if (party.institutionType === 'PSP' && roleKey === 'admin') {
+    return 'roles.pspAdmin';
+  }
+  if (roleKey === 'operator') {
+    return 'roles.ecOperator';
+  }
+  if (roleKey === 'admin') {
+    return 'roles.ecAdmin';
+  }
+  return '';
+};
+
 const Header = ({ onExit, loggedUser, parties }: Props) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -87,10 +107,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
       partyList={parties2Show.map((party) => ({
         id: party.partyId,
         name: party.description,
-        productRole:
-          party.roles[0].roleKey === 'operator' || isOperator()
-            ? t(`roles.operator`)
-            : t(`roles.admin`),
+        productRole: t(roleKey2LanguageKey(party)),
         logoUrl: party.urlLogo,
       }))}
       loggedUser={

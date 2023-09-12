@@ -27,7 +27,7 @@ describe('IbanDetailButtons', (injectedHistory?: ReturnType<typeof createMemoryH
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
-            <IbanDetailButtons active={active} iban={iban} deleteIban={jest.fn()} />
+            <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} />
           </ThemeProvider>
         </Router>
       </Provider>
@@ -46,7 +46,7 @@ describe('IbanDetailButtons', (injectedHistory?: ReturnType<typeof createMemoryH
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={theme}>
-            <IbanDetailButtons active={active} iban={iban} deleteIban={jest.fn()} />
+            <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} />
           </ThemeProvider>
         </Router>
       </Provider>

@@ -1,10 +1,10 @@
 import { PartyAccountItem } from '@pagopa/mui-italia';
 import { Box, IconButton } from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { EC } from '../../../model/EC';
+import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
 
 type Props = {
-  selectedEC: EC | null;
+  selectedEC: DelegationResource | null;
   clearField: () => void;
 };
 
@@ -13,7 +13,7 @@ export default function ECAccountItemSelection({ selectedEC, clearField }: Props
     <Box display="flex" p={2}>
       <Box width="100%">
         <PartyAccountItem
-          partyName={selectedEC ? selectedEC.description : ''}
+          partyName={selectedEC ? selectedEC.brokerName ?? '' : ''}
           partyRole={/* selectedEC ? t(roleLabels[selectedEC.userRole].longLabelKey) : */ ''}
           image={/* selectedEC?.urlLogo */ ''}
           maxCharactersNumberMultiLine={20}

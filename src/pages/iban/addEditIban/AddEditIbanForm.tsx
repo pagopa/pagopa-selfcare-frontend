@@ -57,6 +57,13 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     }
   }, [subject, ecCode]);
 
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setFieldValue('validityDate', getTomorrowDate(new Date()));
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    formik.setFieldValue('dueDate', getTomorrowDate(new Date()));
+  }, []);
+
   const changeUploadType = (event: any) => {
     setUploadType(event.target.value);
   };
@@ -65,8 +72,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   //   setSubject(e.target.value);
   // };
 
-  const getTomorrowDate = (currentDate: Date) =>
-    new Date(currentDate.setDate(currentDate.getDate() + 1));
+  const getTomorrowDate = (currentDate: Date) => {
+    const tomorrow = new Date(currentDate);
+    tomorrow.setDate(currentDate.getDate() + 1);
+    return tomorrow;
+  };
 
   const initialFormData = (ibanBody?: IbanOnCreation) =>
     ibanBody
@@ -148,7 +158,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           description: !values.description ? 'Campo obbligatorio' : undefined,
           validityDate: !values.validityDate
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.validityDate.getTime() < minDate.getTime() && !values.active
+            : values.validityDate.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
             ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
@@ -203,7 +213,6 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async (values: IbanOnCreation) => {
-    const currentDate = new Date();
     if (uploadType === 'single') {
       setLoading(true);
       try {
@@ -214,7 +223,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             validityDate: values.validityDate,
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
-            active: values.validityDate.getTime() > currentDate.getTime() ? false : true,
+            active: true,
           });
         } else {
           await updateIban({
@@ -224,7 +233,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             dueDate: values.dueDate,
             creditorInstitutionCode: values.creditorInstitutionCode,
             labels: values.labels ?? undefined,
-            active: values.validityDate.getTime() > currentDate.getTime() ? false : true,
+            active: true,
           });
         }
         history.push(ROUTES.IBAN);
@@ -379,11 +388,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                     disabled={ibanBody?.active && formAction === IbanFormAction.Edit}
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
-                    value={
-                      formik.values.validityDate.getTime() === new Date().getTime()
-                        ? getTomorrowDate(formik.values.validityDate)
-                        : formik.values.validityDate
-                    }
+                    value={formik.values.validityDate}
                     onChange={(e) => formik.setFieldValue('validityDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
@@ -410,11 +415,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
-                    value={
-                      formik.values.dueDate.getTime() === new Date().getTime()
-                        ? getTomorrowDate(formik.values.dueDate)
-                        : formik.values.dueDate
-                    }
+                    value={formik.values.dueDate}
                     onChange={(e) => formik.setFieldValue('dueDate', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField

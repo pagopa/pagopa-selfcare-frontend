@@ -4,7 +4,7 @@ import { Breadcrumbs, Divider, Box, Grid, Paper, Stack, Typography, Chip } from 
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import ROUTES from '../../../routes';
@@ -14,6 +14,7 @@ import { LOADING_TASK_DELETE_IBAN, LOADING_TASK_GET_IBAN } from '../../../utils/
 import { IbanOnCreation } from '../../../model/Iban';
 import { emptyIban } from '../IbanPage';
 import { deleteIban, getIbanList } from '../../../services/ibanService';
+import IbanUploadModal from '../components/IbanUploadModal';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -26,7 +27,7 @@ const IbanDetailPage = () => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
   const setLoadingDelete = useLoading(LOADING_TASK_DELETE_IBAN);
-  const currentDate = new Date();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
@@ -131,7 +132,11 @@ const IbanDetailPage = () => {
             </Typography>
           </Grid>
           <Grid item xs={6}>
-            <IbanDetailButtons active={iban.active} iban={ibanId} deleteIban={deleteIbanHandler} />
+            <IbanDetailButtons
+              active={iban.active}
+              iban={ibanId}
+              setShowDeleteModal={setShowDeleteModal}
+            />
           </Grid>
         </Grid>
 
@@ -227,6 +232,24 @@ const IbanDetailPage = () => {
             </Grid>
           </Box>
         </Paper>
+
+        <IbanUploadModal
+          title={t('addEditIbanPage.delete-modal.title')}
+          message={
+            <Trans i18nKey="addEditIbanPage.delete-modal.subTitle">
+              Attenzione confermando l’operazione l’IBAN verrà dissociato dall’Ente
+              <br />
+            </Trans>
+          }
+          openConfirmModal={showDeleteModal}
+          onConfirmLabel={t('addEditIbanPage.delete-modal.confirmButton')}
+          onCloseLabel={t('addEditIbanPage.delete-modal.backButton')}
+          handleCloseModal={() => setShowDeleteModal(false)}
+          handleConfrim={async () => {
+            await deleteIbanHandler();
+            setShowDeleteModal(false);
+          }}
+        />
       </Grid>
     </Grid>
   );

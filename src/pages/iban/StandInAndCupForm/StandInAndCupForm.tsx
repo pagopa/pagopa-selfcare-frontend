@@ -463,13 +463,12 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         openConfirmModal={showConfirmModal}
         onConfirmLabel={t('addEditIbanPage.modal.confirmButton')}
         onCloseLabel={t('addEditIbanPage.modal.backButton')}
-        handleCloseConfirmModal={() => setShowConfirmModal(false)}
-        handleConfrimSubmit={async () => {
+        handleCloseModal={() => setShowConfirmModal(false)}
+        handleConfrim={async () => {
           await submit(formikStandIn.values, formikCup.values);
           setShowMaganeButton(true);
           setShowConfirmModal(false);
         }}
-        data-testId="upload-ibans-modal"
       />
     </form>
   );

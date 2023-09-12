@@ -196,7 +196,7 @@ export const PortalApi = {
         vat_number: psp.fiscalCode,
       },
     });
-    return extractResponse(result, 204, onRedirectToLogin);
+    return extractResponse(result, 201, onRedirectToLogin);
   },
 
   getChannels: async (page: number): Promise<ChannelsResource> => {

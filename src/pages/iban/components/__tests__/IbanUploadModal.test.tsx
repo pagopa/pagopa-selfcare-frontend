@@ -29,8 +29,8 @@ describe('IbanUploadModal', (injectedHistory?: ReturnType<typeof createMemoryHis
               openConfirmModal={true}
               onConfirmLabel={''}
               onCloseLabel={''}
-              handleCloseConfirmModal={handleCloseConfirmModal}
-              handleConfrimSubmit={handleConfirmSubmit}
+              handleCloseModal={handleCloseConfirmModal}
+              handleConfrim={handleConfirmSubmit}
             />
           </ThemeProvider>
         </Router>

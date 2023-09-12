@@ -748,6 +748,12 @@
       "backButton": "Annulla",
       "confirmButton": "Conferma"
     },
+    "delete-modal": {
+      "title": "Elimina IBAN",
+      "subTitle": "Attenzione confermando l’operazione l’IBAN verrà dissociato dall’Ente",
+      "backButton": "Torna indietro",
+      "confirmButton": "Elimina IBAN"
+    },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",
       "ibanNotValid": "l’IBAN inserito non è valido",

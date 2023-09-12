@@ -469,7 +469,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
           setShowMaganeButton(true);
           setShowConfirmModal(false);
         }}
-        data-testId="upload-ibans-modal"
       />
     </form>
   );

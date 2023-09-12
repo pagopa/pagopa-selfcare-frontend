@@ -7,8 +7,8 @@ type Props = {
   openConfirmModal: boolean;
   onConfirmLabel: string;
   onCloseLabel: string;
-  handleCloseConfirmModal: MouseEventHandler;
-  handleConfrimSubmit: MouseEventHandler;
+  handleCloseModal: MouseEventHandler;
+  handleConfrim: MouseEventHandler;
 };
 
 const IbanUploadModal = ({
@@ -17,14 +17,14 @@ const IbanUploadModal = ({
   openConfirmModal,
   onConfirmLabel,
   onCloseLabel,
-  handleCloseConfirmModal,
-  handleConfrimSubmit,
+  handleCloseModal,
+  handleConfrim,
 }: Props) => (
   <Modal
     aria-labelledby="confirm-modal-title"
     aria-describedby="confirm-modal-description"
     open={openConfirmModal}
-    onClose={handleCloseConfirmModal}
+    onClose={handleCloseModal}
     BackdropComponent={Backdrop}
     BackdropProps={{
       timeout: 500,
@@ -51,22 +51,22 @@ const IbanUploadModal = ({
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: 'repeat(8, 1fr)',
             gridTemplateRows: 'auto',
           }}
         >
           <Button
             variant="outlined"
-            sx={{ gridColumn: 'span 3', justifySelf: 'end' }}
-            onClick={handleCloseConfirmModal}
+            sx={{ gridColumn: 'span 6', justifySelf: 'end', mr: 1 }}
+            onClick={handleCloseModal}
             data-testid="cancel-button-test"
           >
             {onCloseLabel}
           </Button>
           <Button
             variant="contained"
-            sx={{ gridColumn: 'span 1', justifySelf: 'end' }}
-            onClick={handleConfrimSubmit}
+            sx={{ gridColumn: 'span 2', justifySelf: 'end' }}
+            onClick={handleConfrim}
             data-testid="confirm-button-test"
           >
             {onConfirmLabel}

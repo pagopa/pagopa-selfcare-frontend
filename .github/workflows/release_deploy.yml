@@ -16,6 +16,7 @@ on:
           - dev
           - uat
           - prod
+        default: dev
       skip_release:
         required: false
         type: boolean

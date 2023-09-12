@@ -16,22 +16,24 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-describe('IbanDetailButtons', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
+const renderIbanDetailButtons = (active: boolean, iban: string) => {
+  render(
+    <Provider store={store}>
+      <Router history={createMemoryHistory()}>
+        <ThemeProvider theme={theme}>
+          <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} />
+        </ThemeProvider>
+      </Router>
+    </Provider>
+  );
+};
 
+describe('IbanDetailButtons', () => {
   it('should render the buttons', () => {
     const active = false;
     const iban = 'IT99C0222211111000000000002';
 
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
+    renderIbanDetailButtons(active, iban);
 
     expect(screen.getByText('ibanDetailPage.buttons.delete')).toBeInTheDocument();
     expect(screen.getByText('ibanDetailPage.buttons.edit')).toBeInTheDocument();
@@ -42,15 +44,7 @@ describe('IbanDetailButtons', (injectedHistory?: ReturnType<typeof createMemoryH
     const active = true;
     const iban = 'IT99C0222211111000000000002';
 
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <ThemeProvider theme={theme}>
-            <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    );
+    renderIbanDetailButtons(active, iban);
 
     expect(screen.getByText('ibanDetailPage.buttons.delete')).toBeInTheDocument();
     expect(screen.getByText('ibanDetailPage.buttons.edit')).toBeInTheDocument();

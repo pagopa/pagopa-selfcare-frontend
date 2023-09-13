@@ -209,10 +209,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   }, [formik.values.targetUnion]);
 
   useEffect(() => {
-    splitNewConnection(formik.values);
-  }, [formik.values.newConnection]);
-
-  useEffect(() => {
     splitProxy(formik.values);
     if (formik.values.proxy_host !== '' && formik.values.proxy_port !== 0) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -400,6 +396,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const submit = async (values: ChannelOnCreation) => {
     setShowConfirmModal(false);
     setLoading(true);
+
+    splitNewConnection(formik.values);
 
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {

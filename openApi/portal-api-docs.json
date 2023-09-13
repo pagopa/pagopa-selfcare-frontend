@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.4.0"
+    "version": "0.4.3"
   },
   "servers": [
     {
@@ -7341,7 +7341,6 @@
       },
       "PaymentServiceProviderDetailsResource": {
         "title": "PaymentServiceProviderDetailsResource",
-        "required": ["abi", "agid_psp", "bic", "my_bank_code", "stamp", "tax_code", "vat_number"],
         "type": "object",
         "properties": {
           "abi": {

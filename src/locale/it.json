@@ -774,7 +774,10 @@
   "commisionalPackagesPage": {
     "title": "Pacchetti commissioni",
     "subtitle": "Gestisci i pacchetti commissionali.",
-    "noCommPackages": "Non sono ancora presenti pacchetti commissionali."
+    "noCommPackages": "Non sono ancora presenti pacchetti commissionali.",
+    "privatePackages": "Privati",
+    "publicPackages": "Pubblici",
+    "globalPackages": "Globali"
   },
   "sideMenu": {
     "home": {

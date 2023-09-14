@@ -1,6 +1,7 @@
-import { Typography, Tabs, Tab, Grid } from '@mui/material';
+import { Typography, Tabs, Tab } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import CommisionalPackagesEmpty from './CommisionalPackagesEmpty';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const TabPanels = () => {
+  const { t } = useTranslation();
   const [value, setValue] = useState(0);
 
   const CustomTabPanel = (props: Props) => {
@@ -51,9 +53,9 @@ const TabPanels = () => {
           centered
           variant="fullWidth"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label={t('commisionalPackagesPage.privatePackages')} {...a11yProps(0)} />
+          <Tab label={t('commisionalPackagesPage.publicPackages')} {...a11yProps(1)} />
+          <Tab label={t('commisionalPackagesPage.globalPackages')} {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel valueTab={value} index={0}>

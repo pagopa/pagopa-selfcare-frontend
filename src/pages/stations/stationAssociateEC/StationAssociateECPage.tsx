@@ -26,7 +26,8 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Party } from '../../../model/Party';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionAssociatedCodeList } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
-import { getStationAvailableEC } from '../../../services/__mocks__/stationService';
+import { getStationAvailableEC } from '../../../services/stationService';
+import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -36,8 +37,8 @@ function StationAssociateECPage() {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
-  const [selectedEC, setSelectedEC] = useState<EC | undefined>();
-  const [availableEC, setAvailableEC] = useState<Array<EC>>([]);
+  const [selectedEC, setSelectedEC] = useState<DelegationResource | undefined>();
+  const [availableEC, setAvailableEC] = useState<Array<DelegationResource>>([]);
   const [segregationCodeList, setSegregationCodeList] =
     useState<CreditorInstitutionAssociatedCodeList>([
       {
@@ -50,23 +51,36 @@ function StationAssociateECPage() {
 
   useEffect(() => {
     setLoading(true);
-    getStationAvailableEC()
-      .then((data) => {
-        if (data && selectedParty) {
-          // TODO:  remove when real service is available
-          const availableECFromService = addCurrentEC(data, selectedParty);
-          setAvailableEC(availableECFromService);
-        }
-      })
-      .catch((reason) => console.error(reason))
-      .finally(() => setLoading(false));
+    if (selectedParty) {
+      getStationAvailableEC(selectedParty.partyId)
+        .then((data) => {
+          if (data) {
+            setAvailableEC(data as Array<DelegationResource>);
+          }
+        })
+        .catch((reason) =>
+          addError({
+            id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while getting delegated ec list`,
+            toNotify: true,
+            displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
+            displayableDescription: t(
+              'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+            ),
+            component: 'Toast',
+          })
+        )
+        .finally(() => setLoading(false));
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    if (selectedEC) {
+    if (selectedEC && selectedEC.brokerId) {
       setLoadingList(true);
-      getCreditorInstitutionSegregationcodes(selectedEC.broker_ec_code)
+      getCreditorInstitutionSegregationcodes(selectedEC.brokerId)
         .then((res) => {
           if (res && Array.isArray(res.unused)) {
             setSegregationCodeList(res);
@@ -122,9 +136,9 @@ function StationAssociateECPage() {
     values.stationCode !== '' && values.auxDigit !== 0 && values.segregationCode !== '';
 
   const submit = (values: CreditorInstitutionStationDto) => {
-    if (selectedEC) {
+    if (selectedEC && selectedEC.brokerId) {
       setLoading(true);
-      associateEcToStation(selectedEC.broker_ec_code, { ...values, stationCode: stationId })
+      associateEcToStation(selectedEC.brokerId, { ...values, stationCode: stationId })
         .then((_data) => {
           history.push(
             generatePath(ROUTES.STATION_EC_LIST, {
@@ -213,7 +227,7 @@ function StationAssociateECPage() {
                         )}
                         availableEC={availableEC}
                         selectedEC={selectedEC}
-                        onECSelectionChange={(selectedEC: EC | undefined) => {
+                        onECSelectionChange={(selectedEC: DelegationResource | undefined) => {
                           setSelectedEC(selectedEC);
                         }}
                       />
@@ -258,7 +272,7 @@ function StationAssociateECPage() {
                         {t('stationAssociateECPage.associationForm.segregationCode')}
                       </InputLabel>
                       <Select
-                        disabled={selectedEC?.broker_ec_code === undefined}
+                        disabled={selectedEC?.brokerId === undefined}
                         id="segregationCode"
                         name="segregationCode"
                         label={t('stationAssociateECPage.associationForm.segregationCode')}
@@ -343,23 +357,3 @@ function StationAssociateECPage() {
 }
 
 export default StationAssociateECPage;
-
-const addCurrentEC = (availableEC: Array<EC>, selectedParty: Party) => {
-  const value = {
-    broker_ec_code: selectedParty?.fiscalCode ?? '',
-    description: selectedParty?.description ?? '',
-    enabled: true,
-    extended_fault_bean: true,
-  };
-
-  const index = availableEC.findIndex(
-    (object) => object.broker_ec_code === selectedParty.fiscalCode ?? ''
-  );
-
-  if (index === -1) {
-    // eslint-disable-next-line functional/immutable-data
-    availableEC.push(value);
-  }
-
-  return availableEC;
-};

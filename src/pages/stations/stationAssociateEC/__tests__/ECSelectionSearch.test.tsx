@@ -1,11 +1,12 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../../redux/store';
-import {Provider} from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
 import ECSelectionSearch from '../ECSelectionSearch';
+import { DelegationResource } from '../../../../api/generated/portal/DelegationResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -16,17 +17,35 @@ afterEach(cleanup);
 
 describe('<ECSelectionSearch />', () => {
   const stationId = 'XPAY_03_ONUS';
-  const ec = {
-    broker_ec_code: 'string',
-    description: 'string',
-    enabled: true,
-    extended_fault_bean: true,
-  };
 
-  const availableEC = [
-    { broker_ec_code: '1', description: 'EC 1', enabled: true, extended_fault_bean: true },
-    { broker_ec_code: '2', description: 'EC 2', enabled: true, extended_fault_bean: true },
-    { broker_ec_code: '3', description: 'EC 3', enabled: true, extended_fault_bean: true },
+  const availableEC: Array<DelegationResource> = [
+    {
+      brokerId: '01234567890',
+      brokerName: 'EC 1',
+      id: 'b6207adb-7a72-42d4-9d77-c884e8a0bf43',
+      institutionId: 'a761ceeb-6014-4620-9c5b-c66898527a43',
+      institutionName: "Comune di Budduso'",
+      productId: 'prod-pagopa',
+      type: 'PT',
+    },
+    {
+      brokerId: '01234567891',
+      brokerName: 'EC 2',
+      id: 'b6207adb-7a72-42d4-9d77-c884e8a0bf43',
+      institutionId: 'a761ceeb-6014-4620-9c5b-c66898527a43',
+      institutionName: "Comune di Budduso'",
+      productId: 'prod-pagopa',
+      type: 'PT',
+    },
+    {
+      brokerId: '01234567892',
+      brokerName: 'EC 2',
+      id: 'b6207adb-7a72-42d4-9d77-c884e8a0bf43',
+      institutionId: 'a761ceeb-6014-4620-9c5b-c66898527a43',
+      institutionName: "Comune di Budduso'",
+      productId: 'prod-pagopa',
+      type: 'PT',
+    },
   ];
 
   const onECSelectionChange = jest.fn();
@@ -59,10 +78,13 @@ describe('<ECSelectionSearch />', () => {
 
     fireEvent.click(filteredEC);
     expect(onECSelectionChange).toHaveBeenCalledWith({
-      broker_ec_code: '1',
-      description: 'EC 1',
-      enabled: true,
-      extended_fault_bean: true,
+      brokerId: '01234567890',
+      brokerName: 'EC 1',
+      id: 'b6207adb-7a72-42d4-9d77-c884e8a0bf43',
+      institutionId: 'a761ceeb-6014-4620-9c5b-c66898527a43',
+      institutionName: "Comune di Budduso'",
+      productId: 'prod-pagopa',
+      type: 'PT',
     });
 
     const filteredECContainer = screen.getByTestId('PartyItemContainer: EC 1');

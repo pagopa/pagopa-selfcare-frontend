@@ -67,7 +67,6 @@ export default function ECSelectionSearch({
     _event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     EC: DelegationResource
   ) => {
-    console.log('clicked', EC);
     onECSelectionChange(EC);
   };
 
@@ -102,7 +101,7 @@ export default function ECSelectionSearch({
               clearField={() => onECSelectionChange(undefined)}
             />
           ) : (
-            <CustomBox sx={{ pointerEvents: availableEC.length !== 1 ? 'auto' : 'none' }}>
+            <CustomBox sx={{ pointerEvents: availableEC.length >= 1 ? 'auto' : 'none' }}>
               {filteredParties &&
                 filteredParties.map((EC) => (
                   <ECSelectionSearchItemContainer
@@ -111,7 +110,6 @@ export default function ECSelectionSearch({
                     subTitle={/* t(roleLabels[EC.userRole].longLabelKey) */ ''}
                     image={/* EC.urlLogo */ ''}
                     action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                      console.log('event', event);
                       handleListItemClick(event, EC);
                     }}
                   />

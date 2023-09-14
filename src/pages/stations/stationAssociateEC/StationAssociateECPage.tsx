@@ -77,8 +77,6 @@ function StationAssociateECPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => console.log('available EC', availableEC), [availableEC]);
-
   useEffect(() => {
     if (selectedEC && selectedEC.brokerId) {
       setLoadingList(true);

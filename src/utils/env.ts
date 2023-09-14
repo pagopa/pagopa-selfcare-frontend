@@ -50,6 +50,12 @@ export const ENV = {
     IBAN: {
       ENABLED: env.get('REACT_APP_FEATURES_IBAN_ENABLED').default('false').asBool(),
     },
+    COMMISSIONAL_PACKAGES: {
+      ENABLED: env
+        .get('REACT_APP_FEATURES_COMMISSIONAL_PACKAGES_ENABLED')
+        .default('false')
+        .asBool(),
+    },
   },
 
   ANALYTCS: {

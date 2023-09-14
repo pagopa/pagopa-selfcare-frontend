@@ -6,6 +6,7 @@ import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import UsbIcon from '@mui/icons-material/Usb';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EuroIcon from '@mui/icons-material/Euro';
+import ExtensionIcon from '@mui/icons-material/Extension';
 
 import { useState } from 'react';
 import { ENV } from '../../utils/env';
@@ -96,6 +97,21 @@ export default function SideMenu() {
               data-testid="iban-test"
             />
           )}
+
+          {ENV.FEATURES.COMMISSIONAL_PACKAGES.ENABLED &&
+            selectedParty?.institutionType !== 'PSP' && (
+              <SidenavItem
+                title={t('sideMenu.commPackages.title')}
+                handleClick={() => onExit(() => history.push(ROUTES.COMMISIONAL_PACKAGES))}
+                isSelected={
+                  pathname === ROUTES.COMMISIONAL_PACKAGES ||
+                  pathname.startsWith(ROUTES.COMMISIONAL_PACKAGES)
+                }
+                icon={ExtensionIcon}
+                disabled={isDisabled}
+                data-testid="iban-test"
+              />
+            )}
         </List>
       </Box>
     </Box>

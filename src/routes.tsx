@@ -30,6 +30,8 @@ const ROUTES = {
   IBAN_EDIT: `${BASE_ROUTE}/iban/:ibanId/:actionId`,
   IBAN_ADD: `${BASE_ROUTE}/iban/add-iban/`,
 
+  COMMISIONAL_PACKAGES: `${BASE_ROUTE}/comm-packages`,
+
   /* TOS: {
     PATH: '/terms-of-service',
     LABEL: { it: 'Termini di servizio', en: 'Terms of service' },

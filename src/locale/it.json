@@ -771,6 +771,14 @@
       "bankIbanConflict": "IBAN già censito"
     }
   },
+  "commisionalPackagesPage": {
+    "title": "Pacchetti commissioni",
+    "subtitle": "Gestisci i pacchetti commissionali.",
+    "noCommPackages": "Non sono ancora presenti pacchetti commissionali.",
+    "privatePackages": "Privati",
+    "publicPackages": "Pubblici",
+    "globalPackages": "Globali"
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -786,6 +794,9 @@
     },
     "iban": {
       "title": "IBAN"
+    },
+    "commPackages": {
+      "title": "Pacchetti commissioni"
     }
   },
   "header": {

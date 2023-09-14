@@ -587,6 +587,7 @@
       "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageSegregationCodesGet": "Errore durante la ricezione della lista dei codici di segregazione",
+      "errorMessageDelegatedEd": "Errore durante la ricezione della lista degli EC disponibili per l'associazione",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
     }

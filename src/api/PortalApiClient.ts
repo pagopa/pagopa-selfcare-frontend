@@ -688,7 +688,7 @@ export const PortalApi = {
     institutionId?: string,
     brokerId?: string
   ): Promise<DelegationResource> => {
-    const result = await apiConfigClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
+    const result = await apiClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

@@ -38,7 +38,7 @@ function StationAssociateECPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
   const [selectedEC, setSelectedEC] = useState<DelegationResource | undefined>();
-  const [availableEC, setAvailableEC] = useState<DelegationResource>([]);
+  const [availableEC, setAvailableEC] = useState<Array<DelegationResource>>([]);
   const [segregationCodeList, setSegregationCodeList] =
     useState<CreditorInstitutionAssociatedCodeList>([
       {
@@ -52,18 +52,32 @@ function StationAssociateECPage() {
   useEffect(() => {
     setLoading(true);
     if (selectedParty) {
-      getStationAvailableEC(selectedParty.partyId, selectedParty.fiscalCode)
+      getStationAvailableEC(selectedParty.partyId)
         .then((data) => {
           if (data) {
-            console.log('Response', data);
-            setAvailableEC({ ...data });
+            setAvailableEC(data as Array<DelegationResource>);
           }
         })
-        .catch((reason) => console.error(reason))
+        .catch((reason) =>
+          addError({
+            id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while getting delegated ec list`,
+            toNotify: true,
+            displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
+            displayableDescription: t(
+              'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+            ),
+            component: 'Toast',
+          })
+        )
         .finally(() => setLoading(false));
     }
     setLoading(false);
   }, []);
+
+  useEffect(() => console.log('available EC', availableEC), [availableEC]);
 
   useEffect(() => {
     if (selectedEC && selectedEC.brokerId) {
@@ -213,7 +227,7 @@ function StationAssociateECPage() {
                         label={t(
                           'stationAssociateECPage.associationForm.ECSelectionInputPlaceholder'
                         )}
-                        availableEC={[availableEC]}
+                        availableEC={availableEC}
                         selectedEC={selectedEC}
                         onECSelectionChange={(selectedEC: DelegationResource | undefined) => {
                           setSelectedEC(selectedEC);
@@ -345,23 +359,3 @@ function StationAssociateECPage() {
 }
 
 export default StationAssociateECPage;
-
-const addCurrentEC = (availableEC: Array<EC>, selectedParty: Party) => {
-  const value = {
-    broker_ec_code: selectedParty?.fiscalCode ?? '',
-    description: selectedParty?.description ?? '',
-    enabled: true,
-    extended_fault_bean: true,
-  };
-
-  const index = availableEC.findIndex(
-    (object) => object.broker_ec_code === selectedParty.fiscalCode ?? ''
-  );
-
-  if (index === -1) {
-    // eslint-disable-next-line functional/immutable-data
-    availableEC.push(value);
-  }
-
-  return availableEC;
-};

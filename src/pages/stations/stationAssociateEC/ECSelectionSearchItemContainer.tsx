@@ -1,6 +1,6 @@
 import React from 'react';
-import {Grid} from '@mui/material';
-import {PartyAccountItemButton} from '@pagopa/mui-italia/dist/components/PartyAccountItemButton';
+import { Grid } from '@mui/material';
+import { PartyAccountItemButton } from '@pagopa/mui-italia/dist/components/PartyAccountItemButton';
 
 type Props = {
   title: string | undefined;
@@ -21,6 +21,7 @@ const ECItemContainer = ({ title, subTitle, image, action }: Props) => (
         action(e as any);
       }
     }}
+    onClick={(e) => action && action(e as any)}
   >
     <PartyAccountItemButton
       partyName={title as string}

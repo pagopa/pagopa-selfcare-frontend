@@ -51,17 +51,23 @@ export default function ECSelectionSearch({
     if (!value || value.length < 3) {
       setFilteredParties([]);
     } else {
-      setFilteredParties(availableEC?.filter((e) => verifyECFilter(e, value)));
+      setFilteredParties(
+        availableEC.filter(
+          (e) => e.brokerName && e.brokerName.toUpperCase().includes(value.toUpperCase())
+        )
+      );
     }
-    if (value && selectedEC && !verifyECFilter(selectedEC, value)) {
-      onECSelectionChange(undefined);
-    }
+
+    // if (value && selectedEC && !verifyECFilter(selectedEC, value)) {
+    //   onECSelectionChange(undefined);
+    // }
   };
 
   const handleListItemClick = (
     _event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     EC: DelegationResource
   ) => {
+    console.log('clicked', EC);
     onECSelectionChange(EC);
   };
 
@@ -101,12 +107,13 @@ export default function ECSelectionSearch({
                 filteredParties.map((EC) => (
                   <ECSelectionSearchItemContainer
                     key={EC.brokerId}
-                    title={EC.brokerId}
+                    title={EC.brokerName}
                     subTitle={/* t(roleLabels[EC.userRole].longLabelKey) */ ''}
                     image={/* EC.urlLogo */ ''}
-                    action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-                      handleListItemClick(event, EC)
-                    }
+                    action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                      console.log('event', event);
+                      handleListItemClick(event, EC);
+                    }}
                   />
                 ))}
             </CustomBox>

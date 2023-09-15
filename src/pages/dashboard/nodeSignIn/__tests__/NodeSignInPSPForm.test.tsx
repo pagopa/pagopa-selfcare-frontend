@@ -86,12 +86,12 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
-  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
+  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit the update', async () => {
     const { store } = renderApp(undefined, undefined, pspNodeData);
 
     await setupFormAndSubmit(store);
 
-    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalled());
+    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(0));
     await waitFor(() => expect(updatePSPInfoMocked).toHaveBeenCalled());
   });
 });

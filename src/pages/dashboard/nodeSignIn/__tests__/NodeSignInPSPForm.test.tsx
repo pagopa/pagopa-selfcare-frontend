@@ -5,7 +5,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { store } from '../../../../redux/store';
+import { createStore, store } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
@@ -13,6 +13,25 @@ import { PaymentServiceProviderDetailsResource } from '../../../../api/generated
 
 let createPSPDirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
+
+const renderApp = (
+  injectedStore?: ReturnType<typeof createStore>,
+  injectedHistory?: ReturnType<typeof createMemoryHistory>,
+  pspNodeData?: PaymentServiceProviderDetailsResource
+) => {
+  const store = injectedStore ? injectedStore : createStore();
+  const history = injectedHistory ? injectedHistory : createMemoryHistory();
+  render(
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Router history={history}>
+          <NodeSignInPSPForm goBack={jest.fn()} pspNodeData={pspNodeData} />
+        </Router>
+      </ThemeProvider>
+    </Provider>
+  );
+  return { store, history };
+};
 
 beforeEach(() => {
   createPSPDirectMocked = jest.spyOn(
@@ -31,15 +50,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
   test('Test rendering NodeSignInPSPForm and Sumbit', async () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <NodeSignInPSPForm goBack={jest.fn()} />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
+    renderApp();
 
     const name = screen.getByTestId('name-test') as HTMLInputElement;
     const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
@@ -62,15 +73,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
   });
 
   test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <NodeSignInPSPForm goBack={jest.fn()} pspNodeData={pspNodeData} />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
+    renderApp(undefined, undefined, pspNodeData);
 
     const name = screen.getByTestId('name-test') as HTMLInputElement;
     const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;

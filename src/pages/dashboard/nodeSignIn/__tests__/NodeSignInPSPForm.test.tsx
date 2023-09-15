@@ -15,7 +15,7 @@ let createPSPDirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
 let updatePSPInfoMocked: jest.SpyInstance;
 
-jest.mock('../../../../decorators//withSelectedParty');
+jest.mock('../../../../decorators/withSelectedParty');
 
 const renderApp = (
   injectedStore?: ReturnType<typeof createStore>,
@@ -34,6 +34,30 @@ const renderApp = (
     </Provider>
   );
   return { store, history };
+};
+
+const setupFormAndSubmit = async (store) => {
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspPartySelected,
+    })
+  );
+  const name = screen.getByTestId('name-test') as HTMLInputElement;
+  const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
+  const fiscalCode = screen.getByTestId('fiscalCode-test') as HTMLSelectElement;
+  const abiCode = screen.getByTestId('abiCode-test') as HTMLInputElement;
+  const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
+  const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+  const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
+
+  fireEvent.change(bicCode, { target: { value: '1234' } });
+  expect(bicCode.value).toBe('1234');
+
+  fireEvent.click(digitalStampRadioTrue);
+
+  const confirmBtn = await screen.findByTestId('continue-button-test');
+  fireEvent.click(confirmBtn);
 };
 
 beforeEach(() => {
@@ -56,28 +80,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
   test('Test rendering NodeSignInPSPForm and Sumbit', async () => {
     const { store } = renderApp();
 
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: pspPartySelected,
-      })
-    );
-
-    const name = screen.getByTestId('name-test') as HTMLInputElement;
-    const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
-    const fiscalCode = screen.getByTestId('fiscalCode-test') as HTMLSelectElement;
-    const abiCode = screen.getByTestId('abiCode-test') as HTMLInputElement;
-    const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
-    const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-    const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
-
-    fireEvent.change(bicCode, { target: { value: '1234' } });
-    expect(bicCode.value).toBe('1234');
-
-    fireEvent.click(digitalStampRadioTrue);
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
+    await setupFormAndSubmit(store);
 
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
@@ -86,28 +89,8 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
   test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
     const { store } = renderApp(undefined, undefined, pspNodeData);
 
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: pspPartySelected,
-      })
-    );
+    await setupFormAndSubmit(store);
 
-    const name = screen.getByTestId('name-test') as HTMLInputElement;
-    const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
-    const fiscalCode = screen.getByTestId('fiscalCode-test') as HTMLSelectElement;
-    const abiCode = screen.getByTestId('abiCode-test') as HTMLInputElement;
-    const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
-    const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-    const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
-
-    fireEvent.change(bicCode, { target: { value: '1234' } });
-    expect(bicCode.value).toBe('1234');
-
-    fireEvent.click(digitalStampRadioTrue);
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalled());
     await waitFor(() => expect(updatePSPInfoMocked).toHaveBeenCalled());
   });

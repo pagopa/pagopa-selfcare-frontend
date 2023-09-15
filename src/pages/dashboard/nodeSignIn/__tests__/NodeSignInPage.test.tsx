@@ -18,17 +18,14 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-jest.mock('../../../../decorators/withLogin');
-jest.mock('../../../../decorators/withParties');
 jest.mock('../../../../decorators/withSelectedParty');
-jest.mock('../../../../decorators/withSelectedPartyProducts');
 
 const renderApp = (
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
-  const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
+  const store = injectedStore ? injectedStore : createStore();
   render(
     <Provider store={store}>
       <BrowserRouter>

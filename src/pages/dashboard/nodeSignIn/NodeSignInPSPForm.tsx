@@ -93,36 +93,36 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
   const submit = async () => {
     setLoading(true);
 
-    if (selectedParty) {
-      if (pspNodeData) {
-        try {
-          /* TODO: fix whene updatePSP info will be available
-            await updatePSPInfo(formik.values);
-          */
+    if (selectedParty && pspNodeData) {
+      try {
+        /* TODO: fix whene updatePSP info will be available
+          await updatePSPInfo(formik.values);
+        */
 
-          if (selectedParty) {
-            await updateSigninData(selectedParty);
-          }
-
-          history.push(ROUTES.HOME, {
-            alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
-          });
-        } catch (reason) {
-          addError({
-            id: 'NODE_SIGNIN_PSP_UPDATE',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while updating PSP data on the node`,
-            toNotify: true,
-            displayableTitle: t('nodeSignInPage.form.pspErrorMessageTitle'),
-            displayableDescription: t('nodeSignInPage.form.pspUpdateErrorMessageDesc'),
-            component: 'Toast',
-          });
-        } finally {
-          setLoading(false);
+        if (selectedParty) {
+          await updateSigninData(selectedParty);
         }
+
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+        });
+      } catch (reason) {
+        addError({
+          id: 'NODE_SIGNIN_PSP_UPDATE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while updating PSP data on the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.pspErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.pspUpdateErrorMessageDesc'),
+          component: 'Toast',
+        });
+      } finally {
+        setLoading(false);
       }
-    } else {
+    }
+
+    if (selectedParty) {
       try {
         await createPSPDirect(formik.values);
 

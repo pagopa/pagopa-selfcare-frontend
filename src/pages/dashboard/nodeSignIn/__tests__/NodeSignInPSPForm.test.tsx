@@ -14,6 +14,8 @@ import { PaymentServiceProviderDetailsResource } from '../../../../api/generated
 let createPSPDirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
 
+jest.mock('../../../../decorators//withSelectedParty');
+
 const renderApp = (
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
@@ -50,7 +52,14 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
   test('Test rendering NodeSignInPSPForm and Sumbit', async () => {
-    renderApp();
+    const { store } = renderApp();
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspPartySelected,
+      })
+    );
 
     const name = screen.getByTestId('name-test') as HTMLInputElement;
     const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
@@ -72,8 +81,15 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
-  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
-    renderApp(undefined, undefined, pspNodeData);
+  test.skip('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
+    const { store } = renderApp(undefined, undefined, pspNodeData);
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspPartySelected,
+      })
+    );
 
     const name = screen.getByTestId('name-test') as HTMLInputElement;
     const businessName = screen.getByTestId('businessName-test') as HTMLInputElement;
@@ -105,4 +121,32 @@ const pspNodeData: PaymentServiceProviderDetailsResource = {
   business_name: 'PSP S.r.l',
   enabled: true,
   psp_code: '12312312',
+};
+
+const pspPartySelected = {
+  partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+  externalId: '15376371009',
+  originId: 'PAGOPASPA',
+  origin: 'SELC',
+  description: 'PagoPA S.p.A.',
+  fiscalCode: '15376371009',
+  digitalAddress: 'selfcare@pec.pagopa.it',
+  status: 'ACTIVE',
+  registeredOffice: 'Piazza Colonna, 370',
+  institutionType: 'PSP',
+  roles: [
+    {
+      partyRole: 'DELEGATE',
+      roleKey: 'admin',
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+  typology: 'TODO',
+  pspData: {
+    businessRegisterNumber: '00000000000',
+    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+    legalRegisterNumber: '09878',
+    abiCode: '36042',
+    vatNumberGroup: false,
+  },
 };

@@ -191,6 +191,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
+                    inputProps={{ 'data-testid': 'name-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -205,6 +206,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.businessName && Boolean(formik.errors.businessName)}
                     helperText={formik.touched.businessName && formik.errors.businessName}
+                    inputProps={{ 'data-testid': 'businessName-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -219,6 +221,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.fiscalCode && Boolean(formik.errors.fiscalCode)}
                     helperText={formik.touched.fiscalCode && formik.errors.fiscalCode}
+                    inputProps={{ 'data-testid': 'fiscalCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -233,6 +236,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.abiCode && Boolean(formik.errors.abiCode)}
                     helperText={formik.touched.abiCode && formik.errors.abiCode}
+                    inputProps={{ 'data-testid': 'abiCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -247,6 +251,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.pspCode && Boolean(formik.errors.pspCode)}
                     helperText={formik.touched.pspCode && formik.errors.pspCode}
+                    inputProps={{ 'data-testid': 'pspCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -256,7 +261,12 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     name="bicCode"
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
-                    inputProps={{ maxLength: 5, inputMode: 'numeric', pattern: '[0-9]*' }}
+                    inputProps={{
+                      maxLength: 5,
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                      'data-testid': 'bicCode-test',
+                    }}
                     value={formik.values.bicCode}
                     onChange={(e) => handleChangeNumberOnly(e, 'bicCode', formik)}
                     error={formik.touched.bicCode && Boolean(formik.errors.bicCode)}
@@ -284,11 +294,13 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                       value={false}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.no')}
+                      data-testid="digitalStamp-false-test"
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.yes')}
+                      data-testid="digitalStamp-true-test"
                     />
                   </RadioGroup>
                 </Grid>
@@ -310,6 +322,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
               color="primary"
               variant="contained"
               type="submit"
+              data-testid="continue-button-test"
             >
               {t('nodeSignInPage.form.continueButton')}
             </Button>

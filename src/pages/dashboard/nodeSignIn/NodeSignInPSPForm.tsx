@@ -97,15 +97,8 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
       if (pspNodeData) {
         try {
           /* TODO: fix whene updatePSP info will be available
-            await updatePSPInfo(selectedParty.fiscalCode, {
-            address: { ...formik.values },
-            businessName: selectedParty?.description ?? '',
-            creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-            enabled: true,
-            pspPayment: false,
-            reportingFtp: false,
-            reportingZip: false,
-          });
+            await updatePSPInfo(formik.values);
+          */
 
           if (selectedParty) {
             await updateSigninData(selectedParty);
@@ -114,7 +107,6 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
           history.push(ROUTES.HOME, {
             alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
           });
-          */
         } catch (reason) {
           addError({
             id: 'NODE_SIGNIN_PSP_UPDATE',

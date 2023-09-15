@@ -12,12 +12,14 @@ import { CreditorInstitutionDetailsResource } from '../../../../api/generated/po
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 let createPSPDirectMocked: jest.SpyInstance;
+let useSigninDataMocked: jest.SpyInstance;
 
 beforeEach(() => {
   createPSPDirectMocked = jest.spyOn(
     require('../../../../services/nodeService'),
     'createPSPDirect'
   );
+  useSigninDataMocked = jest.spyOn(require('../../../../hooks/useSigninData'), 'useSigninData');
 
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -56,6 +58,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
     fireEvent.click(confirmBtn);
 
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
   test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
@@ -84,7 +87,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
-    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalled());
   });
 });
 

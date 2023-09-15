@@ -24,6 +24,17 @@ export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => 
   }
 };
 
+export const updatePSPInfo = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => updatePSPInfo(psp);
+
+// {
+/* istanbul ignore if */
+// if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+// return updatePSPInfo(psp);
+/* } else {
+    return PortalApi.createPSPDirect(psp).then((resources) => resources);
+  } 
+}; */
+
 export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {

@@ -68,6 +68,9 @@ const ecDirectUpdated: CreditorInstitutionDetailsResource = {
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
+export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+  new Promise((resolve) => resolve(pspDirect));
+
 export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
   new Promise((resolve) => resolve(pspDetails));
 

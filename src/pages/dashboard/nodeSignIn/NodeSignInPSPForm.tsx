@@ -23,7 +23,7 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { NodeOnSignInPSP } from '../../../model/Node';
-import { createPSPDirect } from '../../../services/nodeService';
+import { createPSPDirect, updatePSPInfo } from '../../../services/nodeService';
 import { useSigninData } from '../../../hooks/useSigninData';
 import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
@@ -95,13 +95,9 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
 
     if (selectedParty && pspNodeData) {
       try {
-        /* TODO: fix whene updatePSP info will be available
-          await updatePSPInfo(formik.values);
-        */
+        await updatePSPInfo(formik.values);
 
-        if (selectedParty) {
-          await updateSigninData(selectedParty);
-        }
+        await updateSigninData(selectedParty);
 
         history.push(ROUTES.HOME, {
           alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
@@ -126,9 +122,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
       try {
         await createPSPDirect(formik.values);
 
-        if (selectedParty) {
-          await updateSigninData(selectedParty);
-        }
+        await updateSigninData(selectedParty);
 
         history.push(ROUTES.HOME, {
           alertSuccessMessage: t('nodeSignInPage.form.successMessage'),

@@ -13,6 +13,7 @@ import { PaymentServiceProviderDetailsResource } from '../../../../api/generated
 
 let createPSPDirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
+let updatePSPInfoMocked: jest.SpyInstance;
 
 jest.mock('../../../../decorators//withSelectedParty');
 
@@ -41,6 +42,7 @@ beforeEach(() => {
     'createPSPDirect'
   );
   useSigninDataMocked = jest.spyOn(require('../../../../hooks/useSigninData'), 'useSigninData');
+  updatePSPInfoMocked = jest.spyOn(require('../../../../services/nodeService'), 'updatePSPInfo');
 
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -81,7 +83,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
-  test.skip('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
+  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit', async () => {
     const { store } = renderApp(undefined, undefined, pspNodeData);
 
     await waitFor(() =>
@@ -107,6 +109,7 @@ describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryH
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalled());
+    await waitFor(() => expect(updatePSPInfoMocked).toHaveBeenCalled());
   });
 });
 

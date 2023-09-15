@@ -12,6 +12,7 @@ import {
   createECAndBroker as createECAndBrokerMocked,
   createECDirect as createECDirectMocked,
   getECDetails as getCreditorInstitutionDetailsMocked,
+  updatePSPInfo as updatePSPInfoMocked,
   updateECDirect,
 } from './__mocks__/nodeService';
 
@@ -24,7 +25,8 @@ export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => 
   }
 };
 
-export const updatePSPInfo = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => updatePSPInfo(psp);
+export const updatePSPInfo = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+  updatePSPInfoMocked(psp);
 
 // {
 /* istanbul ignore if */

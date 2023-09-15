@@ -118,7 +118,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
       }
     }
 
-    if (selectedParty) {
+    if (selectedParty && !pspNodeData) {
       try {
         await createPSPDirect(formik.values);
 

@@ -20,14 +20,10 @@ const CommissionPackagesPage = () => {
   const history = useHistory();
   const [value, setValue] = useState(2);
   const [packageNameInput, setPackageNameInput] = useState<string>('');
-  const [_packageName, setPackageName] = useState<string>('');
+  const [packageName, setPackageName] = useState<string>('');
 
   useEffect(() => {
-    const setSearchValue = setTimeout(() => {
-      setPackageName(packageNameInput);
-    }, 500);
-
-    return () => clearTimeout(setSearchValue);
+    setPackageName(packageNameInput);
   }, [packageNameInput]);
 
   useEffect(() => {
@@ -125,7 +121,10 @@ const CommissionPackagesPage = () => {
               <CommissionPackagesEmpty packageType={t('commissionPackagesPage.publicPackages')} />
             </CustomTabPanel>
             <CustomTabPanel valueTab={value} index={2}>
-              <CommissionPackagesTable />
+              <CommissionPackagesTable
+                packageType={t('commissionPackagesPage.privatePackages')}
+                packageNameFilter={packageName}
+              />
             </CustomTabPanel>
           </Box>
         </Grid>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 type Props = {
   packageNameInput: string;
-  setPackageNameInput: (stationCode: string) => void;
+  setPackageNameInput: (value: string) => void;
 };
 
 const CommissionPackagesSearchBar = ({ packageNameInput, setPackageNameInput }: Props) => {
@@ -16,7 +16,7 @@ const CommissionPackagesSearchBar = ({ packageNameInput, setPackageNameInput }: 
         sx={{ backgroundColor: '#FFFFFF' }}
         key="fixed"
         value={packageNameInput}
-        onChange={(event) => setPackageNameInput(event.target.value)}
+        onChange={(e) => setPackageNameInput(e.target.value)}
         fullWidth
         placeholder={t('commissionPackagesPage.list.searchByName')}
       />

@@ -3,7 +3,7 @@ import { Box, Pagination, styled, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   CommissionPackageListResource,
   getCommissionPackagePsp,
@@ -13,6 +13,11 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
+
+type Props = {
+  packageNameFilter: string;
+  packageType: string;
+};
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -85,7 +90,7 @@ const CustomDataGrid = styled(DataGrid)({
   },
 });
 
-const CommissionPackagesTable = () => {
+const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const { t } = useTranslation();
 
   const columns: Array<GridColDef> = buildColumnDefs(t);
@@ -97,8 +102,11 @@ const CommissionPackagesTable = () => {
   const [commissionPackagePsp, setCommissionPackagePsp] = useState<CommissionPackageListResource>(
     emptyCommissionPackageList
   );
-  const [page, setPage] = useState(0);
 
+  const [listFiltered, setListFiltered] = useState<CommissionPackageListResource>(
+    emptyCommissionPackageList
+  );
+  const [page, setPage] = useState(0);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   const setLoadingStatus = (status: boolean) => {
@@ -106,18 +114,33 @@ const CommissionPackagesTable = () => {
     setLoadingTable(status);
   };
 
+  const filterList = (name: string) => {
+    console.log('name', name);
+    if (name !== '') {
+      return commissionPackagePsp.commPackagesList.filter((item) =>
+        item.packageName.toUpperCase().includes(name.toUpperCase())
+      );
+    }
+    return commissionPackagePsp.commPackagesList;
+  };
+
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
       getCommissionPackagePsp(brokerCode)
         .then((res) => {
+          console.log(res);
           setCommissionPackagePsp(res);
-          setError(false);
         })
         .catch((reason) => console.error(reason))
         .finally(() => setLoadingStatus(false));
     }
   }, [page, brokerCode]);
+
+  useEffect(() => {
+    const filteredList = filterList(packageNameFilter);
+    setListFiltered({ ...commissionPackagePsp, commPackagesList: [...filteredList] });
+  }, [packageNameFilter, commissionPackagePsp]);
 
   return (
     <React.Fragment>
@@ -132,8 +155,8 @@ const CommissionPackagesTable = () => {
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && commissionPackagePsp.commPackagesList.length === 0 ? (
-          <CommissionPackagesEmpty packageType={''} />
+        ) : !error && !loading && listFiltered.commPackagesList.length === 0 ? (
+          <CommissionPackagesEmpty packageType={packageType} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -149,7 +172,7 @@ const CommissionPackagesTable = () => {
                 <>
                   <Pagination
                     color="primary"
-                    count={commissionPackagePsp.pageInfo.total_pages ?? 0}
+                    count={listFiltered.pageInfo.total_pages ?? 0}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />
@@ -192,9 +215,9 @@ const CommissionPackagesTable = () => {
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"
-            rowCount={commissionPackagePsp.commPackagesList.length}
+            rowCount={listFiltered.commPackagesList.length}
             rowHeight={rowHeight}
-            rows={commissionPackagePsp.commPackagesList}
+            rows={listFiltered.commPackagesList}
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />

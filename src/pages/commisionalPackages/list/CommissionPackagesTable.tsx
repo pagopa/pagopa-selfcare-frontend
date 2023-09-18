@@ -145,7 +145,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   return (
     <React.Fragment>
       <Box
-        id="StationsSearchTableBox"
+        id="commissionPackagesTable"
         sx={{
           position: 'relative',
           width: '100% !important',

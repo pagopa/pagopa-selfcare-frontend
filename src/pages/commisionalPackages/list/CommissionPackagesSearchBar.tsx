@@ -19,6 +19,9 @@ const CommissionPackagesSearchBar = ({ packageNameInput, setPackageNameInput }: 
         onChange={(e) => setPackageNameInput(e.target.value)}
         fullWidth
         placeholder={t('commissionPackagesPage.list.searchByName')}
+        inputProps={{
+          'data-testid': 'search-name-test',
+        }}
       />
       <Button
         component={Link}

@@ -108,7 +108,7 @@ export default function SideMenu() {
               }
               icon={ExtensionIcon}
               disabled={isDisabled}
-              data-testid="iban-test"
+              data-testid="commission-packages-test"
             />
           )}
         </List>

@@ -115,7 +115,6 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   };
 
   const filterList = (name: string) => {
-    console.log('name', name);
     if (name !== '') {
       return commissionPackagePsp.commPackagesList.filter((item) =>
         item.packageName.toUpperCase().includes(name.toUpperCase())
@@ -129,7 +128,6 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
       setLoadingStatus(true);
       getCommissionPackagePsp(brokerCode)
         .then((res) => {
-          console.log(res);
           setCommissionPackagePsp(res);
         })
         .catch((reason) => console.error(reason))

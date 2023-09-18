@@ -98,20 +98,19 @@ export default function SideMenu() {
             />
           )}
 
-          {ENV.FEATURES.COMMISSIONAL_PACKAGES.ENABLED &&
-            selectedParty?.institutionType !== 'PSP' && (
-              <SidenavItem
-                title={t('sideMenu.commPackages.title')}
-                handleClick={() => onExit(() => history.push(ROUTES.COMMISIONAL_PACKAGES))}
-                isSelected={
-                  pathname === ROUTES.COMMISIONAL_PACKAGES ||
-                  pathname.startsWith(ROUTES.COMMISIONAL_PACKAGES)
-                }
-                icon={ExtensionIcon}
-                disabled={isDisabled}
-                data-testid="iban-test"
-              />
-            )}
+          {ENV.FEATURES.COMMISSION_PACKAGES.ENABLED && selectedParty?.institutionType === 'PSP' && (
+            <SidenavItem
+              title={t('sideMenu.commPackages.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_PACKAGES))}
+              isSelected={
+                pathname === ROUTES.COMMISSION_PACKAGES ||
+                pathname.startsWith(ROUTES.COMMISSION_PACKAGES)
+              }
+              icon={ExtensionIcon}
+              disabled={isDisabled}
+              data-testid="commission-packages-test"
+            />
+          )}
         </List>
       </Box>
     </Box>

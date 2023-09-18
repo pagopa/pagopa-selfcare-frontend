@@ -33,7 +33,7 @@ import StationAssociateECPage from './pages/stations/stationAssociateEC/StationA
 import IbanPage from './pages/iban/IbanPage';
 import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
 import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
-import CommisionalPackagesPage from './pages/commisionalPackages/CommisionalPackagesPage';
+import CommissionPackagesPage from './pages/commisionalPackages/CommissionPackagesPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -115,8 +115,8 @@ const SecuredRoutes = withLogin(
             <AddEditIbanPage />
           </Route>
 
-          <Route path={routes.COMMISIONAL_PACKAGES} exact={true}>
-            <CommisionalPackagesPage />
+          <Route path={routes.COMMISSION_PACKAGES} exact={true}>
+            <CommissionPackagesPage />
           </Route>
 
           <Route path={routes.TOS} exact={true}>

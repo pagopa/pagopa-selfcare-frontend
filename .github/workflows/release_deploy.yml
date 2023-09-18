@@ -142,7 +142,7 @@ jobs:
             export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
             export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
-            export REACT_APP_FEATURES_COMMISSIONAL_PACKAGES_ENABLED='true'
+            export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='true'
           fi
 
           if [ "${{ inputs.environment }}" = "uat" ]; then
@@ -150,7 +150,7 @@ jobs:
             export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
             export REACT_APP_FEATURES_STATIONS_ENABLED='true'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
-            export REACT_APP_FEATURES_COMMISSIONAL_PACKAGES_ENABLED='false'
+            export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
           fi
 
           if [ "${{ inputs.environment }}" = "prod" ]; then
@@ -158,7 +158,7 @@ jobs:
             export REACT_APP_FEATURES_CHANNELS_ENABLED='false'
             export REACT_APP_FEATURES_STATIONS_ENABLED='false'
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
-            export REACT_APP_FEATURES_COMMISSIONAL_PACKAGES_ENABLED='false'
+            export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
           fi
 
           yarn install

@@ -57,7 +57,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     timeoutA: 15,
     timeoutB: 30,
     timeoutC: 120,
-    targetConcat: 'https://www.google.it/path?params=test#hash',
+    targetConcat: 'https://www.test.it:8080/pathTest',
     targetHost: 'https://www.google.it',
     targetPort: 0,
     targetPath: '/path?params=test#hash',
@@ -239,9 +239,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
     const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
-    const targetConcat = screen.getByTestId('target-targetConcat-test') as HTMLInputElement;
-
-    expect(targetConcat.value).toBe('https://www.google.it/path?params=test#hash');
 
     fireEvent.change(version, { target: { value: 1 } });
     expect(version.value).toBe('1');

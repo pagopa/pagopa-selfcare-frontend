@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommisionalPackagesEmpty from '../CommisionalPackagesPage';
+import CommissionPackagesPage from '../CommissionPackagesPage';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -21,7 +21,7 @@ describe('<CommisionalPackagesPage />', () => {
         <MemoryRouter initialEntries={[`/comm-packages`]}>
           <Route path="/comm-packages">
             <ThemeProvider theme={theme}>
-              <CommisionalPackagesEmpty />
+              <CommissionPackagesPage />
             </ThemeProvider>
           </Route>
         </MemoryRouter>

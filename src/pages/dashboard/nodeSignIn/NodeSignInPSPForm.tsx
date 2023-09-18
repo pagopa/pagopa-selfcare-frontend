@@ -1,25 +1,38 @@
-import {useHistory} from 'react-router';
-import {Box, Button, FormControlLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField,} from '@mui/material';
-import {FormikProps, useFormik} from 'formik';
-import {useTranslation} from 'react-i18next';
-import {theme} from '@pagopa/mui-italia';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon} from '@mui/icons-material';
+import { useHistory } from 'react-router';
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+} from '@mui/material';
+import { FormikProps, useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {Party} from '../../../model/Party';
-import {LOADING_TASK_CHANNEL_ADD_EDIT} from '../../../utils/constants';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { Party } from '../../../model/Party';
+import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import {NodeOnSignInPSP} from '../../../model/Node';
-import {createPSPDirect} from '../../../services/nodeService';
+import { NodeOnSignInPSP } from '../../../model/Node';
+import { createPSPDirect, updatePSPInfo } from '../../../services/nodeService';
+import { useSigninData } from '../../../hooks/useSigninData';
+import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 type Props = {
   goBack: () => void;
+  pspNodeData?: PaymentServiceProviderDetailsResource;
 };
 
-const NodeSignInPSPForm = ({ goBack }: Props) => {
+const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -27,6 +40,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const updateSigninData = useSigninData();
 
   const initialFormData = (selectedParty?: Party) => ({
     name: selectedParty?.fiscalCode ?? '',
@@ -79,15 +93,43 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
   const submit = async () => {
     setLoading(true);
 
-    createPSPDirect(formik.values)
-      .then(() => {
+    if (selectedParty && pspNodeData) {
+      try {
+        await updatePSPInfo(formik.values);
+
+        await updateSigninData(selectedParty);
+
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+        });
+      } catch (reason) {
+        addError({
+          id: 'NODE_SIGNIN_PSP_UPDATE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while updating PSP data on the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.pspErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.pspUpdateErrorMessageDesc'),
+          component: 'Toast',
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (selectedParty && !pspNodeData) {
+      try {
+        await createPSPDirect(formik.values);
+
+        await updateSigninData(selectedParty);
+
         history.push(ROUTES.HOME, {
           alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
         });
-      })
-      .catch((reason) => {
+      } catch (reason) {
         addError({
-          id: 'NODE_SIGNIN',
+          id: 'NODE_SIGNIN_PSP_CREATE',
           blocking: false,
           error: reason as Error,
           techDescription: `An error occurred while registration at the node`,
@@ -96,10 +138,10 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
           displayableDescription: t('nodeSignInPage.form.pspErrorMessageDesc'),
           component: 'Toast',
         });
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    }
   };
 
   const enebledSubmit = (values: NodeOnSignInPSP) =>
@@ -135,6 +177,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.name && Boolean(formik.errors.name)}
                     helperText={formik.touched.name && formik.errors.name}
+                    inputProps={{ 'data-testid': 'name-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -149,6 +192,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.businessName && Boolean(formik.errors.businessName)}
                     helperText={formik.touched.businessName && formik.errors.businessName}
+                    inputProps={{ 'data-testid': 'businessName-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -163,6 +207,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.fiscalCode && Boolean(formik.errors.fiscalCode)}
                     helperText={formik.touched.fiscalCode && formik.errors.fiscalCode}
+                    inputProps={{ 'data-testid': 'fiscalCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -177,6 +222,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.abiCode && Boolean(formik.errors.abiCode)}
                     helperText={formik.touched.abiCode && formik.errors.abiCode}
+                    inputProps={{ 'data-testid': 'abiCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -191,6 +237,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.pspCode && Boolean(formik.errors.pspCode)}
                     helperText={formik.touched.pspCode && formik.errors.pspCode}
+                    inputProps={{ 'data-testid': 'pspCode-test' }}
                   />
                 </Grid>
                 <Grid container item xs={6}>
@@ -200,7 +247,12 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                     name="bicCode"
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
-                    inputProps={{ maxLength: 5, inputMode: 'numeric', pattern: '[0-9]*' }}
+                    inputProps={{
+                      maxLength: 5,
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                      'data-testid': 'bicCode-test',
+                    }}
                     value={formik.values.bicCode}
                     onChange={(e) => handleChangeNumberOnly(e, 'bicCode', formik)}
                     error={formik.touched.bicCode && Boolean(formik.errors.bicCode)}
@@ -228,11 +280,13 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
                       value={false}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.no')}
+                      data-testid="digitalStamp-false-test"
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       label={t('nodeSignInPage.form.pspFields.digitalStamp.yes')}
+                      data-testid="digitalStamp-true-test"
                     />
                   </RadioGroup>
                 </Grid>
@@ -254,6 +308,7 @@ const NodeSignInPSPForm = ({ goBack }: Props) => {
               color="primary"
               variant="contained"
               type="submit"
+              data-testid="continue-button-test"
             >
               {t('nodeSignInPage.form.continueButton')}
             </Button>

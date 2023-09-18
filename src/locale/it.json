@@ -104,6 +104,7 @@
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
       "pspErrorMessageTitle": "Errore",
       "pspErrorMessageDesc": "Errore durante la creazione, PSP già censito",
+      "pspUpdateErrorMessageDesc": "Errore durante l'update del PSP",
       "ecErrorMessageTitle": "Errore",
       "ecErrorMessageDesc": "Errore durante la creazione, EC già censito",
       "ecUpdateErrorMessageDesc": "Errore durante la modifica dei dati",

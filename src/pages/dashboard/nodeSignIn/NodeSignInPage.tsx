@@ -1,16 +1,17 @@
-import {ArrowBack} from '@mui/icons-material';
-import {Breadcrumbs, Grid, Stack, Typography} from '@mui/material';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import { ArrowBack } from '@mui/icons-material';
+import { Breadcrumbs, Grid, Stack, Typography } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import {CreditorInstitutionDetailsResource} from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
-import {getCreditorInstitutionDetails} from '../../../services/nodeService';
-import {LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS} from '../../../utils/constants';
+import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { getCreditorInstitutionDetails, getPSPDetails } from '../../../services/nodeService';
+import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../../utils/constants';
+import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInECForm from './NodeSignInECForm';
 
@@ -23,6 +24,7 @@ const NodeSignInPage = () => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS);
   const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
+  const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
 
   useEffect(() => {
     if (selectedParty && selectedParty.institutionType !== 'PSP') {
@@ -34,6 +36,27 @@ const NodeSignInPage = () => {
         .catch((reason) => {
           addError({
             id: 'NODE_SIGN_IN_PAGE_EC_DETAILS',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting ec details`,
+            toNotify: true,
+            displayableTitle: t('dashboardPage.registrationData.ecDetailsErrorMessageTitle'),
+            displayableDescription: t('dashboardPage.registrationData.ecDetailsErrorMessageDesc'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => setLoading(false));
+    }
+
+    if (selectedParty && selectedParty.institutionType === 'PSP') {
+      setLoading(true);
+      getPSPDetails(selectedParty.pspData?.abiCode ? `ABI${selectedParty.pspData.abiCode}` : '')
+        .then((res) => {
+          setPspNodeData(res);
+        })
+        .catch((reason) => {
+          addError({
+            id: 'NODE_SIGN_IN_PAGE_PSP_DETAILS',
             blocking: false,
             error: reason as Error,
             techDescription: `An error occurred while getting ec details`,
@@ -80,7 +103,7 @@ const NodeSignInPage = () => {
           variantSubTitle="body1"
         />
         {selectedParty?.pspData ? (
-          <NodeSignInPSPForm goBack={goBack} />
+          <NodeSignInPSPForm goBack={goBack} pspNodeData={pspNodeData} />
         ) : (
           <NodeSignInECForm goBack={goBack} ecNodeData={ecNodeData} />
         )}

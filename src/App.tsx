@@ -34,6 +34,7 @@ import IbanPage from './pages/iban/IbanPage';
 import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
 import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
 import CommissionPackagesPage from './pages/commisionalPackages/CommissionPackagesPage';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -55,7 +56,9 @@ const SecuredRoutes = withLogin(
             {ENV.FEATURES.DASHBOARD.ENABLED ? <DashboardPage /> : <ApiKeysPage />}
           </Route>
           <Route path={routes.NODE_SIGNIN} exact={true}>
-            <NodeSignInPage />
+            <ProtectedRoute permission="node-signin">
+              <NodeSignInPage />
+            </ProtectedRoute>
           </Route>
           <Route path={routes.APIKEYS} exact={true}>
             <ApiKeysPage />

@@ -18,35 +18,39 @@ const pspDirect: PSPDirectDTO = {
   vat_number: 'vat_number',
 };
 
-const pspDetails: PaymentServiceProviderDetailsResource = {
-  abi: '12345',
-  agid_psp: true,
-  bic: '10101',
-  my_bank_code: '',
-  stamp: true,
-  tax_code: '123123',
-  vat_number: '12312312',
-  business_name: 'PSP S.r.l',
-  enabled: true,
-  psp_code: '12312312',
-};
-
-const ecDirect: CreditorInstitutionDetailsResource = {
-  address: {
-    city: 'Milano',
-    countryCode: 'Via Ernesto Calindri 4',
-    location: 'MI',
-    taxDomicile: 'Via Ernesto Calindri 4',
-    zipCode: '20143',
+const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
+  {
+    abi: '12345',
+    agid_psp: true,
+    bic: '10101',
+    my_bank_code: '',
+    stamp: true,
+    tax_code: '123123',
+    vat_number: '12312312',
+    business_name: 'PSP S.r.l',
+    enabled: true,
+    psp_code: '12312312',
   },
-  businessName: 'businessName',
-  creditorInstitutionCode: 'creditorInstitutionCode',
-  enabled: true,
-  pspPayment: false,
-  reportingFtp: false,
-  reportingZip: false,
-  broadcast: true,
-};
+];
+
+const ecDirect: Array<CreditorInstitutionDetailsResource> = [
+  {
+    address: {
+      city: 'Milano',
+      countryCode: 'Via Ernesto Calindri 4',
+      location: 'MI',
+      taxDomicile: 'Via Ernesto Calindri 4',
+      zipCode: '20143',
+    },
+    businessName: 'businessName',
+    creditorInstitutionCode: 'creditorInstitutionCode',
+    enabled: true,
+    pspPayment: false,
+    reportingFtp: false,
+    reportingZip: false,
+    broadcast: true,
+  },
+];
 
 const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   address: {
@@ -71,8 +75,8 @@ export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const getPSPDetails = (_pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
-  new Promise((resolve) => resolve(pspDetails));
+export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
+  new Promise((resolve) => resolve(pspDetails.filter((pd) => pd.psp_code === pspcode)));
 
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
@@ -84,8 +88,8 @@ export const createECDirect = (
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve({ ...ec, broadcast: true }));
 
-export const getECDetails = (_ecCode: string): Promise<CreditorInstitutionDetailsResource> =>
-  new Promise((resolve) => resolve(ecDirect));
+export const getECDetails = (ecCode: string): Promise<CreditorInstitutionDetailsResource> =>
+  new Promise((resolve) => resolve(ecDirect[0]));
 
 export const updateECDirect = (
   _ecCode: string,

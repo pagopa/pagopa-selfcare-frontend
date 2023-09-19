@@ -49,6 +49,53 @@ export const mockedParties: Array<Party> = [
     urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
     pspData: undefined,
   },
+  {
+    partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b945',
+    externalId: '14847241009',
+    originId: 'PSP_14847241009',
+    origin: 'SELC',
+    description: 'PSP unsigned',
+    fiscalCode: '14847241009',
+    digitalAddress: 'pspspa@test.dummy',
+    status: 'ACTIVE',
+    registeredOffice: 'VIA DEI PSP 20, ROMA',
+    roles: [
+      {
+        partyRole: 'DELEGATE',
+        roleKey: 'Admin', // TODO use real product role
+      },
+    ],
+    urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+    institutionType: 'PSP',
+    pspData: {
+      businessRegisterNumber: '00000000000',
+      legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+      legalRegisterNumber: '09878',
+      abiCode: '36042',
+      vatNumberGroup: false,
+    },
+  },
+  {
+    partyId: '6b82300e-4fad-459d-a75b-91b5e7ae4f05',
+    externalId: '1122334456',
+    originId: 'c_g922',
+    origin: 'IPA',
+    institutionType: 'PA',
+    description: 'EC unsigned',
+    category: 'Gestori di Pubblici Servizi',
+    fiscalCode: '1122334456',
+    digitalAddress: 'email-ec@test.dummy',
+    status: 'ACTIVE',
+    registeredOffice: 'Via degli Enti Creditori 1',
+    roles: [
+      {
+        partyRole: 'OPERATOR',
+        roleKey: 'operator', // TODO use real product role
+      },
+    ],
+    urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
+    pspData: undefined,
+  },
 ];
 
 export const mockedPartyDetail: PartyDetail = {

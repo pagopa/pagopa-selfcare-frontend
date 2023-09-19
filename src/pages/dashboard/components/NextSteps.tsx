@@ -1,10 +1,11 @@
-import {ArrowForward} from '@mui/icons-material';
-import {Alert, Box, Button, Card, Typography} from '@mui/material';
-import {useTranslation} from 'react-i18next';
-import {Link} from 'react-router-dom';
+import { ArrowForward } from '@mui/icons-material';
+import { Alert, Box, Button, Card, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import ROUTES from '../../../routes';
-import {Party} from '../../../model/Party';
-import {SigninData} from '../../../model/Node';
+import { Party } from '../../../model/Party';
+import { SigninData } from '../../../model/Node';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 type Props = {
   selectedParty?: Party;
@@ -16,6 +17,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
   const isSignedIn = signinData ? true : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
   const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
+  const { hasPermission } = usePermissions();
 
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
@@ -26,16 +28,16 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
         <Alert severity="warning">
           {t(
             `dashboardPage.nextStep.${
-              isAdmin && isSignedIn && isPSP
+              isSignedIn && isPSP
                 ? 'generateApiKeysStepAlertPSP'
-                : isAdmin && isSignedIn
+                : isSignedIn
                 ? 'generateApiKeyStepAlertEC'
                 : 'signInStepAlert'
             }`
           )}
         </Alert>
       </Box>
-      {isAdmin && isSignedIn ? (
+      {isSignedIn ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}
@@ -46,7 +48,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
           {t('dashboardPage.nextStep.generateApiKeysCTA')}
         </Button>
       ) : (
-        isAdmin && (
+        hasPermission('node-signin') && (
           <Button
             component={Link}
             to={ROUTES.NODE_SIGNIN}

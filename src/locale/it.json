@@ -829,6 +829,12 @@
         "confirmButton": "Conferma",
         "backButton": "Indietro"
       },
+      "validationMessage": {
+        "requiredField": "Campo obbligatorio",
+        "dateNotValid": "La data inserita non è valida",
+        "startDateOverEndDate": "La data di inizio non può essere maggiore di quella di scadenza",
+        "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio"
+      },
       "modal": {
         "title": "Creazione nuovo pacchetto commissioni privato",
         "message": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
@@ -838,7 +844,9 @@
       "error": {
         "errorTitle": "Errore",
         "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei Tipi di pagamento",
-        "errorMessageTouchpointDesc": "Errore durante la ricezione dei touchpoint"
+        "errorMessageTouchpointDesc": "Errore durante la ricezione dei touchpoint",
+        "errorMessageChannelsId": "Errore durante la ricezione dei codici canale",
+        "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni"
       }
     }
   },

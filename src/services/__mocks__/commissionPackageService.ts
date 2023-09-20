@@ -63,7 +63,7 @@ export const getCommissionPackageDetails = (_name: string): Promise<CommissionPa
   new Promise((resolve) => resolve(mockedCommissionPackagePspDetail));
 
 export const createCommissionPackage = (
-  _commissionPackage: CommissionPackageOnCreation
+  _body: CommissionPackageOnCreation
 ): Promise<CommissionPackageOnCreation> =>
   new Promise((resolve) => resolve(mockedCommissionPackagePspDetail));
 

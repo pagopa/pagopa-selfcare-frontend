@@ -790,6 +790,56 @@
         "paymentType": "Tipo di pagamento",
         "amountRange": "Fascia importo"
       }
+    },
+    "addEditCommissionPackage": {
+      "breadcrumb": {
+        "first": "Pacchetti commissioni",
+        "second": "Crea pacchetto"
+      },
+      "title": "Crea un nuovo pacchetto commissioni",
+      "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
+      "form": {
+        "packageType": "Tipologia pacchetto",
+        "privatePackage": "Privato",
+        "publicPackage": "Pubblico",
+        "globalPackage": "Globale",
+        "packageConfiguration": "Configurazione pacchetto",
+        "packageStructure": "Struttura del pacchetto",
+        "packageName": "Nome pacchetto",
+        "packageDescription": "Descrizione pacchetto",
+        "paymentType": "Tipo di pagamento",
+        "touchpoint": "Touchpoint",
+        "taxonomyOfService": "Tassonomia di servizio",
+        "addTaxonomy": "Aggiungi tassonomia",
+        "amountRange": "Fascia importo",
+        "maxImport": "Importo massimo",
+        "minImport": "Importo minimo",
+        "commission": "Commissioni",
+        "feeApplied": "Fee applicata",
+        "pspdata": "Dati del PSP",
+        "digitalStamp": "Marca da bollo digitale",
+        "validityPeriod": "Periodo di validità",
+        "channelCode": "Codice canale",
+        "paymentWithDigitalStamp": "Pagamento con marca da bollo",
+        "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
+        "yes": "Si",
+        "no": "No",
+        "from": "Da",
+        "to": "A",
+        "confirmButton": "Conferma",
+        "backButton": "Indietro"
+      },
+      "modal": {
+        "title": "Creazione nuovo pacchetto commissioni privato",
+        "message": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
+        "confirmButton": "Conferma",
+        "backButton": "Annulla"
+      },
+      "error": {
+        "errorTitle": "Errore",
+        "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei Tipi di pagamento",
+        "errorMessageTouchpointDesc": "Errore durante la ricezione dei touchpoint"
+      }
     }
   },
   "sideMenu": {

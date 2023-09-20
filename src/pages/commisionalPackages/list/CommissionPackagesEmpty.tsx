@@ -2,6 +2,7 @@ import { Link, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, Link as RouterLink } from 'react-router-dom';
+import ROUTES from '../../../routes';
 
 type Props = {
   packageType: string;
@@ -24,7 +25,7 @@ const CommissionPackagesEmpty = ({ packageType }: Props) => {
                   textDecoration: 'none',
                   whiteSpace: 'pre',
                 }}
-                to={generatePath('')}
+                to={generatePath(ROUTES.COMMISSION_PACKAGES_ADD)}
               >
                 <strong> Crea Pacchetto</strong>
               </Link>

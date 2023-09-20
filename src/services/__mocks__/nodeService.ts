@@ -20,7 +20,7 @@ const pspDirect: PSPDirectDTO = {
 
 const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
   {
-    abi: '12345',
+    abi: '36042',
     agid_psp: true,
     bic: '10101',
     my_bank_code: '',
@@ -29,11 +29,11 @@ const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
     vat_number: '12312312',
     business_name: 'PSP S.r.l',
     enabled: true,
-    psp_code: '12312312',
+    psp_code: 'ABI36042',
   },
 ];
 
-const ecDirect: Array<CreditorInstitutionDetailsResource> = [
+const ecDetails: Array<CreditorInstitutionDetailsResource> = [
   {
     address: {
       city: 'Milano',
@@ -43,7 +43,7 @@ const ecDirect: Array<CreditorInstitutionDetailsResource> = [
       zipCode: '20143',
     },
     businessName: 'businessName',
-    creditorInstitutionCode: 'creditorInstitutionCode',
+    creditorInstitutionCode: '1122334455',
     enabled: true,
     pspPayment: false,
     reportingFtp: false,
@@ -61,7 +61,7 @@ const ecDirectUpdated: CreditorInstitutionDetailsResource = {
     zipCode: '20900',
   },
   businessName: 'businessName',
-  creditorInstitutionCode: 'creditorInstitutionCode',
+  creditorInstitutionCode: '1122334455',
   enabled: true,
   pspPayment: false,
   reportingFtp: false,
@@ -75,8 +75,13 @@ export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> =>
-  new Promise((resolve) => resolve(pspDetails.filter((pd) => pd.psp_code === pspcode)));
+export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
+  const pspDetail = pspDetails.find((pd) => pd.psp_code === pspcode);
+  if (pspDetail === undefined) {
+    return new Promise((resolve) => resolve({}));
+  }
+  return new Promise((resolve) => resolve(pspDetail));
+};
 
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
@@ -88,8 +93,15 @@ export const createECDirect = (
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve({ ...ec, broadcast: true }));
 
-export const getECDetails = (ecCode: string): Promise<CreditorInstitutionDetailsResource> =>
-  new Promise((resolve) => resolve(ecDirect[0]));
+export const getECDetails = (
+  ecCode: string
+): Promise<CreditorInstitutionDetailsResource | undefined> => {
+  const ecDetail = ecDetails.find((ec) => ec.creditorInstitutionCode === ecCode);
+  if (ecDetail === undefined) {
+    return new Promise((resolve) => resolve(undefined));
+  }
+  return new Promise((resolve) => resolve(ecDetail));
+};
 
 export const updateECDirect = (
   _ecCode: string,

@@ -1,16 +1,17 @@
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
-import {Provider} from 'react-redux';
-import {createMemoryHistory} from 'history';
+import { Provider } from 'react-redux';
+import { createMemoryHistory } from 'history';
 // import { mockedParties } from '../services/__mocks__/partyService';
-import {ThemeProvider} from '@mui/material';
-import {theme} from '@pagopa/mui-italia';
+import { ThemeProvider } from '@mui/material';
+import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
-import {BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import DashboardPage from '../DashboardPage';
-import {createStore} from '../../../redux/store';
+import { createStore } from '../../../redux/store';
+import { mockedParties } from '../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -55,7 +56,7 @@ test('Test rendering button', async () => {
   const { store } = renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
-    payload: pspPartySelected,
+    payload: pspUnsignedAdmin,
   });
   expect(
     screen.getByRole('link', {
@@ -64,11 +65,11 @@ test('Test rendering button', async () => {
   ).toBeVisible();
 });
 
-test('Test not admin', async () => {
+test('Test - PSP unsigned - not admin', async () => {
   const { store } = renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
-    payload: pspPartyNotAdminSelected,
+    payload: pspUnsignedOperator,
   });
   expect(
     screen.queryByRole('link', {
@@ -105,29 +106,8 @@ const pspPartySelected = {
   },
 };
 
-const pspPartyNotAdminSelected = {
-  partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-  externalId: '15376371009',
-  originId: 'PAGOPASPA',
-  origin: 'SELC',
-  description: 'PagoPA S.p.A.',
-  fiscalCode: '15376371009',
-  digitalAddress: 'selfcare@pec.pagopa.it',
-  status: 'ACTIVE',
-  registeredOffice: 'Piazza Colonna, 370',
-  roles: [
-    {
-      partyRole: 'DELEGATE',
-      roleKey: 'operator',
-    },
-  ],
-  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
-  typology: 'TODO',
-  pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: '36042',
-    vatNumberGroup: false,
-  },
-};
+const pspUnsignedOperator = mockedParties.find(
+  (party) => party.description === 'PSP Operator unsigned'
+);
+
+const pspUnsignedAdmin = mockedParties.find((party) => party.description === 'PSP Admin unsigned');

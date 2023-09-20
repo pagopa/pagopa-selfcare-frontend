@@ -68,7 +68,7 @@ export const createECDirect = (
 
 export const getCreditorInstitutionDetails = (
   ecCode: string
-): Promise<CreditorInstitutionDetailsResource> => {
+): Promise<CreditorInstitutionDetailsResource | undefined> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getCreditorInstitutionDetailsMocked(ecCode);
   } else {

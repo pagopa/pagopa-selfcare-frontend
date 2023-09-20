@@ -14,7 +14,7 @@ type Props = {
 
 const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
-  const isSignedIn = signinData ? true : false;
+  const isSignedIn = signinData && Object.keys(signinData).length > 0 ? true : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
   const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
   const { hasPermission } = usePermissions();

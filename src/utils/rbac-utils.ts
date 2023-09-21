@@ -9,11 +9,13 @@ export const getUserRole = (party: Party): ROLE | undefined => {
     return ROLE.PAGOPA_OPERATOR;
   }
 
+  /*
   if (party.institutionType === 'PT') {
     // TODO: need a function to know if PT is a EC broker or PSP broker or both
     return ROLE.PT_EC_OPERATOR;
     // return ROLE.PT_PSP_OPERATOR;
   }
+  */
 
   if (party.institutionType === 'PSP') {
     // TODO: need a function to check if psp is DIRECT or not

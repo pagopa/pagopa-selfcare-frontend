@@ -17,6 +17,7 @@ import {
 import { ecDetails, pspDetails } from '../../../services/__mocks__/nodeService';
 import NextSteps from '../components/NextSteps';
 import { SigninData } from '../../../model/Node';
+import { Party } from '../../../model/Party';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -25,6 +26,7 @@ beforeEach(() => {
 
 const renderApp = (
   signinData?: SigninData,
+  party?: Party,
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
@@ -34,7 +36,7 @@ const renderApp = (
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <NextSteps signinData={signinData} />
+          <NextSteps signinData={signinData} selectedParty={party} />
         </ThemeProvider>
       </BrowserRouter>
     </Provider>
@@ -43,7 +45,7 @@ const renderApp = (
 };
 
 test('Test rendering', async () => {
-  const { store } = renderApp();
+  const { store } = renderApp(undefined, pspAdminUnsigned);
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -58,13 +60,7 @@ test('Test rendering', async () => {
 });
 
 test('Test - EC signed - admin', async () => {
-  const { store } = renderApp(ecDetails);
-  await waitFor(() =>
-    store.dispatch({
-      type: 'parties/setPartySelected',
-      payload: ecAdminSigned,
-    })
-  );
+  const { store } = renderApp(ecDetails, ecAdminSigned);
 
   expect(
     screen.queryByRole('link', {
@@ -74,17 +70,17 @@ test('Test - EC signed - admin', async () => {
 });
 
 test('Test - PSP signed - operator', async () => {
-  const { store } = renderApp(pspDetails);
-  await waitFor(() =>
-    store.dispatch({
-      type: 'parties/setPartySelected',
-      payload: pspOperatorSigned,
-    })
-  );
+  const { store } = renderApp(pspDetails, pspOperatorSigned);
 
   expect(
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
+  ).toBeVisible();
+
+  expect(
+    screen.queryByText(
+      /Genera le API Key di connessione al Nodo per abilitare la creazione dei canali./i
+    )
   ).toBeVisible();
 });

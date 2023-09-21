@@ -5,11 +5,7 @@ import {
   Party,
 } from '../../model/Party';
 
-import {
-  mockedInstitutionDetailResource,
-  mockedInstitutionResources,
-  PortalApi,
-} from '../../api/__mocks__/PortalApiClient';
+import { mockedInstitutionDetailResource, PortalApi } from '../../api/__mocks__/PortalApiClient';
 import {
   InstitutionResource,
   InstitutionTypeEnum,
@@ -23,7 +19,7 @@ beforeEach(() => {
   portalApiGetInstitutionsSpy = jest.spyOn(require('../partyService'), 'fetchParties');
 });
 
-export const mockedInstitution: Array<InstitutionResource> = [
+export const mockedInstitutions: Array<InstitutionResource> = [
   {
     id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
     externalId: '14847241008',
@@ -135,7 +131,7 @@ export const mockedInstitution: Array<InstitutionResource> = [
 
 test('Test fetchParties', async () => {
   const parties = await fetchParties();
-  expect(parties).toMatchObject(mockedInstitution.map(institutionResource2Party));
+  expect(parties).toMatchObject(mockedInstitutions.map(institutionResource2Party));
 
   parties.forEach((p) =>
     expect(p.urlLogo).toBe(`http://checkout.selfcare/institutions/${p.partyId}/logo.png`)
@@ -171,7 +167,7 @@ describe('Test fetchPartyDetails', () => {
 
   // TODO: to be fixed when fetchPartyDetails will also retrieve roles
   test.skip('Test parties as cache', async () => {
-    const parties = mockedInstitutionResources.map(institutionResource2Party);
+    const parties = mockedInstitutions.map(institutionResource2Party);
     const party = await fetchPartyDetails(expectedPartyId, parties);
     checkSelectedParty(party);
 

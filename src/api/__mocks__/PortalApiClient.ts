@@ -5,6 +5,7 @@ import {
   mockedChannelDetail,
 } from '../../services/__mocks__/channelService';
 import { mockedStations } from '../../services/__mocks__/stationService';
+import { mockedInstitutions } from '../../services/__tests__/partyService.test';
 import { ChannelDetailsResource } from '../generated/portal/ChannelDetailsResource';
 import {
   InstitutionDetailResource,
@@ -17,51 +18,6 @@ import { ProductsResource } from '../generated/portal/ProductsResource';
 import { PspChannelPaymentTypes } from '../generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from '../generated/portal/PspChannelPaymentTypesResource';
 import { StationsResource } from '../generated/portal/StationsResource';
-
-export const mockedInstitutionResources: Array<InstitutionResource> = [
-  {
-    id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-    externalId: '14847241008',
-    originId: 'PSP_14847241008',
-    origin: 'SELC',
-    institutionType: 'PSP' as InstitutionTypeEnum,
-    name: 'PSP S.p.A.',
-    fiscalCode: '14847241008',
-    mailAddress: 'pspspa@test.dummy',
-    status: 'ACTIVE',
-    address: 'VIA DEI PSP 20, ROMA',
-    userProductRoles: ['admin'],
-    companyInformations: {},
-    assistanceContacts: {},
-    pspData: {
-      businessRegisterNumber: '00000000000',
-      legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-      legalRegisterNumber: '09878',
-      abiCode: '36042',
-      vatNumberGroup: false,
-    },
-    dpoData: {
-      address: 'pectest@pec.pagopa.it',
-      pec: 'pectest@pec.pagopa.it',
-      email: 'pectest@pec.pagopa.it',
-    },
-  },
-  {
-    id: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
-    externalId: '1122334455',
-    originId: 'c_g922',
-    origin: 'IPA',
-    institutionType: 'PA' as InstitutionTypeEnum,
-    name: 'Ente Creditore S.r.l.',
-    fiscalCode: '1122334455',
-    mailAddress: 'email-ec@test.dummy',
-    status: 'ACTIVE',
-    address: 'Via degli Enti Creditori 1',
-    userProductRoles: ['admin'],
-    companyInformations: {},
-    assistanceContacts: {},
-  },
-];
 
 export const mockedInstitutionDetailResource: InstitutionDetailResource = {
   id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
@@ -96,7 +52,7 @@ export const mockedProductResources: Array<ProductsResource> = [
 
 export const PortalApi = {
   getInstitutions: async (_productId: string): Promise<Array<InstitutionResource>> =>
-    new Promise((resolve) => resolve(mockedInstitutionResources)),
+    new Promise((resolve) => resolve(mockedInstitutions)),
 
   getInstitution: async (_institutionId: string): Promise<InstitutionDetailResource> =>
     new Promise((resolve) => resolve(mockedInstitutionDetailResource)),

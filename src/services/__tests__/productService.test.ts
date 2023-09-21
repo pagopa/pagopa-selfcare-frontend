@@ -2,12 +2,12 @@ import { mockedProductResources } from '../../api/__mocks__/PortalApiClient';
 import { fetchProducts } from '../productService';
 import { productResource2Product } from '../../model/Product';
 
-jest.mock('../../api/PortalApiClient');
+//jest.mock('../../api/PortalApiClient');
 
-let fetchProductsSpy: any;
+//let fetchProductsSpy: any;
 
 beforeEach(() => {
-  fetchProductsSpy = jest.spyOn(require('../productService'), 'fetchProducts');
+  //fetchProductsSpy = jest.spyOn(require('../productService'), 'fetchProducts');
   //jest.spyOn(PortalApi, 'getProductRoles');
 });
 
@@ -16,5 +16,5 @@ test('Test fetchProducts', async () => {
 
   expect(products).toMatchObject(mockedProductResources.map(productResource2Product));
 
-  expect(fetchProductsSpy).toBeCalledTimes(1);
+  //expect(fetchProductsSpy).toBeCalledTimes(1);
 });

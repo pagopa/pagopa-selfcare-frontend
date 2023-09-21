@@ -18,7 +18,7 @@ const pspDirect: PSPDirectDTO = {
   vat_number: 'vat_number',
 };
 
-const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
+export const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
   {
     abi: '36042',
     agid_psp: true,
@@ -33,7 +33,7 @@ const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
   },
 ];
 
-const ecDetails: Array<CreditorInstitutionDetailsResource> = [
+export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
   {
     address: {
       city: 'Milano',

@@ -8,18 +8,20 @@ export const getUserRole = (party: Party): ROLE | undefined => {
   if (isOperator()) {
     return ROLE.PAGOPA_OPERATOR;
   }
-  if (party.institutionType === 'PSP' && roleKey === 'operator') {
-    return ROLE.PSP_OPERATOR;
+
+  if (party.institutionType === 'PT') {
+    // TODO: need a function to know if PT is a EC broker or PSP broker or both
+    return ROLE.PT_EC_OPERATOR;
+    // return ROLE.PT_PSP_OPERATOR;
   }
-  if (party.institutionType === 'PSP' && roleKey === 'admin') {
-    return ROLE.PSP_ADMIN;
+
+  if (party.institutionType === 'PSP') {
+    // TODO: need a function to check if psp is DIRECT or not
+    return roleKey === 'admin' ? ROLE.PSP_ADMIN : ROLE.PSP_OPERATOR;
+    // return roleKey === 'admin' ? ROLE.PSP_DIRECT_ADMIN : ROLE.PSP_DIRECT_OPERATOR;
   }
-  if (party.institutionType === 'PT' && roleKey === 'operator') {
-    return ROLE.PT_OPERATOR;
-  }
-  if (party.institutionType === 'PT' && roleKey === 'admin') {
-    return ROLE.PT_ADMIN;
-  }
+
+  // TODO: need a function to check if ec is DIRECT or not
   if (roleKey === 'operator') {
     return ROLE.EC_OPERATOR;
   }

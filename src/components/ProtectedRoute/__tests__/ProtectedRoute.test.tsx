@@ -13,7 +13,6 @@ describe('ProtectedRoute component', () => {
   jest.mock('../../../hooks/usePermissions');
 
   test('should render children when user has permission', () => {
-    // Mock the usePermissions hook to return true for the specified permission
     jest
       .spyOn(usePermissions, 'usePermissions')
       .mockReturnValue({ hasPermission: (permissionName) => true });
@@ -30,7 +29,6 @@ describe('ProtectedRoute component', () => {
     expect(childComponent).toBeInTheDocument();
   });
   test("should not render children when user hasn't permission", () => {
-    // Mock the usePermissions hook to return true for the specified permission
     jest
       .spyOn(usePermissions, 'usePermissions')
       .mockReturnValue({ hasPermission: (permissionName) => false });

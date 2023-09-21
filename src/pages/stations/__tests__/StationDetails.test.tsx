@@ -107,9 +107,6 @@ describe('<StationDetails />', () => {
       const backBtn = screen.getByTestId('exit-btn-test');
       fireEvent.click(backBtn);
       expect(history.location.pathname).toBe('/');
-
-      const showPassword = screen.getByTestId('show-psw-test');
-      fireEvent.click(showPassword);
     }
   });
 
@@ -155,7 +152,7 @@ describe('<StationDetails />', () => {
       </Provider>
     );
     if (!isOperator()) {
-      const editBtn = await screen.findByTestId('edit-ope-sts-chk');
+      const editBtn = await screen.findByTestId('edit-btn-sts-approved');
       fireEvent.click(editBtn);
     }
   });

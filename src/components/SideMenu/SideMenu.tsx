@@ -42,7 +42,7 @@ export default function SideMenu() {
       isSelected={pathname === ROUTES.APIKEYS}
       disabled={isDisabled || (!isDisabled && !hasPermission('apikey'))}
       icon={VpnKeyIcon}
-      data-testid="apikeys-test"
+      dataTestId="apikeys-test"
     />
   );
 

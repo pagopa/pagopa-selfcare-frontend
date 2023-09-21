@@ -44,7 +44,7 @@ const renderApp = (
   return { store, history };
 };
 
-test('Test rendering', async () => {
+test('Test rendering - PSP unsigned admin', async () => {
   const { store } = renderApp(undefined, pspAdminUnsigned);
   await waitFor(() =>
     store.dispatch({
@@ -61,16 +61,29 @@ test('Test rendering', async () => {
 
 test('Test - EC signed - admin', async () => {
   const { store } = renderApp(ecDetails, ecAdminSigned);
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: ecAdminSigned,
+    })
+  );
 
   expect(
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeVisible();
+  ).toBeNull();
 });
 
 test('Test - PSP signed - operator', async () => {
   const { store } = renderApp(pspDetails, pspOperatorSigned);
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspOperatorSigned,
+    })
+  );
 
   expect(
     screen.queryByRole('link', {
@@ -83,4 +96,21 @@ test('Test - PSP signed - operator', async () => {
       /Genera le API Key di connessione al Nodo per abilitare la creazione dei canali./i
     )
   ).toBeVisible();
+});
+
+test('Test - PSP unsigned - operator', async () => {
+  const { store } = renderApp(undefined, pspOperatorSigned);
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspOperatorSigned,
+    })
+  );
+
+  expect(
+    screen.queryByRole('link', {
+      name: /Completa registrazione/i,
+    })
+  ).toBeNull();
 });

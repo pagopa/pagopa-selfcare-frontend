@@ -13,6 +13,7 @@ import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { usePermissions } from '../../hooks/usePermissions';
 import SidenavItem from './SidenavItem';
 
 /** The side menu of the application */
@@ -30,9 +31,20 @@ export default function SideMenu() {
     history.listen(() => setPathName(history.location.pathname));
     return history.location.pathname;
   });
-
+  const { hasPermission } = usePermissions();
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
-  const isDisabled = signinData ? false : true;
+  const isDisabled = signinData && Object.keys(signinData).length > 0 ? false : true;
+
+  const apiKeyItem = (
+    <SidenavItem
+      title={t('sideMenu.apikeys.title')}
+      handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
+      isSelected={pathname === ROUTES.APIKEYS}
+      disabled={isDisabled || (!isDisabled && !hasPermission('apikey'))}
+      icon={VpnKeyIcon}
+      data-testid="apikeys-test"
+    />
+  );
 
   return (
     <Box display="grid" mt={1}>
@@ -47,24 +59,10 @@ export default function SideMenu() {
                 icon={DashboardIcon}
                 data-testid="home-test"
               />
-              <SidenavItem
-                title={t('sideMenu.apikeys.title')}
-                handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-                isSelected={pathname === ROUTES.APIKEYS}
-                disabled={isDisabled}
-                icon={VpnKeyIcon}
-                data-testid="apikeys-test"
-              />
+              {apiKeyItem}
             </>
           ) : (
-            <SidenavItem
-              title={t('sideMenu.apikeys.title')}
-              handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-              isSelected={pathname === ROUTES.APIKEYS || pathname === ROUTES.HOME}
-              icon={VpnKeyIcon}
-              disabled={isDisabled}
-              data-testid="apikeys-test"
-            />
+            apiKeyItem
           )}
 
           {ENV.FEATURES.CHANNELS.ENABLED && selectedParty?.institutionType === 'PSP' && (

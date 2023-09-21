@@ -57,7 +57,7 @@ export default function SideMenu() {
                 handleClick={() => onExit(() => history.push(ROUTES.HOME))}
                 isSelected={pathname === ROUTES.HOME}
                 icon={DashboardIcon}
-                data-testid="home-test"
+                dataTestId={'home-test'}
               />
               {apiKeyItem}
             </>
@@ -72,7 +72,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
               icon={UsbIcon}
               disabled={isDisabled}
-              data-testid="channels-test"
+              dataTestId="channels-test"
             />
           )}
           {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
@@ -82,7 +82,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
               disabled={isDisabled}
-              data-testid="stations-test"
+              dataTestId="stations-test"
             />
           )}
           {ENV.FEATURES.IBAN.ENABLED && selectedParty?.institutionType !== 'PSP' && (
@@ -92,7 +92,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.IBAN || pathname.startsWith(ROUTES.IBAN)}
               icon={EuroIcon}
               disabled={isDisabled}
-              data-testid="iban-test"
+              dataTestId="iban-test"
             />
           )}
 
@@ -106,7 +106,7 @@ export default function SideMenu() {
               }
               icon={ExtensionIcon}
               disabled={isDisabled}
-              data-testid="commission-packages-test"
+              dataTestId="commission-packages-test"
             />
           )}
         </List>

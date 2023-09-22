@@ -60,10 +60,16 @@ const SecuredRoutes = withLogin(
               <NodeSignInPage />
             </ProtectedRoute>
           </Route>
+
           <Route path={routes.APIKEYS} exact={true}>
-            <ApiKeysPage />
+            <ProtectedRoute permission="apikey">
+              <ApiKeysPage />
+            </ProtectedRoute>
           </Route>
           <Route path={routes.APIKEYS_CREATE} exact={true}>
+            <ProtectedRoute permission="apikey">
+              <AddApiKeyPage />
+            </ProtectedRoute>
             <AddApiKeyPage />
           </Route>
 

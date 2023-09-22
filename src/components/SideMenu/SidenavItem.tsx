@@ -7,9 +7,17 @@ type Props = {
   isSelected?: boolean;
   icon: SvgIconComponent;
   disabled?: boolean;
+  dataTestId?: string;
 };
 
-export default function SidenavItem({ handleClick, title, isSelected, icon, disabled}: Props) {
+export default function SidenavItem({
+  handleClick,
+  title,
+  isSelected,
+  icon,
+  disabled,
+  dataTestId,
+}: Props) {
   return (
     <ListItemButton
       selected={isSelected}
@@ -19,6 +27,7 @@ export default function SidenavItem({ handleClick, title, isSelected, icon, disa
         height: '100%',
         backgroundColor: 'background.paper',
       }}
+      data-testid={dataTestId}
     >
       <ListItemIcon>
         <Icon component={icon} />

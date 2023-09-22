@@ -13,6 +13,7 @@ import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { usePermissions } from '../../hooks/usePermissions';
 import SidenavItem from './SidenavItem';
 
 /** The side menu of the application */
@@ -30,9 +31,20 @@ export default function SideMenu() {
     history.listen(() => setPathName(history.location.pathname));
     return history.location.pathname;
   });
-
+  const { hasPermission } = usePermissions();
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
-  const isDisabled = signinData ? false : true;
+  const isDisabled = signinData && Object.keys(signinData).length > 0 ? false : true;
+
+  const apiKeyItem = (
+    <SidenavItem
+      title={t('sideMenu.apikeys.title')}
+      handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
+      isSelected={pathname === ROUTES.APIKEYS}
+      disabled={isDisabled || (!isDisabled && !hasPermission('apikey'))}
+      icon={VpnKeyIcon}
+      dataTestId="apikeys-test"
+    />
+  );
 
   return (
     <Box display="grid" mt={1}>
@@ -45,26 +57,12 @@ export default function SideMenu() {
                 handleClick={() => onExit(() => history.push(ROUTES.HOME))}
                 isSelected={pathname === ROUTES.HOME}
                 icon={DashboardIcon}
-                data-testid="home-test"
+                dataTestId={'home-test'}
               />
-              <SidenavItem
-                title={t('sideMenu.apikeys.title')}
-                handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-                isSelected={pathname === ROUTES.APIKEYS}
-                disabled={isDisabled}
-                icon={VpnKeyIcon}
-                data-testid="apikeys-test"
-              />
+              {apiKeyItem}
             </>
           ) : (
-            <SidenavItem
-              title={t('sideMenu.apikeys.title')}
-              handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-              isSelected={pathname === ROUTES.APIKEYS || pathname === ROUTES.HOME}
-              icon={VpnKeyIcon}
-              disabled={isDisabled}
-              data-testid="apikeys-test"
-            />
+            apiKeyItem
           )}
 
           {ENV.FEATURES.CHANNELS.ENABLED && selectedParty?.institutionType === 'PSP' && (
@@ -74,7 +72,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.CHANNELS || pathname.startsWith(ROUTES.CHANNELS)}
               icon={UsbIcon}
               disabled={isDisabled}
-              data-testid="channels-test"
+              dataTestId="channels-test"
             />
           )}
           {ENV.FEATURES.STATIONS.ENABLED && selectedParty?.institutionType !== 'PSP' && (
@@ -84,7 +82,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
               disabled={isDisabled}
-              data-testid="stations-test"
+              dataTestId="stations-test"
             />
           )}
           {ENV.FEATURES.IBAN.ENABLED && selectedParty?.institutionType !== 'PSP' && (
@@ -94,7 +92,7 @@ export default function SideMenu() {
               isSelected={pathname === ROUTES.IBAN || pathname.startsWith(ROUTES.IBAN)}
               icon={EuroIcon}
               disabled={isDisabled}
-              data-testid="iban-test"
+              dataTestId="iban-test"
             />
           )}
 
@@ -108,7 +106,7 @@ export default function SideMenu() {
               }
               icon={ExtensionIcon}
               disabled={isDisabled}
-              data-testid="commission-packages-test"
+              dataTestId="commission-packages-test"
             />
           )}
         </List>

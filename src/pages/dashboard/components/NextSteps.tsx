@@ -37,7 +37,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
           )}
         </Alert>
       </Box>
-      {isSignedIn ? (
+      {isSignedIn && hasPermission('apikey') ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}

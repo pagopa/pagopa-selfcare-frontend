@@ -78,7 +78,7 @@ export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
   const pspDetail = pspDetails.find((pd) => pd.psp_code === pspcode);
   if (pspDetail === undefined) {
-    return new Promise((resolve) => resolve);
+    return new Promise((resolve) => resolve({}));
   }
   return new Promise((resolve) => resolve(pspDetail));
 };

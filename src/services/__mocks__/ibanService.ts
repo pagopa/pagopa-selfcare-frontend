@@ -55,7 +55,7 @@ export const ibanList: IbansResource = {
       active: true,
     },
     {
-      iban: 'IT99C0222211111000000000003',
+      iban: 'IT99C0222211111000000000005',
       publicationDate: new Date('2023-06-01T23:59:59.999Z'),
       validityDate: new Date('2023-04-01T13:49:19.897Z'),
       dueDate: new Date('2024-04-01T13:49:19.897Z'),
@@ -136,4 +136,4 @@ export const updateIbanCup = (_iban: IbanCreateRequestDto): Promise<IbanResource
   new Promise((resolve) => resolve(mockedIbanCup));
 
 export const deleteIban = (_creditorInstitutionCode: string, _ibanValue: string): Promise<void> =>
-  new Promise((resolve) => resolve);
+  new Promise((resolve) => resolve());

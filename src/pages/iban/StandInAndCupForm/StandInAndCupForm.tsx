@@ -398,7 +398,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                   )}
                 </Box>
               </Grid>
-              <Grid container xs={12} direction="row" justifyContent="space-between" mt={3}>
+              <Grid container direction="row" justifyContent="space-between" mt={3}>
                 <Grid item md={1} display="flex" justifyContent="flex-start" ml={3}>
                   {showMaganeButton ? (
                     <ButtonNaked

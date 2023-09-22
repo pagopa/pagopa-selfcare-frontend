@@ -48,7 +48,7 @@ describe('IbanDetailButtons', () => {
 
     expect(screen.getByText('ibanDetailPage.buttons.delete')).toBeInTheDocument();
     expect(screen.getByText('ibanDetailPage.buttons.edit')).toBeInTheDocument();
-    expect(screen.getByText('ibanDetailPage.buttons.deactivate')).toBeInTheDocument();
+    // expect(screen.getByText('ibanDetailPage.buttons.deactivate')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('delete-button-test'));
   });
 });

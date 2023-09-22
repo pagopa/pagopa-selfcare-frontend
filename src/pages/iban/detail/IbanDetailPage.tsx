@@ -49,18 +49,18 @@ const IbanDetailPage = () => {
         .catch((reason) => {
           handleErrors([
             {
-              id: `FETCH_STATIONS_ERROR`,
+              id: `FETCH_IBAN_DETAIL_ERROR`,
               blocking: false,
               error: reason,
-              techDescription: `An error occurred while fetching stations`,
+              techDescription: `An error occurred while fetching iban detail`,
               toNotify: false,
             },
           ]);
           addError({
-            id: 'GET_IBAN_LIST',
+            id: 'FETCH_IBAN_DETAIL_ERROR',
             blocking: false,
             error: reason,
-            techDescription: `An error occurred while retrieving iban list`,
+            techDescription: `An error occurred while retrieving iban detail`,
             toNotify: true,
             displayableTitle: t('ibanPage.error.listErrorTitle'),
             displayableDescription: t('ibanPage.error.listErrorDesc'),
@@ -80,10 +80,10 @@ const IbanDetailPage = () => {
     } catch (reason) {
       handleErrors([
         {
-          id: `FETCH_IBANS_ERROR`,
+          id: `DELETE_IBAN_ERROR`,
           blocking: false,
           error: reason as Error,
-          techDescription: `An error occurred while fetching ibans`,
+          techDescription: `An error occurred while deleting iban`,
           toNotify: false,
         },
       ]);
@@ -149,6 +149,7 @@ const IbanDetailPage = () => {
           }}
         >
           <Grid container alignItems={'center'} spacing={0} mb={2}>
+            {/* 
             <Grid item xs={3}>
               <Typography variant="subtitle2">{t('ibanDetailPage.state')}</Typography>
             </Grid>
@@ -166,6 +167,7 @@ const IbanDetailPage = () => {
                 }}
               ></Chip>
             </Grid>
+              */}
           </Grid>
           <Typography variant="h6" mb={3}>
             {t('ibanDetailPage.ibanConfiguration')}

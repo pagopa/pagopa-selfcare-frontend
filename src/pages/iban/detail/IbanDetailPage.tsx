@@ -57,10 +57,10 @@ const IbanDetailPage = () => {
             },
           ]);
           addError({
-            id: 'GET_IBAN_LIST',
+            id: 'FETCH_IBAN_DETAIL_ERROR',
             blocking: false,
             error: reason,
-            techDescription: `An error occurred while retrieving iban list`,
+            techDescription: `An error occurred while retrieving iban detail`,
             toNotify: true,
             displayableTitle: t('ibanPage.error.listErrorTitle'),
             displayableDescription: t('ibanPage.error.listErrorDesc'),

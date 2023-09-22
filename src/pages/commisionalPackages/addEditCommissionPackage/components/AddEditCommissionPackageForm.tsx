@@ -67,7 +67,7 @@ const emptyPaymentTypes = {
   ],
 };
 
-const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
+const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: Props) => {
   const { t } = useTranslation();
   // const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -362,7 +362,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
 
   const sortingChannelsIdList = (list: Array<string>) => {
     const arrayWithoutFs = list.map((e) => e.replace('f', ''));
-    const arrayOfCOrrectChannelsId = arrayWithoutFs.filter((e) => e.includes('97735020584'));
+    const arrayOfCOrrectChannelsId = arrayWithoutFs.filter((e) => e.includes(brokerCode));
     const channelsIdNumbers = arrayOfCOrrectChannelsId.map((v, i) => ({
       i,
       value: parseInt(v.substring(12, 14), 10),
@@ -402,6 +402,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
             name="type"
             row
             onChange={(e) => formik.setFieldValue('type', e.target.value)}
+            data-testid="package-type-test"
           >
             <FormControlLabel
               value="GLOBAL"
@@ -496,7 +497,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
                       'commissionPackagesPage.addEditCommissionPackage.form.paymentType'
                     )}
                     size="small"
-                    value={formik.values.paymentType === undefined ? '' : formik.values.paymentType}
+                    value={formik.values.paymentType || ''}
                     onChange={(e) => formik.setFieldValue('paymentType', e.target.value)}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     inputProps={{
@@ -779,19 +780,18 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
                     sx={{ pl: 1 }}
                     onChange={(e) => formik.setFieldValue('digitalStamp', e.target.value)}
                     row
+                    data-testid="digital-stamp-test"
                   >
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      data-testid="digital-stamp-true-test"
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
-                      data-testid="digital-stamp-false-test"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -811,19 +811,18 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails }: Props) => {
                       formik.setFieldValue('digitalStampRestriction', e.target.value)
                     }
                     row
+                    data-testid="digital-stamp-restriction-test"
                   >
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      data-testid="only-digital-stamp-true-test"
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
-                      data-testid="only-digital-stamp-false-test"
                     />
                   </RadioGroup>
                 </FormControl>

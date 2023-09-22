@@ -5,7 +5,7 @@ import {
   CommissionPackageOnCreation,
   TouchpointsResource,
 } from '../../model/CommissionPackage';
-import { mockedPaymentTypes } from '../__mocks__/channelService';
+import { mockedPaymentTypes, mockedStationsMerged } from '../__mocks__/channelService';
 
 export const mockedCommissionPackagePspList: CommissionPackageListResource = {
   commPackagesList: [
@@ -50,6 +50,13 @@ export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {
 export const mockedTouchpoints: TouchpointsResource = {
   touchpointList: [{ touchpoint: 'Io' }, { touchpoint: 'Checkout' }],
 };
+
+export const mockedChannelsIdList: Array<string> = mockedStationsMerged.channels.map((e) =>
+  typeof e.channel_code !== 'undefined' ? e.channel_code : ''
+);
+
+export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
+  new Promise((resolve) => resolve(mockedChannelsIdList));
 
 export const getCommissionPackagePsp = (
   _brokerCode: string

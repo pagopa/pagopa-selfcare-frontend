@@ -46,7 +46,6 @@ const AddEditCommissionPackagePage = () => {
     useState<CommissionPackageOnCreation>(commissionPackageDetailsEmpty);
 
   useEffect(() => {
-    console.log('formAction', formAction);
     if (formAction !== FormAction.Create) {
       setLoading(true);
       getCommissionPackageDetails(nameId)
@@ -66,10 +65,9 @@ const AddEditCommissionPackagePage = () => {
             size="small"
             component="button"
             onClick={() => goBack()}
-            startIcon={<ArrowBack />}
+            startIcon={<ArrowBack data-testid="arrow-back-test" />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"
-            data-testid="back-btn-test"
           >
             {t('general.exit')}
           </ButtonNaked>

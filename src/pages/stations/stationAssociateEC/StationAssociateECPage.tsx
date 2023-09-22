@@ -20,7 +20,7 @@ import {
 } from '../../../utils/constants';
 import { EC } from '../../../model/EC';
 import { associateEcToStation } from '../../../services/stationService';
-import { getCreditorInstitutionSegregationcodes } from '../../../services/__mocks__/stationService';
+import { getCreditorInstitutionSegregationcodes } from '../../../services/stationService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Party } from '../../../model/Party';

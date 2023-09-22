@@ -34,7 +34,7 @@ describe('IbanDetailPage', () => {
 
     expect(screen.getByText('general.exit')).toBeInTheDocument();
     expect(screen.getByText('general.Iban')).toBeInTheDocument();
-    expect(screen.getByText('ibanDetailPage.state')).toBeInTheDocument();
+    /* expect(screen.getByText('ibanDetailPage.state')).toBeInTheDocument(); */
     expect(screen.getByText('ibanDetailPage.ibanConfiguration')).toBeInTheDocument();
   });
 

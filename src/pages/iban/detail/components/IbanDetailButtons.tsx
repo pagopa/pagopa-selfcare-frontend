@@ -25,22 +25,20 @@ const IbanDetailButtons = ({ active, iban, setShowDeleteModal }: Props) => {
       >
         {t('ibanDetailPage.buttons.delete')}
       </Button>
-      {!active ? (
-        <Button
-          component={Link}
-          to={() =>
-            generatePath(ROUTES.IBAN_EDIT, {
-              ibanId: iban,
-              actionId: IbanFormAction.Edit,
-            })
-          }
-          variant="contained"
-          data-testid="button Edit"
-        >
-          {t('ibanDetailPage.buttons.edit')}
-        </Button>
-      ) : (
-        <>
+      <Button
+        component={Link}
+        to={() =>
+          generatePath(ROUTES.IBAN_EDIT, {
+            ibanId: iban,
+            actionId: IbanFormAction.Edit,
+          })
+        }
+        variant="contained"
+        data-testid="button Edit"
+      >
+        {t('ibanDetailPage.buttons.edit')}
+      </Button>
+      {/* TODO: fix when iban deactivation will be available
           <Button component={Link} to={''} variant="outlined" disabled={true}>
             {t('ibanDetailPage.buttons.deactivate')}
           </Button>
@@ -58,7 +56,7 @@ const IbanDetailButtons = ({ active, iban, setShowDeleteModal }: Props) => {
             {t('ibanDetailPage.buttons.edit')}
           </Button>
         </>
-      )}
+        */}
     </Stack>
   );
 };

@@ -49,6 +49,7 @@ export function buildColumnDefs(
       sortable: false,
       flex: 3,
     },
+    /* 
     {
       field: 'enabled',
       cellClassName: 'justifyContentNormal',
@@ -62,6 +63,7 @@ export function buildColumnDefs(
       sortable: false,
       flex: 2,
     },
+    */
     {
       field: 'actions',
       cellClassName: 'justifyContentNormalRight',

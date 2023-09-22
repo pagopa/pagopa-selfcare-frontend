@@ -44,6 +44,6 @@ describe('IbanTable', (injectedHistory?: ReturnType<typeof createMemoryHistory>)
     // Assert table headers
     expect(screen.getByText('ibanPage.list.column.ibanCode')).toBeInTheDocument();
     expect(screen.getByText('ibanPage.list.column.description')).toBeInTheDocument();
-    expect(screen.getByText('ibanPage.list.column.status')).toBeInTheDocument();
+    // expect(screen.getByText('ibanPage.list.column.status')).toBeInTheDocument();
   });
 });

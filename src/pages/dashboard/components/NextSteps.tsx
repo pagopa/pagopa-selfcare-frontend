@@ -48,6 +48,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
           {t('dashboardPage.nextStep.generateApiKeysCTA')}
         </Button>
       ) : (
+        !isSignedIn &&
         hasPermission('node-signin') && (
           <Button
             component={Link}

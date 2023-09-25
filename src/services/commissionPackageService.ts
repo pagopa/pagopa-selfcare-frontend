@@ -1,6 +1,7 @@
 import { PortalApi } from '../api/PortalApiClient';
 import { getChannelsMerged as getChannelsMergedMocked } from '../services/__mocks__/channelService';
 
+// FIXME: use the get that returns the channels associated to PSP
 export const getChannelsId = (
   page: number,
   brokerCode: string,

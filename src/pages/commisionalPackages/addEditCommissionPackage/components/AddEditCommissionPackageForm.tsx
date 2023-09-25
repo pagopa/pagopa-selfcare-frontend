@@ -440,8 +440,11 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
+  // FIXME: In case that the fiscalcode is < or > of 11 and the channelId is _100 the sorting will be done incorrectly
   const sortingChannelsIdList = (list: Array<string>) => {
+    // FIXME: this need to be removed because the channelIds with the f are dirty datas and will be removed
     const arrayWithoutFs = list.map((e) => e.replace('f', ''));
+
     const uniqueChannels = arrayWithoutFs.filter(
       (value, index, self) => self.indexOf(value) === index && value.includes(brokerCode)
     );

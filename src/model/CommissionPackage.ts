@@ -18,7 +18,7 @@ export type CommissionPackageOnCreation = {
   name?: string;
   paymentAmount?: number;
   paymentType?: PaymentTypeResource;
-  touchpoint?: TouchpointResource;
+  touchpoint?: TouchpointsResource;
   transferCategoryList?: Array<string>;
   type?: 'GLOBAL' | 'PUBLIC' | 'PRIVATE';
   validityDateFrom?: Date;
@@ -36,6 +36,9 @@ export type CommissionPackageResource = {
 };
 export type TouchpointResource = { touchpoint: string };
 export type TouchpointsResource = { touchpointList: Array<TouchpointResource> };
+
+export type TaxonomyServiceResource = { taxonomyService: string };
+export type TaxonomyServicesResource = { taxonomyServiceList: Array<TaxonomyServiceResource> };
 
 export type CommissionPackageListResource = {
   commPackagesList: Array<CommissionPackageResource>;

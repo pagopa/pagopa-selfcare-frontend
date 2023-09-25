@@ -36,7 +36,6 @@ import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
 import CommissionPackagesPage from './pages/commisionalPackages/CommissionPackagesPage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import AddEditCommissionPackagePage from './pages/commisionalPackages/addEditCommissionPackage/AddEditCommissionPackagePage';
-import AddEditCommissionPackageForm from './pages/commisionalPackages/addEditCommissionPackage/components/AddEditCommissionPackageForm';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {

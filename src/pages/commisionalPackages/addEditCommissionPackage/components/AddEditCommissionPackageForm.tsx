@@ -2,18 +2,21 @@
 /* eslint-disable complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { FormikProps, useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
+  Popper,
   Radio,
   RadioGroup,
   Select,
@@ -28,9 +31,11 @@ import { MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { LocalizationProvider, DesktopDatePicker } from '@mui/lab';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {
+  LOADING_TASK_COMMISSION_PACKAGE_TAXONOMY_SERVICE,
   LOADING_TASK_COMMISSION_PACKAGE_TOUCHPOINT,
   LOADING_TASK_CREATING_COMMISSION_PACKAGE,
   LOADING_TASK_GET_CHANNELS_ID,
@@ -38,12 +43,15 @@ import {
 } from '../../../../utils/constants';
 import {
   CommissionPackageOnCreation,
+  TaxonomyServicesResource,
+  TouchpointResource,
   TouchpointsResource,
 } from '../../../../model/CommissionPackage';
 import { PaymentTypesResource } from '../../../../api/generated/portal/PaymentTypesResource';
 import {
   createCommissionPackage,
   getPaymentTypes,
+  getTaxonomyService,
   getTouchpoint,
 } from '../../../../services/__mocks__/commissionPackageService';
 import { sortPaymentType } from '../../../../model/PaymentType';
@@ -73,13 +81,19 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const setLoadingTouchpoint = useLoading(LOADING_TASK_COMMISSION_PACKAGE_TOUCHPOINT);
+  const setLoadingTaxonomySerivice = useLoading(LOADING_TASK_COMMISSION_PACKAGE_TAXONOMY_SERVICE);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_ID);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>(emptyPaymentTypes);
-  const [touchPoint, setTouchPoint] = useState<TouchpointsResource>({ touchpointList: [] });
+  const [touchPoint, setTouchPoint] = useState<TouchpointsResource>({
+    touchpointList: [],
+  });
+  const [taxonomyService, setTaxonomyService] = useState<TaxonomyServicesResource>({
+    taxonomyServiceList: [],
+  });
   const [channelsId, setChannelsId] = useState<Array<string>>(['']);
 
   useEffect(() => {
@@ -129,6 +143,31 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
         });
       })
       .finally(() => setLoadingTouchpoint(false));
+  }, []);
+
+  useEffect(() => {
+    setLoadingTaxonomySerivice(true);
+    getTaxonomyService()
+      .then((results) => {
+        if (results) {
+          setTaxonomyService(results);
+        }
+      })
+      .catch((reason) => {
+        addError({
+          id: 'GET_TAXONOMY_SERVICE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting taxonomy service`,
+          toNotify: true,
+          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+          displayableDescription: t(
+            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageTaxonomyServiceDesc'
+          ),
+          component: 'Toast',
+        });
+      })
+      .finally(() => setLoadingTaxonomySerivice(false));
   }, []);
 
   useEffect(() => {
@@ -199,7 +238,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
           name: '',
           paymentAmount: 0,
           paymentType: undefined,
-          touchpoint: undefined,
+          touchpoint: { touchpointList: [] },
           transferCategoryList: ['97735020584_01'],
           type: undefined,
           validityDateFrom: new Date(),
@@ -280,6 +319,27 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     );
   };
 
+  const enableSubmit = (values: CommissionPackageOnCreation) => {
+    const baseCondition =
+      values.type !== undefined &&
+      values.name !== '' &&
+      values.paymentType !== undefined &&
+      values.touchpoint !== undefined &&
+      values.transferCategoryList !== undefined &&
+      values.minPaymentAmount !== 0 &&
+      values.maxPaymentAmount !== 0 &&
+      values.paymentAmount !== 0 &&
+      values.idChannel !== '' &&
+      values.digitalStamp !== undefined &&
+      values.digitalStampRestriction !== undefined &&
+      values.validityDateFrom != null &&
+      values.validityDateFrom.getTime() > 0 &&
+      values.validityDateTo != null &&
+      values.validityDateTo.getTime() > 0;
+
+    return !!baseCondition;
+  };
+
   const submit = async (body: CommissionPackageOnCreation) => {
     setLoadingCreating(true);
     try {
@@ -344,6 +404,26 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
+  const handleChangeFloatNumberOnly = (
+    e: React.ChangeEvent<any>,
+    field: string,
+    formik: FormikProps<CommissionPackageOnCreation>
+  ) => {
+    // eslint-disable-next-line functional/no-let
+    let { value } = e.target;
+
+    value = value.replace(/[^0-9,.]/g, '');
+
+    value = value.replace(/,/, '.');
+
+    const parts = value.split('.');
+    if (parts[1] && parts[1].length > 2) {
+      value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+    }
+
+    formik.setFieldValue(field, value);
+  };
+
   const shouldDisableDate = (date: Date) => date < new Date();
 
   const getTomorrowDate = (currentDate: Date) => {
@@ -362,8 +442,11 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
 
   const sortingChannelsIdList = (list: Array<string>) => {
     const arrayWithoutFs = list.map((e) => e.replace('f', ''));
-    const arrayOfCOrrectChannelsId = arrayWithoutFs.filter((e) => e.includes(brokerCode));
-    const channelsIdNumbers = arrayOfCOrrectChannelsId.map((v, i) => ({
+    const uniqueChannels = arrayWithoutFs.filter(
+      (value, index, self) => self.indexOf(value) === index && value.includes(brokerCode)
+    );
+
+    const channelsIdNumbers = uniqueChannels.map((v, i) => ({
       i,
       value: parseInt(v.substring(12, 14), 10),
     }));
@@ -378,8 +461,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
       }
       return 0;
     });
-
-    return channelsIdNumbersSorted.map((v) => arrayOfCOrrectChannelsId[v.i]);
+    return channelsIdNumbersSorted.map((v) => uniqueChannels[v.i]);
   };
 
   return (
@@ -519,9 +601,9 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     {t('commissionPackagesPage.addEditCommissionPackage.form.touchpoint')}
                   </InputLabel>
                   <Select
-                    id={`touchpoint`}
-                    labelId={`touchpointLabel`}
-                    name={`touchpoint`}
+                    id={'touchpoint'}
+                    labelId={'touchpointLabel'}
+                    name={'touchpoint'}
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.touchpoint')}
                     placeholder={t(
                       'commissionPackagesPage.addEditCommissionPackage.form.touchpoint'
@@ -598,10 +680,10 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                           'data-testid': 'transfer-category-list-test',
                         }}
                       >
-                        {paymentOptions &&
-                          sortPaymentType(paymentOptions.payment_types).map((option: any) => (
-                            <MenuItem key={option.payment_type} value={option.payment_type}>
-                              {`${option.description} - ${option.payment_type}`}
+                        {taxonomyService &&
+                          taxonomyService.taxonomyServiceList.map((option: any) => (
+                            <MenuItem key={option.taxonomyService} value={option.taxonomyService}>
+                              {option.taxonomyService}
                             </MenuItem>
                           ))}
                       </Select>
@@ -705,7 +787,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     )}
                     size="small"
                     value={formik.values.paymentAmount === 0 ? '' : formik.values.paymentAmount}
-                    onChange={(e) => handleChangeNumberOnly(e, 'paymentAmount', formik)}
+                    onChange={(e) => handleChangeFloatNumberOnly(e, 'paymentAmount', formik)}
                     error={formik.touched.paymentAmount && Boolean(formik.errors.paymentAmount)}
                     helperText={formik.touched.paymentAmount && formik.errors.paymentAmount}
                     inputProps={{
@@ -725,40 +807,32 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               icon={<MenuBook />}
             />
             <Grid container item xs={6} sx={{ mt: 2, pr: 1 }}>
-              <FormControl fullWidth>
-                <InputLabel size="small">
-                  {t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
-                </InputLabel>
-                <Select
-                  id={`idChannel`}
-                  labelId={`idChannelLabel`}
-                  name={`idChannel`}
-                  label={t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
-                  placeholder={t(
-                    'commissionPackagesPage.addEditCommissionPackage.form.channelCode'
-                  )}
-                  size="small"
-                  value={formik.values.idChannel === undefined ? '' : formik.values.idChannel}
-                  onChange={(e) => formik.setFieldValue('idChannel', e.target.value)}
-                  error={formik.touched.idChannel && Boolean(formik.errors.idChannel)}
-                  inputProps={{
-                    'data-testid': 'id-channel-test',
-                  }}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: '200px', // Imposta l'altezza massima del menu
-                      },
-                    },
-                  }}
-                >
-                  {sortingChannelsIdList(channelsId).map((option, i) => (
-                    <MenuItem key={i} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                sx={{ mb: 5 }}
+                disablePortal
+                id="channels-id-list"
+                componentName="idChannel"
+                options={sortingChannelsIdList(channelsId)}
+                onChange={(_e, value) => formik.setFieldValue('idChannel', value)}
+                value={
+                  typeof formik.values.idChannel !== 'undefined' ? formik.values.idChannel : ''
+                }
+                fullWidth
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
+                    sx={{ fontWeight: 'medium' }}
+                  />
+                )}
+                PaperComponent={({ children }) => (
+                  <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
+                )}
+                noOptionsText={t(
+                  'commissionPackagesPage.addEditCommissionPackage.form.noChannelsOption'
+                )}
+                data-testid="channels-id-test"
+              />
             </Grid>
           </Box>
           <Box sx={inputGroupStyle}>
@@ -916,7 +990,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               openConfirmModal();
               formik.handleSubmit();
             }}
-            // disabled={!enableSubmit(formik.values)}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

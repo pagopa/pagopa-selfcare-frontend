@@ -820,6 +820,7 @@
         "digitalStamp": "Marca da bollo digitale",
         "validityPeriod": "Periodo di validità",
         "channelCode": "Codice canale",
+        "noChannelsOption": "Nessun canale trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
         "yes": "Si",
@@ -845,6 +846,7 @@
         "errorTitle": "Errore",
         "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei Tipi di pagamento",
         "errorMessageTouchpointDesc": "Errore durante la ricezione dei touchpoint",
+        "errorMessageTaxonomyServiceDesc": "Errore durante la ricezione dei servizi di tassonomia",
         "errorMessageChannelsId": "Errore durante la ricezione dei codici canale",
         "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni"
       }

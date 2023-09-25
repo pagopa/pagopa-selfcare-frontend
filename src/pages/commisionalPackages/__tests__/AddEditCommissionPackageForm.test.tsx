@@ -53,7 +53,9 @@ describe('<AddEditCommissionPackageForm />', () => {
       minImport: screen.getByTestId('min-import-test') as HTMLInputElement,
       maxImport: screen.getByTestId('max-import-test') as HTMLInputElement,
       feeApplied: screen.getByTestId('payment-amount-test') as HTMLInputElement,
-      channelList: screen.getByTestId('id-channel-test') as HTMLInputElement,
+      channelList: screen
+        .getByTestId('channels-id-test')
+        .querySelector('input') as HTMLInputElement,
       digitalStampYes: screen
         .getByTestId('digital-stamp-test')
         .querySelector('[value="true"]') as HTMLInputElement,

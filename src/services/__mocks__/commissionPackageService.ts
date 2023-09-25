@@ -3,6 +3,7 @@ import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesRes
 import {
   CommissionPackageListResource,
   CommissionPackageOnCreation,
+  TaxonomyServicesResource,
   TouchpointsResource,
 } from '../../model/CommissionPackage';
 import { mockedPaymentTypes, mockedStationsMerged } from '../__mocks__/channelService';
@@ -27,6 +28,14 @@ export const mockedCommissionPackagePspList: CommissionPackageListResource = {
   },
 };
 
+export const mockedTouchpoints: TouchpointsResource = {
+  touchpointList: [{ touchpoint: 'Tutti' }, { touchpoint: 'App Io' }, { touchpoint: 'Checkout' }],
+};
+
+export const mockedTaxonomy: TaxonomyServicesResource = {
+  taxonomyServiceList: [{ taxonomyService: ' 100 - Rendite catastali (ICI, IMU, TUC, ecc.)' }],
+};
+
 export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {
   abi: '12345',
   description: 'Pacchetti commissione',
@@ -40,15 +49,11 @@ export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {
   name: 'Pacchetto 1',
   paymentAmount: 10,
   paymentType: mockedPaymentTypes.payment_types[0],
-  touchpoint: { touchpoint: 'Checkout' },
+  touchpoint: mockedTouchpoints,
   transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.) '],
   type: 'GLOBAL',
   validityDateFrom: new Date(),
   validityDateTo: new Date(),
-};
-
-export const mockedTouchpoints: TouchpointsResource = {
-  touchpointList: [{ touchpoint: 'Io' }, { touchpoint: 'Checkout' }],
 };
 
 export const mockedChannelsIdList: Array<string> = mockedStationsMerged.channels.map((e) =>
@@ -82,3 +87,6 @@ export const updateCommissionPackage = (
 
 export const getTouchpoint = (): Promise<TouchpointsResource> =>
   new Promise((resolve) => resolve(mockedTouchpoints));
+
+export const getTaxonomyService = (): Promise<TaxonomyServicesResource> =>
+  new Promise((resolve) => resolve(mockedTaxonomy));

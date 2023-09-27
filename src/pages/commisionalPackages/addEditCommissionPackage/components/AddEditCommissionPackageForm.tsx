@@ -34,6 +34,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { LocalizationProvider, DesktopDatePicker } from '@mui/lab';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { NumericFormat } from 'react-number-format';
 import {
   LOADING_TASK_COMMISSION_PACKAGE_TAXONOMY_SERVICE,
   LOADING_TASK_COMMISSION_PACKAGE_TOUCHPOINT,
@@ -220,7 +221,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
           touchpoint: detail.touchpoint,
           transferCategoryList: detail.transferCategoryList
             ? [...detail.transferCategoryList]
-            : [''],
+            : undefined,
           type: detail.type,
           validityDateFrom: detail.validityDateFrom,
           validityDateTo: detail.validityDateTo,
@@ -238,8 +239,8 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
           name: '',
           paymentAmount: 0,
           paymentType: undefined,
-          touchpoint: { touchpointList: [] },
-          transferCategoryList: ['97735020584_01'],
+          touchpoint: undefined,
+          transferCategoryList: undefined,
           type: undefined,
           validityDateFrom: new Date(),
           validityDateTo: new Date(),
@@ -282,15 +283,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
           paymentAmount: !values.paymentAmount
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
             : undefined,
-          paymentType: !values.paymentType
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
-          touchpoint: !values.touchpoint
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
-          transferCategoryList: !values.transferCategoryList
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
           type: !values.type
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
             : undefined,
@@ -319,26 +311,28 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     );
   };
 
-  const enableSubmit = (values: CommissionPackageOnCreation) => {
-    const baseCondition =
-      values.type !== undefined &&
+  const enableSubmit = (values: CommissionPackageOnCreation) =>
+    !(
+      values.type !== ('GLOBAL' || 'PUBLIC' || 'PRIVATE') &&
       values.name !== '' &&
-      values.paymentType !== undefined &&
-      values.touchpoint !== undefined &&
-      values.transferCategoryList !== undefined &&
       values.minPaymentAmount !== 0 &&
+      !Number.isNaN(values.minPaymentAmount) &&
       values.maxPaymentAmount !== 0 &&
+      !Number.isNaN(values.maxPaymentAmount) &&
       values.paymentAmount !== 0 &&
+      !Number.isNaN(values.paymentAmount) &&
       values.idChannel !== '' &&
-      values.digitalStamp !== undefined &&
-      values.digitalStampRestriction !== undefined &&
+      values.idChannel !== undefined &&
+      values.description !== '' &&
+      values.digitalStamp !== true &&
+      values.digitalStamp !== false &&
+      values.digitalStampRestriction !== true &&
+      values.digitalStampRestriction !== false &&
       values.validityDateFrom != null &&
       values.validityDateFrom.getTime() > 0 &&
       values.validityDateTo != null &&
-      values.validityDateTo.getTime() > 0;
-
-    return !!baseCondition;
-  };
+      values.validityDateTo.getTime() > 0
+    );
 
   const submit = async (body: CommissionPackageOnCreation) => {
     setLoadingCreating(true);
@@ -393,37 +387,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
-  const handleChangeNumberOnly = (
-    e: React.ChangeEvent<any>,
-    field: string,
-    formik: FormikProps<CommissionPackageOnCreation>
-  ) => {
-    const regex = /^[0-9\b]+$/;
-    if (e.target.value === '' || regex.test(e.target.value)) {
-      formik.setFieldValue(field, e.target.value);
-    }
-  };
-
-  const handleChangeFloatNumberOnly = (
-    e: React.ChangeEvent<any>,
-    field: string,
-    formik: FormikProps<CommissionPackageOnCreation>
-  ) => {
-    // eslint-disable-next-line functional/no-let
-    let { value } = e.target;
-
-    value = value.replace(/[^0-9,.]/g, '');
-
-    value = value.replace(/,/, '.');
-
-    const parts = value.split('.');
-    if (parts[1] && parts[1].length > 2) {
-      value = `${parts[0]}.${parts[1].substring(0, 2)}`;
-    }
-
-    formik.setFieldValue(field, value);
-  };
-
   const shouldDisableDate = (date: Date) => date < new Date();
 
   const getTomorrowDate = (currentDate: Date) => {
@@ -440,32 +403,17 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
-  // FIXME: In case that the fiscalcode is < or > of 11 and the channelId is _100 the sorting will be done incorrectly
-  const sortingChannelsIdList = (list: Array<string>) => {
-    // FIXME: this need to be removed because the channelIds with the f are dirty datas and will be removed
-    const arrayWithoutFs = list.map((e) => e.replace('f', ''));
-
-    const uniqueChannels = arrayWithoutFs.filter(
-      (value, index, self) => self.indexOf(value) === index && value.includes(brokerCode)
-    );
-
-    const channelsIdNumbers = uniqueChannels.map((v, i) => ({
-      i,
-      value: parseInt(v.substring(12, 14), 10),
-    }));
-
+  const sortingChannelsIdList = (list: Array<string>) =>
     // eslint-disable-next-line functional/immutable-data
-    const channelsIdNumbersSorted = channelsIdNumbers.sort((a, b) => {
-      if (a.value > b.value) {
+    list.sort((a, b) => {
+      if (a > b) {
         return 1;
       }
-      if (a.value < b.value) {
+      if (a < b) {
         return -1;
       }
       return 0;
     });
-    return channelsIdNumbersSorted.map((v) => uniqueChannels[v.i]);
-  };
 
   return (
     <>
@@ -718,10 +666,11 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
                 <Grid container item xs={6}>
-                  <TextField
+                  <NumericFormat
                     fullWidth
                     id="minPaymentAmount"
                     name="minPaymentAmount"
+                    customInput={TextField}
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.minImport')}
                     placeholder={t(
                       'commissionPackagesPage.addEditCommissionPackage.form.minImport'
@@ -730,25 +679,33 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     value={
                       formik.values.minPaymentAmount === 0 ? '' : formik.values.minPaymentAmount
                     }
-                    onChange={(e) => handleChangeNumberOnly(e, 'minPaymentAmount', formik)}
+                    onValueChange={({ value }) => {
+                      const numericValue = parseFloat(value.replace(',', '.'));
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      formik.setFieldValue('minPaymentAmount', numericValue);
+                    }}
+                    thousandSeparator=""
+                    decimalSeparator="."
+                    allowNegative={false}
+                    decimalScale={2}
+                    fixedDecimalScale={false}
                     error={
                       formik.touched.minPaymentAmount && Boolean(formik.errors.minPaymentAmount)
                     }
                     helperText={formik.touched.minPaymentAmount && formik.errors.minPaymentAmount}
-                    inputProps={{
-                      'data-testid': 'min-import-test',
-                    }}
                     InputProps={{
                       endAdornment: <EuroIcon sx={{ color: 'GrayText' }} />,
                     }}
+                    inputProps={{ 'data-testid': 'min-import-test' }}
                   />
                 </Grid>
 
                 <Grid container item xs={6}>
-                  <TextField
+                  <NumericFormat
                     fullWidth
                     id="maxPaymentAmount"
                     name="maxPaymentAmount"
+                    customInput={TextField}
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.maxImport')}
                     placeholder={t(
                       'commissionPackagesPage.addEditCommissionPackage.form.maxImport'
@@ -757,17 +714,24 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     value={
                       formik.values.maxPaymentAmount === 0 ? '' : formik.values.maxPaymentAmount
                     }
-                    onChange={(e) => handleChangeNumberOnly(e, 'maxPaymentAmount', formik)}
+                    onValueChange={({ value }) => {
+                      const numericValue = parseFloat(value.replace(',', '.'));
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      formik.setFieldValue('maxPaymentAmount', numericValue);
+                    }}
+                    thousandSeparator=""
+                    decimalSeparator="."
+                    allowNegative={false}
+                    decimalScale={2}
+                    fixedDecimalScale={false}
                     error={
                       formik.touched.maxPaymentAmount && Boolean(formik.errors.maxPaymentAmount)
                     }
                     helperText={formik.touched.maxPaymentAmount && formik.errors.maxPaymentAmount}
-                    inputProps={{
-                      'data-testid': 'max-import-test',
-                    }}
                     InputProps={{
                       endAdornment: <EuroIcon sx={{ color: 'GrayText' }} />,
                     }}
+                    inputProps={{ 'data-testid': 'max-import-test' }}
                   />
                 </Grid>
               </Grid>
@@ -780,25 +744,33 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
                 <Grid container item xs={6}>
-                  <TextField
+                  <NumericFormat
                     fullWidth
                     id="paymentAmount"
                     name="paymentAmount"
+                    customInput={TextField}
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.feeApplied')}
                     placeholder={t(
                       'commissionPackagesPage.addEditCommissionPackage.form.feeApplied'
                     )}
                     size="small"
                     value={formik.values.paymentAmount === 0 ? '' : formik.values.paymentAmount}
-                    onChange={(e) => handleChangeFloatNumberOnly(e, 'paymentAmount', formik)}
+                    onValueChange={({ value }) => {
+                      const numericValue = parseFloat(value.replace(',', '.'));
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      formik.setFieldValue('paymentAmount', numericValue);
+                    }}
+                    thousandSeparator=""
+                    decimalSeparator="."
+                    allowNegative={false}
+                    decimalScale={2}
+                    fixedDecimalScale={false}
                     error={formik.touched.paymentAmount && Boolean(formik.errors.paymentAmount)}
                     helperText={formik.touched.paymentAmount && formik.errors.paymentAmount}
-                    inputProps={{
-                      'data-testid': 'payment-amount-test',
-                    }}
                     InputProps={{
                       endAdornment: <EuroIcon sx={{ color: 'GrayText' }} />,
                     }}
+                    inputProps={{ 'data-testid': 'payment-amount-test' }}
                   />
                 </Grid>
               </Grid>
@@ -816,10 +788,15 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                 id="channels-id-list"
                 componentName="idChannel"
                 options={sortingChannelsIdList(channelsId)}
-                onChange={(_e, value) => formik.setFieldValue('idChannel', value)}
-                value={
-                  typeof formik.values.idChannel !== 'undefined' ? formik.values.idChannel : ''
-                }
+                onChange={(_event, value) => {
+                  if (value === null) {
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                    formik.setFieldValue('idChannel', ''); // Imposta il campo su vuoto se il valore è null
+                  } else {
+                    formik.handleChange('idChannel')(value); // Altrimenti, usa formik.handleChange normalmente
+                  }
+                }}
+                value={formik.values.idChannel}
                 fullWidth
                 renderInput={(params) => (
                   <TextField
@@ -993,7 +970,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               openConfirmModal();
               formik.handleSubmit();
             }}
-            disabled={!enableSubmit(formik.values)}
+            disabled={enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

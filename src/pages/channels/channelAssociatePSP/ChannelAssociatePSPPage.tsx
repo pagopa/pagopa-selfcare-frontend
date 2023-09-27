@@ -210,16 +210,13 @@ function ChannelAssociatePSPPage() {
 export default ChannelAssociatePSPPage;
 
 const addCurrentPSP = (availablePSP: Array<DelegationResource>, selectedParty: Party) => {
-  console.log(selectedParty);
   const value = {
-    broker_psp_code: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
-    description: selectedParty?.description ?? '',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionName: selectedParty?.description ?? '',
+    institutionId: selectedParty.partyId,
   };
 
   const index = availablePSP.findIndex(
-    (object) => object.brokerId === selectedParty.fiscalCode ?? ''
+    (object) => object.institutionId === selectedParty.partyId ?? ''
   );
 
   if (index === -1) {

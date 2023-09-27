@@ -1,11 +1,12 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../../redux/store';
-import {Provider} from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
 import PSPSelectionSearch from '../PSPSelectionSearch';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/channelService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -23,11 +24,7 @@ describe('<PSPSelectionSearch />', () => {
     extended_fault_bean: true,
   };
 
-  const availablePSP = [
-    { broker_psp_code: '1', description: 'PSP 1', enabled: true, extended_fault_bean: true },
-    { broker_psp_code: '2', description: 'PSP 2', enabled: true, extended_fault_bean: true },
-    { broker_psp_code: '3', description: 'PSP 3', enabled: true, extended_fault_bean: true },
-  ];
+  const availablePSP = mockedDelegatedPSP;
 
   const onPSPSelectionChange = jest.fn();
 
@@ -51,21 +48,20 @@ describe('<PSPSelectionSearch />', () => {
     const pspSelectionSearch = screen.getByTestId('psp-selection-search');
     expect(pspSelectionSearch).toBeInTheDocument();
 
-    fireEvent.change(pspSelectionSearch, { target: { value: 'PSP 1' } });
-    const filteredPSP = screen.getByText('PSP 1');
+    fireEvent.change(pspSelectionSearch, { target: { value: 'PSP1' } });
+    const filteredPSP = screen.getByText('PSP1');
     const searchButton = screen.getByTestId('search-field-test');
     fireEvent.click(searchButton);
     expect(filteredPSP).toBeInTheDocument();
 
     fireEvent.click(filteredPSP);
     expect(onPSPSelectionChange).toHaveBeenCalledWith({
-      broker_psp_code: '1',
-      description: 'PSP 1',
-      enabled: true,
-      extended_fault_bean: true,
+      brokerId: '12345',
+      institutionId: '0000001',
+      institutionName: 'PSP1',
     });
 
-    const filteredPSPContainer = screen.getByTestId('PartyItemContainer: PSP 1');
+    const filteredPSPContainer = screen.getByTestId('PartyItemContainer: PSP1');
     fireEvent.click(filteredPSPContainer);
 
     const clearButton = screen.getByTestId('clear-field-test');

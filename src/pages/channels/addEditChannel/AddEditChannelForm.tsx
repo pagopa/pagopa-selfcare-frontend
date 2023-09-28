@@ -40,7 +40,6 @@ import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypes
 import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
 import { sortPaymentType } from '../../../model/PaymentType';
-import ConfirmModal from '../../components/ConfirmModal';
 import { isOperator, isValidURL } from '../../components/commonFunctions';
 import {
   ChannelDetailsResource,
@@ -49,6 +48,7 @@ import {
 import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import { ENV } from '../../../utils/env';
+import ConfirmModal from '../../components/ConfirmModal';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -743,7 +743,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           await submit(formik.values);
           setShowConfirmModal(false);
         }}
-        isOperator={operator}
       />
     </>
   );

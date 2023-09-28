@@ -57,7 +57,7 @@ import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { getChannelsIdAssociatedToPSP } from '../../../../services/commissionPackageService';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import CommissionPackageConfirmModal from './CommissionPackageConfirmModal';
+import GenericModal from '../../../../components/Form/GenericModal';
 
 type Props = {
   commissionPackageDetails?: CommissionPackageOnCreation;
@@ -916,7 +916,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
           </Button>
         </Stack>
       </Stack>
-      <CommissionPackageConfirmModal
+      <GenericModal
         title={t('commissionPackagesPage.addEditCommissionPackage.modal.title')}
         message={
           <Trans i18nKey="commissionPackagesPage.addEditCommissionPackage.modal.message">
@@ -925,11 +925,11 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
             <br />
           </Trans>
         }
-        openConfirmModal={showConfirmModal}
+        openModal={showConfirmModal}
         onConfirmLabel={t('commissionPackagesPage.addEditCommissionPackage.modal.confirmButton')}
         onCloseLabel={t('commissionPackagesPage.addEditCommissionPackage.modal.backButton')}
         handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfrim={async () => {
+        handleConfirm={async () => {
           await submit(formik.values);
           setShowConfirmModal(false);
         }}

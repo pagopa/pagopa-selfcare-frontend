@@ -14,7 +14,7 @@ import { LOADING_TASK_DELETE_IBAN, LOADING_TASK_GET_IBAN } from '../../../utils/
 import { IbanOnCreation } from '../../../model/Iban';
 import { emptyIban } from '../IbanPage';
 import { deleteIban, getIbanList } from '../../../services/ibanService';
-import IbanUploadModal from '../components/IbanUploadModal';
+import GenericModal from '../../../components/Form/GenericModal';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -235,7 +235,7 @@ const IbanDetailPage = () => {
           </Box>
         </Paper>
 
-        <IbanUploadModal
+        <GenericModal
           title={t('addEditIbanPage.delete-modal.title')}
           message={
             <Trans i18nKey="addEditIbanPage.delete-modal.subTitle">
@@ -243,11 +243,11 @@ const IbanDetailPage = () => {
               <br />
             </Trans>
           }
-          openConfirmModal={showDeleteModal}
+          openModal={showDeleteModal}
           onConfirmLabel={t('addEditIbanPage.delete-modal.confirmButton')}
           onCloseLabel={t('addEditIbanPage.delete-modal.backButton')}
           handleCloseModal={() => setShowDeleteModal(false)}
-          handleConfrim={async () => {
+          handleConfirm={async () => {
             await deleteIbanHandler();
             setShowDeleteModal(false);
           }}

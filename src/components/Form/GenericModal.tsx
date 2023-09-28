@@ -4,33 +4,34 @@ import { MouseEventHandler } from 'react';
 type Props = {
   title: string;
   message: any;
-  openConfirmModal: boolean;
+  openModal: boolean;
   onConfirmLabel: string;
   onCloseLabel: string;
   handleCloseModal: MouseEventHandler;
-  handleConfrim: MouseEventHandler;
+  handleConfirm: MouseEventHandler;
+  renderContent?: () => any;
 };
 
-const CommissionPackageConfirmModal = ({
+const GenericModal = ({
   title,
   message,
-  openConfirmModal,
+  openModal,
   onConfirmLabel,
   onCloseLabel,
   handleCloseModal,
-  handleConfrim,
+  handleConfirm,
 }: Props) => (
   <Modal
-    aria-labelledby="confirm-modal-title"
-    aria-describedby="confirm-modal-description"
-    open={openConfirmModal}
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+    open={openModal}
     onClose={handleCloseModal}
     BackdropComponent={Backdrop}
     BackdropProps={{
       timeout: 500,
     }}
   >
-    <Fade in={openConfirmModal} data-testid="fade-test">
+    <Fade in={openModal} data-testid="fade-test">
       <Box
         sx={{
           position: 'absolute',
@@ -59,15 +60,15 @@ const CommissionPackageConfirmModal = ({
             variant="outlined"
             sx={{ gridColumn: 'span 6', justifySelf: 'end', mr: 1 }}
             onClick={handleCloseModal}
-            data-testid="cancel-modal-button-test"
+            data-testid="cancel-button-test"
           >
             {onCloseLabel}
           </Button>
           <Button
             variant="contained"
             sx={{ gridColumn: 'span 2', justifySelf: 'end' }}
-            onClick={handleConfrim}
-            data-testid="confirm-modal-button-test"
+            onClick={handleConfirm}
+            data-testid="confirm-button-test"
           >
             {onConfirmLabel}
           </Button>
@@ -77,4 +78,4 @@ const CommissionPackageConfirmModal = ({
   </Modal>
 );
 
-export default CommissionPackageConfirmModal;
+export default GenericModal;

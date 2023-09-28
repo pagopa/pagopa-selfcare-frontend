@@ -131,6 +131,9 @@ const SecuredRoutes = withLogin(
           <Route path={routes.COMMISSION_PACKAGES_ADD} exact={true}>
             <AddEditCommissionPackagePage />
           </Route>
+          <Route path={routes.COMMISSION_PACKAGES_EDIT} exact={true}>
+            <AddEditCommissionPackagePage />
+          </Route>
 
           <Route path={routes.TOS} exact={true}>
             <TOS />

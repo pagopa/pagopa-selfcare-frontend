@@ -32,6 +32,7 @@ const ROUTES = {
 
   COMMISSION_PACKAGES: `${BASE_ROUTE}/comm-packages`,
   COMMISSION_PACKAGES_ADD: `${BASE_ROUTE}/comm-packages/add-package/`,
+  COMMISSION_PACKAGES_EDIT: `${BASE_ROUTE}/comm-packages/:nameId/:actionId`,
 
   /* TOS: {
     PATH: '/terms-of-service',

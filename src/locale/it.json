@@ -789,6 +789,10 @@
         "Touchpoint": "Touchpoint",
         "paymentType": "Tipo di pagamento",
         "amountRange": "Fascia importo"
+      },
+      "error": {
+        "errorTitle": "Errore",
+        "commissionPackageDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
       }
     },
     "addEditCommissionPackage": {

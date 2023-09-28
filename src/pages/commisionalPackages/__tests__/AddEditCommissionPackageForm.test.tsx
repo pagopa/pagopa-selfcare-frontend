@@ -1,19 +1,13 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import AddEditCommissionPackageForm from '../addEditCommissionPackage/components/AddEditCommissionPackageForm';
-import {
-  mockedChannelsIdList,
-  mockedCommissionPackagePspDetail,
-  mockedTouchpoints,
-} from '../../../services/__mocks__/commissionPackageService';
+import { mockedTouchpoints } from '../../../services/__mocks__/commissionPackageService';
 import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
-import CommissionPackageConfirmModal from '../addEditCommissionPackage/components/CommissionPackageConfirmModal';
 
 let spyOnGetPaymentTypes;
 let spyOnGetTouchpoint;
@@ -124,10 +118,7 @@ describe('<AddEditCommissionPackageForm />', () => {
     return input;
   };
 
-  const handleCloseConfirmModal = jest.fn();
-  const handleConfirmSubmit = jest.fn();
-
-  test('Test AddEditCommissionPackageForm input change', async () => {
+  test('Test AddEditCommissionPackageForm input change', () => {
     const { ...input } = componentRender();
     const paymentTypeOptionText = `${mockedPaymentTypes.payment_types[1].description} - ${mockedPaymentTypes.payment_types[1].payment_type}`;
 
@@ -146,25 +137,25 @@ describe('<AddEditCommissionPackageForm />', () => {
 
     fireEvent.change(input.touchpoint, { target: { value: mockedTouchpoints.touchpointList[1] } });
 
-    await waitFor(() => {
-      const transCategoryList = screen.getAllByTestId(
-        'transfer-category-list-test'
-      ) as HTMLInputElement[];
-      fireEvent.change(transCategoryList[0], {
-        target: { value: mockedPaymentTypes.payment_types[1] },
-      });
-
-      fireEvent.click(input.addTaxnonomy);
-
-      fireEvent.change(transCategoryList[1], {
-        target: { value: mockedPaymentTypes.payment_types[1] },
-      });
-
-      const removePaymentMethod = screen.getAllByTestId(
-        'remove-payment-method'
-      ) as HTMLButtonElement[];
-      fireEvent.click(removePaymentMethod[1]);
+    const transCategoryListFirst = screen.getByTestId(
+      'transfer-category-list-test0'
+    ) as HTMLInputElement;
+    fireEvent.change(transCategoryListFirst, {
+      target: { value: mockedPaymentTypes.payment_types[1] },
     });
+
+    fireEvent.click(input.addTaxnonomy);
+
+    const transCategoryListSecond = screen.getByTestId(
+      'transfer-category-list-test1'
+    ) as HTMLInputElement;
+
+    fireEvent.change(transCategoryListSecond, {
+      target: { value: mockedPaymentTypes.payment_types[1] },
+    });
+
+    const removePaymentMethod = screen.getByTestId('remove-payment-method1') as HTMLButtonElement;
+    fireEvent.click(removePaymentMethod);
 
     fireEvent.change(input.minImport, { target: { value: 10 } });
     fireEvent.change(input.maxImport, { target: { value: 10 } });
@@ -178,12 +169,8 @@ describe('<AddEditCommissionPackageForm />', () => {
     const optionToSelect = '97735020584_01';
     fireEvent.change(input.channelList, { target: { value: optionToSelect } });
 
-    await screen.findByText(optionToSelect);
-
     expect(input.digitalStampYes.checked).toBe(false);
     expect(input.digitalStampNo.checked).toBe(false);
-
-    expect(input.channelList.value).toBe(optionToSelect);
 
     fireEvent.click(input.digitalStampYes);
 

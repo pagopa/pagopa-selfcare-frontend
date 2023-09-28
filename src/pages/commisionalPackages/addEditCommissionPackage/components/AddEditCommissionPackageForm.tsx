@@ -523,7 +523,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                         }}
                         onClick={() => deleteTransferCategoryItem(i)}
                         id={`remove_PaymentMethod${i}`}
-                        data-testid="remove-payment-method"
+                        data-testid={`remove-payment-method${i}`}
                       />
                     </Grid>
                   ) : null}
@@ -564,7 +564,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                           Boolean(formik.errors.transferCategoryList)
                         }
                         inputProps={{
-                          'data-testid': 'transfer-category-list-test',
+                          'data-testid': `transfer-category-list-test${i}`,
                         }}
                       >
                         {taxonomyService &&
@@ -727,9 +727,9 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                 onChange={(_event, value) => {
                   if (value === null) {
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                    formik.setFieldValue('idChannel', ''); // Imposta il campo su vuoto se il valore è null
+                    formik.setFieldValue('idChannel', '');
                   } else {
-                    formik.handleChange('idChannel')(value); // Altrimenti, usa formik.handleChange normalmente
+                    formik.handleChange('idChannel')(value);
                   }
                 }}
                 value={formik.values.idChannel}

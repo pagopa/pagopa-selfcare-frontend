@@ -13,8 +13,36 @@ import {
   mockedTouchpoints,
 } from '../../../services/__mocks__/commissionPackageService';
 import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
+import CommissionPackageConfirmModal from '../addEditCommissionPackage/components/CommissionPackageConfirmModal';
+
+let spyOnGetPaymentTypes;
+let spyOnGetTouchpoint;
+let spyOnGetTaxonomyService;
+let spyOnGetChannelsIdAssociatedToPSP;
+let spyOnCreateCommissionPackage;
 
 beforeEach(() => {
+  spyOnGetPaymentTypes = jest.spyOn(
+    require('../../../services/__mocks__/commissionPackageService'),
+    'getPaymentTypes'
+  );
+  spyOnGetTouchpoint = jest.spyOn(
+    require('../../../services/__mocks__/commissionPackageService'),
+    'getTouchpoint'
+  );
+  spyOnGetTaxonomyService = jest.spyOn(
+    require('../../../services/__mocks__/commissionPackageService'),
+    'getTaxonomyService'
+  );
+  spyOnGetChannelsIdAssociatedToPSP = jest.spyOn(
+    require('../../../services/commissionPackageService.ts'),
+    'getChannelsIdAssociatedToPSP'
+  );
+
+  spyOnCreateCommissionPackage = jest.spyOn(
+    require('../../../services/__mocks__/commissionPackageService'),
+    'createCommissionPackage'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -29,7 +57,25 @@ describe('<AddEditCommissionPackageForm />', () => {
           <Route path="/comm-packages/add-package/">
             <ThemeProvider theme={theme}>
               <AddEditCommissionPackageForm
-                commissionPackageDetails={mockedCommissionPackagePspDetail}
+                commissionPackageDetails={{
+                  abi: '',
+                  description: 'Pacchetti commissione',
+                  digitalStamp: true,
+                  digitalStampRestriction: false,
+                  idBrokerPsp: '',
+                  idCdi: '',
+                  idChannel: '97735020584_01',
+                  maxPaymentAmount: 1500,
+                  minPaymentAmount: 150,
+                  name: 'Pacchetto 1',
+                  paymentAmount: 10,
+                  paymentType: mockedPaymentTypes.payment_types[0],
+                  touchpoint: mockedTouchpoints,
+                  transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.) '],
+                  type: 'GLOBAL',
+                  validityDateFrom: new Date('23/10/2050'),
+                  validityDateTo: new Date('23/10/2050'),
+                }}
                 formAction={''}
               />
             </ThemeProvider>
@@ -78,6 +124,9 @@ describe('<AddEditCommissionPackageForm />', () => {
     return input;
   };
 
+  const handleCloseConfirmModal = jest.fn();
+  const handleConfirmSubmit = jest.fn();
+
   test('Test AddEditCommissionPackageForm input change', async () => {
     const { ...input } = componentRender();
     const paymentTypeOptionText = `${mockedPaymentTypes.payment_types[1].description} - ${mockedPaymentTypes.payment_types[1].payment_type}`;
@@ -120,13 +169,21 @@ describe('<AddEditCommissionPackageForm />', () => {
     fireEvent.change(input.minImport, { target: { value: 10 } });
     fireEvent.change(input.maxImport, { target: { value: 10 } });
 
-    fireEvent.change(input.feeApplied, { target: { value: 10 } });
-    fireEvent.change(input.feeApplied, { target: { value: 'abc' } });
+    fireEvent.change(input.feeApplied, { target: { value: 10.76 } });
 
-    fireEvent.change(input.channelList, { target: { value: mockedChannelsIdList[0] } });
+    fireEvent.click(input.channelList);
+    fireEvent.change(input.channelList, { target: { value: '' } });
+
+    fireEvent.click(input.channelList);
+    const optionToSelect = '97735020584_01';
+    fireEvent.change(input.channelList, { target: { value: optionToSelect } });
+
+    await screen.findByText(optionToSelect);
 
     expect(input.digitalStampYes.checked).toBe(false);
     expect(input.digitalStampNo.checked).toBe(false);
+
+    expect(input.channelList.value).toBe(optionToSelect);
 
     fireEvent.click(input.digitalStampYes);
 
@@ -141,12 +198,98 @@ describe('<AddEditCommissionPackageForm />', () => {
     expect(input.digitalStampResYes.checked).toBe(true);
     expect(input.digitalStampResNo.checked).toBe(false);
 
-    fireEvent.change(input.fromDate, { target: { value: '2023-10-27' } });
-    fireEvent.change(input.ToDate, { target: { value: '2023-10-28' } });
-
-    fireEvent.click(input.cancelBtn);
+    fireEvent.change(input.fromDate, { target: { value: new Date('2023-10-27') } });
+    fireEvent.change(input.ToDate, { target: { value: new Date('2023-10-28') } });
 
     fireEvent.click(input.confirmBtn);
     fireEvent.submit(input.confirmBtn);
+
+    fireEvent.click(input.cancelBtn);
+  });
+
+  it('Test fetch error getPaymentTypes', async () => {
+    const mockError = new Error('API error message getPaymentTypes');
+    spyOnGetPaymentTypes.mockRejectedValue(mockError);
+
+    componentRender();
+
+    await waitFor(() => {
+      expect(spyOnGetPaymentTypes).toHaveBeenCalled();
+    });
+  });
+
+  it('Test fetch error getTouchpoint', async () => {
+    const mockError = new Error('API error message GetTouchpoint');
+    spyOnGetTouchpoint.mockRejectedValue(mockError);
+
+    componentRender();
+
+    await waitFor(() => {
+      expect(spyOnGetTouchpoint).toHaveBeenCalled();
+    });
+  });
+
+  it('Test fetch error getTaxonomyService', async () => {
+    const mockError = new Error('API error message GetTaxonomyService');
+    spyOnGetTaxonomyService.mockRejectedValue(mockError);
+
+    componentRender();
+
+    await waitFor(() => {
+      expect(spyOnGetTaxonomyService).toHaveBeenCalled();
+    });
+  });
+
+  it('Test fetch error getChannelsIdAssociatedToPSP', async () => {
+    const mockError = new Error('API error message GetChannelsIdAssociatedToPSP');
+    spyOnGetChannelsIdAssociatedToPSP.mockRejectedValue(mockError);
+
+    componentRender();
+
+    await waitFor(() => {
+      expect(spyOnGetChannelsIdAssociatedToPSP).toHaveBeenCalled();
+    });
+  });
+
+  it('Test the opening of the modal and then the submit of the form', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
+          <Route path="/comm-packages/add-package/">
+            <ThemeProvider theme={theme}>
+              <AddEditCommissionPackageForm
+                commissionPackageDetails={{
+                  abi: '',
+                  description: 'momom',
+                  digitalStamp: true,
+                  digitalStampRestriction: false,
+                  idBrokerPsp: '',
+                  idCdi: '',
+                  idChannel: '14847241008_14',
+                  maxPaymentAmount: 33333,
+                  minPaymentAmount: 233,
+                  name: '22222',
+                  paymentAmount: 32,
+                  paymentType: undefined,
+                  touchpoint: undefined,
+                  transferCategoryList: [''],
+                  type: 'PRIVATE',
+                  validityDateFrom: new Date('30/10/2060'),
+                  validityDateTo: new Date('30/10/2080'),
+                }}
+                formAction={''}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const confirmBtn = screen.getByTestId('confirm-button-test') as HTMLButtonElement;
+
+    const checkDisabledAttributeValue = confirmBtn.getAttribute('disabled'); // element.hasAttribute("disabled")
+    expect(checkDisabledAttributeValue).toBe('');
+
+    fireEvent.submit(confirmBtn);
   });
 });

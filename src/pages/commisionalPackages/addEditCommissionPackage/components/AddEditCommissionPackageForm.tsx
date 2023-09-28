@@ -467,7 +467,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     )}
                     size="small"
                     value={formik.values.paymentType || ''}
-                    onChange={(e) => formik.setFieldValue('paymentType', e.target.value)}
+                    onChange={formik.handleChange}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     inputProps={{
                       'data-testid': 'payment-type-test',
@@ -497,7 +497,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     )}
                     size="small"
                     value={formik.values.touchpoint === undefined ? '' : formik.values.touchpoint}
-                    onChange={(e) => formik.setFieldValue('touchpoint', e.target.value)}
+                    onChange={(e) => formik.handleChange(e)}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     inputProps={{
                       'data-testid': 'touchpoint-test',
@@ -920,7 +920,8 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
         title={t('commissionPackagesPage.addEditCommissionPackage.modal.title')}
         message={
           <Trans i18nKey="commissionPackagesPage.addEditCommissionPackage.modal.message">
-            Attenzione confermando l’operazione l’IBAN verrà dissociato dall’Ente
+            Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i
+            destinatari in seguito.
             <br />
           </Trans>
         }

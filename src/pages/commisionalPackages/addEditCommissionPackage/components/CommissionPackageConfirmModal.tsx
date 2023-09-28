@@ -59,7 +59,7 @@ const CommissionPackageConfirmModal = ({
             variant="outlined"
             sx={{ gridColumn: 'span 6', justifySelf: 'end', mr: 1 }}
             onClick={handleCloseModal}
-            data-testid="cancel-button-test"
+            data-testid="cancel-modal-button-test"
           >
             {onCloseLabel}
           </Button>
@@ -67,7 +67,7 @@ const CommissionPackageConfirmModal = ({
             variant="contained"
             sx={{ gridColumn: 'span 2', justifySelf: 'end' }}
             onClick={handleConfrim}
-            data-testid="confirm-button-test"
+            data-testid="confirm-modal-button-test"
           >
             {onConfirmLabel}
           </Button>

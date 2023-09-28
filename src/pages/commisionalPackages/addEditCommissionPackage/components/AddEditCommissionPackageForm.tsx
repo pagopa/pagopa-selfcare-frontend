@@ -36,11 +36,8 @@ import { LocalizationProvider, DesktopDatePicker } from '@mui/lab';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
 import {
-  LOADING_TASK_COMMISSION_PACKAGE_TAXONOMY_SERVICE,
-  LOADING_TASK_COMMISSION_PACKAGE_TOUCHPOINT,
   LOADING_TASK_CREATING_COMMISSION_PACKAGE,
-  LOADING_TASK_GET_CHANNELS_ID,
-  LOADING_TASK_PAYMENT_TYPE,
+  LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
 } from '../../../../utils/constants';
 import {
   CommissionPackageOnCreation,
@@ -57,7 +54,7 @@ import {
 } from '../../../../services/__mocks__/commissionPackageService';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
-import { getChannelsId } from '../../../../services/commissionPackageService';
+import { getChannelsIdAssociatedToPSP } from '../../../../services/commissionPackageService';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import CommissionPackageConfirmModal from './CommissionPackageConfirmModal';
@@ -80,10 +77,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   const { t } = useTranslation();
   // const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
-  const setLoadingTouchpoint = useLoading(LOADING_TASK_COMMISSION_PACKAGE_TOUCHPOINT);
-  const setLoadingTaxonomySerivice = useLoading(LOADING_TASK_COMMISSION_PACKAGE_TAXONOMY_SERVICE);
-  const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_ID);
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -98,103 +92,45 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   const [channelsId, setChannelsId] = useState<Array<string>>(['']);
 
   useEffect(() => {
-    getPaymentTypes()
-      .then((results) => {
-        if (results) {
-          setPaymentOptions(results);
+    setLoading(true);
+    Promise.all([
+      getPaymentTypes(),
+      getTouchpoint(),
+      getTaxonomyService(),
+      getChannelsIdAssociatedToPSP(0, brokerCode),
+    ])
+      .then(([paymentTypes, touchpoint, taxonomyService, channelsId]) => {
+        if (paymentTypes) {
+          setPaymentOptions(paymentTypes);
+        }
+        if (touchpoint) {
+          setTouchPoint(touchpoint);
+        }
+        if (taxonomyService) {
+          setTaxonomyService(taxonomyService);
+        }
+        if (channelsId) {
+          setChannelsId(channelsId);
         }
       })
       .catch((reason) => {
         addError({
-          id: 'GET_PAYMENT_TYPES',
+          id: 'GET_ALL_DATA',
           blocking: false,
           error: reason as Error,
-          techDescription: `An error occurred while getting payment types`,
+          techDescription: `An error occurred while getting data`,
           toNotify: true,
           displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
           displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessagePaymentTypesDesc'
+            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
           ),
           component: 'Toast',
         });
       })
-      .finally(() => setLoadingPayment(false));
-  }, []);
-
-  useEffect(() => {
-    setLoadingTouchpoint(true);
-    getTouchpoint()
-      .then((results) => {
-        if (results) {
-          setTouchPoint(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_TOUCHPOINT',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting touchpoint`,
-          toNotify: true,
-          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
-          displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageTouchpointDesc'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingTouchpoint(false));
-  }, []);
-
-  useEffect(() => {
-    setLoadingTaxonomySerivice(true);
-    getTaxonomyService()
-      .then((results) => {
-        if (results) {
-          setTaxonomyService(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_TAXONOMY_SERVICE',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting taxonomy service`,
-          toNotify: true,
-          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
-          displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageTaxonomyServiceDesc'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingTaxonomySerivice(false));
-  }, []);
-
-  useEffect(() => {
-    setLoadingChannels(true);
-    getChannelsId(0, brokerCode)
-      .then((results) => {
-        if (results) {
-          setChannelsId(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_CHANNELS_ID',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting channels id`,
-          toNotify: true,
-          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
-          displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageChannelsId'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingChannels(false));
-  }, []);
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [brokerCode]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

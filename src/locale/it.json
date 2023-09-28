@@ -844,10 +844,7 @@
       },
       "error": {
         "errorTitle": "Errore",
-        "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei Tipi di pagamento",
-        "errorMessageTouchpointDesc": "Errore durante la ricezione dei touchpoint",
-        "errorMessageTaxonomyServiceDesc": "Errore durante la ricezione dei servizi di tassonomia",
-        "errorMessageChannelsId": "Errore durante la ricezione dei codici canale",
+        "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
         "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni"
       }
     }

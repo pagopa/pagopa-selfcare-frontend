@@ -248,27 +248,25 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   };
 
   const enableSubmit = (values: CommissionPackageOnCreation) =>
-    !(
-      values.type !== ('GLOBAL' || 'PUBLIC' || 'PRIVATE') &&
-      values.name !== '' &&
-      values.minPaymentAmount !== 0 &&
-      !Number.isNaN(values.minPaymentAmount) &&
-      values.maxPaymentAmount !== 0 &&
-      !Number.isNaN(values.maxPaymentAmount) &&
-      values.paymentAmount !== 0 &&
-      !Number.isNaN(values.paymentAmount) &&
-      values.idChannel !== '' &&
-      values.idChannel !== undefined &&
-      values.description !== '' &&
-      values.digitalStamp !== true &&
-      values.digitalStamp !== false &&
-      values.digitalStampRestriction !== true &&
-      values.digitalStampRestriction !== false &&
-      values.validityDateFrom != null &&
-      values.validityDateFrom.getTime() > 0 &&
-      values.validityDateTo != null &&
-      values.validityDateTo.getTime() > 0
-    );
+    values.type !== undefined &&
+    values.name !== '' &&
+    values.minPaymentAmount !== 0 &&
+    !Number.isNaN(values.minPaymentAmount) &&
+    values.maxPaymentAmount !== 0 &&
+    !Number.isNaN(values.maxPaymentAmount) &&
+    values.paymentAmount !== 0 &&
+    !Number.isNaN(values.paymentAmount) &&
+    values.idChannel !== '' &&
+    values.idChannel !== undefined &&
+    values.description !== '' &&
+    values.digitalStamp !== true &&
+    values.digitalStamp !== false &&
+    values.digitalStampRestriction !== true &&
+    values.digitalStampRestriction !== false &&
+    values.validityDateFrom != null &&
+    values.validityDateFrom.getTime() > 0 &&
+    values.validityDateTo != null &&
+    values.validityDateTo.getTime() > 0;
 
   const submit = async (body: CommissionPackageOnCreation) => {
     setLoadingCreating(true);
@@ -339,17 +337,8 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
-  const sortingChannelsIdList = (list: Array<string>) =>
-    // eslint-disable-next-line functional/immutable-data
-    list.sort((a, b) => {
-      if (a > b) {
-        return 1;
-      }
-      if (a < b) {
-        return -1;
-      }
-      return 0;
-    });
+  // eslint-disable-next-line functional/immutable-data
+  const sortingChannelsIdList = (list: Array<string>) => list.sort();
 
   return (
     <>
@@ -497,7 +486,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     )}
                     size="small"
                     value={formik.values.touchpoint === undefined ? '' : formik.values.touchpoint}
-                    onChange={(e) => formik.handleChange(e)}
+                    onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     inputProps={{
                       'data-testid': 'touchpoint-test',
@@ -729,7 +718,8 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     formik.setFieldValue('idChannel', '');
                   } else {
-                    formik.handleChange('idChannel')(value);
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                    formik.setFieldValue('idChannel', value);
                   }
                 }}
                 value={formik.values.idChannel}
@@ -903,10 +893,10 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
         <Stack display="flex" justifyContent="flex-end">
           <Button
             onClick={() => {
-              openConfirmModal();
               formik.handleSubmit();
+              openConfirmModal();
             }}
-            disabled={enableSubmit(formik.values)}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             type="submit"

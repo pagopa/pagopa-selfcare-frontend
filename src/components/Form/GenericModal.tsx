@@ -20,6 +20,7 @@ const GenericModal = ({
   onCloseLabel,
   handleCloseModal,
   handleConfirm,
+  renderContent,
 }: Props) => (
   <Modal
     aria-labelledby="modal-title"
@@ -45,34 +46,40 @@ const GenericModal = ({
           p: 4,
         }}
       >
-        <Typography variant="h6">{title}</Typography>
-        <Typography variant="body1" sx={{ my: 2 }}>
-          {message}
-        </Typography>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(8, 1fr)',
-            gridTemplateRows: 'auto',
-          }}
-        >
-          <Button
-            variant="outlined"
-            sx={{ gridColumn: 'span 6', justifySelf: 'end', mr: 1 }}
-            onClick={handleCloseModal}
-            data-testid="cancel-button-test"
-          >
-            {onCloseLabel}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ gridColumn: 'span 2', justifySelf: 'end' }}
-            onClick={handleConfirm}
-            data-testid="confirm-button-test"
-          >
-            {onConfirmLabel}
-          </Button>
-        </Box>
+        {renderContent ? (
+          renderContent()
+        ) : (
+          <>
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body1" sx={{ my: 2 }}>
+              {message}
+            </Typography>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(8, 1fr)',
+                gridTemplateRows: 'auto',
+              }}
+            >
+              <Button
+                variant="outlined"
+                sx={{ gridColumn: 'span 6', justifySelf: 'end', mr: 1 }}
+                onClick={handleCloseModal}
+                data-testid="cancel-button-test"
+              >
+                {onCloseLabel}
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ gridColumn: 'span 2', justifySelf: 'end' }}
+                onClick={handleConfirm}
+                data-testid="confirm-button-test"
+              >
+                {onConfirmLabel}
+              </Button>
+            </Box>
+          </>
+        )}
       </Box>
     </Fade>
   </Modal>

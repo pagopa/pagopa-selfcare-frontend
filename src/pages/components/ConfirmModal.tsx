@@ -45,7 +45,7 @@ const ConfirmModal = ({
               : { gridColumn: 'span 5', justifySelf: 'end', mr: 2 }
           }
           onClick={handleCloseConfirmModal}
-          data-testid="cancel-button-test"
+          data-testid="cancel-button-modal-test"
         >
           {onCloseLabel}
         </Button>
@@ -53,7 +53,7 @@ const ConfirmModal = ({
           variant="contained"
           sx={{ gridColumn: 'span 1', justifySelf: 'end' }}
           onClick={handleConfrimSubmit}
-          data-testid="confirm-button-test"
+          data-testid="confirm-button-modal-test"
         >
           {onConfirmLabel}
         </Button>

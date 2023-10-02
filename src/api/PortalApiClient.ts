@@ -52,6 +52,7 @@ import { IbanCreateRequestDto } from './generated/portal/IbanCreateRequestDto';
 import { IbanResource } from './generated/portal/IbanResource';
 import { CreditorInstitutionAssociatedCodeList } from './generated/portal/CreditorInstitutionAssociatedCodeList';
 import { DelegationResource } from './generated/portal/DelegationResource';
+import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -176,8 +177,8 @@ export const PortalApi = {
     return extractResponse(result, 204, onRedirectToLogin);
   },
 
-  getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-    const result = await apiConfigClient.getPSPDetailsUsingGET({ pspcode });
+  getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
+    const result = await apiConfigClient.getBrokerAndPspDetailsUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

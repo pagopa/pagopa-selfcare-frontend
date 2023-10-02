@@ -1,5 +1,5 @@
+import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
-import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 export type NodeOnSignInPSP = {
   name: string;
@@ -11,4 +11,4 @@ export type NodeOnSignInPSP = {
   digitalStamp: boolean;
 };
 
-export type SigninData = PaymentServiceProviderDetailsResource | CreditorInstitutionDetailsResource;
+export type SigninData = BrokerOrPspDetailsResource | CreditorInstitutionDetailsResource;

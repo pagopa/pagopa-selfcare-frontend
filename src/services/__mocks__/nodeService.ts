@@ -1,3 +1,5 @@
+import { BrokerOrPspDetailsResource } from '../../api/generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsResource } from '../../api/generated/portal/BrokerPspDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
@@ -18,20 +20,25 @@ const pspDirect: PSPDirectDTO = {
   vat_number: 'vat_number',
 };
 
-export const pspDetails: Array<PaymentServiceProviderDetailsResource> = [
-  {
-    abi: '36042',
-    agid_psp: true,
-    bic: '10101',
-    my_bank_code: '',
-    stamp: true,
-    tax_code: '123123',
-    vat_number: '12312312',
-    business_name: 'PSP S.r.l',
-    enabled: true,
-    psp_code: 'ABI36042',
-  },
-];
+export const pspDetails: PaymentServiceProviderDetailsResource = {
+  abi: '36042',
+  agid_psp: true,
+  bic: '10101',
+  my_bank_code: '',
+  stamp: true,
+  tax_code: '123123',
+  vat_number: '12312312',
+  business_name: 'PSP S.r.l',
+  enabled: true,
+  psp_code: 'ABI36042',
+};
+
+export const pspBrokerDetails: BrokerPspDetailsResource = {
+  broker_psp_code: '12312312',
+  description: 'descrizione broker',
+  enabled: true,
+  extended_fault_bean: true,
+};
 
 export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
   {
@@ -69,18 +76,25 @@ const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   broadcast: false,
 };
 
+const brokerOrPspDetailsResource_Empty: BrokerOrPspDetailsResource = {};
+
+const brokerOrPspDetailsResource_PSPOnly: BrokerOrPspDetailsResource = {
+  paymentServiceProviderDetailsResource: pspDetails,
+};
+
+const brokerOrPspDetailsResource_PSPAndBroker: BrokerOrPspDetailsResource = {
+  paymentServiceProviderDetailsResource: pspDetails,
+  brokerPspDetailsResource: pspBrokerDetails,
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
 export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const getPSPDetails = (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-  const pspDetail = pspDetails.find((pd) => pd.psp_code === pspcode);
-  if (pspDetail === undefined) {
-    return new Promise((resolve) => resolve({}));
-  }
-  return new Promise((resolve) => resolve(pspDetail));
+export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
+  return new Promise((resolve) => resolve(brokerOrPspDetailsResource_PSPAndBroker));
 };
 
 export const createECAndBroker = (

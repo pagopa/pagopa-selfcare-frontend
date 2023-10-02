@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
+import { useEffect } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -26,10 +27,11 @@ import { NodeOnSignInPSP } from '../../../model/Node';
 import { createPSPDirect, updatePSPInfo } from '../../../services/nodeService';
 import { useSigninData } from '../../../hooks/useSigninData';
 import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 
 type Props = {
   goBack: () => void;
-  pspNodeData?: PaymentServiceProviderDetailsResource;
+  pspNodeData?: BrokerOrPspDetailsResource;
 };
 
 const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
@@ -48,8 +50,8 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abiCode ?? '',
     pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
-    bicCode: '',
-    digitalStamp: false,
+    bicCode: pspNodeData?.paymentServiceProviderDetailsResource?.bic ?? '',
+    digitalStamp: pspNodeData?.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
 
   const inputGroupStyle = {
@@ -273,6 +275,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                   <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStamp"
+                    value={formik.values.digitalStamp}
                     sx={{ pl: 1 }}
                     onChange={formik.handleChange}
                   >

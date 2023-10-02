@@ -76,13 +76,13 @@ const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   broadcast: false,
 };
 
-const brokerOrPspDetailsResource_Empty: BrokerOrPspDetailsResource = {};
+export const brokerOrPspDetailsResource_Empty: BrokerOrPspDetailsResource = {};
 
-const brokerOrPspDetailsResource_PSPOnly: BrokerOrPspDetailsResource = {
+export const brokerOrPspDetailsResource_PSPOnly: BrokerOrPspDetailsResource = {
   paymentServiceProviderDetailsResource: pspDetails,
 };
 
-const brokerOrPspDetailsResource_PSPAndBroker: BrokerOrPspDetailsResource = {
+export const brokerOrPspDetailsResource_PSPAndBroker: BrokerOrPspDetailsResource = {
   paymentServiceProviderDetailsResource: pspDetails,
   brokerPspDetailsResource: pspBrokerDetails,
 };

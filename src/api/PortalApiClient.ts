@@ -449,7 +449,7 @@ export const PortalApi = {
 
   getDelegatedPSPbyBroker: async (brokerId: string): Promise<Array<DelegationResource>> => {
     const institutionId = undefined;
-    const result = await apiConfigClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
+    const result = await apiClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

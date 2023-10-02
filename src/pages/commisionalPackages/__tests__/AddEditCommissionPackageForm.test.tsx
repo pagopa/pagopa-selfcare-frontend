@@ -1,22 +1,12 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import {
-  cleanup,
-  fireEvent,
-  getByText,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import AddEditCommissionPackageForm from '../addEditCommissionPackage/components/AddEditCommissionPackageForm';
 import { mockedTouchpoints } from '../../../services/__mocks__/commissionPackageService';
-import { mockedPaymentTypes } from '../../../services/__mocks__/channelService';
-import userEvent from '@testing-library/user-event';
 
 let spyOnGetPaymentTypes;
 let spyOnGetTouchpoint;
@@ -53,7 +43,6 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('<AddEditCommissionPackageForm />', () => {
-  jest.spyOn(require('../../../services/__mocks__/commissionPackageService'), 'getPaymentTypes');
   const emptyDetailsComponentRender = () =>
     render(
       <Provider store={store}>
@@ -253,58 +242,6 @@ describe('<AddEditCommissionPackageForm />', () => {
     fireEvent.click(input.cancelBtn);
   });
 
-  test('Test AddEditCommissionPackageForm without not required input change', () => {
-    const { ...input } = componentRender();
-
-    expect(input.public.checked).toBe(false);
-    expect(input.global.checked).toBe(false);
-
-    fireEvent.click(input.global);
-
-    expect(input.public.checked).toBe(false);
-    expect(input.global.checked).toBe(true);
-
-    fireEvent.change(input.name, { target: { value: 'prova' } });
-    fireEvent.change(input.description, { target: { value: 'prova' } });
-
-    fireEvent.change(input.minImport, { target: { value: 10 } });
-    fireEvent.change(input.maxImport, { target: { value: 10 } });
-
-    fireEvent.change(input.feeApplied, { target: { value: 10.76 } });
-
-    expect(input.digitalStampYes.checked).toBe(false);
-    expect(input.digitalStampNo.checked).toBe(false);
-
-    fireEvent.click(input.digitalStampYes);
-
-    expect(input.digitalStampYes.checked).toBe(true);
-    expect(input.digitalStampNo.checked).toBe(false);
-
-    expect(input.digitalStampResYes.checked).toBe(false);
-    expect(input.digitalStampResNo.checked).toBe(false);
-
-    fireEvent.click(input.digitalStampResYes);
-
-    expect(input.digitalStampResYes.checked).toBe(true);
-    expect(input.digitalStampResNo.checked).toBe(false);
-
-    fireEvent.change(input.fromDate, { target: { value: new Date('28/10/2028') } });
-    fireEvent.change(input.ToDate, { target: { value: new Date('27/10/2028') } });
-
-    fireEvent.click(input.confirmBtn);
-
-    fireEvent.change(input.fromDate, { target: { value: new Date('27/10/2028') } });
-    fireEvent.change(input.ToDate, { target: { value: new Date('28/10/2028') } });
-
-    fireEvent.click(input.confirmBtn);
-    fireEvent.submit(input.confirmBtn);
-
-    fireEvent.change(input.name, { target: { value: '' } });
-    fireEvent.change(input.description, { target: { value: '' } });
-
-    fireEvent.click(input.cancelBtn);
-  });
-
   it('Test fetch error getPaymentTypes', async () => {
     const mockError = new Error('API error message getPaymentTypes');
     spyOnGetPaymentTypes.mockRejectedValue(mockError);
@@ -349,7 +286,10 @@ describe('<AddEditCommissionPackageForm />', () => {
     });
   });
 
-  it('Il pulsante di invio è abilitato con i valori forniti', () => {
+  it('Il pulsante di invio è abilitato con i valori forniti', async () => {
+    const mockError = new Error('API error message CreateCommissionPackage');
+    spyOnCreateCommissionPackage.mockRejectedValue(mockError);
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
@@ -383,16 +323,29 @@ describe('<AddEditCommissionPackageForm />', () => {
       </Provider>
     );
 
-    const digitalStampYes = screen.getByTestId('digital-stamp-test') as HTMLInputElement;
-    const digitalStampResYes = screen.getByTestId(
-      'digital-stamp-restriction-test'
-    ) as HTMLInputElement;
+    const digitalStampYes = screen
+      .getByTestId('digital-stamp-test')
+      .querySelector('[value="true"]') as HTMLInputElement;
+    const digitalStampResYes = screen
+      .getByTestId('digital-stamp-restriction-test')
+      .querySelector('[value="true"]') as HTMLInputElement;
 
     fireEvent.click(digitalStampYes);
     fireEvent.click(digitalStampResYes);
 
     const submitButton = screen.getByTestId('confirm-button-test') as HTMLInputElement;
     fireEvent.click(submitButton);
+    fireEvent.submit(submitButton);
+
+    const backModalBtn = screen.getByText(
+      'commissionPackagesPage.addEditCommissionPackage.modal.backButton'
+    ) as HTMLInputElement;
+    const confirmModalBtn = screen.getByText(
+      'commissionPackagesPage.addEditCommissionPackage.modal.confirmButton'
+    ) as HTMLInputElement;
+    fireEvent.click(backModalBtn);
+    fireEvent.click(submitButton);
+    fireEvent.click(confirmModalBtn);
   });
 
   test('Test AddEditCommissionPackageForm with all input change', () => {

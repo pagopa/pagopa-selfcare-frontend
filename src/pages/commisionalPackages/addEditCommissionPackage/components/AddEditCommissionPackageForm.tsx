@@ -272,7 +272,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     setLoadingCreating(true);
     try {
       await createCommissionPackage(body);
-      console.log('body', body);
     } catch (reason) {
       addError({
         id: 'CREATE_COMMISSION_PACKAGE',
@@ -336,9 +335,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
       setShowConfirmModal(false);
     }
   };
-
-  // eslint-disable-next-line functional/immutable-data
-  const sortingChannelsIdList = (list: Array<string>) => list.sort();
 
   return (
     <>
@@ -712,14 +708,17 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                 disablePortal
                 id="channels-id-list"
                 componentName="idChannel"
-                options={sortingChannelsIdList(channelsId)}
+                options={
+                  // eslint-disable-next-line functional/immutable-data
+                  channelsId.sort()
+                }
                 onChange={(_event, value) => {
                   if (value === null) {
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     formik.setFieldValue('idChannel', '');
                   } else {
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                    formik.setFieldValue('idChannel', value);
+                    formik.handleChange('idChannel')(value);
                   }
                 }}
                 value={formik.values.idChannel}

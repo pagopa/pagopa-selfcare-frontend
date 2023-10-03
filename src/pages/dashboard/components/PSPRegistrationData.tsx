@@ -73,7 +73,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.paymentServiceProviderDetailsResource?.stamp
+          {signinData?.paymentServiceProviderDetailsResource?.stamp !== undefined
             ? stampToString(signinData.paymentServiceProviderDetailsResource.stamp)
             : '-'}
         </Typography>

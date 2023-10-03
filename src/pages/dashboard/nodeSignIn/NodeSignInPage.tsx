@@ -9,9 +9,13 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { getCreditorInstitutionDetails, getPSPDetails } from '../../../services/nodeService';
+import {
+  getBrokerAndPspDetails,
+  getCreditorInstitutionDetails,
+} from '../../../services/nodeService';
 import { LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS } from '../../../utils/constants';
 import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInECForm from './NodeSignInECForm';
 
@@ -24,7 +28,7 @@ const NodeSignInPage = () => {
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_DASHBOARD_GET_EC_PSP_DETAILS);
   const [ecNodeData, setEcNodeData] = useState<CreditorInstitutionDetailsResource>();
-  const [pspNodeData, setPspNodeData] = useState<PaymentServiceProviderDetailsResource>();
+  const [pspNodeData, setPspNodeData] = useState<BrokerOrPspDetailsResource>();
 
   useEffect(() => {
     if (selectedParty && selectedParty.institutionType !== 'PSP') {
@@ -50,7 +54,9 @@ const NodeSignInPage = () => {
 
     if (selectedParty && selectedParty.institutionType === 'PSP') {
       setLoading(true);
-      getPSPDetails(selectedParty.pspData?.abiCode ? `ABI${selectedParty.pspData.abiCode}` : '')
+      getBrokerAndPspDetails(
+        selectedParty.pspData?.abiCode ? `ABI${selectedParty.pspData.abiCode}` : ''
+      )
         .then((res) => {
           setPspNodeData(res);
         })

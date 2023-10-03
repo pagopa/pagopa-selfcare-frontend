@@ -1,17 +1,17 @@
-import {Chip, Grid, Typography} from '@mui/material';
-import {useTranslation} from 'react-i18next';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {
-    PaymentServiceProviderDetailsResource
-} from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { Chip, Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { SigninData } from '../../../model/Node';
+import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(
     partiesSelectors.selectSigninData
-  ) as PaymentServiceProviderDetailsResource;
+  ) as BrokerOrPspDetailsResource;
 
   const stampToString = (stamp: boolean) =>
     stamp
@@ -65,7 +65,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.bic ?? '-'}
+          {signinData?.paymentServiceProviderDetailsResource?.bic ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -73,7 +73,9 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.stamp ? stampToString(signinData?.stamp) : '-'}
+          {signinData?.paymentServiceProviderDetailsResource?.stamp !== undefined
+            ? stampToString(signinData.paymentServiceProviderDetailsResource.stamp)
+            : '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -81,9 +83,11 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Chip
-          color={signinData?.bic ? 'primary' : 'default'}
+          color={signinData?.paymentServiceProviderDetailsResource?.bic ? 'primary' : 'default'}
           label={t(
-            `dashboardPage.registrationData.status.${signinData?.bic ? 'enabled' : 'disabled'}`
+            `dashboardPage.registrationData.status.${
+              signinData?.paymentServiceProviderDetailsResource?.bic ? 'enabled' : 'disabled'
+            }`
           )}
         ></Chip>
       </Grid>

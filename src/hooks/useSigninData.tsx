@@ -18,5 +18,5 @@ export const useSigninData = () => {
       .then((sd) => {
         setSigninData(sd);
       })
-      .catch((reason) => console.log(reason));
+      .catch((reason) => console.error(reason));
 };

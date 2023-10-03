@@ -14,6 +14,7 @@ import { PaymentServiceProviderDetailsResource } from '../../../../api/generated
 let createPSPDirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
 let updatePSPInfoMocked: jest.SpyInstance;
+let getBrokerAndPspDetailsMocked: jest.SpyInstance;
 
 jest.mock('../../../../decorators/withSelectedParty');
 
@@ -67,6 +68,10 @@ beforeEach(() => {
   );
   useSigninDataMocked = jest.spyOn(require('../../../../hooks/useSigninData'), 'useSigninData');
   updatePSPInfoMocked = jest.spyOn(require('../../../../services/nodeService'), 'updatePSPInfo');
+  getBrokerAndPspDetailsMocked = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'getBrokerAndPspDetails'
+  );
 
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -74,8 +79,16 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('NodeSignInPSPForm', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
+describe('NodeSignInPSPForm', () => {
+  test('Test rendering NodeSignInPSPForm with getBrokerAndPspDetailsMocked error ', async () => {
+    getBrokerAndPspDetailsMocked.mockRejectedValueOnce(new Error('Fetch error'));
+    const { store } = renderApp();
+
+    await setupFormAndSubmit(store);
+
+    await waitFor(() => expect(getBrokerAndPspDetailsMocked).toBeCalled());
+    expect(console.error).toBeCalled();
+  });
 
   test('Test rendering NodeSignInPSPForm and Sumbit', async () => {
     const { store } = renderApp();

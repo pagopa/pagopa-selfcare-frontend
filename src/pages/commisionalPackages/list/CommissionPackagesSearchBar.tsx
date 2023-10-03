@@ -1,6 +1,8 @@
 import { Box, Button, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink, generatePath /* useHistory */ } from 'react-router-dom';
+import ROUTES from '../../../routes';
+import { FormAction } from '../../../model/CommissionPackage';
 
 type Props = {
   packageNameInput: string;
@@ -9,6 +11,7 @@ type Props = {
 
 const CommissionPackagesSearchBar = ({ packageNameInput, setPackageNameInput }: Props) => {
   const { t } = useTranslation();
+  // const history = useHistory();
 
   return (
     <Box width="100%" display="flex" sx={{ mt: 1 }}>
@@ -24,8 +27,8 @@ const CommissionPackagesSearchBar = ({ packageNameInput, setPackageNameInput }: 
         }}
       />
       <Button
-        component={Link}
-        to={''}
+        component={RouterLink}
+        to={generatePath(ROUTES.COMMISSION_PACKAGES_ADD)}
         variant="contained"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
       >

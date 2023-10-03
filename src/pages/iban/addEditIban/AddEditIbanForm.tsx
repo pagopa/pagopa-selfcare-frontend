@@ -58,10 +58,12 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   }, [subject, ecCode]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setFieldValue('validityDate', getTomorrowDate(new Date()));
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setFieldValue('dueDate', getTomorrowDate(new Date()));
+    if (typeof ibanBody === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('validityDate', getTomorrowDate(new Date()));
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('dueDate', getTomorrowDate(new Date()));
+    }
   }, []);
 
   const changeUploadType = (event: any) => {

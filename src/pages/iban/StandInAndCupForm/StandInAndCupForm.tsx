@@ -22,10 +22,10 @@ import { IbanOnCreation } from '../../../model/Iban';
 import { updateIbanStandIn, updateIbanCup } from '../../../services/ibanService';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP } from '../../../utils/constants';
 import { emptyIban } from '../IbanPage';
-import IbanUploadModal from '../components/IbanUploadModal';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import IbanTable from '../list/IbanTable';
+import GenericModal from '../../../components/Form/GenericModal';
 
 type Props = {
   ibanList: IbansResource;
@@ -452,7 +452,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         </Grid>
       </Grid>
 
-      <IbanUploadModal
+      <GenericModal
         title={t('addEditIbanPage.modal.title')}
         message={
           <Trans i18nKey="addEditIbanPage.modal.subTitle">
@@ -460,11 +460,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
             <br />
           </Trans>
         }
-        openConfirmModal={showConfirmModal}
+        openModal={showConfirmModal}
         onConfirmLabel={t('addEditIbanPage.modal.confirmButton')}
         onCloseLabel={t('addEditIbanPage.modal.backButton')}
         handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfrim={async () => {
+        handleConfirm={async () => {
           await submit(formikStandIn.values, formikCup.values);
           setShowMaganeButton(true);
           setShowConfirmModal(false);

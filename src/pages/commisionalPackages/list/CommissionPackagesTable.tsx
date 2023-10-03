@@ -4,15 +4,13 @@ import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  CommissionPackageListResource,
-  getCommissionPackagePsp,
-} from '../../../services/__mocks__/commissionPackageService';
+import { getCommissionPackagePsp } from '../../../services/__mocks__/commissionPackageService';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
+import { CommissionPackageListResource } from '../../../model/CommissionPackage';
 
 type Props = {
   packageNameFilter: string;

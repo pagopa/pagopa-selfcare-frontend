@@ -646,7 +646,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           await submit(formik.values);
           setShowConfirmModal(false);
         }}
-        isOperator={undefined}
       />
     </>
   );

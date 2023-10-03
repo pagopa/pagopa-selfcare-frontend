@@ -13,26 +13,6 @@ import { getCommissionPackageDetails } from '../../../services/__mocks__/commiss
 import { LOADING_TASK_COMMISSION_PACKAGE_DETAIL } from '../../../utils/constants';
 import AddEditCommissionPackageForm from './components/AddEditCommissionPackageForm';
 
-const commissionPackageDetailsEmpty: CommissionPackageOnCreation = {
-  abi: '',
-  description: '',
-  digitalStamp: false,
-  digitalStampRestriction: false,
-  idBrokerPsp: '',
-  idCdi: '',
-  idChannel: '',
-  maxPaymentAmount: 0,
-  minPaymentAmount: 0,
-  name: '',
-  paymentAmount: 0,
-  paymentType: undefined,
-  touchpoint: undefined,
-  transferCategoryList: [''],
-  type: undefined,
-  validityDateFrom: new Date(),
-  validityDateTo: new Date(),
-};
-
 const AddEditCommissionPackagePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -40,15 +20,16 @@ const AddEditCommissionPackagePage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_DETAIL);
   const { nameId, actionId } = useParams<{ nameId: string; actionId: string }>();
-  const formAction = actionId ?? FormAction.Create;
   const goBack = () => history.push(ROUTES.COMMISSION_PACKAGES);
-  const [commissionPackageDetails, setCommissionPackageDetails] =
-    useState<CommissionPackageOnCreation>(commissionPackageDetailsEmpty);
+  const [commissionPackageDetails, setCommissionPackageDetails] = useState<
+    CommissionPackageOnCreation | undefined
+  >();
 
   const getDetails = async () => {
     setLoading(true);
     try {
-      await getCommissionPackageDetails(nameId);
+      const response = await getCommissionPackageDetails(nameId);
+      setCommissionPackageDetails(response);
     } catch (reason) {
       addError({
         id: 'GET_COMMISSION_PACKAGE_DETAILS',
@@ -68,11 +49,11 @@ const AddEditCommissionPackagePage = () => {
   };
 
   useEffect(() => {
-    if (formAction !== FormAction.Create) {
+    if (nameId && actionId === FormAction.Edit) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getDetails();
     }
-  }, []);
+  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -106,11 +87,9 @@ const AddEditCommissionPackagePage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-
-        <AddEditCommissionPackageForm
-          commissionPackageDetails={commissionPackageDetails}
-          formAction={formAction}
-        />
+        {selectedParty && (
+          <AddEditCommissionPackageForm commPackageDetails={commissionPackageDetails} />
+        )}
       </Grid>
     </Grid>
   );

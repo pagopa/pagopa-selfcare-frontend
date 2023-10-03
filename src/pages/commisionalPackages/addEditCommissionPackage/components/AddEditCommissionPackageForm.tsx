@@ -1,8 +1,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
-import { FormikProps, useFormik } from 'formik';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import {
   Autocomplete,
@@ -26,15 +26,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RemoveCircleOutline } from '@mui/icons-material';
+import { Female, RemoveCircleOutline } from '@mui/icons-material';
 import { MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { LocalizationProvider, DesktopDatePicker } from '@mui/lab';
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
   LOADING_TASK_CREATING_COMMISSION_PACKAGE,
   LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
@@ -42,7 +42,6 @@ import {
 import {
   CommissionPackageOnCreation,
   TaxonomyServicesResource,
-  TouchpointResource,
   TouchpointsResource,
 } from '../../../../model/CommissionPackage';
 import { PaymentTypesResource } from '../../../../api/generated/portal/PaymentTypesResource';
@@ -59,9 +58,8 @@ import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import GenericModal from '../../../../components/Form/GenericModal';
 
-type Props = {
-  commissionPackageDetails?: CommissionPackageOnCreation;
-  formAction: string;
+type Prop = {
+  commPackageDetails: CommissionPackageOnCreation | undefined;
 };
 
 const emptyPaymentTypes = {
@@ -73,9 +71,8 @@ const emptyPaymentTypes = {
   ],
 };
 
-const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: Props) => {
+const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const { t } = useTranslation();
-  // const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
@@ -90,6 +87,14 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     taxonomyServiceList: [],
   });
   const [channelsId, setChannelsId] = useState<Array<string>>(['']);
+
+  const inputGroupStyle = {
+    borderRadius: 1,
+    border: 1,
+    borderColor: theme.palette.divider,
+    p: 3,
+    mb: 3,
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -133,66 +138,42 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   }, [brokerCode]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setFieldValue('validityDateFrom', getTomorrowDate(new Date()));
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    formik.setFieldValue('validityDateTo', getTomorrowDate(new Date()));
-  }, []);
+    if (typeof commPackageDetails === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('validityDateFrom', getTomorrowDate(new Date()));
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      formik.setFieldValue('validityDateTo', getTomorrowDate(new Date()));
+    }
+  }, [commPackageDetails]);
 
-  const initialFormData = (detail?: CommissionPackageOnCreation) =>
-    detail
-      ? {
-          abi: detail.abi,
-          description: detail.description,
-          digitalStamp: detail.digitalStamp,
-          digitalStampRestriction: detail.digitalStampRestriction,
-          idBrokerPsp: detail.idBrokerPsp,
-          idCdi: detail.idCdi,
-          idChannel: detail.idChannel,
-          maxPaymentAmount: detail.maxPaymentAmount,
-          minPaymentAmount: detail.minPaymentAmount,
-          name: detail.name,
-          paymentAmount: detail.paymentAmount,
-          paymentType: detail.paymentType,
-          touchpoint: detail.touchpoint,
-          transferCategoryList: detail.transferCategoryList
-            ? [...detail.transferCategoryList]
-            : undefined,
-          type: detail.type,
-          validityDateFrom: detail.validityDateFrom,
-          validityDateTo: detail.validityDateTo,
-        }
-      : {
-          abi: '',
-          description: '',
-          digitalStamp: false,
-          digitalStampRestriction: false,
-          idBrokerPsp: '',
-          idCdi: '',
-          idChannel: '',
-          maxPaymentAmount: 0,
-          minPaymentAmount: 0,
-          name: '',
-          paymentAmount: 0,
-          paymentType: undefined,
-          touchpoint: undefined,
-          transferCategoryList: undefined,
-          type: undefined,
-          validityDateFrom: new Date(),
-          validityDateTo: new Date(),
-        };
-
-  const inputGroupStyle = {
-    borderRadius: 1,
-    border: 1,
-    borderColor: theme.palette.divider,
-    p: 3,
-    mb: 3,
+  const getTomorrowDate = (currentDate: Date) => {
+    const tomorrow = new Date(currentDate);
+    tomorrow.setDate(currentDate.getDate() + 1);
+    return tomorrow;
   };
 
-  const validate = (values: Partial<CommissionPackageOnCreation>) => {
-    const minDate = new Date();
-    return Object.fromEntries(
+  const initialFormData = (detail?: CommissionPackageOnCreation) => ({
+    abi: detail?.abi || '',
+    description: detail?.description || '',
+    digitalStamp: detail?.digitalStamp || false,
+    digitalStampRestriction: detail?.digitalStampRestriction || false,
+    idBrokerPsp: detail?.idBrokerPsp || '',
+    idCdi: detail?.idCdi || '',
+    idChannel: detail?.idChannel || '',
+    maxPaymentAmount: detail?.maxPaymentAmount || 0,
+    minPaymentAmount: detail?.minPaymentAmount || 0,
+    name: detail?.name || '',
+    paymentAmount: detail?.paymentAmount || 0,
+    paymentType: detail?.paymentType || undefined,
+    touchpoint: detail?.touchpoint || undefined,
+    transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
+    type: detail?.type || undefined,
+    validityDateFrom: detail?.validityDateFrom || undefined,
+    validityDateTo: detail?.validityDateTo || undefined,
+  });
+
+  const validate = (values: Partial<CommissionPackageOnCreation>) =>
+    Object.fromEntries(
       Object.entries({
         ...{
           description: !values.description
@@ -224,7 +205,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
             : undefined,
           validityDateFrom: !values.validityDateFrom
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateFrom.getTime() < minDate.getTime()
+            : values.validityDateFrom.getTime() < new Date().getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateTo &&
               values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -234,7 +215,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
             : undefined,
           validityDateTo: !values.validityDateTo
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateTo.getTime() < minDate.getTime()
+            : values.validityDateTo.getTime() < new Date().getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateFrom &&
               values.validityDateTo.getTime() < values.validityDateFrom.getTime()
@@ -245,7 +226,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
         },
       }).filter(([_key, value]) => value)
     );
-  };
 
   const enableSubmit = (values: CommissionPackageOnCreation) =>
     values.type !== undefined &&
@@ -290,14 +270,13 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
     }
   };
 
-  const formik = useFormik<CommissionPackageOnCreation>({
-    initialValues: initialFormData(commissionPackageDetails),
+  const formik = useFormik<Partial<CommissionPackageOnCreation>>({
+    initialValues: initialFormData(commPackageDetails),
     validate,
     onSubmit: async () => {
       setShowConfirmModal(true);
     },
     enableReinitialize: true,
-    validateOnMount: true,
     validateOnBlur: true,
     validateOnChange: true,
   });
@@ -321,12 +300,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
   };
 
   const shouldDisableDate = (date: Date) => date < new Date();
-
-  const getTomorrowDate = (currentDate: Date) => {
-    const tomorrow = new Date(currentDate);
-    tomorrow.setDate(currentDate.getDate() + 1);
-    return tomorrow;
-  };
 
   const openConfirmModal = () => {
     if (formik.isValid) {
@@ -454,9 +427,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     value={formik.values.paymentType || ''}
                     onChange={formik.handleChange}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
-                    inputProps={{
-                      'data-testid': 'payment-type-test',
-                    }}
+                    data-testid="payment-type-test"
                   >
                     {paymentOptions &&
                       sortPaymentType(paymentOptions.payment_types).map((option: any) => (
@@ -484,9 +455,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     value={formik.values.touchpoint === undefined ? '' : formik.values.touchpoint}
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
-                    inputProps={{
-                      'data-testid': 'touchpoint-test',
-                    }}
+                    data-testid="touchpoint-test"
                   >
                     {touchPoint.touchpointList.map((option, i) => (
                       <MenuItem key={i} value={option.touchpoint}>
@@ -530,7 +499,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                           'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
                         )}
                         size="small"
-                        defaultValue={undefined}
                         value={
                           formik.values.transferCategoryList
                             ? formik.values.transferCategoryList[i]
@@ -548,9 +516,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                           formik.touched.transferCategoryList &&
                           Boolean(formik.errors.transferCategoryList)
                         }
-                        inputProps={{
-                          'data-testid': `transfer-category-list-test${i}`,
-                        }}
+                        data-testid="transfer-category-list-test"
                       >
                         {taxonomyService &&
                           taxonomyService.taxonomyServiceList.map((option: any) => (
@@ -706,8 +672,7 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
               <Autocomplete
                 sx={{ mb: 5 }}
                 disablePortal
-                id="channels-id-list"
-                componentName="idChannel"
+                id="idChannel"
                 options={
                   // eslint-disable-next-line functional/immutable-data
                   channelsId.sort()
@@ -717,7 +682,6 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     formik.setFieldValue('idChannel', '');
                   } else {
-                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     formik.handleChange('idChannel')(value);
                   }
                 }}
@@ -820,13 +784,13 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.from')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validityDateFrom}
-                    onChange={(e) => formik.setFieldValue('validityDateFrom', e)}
+                    onChange={(value) => formik.setFieldValue('validityDateFrom', value)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
                         inputProps={{
                           ...params.inputProps,
-                          placeholder: 'dd/mm/aaaa',
+                          placeholder: 'dd/MM/aaaa',
                           'data-testid': 'from-date-test',
                         }}
                         id="validityDateFrom"
@@ -851,13 +815,13 @@ const AddEditCommissionPackageForm = ({ commissionPackageDetails, formAction }: 
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.to')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validityDateTo}
-                    onChange={(e) => formik.setFieldValue('validityDateTo', e)}
+                    onChange={(value) => formik.setFieldValue('validityDateTo', value)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
                         inputProps={{
                           ...params.inputProps,
-                          placeholder: 'dd/mm/aaaa',
+                          placeholder: 'dd/MM/aaaa',
                           'data-testid': 'to-date-test',
                         }}
                         id="validityDateTo"

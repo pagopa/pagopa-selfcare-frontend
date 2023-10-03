@@ -1,12 +1,15 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import AddEditCommissionPackageForm from '../addEditCommissionPackage/components/AddEditCommissionPackageForm';
 import { mockedTouchpoints } from '../../../services/__mocks__/commissionPackageService';
+import { partiesActions } from '../../../redux/slices/partiesSlice';
+import { pspOperatorSigned } from '../../../services/__mocks__/partyService';
+import { CommissionPackageOnCreation } from '../../../model/CommissionPackage';
 
 let spyOnGetPaymentTypes;
 let spyOnGetTouchpoint;
@@ -43,49 +46,35 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('<AddEditCommissionPackageForm />', () => {
-  const emptyDetailsComponentRender = () =>
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
-          <Route path="/comm-packages/add-package/">
-            <ThemeProvider theme={theme}>
-              <AddEditCommissionPackageForm commissionPackageDetails={{}} formAction={''} />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
+  const commissionPackageDetailsMocked: CommissionPackageOnCreation = {
+    abi: '',
+    description: 'Pacchetti commissione',
+    digitalStamp: true,
+    digitalStampRestriction: false,
+    idBrokerPsp: '',
+    idCdi: '',
+    idChannel: '97735020584_01',
+    maxPaymentAmount: 1500,
+    minPaymentAmount: 150,
+    name: 'Pacchetto 1',
+    paymentAmount: 10,
+    paymentType: undefined,
+    touchpoint: {
+      touchpointList: [mockedTouchpoints.touchpointList[0]],
+    },
+    transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.)'],
+    type: 'GLOBAL',
+    validityDateFrom: new Date(2050, 9, 27),
+    validityDateTo: new Date(2050, 9, 27),
+  };
 
-  const componentRender = () => {
+  const componentRender = (commPackageDetails?: CommissionPackageOnCreation) => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
           <Route path="/comm-packages/add-package/">
             <ThemeProvider theme={theme}>
-              <AddEditCommissionPackageForm
-                commissionPackageDetails={{
-                  abi: '',
-                  description: 'Pacchetti commissione',
-                  digitalStamp: true,
-                  digitalStampRestriction: false,
-                  idBrokerPsp: '',
-                  idCdi: '',
-                  idChannel: '97735020584_01',
-                  maxPaymentAmount: 1500,
-                  minPaymentAmount: 150,
-                  name: 'Pacchetto 1',
-                  paymentAmount: 10,
-                  paymentType: undefined,
-                  touchpoint: {
-                    touchpointList: [mockedTouchpoints.touchpointList[0]],
-                  },
-                  transferCategoryList: [''],
-                  type: 'GLOBAL',
-                  validityDateFrom: new Date('23/10/2050'),
-                  validityDateTo: new Date('23/10/2050'),
-                }}
-                formAction={''}
-              />
+              <AddEditCommissionPackageForm commPackageDetails={commPackageDetails} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -125,6 +114,9 @@ describe('<AddEditCommissionPackageForm />', () => {
       digitalStampRes: screen.getByTestId('digital-stamp-restriction-test') as HTMLInputElement,
       fromDate: screen.getByTestId('from-date-test') as HTMLInputElement,
       ToDate: screen.getByTestId('to-date-test') as HTMLInputElement,
+      tranferCategoryList: screen.getAllByTestId(
+        'transfer-category-list-test'
+      ) as HTMLInputElement[],
       confirmBtn: screen.getByTestId('confirm-button-test') as HTMLInputElement,
       cancelBtn: screen.getByTestId('cancel-button-test') as HTMLInputElement,
     };
@@ -132,9 +124,15 @@ describe('<AddEditCommissionPackageForm />', () => {
     return input;
   };
 
-  test('Test AddEditCommissionPackageForm with all input change', () => {
+  test('Test AddEditCommissionPackageForm with all input change', async () => {
     const { ...input } = componentRender();
-    const button = screen.getAllByTestId('ArrowDropDownIcon');
+    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSigned)));
+
+    const changeChannelId = () => {
+      fireEvent.mouseDown(input.channelList);
+      fireEvent.select(input.channelList, { target: { value: '97735020584_01' } });
+      expect(input.channelList.value).toBe('97735020584_01');
+    };
 
     expect(input.public.checked).toBe(false);
     expect(input.global.checked).toBe(false);
@@ -147,76 +145,79 @@ describe('<AddEditCommissionPackageForm />', () => {
     fireEvent.change(input.name, { target: { value: 'prova' } });
     fireEvent.change(input.description, { target: { value: 'prova' } });
 
-    const option1 = document.createElement('option');
-    option1.value = 'Opzione 1';
-    option1.text = 'Opzione 1';
-    input.paymentType.appendChild(option1);
+    // Change paymentType
 
-    fireEvent.mouseDown(button[0]);
-    fireEvent.change(input.paymentType, { target: { value: 'Opzione 1' } });
+    await waitFor(() => {
+      expect(spyOnGetPaymentTypes).toHaveBeenCalled();
+    });
 
-    const option2 = document.createElement('option');
-    option2.value = 'Opzione 2';
-    option2.text = 'Opzione 2';
-    input.touchpoint.appendChild(option2);
+    const selectPaymentTypeBtn = await within(input.paymentType).getByRole('button');
+    await waitFor(() => fireEvent.mouseDown(selectPaymentTypeBtn));
+    await waitFor(() => screen.getByText(new RegExp('Bonifico - SEPA', 'i')));
 
-    fireEvent.mouseDown(button[1]);
-    const option2ToSelect = screen.getByText('Opzione 2');
-    fireEvent.change(input.touchpoint, { target: { value: option2ToSelect } });
+    waitFor(() => fireEvent.click(screen.getByText(new RegExp('Bonifico - SEPA', 'i'))));
 
-    const transCategoryListFirst = screen.getByTestId(
-      'transfer-category-list-test0'
-    ) as HTMLInputElement;
+    expect(selectPaymentTypeBtn.textContent).toBe('Bonifico - SEPA');
 
-    const option3 = document.createElement('option');
-    option2.value = 'Opzione 3';
-    option2.text = 'Opzione 3';
-    transCategoryListFirst.appendChild(option3);
+    // Change touchpoint
 
-    fireEvent.mouseDown(button[2]);
-    fireEvent.click(option3);
+    await waitFor(() => {
+      expect(spyOnGetTouchpoint).toHaveBeenCalled();
+    });
+    const selectTouchPointBtn = await within(input.touchpoint).getByRole('button');
+    await waitFor(() => fireEvent.mouseDown(selectTouchPointBtn));
+    await waitFor(() => screen.getByText(new RegExp('Tutti', 'i')));
+
+    waitFor(() => fireEvent.click(screen.getByText(new RegExp('Tutti', 'i'))));
+
+    expect(selectTouchPointBtn.textContent).toBe('Tutti');
+
+    // change taxonomy service
+
+    await waitFor(() => {
+      expect(spyOnGetTaxonomyService).toHaveBeenCalled();
+    });
+
+    const selectTransCategoryListFirstBtn = await within(input.tranferCategoryList[0]).getByRole(
+      'button'
+    );
+    await waitFor(() => fireEvent.mouseDown(selectTransCategoryListFirstBtn));
+
+    await waitFor(() => screen.getByText(new RegExp('Rendite catastali', 'i')));
+
+    waitFor(() => fireEvent.click(screen.getByText(new RegExp('Rendite catastali', 'i'))));
+
+    expect(selectTransCategoryListFirstBtn.textContent).toBe(
+      '100 - Rendite catastali (ICI, IMU, TUC, ecc.)'
+    );
 
     fireEvent.click(input.addTaxnonomy);
-
-    const transCategoryListSecond = screen.getByTestId(
-      'transfer-category-list-test1'
-    ) as HTMLInputElement;
-
-    const option4 = document.createElement('option');
-    option2.value = 'Opzione 4';
-    option2.text = 'Opzione 4';
-    transCategoryListSecond.appendChild(option4);
-
-    fireEvent.mouseDown(button[3]);
-    fireEvent.change(transCategoryListSecond, {
-      target: { value: 'Opzione 4' },
-    });
 
     const removePaymentMethod = screen.getByTestId('remove-payment-method1') as HTMLButtonElement;
     fireEvent.click(removePaymentMethod);
 
+    // change input number
+
     fireEvent.change(input.minImport, { target: { value: 10 } });
+    expect(parseFloat(input.minImport.value)).toBe(10);
     fireEvent.change(input.maxImport, { target: { value: 10 } });
+    expect(parseFloat(input.maxImport.value)).toBe(10);
 
     fireEvent.change(input.feeApplied, { target: { value: 10.76 } });
+    expect(parseFloat(input.feeApplied.value)).toBe(10.76);
 
-    fireEvent.click(input.channelList);
-    fireEvent.change(input.channelList, { target: { value: '' } });
+    // change channel id
 
-    fireEvent.click(input.channelList);
-
-    const option5 = document.createElement('option');
-    option2.value = 'Opzione 5';
-    option2.text = 'Opzione 5';
-    input.channelList.appendChild(option5);
+    changeChannelId();
 
     const closeIcon = screen.getByTestId('CloseIcon');
-    fireEvent.mouseDown(closeIcon);
+    fireEvent.click(closeIcon);
 
-    fireEvent.mouseDown(input.channelList);
+    expect(input.channelList.value).toBe('');
 
-    const option5ToSelect = screen.getByText('Opzione 5');
-    fireEvent.change(input.channelList, { target: { value: option5ToSelect } });
+    changeChannelId();
+
+    // change radio buttons
 
     expect(input.digitalStampYes.checked).toBe(false);
     expect(input.digitalStampNo.checked).toBe(false);
@@ -234,94 +235,77 @@ describe('<AddEditCommissionPackageForm />', () => {
     expect(input.digitalStampResYes.checked).toBe(true);
     expect(input.digitalStampResNo.checked).toBe(false);
 
-    fireEvent.change(input.fromDate, { target: { value: new Date('27/10/2028') } });
-    fireEvent.change(input.ToDate, { target: { value: new Date('28/10/2028') } });
+    //change dates
+
+    const formatDate = (date: Date) => {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+    const fromDate = new Date(2028, 9, 27);
+    const toDate = new Date(2028, 9, 28);
+
+    fireEvent.change(input.fromDate, { target: { value: formatDate(fromDate) } });
+    expect(input.fromDate.value).toBe('27/10/2028');
+
+    fireEvent.change(input.ToDate, { target: { value: formatDate(toDate) } });
+    expect(input.ToDate.value).toBe('28/10/2028');
 
     fireEvent.submit(input.confirmBtn);
-
     fireEvent.click(input.cancelBtn);
   });
 
-  it('Test fetch error getPaymentTypes', async () => {
+  test('Test fetch error getPaymentTypes', async () => {
     const mockError = new Error('API error message getPaymentTypes');
     spyOnGetPaymentTypes.mockRejectedValue(mockError);
 
-    emptyDetailsComponentRender();
+    componentRender();
 
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
     });
   });
 
-  it('Test fetch error getTouchpoint', async () => {
+  test('Test fetch error getTouchpoint', async () => {
     const mockError = new Error('API error message GetTouchpoint');
     spyOnGetTouchpoint.mockRejectedValue(mockError);
 
-    emptyDetailsComponentRender();
+    componentRender();
 
     await waitFor(() => {
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
     });
   });
 
-  it('Test fetch error getTaxonomyService', async () => {
+  test('Test fetch error getTaxonomyService', async () => {
     const mockError = new Error('API error message GetTaxonomyService');
     spyOnGetTaxonomyService.mockRejectedValue(mockError);
 
-    emptyDetailsComponentRender();
+    componentRender();
 
     await waitFor(() => {
       expect(spyOnGetTaxonomyService).toHaveBeenCalled();
     });
   });
 
-  it('Test fetch error getChannelsIdAssociatedToPSP', async () => {
+  test('Test fetch error getChannelsIdAssociatedToPSP', async () => {
     const mockError = new Error('API error message GetChannelsIdAssociatedToPSP');
     spyOnGetChannelsIdAssociatedToPSP.mockRejectedValue(mockError);
 
-    emptyDetailsComponentRender();
+    componentRender();
 
     await waitFor(() => {
       expect(spyOnGetChannelsIdAssociatedToPSP).toHaveBeenCalled();
     });
   });
 
-  it('Il pulsante di invio è abilitato con i valori forniti', async () => {
+  test('Il pulsante di invio è abilitato con i valori forniti', async () => {
     const mockError = new Error('API error message CreateCommissionPackage');
     spyOnCreateCommissionPackage.mockRejectedValue(mockError);
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
-          <Route path="/comm-packages/add-package/">
-            <ThemeProvider theme={theme}>
-              <AddEditCommissionPackageForm
-                commissionPackageDetails={{
-                  abi: '',
-                  description: 'momom',
-                  digitalStamp: true,
-                  digitalStampRestriction: false,
-                  idBrokerPsp: '',
-                  idCdi: '',
-                  idChannel: '14847241008_14',
-                  maxPaymentAmount: 33333,
-                  minPaymentAmount: 233,
-                  name: '22222',
-                  paymentAmount: 32,
-                  paymentType: undefined,
-                  touchpoint: undefined,
-                  transferCategoryList: undefined,
-                  type: 'PRIVATE',
-                  validityDateFrom: new Date('30/10/2060'),
-                  validityDateTo: new Date('30/10/2080'),
-                }}
-                formAction={''}
-              />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
+    componentRender(commissionPackageDetailsMocked);
 
     const digitalStampYes = screen
       .getByTestId('digital-stamp-test')
@@ -346,10 +330,5 @@ describe('<AddEditCommissionPackageForm />', () => {
     fireEvent.click(backModalBtn);
     fireEvent.click(submitButton);
     fireEvent.click(confirmModalBtn);
-  });
-
-  test('Test AddEditCommissionPackageForm with all input change', () => {
-    const { ...input } = componentRender();
-    fireEvent.click(input.confirmBtn);
   });
 });

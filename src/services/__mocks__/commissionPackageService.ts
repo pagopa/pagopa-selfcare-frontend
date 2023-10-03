@@ -33,7 +33,7 @@ export const mockedTouchpoints: TouchpointsResource = {
 };
 
 export const mockedTaxonomy: TaxonomyServicesResource = {
-  taxonomyServiceList: [{ taxonomyService: ' 100 - Rendite catastali (ICI, IMU, TUC, ecc.)' }],
+  taxonomyServiceList: [{ taxonomyService: '100 - Rendite catastali (ICI, IMU, TUC, ecc.)' }],
 };
 
 export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {

@@ -7,7 +7,7 @@ import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import StationAssociateECPage from '../StationAssociateECPage';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
-import { mockedParties } from '../../../../services/__mocks__/partyService';
+import { pspAdminUnsigned } from '../../../../services/__mocks__/partyService';
 import { mockedSegregationCodeList } from '../../../../services/__mocks__/stationService';
 
 let getStationAvailableECSpy: jest.SpyInstance;
@@ -47,7 +47,7 @@ describe('<StationAssociateECPage />', () => {
     ]);
 
     getCreditorInstitutionSegregationcodesSpy.mockResolvedValue(mockedSegregationCodeList);
-    store.dispatch(partiesActions.setPartySelected(mockedParties[2]));
+    store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
 
     render(
       <Provider store={store}>

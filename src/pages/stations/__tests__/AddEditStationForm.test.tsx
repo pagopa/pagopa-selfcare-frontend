@@ -24,7 +24,7 @@ import {
 } from '../../../api/generated/portal/StationDetailsDto';
 import { isOperator } from '../../components/commonFunctions';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { mockedParties } from '../../../services/__mocks__/partyService';
+import { ecAdminSigned } from '../../../services/__mocks__/partyService';
 import * as stationService from '../../../services/stationService';
 
 jest.mock('../../components/commonFunctions');
@@ -73,7 +73,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
   test('Test rendering AddEditStationForm with operator false', async () => {
     (isOperator as jest.Mock).mockReturnValue(false);
-    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
 
     render(
@@ -128,7 +128,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
   test('Test Edit AddEditStationForm with operator false', async () => {
     (isOperator as jest.Mock).mockReturnValue(false);
-    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
     const updateWrapperStationToCheckUpdate = jest.spyOn(
       stationService,
       'updateWrapperStationToCheckUpdate'
@@ -174,7 +174,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
-    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
     (isOperator as jest.Mock).mockReturnValue(true);
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
     const createStation = jest.spyOn(stationService, 'createStation');

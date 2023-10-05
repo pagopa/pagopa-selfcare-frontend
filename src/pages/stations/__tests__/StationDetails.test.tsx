@@ -13,7 +13,7 @@ import {
   WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { mockedParties } from '../../../services/__mocks__/partyService';
+import { ecAdminSigned } from '../../../services/__mocks__/partyService';
 import { isOperator } from '../../components/commonFunctions';
 
 beforeEach(() => {
@@ -86,7 +86,7 @@ describe('<StationDetails />', () => {
   const history = createMemoryHistory();
 
   test('render component StationDetails and exit button test', () => {
-    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${mockedFullStationToCheck.stationCode}`]}>
@@ -111,7 +111,7 @@ describe('<StationDetails />', () => {
   });
 
   test('Test edit Button with StationDetails in role operator and status approved', async () => {
-    store.dispatch(partiesActions.setPartySelected(mockedParties[1]));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${mockedFullStationApproved.stationCode}`]}>

@@ -72,7 +72,7 @@ test('Test - EC signed - admin', async () => {
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeNull();
+  ).toBeVisible();
 });
 
 test('Test - PSP signed - operator', async () => {

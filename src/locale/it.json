@@ -89,7 +89,7 @@
         "intermediaryAvailable": {
           "yes": "Diretto",
           "no": "Indiretto",
-          "info": "intermediario da delegare"
+          "info": "Questa opzione comporta la necessità di definire un intermediario"
         }
       },
       "ecFields": {
@@ -101,7 +101,7 @@
         "intermediaryAvailable": {
           "yes": "Diretto",
           "no": "Indiretto",
-          "info": "intermediario da delegare"
+          "info": "Questa opzione comporta la necessità di definire un intermediario"
         },
         "validation": {
           "required": "Campo obbligatorio",

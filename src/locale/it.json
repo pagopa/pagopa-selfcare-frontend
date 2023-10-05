@@ -72,7 +72,8 @@
     "form": {
       "sections": {
         "registrationData": "Dati di registrazione",
-        "digitalStamp": "Marca da bollo digitale"
+        "digitalStamp": "Marca da bollo digitale",
+        "intermediaryAvailable": "Modalità di connessione al nodo"
       },
       "pspFields": {
         "name": "Nome",
@@ -84,6 +85,10 @@
         "digitalStamp": {
           "yes": "Sì, attiva",
           "no": "No"
+        },
+        "intermediaryAvailable": {
+          "yes": "Diretto",
+          "no": "Indiretto"
         }
       },
       "ecFields": {
@@ -92,6 +97,10 @@
         "province": "Provinca",
         "CAP": "CAP",
         "fiscalDomicile": "Domicilio Fiscale",
+        "intermediaryAvailable": {
+          "yes": "Diretto",
+          "no": "Indiretto"
+        },
         "validation": {
           "required": "Campo obbligatorio",
           "countryCode": "per specificare la provincia è necessario inserire 2 lettere",

@@ -17,7 +17,11 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon } from '@mui/icons-material';
-import { CompareArrows as CompareArrowsIcon } from '@mui/icons-material';
+import {
+  CompareArrows as CompareArrowsIcon,
+  InfoOutlined as InfoOutlinedIcon,
+} from '@mui/icons-material';
+import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
@@ -352,7 +356,17 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
                   <FormControlLabel
                     value={false}
                     control={<Radio />}
-                    label={t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
+                        <Tooltip
+                          title={t('nodeSignInPage.form.ecFields.intermediaryAvailable.info')}
+                          placement="right"
+                        >
+                          <InfoOutlinedIcon fontSize="small" color="primary" sx={{ ml: 2 }} />
+                        </Tooltip>
+                      </div>
+                    }
                   />
                   <FormControlLabel
                     value={true}

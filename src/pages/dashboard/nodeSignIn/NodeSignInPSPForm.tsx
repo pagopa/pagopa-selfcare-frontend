@@ -10,6 +10,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import { FormikProps, useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
@@ -18,6 +19,7 @@ import {
   Badge as BadgeIcon,
   BookmarkAdd as BookmarkAddIcon,
   CompareArrows as CompareArrowsIcon,
+  InfoOutlined as InfoOutlinedIcon,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
@@ -329,7 +331,17 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
-                      label={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
+                      label={
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          {t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
+                          <Tooltip
+                            title={t('nodeSignInPage.form.pspFields.intermediaryAvailable.info')}
+                            placement="right"
+                          >
+                            <InfoOutlinedIcon fontSize="small" color="primary" sx={{ ml: 2 }} />
+                          </Tooltip>
+                        </div>
+                      }
                     />
                     <FormControlLabel
                       value={true}

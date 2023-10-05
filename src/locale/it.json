@@ -88,7 +88,8 @@
         },
         "intermediaryAvailable": {
           "yes": "Diretto",
-          "no": "Indiretto"
+          "no": "Indiretto",
+          "info": "intermediario da delegare"
         }
       },
       "ecFields": {
@@ -99,7 +100,8 @@
         "fiscalDomicile": "Domicilio Fiscale",
         "intermediaryAvailable": {
           "yes": "Diretto",
-          "no": "Indiretto"
+          "no": "Indiretto",
+          "info": "intermediario da delegare"
         },
         "validation": {
           "required": "Campo obbligatorio",

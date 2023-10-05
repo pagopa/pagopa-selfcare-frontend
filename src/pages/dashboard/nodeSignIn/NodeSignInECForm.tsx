@@ -1,27 +1,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { useHistory } from 'react-router';
-import {
-  Box,
-  Button,
-  FormControlLabel,
-  Grid,
-  Paper,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon } from '@mui/icons-material';
-import {
-  CompareArrows as CompareArrowsIcon,
-  InfoOutlined as InfoOutlinedIcon,
-} from '@mui/icons-material';
-import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
@@ -36,6 +21,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
 import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { useSigninData } from '../../../hooks/useSigninData';
+import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
@@ -338,44 +324,12 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
           </Box>
 
           <Box sx={inputGroupStyle}>
-            <FormSectionTitle
-              title={t('nodeSignInPage.form.sections.intermediaryAvailable')}
-              icon={<CompareArrowsIcon />}
-              isRequired
-            ></FormSectionTitle>
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  name="intermediaryAvailable"
-                  value={intermediaryAvailableValue}
-                  sx={{ pl: 1 }}
-                  onChange={changeIntermediaryAvailable}
-                  data-testid="intermediary-available-test"
-                >
-                  <FormControlLabel
-                    value={false}
-                    control={<Radio />}
-                    label={
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
-                        <Tooltip
-                          title={t('nodeSignInPage.form.ecFields.intermediaryAvailable.info')}
-                          placement="right"
-                        >
-                          <InfoOutlinedIcon fontSize="small" color="primary" sx={{ ml: 2 }} />
-                        </Tooltip>
-                      </div>
-                    }
-                  />
-                  <FormControlLabel
-                    value={true}
-                    control={<Radio />}
-                    label={t('nodeSignInPage.form.ecFields.intermediaryAvailable.yes')}
-                  />
-                </RadioGroup>
-              </Grid>
-            </Grid>
+            <CommonRadioGroup
+              labelTrue={t('nodeSignInPage.form.ecFields.intermediaryAvailable.yes')}
+              labelFalse={t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
+              value={intermediaryAvailableValue}
+              onChange={changeIntermediaryAvailable}
+            />
           </Box>
         </Paper>
 

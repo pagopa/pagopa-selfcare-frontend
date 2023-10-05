@@ -10,18 +10,12 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
 import { FormikProps, useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  Badge as BadgeIcon,
-  BookmarkAdd as BookmarkAddIcon,
-  CompareArrows as CompareArrowsIcon,
-  InfoOutlined as InfoOutlinedIcon,
-} from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
+import { useState } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -33,6 +27,7 @@ import { NodeOnSignInPSP } from '../../../model/Node';
 import { createPSPDirect, createPSPIndirect, updatePSPInfo } from '../../../services/nodeService';
 import { useSigninData } from '../../../hooks/useSigninData';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
@@ -313,44 +308,12 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
             </Box>
 
             <Box sx={inputGroupStyle}>
-              <FormSectionTitle
-                title={t('nodeSignInPage.form.sections.intermediaryAvailable')}
-                icon={<CompareArrowsIcon />}
-                isRequired
-              ></FormSectionTitle>
-              <Grid container spacing={2} mt={1}>
-                <Grid container item xs={6}>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    name="intermediaryAvailable"
-                    value={intermediaryAvailableValue}
-                    sx={{ pl: 1 }}
-                    onChange={changeIntermediaryAvailable}
-                    data-testid="intermediary-available-test"
-                  >
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio />}
-                      label={
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          {t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
-                          <Tooltip
-                            title={t('nodeSignInPage.form.pspFields.intermediaryAvailable.info')}
-                            placement="right"
-                          >
-                            <InfoOutlinedIcon fontSize="small" color="primary" sx={{ ml: 2 }} />
-                          </Tooltip>
-                        </div>
-                      }
-                    />
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label={t('nodeSignInPage.form.pspFields.intermediaryAvailable.yes')}
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
+              <CommonRadioGroup
+                labelTrue={t('nodeSignInPage.form.pspFields.intermediaryAvailable.yes')}
+                labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
+                value={intermediaryAvailableValue}
+                onChange={changeIntermediaryAvailable}
+              />
             </Box>
           </Box>
         </Paper>

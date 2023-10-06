@@ -1,8 +1,8 @@
+import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/PaymentServiceProviderDetailsDto';
-import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { NodeOnSignInPSP } from '../model/Node';
@@ -11,6 +11,7 @@ import { PSPDirectDTO } from '../model/PSP';
 import {
   createPSPDirect as createPSPDirectMocked,
   getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
+  getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
   createECAndBroker as createECAndBrokerMocked,
   createECIndirect as createECIndirectMocked,
   createPSPIndirect as createPSPIndirectMocked,
@@ -59,6 +60,15 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
   }
 };
 
+export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getBrokerAndEcDetailsMocked(ecCode);
+  } else {
+    return PortalApi.getBrokerAndEcDetails(ecCode).then((resources) => resources);
+  }
+};
+
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => {
@@ -76,16 +86,6 @@ export const createECIndirect = (
     return createECIndirectMocked(ec);
   } else {
     return PortalApi.createECIndirect(ec).then((resources) => resources);
-  }
-};
-
-export const getCreditorInstitutionDetails = (
-  ecCode: string
-): Promise<CreditorInstitutionDetailsResource | undefined> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getCreditorInstitutionDetailsMocked(ecCode);
-  } else {
-    return PortalApi.getCreditorInstitutionDetails(ecCode).then((resources) => resources);
   }
 };
 

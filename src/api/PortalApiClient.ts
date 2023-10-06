@@ -24,7 +24,6 @@ import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
-import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
@@ -53,6 +52,7 @@ import { IbanResource } from './generated/portal/IbanResource';
 import { CreditorInstitutionAssociatedCodeList } from './generated/portal/CreditorInstitutionAssociatedCodeList';
 import { DelegationResource } from './generated/portal/DelegationResource';
 import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
+import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { PaymentServiceProviderDetailsDto } from './generated/portal/PaymentServiceProviderDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
@@ -70,7 +70,7 @@ const apiClient = createClient({
   withDefaults: withBearer,
 });
 
-const apiConfigClient = createClient({
+export const apiConfigClient = createClient({
   baseUrl: ENV.URL_API.APICONFIG,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
@@ -180,6 +180,11 @@ export const PortalApi = {
 
   getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
     const result = await apiConfigClient.getBrokerAndPspDetailsUsingGET({ code });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
+    const result = await apiConfigClient.getBrokerAndEcDetailsUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -516,13 +521,6 @@ export const PortalApi = {
     });
 
     return extractResponse(result, 201, onRedirectToLogin);
-  },
-
-  getCreditorInstitutionDetails: async (
-    ecCode: string
-  ): Promise<CreditorInstitutionDetailsResource | undefined> => {
-    const result = await apiConfigClient.getCreditorInstitutionDetailsUsingGET({ ecCode });
-    return extractResponse(result, 200, onRedirectToLogin);
   },
 
   updateCreditorInstitution: async (

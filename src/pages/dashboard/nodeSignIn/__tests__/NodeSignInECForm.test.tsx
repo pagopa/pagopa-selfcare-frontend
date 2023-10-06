@@ -8,13 +8,14 @@ import { Router } from 'react-router-dom';
 import { createStore, store } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
-import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { ecDetails } from '../../../../services/__mocks__/nodeService';
 import { ecOperatorUnsigned } from '../../../../services/__mocks__/partyService';
+import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
 
 const renderApp = (
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  ecNodeData?: CreditorInstitutionDetailsResource
+  ecNodeData?: BrokerAndEcDetailsResource
 ) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
@@ -55,7 +56,7 @@ const setupForm = () => {
 let spyOnCreateECAndBroker;
 let spyOnCreateEcIndirect;
 let spyOnUpdateCreditorInstitution;
-let spyOnGetCreditorInstitutionDetails;
+let spyOnGetBrokerAndEcDetails;
 
 beforeEach(() => {
   spyOnCreateECAndBroker = jest.spyOn(
@@ -70,9 +71,9 @@ beforeEach(() => {
     require('../../../../services/nodeService'),
     'updateCreditorInstitution'
   );
-  spyOnGetCreditorInstitutionDetails = jest.spyOn(
+  spyOnGetBrokerAndEcDetails = jest.spyOn(
     require('../../../../services/nodeService'),
-    'getCreditorInstitutionDetails'
+    'getBrokerAndEcDetails'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -153,7 +154,7 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
 
     await waitFor(() => {
       expect(spyOnUpdateCreditorInstitution).toHaveBeenCalled();
-      expect(spyOnGetCreditorInstitutionDetails).toHaveBeenCalled();
+      expect(spyOnGetBrokerAndEcDetails).toHaveBeenCalled();
     });
   });
 
@@ -172,9 +173,8 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    PortalApi.getCreditorInstitutionDetails =
-      async (): Promise<CreditorInstitutionDetailsResource> =>
-        Promise.reject('mocked errore response for tests');
+    PortalApi.getBrokerAndEcDetails = async (): Promise<CreditorInstitutionDetailsResource> =>
+      Promise.reject('mocked errore response for tests');
 
     PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
       Promise.reject('mocked error response for tests');
@@ -200,7 +200,7 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    PortalApi.createECIndirect = async (): Promise<CreditorInstitutionDetailsResource> =>
+    PortalApi.createECIndirect = async (): Promise<BrokerAndEcDetailsResource> =>
       Promise.reject('mocked error response for tests');
   });
 });

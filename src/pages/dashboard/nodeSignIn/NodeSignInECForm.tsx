@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
+import { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
@@ -19,13 +20,13 @@ import {
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
-import { CreditorInstitutionDetailsResource } from '../../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { useSigninData } from '../../../hooks/useSigninData';
+import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
-  ecNodeData?: CreditorInstitutionDetailsResource;
+  ecNodeData?: BrokerAndEcDetailsResource;
 };
 
 const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
@@ -37,14 +38,14 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
 
-  const initialFormData = (ecDetails: CreditorInstitutionDetailsResource | undefined) =>
+  const initialFormData = (ecDetails: BrokerAndEcDetailsResource | undefined) =>
     ecDetails
       ? {
-          city: ecNodeData?.address.city ?? '',
-          countryCode: ecNodeData?.address.countryCode ?? '',
-          location: ecNodeData?.address.location ?? '',
-          taxDomicile: ecNodeData?.address.taxDomicile ?? '',
-          zipCode: ecNodeData?.address.zipCode ?? '',
+          city: ecDetails?.creditorInstitutionDetailsResource?.address?.city ?? '',
+          countryCode: ecDetails?.creditorInstitutionDetailsResource?.address?.countryCode ?? '',
+          location: ecDetails?.creditorInstitutionDetailsResource?.address?.location ?? '',
+          taxDomicile: ecDetails?.creditorInstitutionDetailsResource?.address?.taxDomicile ?? '',
+          zipCode: ecDetails?.creditorInstitutionDetailsResource?.address?.zipCode ?? '',
         }
       : {
           city: '',
@@ -317,7 +318,11 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
                   error={formik.touched.taxDomicile && Boolean(formik.errors.taxDomicile)}
                   helperText={formik.touched.taxDomicile && formik.errors.taxDomicile}
                   inputProps={{ 'data-testid': 'fiscal-domicile-test' }}
-                  disabled={ecNodeData?.address.taxDomicile ? true : false}
+                  disabled={
+                    ecNodeData?.creditorInstitutionDetailsResource?.address?.taxDomicile
+                      ? true
+                      : false
+                  }
                 />
               </Grid>
             </Grid>

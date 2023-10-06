@@ -24,7 +24,6 @@ import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
-import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
@@ -71,7 +70,7 @@ const apiClient = createClient({
   withDefaults: withBearer,
 });
 
-const apiConfigClient = createClient({
+export const apiConfigClient = createClient({
   baseUrl: ENV.URL_API.APICONFIG,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),

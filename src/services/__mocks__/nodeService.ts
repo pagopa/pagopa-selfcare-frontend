@@ -90,10 +90,13 @@ export const brokerOrPspDetailsResource_PSPAndBroker: BrokerOrPspDetailsResource
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
+export const createPSPIndirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+  new Promise((resolve) => resolve(pspDirect));
+
 export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
+export const getBrokerAndPspDetails = (_pspcode: string): Promise<BrokerOrPspDetailsResource> => {
   return new Promise((resolve) => resolve(brokerOrPspDetailsResource_PSPAndBroker));
 };
 
@@ -102,7 +105,7 @@ export const createECAndBroker = (
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve({ ...ec, broadcast: true }));
 
-export const createECDirect = (
+export const createECIndirect = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve({ ...ec, broadcast: true }));

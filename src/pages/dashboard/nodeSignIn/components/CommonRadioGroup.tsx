@@ -33,12 +33,13 @@ const CommonRadioGroup = ({ labelTrue, labelFalse, value, onChange }: Props) => 
             onChange={onChange}
             data-testid="intermediary-available-test"
           >
+            <FormControlLabel value={false} control={<Radio />} label={labelTrue} />
             <FormControlLabel
-              value={false}
+              value={true}
               control={<Radio />}
               label={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {labelTrue}
+                  {labelFalse}
                   <Tooltip
                     title={t('nodeSignInPage.form.ecFields.intermediaryAvailable.info')}
                     placement="right"
@@ -48,7 +49,6 @@ const CommonRadioGroup = ({ labelTrue, labelFalse, value, onChange }: Props) => 
                 </div>
               }
             />
-            <FormControlLabel value={true} control={<Radio />} label={labelFalse} />
           </RadioGroup>
         </Grid>
       </Grid>

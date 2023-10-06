@@ -87,8 +87,8 @@
           "no": "No"
         },
         "intermediaryAvailable": {
-          "yes": "Diretto",
-          "no": "Indiretto",
+          "yes": "Diretta",
+          "no": "Indiretta",
           "info": "Questa opzione comporta la necessità di definire un intermediario"
         }
       },
@@ -99,8 +99,8 @@
         "CAP": "CAP",
         "fiscalDomicile": "Domicilio Fiscale",
         "intermediaryAvailable": {
-          "yes": "Diretto",
-          "no": "Indiretto",
+          "yes": "Diretta",
+          "no": "Indiretta",
           "info": "Questa opzione comporta la necessità di definire un intermediario"
         },
         "validation": {

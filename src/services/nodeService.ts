@@ -89,16 +89,6 @@ export const createECIndirect = (
   }
 };
 
-export const getCreditorInstitutionDetails = (
-  ecCode: string
-): Promise<CreditorInstitutionDetailsResource | undefined> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getCreditorInstitutionDetailsMocked(ecCode);
-  } else {
-    return PortalApi.getCreditorInstitutionDetails(ecCode).then((resources) => resources);
-  }
-};
-
 export const updateCreditorInstitution = (
   ecCode: string,
   ec: UpdateCreditorInstitutionDto

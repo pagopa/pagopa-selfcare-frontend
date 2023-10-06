@@ -54,6 +54,7 @@ import { CreditorInstitutionAssociatedCodeList } from './generated/portal/Credit
 import { DelegationResource } from './generated/portal/DelegationResource';
 import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
+import { PaymentServiceProviderDetailsDto } from './generated/portal/PaymentServiceProviderDetailsDto';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();

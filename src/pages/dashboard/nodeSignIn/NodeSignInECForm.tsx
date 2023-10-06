@@ -24,7 +24,6 @@ import { useSigninData } from '../../../hooks/useSigninData';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
-
 type Props = {
   goBack: () => void;
   ecNodeData?: BrokerAndEcDetailsResource;
@@ -319,7 +318,11 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
                   error={formik.touched.taxDomicile && Boolean(formik.errors.taxDomicile)}
                   helperText={formik.touched.taxDomicile && formik.errors.taxDomicile}
                   inputProps={{ 'data-testid': 'fiscal-domicile-test' }}
-                  disabled={ecNodeData?.address.taxDomicile ? true : false}
+                  disabled={
+                    ecNodeData?.creditorInstitutionDetailsResource?.address?.taxDomicile
+                      ? true
+                      : false
+                  }
                 />
               </Grid>
             </Grid>

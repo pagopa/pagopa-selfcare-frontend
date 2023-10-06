@@ -523,6 +523,13 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
+  getCreditorInstitutionDetails: async (
+    ecCode: string
+  ): Promise<CreditorInstitutionDetailsResource | undefined> => {
+    const result = await apiConfigClient.getCreditorInstitutionDetailsUsingGET({ ecCode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   updateCreditorInstitution: async (
     ecCode: string,
     ec: UpdateCreditorInstitutionDto

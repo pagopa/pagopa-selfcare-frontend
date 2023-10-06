@@ -117,6 +117,16 @@ const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
   return brokerOrPspDetailsResource_Empty;
 };
 
+const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
+  if (pspCode.toUpperCase().includes('UNSIGNED')) {
+    return brokerOrPspDetailsResource_Empty;
+  }
+  if (pspCode.toUpperCase().includes('SIGNED')) {
+    return brokerOrPspDetailsResource_PSPAndBroker;
+  }
+  return brokerOrPspDetailsResource_Empty;
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 

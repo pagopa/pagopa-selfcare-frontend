@@ -8,7 +8,6 @@ import { Router } from 'react-router-dom';
 import { createStore, store } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
-import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 let createPSPDirectMocked: jest.SpyInstance;

@@ -2,7 +2,7 @@ import { SigninData } from '../model/Node';
 import { Party } from '../model/Party';
 import { useAppDispatch } from '../redux/hooks';
 import { partiesActions } from '../redux/slices/partiesSlice';
-import { getBrokerAndPspDetails, getCreditorInstitutionDetails } from '../services/nodeService';
+import { getBrokerAndEcDetails, getBrokerAndPspDetails } from '../services/nodeService';
 
 /** A custom hook to retrieve the signin details of PSP and EC and store them into redux */
 export const useSigninData = () => {
@@ -13,7 +13,7 @@ export const useSigninData = () => {
   return (party: Party) =>
     (party.institutionType === 'PSP'
       ? getBrokerAndPspDetails(party.pspData?.abiCode ? `ABI${party.pspData.abiCode}` : '')
-      : getCreditorInstitutionDetails(party.fiscalCode)
+      : getBrokerAndEcDetails(party.fiscalCode)
     )
       .then((sd) => {
         setSigninData(sd);

@@ -1,5 +1,7 @@
+import { BrokerAndEcDetailsResource } from '../../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../api/generated/portal/BrokerOrPspDetailsResource';
 import { BrokerPspDetailsResource } from '../../api/generated/portal/BrokerPspDetailsResource';
+import { BrokerResource } from '../../api/generated/portal/BrokerResource';
 import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
@@ -36,6 +38,13 @@ export const pspDetails: PaymentServiceProviderDetailsResource = {
 export const pspBrokerDetails: BrokerPspDetailsResource = {
   broker_psp_code: '12312312',
   description: 'descrizione broker',
+  enabled: true,
+  extended_fault_bean: true,
+};
+
+export const ecBrokerDetails: BrokerResource = {
+  broker_code: '12312312',
+  description: 'descrizione broker ec',
   enabled: true,
   extended_fault_bean: true,
 };
@@ -87,6 +96,17 @@ export const brokerOrPspDetailsResource_PSPAndBroker: BrokerOrPspDetailsResource
   brokerPspDetailsResource: pspBrokerDetails,
 };
 
+export const brokerAndEcDetailsResource_Empty: BrokerAndEcDetailsResource = {};
+
+export const brokerAndEcDetailsResource_ECOnly: BrokerAndEcDetailsResource = {
+  creditorInstitutionDetailsResource: ecDirectUpdated,
+};
+
+export const brokerAndEcDetailsResource_ECAndBroker: BrokerAndEcDetailsResource = {
+  brokerDetailsResource: ecBrokerDetails,
+  creditorInstitutionDetailsResource: ecDirectUpdated,
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
@@ -96,6 +116,12 @@ export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
 export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
   return new Promise((resolve) => resolve(brokerOrPspDetailsResource_PSPAndBroker));
 };
+
+export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {
+  return new Promise((resolve) => resolve(brokerAndEcDetailsResource_ECAndBroker));
+};
+
+getBrokerAndEcDetails;
 
 export const createECAndBroker = (
   ec: CreditorInstitutionDto

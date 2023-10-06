@@ -8,12 +8,12 @@ import { Router } from 'react-router-dom';
 import { createStore, store } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
-import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 
 const renderApp = (
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  ecNodeData?: CreditorInstitutionDetailsResource
+  ecNodeData?: BrokerAndEcDetailsResource
 ) => {
   const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
@@ -88,7 +88,7 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    PortalApi.createECDirect = async (): Promise<CreditorInstitutionDetailsResource> =>
+    PortalApi.createECDirect = async (): Promise<BrokerAndEcDetailsResource> =>
       Promise.reject('mocked error response for tests');
   });
 });

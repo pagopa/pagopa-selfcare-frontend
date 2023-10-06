@@ -53,6 +53,7 @@ import { IbanResource } from './generated/portal/IbanResource';
 import { CreditorInstitutionAssociatedCodeList } from './generated/portal/CreditorInstitutionAssociatedCodeList';
 import { DelegationResource } from './generated/portal/DelegationResource';
 import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
+import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -179,6 +180,11 @@ export const PortalApi = {
 
   getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
     const result = await apiConfigClient.getBrokerAndPspDetailsUsingGET({ code });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
+    const result = await apiConfigClient.getBrokerAndEcDetailsUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -498,13 +504,6 @@ export const PortalApi = {
     });
 
     return extractResponse(result, 201, onRedirectToLogin);
-  },
-
-  getCreditorInstitutionDetails: async (
-    ecCode: string
-  ): Promise<CreditorInstitutionDetailsResource | undefined> => {
-    const result = await apiConfigClient.getCreditorInstitutionDetailsUsingGET({ ecCode });
-    return extractResponse(result, 200, onRedirectToLogin);
   },
 
   updateCreditorInstitution: async (

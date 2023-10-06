@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -24,10 +24,10 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { NodeOnSignInPSP } from '../../../model/Node';
-import { createPSPDirect, updatePSPInfo } from '../../../services/nodeService';
+import { createPSPDirect, createPSPIndirect, updatePSPInfo } from '../../../services/nodeService';
 import { useSigninData } from '../../../hooks/useSigninData';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
@@ -43,6 +43,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
+  const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
 
   const initialFormData = (selectedParty?: Party) => ({
     name: selectedParty?.fiscalCode ?? '',
@@ -66,9 +67,10 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
     Object.fromEntries(
       Object.entries({
         bicCode: !values.bicCode ? t('nodeSignInPage.validationMessage.requiredField') : undefined,
-        digitalStamp: !values.digitalStamp
-          ? t('nodeSignInPage.validationMessage.requiredField')
-          : undefined,
+        digitalStamp:
+          values.digitalStamp === undefined
+            ? t('nodeSignInPage.validationMessage.requiredField')
+            : undefined,
       }).filter(([_key, value]) => value)
     );
 
@@ -122,7 +124,11 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
 
     if (selectedParty && !pspNodeData) {
       try {
-        await createPSPDirect(formik.values);
+        if (intermediaryAvailableValue) {
+          await createPSPDirect(formik.values);
+        } else {
+          await createPSPIndirect(formik.values);
+        }
 
         await updateSigninData(selectedParty);
 
@@ -146,8 +152,13 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
     }
   };
 
+  const changeIntermediaryAvailable = () =>
+    setIntermediaryAvailableValue(!intermediaryAvailableValue);
+
   const enebledSubmit = (values: NodeOnSignInPSP) =>
-    !!(values.bicCode !== '' && values.digitalStamp !== false);
+    values.bicCode !== '' &&
+    values.digitalStamp !== undefined &&
+    intermediaryAvailableValue !== undefined;
 
   return (
     <>
@@ -294,6 +305,15 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                   </RadioGroup>
                 </Grid>
               </Grid>
+            </Box>
+
+            <Box sx={inputGroupStyle}>
+              <CommonRadioGroup
+                labelTrue={t('nodeSignInPage.form.pspFields.intermediaryAvailable.yes')}
+                labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
+                value={intermediaryAvailableValue}
+                onChange={changeIntermediaryAvailable}
+              />
             </Box>
           </Box>
         </Paper>

@@ -11,6 +11,7 @@ import { PortalApi } from '../../../../api/PortalApiClient';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 
 let createPSPDirectMocked: jest.SpyInstance;
+let createPSPIndirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
 let updatePSPInfoMocked: jest.SpyInstance;
 let getBrokerAndPspDetailsMocked: jest.SpyInstance;
@@ -65,6 +66,11 @@ beforeEach(() => {
     require('../../../../services/nodeService'),
     'createPSPDirect'
   );
+
+  createPSPIndirectMocked = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'createPSPIndirect'
+  );
   useSigninDataMocked = jest.spyOn(require('../../../../hooks/useSigninData'), 'useSigninData');
   updatePSPInfoMocked = jest.spyOn(require('../../../../services/nodeService'), 'updatePSPInfo');
   getBrokerAndPspDetailsMocked = jest.spyOn(
@@ -89,12 +95,33 @@ describe('NodeSignInPSPForm', () => {
     expect(console.error).toBeCalled();
   });
 
-  test('Test rendering NodeSignInPSPForm and Sumbit', async () => {
+  test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit', async () => {
     const { store } = renderApp();
 
     await setupFormAndSubmit(store);
 
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
+
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
+  });
+
+  test('Test rendering NodeSignInPSPForm with intermediary false and Sumbit', async () => {
+    const { store } = renderApp();
+
+    await setupFormAndSubmit(store);
+
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=false]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryFalse);
+
+    await waitFor(() => expect(createPSPIndirectMocked).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 

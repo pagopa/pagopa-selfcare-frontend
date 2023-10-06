@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -9,13 +9,13 @@ import { createStore, store } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
+import { ecDetails } from '../../../../services/__mocks__/nodeService';
+import { ecOperatorUnsigned } from '../../../../services/__mocks__/partyService';
 
 const renderApp = (
-  injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
   ecNodeData?: BrokerAndEcDetailsResource
 ) => {
-  const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
@@ -52,7 +52,28 @@ const setupForm = () => {
   expect(fiscalDomicile.value).toBe('Via Calindri 21');
 };
 
+let spyOnCreateECAndBroker;
+let spyOnCreateEcIndirect;
+let spyOnUpdateCreditorInstitution;
+let spyOnGetCreditorInstitutionDetails;
+
 beforeEach(() => {
+  spyOnCreateECAndBroker = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'createECAndBroker'
+  );
+  spyOnCreateEcIndirect = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'createECIndirect'
+  );
+  spyOnUpdateCreditorInstitution = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'updateCreditorInstitution'
+  );
+  spyOnGetCreditorInstitutionDetails = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'getCreditorInstitutionDetails'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -62,13 +83,42 @@ afterEach(cleanup);
 describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
-  test('Test rendering NodeSignInECForm and Sumbit', async () => {
+  test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
     renderApp();
 
     setupForm();
 
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
+
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(spyOnCreateECAndBroker).toHaveBeenCalled();
+    });
+  });
+
+  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
+    renderApp();
+
+    setupForm();
+
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=false]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryFalse);
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(spyOnCreateEcIndirect).toHaveBeenCalled();
+    });
   });
 
   test('Test rendering NodeSignInECForm and Sumbit', async () => {
@@ -80,7 +130,69 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     fireEvent.click(backBtn);
   });
 
-  test('Test rendering NodeSignInECForm and Sumbit', async () => {
+  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
+    renderApp(history, ecDetails[0]);
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecOperatorUnsigned,
+      })
+    );
+
+    setupForm();
+
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=false]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryFalse);
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(spyOnUpdateCreditorInstitution).toHaveBeenCalled();
+      expect(spyOnGetCreditorInstitutionDetails).toHaveBeenCalled();
+    });
+  });
+
+  test('Test error response of updateCreditorInstitution', async () => {
+    renderApp();
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecOperatorUnsigned,
+      })
+    );
+
+    setupForm();
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    PortalApi.getCreditorInstitutionDetails =
+      async (): Promise<CreditorInstitutionDetailsResource> =>
+        Promise.reject('mocked errore response for tests');
+
+    PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
+      Promise.reject('mocked error response for tests');
+  });
+
+  test('Test error response of createECAndBroker', async () => {
+    renderApp();
+
+    setupForm();
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    PortalApi.createECAndBroker = async (): Promise<CreditorInstitutionDetailsResource> =>
+      Promise.reject('mocked error response for tests');
+  });
+
+  test('Test error response of createECIndirect', async () => {
     renderApp();
 
     setupForm();

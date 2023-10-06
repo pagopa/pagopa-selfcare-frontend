@@ -2,6 +2,7 @@ import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcD
 import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
+import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/PaymentServiceProviderDetailsDto';
 import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { NodeOnSignInPSP } from '../model/Node';
@@ -12,7 +13,9 @@ import {
   getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
   getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
   createECAndBroker as createECAndBrokerMocked,
-  createECDirect as createECDirectMocked,
+  createECIndirect as createECIndirectMocked,
+  createPSPIndirect as createPSPIndirectMocked,
+  getECDetails as getCreditorInstitutionDetailsMocked,
   updatePSPInfo as updatePSPInfoMocked,
   updateECDirect,
 } from './__mocks__/nodeService';
@@ -28,6 +31,16 @@ export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => 
 
 export const updatePSPInfo = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   updatePSPInfoMocked(psp);
+
+export const createPSPIndirect = (
+  psp: NodeOnSignInPSP
+): Promise<PaymentServiceProviderDetailsDto> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createPSPIndirectMocked(psp);
+  } else {
+    return createPSPIndirect(psp);
+  }
+};
 
 // {
 /* istanbul ignore if */
@@ -66,13 +79,13 @@ export const createECAndBroker = (
   }
 };
 
-export const createECDirect = (
+export const createECIndirect = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createECDirectMocked(ec);
+    return createECIndirectMocked(ec);
   } else {
-    return PortalApi.createECDirect(ec).then((resources) => resources);
+    return PortalApi.createECIndirect(ec).then((resources) => resources);
   }
 };
 

@@ -206,6 +206,23 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
+  createPSPIndirect: async (psp: NodeOnSignInPSP): Promise<PaymentServiceProviderDetailsDto> => {
+    const result = await apiConfigClient.createPaymentServiceProviderUsingPOST({
+      body: {
+        abi: psp.abiCode,
+        agid_psp: true,
+        bic: psp.bicCode,
+        business_name: psp.businessName,
+        enabled: true,
+        my_bank_code: '',
+        psp_code: psp.pspCode,
+        stamp: true,
+        tax_code: psp.fiscalCode,
+        vat_number: psp.fiscalCode,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
   getChannels: async (page: number): Promise<ChannelsResource> => {
     const result = await apiConfigClient.getChannelsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -488,7 +505,7 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  createECDirect: async (
+  createECIndirect: async (
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
     const result = await apiConfigClient.createCreditorInstitutionUsingPOST({

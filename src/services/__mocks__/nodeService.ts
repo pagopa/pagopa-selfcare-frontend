@@ -121,8 +121,6 @@ export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetail
   return new Promise((resolve) => resolve(brokerAndEcDetailsResource_ECAndBroker));
 };
 
-getBrokerAndEcDetails;
-
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>

@@ -107,6 +107,16 @@ export const brokerAndEcDetailsResource_ECAndBroker: BrokerAndEcDetailsResource 
   creditorInstitutionDetailsResource: ecDirectUpdated,
 };
 
+const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
+  if (pspCode.toUpperCase().includes('UNSIGNED')) {
+    return brokerOrPspDetailsResource_Empty;
+  }
+  if (pspCode.toUpperCase().includes('SIGNED')) {
+    return brokerOrPspDetailsResource_PSPAndBroker;
+  }
+  return brokerOrPspDetailsResource_Empty;
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
@@ -116,8 +126,8 @@ export const createPSPIndirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> 
 export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const getBrokerAndPspDetails = (_pspcode: string): Promise<BrokerOrPspDetailsResource> => {
-  return new Promise((resolve) => resolve(brokerOrPspDetailsResource_PSPAndBroker));
+export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
+  return new Promise((resolve) => resolve(mapPspCode2BrokerOrPspDetailsResource(pspcode)));
 };
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {

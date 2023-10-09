@@ -203,8 +203,8 @@ describe('<AddEditCommissionPackageForm />', () => {
     fireEvent.change(input.maxImport, { target: { value: 10 } });
     expect(parseFloat(input.maxImport.value)).toBe(10);
 
-    fireEvent.change(input.feeApplied, { target: { value: 6 } });
-    expect(parseFloat(input.feeApplied.value)).toBe(6);
+    fireEvent.change(input.feeApplied, { target: { value: '10,8' } });
+    expect(parseFloat(input.feeApplied.value.replace(',', '.'))).toBe(10.8);
 
     // change channel id
 

@@ -2935,10 +2935,10 @@
     fp-ts "^2.12.1"
     io-ts "^2.2.16"
 
-"@pagopa/openapi-codegen-ts@^12.2.1":
-  version "12.2.1"
-  resolved "https://registry.yarnpkg.com/@pagopa/openapi-codegen-ts/-/openapi-codegen-ts-12.2.1.tgz#e2cc9cedcbb23077b4f3f80e970ebd9c55e71afe"
-  integrity sha512-NO+z8+FUuR04Kc6I6fZk2mh+PWc1wrrBiTmcmnwuGGAWcObPqt4oF7b0fpAiZF91YuAMf5BOaXsFIIeSQv3i8g==
+"@pagopa/openapi-codegen-ts@^13.1.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@pagopa/openapi-codegen-ts/-/openapi-codegen-ts-13.1.0.tgz#b5dca49eec448474f2639516d05f42e78eab0a1c"
+  integrity sha512-VKXkZtIGzklWgRK/GzsmefnHW9Mc9j0tukDxgRz4T3BfKXX0xoy5t0Es6AygRmg2WhF998wSVoQZF/9yhSgEZA==
   dependencies:
     "@pagopa/ts-commons" "^10.15.0"
     fs-extra "^6.0.0"
@@ -2994,7 +2994,7 @@
     validator "13.7.0"
     web-vitals "^1.1.2"
 
-"@pagopa/ts-commons@^10.15.0":
+"@pagopa/ts-commons@^10.15.0", "@pagopa/ts-commons@^10.2.1":
   version "10.15.0"
   resolved "https://registry.yarnpkg.com/@pagopa/ts-commons/-/ts-commons-10.15.0.tgz#8e3030a2ebc16c3edb5ef99962c6e8d534826957"
   integrity sha512-MTmD0geIN9L9vnEYjPTE7v6Bu+IRTFMre+3K4LWYjy1AaRmYcpSrc9HTZgyCRW8uLCvw1BmDKcKtSiETM817kw==
@@ -3008,20 +3008,6 @@
     json-set-map "^1.1.2"
     node-fetch "^2.6.0"
     semver "^7.3.7"
-    validator "^13.7.0"
-
-"@pagopa/ts-commons@^10.2.1":
-  version "10.4.0"
-  resolved "https://registry.yarnpkg.com/@pagopa/ts-commons/-/ts-commons-10.4.0.tgz#a422295e24735cfba26b744b055f90f718fd9aef"
-  integrity sha512-4/qbF+WjyjYJqMG8otj3qBwGe4g4DqZ8haou1GkuC4cYog6Yv+BfQT7TbV+dNsTGYbuc6QRw0eHXBPvbjpD7dw==
-  dependencies:
-    abort-controller "^3.0.0"
-    agentkeepalive "^4.1.4"
-    applicationinsights "^1.8.10"
-    fp-ts "^2.11.0"
-    io-ts "^2.2.16"
-    json-set-map "^1.1.2"
-    node-fetch "^2.6.0"
     validator "^13.7.0"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":

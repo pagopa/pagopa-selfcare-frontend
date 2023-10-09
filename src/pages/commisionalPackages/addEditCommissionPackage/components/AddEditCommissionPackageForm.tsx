@@ -572,7 +572,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       formik.setFieldValue('minPaymentAmount', numericValue);
                     }}
                     thousandSeparator=""
-                    decimalSeparator="."
+                    decimalSeparator=","
                     allowNegative={false}
                     decimalScale={2}
                     fixedDecimalScale={false}
@@ -607,7 +607,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       formik.setFieldValue('maxPaymentAmount', numericValue);
                     }}
                     thousandSeparator=""
-                    decimalSeparator="."
+                    decimalSeparator=","
                     allowNegative={false}
                     decimalScale={2}
                     fixedDecimalScale={false}
@@ -648,7 +648,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       formik.setFieldValue('paymentAmount', numericValue);
                     }}
                     thousandSeparator=""
-                    decimalSeparator="."
+                    decimalSeparator=","
                     allowNegative={false}
                     decimalScale={2}
                     fixedDecimalScale={false}

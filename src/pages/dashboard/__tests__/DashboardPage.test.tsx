@@ -95,7 +95,7 @@ const pspPartySelected = {
       roleKey: 'admin',
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+  urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
   typology: 'TODO',
   pspData: {
     businessRegisterNumber: '00000000000',

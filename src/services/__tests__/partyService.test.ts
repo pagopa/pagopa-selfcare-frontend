@@ -146,7 +146,7 @@ test('Test fetchParties', async () => {
   expect(parties[6]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[3]);
 
   parties.forEach((p) =>
-    expect(p.urlLogo).toBe(`http://checkout.selfcare/institutions/${p.partyId}/logo.png`)
+    expect(p.urlLogo).toBe(`https://checkout.selfcare/institutions/${p.partyId}/logo.png`)
   );
 
   expect(portalApiGetInstitutionsSpy).toBeCalledTimes(1);
@@ -159,7 +159,7 @@ describe('Test fetchPartyDetails', () => {
     expect(party).not.toBeNull();
     expect(party).toMatchObject(institutionDetailResource2Party(mockedInstitutionDetailResource));
     expect(party!.urlLogo).toBe(
-      `http://checkout.selfcare/institutions/${expectedPartyId}/logo.png`
+      `https://checkout.selfcare/institutions/${expectedPartyId}/logo.png`
     );
   };
 

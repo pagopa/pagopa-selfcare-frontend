@@ -111,16 +111,6 @@ const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
   if (pspCode.toUpperCase().includes('UNSIGNED')) {
     return brokerOrPspDetailsResource_Empty;
   }
-  if (pspCode.toUpperCase().includes('SIGNED')) {
-    return brokerOrPspDetailsResource_PSPAndBroker;
-  }
-  return brokerOrPspDetailsResource_Empty;
-};
-
-const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
-  if (pspCode.toUpperCase().includes('UNSIGNED')) {
-    return brokerOrPspDetailsResource_Empty;
-  }
   if (pspCode.toUpperCase().includes('SIGNED_DIRECT')) {
     return brokerOrPspDetailsResource_PSPAndBroker;
   }

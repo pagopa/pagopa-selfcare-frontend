@@ -44,7 +44,7 @@ export const pspAdminSignedUndirect: Party = {
       roleKey: 'admin', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/pspAdminSignedUndirect/logo.png',
   institutionType: 'PSP',
   pspData: {
     businessRegisterNumber: '00000000000',
@@ -180,7 +180,7 @@ export const ecAdminSignedDirect: Party = {
       roleKey: 'admin', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/ecAdminSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/ecAdminSignedDirect/logo.png',
   pspData: undefined,
 };
 
@@ -201,7 +201,7 @@ export const ecAdminSignedUndirect: Party = {
       roleKey: 'admin', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/ecAdminSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/ecAdminSignedUndirect/logo.png',
   pspData: undefined,
 };
 
@@ -264,7 +264,7 @@ export const ecOperatorSignedUndirect: Party = {
       roleKey: 'operator', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/ecOperatorSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/ecOperatorSignedUndirect/logo.png',
   pspData: undefined,
 };
 
@@ -327,7 +327,7 @@ export const PTPSPSigned: Party = {
       roleKey: 'operator', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/PTPSPSigned/logo.png',
   pspData: undefined,
 };
 
@@ -348,7 +348,7 @@ export const PTECSigned: Party = {
       roleKey: 'operator', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/PTECSigned/logo.png',
   pspData: undefined,
 };
 
@@ -369,7 +369,7 @@ export const PTECPSPSigned: Party = {
       roleKey: 'operator', // TODO use real product role
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  urlLogo: 'http://checkout.selfcare/institutions/PTECPSPSigned/logo.png',
   pspData: undefined,
 };
 

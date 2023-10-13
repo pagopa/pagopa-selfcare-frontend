@@ -25,7 +25,7 @@ export const pspAdminSignedInstitution: InstitutionResource = {
   originId: 'PSP_pspAdminSigned',
   origin: 'SELC',
   institutionType: 'PSP' as InstitutionTypeEnum,
-  name: 'PSP Admin Signed',
+  name: 'PSP Admin Signed Direct',
   fiscalCode: 'pspAdminSigned',
   mailAddress: 'pspAdminSigned@test.dummy',
   status: 'ACTIVE',
@@ -37,7 +37,7 @@ export const pspAdminSignedInstitution: InstitutionResource = {
     businessRegisterNumber: '00000000000',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
     legalRegisterNumber: '09879',
-    abiCode: 'pspAdminSigned',
+    abiCode: 'pspAdminSigned_DIRECT',
     vatNumberGroup: false,
   },
   dpoData: {
@@ -48,16 +48,16 @@ export const pspAdminSignedInstitution: InstitutionResource = {
 };
 
 export const pspAdminUnsignedInstitution: InstitutionResource = {
-  id: 'pspAdminUnsigned',
-  externalId: '14847241009',
-  originId: 'PSP_14847241009',
+  id: 'pspAdminSignedUndirect',
+  externalId: 'pspAdminSignedUndirect',
+  originId: 'PSP_pspAdminSignedUndirect',
   origin: 'SELC',
   institutionType: 'PSP' as InstitutionTypeEnum,
-  name: 'PSP Admin unsigned',
-  fiscalCode: '14847241009',
-  mailAddress: 'pspspa@test.dummy',
+  name: 'PSP Admin Signed Undirect',
+  fiscalCode: 'pspAdminSigned',
+  mailAddress: 'pspAdminSignedundirect@test.dummy',
   status: 'ACTIVE',
-  address: 'VIA DEI PSP 20, ROMA',
+  address: 'VIA DEI pspAdminSigned  Undirect 20, ROMA',
   userProductRoles: ['admin'],
   companyInformations: {},
   assistanceContacts: {},
@@ -65,7 +65,7 @@ export const pspAdminUnsignedInstitution: InstitutionResource = {
     businessRegisterNumber: '00000000000',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
     legalRegisterNumber: '09879',
-    abiCode: 'pspAdminUnsigned',
+    abiCode: 'pspAdminSigned_UNDIRECT',
     vatNumberGroup: false,
   },
   dpoData: {
@@ -76,13 +76,13 @@ export const pspAdminUnsignedInstitution: InstitutionResource = {
 };
 
 export const ecAdminSignedInstitution: InstitutionResource = {
-  id: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
+  id: 'ecAdminSignedDirect',
   externalId: '1122334455',
   originId: 'c_g922',
   origin: 'IPA',
   institutionType: 'PA' as InstitutionTypeEnum,
-  name: 'Ente Creditore S.r.l.',
-  fiscalCode: '1122334455',
+  name: 'EC Admin Signed Direct',
+  fiscalCode: 'ecAdminSigned_DIRECT',
   mailAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   address: 'Via degli Enti Creditori 1',
@@ -143,7 +143,7 @@ test('Test fetchParties', async () => {
   const parties = await fetchParties();
   expect(parties[0]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[0]);
   expect(parties[1]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[1]);
-  expect(parties[2]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[2]);
+  expect(parties[6]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[3]);
 
   parties.forEach((p) =>
     expect(p.urlLogo).toBe(`http://checkout.selfcare/institutions/${p.partyId}/logo.png`)

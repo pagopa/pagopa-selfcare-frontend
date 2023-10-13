@@ -10,9 +10,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
 import {
-  ecAdminSigned,
+  ecAdminSignedDirect,
   pspAdminUnsigned,
-  pspOperatorSigned,
+  pspOperatorSignedDirect,
 } from '../../../services/__mocks__/partyService';
 import { ecDetails, pspDetails } from '../../../services/__mocks__/nodeService';
 import NextSteps from '../components/NextSteps';
@@ -60,11 +60,11 @@ test('Test rendering - PSP unsigned admin', async () => {
 });
 
 test('Test - EC signed - admin', async () => {
-  const { store } = renderApp(ecDetails, ecAdminSigned);
+  const { store } = renderApp(ecDetails, ecAdminSignedDirect);
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: ecAdminSigned,
+      payload: ecAdminSignedDirect,
     })
   );
 
@@ -76,12 +76,12 @@ test('Test - EC signed - admin', async () => {
 });
 
 test('Test - PSP signed - operator', async () => {
-  const { store } = renderApp(pspDetails, pspOperatorSigned);
+  const { store } = renderApp(pspDetails, pspOperatorSignedDirect);
 
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspOperatorSigned,
+      payload: pspOperatorSignedDirect,
     })
   );
 
@@ -99,12 +99,12 @@ test('Test - PSP signed - operator', async () => {
 });
 
 test('Test - PSP unsigned - operator', async () => {
-  const { store } = renderApp(undefined, pspOperatorSigned);
+  const { store } = renderApp(undefined, pspOperatorSignedDirect);
 
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspOperatorSigned,
+      payload: pspOperatorSignedDirect,
     })
   );
 

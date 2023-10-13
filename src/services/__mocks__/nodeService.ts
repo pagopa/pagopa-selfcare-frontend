@@ -121,10 +121,29 @@ const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
   if (pspCode.toUpperCase().includes('UNSIGNED')) {
     return brokerOrPspDetailsResource_Empty;
   }
-  if (pspCode.toUpperCase().includes('SIGNED')) {
+  if (pspCode.toUpperCase().includes('SIGNED_DIRECT')) {
     return brokerOrPspDetailsResource_PSPAndBroker;
   }
+  if (pspCode.toUpperCase().includes('SIGNED_UNDIRECT')) {
+    return brokerOrPspDetailsResource_PSPOnly;
+  }
   return brokerOrPspDetailsResource_Empty;
+};
+
+const mapECCode2BrokerAndECDetailsResource = (ecCode: string) => {
+  if (ecCode.toUpperCase().includes('UNSIGNED')) {
+    return brokerAndEcDetailsResource_Empty;
+  }
+  if (ecCode.toUpperCase().includes('PT_PSP_SIGNED')) {
+    return brokerAndEcDetailsResource_Empty;
+  }
+  if (ecCode.toUpperCase().includes('SIGNED_DIRECT')) {
+    return brokerAndEcDetailsResource_ECAndBroker;
+  }
+  if (ecCode.toUpperCase().includes('SIGNED_UNDIRECT')) {
+    return brokerAndEcDetailsResource_ECOnly;
+  }
+  return brokerAndEcDetailsResource_Empty;
 };
 
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
@@ -140,8 +159,19 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
   return new Promise((resolve) => resolve(mapPspCode2BrokerOrPspDetailsResource(pspcode)));
 };
 
+export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
+  return new Promise((resolve) =>
+    resolve(
+      pspBrokerCode.toUpperCase().includes('UNSIGNED') ||
+        pspBrokerCode.toUpperCase().includes('PT_EC_SIGNED')
+        ? {}
+        : pspBrokerDetails
+    )
+  );
+};
+
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {
-  return new Promise((resolve) => resolve(brokerAndEcDetailsResource_ECAndBroker));
+  return new Promise((resolve) => resolve(mapECCode2BrokerAndECDetailsResource(ecCode)));
 };
 
 export const createECAndBroker = (

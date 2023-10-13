@@ -1,12 +1,12 @@
 import { Party } from '../../model/Party';
 import { PartyDetail } from '../../model/PartyDetail';
 
-export const pspAdminSigned: Party = {
+export const pspAdminSignedDirect: Party = {
   partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
   externalId: 'pspAdminSigned',
   originId: 'PSP_pspAdminSigned',
   origin: 'SELC',
-  description: 'PSP Admin Signed',
+  description: 'PSP Admin Signed Direct',
   fiscalCode: 'pspAdminSigned',
   digitalAddress: 'pspAdminSigned@test.dummy',
   status: 'ACTIVE',
@@ -23,7 +23,34 @@ export const pspAdminSigned: Party = {
     businessRegisterNumber: '00000000000',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
     legalRegisterNumber: '09879',
-    abiCode: 'pspAdminSigned',
+    abiCode: 'pspAdminSigned_DIRECT',
+    vatNumberGroup: false,
+  },
+};
+
+export const pspAdminSignedUndirect: Party = {
+  partyId: 'pspAdminSignedUndirect',
+  externalId: 'pspAdminSignedUndirect',
+  originId: 'PSP_pspAdminSignedUndirect',
+  origin: 'SELC',
+  description: 'PSP Admin Signed Undirect',
+  fiscalCode: 'pspAdminSigned',
+  digitalAddress: 'pspAdminSignedundirect@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'VIA DEI pspAdminSigned  Undirect 20, ROMA',
+  roles: [
+    {
+      partyRole: 'DELEGATE',
+      roleKey: 'admin', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+  institutionType: 'PSP',
+  pspData: {
+    businessRegisterNumber: '00000000000',
+    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+    legalRegisterNumber: '09879',
+    abiCode: 'pspAdminSigned_UNDIRECT',
     vatNumberGroup: false,
   },
 };
@@ -55,6 +82,60 @@ export const pspAdminUnsigned: Party = {
   },
 };
 
+export const pspOperatorSignedDirect: Party = {
+  partyId: 'pspOperatorSigned',
+  externalId: '14847241008',
+  originId: 'PSP_14847241008',
+  origin: 'SELC',
+  description: 'PSP Operator Signed Direct',
+  fiscalCode: '14847241008',
+  digitalAddress: 'pspspa@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'VIA DEI PSP 20, ROMA',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/pspOperatorSigned/logo.png',
+  institutionType: 'PSP',
+  pspData: {
+    businessRegisterNumber: '00000000000',
+    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+    legalRegisterNumber: '09878',
+    abiCode: 'pspOperatorSigned_DIRECT',
+    vatNumberGroup: false,
+  },
+};
+
+export const pspOperatorSignedUndirect: Party = {
+  partyId: 'pspOperatorSignedUndirect',
+  externalId: '14847241008',
+  originId: 'PSP_14847241008',
+  origin: 'SELC',
+  description: 'PSP Operator Signed Undirect',
+  fiscalCode: '14847241008',
+  digitalAddress: 'pspspa@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'VIA DEI PSP 20, ROMA',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/pspOperatorSignedUndirect/logo.png',
+  institutionType: 'PSP',
+  pspData: {
+    businessRegisterNumber: '00000000000',
+    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
+    legalRegisterNumber: '09878',
+    abiCode: 'pspOperatorSigned_UNDIRECT',
+    vatNumberGroup: false,
+  },
+};
+
 export const pspOperatorUnsigned: Party = {
   partyId: 'pspOperatorUnsigned',
   externalId: '14847241010',
@@ -82,41 +163,35 @@ export const pspOperatorUnsigned: Party = {
   },
 };
 
-export const pspOperatorSigned: Party = {
-  partyId: 'pspOperatorSigned',
-  externalId: '14847241008',
-  originId: 'PSP_14847241008',
-  origin: 'SELC',
-  description: 'PSP Operator Signed',
-  fiscalCode: '14847241008',
-  digitalAddress: 'pspspa@test.dummy',
-  status: 'ACTIVE',
-  registeredOffice: 'VIA DEI PSP 20, ROMA',
-  roles: [
-    {
-      partyRole: 'OPERATOR',
-      roleKey: 'operator', // TODO use real product role
-    },
-  ],
-  urlLogo: 'http://checkout.selfcare/institutions/pspOperatorSigned/logo.png',
-  institutionType: 'PSP',
-  pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: 'pspOperatorSigned',
-    vatNumberGroup: false,
-  },
-};
-
-export const ecAdminSigned: Party = {
-  partyId: 'ecAdminSigned',
+export const ecAdminSignedDirect: Party = {
+  partyId: 'ecAdminSignedDirect',
   externalId: '1122334455',
   originId: 'c_g922',
   origin: 'IPA',
   institutionType: 'PA',
-  description: 'EC Admin Signed',
-  fiscalCode: '1122334455',
+  description: 'EC Admin Signed Direct',
+  fiscalCode: 'ecAdminSigned_DIRECT',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'DELEGATE',
+      roleKey: 'admin', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/ecAdminSigned/logo.png',
+  pspData: undefined,
+};
+
+export const ecAdminSignedUndirect: Party = {
+  partyId: 'ecAdminSignedUndirect',
+  externalId: '1122334455',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PA',
+  description: 'EC Admin Signed Undirect',
+  fiscalCode: 'ecAdminSigned_UNDIRECT',
   digitalAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'Via degli Enti Creditori 1',
@@ -137,7 +212,7 @@ export const ecAdminUnsigned: Party = {
   origin: 'IPA',
   institutionType: 'PA',
   description: 'EC Admin Unsigned',
-  fiscalCode: '1122334455',
+  fiscalCode: 'ecAdminUnsigned',
   digitalAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'Via degli Enti Creditori 1',
@@ -151,14 +226,35 @@ export const ecAdminUnsigned: Party = {
   pspData: undefined,
 };
 
-export const ecOperatorSigned: Party = {
+export const ecOperatorSignedDirect: Party = {
   partyId: 'ecOperatorSigned',
   externalId: '1122334456',
   originId: 'c_g922',
   origin: 'IPA',
   institutionType: 'PA',
-  description: 'EC OP Signed',
-  fiscalCode: '1122334456',
+  description: 'EC OP Signed Direct',
+  fiscalCode: 'ecOperatorSigned_DIRECT',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/ecOperatorSigned/logo.png',
+  pspData: undefined,
+};
+
+export const ecOperatorSignedUndirect: Party = {
+  partyId: 'ecOperatorSignedUndirect',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PA',
+  description: 'EC OP Signed Undirect',
+  fiscalCode: 'ecOperatorSigned_UNDIRECT',
   digitalAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'Via degli Enti Creditori 1',
@@ -179,7 +275,7 @@ export const ecOperatorUnsigned: Party = {
   origin: 'IPA',
   institutionType: 'PA',
   description: 'EC OP unsigned',
-  fiscalCode: '1122334456',
+  fiscalCode: 'ecOperatorUnsigned',
   digitalAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'Via degli Enti Creditori 1',
@@ -193,15 +289,107 @@ export const ecOperatorUnsigned: Party = {
   pspData: undefined,
 };
 
+export const PTUnsigned: Party = {
+  partyId: 'PTUnsigned',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PT',
+  description: 'PT unsigned',
+  fiscalCode: 'PTUnsigned',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/PTUnsigned/logo.png',
+  pspData: undefined,
+};
+
+export const PTPSPSigned: Party = {
+  partyId: 'PTPSPSigned',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PT',
+  description: 'PT PSP Signed',
+  fiscalCode: 'PT_PSP_SIGNED_DIRECT',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  pspData: undefined,
+};
+
+export const PTECSigned: Party = {
+  partyId: 'PTECSigned',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PT',
+  description: 'PT EC Signed',
+  fiscalCode: 'PT_EC_SIGNED_DIRECT',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  pspData: undefined,
+};
+
+export const PTECPSPSigned: Party = {
+  partyId: 'PTECPSPSigned',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PT',
+  description: 'PT ECPSP Signed',
+  fiscalCode: 'PT_EC_PSP_SIGNED_DIRECT',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/PTSigned/logo.png',
+  pspData: undefined,
+};
+
 export const mockedParties: Array<Party> = [
-  pspAdminSigned,
+  pspAdminSignedDirect,
+  pspAdminSignedUndirect,
   pspAdminUnsigned,
+  pspOperatorSignedDirect,
+  pspOperatorSignedUndirect,
   pspOperatorUnsigned,
-  pspOperatorSigned,
-  ecAdminSigned,
+  ecAdminSignedDirect,
+  ecAdminSignedUndirect,
   ecAdminUnsigned,
-  ecOperatorSigned,
+  ecOperatorSignedDirect,
+  ecOperatorSignedUndirect,
   ecOperatorUnsigned,
+  PTUnsigned,
+  PTPSPSigned,
+  PTECSigned,
+  PTECPSPSigned,
 ];
 
 export const mockedPartyDetail: PartyDetail = {

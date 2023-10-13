@@ -2,10 +2,10 @@ import { getUserRole } from '../rbac-utils'; // Import your module
 import * as utils from '../../pages/components/commonFunctions';
 import { ROLE } from '../../model/RolePermission';
 import {
-  ecAdminSigned,
+  ecAdminSignedDirect,
   ecOperatorUnsigned,
   pspAdminUnsigned,
-  pspOperatorSigned,
+  pspOperatorSignedDirect,
 } from '../../services/__mocks__/partyService';
 import { Party } from '../../model/Party';
 
@@ -15,13 +15,13 @@ describe('getUserRole function', () => {
   test('should return ROLE.PAGOPA_OPERATOR when isOperator() is true', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(true);
 
-    const result = getUserRole(pspOperatorSigned);
+    const result = getUserRole(pspOperatorSignedDirect);
     expect(result).toBe(ROLE.PAGOPA_OPERATOR);
   });
 
   test('should return ROLE.PSP_OPERATOR when party is a PSP with roleKey "operator"', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(false);
-    const result = getUserRole(pspOperatorSigned);
+    const result = getUserRole(pspOperatorSignedDirect);
     expect(result).toBe(ROLE.PSP_OPERATOR);
   });
 
@@ -39,7 +39,7 @@ describe('getUserRole function', () => {
 
   test('should return ROLE.EC_ADMIN when party is an EC with roleKey "admin"', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(false);
-    const result = getUserRole(ecAdminSigned);
+    const result = getUserRole(ecAdminSignedDirect);
     expect(result).toBe(ROLE.EC_ADMIN);
   });
 

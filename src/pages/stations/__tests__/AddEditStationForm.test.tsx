@@ -24,7 +24,7 @@ import {
 } from '../../../api/generated/portal/StationDetailsDto';
 import { isOperator } from '../../components/commonFunctions';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { ecAdminSigned } from '../../../services/__mocks__/partyService';
+import { ecAdminSignedDirect } from '../../../services/__mocks__/partyService';
 import * as stationService from '../../../services/stationService';
 
 jest.mock('../../components/commonFunctions');
@@ -73,7 +73,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
   test('Test rendering AddEditStationForm with operator false', async () => {
     (isOperator as jest.Mock).mockReturnValue(false);
-    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
 
     render(
@@ -128,7 +128,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
   test('Test Edit AddEditStationForm with operator false', async () => {
     (isOperator as jest.Mock).mockReturnValue(false);
-    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const updateWrapperStationToCheckUpdate = jest.spyOn(
       stationService,
       'updateWrapperStationToCheckUpdate'
@@ -174,7 +174,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
-    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     (isOperator as jest.Mock).mockReturnValue(true);
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
     const createStation = jest.spyOn(stationService, 'createStation');
@@ -309,7 +309,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
     );
     expect(radioGPD.checked).toBeTruthy();
-    // console.log('checked', test.checked);
   });
 
   test('Test gdpConcat select handleChange with operator true', async () => {

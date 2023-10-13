@@ -7,7 +7,7 @@ import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import StationDetailPage from '../detail/StationDetailPage';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { ecAdminSigned } from '../../../services/__mocks__/partyService';
+import { ecAdminSignedDirect } from '../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -34,7 +34,7 @@ describe('<StationDetailPage />', () => {
   });
 
   test('Test Render station detail with role operator', async () => {
-    store.dispatch(partiesActions.setPartySelected(ecAdminSigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/station/${stationId}`]}>

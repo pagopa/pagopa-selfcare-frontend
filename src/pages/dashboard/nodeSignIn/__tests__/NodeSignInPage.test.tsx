@@ -12,7 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 import NodeSignInPage from '../NodeSignInPage';
 import { createStore } from '../../../../redux/store';
 import { Party } from '../../../../model/Party';
-import { pspAdminSigned } from '../../../../services/__mocks__/partyService';
+import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -44,7 +44,7 @@ test('Test rendering with psp', async () => {
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspAdminSigned,
+      payload: pspAdminSignedDirect,
     })
   );
   expect(screen.getByText(/Marca da bollo digitale/i)).toBeVisible();

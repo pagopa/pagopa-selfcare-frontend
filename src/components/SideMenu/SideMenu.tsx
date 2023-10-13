@@ -91,7 +91,7 @@ export default function SideMenu() {
               handleClick={() => onExit(() => history.push(ROUTES.IBAN))}
               isSelected={pathname === ROUTES.IBAN || pathname.startsWith(ROUTES.IBAN)}
               icon={EuroIcon}
-              disabled={isDisabled}
+              disabled={isDisabled || !hasPermission('iban')}
               dataTestId="iban-test"
             />
           )}

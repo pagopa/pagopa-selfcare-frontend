@@ -54,6 +54,7 @@ import { DelegationResource } from './generated/portal/DelegationResource';
 import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { PaymentServiceProviderDetailsDto } from './generated/portal/PaymentServiceProviderDetailsDto';
+import { BrokerPspDetailsResource } from './generated/portal/BrokerPspDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -180,6 +181,11 @@ export const PortalApi = {
 
   getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
     const result = await apiConfigClient.getBrokerAndPspDetailsUsingGET({ code });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getPSPBrokerDetails: async (brokerpspcode: string): Promise<BrokerPspDetailsResource> => {
+    const result = await apiConfigClient.getBrokerPspUsingGET({ brokerpspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

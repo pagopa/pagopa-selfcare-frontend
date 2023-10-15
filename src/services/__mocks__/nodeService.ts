@@ -53,8 +53,8 @@ export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
   {
     address: {
       city: 'Milano',
-      countryCode: 'Via Ernesto Calindri 4',
-      location: 'MI',
+      countryCode: 'MY',
+      location: 'Via Ernesto Calindri 4',
       taxDomicile: 'Via Ernesto Calindri 4',
       zipCode: '20143',
     },
@@ -71,8 +71,8 @@ export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
 const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   address: {
     city: 'Monza',
-    countryCode: 'Via Liberta 64',
-    location: 'MB',
+    countryCode: 'MB',
+    location: 'Via Liberta 64',
     taxDomicile: 'Via Ernesto Calindri 4',
     zipCode: '20900',
   },

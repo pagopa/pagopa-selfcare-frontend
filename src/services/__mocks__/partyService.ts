@@ -34,8 +34,8 @@ export const pspAdminSignedUndirect: Party = {
   originId: 'PSP_pspAdminSignedUndirect',
   origin: 'SELC',
   description: 'PSP Admin Signed Undirect',
-  fiscalCode: 'pspAdminSigned',
-  digitalAddress: 'pspAdminSignedundirect@test.dummy',
+  fiscalCode: 'pspAdminSignedUndirect',
+  digitalAddress: 'pspAdminSignedUndirectInstitution@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'VIA DEI pspAdminSigned  Undirect 20, ROMA',
   roles: [
@@ -47,11 +47,11 @@ export const pspAdminSignedUndirect: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspAdminSignedUndirect/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09879',
+    businessRegisterNumber: '00000000001',
+    legalRegisterName: 'ISTITUTO DI PAGAMENTO',
+    legalRegisterNumber: '09880',
     abiCode: 'pspAdminSigned_UNDIRECT',
-    vatNumberGroup: false,
+    vatNumberGroup: true,
   },
 };
 

@@ -14,8 +14,8 @@ export const useSigninData = () => {
   const setSigninData = (signinData?: SigninData) =>
     dispatch(partiesActions.setSigninData(signinData));
 
-  return (party: Party) => {
-    fetchSigninData(party)
+  return async (party: Party) => {
+    await fetchSigninData(party)
       .then((result) => {
         setSigninData(result);
       })

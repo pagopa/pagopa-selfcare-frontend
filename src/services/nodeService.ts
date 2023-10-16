@@ -1,5 +1,6 @@
 import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsResource } from '../api/generated/portal/BrokerPspDetailsResource';
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/PaymentServiceProviderDetailsDto';
@@ -11,6 +12,7 @@ import { PSPDirectDTO } from '../model/PSP';
 import {
   createPSPDirect as createPSPDirectMocked,
   getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
+  getPSPBrokerDetails as getPSPBrokerDetailsMocked,
   getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
   createECAndBroker as createECAndBrokerMocked,
   createECIndirect as createECIndirectMocked,
@@ -57,6 +59,15 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
     return getBrokerAndPspDetailsMocked(pspcode);
   } else {
     return PortalApi.getBrokerAndPspDetails(pspcode).then((resources) => resources);
+  }
+};
+
+export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getPSPBrokerDetailsMocked(pspBrokerCode);
+  } else {
+    return PortalApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
   }
 };
 

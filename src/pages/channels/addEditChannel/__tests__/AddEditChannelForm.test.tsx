@@ -9,7 +9,10 @@ import { Router } from 'react-router-dom';
 import { FormAction } from '../../../../model/Channel';
 import { store } from '../../../../redux/store';
 import AddEditChannelForm from '../AddEditChannelForm';
-import { mockedParties } from '../../../../services/__mocks__/partyService';
+import {
+  pspAdminSignedDirect,
+  pspOperatorSignedDirect,
+} from '../../../../services/__mocks__/partyService';
 import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { Party } from '../../../../model/Party';
@@ -27,65 +30,9 @@ afterEach(cleanup);
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
-  const adminUser: Array<Party> = [
-    {
-      partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-      externalId: '14847241008',
-      originId: 'PSP_14847241008',
-      origin: 'SELC',
-      description: 'PSP S.p.A.',
-      fiscalCode: '14847241008',
-      digitalAddress: 'pspspa@test.dummy',
-      status: 'ACTIVE',
-      registeredOffice: 'VIA DEI PSP 20, ROMA',
-      roles: [
-        {
-          partyRole: 'DELEGATE',
-          roleKey: 'admin',
-        },
-      ],
-      urlLogo:
-        'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
-      institutionType: 'PSP',
-      pspData: {
-        businessRegisterNumber: '00000000000',
-        legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-        legalRegisterNumber: '09878',
-        abiCode: '36042',
-        vatNumberGroup: false,
-      },
-    },
-  ];
+  const adminUser: Array<Party> = [pspAdminSignedDirect];
 
-  const operatorUser: Array<Party> = [
-    {
-      partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-      externalId: '14847241008',
-      originId: 'PSP_14847241008',
-      origin: 'SELC',
-      description: 'PSP S.p.A.',
-      fiscalCode: '14847241008',
-      digitalAddress: 'pspspa@test.dummy',
-      status: 'ACTIVE',
-      registeredOffice: 'VIA DEI PSP 20, ROMA',
-      roles: [
-        {
-          partyRole: 'DELEGATE',
-          roleKey: 'operator', // TODO use real product role
-        },
-      ],
-      urlLogo:
-        'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
-      institutionType: 'PSP',
-      pspData: {
-        businessRegisterNumber: '00000000000',
-        legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-        legalRegisterNumber: '09878',
-        abiCode: '36042',
-        vatNumberGroup: false,
-      },
-    },
-  ];
+  const operatorUser: Array<Party> = [pspOperatorSignedDirect];
 
   test('Test rendering AddEditChannelForm', async () => {
     render(
@@ -94,8 +41,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Duplicate}
-              selectedParty={mockedParties[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
             />
           </ThemeProvider>
         </Router>
@@ -110,9 +57,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       'addEditChannelPage.addForm.continueButton'
     ) as HTMLButtonElement;
 
-    expect(businessName.value).toBe(mockedParties[0].description);
-    expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
-    expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
+    expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+    expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+    expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
 
     fireEvent.click(businessName);
     fireEvent.change(businessName, { target: { value: 'businessName' } });
@@ -152,8 +99,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Create}
-              selectedParty={mockedParties[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
             />
           </ThemeProvider>
         </Router>
@@ -168,7 +115,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Duplicate}
-              selectedParty={mockedParties[0]}
+              selectedParty={pspOperatorSignedDirect}
               channelCode={'14847241008_01'}
             />
           </ThemeProvider>
@@ -184,7 +131,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
+              selectedParty={pspOperatorSignedDirect}
               channelCode={'14847241008_01'}
             />
           </ThemeProvider>
@@ -200,8 +147,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Create}
-              selectedParty={adminUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
             />
           </ThemeProvider>
         </Router>
@@ -216,9 +163,9 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
     const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
 
-    expect(businessName.value).toBe(mockedParties[0].description);
-    expect(pspBrokerCode.value).toBe(mockedParties[0].fiscalCode);
-    expect(channelCode.value).toBe(`${mockedParties[0].fiscalCode}_01`);
+    expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+    expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+    expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
 
     fireEvent.click(targetUnion);
     fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
@@ -253,7 +200,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
       target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 443,
       target_host: 'www.lab.link.it',
@@ -267,8 +214,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
               channelDetail={channelDetail}
             />
           </ThemeProvider>
@@ -304,7 +251,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
       target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 8080,
       target_host: 'https://www.lab.link.it',
@@ -319,7 +266,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
             <AddEditChannelForm
               formAction={FormAction.Edit}
               selectedParty={operatorUser[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
               channelDetail={channelDetail}
             />
           </ThemeProvider>
@@ -395,7 +342,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     const channelDetail: ChannelDetailsDto = {
       broker_psp_code: '97735020584',
       broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${mockedParties[0].fiscalCode}_01`,
+      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
       target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
       target_port: 443,
       target_host: '',
@@ -409,8 +356,8 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
           <ThemeProvider theme={theme}>
             <AddEditChannelForm
               formAction={FormAction.Edit}
-              selectedParty={mockedParties[0]}
-              channelCode={`${mockedParties[0].fiscalCode}_01`}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
               channelDetail={channelDetail}
             />
           </ThemeProvider>

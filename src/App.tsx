@@ -113,16 +113,24 @@ const SecuredRoutes = withLogin(
           </Route>
 
           <Route path={routes.IBAN} exact={true}>
-            <IbanPage />
+            <ProtectedRoute permission="iban">
+              <IbanPage />
+            </ProtectedRoute>
           </Route>
           <Route path={routes.IBAN_ADD} exact={true}>
-            <AddEditIbanPage />
+            <ProtectedRoute permission="iban">
+              <AddEditIbanPage />
+            </ProtectedRoute>
           </Route>
           <Route path={routes.IBAN_DETAIL} exact={true}>
-            <IbanDetailPage />
+            <ProtectedRoute permission="iban">
+              <IbanDetailPage />
+            </ProtectedRoute>
           </Route>
           <Route path={routes.IBAN_EDIT} exact={true}>
-            <AddEditIbanPage />
+            <ProtectedRoute permission="iban">
+              <AddEditIbanPage />
+            </ProtectedRoute>
           </Route>
 
           <Route path={routes.COMMISSION_PACKAGES} exact={true}>

@@ -10,11 +10,17 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
 import {
-  ecAdminSigned,
+  ecAdminSignedDirect,
   pspAdminUnsigned,
-  pspOperatorSigned,
+  pspOperatorSignedDirect,
 } from '../../../services/__mocks__/partyService';
-import { ecDetails, pspDetails } from '../../../services/__mocks__/nodeService';
+import {
+  ecDetails,
+  pspDetails,
+  brokerAndEcDetailsResource_ECAndBroker,
+  brokerOrPspDetailsResource_Empty,
+  brokerOrPspDetailsResource_PSPAndBroker,
+} from '../../../services/__mocks__/nodeService';
 import NextSteps from '../components/NextSteps';
 import { SigninData } from '../../../model/Node';
 import { Party } from '../../../model/Party';
@@ -52,6 +58,14 @@ test('Test rendering - PSP unsigned admin', async () => {
       payload: pspAdminUnsigned,
     })
   );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerOrPspDetailsResource_Empty,
+    })
+  );
+
   expect(
     screen.queryByRole('link', {
       name: /Completa registrazione/i,
@@ -59,12 +73,20 @@ test('Test rendering - PSP unsigned admin', async () => {
   ).toBeVisible();
 });
 
-test('Test - EC signed - admin', async () => {
-  const { store } = renderApp(ecDetails, ecAdminSigned);
+test('Test - EC direct signed - admin', async () => {
+  const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker, ecAdminSignedDirect);
+
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: ecAdminSigned,
+      payload: ecAdminSignedDirect,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerAndEcDetailsResource_ECAndBroker,
     })
   );
 
@@ -72,16 +94,23 @@ test('Test - EC signed - admin', async () => {
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeNull();
+  ).toBeVisible();
 });
 
-test('Test - PSP signed - operator', async () => {
-  const { store } = renderApp(pspDetails, pspOperatorSigned);
+test('Test - PSP direct signed - operator', async () => {
+  const { store } = renderApp(pspDetails, pspOperatorSignedDirect);
 
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspOperatorSigned,
+      payload: pspOperatorSignedDirect,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerOrPspDetailsResource_PSPAndBroker,
     })
   );
 
@@ -99,12 +128,12 @@ test('Test - PSP signed - operator', async () => {
 });
 
 test('Test - PSP unsigned - operator', async () => {
-  const { store } = renderApp(undefined, pspOperatorSigned);
+  const { store } = renderApp(undefined, pspOperatorSignedDirect);
 
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspOperatorSigned,
+      payload: pspOperatorSignedDirect,
     })
   );
 

@@ -8,7 +8,7 @@ import React from 'react';
 import AddEditCommissionPackageForm from '../addEditCommissionPackage/components/AddEditCommissionPackageForm';
 import { mockedTouchpoints } from '../../../services/__mocks__/commissionPackageService';
 import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { pspOperatorSigned } from '../../../services/__mocks__/partyService';
+import { pspOperatorSignedDirect } from '../../../services/__mocks__/partyService';
 import { CommissionPackageOnCreation } from '../../../model/CommissionPackage';
 
 let spyOnGetPaymentTypes;
@@ -126,7 +126,7 @@ describe('<AddEditCommissionPackageForm />', () => {
 
   test('Test AddEditCommissionPackageForm with all input change', async () => {
     const { ...input } = componentRender();
-    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSigned)));
+    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
 
     const changeChannelId = () => {
       fireEvent.mouseDown(input.channelList);

@@ -1,6 +1,4 @@
-import {
-  InstitutionResource,
-} from '../../api/generated/portal/InstitutionResource';
+import { InstitutionResource } from '../../api/generated/portal/InstitutionResource';
 import { institutionResource2Party } from '../Party';
 
 test('Test institutionResource2Party', () => {
@@ -42,7 +40,7 @@ test('Test institutionResource2Party', () => {
     digitalAddress: 'selfcare@pec.pagopa.it',
     status: 'ACTIVE',
     roles: [{ partyRole: 'DELEGATE', roleKey: 'admin' }],
-    urlLogo: 'http://checkout.selfcare/institutions/46ef5b6b-7ee4-4dab-b8bc-fb5e30111239/logo.png',
+    urlLogo: 'https://checkout.selfcare/institutions/46ef5b6b-7ee4-4dab-b8bc-fb5e30111239/logo.png',
     fiscalCode: '15376371009',
     registeredOffice: 'Piazza Colonna, 370',
     institutionType: undefined,

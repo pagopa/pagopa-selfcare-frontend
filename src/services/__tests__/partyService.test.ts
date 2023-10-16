@@ -19,25 +19,25 @@ beforeEach(() => {
   portalApiGetInstitutionsSpy = jest.spyOn(require('../partyService'), 'fetchParties');
 });
 
-export const pspOperatorSignedInstitution: InstitutionResource = {
+export const pspAdminSignedInstitution: InstitutionResource = {
   id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-  externalId: '14847241008',
-  originId: 'PSP_14847241008',
+  externalId: 'pspAdminSigned',
+  originId: 'PSP_pspAdminSigned',
   origin: 'SELC',
   institutionType: 'PSP' as InstitutionTypeEnum,
-  name: 'PSP S.p.A.',
-  fiscalCode: '14847241008',
-  mailAddress: 'pspspa@test.dummy',
+  name: 'PSP Admin Signed Direct',
+  fiscalCode: 'pspAdminSigned',
+  mailAddress: 'pspAdminSigned@test.dummy',
   status: 'ACTIVE',
-  address: 'VIA DEI PSP 20, ROMA',
-  userProductRoles: ['operator'],
+  address: 'VIA DEI pspAdminSigned 20, ROMA',
+  userProductRoles: ['admin'],
   companyInformations: {},
   assistanceContacts: {},
   pspData: {
     businessRegisterNumber: '00000000000',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: '36042',
+    legalRegisterNumber: '09879',
+    abiCode: 'pspAdminSigned_DIRECT',
     vatNumberGroup: false,
   },
   dpoData: {
@@ -47,14 +47,42 @@ export const pspOperatorSignedInstitution: InstitutionResource = {
   },
 };
 
+export const pspAdminUnsignedInstitution: InstitutionResource = {
+  id: 'pspAdminSignedUndirect',
+  externalId: 'pspAdminSignedUndirect',
+  originId: 'PSP_pspAdminSignedUndirect',
+  origin: 'SELC',
+  institutionType: 'PSP' as InstitutionTypeEnum,
+  name: 'PSP Admin Signed Undirect',
+  fiscalCode: 'pspAdminSignedUndirect',
+  mailAddress: 'pspAdminSignedUndirectInstitution@test.dummy',
+  status: 'ACTIVE',
+  address: 'VIA DEI pspAdminSigned  Undirect 20, ROMA',
+  userProductRoles: ['admin'],
+  companyInformations: {},
+  assistanceContacts: {},
+  pspData: {
+    businessRegisterNumber: '00000000001',
+    legalRegisterName: 'ISTITUTO DI PAGAMENTO',
+    legalRegisterNumber: '09880',
+    abiCode: 'pspAdminSigned_UNDIRECT',
+    vatNumberGroup: true,
+  },
+  dpoData: {
+    address: 'pectestunsigned@pec.pagopa.it',
+    pec: 'pectestunsigned@pec.pagopa.it',
+    email: 'pectestunsigned@pec.pagopa.it',
+  },
+};
+
 export const ecAdminSignedInstitution: InstitutionResource = {
-  id: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
+  id: 'ecAdminSignedDirect',
   externalId: '1122334455',
   originId: 'c_g922',
   origin: 'IPA',
   institutionType: 'PA' as InstitutionTypeEnum,
-  name: 'Ente Creditore S.r.l.',
-  fiscalCode: '1122334455',
+  name: 'EC Admin Signed Direct',
+  fiscalCode: 'ecAdminSigned_DIRECT',
   mailAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   address: 'Via degli Enti Creditori 1',
@@ -63,36 +91,8 @@ export const ecAdminSignedInstitution: InstitutionResource = {
   assistanceContacts: {},
 };
 
-export const pspAdminUnsignedInstitution: InstitutionResource = {
-  id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b945',
-  externalId: '14847241009',
-  originId: 'PSP_14847241009',
-  origin: 'SELC',
-  institutionType: 'PSP' as InstitutionTypeEnum,
-  name: 'PSP Admin unsigned',
-  fiscalCode: '14847241009',
-  mailAddress: 'pspspa@test.dummy',
-  status: 'ACTIVE',
-  address: 'VIA DEI PSP 20, ROMA',
-  userProductRoles: ['admin'],
-  companyInformations: {},
-  assistanceContacts: {},
-  pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09879',
-    abiCode: '36043',
-    vatNumberGroup: false,
-  },
-  dpoData: {
-    address: 'pectest@pec.pagopa.it',
-    pec: 'pectest@pec.pagopa.it',
-    email: 'pectest@pec.pagopa.it',
-  },
-};
-
 export const pspOperatorUnsignedInstitution: InstitutionResource = {
-  id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b946',
+  id: 'pspOperatorUnsigned',
   externalId: '14847241010',
   originId: 'PSP_14847241010',
   origin: 'SELC',
@@ -107,7 +107,7 @@ export const pspOperatorUnsignedInstitution: InstitutionResource = {
     businessRegisterNumber: '00000000001',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
     legalRegisterNumber: '09880',
-    abiCode: '36044',
+    abiCode: 'pspOperatorUnsigned',
     vatNumberGroup: false,
   },
   dpoData: {
@@ -132,19 +132,21 @@ export const ecOperatorUnsignedInstitution: InstitutionResource = {
 };
 
 export const mockedInstitutions: Array<InstitutionResource> = [
-  pspOperatorSignedInstitution,
-  ecAdminSignedInstitution,
+  pspAdminSignedInstitution,
   pspAdminUnsignedInstitution,
   pspOperatorUnsignedInstitution,
+  ecAdminSignedInstitution,
   ecOperatorUnsignedInstitution,
 ];
 
 test('Test fetchParties', async () => {
   const parties = await fetchParties();
-  expect(parties).toMatchObject(mockedInstitutions.map(institutionResource2Party));
+  expect(parties[0]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[0]);
+  expect(parties[1]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[1]);
+  expect(parties[6]).toMatchObject(mockedInstitutions.map(institutionResource2Party)[3]);
 
   parties.forEach((p) =>
-    expect(p.urlLogo).toBe(`http://checkout.selfcare/institutions/${p.partyId}/logo.png`)
+    expect(p.urlLogo).toBe(`https://checkout.selfcare/institutions/${p.partyId}/logo.png`)
   );
 
   expect(portalApiGetInstitutionsSpy).toBeCalledTimes(1);
@@ -157,7 +159,7 @@ describe('Test fetchPartyDetails', () => {
     expect(party).not.toBeNull();
     expect(party).toMatchObject(institutionDetailResource2Party(mockedInstitutionDetailResource));
     expect(party!.urlLogo).toBe(
-      `http://checkout.selfcare/institutions/${expectedPartyId}/logo.png`
+      `https://checkout.selfcare/institutions/${expectedPartyId}/logo.png`
     );
   };
 

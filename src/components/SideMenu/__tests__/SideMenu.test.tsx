@@ -16,7 +16,7 @@ import { ThemeProvider } from '@mui/material';
 import { Router } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import { createStore } from '../../../redux/store';
-import { ecAdminSigned, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
+import { ecAdminSignedDirect, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
 import ROUTES from '../../../routes';
 import { pspDetails } from '../../../services/__mocks__/nodeService';
 
@@ -77,7 +77,7 @@ describe('SideMenu component', () => {
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
-        payload: ecAdminSigned,
+        payload: ecAdminSignedDirect,
       })
     );
     const stations = await screen.findByText('sideMenu.stations.title');

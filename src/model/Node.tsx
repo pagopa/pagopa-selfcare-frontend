@@ -11,4 +11,4 @@ export type NodeOnSignInPSP = {
   digitalStamp: boolean;
 };
 
-export type SigninData = BrokerOrPspDetailsResource | BrokerAndEcDetailsResource;
+export type SigninData = BrokerOrPspDetailsResource & BrokerAndEcDetailsResource;

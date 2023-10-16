@@ -12,6 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 import NodeSignInPage from '../NodeSignInPage';
 import { createStore } from '../../../../redux/store';
 import { Party } from '../../../../model/Party';
+import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -43,7 +44,7 @@ test('Test rendering with psp', async () => {
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspPartySelected,
+      payload: pspAdminSignedDirect,
     })
   );
   expect(screen.getByText(/Marca da bollo digitale/i)).toBeVisible();
@@ -77,7 +78,7 @@ const pspPartySelected: Party = {
       roleKey: 'admin',
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
+  urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
   pspData: {
     businessRegisterNumber: '00000000000',
     legalRegisterName: 'ISTITUTI DI PAGAMENTO',
@@ -105,5 +106,5 @@ const ecPartySelected: Party = {
       roleKey: 'admin',
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
+  urlLogo: 'https://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
 };

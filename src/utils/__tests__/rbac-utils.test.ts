@@ -2,12 +2,18 @@ import { getUserRole } from '../rbac-utils'; // Import your module
 import * as utils from '../../pages/components/commonFunctions';
 import { ROLE } from '../../model/RolePermission';
 import {
-  ecAdminSigned,
+  PTECPSPSigned,
+  PTECSigned,
+  PTPSPSigned,
+  PTUnsigned,
+  ecAdminSignedDirect,
   ecOperatorUnsigned,
   pspAdminUnsigned,
-  pspOperatorSigned,
+  pspOperatorSignedDirect,
 } from '../../services/__mocks__/partyService';
+import { pspBrokerDetails, ecBrokerDetails } from '../../services/__mocks__/nodeService';
 import { Party } from '../../model/Party';
+import { SigninData } from '../../model/Node';
 
 describe('getUserRole function', () => {
   jest.mock('../../pages/components/commonFunctions');
@@ -15,13 +21,54 @@ describe('getUserRole function', () => {
   test('should return ROLE.PAGOPA_OPERATOR when isOperator() is true', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(true);
 
-    const result = getUserRole(pspOperatorSigned);
+    const result = getUserRole(pspOperatorSignedDirect);
     expect(result).toBe(ROLE.PAGOPA_OPERATOR);
+  });
+
+  test('should return ROLE.ROLE.PT_PSPEC_OPERATOR when party is a PT signedin as a PSP and EC broker ', () => {
+    jest.spyOn(utils, 'isOperator').mockReturnValue(false);
+
+    const signinDataPTECPSPSigned: SigninData = {
+      brokerPspDetailsResource: { ...pspBrokerDetails },
+      brokerDetailsResource: { ...ecBrokerDetails },
+    };
+
+    const result = getUserRole(PTECPSPSigned, signinDataPTECPSPSigned);
+    expect(result).toBe(ROLE.PT_PSPEC_OPERATOR);
+  });
+
+  test('should return ROLE.ROLE.PT_PSP_OPERATOR when party is a PT signedin as a PSP broker ', () => {
+    jest.spyOn(utils, 'isOperator').mockReturnValue(false);
+
+    const signinDataPTPSPSigned: SigninData = {
+      brokerPspDetailsResource: { ...pspBrokerDetails },
+    };
+
+    const result = getUserRole(PTPSPSigned, signinDataPTPSPSigned);
+    expect(result).toBe(ROLE.PT_PSP_OPERATOR);
+  });
+
+  test('should return ROLE.ROLE.PT_EC_OPERATOR when party is a PT signedin as a EC broker ', () => {
+    jest.spyOn(utils, 'isOperator').mockReturnValue(false);
+
+    const signinDataPTECSigned: SigninData = {
+      brokerDetailsResource: { ...ecBrokerDetails },
+    };
+
+    const result = getUserRole(PTECSigned, signinDataPTECSigned);
+    expect(result).toBe(ROLE.PT_EC_OPERATOR);
+  });
+
+  test('should return ROLE.ROLE.PTUNSIGNE when party is a PT unsigned', () => {
+    jest.spyOn(utils, 'isOperator').mockReturnValue(false);
+
+    const result = getUserRole(PTUnsigned);
+    expect(result).toBe(ROLE.PT_UNSIGNED);
   });
 
   test('should return ROLE.PSP_OPERATOR when party is a PSP with roleKey "operator"', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(false);
-    const result = getUserRole(pspOperatorSigned);
+    const result = getUserRole(pspOperatorSignedDirect);
     expect(result).toBe(ROLE.PSP_OPERATOR);
   });
 
@@ -39,7 +86,7 @@ describe('getUserRole function', () => {
 
   test('should return ROLE.EC_ADMIN when party is an EC with roleKey "admin"', () => {
     jest.spyOn(utils, 'isOperator').mockReturnValue(false);
-    const result = getUserRole(ecAdminSigned);
+    const result = getUserRole(ecAdminSignedDirect);
     expect(result).toBe(ROLE.EC_ADMIN);
   });
 

@@ -114,16 +114,10 @@ test('Test - PSP direct signed - operator', async () => {
     })
   );
 
-  expect(
-    screen.queryByRole('link', {
-      name: /Genera API Key/i,
-    })
-  ).toBeVisible();
+  screen.debug(undefined, 9999999);
 
   expect(
-    screen.queryByText(
-      /Genera le API Key di connessione al Nodo per abilitare la creazione dei canali./i
-    )
+    screen.queryByText(/Completa la registrazione sul Nodo inserendo i dati mancanti./i)
   ).toBeVisible();
 });
 

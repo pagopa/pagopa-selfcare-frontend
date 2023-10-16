@@ -9,7 +9,12 @@ import '../../../locale';
 import { BrowserRouter } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
-import { ecAdminSigned, ecOperatorUnsigned } from '../../../services/__mocks__/partyService';
+import {
+  ecAdminSignedDirect,
+  ecAdminUnsigned,
+  ecOperatorSignedDirect,
+  ecOperatorUnsigned,
+} from '../../../services/__mocks__/partyService';
 import ECRegistrationData from '../components/ECRegistrationData';
 import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
 
@@ -19,7 +24,6 @@ beforeEach(() => {
 });
 
 const renderApp = (
-  ecType: string,
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
@@ -29,7 +33,7 @@ const renderApp = (
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <ECRegistrationData ecType={ecType} />
+          <ECRegistrationData />
         </ThemeProvider>
       </BrowserRouter>
     </Provider>
@@ -38,18 +42,18 @@ const renderApp = (
 };
 
 test('Test rendering ecAdminSigned', async () => {
-  const { store } = renderApp('direct');
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: ecAdminSigned,
+      payload: ecAdminUnsigned,
     })
   );
-  expect(screen.queryAllByText('Ente Creditore S.r.l.')[0]).toBeVisible();
+  expect(screen.queryAllByText('ecAdminUnsigned')[0]).toBeVisible();
 });
 
 test('Test rendering ecOperatorUnsigned', async () => {
-  const { store } = renderApp('indirect');
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -67,6 +71,26 @@ test('Test rendering ecOperatorUnsigned', async () => {
     })
   );
   expect(screen.getByText('Non disponibile')).toBeVisible();
+
+  const modifyBtn = screen.getByTestId('modify-data-test');
+  fireEvent.click(modifyBtn);
+});
+
+test('Test onClick modify button', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: ecAdminSignedDirect,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerAndEcDetailsResource_ECAndBroker,
+    })
+  );
 
   const modifyBtn = screen.getByTestId('modify-data-test');
   fireEvent.click(modifyBtn);

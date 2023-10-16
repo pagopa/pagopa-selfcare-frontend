@@ -10,19 +10,25 @@ import NodeSignInECForm from '../NodeSignInECForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { ecDetails } from '../../../../services/__mocks__/nodeService';
-import { ecOperatorUnsigned } from '../../../../services/__mocks__/partyService';
+import {
+  ecAdminSignedDirect,
+  ecAdminSignedUndirect,
+  ecOperatorSignedUndirect,
+  ecOperatorUnsigned,
+} from '../../../../services/__mocks__/partyService';
 import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import { BrokerResource } from '../../../../api/generated/portal/BrokerResource';
 
 const renderApp = (
-  injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  ecNodeData?: BrokerAndEcDetailsResource
+  signInData: BrokerAndEcDetailsResource,
+  injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router history={history}>
-          <NodeSignInECForm goBack={jest.fn()} ecNodeData={ecNodeData} />
+          <NodeSignInECForm goBack={jest.fn()} signInData={signInData} />
         </Router>
       </ThemeProvider>
     </Provider>
@@ -56,7 +62,7 @@ const setupForm = () => {
 let spyOnCreateECAndBroker;
 let spyOnCreateEcIndirect;
 let spyOnUpdateCreditorInstitution;
-let spyOnGetBrokerAndEcDetails;
+let SpyOnCreateEcBroker;
 
 beforeEach(() => {
   spyOnCreateECAndBroker = jest.spyOn(
@@ -71,21 +77,22 @@ beforeEach(() => {
     require('../../../../services/nodeService'),
     'updateCreditorInstitution'
   );
-  spyOnGetBrokerAndEcDetails = jest.spyOn(
-    require('../../../../services/nodeService'),
-    'getBrokerAndEcDetails'
-  );
+  SpyOnCreateEcBroker = jest.spyOn(require('../../../../services/nodeService'), 'createEcBroker');
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 afterEach(cleanup);
 
-describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
+describe('NodeSignInECForm', () => {
   test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
-    renderApp();
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     setupForm();
 
@@ -104,7 +111,20 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
   });
 
   test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
-    renderApp();
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecDetails,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     setupForm();
 
@@ -123,7 +143,13 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
   });
 
   test('Test rendering NodeSignInECForm and Sumbit', async () => {
-    renderApp();
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     setupForm();
 
@@ -131,40 +157,51 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     fireEvent.click(backBtn);
   });
 
-  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
-    renderApp(history, ecDetails[0]);
+  test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
-        payload: ecOperatorUnsigned,
+        payload: ecDetails,
       })
     );
 
     setupForm();
 
-    const intermediaryFalse = screen
+    const intermediaryTrue = screen
       .getByTestId('intermediary-available-test')
-      .querySelector('[value=false]') as HTMLInputElement;
+      .querySelector('[value=true]') as HTMLInputElement;
 
-    fireEvent.click(intermediaryFalse);
+    fireEvent.click(intermediaryTrue);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
-      expect(spyOnUpdateCreditorInstitution).toHaveBeenCalled();
-      expect(spyOnGetBrokerAndEcDetails).toHaveBeenCalled();
+      expect(SpyOnCreateEcBroker).toHaveBeenCalled();
     });
   });
 
-  test('Test error response of updateCreditorInstitution', async () => {
-    renderApp();
+  test('Test error response of getBrokerAndEcDetails', async () => {
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedDirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
-        payload: ecOperatorUnsigned,
+        payload: ecDetails,
       })
     );
 
@@ -175,13 +212,16 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
 
     PortalApi.getBrokerAndEcDetails = async (): Promise<CreditorInstitutionDetailsResource> =>
       Promise.reject('mocked errore response for tests');
-
-    PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
   });
 
   test('Test error response of createECAndBroker', async () => {
-    renderApp();
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     setupForm();
 
@@ -193,14 +233,72 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
   });
 
   test('Test error response of createECIndirect', async () => {
-    renderApp();
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+    renderApp(ecDetailsDispatched);
 
     setupForm();
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    PortalApi.createECIndirect = async (): Promise<BrokerAndEcDetailsResource> =>
+    PortalApi.createECIndirect = async (): Promise<CreditorInstitutionDetailsResource> =>
+      Promise.reject('mocked error response for tests');
+  });
+
+  test('Test error response of updateCreditorInstitution', async () => {
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecDetails,
+      })
+    );
+
+    renderApp(ecDetailsDispatched);
+
+    setupForm();
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
+      Promise.reject('mocked error response for tests');
+  });
+
+  test('Test error response of createEcBroker', async () => {
+    const ecDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecDetails,
+      })
+    );
+
+    renderApp(ecDetailsDispatched);
+
+    setupForm();
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    PortalApi.createEcBroker = async (): Promise<BrokerResource> =>
       Promise.reject('mocked error response for tests');
   });
 });

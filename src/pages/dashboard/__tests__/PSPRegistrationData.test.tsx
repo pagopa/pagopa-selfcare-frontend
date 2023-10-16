@@ -21,7 +21,6 @@ beforeEach(() => {
 });
 
 const renderApp = (
-  pspType: string,
   injectedStore?: ReturnType<typeof createStore>,
   injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
@@ -31,7 +30,7 @@ const renderApp = (
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          <PSPRegistrationData pspType={pspType} />
+          <PSPRegistrationData />
         </ThemeProvider>
       </BrowserRouter>
     </Provider>
@@ -40,7 +39,7 @@ const renderApp = (
 };
 
 test('Test rendering ', async () => {
-  const { store } = renderApp('direct');
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -51,7 +50,7 @@ test('Test rendering ', async () => {
 });
 
 test('Test rendering digitalStamp false, bic undefined ', async () => {
-  const { store } = renderApp('indirect');
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -73,7 +72,7 @@ test('Test rendering digitalStamp false, bic undefined ', async () => {
 });
 
 test('Test rendering digitalStamp undefined ', async () => {
-  const { store } = renderApp('direct');
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',

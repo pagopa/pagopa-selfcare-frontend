@@ -13,6 +13,7 @@ import NodeSignInPage from '../NodeSignInPage';
 import { createStore } from '../../../../redux/store';
 import { Party } from '../../../../model/Party';
 import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
+import { pspDetails } from '../../../../services/__mocks__/nodeService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -41,12 +42,17 @@ const renderApp = (
 
 test('Test rendering with psp', async () => {
   const { store } = renderApp();
-  await waitFor(() =>
+  await waitFor(() => {
     store.dispatch({
       type: 'parties/setPartySelected',
       payload: pspAdminSignedDirect,
-    })
-  );
+    });
+
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: pspDetails,
+    });
+  });
   expect(screen.getByText(/Marca da bollo digitale/i)).toBeVisible();
 });
 

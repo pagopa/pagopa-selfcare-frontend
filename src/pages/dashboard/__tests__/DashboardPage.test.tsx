@@ -1,15 +1,16 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 
 import DashboardPage from '../DashboardPage';
-import { createStore } from '../../../redux/store';
+import { store } from '../../../redux/store';
 import { mockedParties } from '../../../services/__mocks__/partyService';
+import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
+import { createMemoryHistory } from 'history';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -21,12 +22,7 @@ jest.mock('../../../decorators/withParties');
 jest.mock('../../../decorators/withSelectedParty');
 jest.mock('../../../decorators/withSelectedPartyProducts');
 
-const renderApp = (
-  injectedStore?: ReturnType<typeof createStore>,
-  injectedHistory?: ReturnType<typeof createMemoryHistory>
-) => {
-  const store = injectedStore ? injectedStore : createStore();
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
+const renderApp = () => {
   render(
     <Provider store={store}>
       <BrowserRouter>
@@ -36,11 +32,10 @@ const renderApp = (
       </BrowserRouter>
     </Provider>
   );
-  return { store, history };
 };
 
 test('Test rendering PSP', async () => {
-  const { store } = renderApp();
+  renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -51,7 +46,7 @@ test('Test rendering PSP', async () => {
 });
 
 test('Test rendering EC', async () => {
-  const { store } = renderApp();
+  renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -62,7 +57,7 @@ test('Test rendering EC', async () => {
 });
 
 test('Test rendering button', async () => {
-  const { store } = renderApp();
+  renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: pspUnsignedAdmin,
@@ -75,7 +70,7 @@ test('Test rendering button', async () => {
 });
 
 test('Test - PSP unsigned - not admin', async () => {
-  const { store } = renderApp();
+  renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: pspUnsignedOperator,
@@ -88,7 +83,7 @@ test('Test - PSP unsigned - not admin', async () => {
 });
 
 test('Test - EC unsigned - not admin', async () => {
-  const { store } = renderApp();
+  renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: ecUsnignedOperator,
@@ -101,16 +96,37 @@ test('Test - EC unsigned - not admin', async () => {
 });
 
 test('Test - EC signed - admin', async () => {
-  const { store } = renderApp();
+  renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: ecAdminSigned,
   });
+
+  store.dispatch({
+    type: 'parties/setSignInData',
+    payload: brokerAndEcDetailsResource_ECAndBroker,
+  });
+
   expect(
-    screen.queryByRole('link', {
-      name: /Completa registrazione/i,
-    })
+    screen.queryByText(/Completa la registrazione sul Nodo inserendo i dati mancanti./i)
   ).toBeVisible();
+});
+
+test('render component with alert message', () => {
+  const history = createMemoryHistory();
+  history.location.state = { alertSuccessMessage: 'Success!' };
+
+  render(
+    <Provider store={store}>
+      <Router history={history}>
+        <ThemeProvider theme={theme}>
+          <DashboardPage />
+        </ThemeProvider>
+      </Router>
+    </Provider>
+  );
+
+  screen.debug(undefined, 999999);
 });
 
 const pspPartySelected = {

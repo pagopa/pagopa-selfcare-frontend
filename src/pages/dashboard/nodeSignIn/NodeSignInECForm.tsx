@@ -202,10 +202,6 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
         if (selectedParty) {
           await updateSigninData(selectedParty);
         }
-
-        history.push(ROUTES.HOME, {
-          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
-        });
       } catch (reason) {
         addError({
           id: 'NODE_SIGNIN_EC_CREATE',
@@ -219,6 +215,9 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
         });
       } finally {
         setLoading(false);
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+        });
       }
     }
   };

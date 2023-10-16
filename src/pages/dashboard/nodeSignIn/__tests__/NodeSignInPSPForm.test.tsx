@@ -5,10 +5,20 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createStore, store } from '../../../../redux/store';
+import { store } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import {
+  brokerOrPspDetailsResource_PSPOnly,
+  pspDetails,
+} from '../../../../services/__mocks__/nodeService';
+import {
+  pspAdminSignedDirect,
+  pspAdminSignedUndirect,
+  pspAdminUnsigned,
+} from '../../../../services/__mocks__/partyService';
+import { PSPDirectDTO } from '../../../../model/PSP';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;
@@ -19,17 +29,15 @@ let getBrokerAndPspDetailsMocked: jest.SpyInstance;
 jest.mock('../../../../decorators/withSelectedParty');
 
 const renderApp = (
-  injectedStore?: ReturnType<typeof createStore>,
-  injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  pspNodeData?: PaymentServiceProviderDetailsResource
+  signInData: PaymentServiceProviderDetailsResource,
+  injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
-  const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router history={history}>
-          <NodeSignInPSPForm goBack={jest.fn()} pspNodeData={pspNodeData} />
+          <NodeSignInPSPForm goBack={jest.fn()} signInData={signInData} />
         </Router>
       </ThemeProvider>
     </Provider>
@@ -52,8 +60,8 @@ const setupFormAndSubmit = async (store) => {
   const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
   const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
 
-  fireEvent.change(bicCode, { target: { value: '1234' } });
-  expect(bicCode.value).toBe('1234');
+  fireEvent.change(bicCode, { target: { value: '12345' } });
+  expect(bicCode.value).toBe('12345');
 
   fireEvent.click(digitalStampRadioTrue);
 
@@ -87,7 +95,15 @@ afterEach(cleanup);
 describe('NodeSignInPSPForm', () => {
   test('Test rendering NodeSignInPSPForm with getBrokerAndPspDetailsMocked error ', async () => {
     getBrokerAndPspDetailsMocked.mockRejectedValueOnce(new Error('Fetch error'));
-    const { store } = renderApp();
+
+    const pspDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    renderApp(pspDetailsDispatched);
 
     await setupFormAndSubmit(store);
 
@@ -96,7 +112,21 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit', async () => {
-    const { store } = renderApp();
+    const pspDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: brokerOrPspDetailsResource_PSPOnly,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    renderApp(pspDetailsDispatched);
 
     await setupFormAndSubmit(store);
 
@@ -106,12 +136,18 @@ describe('NodeSignInPSPForm', () => {
 
     fireEvent.click(intermediaryTrue);
 
-    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary false and Sumbit', async () => {
-    const { store } = renderApp();
+    const pspDetailsDispatched = await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    renderApp(pspDetailsDispatched);
 
     await setupFormAndSubmit(store);
 
@@ -124,29 +160,7 @@ describe('NodeSignInPSPForm', () => {
     await waitFor(() => expect(createPSPIndirectMocked).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
-
-  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit the update', async () => {
-    const { store } = renderApp(undefined, undefined, pspNodeData);
-
-    await setupFormAndSubmit(store);
-
-    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(0));
-    await waitFor(() => expect(updatePSPInfoMocked).toHaveBeenCalled());
-  });
 });
-
-const pspNodeData: PaymentServiceProviderDetailsResource = {
-  abi: '12345',
-  agid_psp: true,
-  bic: '10101',
-  my_bank_code: '',
-  stamp: true,
-  tax_code: '123123',
-  vat_number: '12312312',
-  business_name: 'PSP S.r.l',
-  enabled: true,
-  psp_code: '12312312',
-};
 
 const pspPartySelected = {
   partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',

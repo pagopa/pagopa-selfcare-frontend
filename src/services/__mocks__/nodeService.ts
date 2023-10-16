@@ -1,9 +1,13 @@
 import { BrokerAndEcDetailsResource } from '../../api/generated/portal/BrokerAndEcDetailsResource';
+import { BrokerDetailsResource } from '../../api/generated/portal/BrokerDetailsResource';
+import { BrokerDto } from '../../api/generated/portal/BrokerDto';
 import { BrokerOrPspDetailsResource } from '../../api/generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsDto } from '../../api/generated/portal/BrokerPspDetailsDto';
 import { BrokerPspDetailsResource } from '../../api/generated/portal/BrokerPspDetailsResource';
 import { BrokerResource } from '../../api/generated/portal/BrokerResource';
 import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../../api/generated/portal/CreditorInstitutionDto';
+import { PaymentServiceProviderDetailsDto } from '../../api/generated/portal/PaymentServiceProviderDetailsDto';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { UpdateCreditorInstitutionDto } from '../../api/generated/portal/UpdateCreditorInstitutionDto';
 import { NodeOnSignInPSP } from '../../model/Node';
@@ -139,10 +143,16 @@ const mapECCode2BrokerAndECDetailsResource = (ecCode: string) => {
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
+export const createPspBroker = (
+  _broker: BrokerPspDetailsDto
+): Promise<BrokerPspDetailsResource> => {
+  return new Promise((resolve) => resolve(pspBrokerDetails));
+};
+
 export const createPSPIndirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
-export const updatePSPInfo = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+export const updatePSPInfo = (_pspcode: string, _psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
 export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
@@ -168,6 +178,10 @@ export const createECAndBroker = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>
   new Promise((resolve) => resolve({ ...ec, broadcast: true }));
+
+export const createEcBroker = (_broker: BrokerDto): Promise<BrokerResource> => {
+  return new Promise((resolve) => resolve(ecBrokerDetails));
+};
 
 export const createECIndirect = (
   ec: CreditorInstitutionDto

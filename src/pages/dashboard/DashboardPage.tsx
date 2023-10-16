@@ -13,7 +13,6 @@ import NextSteps from './components/NextSteps';
 const DashboardPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
 

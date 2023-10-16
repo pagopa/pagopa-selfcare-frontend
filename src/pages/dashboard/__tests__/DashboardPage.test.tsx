@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
-// import { mockedParties } from '../services/__mocks__/partyService';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
@@ -41,7 +39,7 @@ const renderApp = (
   return { store, history };
 };
 
-test('Test rendering', async () => {
+test('Test rendering PSP', async () => {
   const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
@@ -50,6 +48,17 @@ test('Test rendering', async () => {
     })
   );
   expect(screen.getByText(/istituti di pagamento/i)).toBeVisible();
+});
+
+test('Test rendering EC', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: ecPartySelected,
+    })
+  );
+  expect(screen.getAllByText(/Ente Creditore S.r.l./i)[0]).toBeVisible();
 });
 
 test('Test rendering button', async () => {
@@ -76,6 +85,32 @@ test('Test - PSP unsigned - not admin', async () => {
       name: /Completa registrazione/i,
     })
   ).toBeNull();
+});
+
+test('Test - EC unsigned - not admin', async () => {
+  const { store } = renderApp();
+  store.dispatch({
+    type: 'parties/setPartySelected',
+    payload: ecUsnignedOperator,
+  });
+  expect(
+    screen.queryByRole('link', {
+      name: /Completa registrazione/i,
+    })
+  ).toBeNull();
+});
+
+test('Test - EC signed - admin', async () => {
+  const { store } = renderApp();
+  store.dispatch({
+    type: 'parties/setPartySelected',
+    payload: ecAdminSigned,
+  });
+  expect(
+    screen.queryByRole('link', {
+      name: /Completa registrazione/i,
+    })
+  ).toBeVisible();
 });
 
 const pspPartySelected = {
@@ -106,8 +141,33 @@ const pspPartySelected = {
   },
 };
 
+const ecPartySelected = {
+  partyId: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
+  externalId: '1122334455',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PA',
+  description: 'Ente Creditore S.r.l.',
+  category: 'Gestori di Pubblici Servizi',
+  fiscalCode: '1122334455',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'DELEGATE',
+      roleKey: 'admin',
+    },
+  ],
+  urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
+};
+
 const pspUnsignedOperator = mockedParties.find(
   (party) => party.description === 'PSP Operator unsigned'
 );
+
+const ecUsnignedOperator = mockedParties.find((party) => party.description === 'EC unsigned');
+
+const ecAdminSigned = mockedParties.find((party) => party.description === 'Ente Creditore S.r.l.');
 
 const pspUnsignedAdmin = mockedParties.find((party) => party.description === 'PSP Admin unsigned');

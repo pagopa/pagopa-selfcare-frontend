@@ -1,9 +1,13 @@
 import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcDetailsResource';
+import { BrokerDto } from '../api/generated/portal/BrokerDto';
 import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsDto } from '../api/generated/portal/BrokerPspDetailsDto';
 import { BrokerPspDetailsResource } from '../api/generated/portal/BrokerPspDetailsResource';
+import { BrokerResource } from '../api/generated/portal/BrokerResource';
 import { CreditorInstitutionDetailsResource } from '../api/generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/PaymentServiceProviderDetailsDto';
+import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { NodeOnSignInPSP } from '../model/Node';
@@ -15,6 +19,8 @@ import {
   getPSPBrokerDetails as getPSPBrokerDetailsMocked,
   getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
   createECAndBroker as createECAndBrokerMocked,
+  createEcBroker as createEcBrokerMocked,
+  createPspBroker as createPspBrokerMocked,
   createECIndirect as createECIndirectMocked,
   createPSPIndirect as createPSPIndirectMocked,
   getECDetails as getCreditorInstitutionDetailsMocked,
@@ -22,7 +28,9 @@ import {
   updateECDirect,
 } from './__mocks__/nodeService';
 
-export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
+export const createPSPDirect = (
+  psp: NodeOnSignInPSP
+): Promise<PaymentServiceProviderDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createPSPDirectMocked(psp);
@@ -31,27 +39,34 @@ export const createPSPDirect = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => 
   }
 };
 
-export const updatePSPInfo = (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
-  updatePSPInfoMocked(psp);
-
-export const createPSPIndirect = (
-  psp: NodeOnSignInPSP
-): Promise<PaymentServiceProviderDetailsDto> => {
+export const createPspBroker = (broker: BrokerPspDetailsDto): Promise<BrokerPspDetailsResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createPSPIndirectMocked(psp);
+    return createPspBrokerMocked(broker);
   } else {
-    return createPSPIndirect(psp);
+    return PortalApi.createPspBroker(broker).then((resources) => resources);
   }
 };
 
-// {
-/* istanbul ignore if */
-// if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-// return updatePSPInfo(psp);
-/* } else {
-    return PortalApi.createPSPDirect(psp).then((resources) => resources);
-  } 
-}; */
+export const updatePSPInfo = (
+  pspcode: string,
+  psp: NodeOnSignInPSP
+): Promise<PaymentServiceProviderDetailsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return updatePSPInfoMocked(pspcode, psp);
+  } else {
+    return PortalApi.updatePaymentServiceProvider(pspcode, psp);
+  }
+};
+
+export const createPSPIndirect = (
+  psp: NodeOnSignInPSP
+): Promise<PaymentServiceProviderDetailsResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createPSPIndirectMocked(psp);
+  } else {
+    return PortalApi.createPSPIndirect(psp);
+  }
+};
 
 export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
   /* istanbul ignore if */
@@ -87,6 +102,14 @@ export const createECAndBroker = (
     return createECAndBrokerMocked(ec);
   } else {
     return PortalApi.createECAndBroker(ec).then((resources) => resources);
+  }
+};
+
+export const createEcBroker = (broker: BrokerDto): Promise<BrokerResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return createEcBrokerMocked(broker);
+  } else {
+    return PortalApi.createEcBroker(broker).then((resources) => resources);
   }
 };
 

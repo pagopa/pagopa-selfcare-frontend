@@ -23,6 +23,7 @@
       "companyName": "Ragione Sociale",
       "fiscalCode": "Codice Fiscale",
       "interBankCode": "Codice Interbancario",
+      "intermediary": "Intermediario di altri",
       "accessionDate": "Data adesione",
       "address": "Indirizzo",
       "city": "Città",
@@ -42,11 +43,15 @@
         "enabled": "Abilitato",
         "disabled": "Non abilitato"
       },
+      "intermediaryStatus": {
+        "enabled": "Disponibile",
+        "disabled": "Non disponibile"
+      },
       "ecDetailsErrorMessageTitle": "Errore",
       "ecDetailsErrorMessageDesc": "Errore durante la ricezione del dettaglio dell’EC",
       "pspDetailsErrorMessageTitle": "Errore",
       "pspDetailsErrorMessageDesc": "Errore durante la ricezione del dettaglio del PSP",
-      "modifyData": "Modifica dati"
+      "modifyData": "Gestisci"
     },
     "nextStep": {
       "title": "E ora?",

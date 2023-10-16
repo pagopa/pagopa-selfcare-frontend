@@ -22,14 +22,16 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
 import { useSigninData } from '../../../hooks/useSigninData';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
+import { createEcBroker } from '../../../services/nodeService';
+import { isEcBrokerSigned, isEcSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
-  ecNodeData?: BrokerAndEcDetailsResource;
+  signInData: BrokerAndEcDetailsResource | undefined;
 };
 
-const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
+const NodeSignInECForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -37,6 +39,15 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
+  const ecDirect = signInData && isEcBrokerSigned(signInData) && isEcSigned(signInData);
+
+  useEffect(() => {
+    if (ecDirect) {
+      setIntermediaryAvailableValue(true);
+    } else {
+      setIntermediaryAvailableValue(false);
+    }
+  }, [selectedParty]);
 
   const initialFormData = (ecDetails: BrokerAndEcDetailsResource | undefined) =>
     ecDetails
@@ -88,10 +99,10 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
 
   const submit = async () => {
     setLoading(true);
-    if (ecNodeData) {
-      if (selectedParty) {
+    if (signInData && selectedParty) {
+      if (!intermediaryAvailableValue) {
         try {
-          await updateCreditorInstitution(selectedParty.fiscalCode, {
+          await createECAndBroker({
             address: { ...formik.values },
             businessName: selectedParty?.description ?? '',
             creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
@@ -100,14 +111,52 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
             reportingFtp: false,
             reportingZip: false,
           });
+        } catch (reason) {
+          addError({
+            id: 'NODE_SIGNIN_EC_CREATE',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while registration EC at the node`,
+            toNotify: true,
+            displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
+            displayableDescription: t('nodeSignInPage.form.ecErrorMessageDesc'),
+            component: 'Toast',
+          });
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        try {
+          if (!isPspBrokerSigned(signInData)) {
+            const createtionOfBroker = await createEcBroker({
+              broker_code: selectedParty.fiscalCode,
+              description: selectedParty.description,
+            });
 
-          if (selectedParty) {
+            if (createtionOfBroker) {
+              await updateCreditorInstitution(selectedParty.fiscalCode, {
+                address: { ...formik.values },
+                businessName: selectedParty?.description ?? '',
+                creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+                enabled: true,
+                pspPayment: false,
+                reportingFtp: false,
+                reportingZip: false,
+              });
+            }
+          } else {
+            await updateCreditorInstitution(selectedParty.fiscalCode, {
+              address: { ...formik.values },
+              businessName: selectedParty?.description ?? '',
+              creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+              enabled: true,
+              pspPayment: false,
+              reportingFtp: false,
+              reportingZip: false,
+            });
+
             await updateSigninData(selectedParty);
           }
-
-          history.push(ROUTES.HOME, {
-            alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
-          });
         } catch (reason) {
           addError({
             id: 'NODE_SIGNIN_EC_UPDATE',
@@ -121,6 +170,9 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
           });
         } finally {
           setLoading(false);
+          history.push(ROUTES.HOME, {
+            alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+          });
         }
       }
     } else {
@@ -172,7 +224,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
   };
 
   const formik = useFormik<CreditorInstitutionAddressDto>({
-    initialValues: initialFormData(ecNodeData),
+    initialValues: initialFormData(signInData),
     validate,
     onSubmit: async () => {
       await submit();
@@ -319,7 +371,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
                   helperText={formik.touched.taxDomicile && formik.errors.taxDomicile}
                   inputProps={{ 'data-testid': 'fiscal-domicile-test' }}
                   disabled={
-                    ecNodeData?.creditorInstitutionDetailsResource?.address?.taxDomicile
+                    signInData?.creditorInstitutionDetailsResource?.address?.taxDomicile
                       ? true
                       : false
                   }
@@ -334,6 +386,7 @@ const NodeSignInECForm = ({ goBack, ecNodeData }: Props) => {
               labelFalse={t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
               value={intermediaryAvailableValue}
               onChange={changeIntermediaryAvailable}
+              ecDirect={ecDirect}
             />
           </Box>
         </Paper>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SigninData } from '../model/Node';
 import { Party } from '../model/Party';
 import { useAppDispatch } from '../redux/hooks';
@@ -13,6 +14,7 @@ export const useSigninData = () => {
   const dispatch = useAppDispatch();
   const setSigninData = (signinData?: SigninData) =>
     dispatch(partiesActions.setSigninData(signinData));
+  const [response, setResponse] = useState<any>({});
 
   return async (party: Party) => {
     await fetchSigninData(party)
@@ -35,9 +37,17 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
     }
 
     if (party.institutionType === 'PSP') {
-      return await getBrokerAndPspDetails(
+      const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      const pspDetails = await getBrokerAndPspDetails(
         party.pspData?.abiCode ? `ABI${party.pspData.abiCode}` : ''
       );
+
+      return {
+        brokerPspDetailsResource: { ...pspBrokerDetails, ...pspDetails.brokerPspDetailsResource },
+        paymentServiceProviderDetailsResource: {
+          ...pspDetails.paymentServiceProviderDetailsResource,
+        },
+      };
     } else {
       return await getBrokerAndEcDetails(party.fiscalCode);
     }

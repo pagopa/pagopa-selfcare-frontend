@@ -6,6 +6,7 @@ import ROUTES from '../../../routes';
 import { Party } from '../../../model/Party';
 import { SigninData } from '../../../model/Node';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { isSigned } from '../../../utils/rbac-utils';
 
 type Props = {
   selectedParty?: Party;
@@ -14,7 +15,7 @@ type Props = {
 
 const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
-  const isSignedIn = signinData && Object.keys(signinData).length > 0 ? true : false;
+  const isSignedIn = signinData ? isSigned(signinData) : false;
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
   const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
   const { hasPermission } = usePermissions();

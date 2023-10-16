@@ -5,16 +5,30 @@ import {
 } from '@mui/icons-material';
 import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
+import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
+import { BrokerOrPspDetailsResource } from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
 
 type Props = {
   labelTrue: string;
   labelFalse: string;
   value: boolean;
   onChange: () => void;
+  ecDirect?: BrokerAndEcDetailsResource;
+  pspDirect?: BrokerOrPspDetailsResource;
 };
-const CommonRadioGroup = ({ labelTrue, labelFalse, value, onChange }: Props) => {
+const CommonRadioGroup = ({
+  labelTrue,
+  labelFalse,
+  value,
+  onChange,
+  ecDirect,
+  pspDirect,
+}: Props) => {
   const { t } = useTranslation();
+
+  const changeDisabled = () => !!(pspDirect || ecDirect);
 
   return (
     <>
@@ -33,10 +47,11 @@ const CommonRadioGroup = ({ labelTrue, labelFalse, value, onChange }: Props) => 
             onChange={onChange}
             data-testid="intermediary-available-test"
           >
-            <FormControlLabel value={false} control={<Radio />} label={labelTrue} />
+            <FormControlLabel value={true} control={<Radio />} label={labelTrue} />
             <FormControlLabel
-              value={true}
+              value={false}
               control={<Radio />}
+              disabled={changeDisabled()}
               label={
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {labelFalse}

@@ -38,9 +38,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
 
     if (party.institutionType === 'PSP') {
       const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
-      const pspDetails = await getBrokerAndPspDetails(
-        party.pspData?.abiCode ? `ABI${party.pspData.abiCode}` : ''
-      );
+      const pspDetails = await getBrokerAndPspDetails(party.fiscalCode);
 
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails, ...pspDetails.brokerPspDetailsResource },

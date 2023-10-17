@@ -202,7 +202,7 @@ export const PortalApi = {
     const result = await apiConfigClient.createPSPDirectUsingPOST({
       body: {
         abi: psp.abiCode,
-        agid_psp: true,
+        agid_psp: false,
         bic: psp.bicCode,
         business_name: psp.businessName,
         enabled: true,
@@ -234,7 +234,7 @@ export const PortalApi = {
     const result = await apiConfigClient.createPaymentServiceProviderUsingPOST({
       body: {
         abi: psp.abiCode,
-        agid_psp: true,
+        agid_psp: false,
         bic: psp.bicCode,
         business_name: psp.businessName,
         enabled: true,
@@ -258,7 +258,7 @@ export const PortalApi = {
         business_name: psp.businessName,
         enabled: true,
         psp_code: psp.pspCode,
-        agid_psp: true,
+        agid_psp: false,
         bic: psp.bicCode,
         my_bank_code: '',
         stamp: psp.digitalStamp,

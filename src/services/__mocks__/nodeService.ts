@@ -15,7 +15,7 @@ import { PSPDirectDTO } from '../../model/PSP';
 
 const pspDirect: PSPDirectDTO = {
   abi: 'abi',
-  agid_psp: true,
+  agid_psp: false,
   bic: 'bic',
   business_name: 'business_name',
   enabled: true,
@@ -28,7 +28,7 @@ const pspDirect: PSPDirectDTO = {
 
 export const pspDetails: PaymentServiceProviderDetailsResource = {
   abi: '36042',
-  agid_psp: true,
+  agid_psp: false,
   bic: '10101',
   my_bank_code: '',
   stamp: true,

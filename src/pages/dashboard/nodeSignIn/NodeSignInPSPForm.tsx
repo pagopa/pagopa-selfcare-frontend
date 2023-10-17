@@ -65,7 +65,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     businessName: selectedParty?.description ?? '',
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abiCode ?? '',
-    pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
+    pspCode: selectedParty?.fiscalCode ?? '',
     bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
     digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
@@ -124,10 +124,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        await updatePSPInfo(
-          selectedParty.pspData?.abiCode ? `ABI${selectedParty.pspData.abiCode}` : '',
-          formik.values
-        );
+        await updatePSPInfo(selectedParty.fiscalCode, formik.values);
 
         await updateSigninData(selectedParty);
       } catch (reason) {

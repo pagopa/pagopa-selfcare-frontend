@@ -5,24 +5,18 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createStore, store } from '../../../../redux/store';
+import { store } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
-import { PortalApi } from '../../../../api/PortalApiClient';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 import {
   brokerAndEcDetailsResource_ECAndBroker,
   brokerAndEcDetailsResource_ECOnly,
   ecDetails,
-  ecDirectUpdated,
 } from '../../../../services/__mocks__/nodeService';
 import {
-  ecAdminSignedDirect,
   ecAdminSignedUndirect,
-  ecOperatorSignedUndirect,
-  ecOperatorUnsigned,
+  ecAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
-import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
-import { BrokerResource } from '../../../../api/generated/portal/BrokerResource';
 
 const renderApp = (
   signInData: BrokerAndEcDetailsResource,
@@ -68,6 +62,7 @@ let spyOnCreateECAndBroker;
 let spyOnCreateEcIndirect;
 let spyOnUpdateCreditorInstitution;
 let SpyOnCreateEcBroker;
+let spyOnGetBrokerAndEcDetails;
 
 beforeEach(() => {
   spyOnCreateECAndBroker = jest.spyOn(
@@ -83,6 +78,10 @@ beforeEach(() => {
     'updateCreditorInstitution'
   );
   SpyOnCreateEcBroker = jest.spyOn(require('../../../../services/nodeService'), 'createEcBroker');
+  spyOnGetBrokerAndEcDetails = jest.spyOn(
+    require('../../../../services/nodeService'),
+    'getBrokerAndEcDetails'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -169,6 +168,8 @@ describe('NodeSignInECForm', () => {
 
     fireEvent.click(intermediaryTrue);
 
+    spyOnUpdateCreditorInstitution.mockResolvedValue({ success: true });
+
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
@@ -177,33 +178,43 @@ describe('NodeSignInECForm', () => {
     });
   });
 
-  test('Test error response of getBrokerAndEcDetails', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedDirect,
-      })
-    );
+  test('Test error response of createECAndBroker', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECAndBroker };
     renderApp(ecDetailsDispatched);
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecDetails,
-      })
-    );
 
     setupForm();
 
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=false]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryFalse);
+
+    spyOnCreateECAndBroker.mockRejectedValue(() => {
+      throw new Error('Error in createECAndBroker');
+    });
+    spyOnGetBrokerAndEcDetails;
+
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
-
-    PortalApi.getBrokerAndEcDetails = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked errore response for tests');
   });
 
-  test('Test error response of createECAndBroker', async () => {
-    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECAndBroker };
+  test('Test error response of createECIndirect', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECOnly };
+    renderApp(ecDetailsDispatched);
+
+    setupForm();
+
+    spyOnCreateEcIndirect.mockRejectedValue(() => {
+      throw new Error('Error in createECIndirect');
+    });
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+  });
+
+  test('Test error response of updateCreditorInstitution', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECOnly };
     renderApp(ecDetailsDispatched);
 
     setupForm();
@@ -212,82 +223,17 @@ describe('NodeSignInECForm', () => {
       .getByTestId('intermediary-available-test')
       .querySelector('[value=true]') as HTMLInputElement;
 
+    SpyOnCreateEcBroker.mockRejectedValue(() => {
+      throw new Error('Error in createEcBroker');
+    });
+
+    spyOnUpdateCreditorInstitution.mockRejectedValue(() => {
+      throw new Error('Error in updateCreditorInstitution');
+    });
+
     fireEvent.click(intermediaryTrue);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
-
-    PortalApi.createECAndBroker = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
-  });
-
-  test('Test error response of createECIndirect', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
-    renderApp(ecDetailsDispatched);
-
-    setupForm();
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
-
-    PortalApi.createECIndirect = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
-  });
-
-  test('Test error response of updateCreditorInstitution', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecDetails,
-      })
-    );
-
-    renderApp(ecDetailsDispatched);
-
-    setupForm();
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
-
-    PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
-  });
-
-  test('Test error response of createEcBroker', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecDetails,
-      })
-    );
-
-    renderApp(ecDetailsDispatched);
-
-    setupForm();
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
-
-    PortalApi.createEcBroker = async (): Promise<BrokerResource> =>
-      Promise.reject('mocked error response for tests');
   });
 });

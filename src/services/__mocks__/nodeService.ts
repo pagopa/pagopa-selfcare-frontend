@@ -72,7 +72,7 @@ export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
   },
 ];
 
-const ecDirectUpdated: CreditorInstitutionDetailsResource = {
+export const ecDirectUpdated: CreditorInstitutionDetailsResource = {
   address: {
     city: 'Monza',
     countryCode: 'MB',

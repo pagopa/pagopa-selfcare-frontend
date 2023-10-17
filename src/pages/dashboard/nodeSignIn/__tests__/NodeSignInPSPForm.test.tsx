@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
@@ -19,6 +19,7 @@ import {
   pspAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
 import { PSPDirectDTO } from '../../../../model/PSP';
+import { isPspBrokerSigned } from '../../../../utils/rbac-utils';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;
@@ -36,9 +37,11 @@ const renderApp = (
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Router history={history}>
-          <NodeSignInPSPForm goBack={jest.fn()} signInData={signInData} />
-        </Router>
+        <MemoryRouter initialEntries={[`/node-signin`]}>
+          <Route path="/node-signin">
+            <NodeSignInPSPForm goBack={jest.fn()} signInData={signInData} />
+          </Route>
+        </MemoryRouter>
       </ThemeProvider>
     </Provider>
   );
@@ -58,12 +61,17 @@ const setupFormAndSubmit = async (store) => {
   const abiCode = screen.getByTestId('abiCode-test') as HTMLInputElement;
   const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
   const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-  const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
+  const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test') as HTMLInputElement;
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
 
   fireEvent.change(bicCode, { target: { value: '12345' } });
   expect(bicCode.value).toBe('12345');
 
   fireEvent.click(digitalStampRadioTrue);
+
+  fireEvent.click(intermediaryTrue);
 
   const confirmBtn = await screen.findByTestId('continue-button-test');
   fireEvent.click(confirmBtn);
@@ -112,29 +120,14 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit', async () => {
-    const pspDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: brokerOrPspDetailsResource_PSPOnly,
-      })
-    );
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: pspAdminUnsigned,
-      })
-    );
+    const pspDetailsDispatched = {
+      paymentServiceProviderDetailsResource: pspDetails,
+      brokerPspDetailsResource: {},
+    };
 
     renderApp(pspDetailsDispatched);
 
     await setupFormAndSubmit(store);
-
-    const intermediaryTrue = screen
-      .getByTestId('intermediary-available-test')
-      .querySelector('[value=true]') as HTMLInputElement;
-
-    fireEvent.click(intermediaryTrue);
 
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });

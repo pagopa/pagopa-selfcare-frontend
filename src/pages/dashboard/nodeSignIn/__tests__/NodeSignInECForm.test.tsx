@@ -9,7 +9,12 @@ import { createStore, store } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
 import { PortalApi } from '../../../../api/PortalApiClient';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
-import { ecDetails } from '../../../../services/__mocks__/nodeService';
+import {
+  brokerAndEcDetailsResource_ECAndBroker,
+  brokerAndEcDetailsResource_ECOnly,
+  ecDetails,
+  ecDirectUpdated,
+} from '../../../../services/__mocks__/nodeService';
 import {
   ecAdminSignedDirect,
   ecAdminSignedUndirect,
@@ -85,13 +90,8 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('NodeSignInECForm', () => {
-  test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
+  test('Test rendering NodeSignInECForm with intermediary true and Sumbit a direct ec', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECAndBroker };
     renderApp(ecDetailsDispatched);
 
     setupForm();
@@ -110,21 +110,15 @@ describe('NodeSignInECForm', () => {
     });
   });
 
-  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
+  test('Test rendering NodeSignInECForm with intermediary false and Sumbit an inderiect ec', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECOnly };
 
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecDetails,
-      })
-    );
     renderApp(ecDetailsDispatched);
+
+    store.dispatch({
+      type: 'parties/setSignInData',
+      payload: { ...brokerAndEcDetailsResource_ECOnly },
+    });
 
     setupForm();
 
@@ -137,12 +131,10 @@ describe('NodeSignInECForm', () => {
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    await waitFor(() => {
-      expect(spyOnCreateEcIndirect).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(spyOnCreateEcIndirect).toHaveBeenCalled());
   });
 
-  test('Test rendering NodeSignInECForm and Sumbit', async () => {
+  test('Test rendering NodeSignInECForm and BackBtn click', async () => {
     const ecDetailsDispatched = await waitFor(() =>
       store.dispatch({
         type: 'parties/setSigninData',
@@ -157,13 +149,9 @@ describe('NodeSignInECForm', () => {
     fireEvent.click(backBtn);
   });
 
-  test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
+  test('Test rendering NodeSignInECForm with intermediary true and create ecBroker', async () => {
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECOnly };
+
     renderApp(ecDetailsDispatched);
 
     await waitFor(() =>
@@ -215,15 +203,16 @@ describe('NodeSignInECForm', () => {
   });
 
   test('Test error response of createECAndBroker', async () => {
-    const ecDetailsDispatched = await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setSigninData',
-        payload: ecAdminSignedUndirect,
-      })
-    );
+    const ecDetailsDispatched = { ...brokerAndEcDetailsResource_ECAndBroker };
     renderApp(ecDetailsDispatched);
 
     setupForm();
+
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);

@@ -53,6 +53,9 @@ export const ENV = {
     COMMISSION_PACKAGES: {
       ENABLED: env.get('REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED').default('false').asBool(),
     },
+    OPERATIONTABLE: {
+      ENABLED: env.get('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED').default('false').asBool(),
+    },
   },
 
   ANALYTCS: {

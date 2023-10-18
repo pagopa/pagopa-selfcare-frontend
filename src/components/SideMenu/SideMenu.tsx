@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable complexity */
 import { List, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useUnloadEventOnExit } from '@pagopa/selfcare-common-frontend/hooks/useUnloadEventInterceptor';
@@ -107,6 +109,20 @@ export default function SideMenu() {
               icon={ExtensionIcon}
               disabled={isDisabled}
               dataTestId="commission-packages-test"
+            />
+          )}
+          {/* TODO: enabled only for ROLE.PAGOPA_OPERATOR */}
+          {ENV.FEATURES.OPERATIONTABLE.ENABLED && selectedParty?.institutionType !== 'PSP' && (
+            <SidenavItem
+              title={t('sideMenu.operationTable.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}
+              isSelected={
+                pathname === ROUTES.OPERATION_TABLE_LIST ||
+                pathname.startsWith(ROUTES.OPERATION_TABLE_LIST)
+              }
+              icon={ExtensionIcon}
+              disabled={isDisabled}
+              dataTestId="operation-table-test"
             />
           )}
         </List>

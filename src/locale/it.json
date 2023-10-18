@@ -61,12 +61,11 @@
       "generateApiKeyStepAlertEC": "Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.",
       "generateApiKeysCTA": "Genera API Key"
     },
-    "operativeTable": {
+    "operationTable": {
       "title": "Tavolo operativo",
-      "paymentReferrer": "Referente pagamenti",
-      "mail": "Mail",
-      "deliveryOne": "Recapito 1",
-      "deliveryTwo": "Recapito 2"
+      "mail": "E-Mail",
+      "phone": "Telefono",
+      "completeDataAlert": "Completa i dati del Tavolo Operativo dell’ente per cui operi."
     }
   },
   "nodeSignInPage": {
@@ -869,6 +868,27 @@
       }
     }
   },
+  "addEditOperationTableForm": {
+    "title": "Tavolo Operativo",
+    "subtitle": "Completa i dati relativi al Tavolo Operativo.",
+    "form": {
+      "sections": {
+        "main": "Aggiungi Tavolo Operativo"
+      },
+      "fields": {
+        "email": "E-mail",
+        "phone": "Telefono"
+      },
+      "validation": {
+        "emailNotValid": "Email non valida",
+        "phoneNotValid": "Telefono non valido"
+      }
+    },
+    "errors": {
+      "createOperationTableTitle": "Errore",
+      "createOperationTableDesc": "Errore durante l'inserimento dei dati"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -887,6 +907,9 @@
     },
     "commPackages": {
       "title": "Pacchetti commissioni"
+    },
+    "operationTable": {
+      "title": "Tavoli Operativi"
     }
   },
   "header": {
@@ -913,11 +936,17 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "back": "Indietro",
+    "confirm": "Conferma",
+    "manage": "Gestisci",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
     "Iban": "IBAN",
+    "operationTable": "Tavolo Operativo",
+    "validation": {
+      "requiredField": "Campo obbligatorio"
+    },
     "WrapperStatus": {
       "APPROVED": "Attivo",
       "TO_FIX": "Da correggere",

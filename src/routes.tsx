@@ -34,6 +34,10 @@ const ROUTES = {
   COMMISSION_PACKAGES_ADD: `${BASE_ROUTE}/comm-packages/add-package/`,
   COMMISSION_PACKAGES_EDIT: `${BASE_ROUTE}/comm-packages/:nameId/:actionId`,
 
+  OPERATION_TABLE_ADDEDIT: `${BASE_ROUTE}/operation-table/addedit`,
+  OPERATION_TABLE_DETAILS: `${BASE_ROUTE}/operation-table/:operationTableId`,
+  OPERATION_TABLE_LIST: `${BASE_ROUTE}/operation-table-list`,
+
   /* TOS: {
     PATH: '/terms-of-service',
     LABEL: { it: 'Termini di servizio', en: 'Terms of service' },

@@ -59,7 +59,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.fiscalCode ?? '-'}
+          {signinData?.paymentServiceProviderDetailsResource?.psp_code ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>

@@ -125,8 +125,6 @@ test('render component with alert message', () => {
       </Router>
     </Provider>
   );
-
-  screen.debug(undefined, 999999);
 });
 
 const pspPartySelected = {

@@ -4,22 +4,12 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
-import { PortalApi } from '../../../../api/PortalApiClient';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
-import {
-  brokerOrPspDetailsResource_PSPOnly,
-  pspDetails,
-} from '../../../../services/__mocks__/nodeService';
-import {
-  pspAdminSignedDirect,
-  pspAdminSignedUndirect,
-  pspAdminUnsigned,
-} from '../../../../services/__mocks__/partyService';
-import { PSPDirectDTO } from '../../../../model/PSP';
-import { isPspBrokerSigned } from '../../../../utils/rbac-utils';
+import { pspDetails } from '../../../../services/__mocks__/nodeService';
+import { pspAdminUnsigned } from '../../../../services/__mocks__/partyService';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;

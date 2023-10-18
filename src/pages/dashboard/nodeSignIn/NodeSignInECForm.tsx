@@ -127,7 +127,7 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
         }
       } else {
         try {
-          if (!isPspBrokerSigned(signInData)) {
+          if (!isEcBrokerSigned(signInData)) {
             const createtionOfBroker = await createEcBroker({
               broker_code: selectedParty.fiscalCode,
               description: selectedParty.description,
@@ -154,8 +154,6 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
               reportingFtp: false,
               reportingZip: false,
             });
-
-            await updateSigninData(selectedParty);
           }
         } catch (reason) {
           addError({

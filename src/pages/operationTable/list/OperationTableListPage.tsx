@@ -13,7 +13,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 const OperationTableListPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const goBack = () => history.push(ROUTES.IBAN);
+  const goBack = () => history.push(ROUTES.HOME);
   const { ibanId } = useParams<{ ibanId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 

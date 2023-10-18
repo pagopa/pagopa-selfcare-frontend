@@ -13,7 +13,7 @@ const OperationTableDetailPage = () => {
   const history = useHistory();
   const goBack = () => history.push(ROUTES.HOME);
   const { operationTableId } = useParams<{ operationTableId: string }>();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  /* const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -56,7 +56,9 @@ const OperationTableDetailPage = () => {
         ></Paper>
       </Grid>
     </Grid>
-  );
+  ); */
+
+  return <>{'OperationTableDetailPage'}</>;
 };
 
 export default OperationTableDetailPage;

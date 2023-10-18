@@ -15,6 +15,7 @@ const OperationTableListPage = () => {
   const history = useHistory();
   const goBack = () => history.push(ROUTES.HOME);
   const { ibanId } = useParams<{ ibanId: string }>();
+  /* 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   return (
@@ -54,6 +55,8 @@ const OperationTableListPage = () => {
       </Grid>
     </Grid>
   );
+  */
+  return <>{'OperationTableListPage'}</>;
 };
 
 export default OperationTableListPage;

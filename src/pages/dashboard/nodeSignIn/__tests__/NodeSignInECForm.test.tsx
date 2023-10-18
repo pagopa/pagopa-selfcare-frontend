@@ -193,7 +193,6 @@ describe('NodeSignInECForm', () => {
     spyOnCreateECAndBroker.mockRejectedValue(() => {
       throw new Error('Error in createECAndBroker');
     });
-    spyOnGetBrokerAndEcDetails;
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);

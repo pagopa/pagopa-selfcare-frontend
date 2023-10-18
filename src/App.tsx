@@ -36,6 +36,9 @@ import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
 import CommissionPackagesPage from './pages/commisionalPackages/CommissionPackagesPage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import AddEditCommissionPackagePage from './pages/commisionalPackages/addEditCommissionPackage/AddEditCommissionPackagePage';
+import AddEditOperationTablePage from './pages/operationTable/addEditOperationTable/AddEditOperationTablePage';
+import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
+import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -141,6 +144,18 @@ const SecuredRoutes = withLogin(
           </Route>
           <Route path={routes.COMMISSION_PACKAGES_EDIT} exact={true}>
             <AddEditCommissionPackagePage />
+          </Route>
+
+          <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>
+            <AddEditOperationTablePage />
+          </Route>
+
+          <Route path={routes.OPERATION_TABLE_DETAILS} exact={true}>
+            <OperationTableDetailPage />
+          </Route>
+
+          <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
+            <OperationTableListPage />
           </Route>
 
           <Route path={routes.TOS} exact={true}>

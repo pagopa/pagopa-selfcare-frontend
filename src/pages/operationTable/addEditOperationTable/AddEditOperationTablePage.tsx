@@ -54,7 +54,7 @@ const AddEditOperationTablePage = () => {
             mb: 3,
           }}
         >
-          <AddEditOperationTableForm goBack={goBack} formAction="create" />
+          <AddEditOperationTableForm goBack={goBack} />
         </Paper>
       </Grid>
     </Grid>

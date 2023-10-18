@@ -17,16 +17,16 @@ import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEd
 type Props = {
   goBack: () => void;
   operationTableDetail?: OperationTableOnCreation;
-  formAction: string;
 };
 
-const AddEditOperationTableForm = ({ goBack, operationTableDetail, formAction }: Props) => {
+const AddEditOperationTableForm = ({ goBack, operationTableDetail }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const ecCode = selectedParty ? selectedParty.fiscalCode : '';
+  const isUpdate = true; // TODO: fix getting previous operationTable
 
   const initialFormData = (operationTableDetail?: OperationTableOnCreation) =>
     operationTableDetail
@@ -77,11 +77,11 @@ const AddEditOperationTableForm = ({ goBack, operationTableDetail, formAction }:
   const submit = async (values: OperationTableOnCreation) => {
     setLoading(true);
     try {
-      if (formAction === OperationTableFormAction.Create) {
-        console.log('create OPTABLE');
+      if (isUpdate) {
+        console.log('update OPTABLE');
         // TODO: connect to real service
       } else {
-        console.log('create Update OPTABLE');
+        console.log('create OPTABLE');
         // TODO: connect to real service
       }
       history.push(ROUTES.HOME);

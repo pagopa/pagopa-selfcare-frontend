@@ -32,8 +32,8 @@ const renderApp = (
   return { store, history };
 };
 
-describe('AddEditOperationTablePage', () => {
-  it('Test render AddEditOperationTablePage', async () => {
+describe('OperationTableListPage', () => {
+  it('Test render OperationTableListPage', async () => {
     const { history } = renderApp();
     const backBtn = screen.getByText('general.exit');
     await waitFor(() => fireEvent.click(backBtn));

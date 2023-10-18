@@ -65,7 +65,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     businessName: selectedParty?.description ?? '',
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abiCode ?? '',
-    pspCode: selectedParty?.fiscalCode ?? '',
+    pspCode: signInData.paymentServiceProviderDetailsResource?.psp_code ?? '',
     bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
     digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
@@ -155,10 +155,6 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
         }
 
         await updateSigninData(selectedParty);
-
-        history.push(ROUTES.HOME, {
-          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
-        });
       } catch (reason) {
         addError({
           id: 'NODE_SIGNIN_PSP_CREATE',
@@ -172,6 +168,9 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
         });
       } finally {
         setLoading(false);
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+        });
       }
     }
   };

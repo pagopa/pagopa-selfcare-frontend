@@ -8,12 +8,14 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
   const isEcBroker = signinData && isEcBrokerSigned(signinData) && isEcSigned(signinData);
 
   return (
@@ -121,7 +123,7 @@ const ECRegistrationData = () => {
         )}
       </Grid>
 
-      <Grid xs={12} sx={{ my: 2 }}>
+      <Grid item xs={12} sx={{ my: 2 }}>
         <Divider />
       </Grid>
       <Grid item xs={4}>
@@ -143,7 +145,7 @@ const ECRegistrationData = () => {
           <ButtonNaked
             size="medium"
             component="button"
-            disabled={selectedParty?.roles[0].roleKey === 'operator'}
+            disabled={hasPermission('node-signin')}
             onClick={() => history.push(ROUTES.NODE_SIGNIN)}
             endIcon={<EditIcon />}
             sx={{ color: 'primary.main', mr: '20px' }}

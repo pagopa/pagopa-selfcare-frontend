@@ -28,7 +28,7 @@ import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
-  signInData: BrokerAndEcDetailsResource | undefined;
+  signInData: BrokerAndEcDetailsResource;
 };
 
 const NodeSignInECForm = ({ goBack, signInData }: Props) => {
@@ -49,7 +49,7 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
     }
   }, [selectedParty]);
 
-  const initialFormData = (ecDetails: BrokerAndEcDetailsResource | undefined) =>
+  const initialFormData = (ecDetails: BrokerAndEcDetailsResource) =>
     ecDetails
       ? {
           city: ecDetails?.creditorInstitutionDetailsResource?.address?.city ?? '',
@@ -99,107 +99,57 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
 
   const submit = async () => {
     setLoading(true);
-    if (signInData && selectedParty) {
-      if (!intermediaryAvailableValue) {
-        try {
-          await createECAndBroker({
-            address: { ...formik.values },
-            businessName: selectedParty?.description ?? '',
-            creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-            enabled: true,
-            pspPayment: false,
-            reportingFtp: false,
-            reportingZip: false,
-          });
-        } catch (reason) {
-          addError({
-            id: 'NODE_SIGNIN_EC_CREATE',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while registration EC at the node`,
-            toNotify: true,
-            displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
-            displayableDescription: t('nodeSignInPage.form.ecErrorMessageDesc'),
-            component: 'Toast',
-          });
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        try {
-          if (!isEcBrokerSigned(signInData)) {
-            const createtionOfBroker = await createEcBroker({
-              broker_code: selectedParty.fiscalCode,
-              description: selectedParty.description,
-            });
 
-            if (createtionOfBroker) {
-              await updateCreditorInstitution(selectedParty.fiscalCode, {
-                address: { ...formik.values },
-                businessName: selectedParty?.description ?? '',
-                creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-                enabled: true,
-                pspPayment: false,
-                reportingFtp: false,
-                reportingZip: false,
-              });
-            }
-          } else {
-            await updateCreditorInstitution(selectedParty.fiscalCode, {
-              address: { ...formik.values },
-              businessName: selectedParty?.description ?? '',
-              creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-              enabled: true,
-              pspPayment: false,
-              reportingFtp: false,
-              reportingZip: false,
-            });
-          }
-        } catch (reason) {
-          addError({
-            id: 'NODE_SIGNIN_EC_UPDATE',
-            blocking: false,
-            error: reason as Error,
-            techDescription: `An error occurred while updating Ec data at the node`,
-            toNotify: true,
-            displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
-            displayableDescription: t('nodeSignInPage.form.ecUpdateErrorMessageDesc'),
-            component: 'Toast',
-          });
-        } finally {
-          setLoading(false);
-          history.push(ROUTES.HOME, {
-            alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+    const commonPayload = {
+      address: { ...formik.values },
+      businessName: selectedParty?.description ?? '',
+      creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
+      enabled: true,
+      pspPayment: false,
+      reportingFtp: false,
+      reportingZip: false,
+    };
+
+    if (isEcSigned(signInData) && selectedParty) {
+      try {
+        if (!isEcBrokerSigned(signInData) && intermediaryAvailableValue) {
+          await createEcBroker({
+            broker_code: selectedParty.fiscalCode,
+            description: selectedParty.description,
           });
         }
+
+        await updateCreditorInstitution(selectedParty.fiscalCode, commonPayload);
+
+        await updateSigninData(selectedParty);
+      } catch (reason) {
+        addError({
+          id: 'NODE_SIGNIN_EC_UPDATE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while updating Ec data at the node`,
+          toNotify: true,
+          displayableTitle: t('nodeSignInPage.form.ecErrorMessageTitle'),
+          displayableDescription: t('nodeSignInPage.form.ecUpdateErrorMessageDesc'),
+          component: 'Toast',
+        });
+      } finally {
+        setLoading(false);
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+        });
       }
-    } else {
+    }
+
+    if (!isEcSigned(signInData) && selectedParty) {
       try {
         if (intermediaryAvailableValue) {
-          await createECAndBroker({
-            address: { ...formik.values },
-            businessName: selectedParty?.description ?? '',
-            creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-            enabled: true,
-            pspPayment: false,
-            reportingFtp: false,
-            reportingZip: false,
-          });
+          await createECAndBroker(commonPayload);
         } else {
-          await createECIndirect({
-            address: { ...formik.values },
-            businessName: selectedParty?.description ?? '',
-            creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
-            enabled: true,
-            pspPayment: false,
-            reportingFtp: false,
-            reportingZip: false,
-          });
+          await createECIndirect(commonPayload);
         }
 
-        if (selectedParty) {
-          await updateSigninData(selectedParty);
-        }
+        await updateSigninData(selectedParty);
       } catch (reason) {
         addError({
           id: 'NODE_SIGNIN_EC_CREATE',

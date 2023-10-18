@@ -4,13 +4,14 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route, Router } from 'react-router-dom';
 
 import DashboardPage from '../DashboardPage';
-import { store } from '../../../redux/store';
-import { mockedParties } from '../../../services/__mocks__/partyService';
+import { createStore, store } from '../../../redux/store';
+import { ecAdminSignedDirect, mockedParties } from '../../../services/__mocks__/partyService';
 import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
 import { createMemoryHistory } from 'history';
+import { BASE_ROUTE } from '../../../routes';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -22,7 +23,12 @@ jest.mock('../../../decorators/withParties');
 jest.mock('../../../decorators/withSelectedParty');
 jest.mock('../../../decorators/withSelectedPartyProducts');
 
-const renderApp = () => {
+const renderApp = (
+  injectedStore?: ReturnType<typeof createStore>,
+  injectedHistory?: ReturnType<typeof createMemoryHistory>
+) => {
+  const store = injectedStore ? injectedStore : createStore();
+  const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
       <BrowserRouter>
@@ -32,10 +38,12 @@ const renderApp = () => {
       </BrowserRouter>
     </Provider>
   );
+
+  return { store, history };
 };
 
 test('Test rendering PSP', async () => {
-  renderApp();
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -46,7 +54,7 @@ test('Test rendering PSP', async () => {
 });
 
 test('Test rendering EC', async () => {
-  renderApp();
+  const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -57,7 +65,7 @@ test('Test rendering EC', async () => {
 });
 
 test('Test rendering button', async () => {
-  renderApp();
+  const { store } = renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: pspUnsignedAdmin,
@@ -70,7 +78,7 @@ test('Test rendering button', async () => {
 });
 
 test('Test - PSP unsigned - not admin', async () => {
-  renderApp();
+  const { store } = renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: pspUnsignedOperator,
@@ -83,7 +91,7 @@ test('Test - PSP unsigned - not admin', async () => {
 });
 
 test('Test - EC unsigned - not admin', async () => {
-  renderApp();
+  const { store } = renderApp();
   store.dispatch({
     type: 'parties/setPartySelected',
     payload: ecUsnignedOperator,
@@ -96,19 +104,26 @@ test('Test - EC unsigned - not admin', async () => {
 });
 
 test('Test - EC signed - admin', async () => {
-  renderApp();
-  store.dispatch({
-    type: 'parties/setPartySelected',
-    payload: ecAdminSigned,
+  const { store } = renderApp();
+
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerAndEcDetailsResource_ECAndBroker,
+    });
   });
 
-  store.dispatch({
-    type: 'parties/setSignInData',
-    payload: brokerAndEcDetailsResource_ECAndBroker,
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: ecAdminSignedDirect,
+    });
   });
 
   expect(
-    screen.queryByText(/Completa la registrazione sul Nodo inserendo i dati mancanti./i)
+    screen.queryByRole('link', {
+      name: /Genera API Key/i,
+    })
   ).toBeVisible();
 });
 
@@ -118,11 +133,11 @@ test('render component with alert message', () => {
 
   render(
     <Provider store={store}>
-      <Router history={history}>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Router history={history}>
           <DashboardPage />
-        </ThemeProvider>
-      </Router>
+        </Router>
+      </ThemeProvider>
     </Provider>
   );
 });
@@ -173,7 +188,7 @@ const ecPartySelected = {
       roleKey: 'admin',
     },
   ],
-  urlLogo: 'http://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
+  urlLogo: 'https://checkout.selfcare/institutions/6b82300e-4fad-459d-a75b-91b5e7ae4f04/logo.png',
 };
 
 const pspUnsignedOperator = mockedParties.find(

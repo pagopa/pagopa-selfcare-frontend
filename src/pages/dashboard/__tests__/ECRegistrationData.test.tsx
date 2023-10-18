@@ -17,6 +17,7 @@ import {
 } from '../../../services/__mocks__/partyService';
 import ECRegistrationData from '../components/ECRegistrationData';
 import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
+import NodeSignInECForm from '../nodeSignIn/NodeSignInECForm';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

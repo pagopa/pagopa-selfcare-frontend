@@ -88,5 +88,5 @@ test('Test rendering digitalStamp undefined ', async () => {
     })
   );
 
-  expect(screen.queryAllByText('-').length).toBe(2);
+  expect(screen.queryAllByText('-').length).toBe(3);
 });

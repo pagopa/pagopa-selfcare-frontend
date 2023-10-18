@@ -7,11 +7,13 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import ROUTES from '../../../routes';
 import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
 
   const stampToString = (stamp: boolean) =>
     stamp
@@ -112,7 +114,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={12}>
         <Button
-          disabled={selectedParty?.roles[0].roleKey === 'operator'}
+          disabled={hasPermission('node-signin')}
           component={RouterLink}
           to={generatePath(ROUTES.NODE_SIGNIN)}
           variant="naked"

@@ -145,7 +145,7 @@ const ECRegistrationData = () => {
           <ButtonNaked
             size="medium"
             component="button"
-            disabled={hasPermission('node-signin')}
+            disabled={!hasPermission('node-signin')}
             onClick={() => history.push(ROUTES.NODE_SIGNIN)}
             endIcon={<EditIcon />}
             sx={{ color: 'primary.main', mr: '20px' }}

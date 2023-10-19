@@ -260,6 +260,10 @@ test('Test rendering NodeSignInPSPForm in case of updating the form with a psp d
   );
   const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
 
+  expect(bicCode.value).toBe(
+    brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
+  );
+
   fireEvent.change(bicCode, { target: { value: '12345' } });
   expect(bicCode.value).toBe('12345');
 
@@ -288,14 +292,24 @@ test('Test rendering NodeSignInPSPForm in case of updating the form with a psp i
     })
   );
   const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+  const intermediaryFalse = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=false]') as HTMLInputElement;
   const intermediaryTrue = screen
     .getByTestId('intermediary-available-test')
     .querySelector('[value=true]') as HTMLInputElement;
 
+  expect(bicCode.value).toBe(
+    brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
+  );
+  expect(intermediaryFalse.checked).toBe(true);
+
   fireEvent.change(bicCode, { target: { value: '12345' } });
   expect(bicCode.value).toBe('12345');
 
+  expect(intermediaryTrue.checked).toBe(false);
   fireEvent.click(intermediaryTrue);
+  expect(intermediaryTrue.checked).toBe(true);
 
   const confirmBtn = await screen.findByTestId('continue-button-test');
   fireEvent.click(confirmBtn);

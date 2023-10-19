@@ -6,7 +6,7 @@ import { createMemoryHistory } from 'history';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
 import {
@@ -18,6 +18,8 @@ import {
 import ECRegistrationData from '../components/ECRegistrationData';
 import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
 import NodeSignInECForm from '../nodeSignIn/NodeSignInECForm';
+import ROUTES from '../../../routes';
+import { act } from 'react-dom/test-utils';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -32,11 +34,11 @@ const renderApp = (
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Router history={history}>
           <ECRegistrationData />
-        </ThemeProvider>
-      </BrowserRouter>
+        </Router>
+      </ThemeProvider>
     </Provider>
   );
   return { store, history };
@@ -78,7 +80,7 @@ test('Test rendering ecOperatorUnsigned', async () => {
 });
 
 test('Test onClick modify button', async () => {
-  const { store } = renderApp();
+  const { store, history } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
@@ -92,7 +94,8 @@ test('Test onClick modify button', async () => {
       payload: brokerAndEcDetailsResource_ECAndBroker,
     })
   );
-
   const modifyBtn = screen.getByTestId('modify-data-test');
   fireEvent.click(modifyBtn);
+
+  expect(history.location.pathname).toBe(ROUTES.NODE_SIGNIN);
 });

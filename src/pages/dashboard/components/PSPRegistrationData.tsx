@@ -114,7 +114,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={12}>
         <Button
-          disabled={hasPermission('node-signin')}
+          disabled={!hasPermission('node-signin')}
           component={RouterLink}
           to={generatePath(ROUTES.NODE_SIGNIN)}
           variant="naked"

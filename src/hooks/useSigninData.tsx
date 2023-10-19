@@ -9,12 +9,12 @@ import {
   getPSPBrokerDetails,
 } from '../services/nodeService';
 
-/** A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux */
+/** A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux.
+ * TODO: to be updated with new service that retrive psp by fiscalcode. Now works only for pspSigned with pspCode that match fiscal code. */
 export const useSigninData = () => {
   const dispatch = useAppDispatch();
   const setSigninData = (signinData?: SigninData) =>
     dispatch(partiesActions.setSigninData(signinData));
-  const [response, setResponse] = useState<any>({});
 
   return async (party: Party) => {
     await fetchSigninData(party)

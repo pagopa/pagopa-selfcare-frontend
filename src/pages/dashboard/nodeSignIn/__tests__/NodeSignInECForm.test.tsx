@@ -205,10 +205,22 @@ describe('NodeSignInECForm', () => {
 
   test('Test rendering NodeSignInECForm in case of updating the form with an ec direct', async () => {
     const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker);
+    const formPrevValue =
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address;
 
     dispatchAdminSignedInDirectAndFullEcDetails(store);
 
     const address = screen.getByTestId('address-test') as HTMLInputElement;
+    const city = screen.getByTestId('city-test') as HTMLInputElement;
+    const province = screen.getByTestId('province-test') as HTMLSelectElement;
+    const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
+    const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
+
+    expect(address.value).toBe(formPrevValue?.location);
+    expect(city.value).toBe(formPrevValue?.city);
+    expect(province.value).toBe(formPrevValue?.countryCode);
+    expect(CAP.value).toBe(formPrevValue?.zipCode);
+    expect(fiscalDomicile.value).toBe(formPrevValue?.taxDomicile);
 
     fireEvent.change(address, { target: { value: 'Via Roma 11' } });
     expect(address.value).toBe('Via Roma 11');
@@ -226,16 +238,34 @@ describe('NodeSignInECForm', () => {
 
     dispatchAdminSignedIndirectAndEcDetailsOnly(store);
 
+    const formPrevValue =
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address;
+
     const address = screen.getByTestId('address-test') as HTMLInputElement;
+    const city = screen.getByTestId('city-test') as HTMLInputElement;
+    const province = screen.getByTestId('province-test') as HTMLSelectElement;
+    const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
+    const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
     const intermediaryTrue = screen
       .getByTestId('intermediary-available-test')
       .querySelector('[value=true]') as HTMLInputElement;
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    expect(address.value).toBe(formPrevValue?.location);
+    expect(city.value).toBe(formPrevValue?.city);
+    expect(province.value).toBe(formPrevValue?.countryCode);
+    expect(CAP.value).toBe(formPrevValue?.zipCode);
+    expect(fiscalDomicile.value).toBe(formPrevValue?.taxDomicile);
+    expect(intermediaryFalse.checked).toBe(true);
 
     fireEvent.change(address, { target: { value: 'Via Roma 11' } });
     expect(address.value).toBe('Via Roma 11');
 
+    expect(intermediaryTrue.checked).toBe(false);
     fireEvent.click(intermediaryTrue);
-    expect(intermediaryTrue.value).toBe('true');
+    expect(intermediaryTrue.checked).toBe(true);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);

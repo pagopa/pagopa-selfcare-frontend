@@ -5,24 +5,32 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { createStore, store } from '../../../../redux/store';
+import { createStore } from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
-import { PortalApi } from '../../../../api/PortalApiClient';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
-import { ecDetails } from '../../../../services/__mocks__/nodeService';
-import { ecOperatorUnsigned } from '../../../../services/__mocks__/partyService';
-import { CreditorInstitutionDetailsResource } from '../../../../api/generated/portal/CreditorInstitutionDetailsResource';
+import {
+  brokerAndEcDetailsResource_ECAndBroker,
+  brokerAndEcDetailsResource_ECOnly,
+  ecDetails,
+} from '../../../../services/__mocks__/nodeService';
+import {
+  ecAdminSignedDirect,
+  ecAdminSignedUndirect,
+  ecAdminUnsigned,
+} from '../../../../services/__mocks__/partyService';
 
 const renderApp = (
-  injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  ecNodeData?: BrokerAndEcDetailsResource
+  signInData: BrokerAndEcDetailsResource,
+  injectedStore?: ReturnType<typeof createStore>,
+  injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
+  const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router history={history}>
-          <NodeSignInECForm goBack={jest.fn()} ecNodeData={ecNodeData} />
+          <NodeSignInECForm goBack={jest.fn()} signInData={signInData} />
         </Router>
       </ThemeProvider>
     </Provider>
@@ -56,7 +64,7 @@ const setupForm = () => {
 let spyOnCreateECAndBroker;
 let spyOnCreateEcIndirect;
 let spyOnUpdateCreditorInstitution;
-let spyOnGetBrokerAndEcDetails;
+let SpyOnCreateEcBroker;
 
 beforeEach(() => {
   spyOnCreateECAndBroker = jest.spyOn(
@@ -71,21 +79,67 @@ beforeEach(() => {
     require('../../../../services/nodeService'),
     'updateCreditorInstitution'
   );
-  spyOnGetBrokerAndEcDetails = jest.spyOn(
-    require('../../../../services/nodeService'),
-    'getBrokerAndEcDetails'
-  );
+  SpyOnCreateEcBroker = jest.spyOn(require('../../../../services/nodeService'), 'createEcBroker');
+
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 afterEach(cleanup);
 
-describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-  const history = injectedHistory ? injectedHistory : createMemoryHistory();
+describe('NodeSignInECForm', () => {
+  const dispatchAdminUsignedAndSignInDataEmpty = async (store) => {
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecAdminUnsigned,
+      })
+    );
 
-  test('Test rendering NodeSignInECForm with intermediary true and Sumbit', async () => {
-    renderApp();
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: {},
+      })
+    );
+  };
+
+  const dispatchAdminSignedIndirectAndEcDetailsOnly = async (store) => {
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecAdminSignedUndirect,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: brokerAndEcDetailsResource_ECOnly,
+      })
+    );
+  };
+
+  const dispatchAdminSignedInDirectAndFullEcDetails = async (store) => {
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecAdminSignedDirect,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: brokerAndEcDetailsResource_ECAndBroker,
+      })
+    );
+  };
+
+  test('Test rendering NodeSignInECForm with intermediary true and Sumbit a direct ec', async () => {
+    const { store } = renderApp({});
+
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
@@ -103,8 +157,12 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     });
   });
 
-  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
-    renderApp();
+  test('Test rendering NodeSignInECForm with intermediary false and Sumbit an inderiect ec', async () => {
+    const ecDetailsDispatched = {};
+
+    const { store } = renderApp(ecDetailsDispatched);
+
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
@@ -117,90 +175,236 @@ describe('NodeSignInECForm', (injectedHistory?: ReturnType<typeof createMemoryHi
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
-    await waitFor(() => {
-      expect(spyOnCreateEcIndirect).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(spyOnCreateEcIndirect).toHaveBeenCalled());
   });
 
-  test('Test rendering NodeSignInECForm and Sumbit', async () => {
-    renderApp();
-
-    setupForm();
-
+  test('Test rendering NodeSignInECForm and BackBtn click', async () => {
+    renderApp({});
     const backBtn = await screen.findByTestId('back-button-test');
     fireEvent.click(backBtn);
   });
 
-  test('Test rendering NodeSignInECForm with intermediary false and Sumbit', async () => {
-    renderApp(history, ecDetails[0]);
+  test('Test rendering NodeSignInECForm with intermediary true and create ecBroker', async () => {
+    const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
 
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecOperatorUnsigned,
-      })
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
+
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(SpyOnCreateEcBroker).toHaveBeenCalled();
+    });
+  });
+
+  test('Test rendering NodeSignInECForm in case of updating the form with an ec direct', async () => {
+    const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker);
+
+    dispatchAdminSignedInDirectAndFullEcDetails(store);
+
+    const address = screen.getByTestId('address-test') as HTMLInputElement;
+    const city = screen.getByTestId('city-test') as HTMLInputElement;
+    const province = screen.getByTestId('province-test') as HTMLSelectElement;
+    const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
+    const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
+
+    expect(address.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.location
+    );
+    expect(city.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.city
+    );
+    expect(province.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.countryCode
+    );
+    expect(CAP.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.zipCode
+    );
+    expect(fiscalDomicile.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.taxDomicile
     );
 
-    setupForm();
-
-    const intermediaryFalse = screen
-      .getByTestId('intermediary-available-test')
-      .querySelector('[value=false]') as HTMLInputElement;
-
-    fireEvent.click(intermediaryFalse);
+    fireEvent.change(address, { target: { value: 'Via Roma 11' } });
+    expect(address.value).toBe('Via Roma 11');
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
       expect(spyOnUpdateCreditorInstitution).toHaveBeenCalled();
-      expect(spyOnGetBrokerAndEcDetails).toHaveBeenCalled();
     });
   });
 
-  test('Test error response of updateCreditorInstitution', async () => {
-    renderApp();
+  test('Test rendering NodeSignInECForm in case of updating the form with an ec indirect', async () => {
+    const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
+
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
+
+    const address = screen.getByTestId('address-test') as HTMLInputElement;
+    const city = screen.getByTestId('city-test') as HTMLInputElement;
+    const province = screen.getByTestId('province-test') as HTMLSelectElement;
+    const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
+    const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+    const intermediaryFalse = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=false]') as HTMLInputElement;
+
+    expect(address.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.location
+    );
+    expect(city.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.city
+    );
+    expect(province.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.countryCode
+    );
+    expect(CAP.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.zipCode
+    );
+    expect(fiscalDomicile.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.taxDomicile
+    );
+
+    expect(intermediaryFalse.checked).toBe(true);
+
+    fireEvent.change(address, { target: { value: 'Via Roma 11' } });
+    expect(address.value).toBe('Via Roma 11');
+
+    expect(intermediaryTrue.checked).toBe(false);
+    fireEvent.click(intermediaryTrue);
+    expect(intermediaryTrue.checked).toBe(true);
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => expect(SpyOnCreateEcBroker).toHaveBeenCalled());
+    await waitFor(() => expect(spyOnUpdateCreditorInstitution).toHaveBeenCalled());
+  });
+
+  test('Test NodeSignInECForm function falsy conditions', async () => {
+    const { store } = renderApp({});
 
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
-        payload: ecOperatorUnsigned,
+        payload: {
+          ...ecAdminUnsigned,
+          description: undefined,
+          fiscalCode: undefined,
+        },
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: undefined,
       })
     );
 
     setupForm();
 
+    const province = screen.getByTestId('province-test') as HTMLSelectElement;
+    const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
     const confirmBtn = await screen.findByTestId('continue-button-test');
+
+    fireEvent.change(province, { target: { value: 'M' } });
+    expect(province.value).toBe('M');
+
+    fireEvent.change(province, { target: { value: '12' } });
+    expect(province.value).toBe('M');
+
+    fireEvent.change(CAP, { target: { value: '1111' } });
+    expect(CAP.value).toBe('1111');
+
+    fireEvent.change(CAP, { target: { value: 'AAAAA' } });
+    expect(CAP.value).toBe('1111');
+
     fireEvent.click(confirmBtn);
 
-    PortalApi.getBrokerAndEcDetails = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked errore response for tests');
+    setupForm();
 
-    PortalApi.updateCreditorInstitution = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
+    fireEvent.click(confirmBtn);
   });
 
   test('Test error response of createECAndBroker', async () => {
-    renderApp();
+    const { store } = renderApp({});
+
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
+
+    spyOnCreateECAndBroker.mockRejectedValue(() => {
+      throw new Error('Error in createECAndBroker');
+    });
+
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
-
-    PortalApi.createECAndBroker = async (): Promise<CreditorInstitutionDetailsResource> =>
-      Promise.reject('mocked error response for tests');
   });
 
   test('Test error response of createECIndirect', async () => {
-    renderApp();
+    const { store } = renderApp({});
+
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
+    spyOnCreateEcIndirect.mockRejectedValue(() => {
+      throw new Error('Error in createECIndirect');
+    });
+
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);
+  });
 
-    PortalApi.createECIndirect = async (): Promise<BrokerAndEcDetailsResource> =>
-      Promise.reject('mocked error response for tests');
+  test('Test error response of updateCreditorInstitution with intermediary true', async () => {
+    const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker);
+
+    dispatchAdminSignedInDirectAndFullEcDetails(store);
+
+    const address = screen.getByTestId('address-test') as HTMLInputElement;
+
+    fireEvent.change(address, { target: { value: 'Via Roma 11' } });
+    expect(address.value).toBe('Via Roma 11');
+
+    spyOnUpdateCreditorInstitution.mockRejectedValue(() => {
+      throw new Error('Error in updateCreditorInstitution');
+    });
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
+  });
+
+  test('Test error response of updateCreditorInstitution with intermediary false', async () => {
+    const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
+
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
+
+    const address = screen.getByTestId('address-test') as HTMLInputElement;
+
+    fireEvent.change(address, { target: { value: 'Via Roma 11' } });
+    expect(address.value).toBe('Via Roma 11');
+
+    spyOnUpdateCreditorInstitution.mockRejectedValue(() => {
+      throw new Error('Error in updateCreditorInstitution');
+    });
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
   });
 });

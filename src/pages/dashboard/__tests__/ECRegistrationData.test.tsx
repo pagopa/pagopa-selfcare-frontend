@@ -9,13 +9,17 @@ import '../../../locale';
 import { Router } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
-import { pspAdminSignedDirect, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
-import PSPRegistrationData from '../components/PSPRegistrationData';
-import { SigninData } from '../../../model/Node';
-import { brokerOrPspDetailsResource_PSPAndBroker } from '../../../services/__mocks__/nodeService';
+import {
+  ecAdminSignedDirect,
+  ecAdminUnsigned,
+  ecOperatorSignedDirect,
+  ecOperatorUnsigned,
+} from '../../../services/__mocks__/partyService';
+import ECRegistrationData from '../components/ECRegistrationData';
+import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
+import NodeSignInECForm from '../nodeSignIn/NodeSignInECForm';
 import ROUTES from '../../../routes';
-
-const signInData: SigninData = {};
+import { act } from 'react-dom/test-utils';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -32,7 +36,7 @@ const renderApp = (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router history={history}>
-          <PSPRegistrationData />
+          <ECRegistrationData />
         </Router>
       </ThemeProvider>
     </Provider>
@@ -40,57 +44,39 @@ const renderApp = (
   return { store, history };
 };
 
-test('Test rendering ', async () => {
+test('Test rendering ecAdminSigned', async () => {
   const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspAdminUnsigned,
+      payload: ecAdminUnsigned,
     })
   );
-  expect(screen.queryByText('PSP Admin unsigned')).toBeVisible();
+  expect(screen.queryAllByText('ecAdminUnsigned')[0]).toBeVisible();
 });
 
-test('Test rendering digitalStamp false, bic undefined ', async () => {
+test('Test rendering ecOperatorUnsigned', async () => {
   const { store } = renderApp();
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspAdminUnsigned,
+      payload: ecOperatorUnsigned,
     })
   );
+
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setSigninData',
       payload: {
-        paymentServiceProviderDetailsResource: {
-          stamp: false,
-          bic: '123',
-        },
+        creditorInstitutionDetailsResource:
+          brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource,
       },
     })
   );
-  expect(screen.queryAllByText('No').length).toBe(1);
-});
+  expect(screen.getByText('Non disponibile')).toBeVisible();
 
-test('Test rendering digitalStamp undefined ', async () => {
-  const { store } = renderApp();
-  await waitFor(() =>
-    store.dispatch({
-      type: 'parties/setPartySelected',
-      payload: pspAdminUnsigned,
-    })
-  );
-  await waitFor(() =>
-    store.dispatch({
-      type: 'parties/setSigninData',
-      payload: {
-        paymentServiceProviderDetailsResource: {},
-      },
-    })
-  );
-
-  expect(screen.queryAllByText('-').length).toBe(3);
+  const modifyBtn = screen.getByTestId('modify-data-test');
+  fireEvent.click(modifyBtn);
 });
 
 test('Test onClick modify button', async () => {
@@ -98,17 +84,16 @@ test('Test onClick modify button', async () => {
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setPartySelected',
-      payload: pspAdminSignedDirect,
+      payload: ecAdminSignedDirect,
     })
   );
 
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setSigninData',
-      payload: brokerOrPspDetailsResource_PSPAndBroker,
+      payload: brokerAndEcDetailsResource_ECAndBroker,
     })
   );
-
   const modifyBtn = screen.getByTestId('modify-data-test');
   fireEvent.click(modifyBtn);
 

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { SigninData } from '../model/Node';
 import { Party } from '../model/Party';
 import { useAppDispatch } from '../redux/hooks';
@@ -8,7 +9,8 @@ import {
   getPSPBrokerDetails,
 } from '../services/nodeService';
 
-/** A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux */
+/** A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux.
+ * TODO: to be updated with new service that retrive psp by fiscalcode. Now works only for pspSigned with pspCode that match fiscal code. */
 export const useSigninData = () => {
   const dispatch = useAppDispatch();
   const setSigninData = (signinData?: SigninData) =>
@@ -35,9 +37,15 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
     }
 
     if (party.institutionType === 'PSP') {
-      return await getBrokerAndPspDetails(
-        party.pspData?.abiCode ? `ABI${party.pspData.abiCode}` : ''
-      );
+      const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      const pspDetails = await getBrokerAndPspDetails(party.fiscalCode);
+
+      return {
+        brokerPspDetailsResource: { ...pspBrokerDetails, ...pspDetails.brokerPspDetailsResource },
+        paymentServiceProviderDetailsResource: {
+          ...pspDetails.paymentServiceProviderDetailsResource,
+        },
+      };
     } else {
       return await getBrokerAndEcDetails(party.fiscalCode);
     }

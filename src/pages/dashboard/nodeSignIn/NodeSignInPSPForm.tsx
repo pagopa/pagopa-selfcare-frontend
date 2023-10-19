@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -24,17 +24,23 @@ import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { NodeOnSignInPSP } from '../../../model/Node';
-import { createPSPDirect, createPSPIndirect, updatePSPInfo } from '../../../services/nodeService';
+import {
+  createPSPDirect,
+  createPSPIndirect,
+  createPspBroker,
+  updatePSPInfo,
+} from '../../../services/nodeService';
 import { useSigninData } from '../../../hooks/useSigninData';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
   goBack: () => void;
-  pspNodeData?: BrokerOrPspDetailsResource;
+  signInData: BrokerOrPspDetailsResource;
 };
 
-const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
+const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -44,15 +50,25 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
+  const pspDirect = isPspBrokerSigned(signInData) && isPspSigned(signInData);
+
+  useEffect(() => {
+    if (pspDirect) {
+      setIntermediaryAvailableValue(true);
+    } else {
+      setIntermediaryAvailableValue(false);
+    }
+  }, [selectedParty]);
 
   const initialFormData = (selectedParty?: Party) => ({
     name: selectedParty?.fiscalCode ?? '',
     businessName: selectedParty?.description ?? '',
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abiCode ?? '',
-    pspCode: selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '',
-    bicCode: pspNodeData?.paymentServiceProviderDetailsResource?.bic ?? '',
-    digitalStamp: pspNodeData?.paymentServiceProviderDetailsResource?.stamp ? true : false,
+    pspCode:
+      signInData.paymentServiceProviderDetailsResource?.psp_code ?? selectedParty?.fiscalCode ?? '',
+    bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
+    digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
 
   const inputGroupStyle = {
@@ -94,18 +110,29 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
     enableReinitialize: true,
   });
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async () => {
     setLoading(true);
 
-    if (selectedParty && pspNodeData) {
+    if (selectedParty && isPspSigned(signInData)) {
       try {
-        await updatePSPInfo(formik.values);
+        if (!isPspBrokerSigned(signInData) && intermediaryAvailableValue) {
+          await createPspBroker({
+            broker_psp_code: selectedParty.fiscalCode,
+            description: selectedParty.description,
+            enabled: true,
+            extended_fault_bean: true,
+          });
+        }
+
+        if (signInData.paymentServiceProviderDetailsResource?.psp_code) {
+          await updatePSPInfo(
+            signInData.paymentServiceProviderDetailsResource.psp_code,
+            formik.values
+          );
+        }
 
         await updateSigninData(selectedParty);
-
-        history.push(ROUTES.HOME, {
-          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
-        });
       } catch (reason) {
         addError({
           id: 'NODE_SIGNIN_PSP_UPDATE',
@@ -119,10 +146,13 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
         });
       } finally {
         setLoading(false);
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.seccesMessagePut'),
+        });
       }
     }
 
-    if (selectedParty && !pspNodeData) {
+    if (selectedParty && !isPspSigned(signInData)) {
       try {
         if (intermediaryAvailableValue) {
           await createPSPDirect(formik.values);
@@ -131,10 +161,6 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
         }
 
         await updateSigninData(selectedParty);
-
-        history.push(ROUTES.HOME, {
-          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
-        });
       } catch (reason) {
         addError({
           id: 'NODE_SIGNIN_PSP_CREATE',
@@ -148,6 +174,9 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
         });
       } finally {
         setLoading(false);
+        history.push(ROUTES.HOME, {
+          alertSuccessMessage: t('nodeSignInPage.form.successMessage'),
+        });
       }
     }
   };
@@ -313,6 +342,7 @@ const NodeSignInPSPForm = ({ goBack, pspNodeData }: Props) => {
                 labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
                 value={intermediaryAvailableValue}
                 onChange={changeIntermediaryAvailable}
+                pspDirect={pspDirect}
               />
             </Box>
           </Box>

@@ -4,33 +4,45 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createStore, store } from '../../../../redux/store';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { createStore } from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
-import { PortalApi } from '../../../../api/PortalApiClient';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import {
+  brokerOrPspDetailsResource_PSPAndBroker,
+  brokerOrPspDetailsResource_PSPOnly,
+  pspDetails,
+} from '../../../../services/__mocks__/nodeService';
+import {
+  pspAdminSignedDirect,
+  pspAdminSignedUndirect,
+  pspAdminUnsigned,
+} from '../../../../services/__mocks__/partyService';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;
 let useSigninDataMocked: jest.SpyInstance;
 let updatePSPInfoMocked: jest.SpyInstance;
 let getBrokerAndPspDetailsMocked: jest.SpyInstance;
+let createPspBroker: jest.SpyInstance;
 
 jest.mock('../../../../decorators/withSelectedParty');
 
 const renderApp = (
+  signInData: PaymentServiceProviderDetailsResource,
   injectedStore?: ReturnType<typeof createStore>,
-  injectedHistory?: ReturnType<typeof createMemoryHistory>,
-  pspNodeData?: PaymentServiceProviderDetailsResource
+  injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {
   const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
   render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Router history={history}>
-          <NodeSignInPSPForm goBack={jest.fn()} pspNodeData={pspNodeData} />
-        </Router>
+        <MemoryRouter initialEntries={[`/node-signin`]}>
+          <Route path="/node-signin">
+            <NodeSignInPSPForm goBack={jest.fn()} signInData={signInData} />
+          </Route>
+        </MemoryRouter>
       </ThemeProvider>
     </Provider>
   );
@@ -50,12 +62,17 @@ const setupFormAndSubmit = async (store) => {
   const abiCode = screen.getByTestId('abiCode-test') as HTMLInputElement;
   const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
   const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-  const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test');
+  const digitalStampRadioTrue = screen.getByTestId('digitalStamp-true-test') as HTMLInputElement;
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
 
-  fireEvent.change(bicCode, { target: { value: '1234' } });
-  expect(bicCode.value).toBe('1234');
+  fireEvent.change(bicCode, { target: { value: '12345' } });
+  expect(bicCode.value).toBe('12345');
 
   fireEvent.click(digitalStampRadioTrue);
+
+  fireEvent.click(intermediaryTrue);
 
   const confirmBtn = await screen.findByTestId('continue-button-test');
   fireEvent.click(confirmBtn);
@@ -77,6 +94,7 @@ beforeEach(() => {
     require('../../../../services/nodeService'),
     'getBrokerAndPspDetails'
   );
+  createPspBroker = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
 
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -87,7 +105,22 @@ afterEach(cleanup);
 describe('NodeSignInPSPForm', () => {
   test('Test rendering NodeSignInPSPForm with getBrokerAndPspDetailsMocked error ', async () => {
     getBrokerAndPspDetailsMocked.mockRejectedValueOnce(new Error('Fetch error'));
-    const { store } = renderApp();
+
+    const { store } = renderApp(brokerOrPspDetailsResource_PSPAndBroker);
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: brokerOrPspDetailsResource_PSPAndBroker,
+      })
+    );
 
     await setupFormAndSubmit(store);
 
@@ -96,7 +129,21 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit', async () => {
-    const { store } = renderApp();
+    const { store } = renderApp({});
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: {},
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
 
     await setupFormAndSubmit(store);
 
@@ -111,7 +158,21 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary false and Sumbit', async () => {
-    const { store } = renderApp();
+    const { store } = renderApp({});
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: {},
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
 
     await setupFormAndSubmit(store);
 
@@ -125,28 +186,139 @@ describe('NodeSignInPSPForm', () => {
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
-  test('Test rendering NodeSignInPSPForm with pspNodeData and Sumbit the update', async () => {
-    const { store } = renderApp(undefined, undefined, pspNodeData);
+  test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit with createPspBroker api call', async () => {
+    const { store } = renderApp(brokerOrPspDetailsResource_PSPOnly);
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: brokerOrPspDetailsResource_PSPOnly,
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminSignedUndirect,
+      })
+    );
 
     await setupFormAndSubmit(store);
 
-    await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(0));
-    await waitFor(() => expect(updatePSPInfoMocked).toHaveBeenCalled());
+    const intermediaryTrue = screen
+      .getByTestId('intermediary-available-test')
+      .querySelector('[value=true]') as HTMLInputElement;
+
+    fireEvent.click(intermediaryTrue);
+
+    await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
+  });
+
+  test('Test bicCode empty', async () => {
+    const { store } = renderApp({});
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setSigninData',
+        payload: {},
+      })
+    );
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+
+    fireEvent.change(bicCode, { target: { value: 'abc' } });
+    expect(bicCode.value).toBe('');
+
+    const confirmBtn = await screen.findByTestId('continue-button-test');
+    fireEvent.click(confirmBtn);
   });
 });
 
-const pspNodeData: PaymentServiceProviderDetailsResource = {
-  abi: '12345',
-  agid_psp: true,
-  bic: '10101',
-  my_bank_code: '',
-  stamp: true,
-  tax_code: '123123',
-  vat_number: '12312312',
-  business_name: 'PSP S.r.l',
-  enabled: true,
-  psp_code: '12312312',
-};
+test('Test rendering NodeSignInPSPForm in case of updating the form with a psp direct', async () => {
+  const { store } = renderApp(brokerOrPspDetailsResource_PSPAndBroker);
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerOrPspDetailsResource_PSPAndBroker,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspAdminSignedDirect,
+    })
+  );
+  const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+
+  expect(bicCode.value).toBe(
+    brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
+  );
+
+  fireEvent.change(bicCode, { target: { value: '12345' } });
+  expect(bicCode.value).toBe('12345');
+
+  const confirmBtn = await screen.findByTestId('continue-button-test');
+  fireEvent.click(confirmBtn);
+
+  await waitFor(() => {
+    expect(updatePSPInfoMocked).toHaveBeenCalled();
+  });
+});
+
+test('Test rendering NodeSignInPSPForm in case of updating the form with a psp indirect', async () => {
+  const { store } = renderApp(brokerOrPspDetailsResource_PSPOnly);
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: brokerOrPspDetailsResource_PSPOnly,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspAdminSignedUndirect,
+    })
+  );
+  const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+  const intermediaryFalse = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=false]') as HTMLInputElement;
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
+
+  expect(bicCode.value).toBe(
+    brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
+  );
+  expect(intermediaryFalse.checked).toBe(true);
+
+  fireEvent.change(bicCode, { target: { value: '12345' } });
+  expect(bicCode.value).toBe('12345');
+
+  expect(intermediaryTrue.checked).toBe(false);
+  fireEvent.click(intermediaryTrue);
+  expect(intermediaryTrue.checked).toBe(true);
+
+  const confirmBtn = await screen.findByTestId('continue-button-test');
+  fireEvent.click(confirmBtn);
+
+  await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
+  await waitFor(() => {
+    expect(updatePSPInfoMocked).toHaveBeenCalled();
+  });
+});
 
 const pspPartySelected = {
   partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',

@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.4.15"
+    "version": "0.4.29"
   },
   "servers": [
     {
@@ -15,6 +15,10 @@
     {
       "name": "Ibans",
       "description": "Iban Controller"
+    },
+    {
+      "name": "PSP",
+      "description": "Payment Service Provider Controller"
     },
     {
       "name": "Utils",
@@ -39,6 +43,10 @@
     {
       "name": "stations",
       "description": "Api config stations operations"
+    },
+    {
+      "name": "taxonomy",
+      "description": "All about taxonomy "
     }
   ],
   "paths": {
@@ -3222,6 +3230,95 @@
         ]
       }
     },
+    "/gec/bundles/paymenttypes": {
+      "get": {
+        "tags": ["gec"],
+        "summary": "getBundlesPaymenttypes",
+        "description": "Get payment types of bundle",
+        "operationId": "getBundlesPaymenttypesUsingGET",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of elements on one page. Default = 50",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. Page value starts from 0",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BundlePaymentTypesResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/gec/bundles/touchpoints": {
       "get": {
         "tags": ["gec"],
@@ -3406,6 +3503,90 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
+      "post": {
+        "tags": ["gec"],
+        "summary": "createBundle",
+        "description": "Create a payment types of a channel",
+        "operationId": "createBundleUsingPOST",
+        "parameters": [
+          {
+            "name": "pspCode",
+            "in": "path",
+            "description": "Fiscalcode of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BundleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -4311,6 +4492,92 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/payment-service-provider/{pspcode}": {
+      "put": {
+        "tags": ["PSP"],
+        "summary": "updatePSP",
+        "description": "Create a channel",
+        "operationId": "updatePSPUsingPUT",
+        "parameters": [
+          {
+            "name": "pspcode",
+            "in": "path",
+            "description": "Code of the payment service provider",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentServiceProviderDetailsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentServiceProviderDetailsResource"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -5932,6 +6199,74 @@
         ]
       }
     },
+    "/taxonomy": {
+      "get": {
+        "tags": ["taxonomy"],
+        "summary": "getTaxonomy",
+        "description": "Get list of taxonomy",
+        "operationId": "getTaxonomyUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaxonomyResource"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/utils/ec-brokers/{code}/details": {
       "get": {
         "tags": ["Utils"],
@@ -6318,6 +6653,103 @@
           }
         }
       },
+      "BundleDto": {
+        "title": "BundleDto",
+        "required": ["abi", "idBrokerPsp", "idChannel", "pspBusinessName"],
+        "type": "object",
+        "properties": {
+          "abi": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "digitalStamp": {
+            "type": "boolean"
+          },
+          "digitalStampRestriction": {
+            "type": "boolean"
+          },
+          "idBrokerPsp": {
+            "type": "string"
+          },
+          "idCdi": {
+            "type": "string"
+          },
+          "idChannel": {
+            "type": "string"
+          },
+          "maxPaymentAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minPaymentAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "paymentAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentType": {
+            "type": "string"
+          },
+          "pspBusinessName": {
+            "type": "string"
+          },
+          "touchpoint": {
+            "type": "string"
+          },
+          "transferCategoryList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": ["GLOBAL", "PRIVATE", "PUBLIC"]
+          },
+          "validityDateFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "validityDateTo": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "BundlePaymentTypeResource": {
+        "title": "BundlePaymentTypeResource",
+        "type": "object",
+        "properties": {
+          "paymentType": {
+            "type": "string"
+          },
+          "used": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BundlePaymentTypesResource": {
+        "title": "BundlePaymentTypesResource",
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "paymentTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BundlePaymentTypeResource"
+            }
+          }
+        }
+      },
       "BundleResource": {
         "title": "BundleResource",
         "type": "object",
@@ -6376,11 +6808,11 @@
           },
           "validity_date_from": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "validity_date_to": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           }
         }
       },
@@ -7689,6 +8121,7 @@
       },
       "PaymentServiceProviderDetailsDto": {
         "title": "PaymentServiceProviderDetailsDto",
+        "required": ["business_name", "enabled", "psp_code"],
         "type": "object",
         "properties": {
           "abi": {
@@ -8692,6 +9125,79 @@
             "items": {
               "$ref": "#/components/schemas/StationResource"
             }
+          }
+        }
+      },
+      "TaxonomyResource": {
+        "title": "TaxonomyResource",
+        "required": [
+          "ecType",
+          "ecTypeCode",
+          "endDate",
+          "legalReasonCollection",
+          "macroAreaDescription",
+          "macroAreaEcProgressive",
+          "macroAreaName",
+          "serviceType",
+          "serviceTypeCode",
+          "serviceTypeDescription",
+          "specificBuiltInData",
+          "startDate",
+          "taxonomyVersion"
+        ],
+        "type": "object",
+        "properties": {
+          "ecType": {
+            "type": "string",
+            "description": "Entity creditor type"
+          },
+          "ecTypeCode": {
+            "type": "string",
+            "description": "Entity creditor type code"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of validity"
+          },
+          "legalReasonCollection": {
+            "type": "string",
+            "description": "Legal reason for collection"
+          },
+          "macroAreaDescription": {
+            "type": "string",
+            "description": "Macro area description"
+          },
+          "macroAreaEcProgressive": {
+            "type": "string",
+            "description": "Macro Area Progressive"
+          },
+          "macroAreaName": {
+            "type": "string",
+            "description": "Macro area name"
+          },
+          "serviceType": {
+            "type": "string",
+            "description": "Service type"
+          },
+          "serviceTypeCode": {
+            "type": "string",
+            "description": "Service type code"
+          },
+          "serviceTypeDescription": {
+            "type": "string",
+            "description": "Service description"
+          },
+          "specificBuiltInData": {
+            "type": "string",
+            "description": "Specific collection data"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of validity"
+          },
+          "taxonomyVersion": {
+            "type": "string",
+            "description": "Taxonomy version"
           }
         }
       },

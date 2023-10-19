@@ -55,6 +55,10 @@ import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetail
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { PaymentServiceProviderDetailsDto } from './generated/portal/PaymentServiceProviderDetailsDto';
 import { BrokerPspDetailsResource } from './generated/portal/BrokerPspDetailsResource';
+import { BrokerDto } from './generated/portal/BrokerDto';
+import { BrokerPspDetailsDto } from './generated/portal/BrokerPspDetailsDto';
+import { BrokerResource } from './generated/portal/BrokerResource';
+import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -198,13 +202,13 @@ export const PortalApi = {
     const result = await apiConfigClient.createPSPDirectUsingPOST({
       body: {
         abi: psp.abiCode,
-        agid_psp: true,
+        agid_psp: false,
         bic: psp.bicCode,
         business_name: psp.businessName,
         enabled: true,
         my_bank_code: '',
         psp_code: psp.pspCode,
-        stamp: true,
+        stamp: psp.digitalStamp,
         tax_code: psp.fiscalCode,
         vat_number: psp.fiscalCode,
       },
@@ -212,23 +216,59 @@ export const PortalApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  createPSPIndirect: async (psp: NodeOnSignInPSP): Promise<PaymentServiceProviderDetailsDto> => {
+  createPspBroker: async (broker: BrokerPspDetailsDto): Promise<BrokerPspDetailsResource> => {
+    const result = await apiConfigClient.createBrokerPspUsingPOST({
+      body: {
+        broker_psp_code: broker.broker_psp_code,
+        description: broker.description,
+        enabled: broker.enabled,
+        extended_fault_bean: broker.extended_fault_bean,
+      },
+    });
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  createPSPIndirect: async (
+    psp: NodeOnSignInPSP
+  ): Promise<PaymentServiceProviderDetailsResource> => {
     const result = await apiConfigClient.createPaymentServiceProviderUsingPOST({
       body: {
         abi: psp.abiCode,
-        agid_psp: true,
+        agid_psp: false,
         bic: psp.bicCode,
         business_name: psp.businessName,
         enabled: true,
         my_bank_code: '',
         psp_code: psp.pspCode,
-        stamp: true,
+        stamp: psp.digitalStamp,
         tax_code: psp.fiscalCode,
         vat_number: psp.fiscalCode,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
+
+  updatePaymentServiceProvider: async (
+    pspcode: string,
+    psp: NodeOnSignInPSP
+  ): Promise<PaymentServiceProviderDetailsResource> => {
+    const result = await apiConfigClient.updatePSPUsingPUT({
+      pspcode,
+      body: {
+        business_name: psp.businessName,
+        enabled: true,
+        psp_code: psp.pspCode,
+        agid_psp: false,
+        bic: psp.bicCode,
+        my_bank_code: '',
+        stamp: psp.digitalStamp,
+        tax_code: psp.fiscalCode,
+        vat_number: psp.fiscalCode,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getChannels: async (page: number): Promise<ChannelsResource> => {
     const result = await apiConfigClient.getChannelsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -508,6 +548,16 @@ export const PortalApi = {
       },
     });
 
+    return extractResponse(result, 201, onRedirectToLogin);
+  },
+
+  createEcBroker: async (broker: BrokerDto): Promise<BrokerResource> => {
+    const result = await apiConfigClient.createBrokerUsingPOST({
+      body: {
+        broker_code: broker.broker_code,
+        description: broker.description,
+      },
+    });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 

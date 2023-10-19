@@ -1,22 +1,26 @@
-import { Chip, Grid, Typography } from '@mui/material';
+import { Button, Chip, Divider, Grid, Typography } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
+import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { PaymentServiceProviderDetailsResource } from '../../../api/generated/portal/PaymentServiceProviderDetailsResource';
-import { SigninData } from '../../../model/Node';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import ROUTES from '../../../routes';
+import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const signinData = useAppSelector(
-    partiesSelectors.selectSigninData
-  ) as BrokerOrPspDetailsResource;
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
 
   const stampToString = (stamp: boolean) =>
     stamp
       ? t(`dashboardPage.registrationData.digitalStampValue.yes`)
       : t(`dashboardPage.registrationData.digitalStampValue.no`);
+
+  const isPspBroker = signinData && isPspSigned(signinData) && isPspBrokerSigned(signinData);
 
   return (
     <>
@@ -57,7 +61,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.pspData?.abiCode ? `ABI${selectedParty?.pspData?.abiCode}` : '-'}
+          {signinData?.paymentServiceProviderDetailsResource?.psp_code ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -90,6 +94,36 @@ const PSPRegistrationData = () => {
             }`
           )}
         ></Chip>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Divider sx={{ my: 2 }}></Divider>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.intermediary')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Chip
+          color={isPspBroker ? 'primary' : 'default'}
+          label={t(
+            `dashboardPage.registrationData.intermediaryStatus.${
+              isPspBroker ? 'enabled' : 'disabled'
+            }`
+          )}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          disabled={!hasPermission('node-signin')}
+          component={RouterLink}
+          to={generatePath(ROUTES.NODE_SIGNIN)}
+          variant="naked"
+          sx={{ ml: 1 }}
+          startIcon={<EditIcon />}
+          data-testid="modify-data-test"
+        >
+          {t('dashboardPage.registrationData.modifyData')}
+        </Button>
       </Grid>
     </>
   );

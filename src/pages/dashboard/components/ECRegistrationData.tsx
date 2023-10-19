@@ -1,4 +1,4 @@
-import { Chip, Grid, Typography } from '@mui/material';
+import { Chip, Divider, Grid, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 import { ButtonNaked } from '@pagopa/mui-italia';
@@ -7,14 +7,16 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
+import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
+import { usePermissions } from '../../../hooks/usePermissions';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const signinData = useAppSelector(
-    partiesSelectors.selectSigninData
-  ) as BrokerAndEcDetailsResource;
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
+  const isEcBroker = signinData && isEcBrokerSigned(signinData) && isEcSigned(signinData);
 
   return (
     <>
@@ -121,15 +123,34 @@ const ECRegistrationData = () => {
         )}
       </Grid>
 
+      <Grid item xs={12} sx={{ my: 2 }}>
+        <Divider />
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.intermediary')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Chip
+          color={isEcBroker ? 'primary' : 'default'}
+          label={t(
+            `dashboardPage.registrationData.intermediaryStatus.${
+              isEcBroker ? 'enabled' : 'disabled'
+            }`
+          )}
+        />
+      </Grid>
+
       <Grid item xs={8}>
         {signinData?.creditorInstitutionDetailsResource?.enabled ? (
           <ButtonNaked
             size="medium"
             component="button"
+            disabled={!hasPermission('node-signin')}
             onClick={() => history.push(ROUTES.NODE_SIGNIN)}
             endIcon={<EditIcon />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"
+            data-testid="modify-data-test"
           >
             {t('dashboardPage.registrationData.modifyData')}
           </ButtonNaked>

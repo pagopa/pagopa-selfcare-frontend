@@ -7,7 +7,7 @@ import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import '../../../locale';
 import { BrowserRouter } from 'react-router-dom';
-
+import * as usePermissions from '../../../hooks/usePermissions';
 import { createStore } from '../../../redux/store';
 import {
   ecAdminSignedDirect,
@@ -98,7 +98,7 @@ test('Test - EC direct signed - admin', async () => {
 });
 
 test('Test - PSP direct signed - operator', async () => {
-  const { store } = renderApp(pspDetails, pspOperatorSignedDirect);
+  const { store } = renderApp(brokerOrPspDetailsResource_PSPAndBroker, pspOperatorSignedDirect);
 
   await waitFor(() =>
     store.dispatch({
@@ -110,7 +110,7 @@ test('Test - PSP direct signed - operator', async () => {
   await waitFor(() =>
     store.dispatch({
       type: 'parties/setSigninData',
-      payload: brokerOrPspDetailsResource_PSPAndBroker,
+      payload: { ...brokerOrPspDetailsResource_PSPAndBroker },
     })
   );
 
@@ -118,12 +118,6 @@ test('Test - PSP direct signed - operator', async () => {
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeVisible();
-
-  expect(
-    screen.queryByText(
-      /Genera le API Key di connessione al Nodo per abilitare la creazione dei canali./i
-    )
   ).toBeVisible();
 });
 

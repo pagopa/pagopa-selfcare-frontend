@@ -120,6 +120,7 @@ const PSPRegistrationData = () => {
           variant="naked"
           sx={{ ml: 1 }}
           startIcon={<EditIcon />}
+          data-testid="modify-data-test"
         >
           {t('dashboardPage.registrationData.modifyData')}
         </Button>

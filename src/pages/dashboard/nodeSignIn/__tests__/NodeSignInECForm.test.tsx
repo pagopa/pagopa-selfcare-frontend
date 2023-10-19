@@ -205,8 +205,6 @@ describe('NodeSignInECForm', () => {
 
   test('Test rendering NodeSignInECForm in case of updating the form with an ec direct', async () => {
     const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker);
-    const formPrevValue =
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address;
 
     dispatchAdminSignedInDirectAndFullEcDetails(store);
 
@@ -216,11 +214,21 @@ describe('NodeSignInECForm', () => {
     const CAP = screen.getByTestId('CAP-test') as HTMLInputElement;
     const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
 
-    expect(address.value).toBe(formPrevValue?.location);
-    expect(city.value).toBe(formPrevValue?.city);
-    expect(province.value).toBe(formPrevValue?.countryCode);
-    expect(CAP.value).toBe(formPrevValue?.zipCode);
-    expect(fiscalDomicile.value).toBe(formPrevValue?.taxDomicile);
+    expect(address.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.location
+    );
+    expect(city.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.city
+    );
+    expect(province.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.countryCode
+    );
+    expect(CAP.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.zipCode
+    );
+    expect(fiscalDomicile.value).toBe(
+      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.taxDomicile
+    );
 
     fireEvent.change(address, { target: { value: 'Via Roma 11' } });
     expect(address.value).toBe('Via Roma 11');
@@ -236,10 +244,7 @@ describe('NodeSignInECForm', () => {
   test('Test rendering NodeSignInECForm in case of updating the form with an ec indirect', async () => {
     const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
 
-    dispatchAdminSignedIndirectAndEcDetailsOnly(store);
-
-    const formPrevValue =
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address;
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
 
     const address = screen.getByTestId('address-test') as HTMLInputElement;
     const city = screen.getByTestId('city-test') as HTMLInputElement;
@@ -251,13 +256,24 @@ describe('NodeSignInECForm', () => {
       .querySelector('[value=true]') as HTMLInputElement;
     const intermediaryFalse = screen
       .getByTestId('intermediary-available-test')
-      .querySelector('[value=true]') as HTMLInputElement;
+      .querySelector('[value=false]') as HTMLInputElement;
 
-    expect(address.value).toBe(formPrevValue?.location);
-    expect(city.value).toBe(formPrevValue?.city);
-    expect(province.value).toBe(formPrevValue?.countryCode);
-    expect(CAP.value).toBe(formPrevValue?.zipCode);
-    expect(fiscalDomicile.value).toBe(formPrevValue?.taxDomicile);
+    expect(address.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.location
+    );
+    expect(city.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.city
+    );
+    expect(province.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.countryCode
+    );
+    expect(CAP.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.zipCode
+    );
+    expect(fiscalDomicile.value).toBe(
+      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.taxDomicile
+    );
+
     expect(intermediaryFalse.checked).toBe(true);
 
     fireEvent.change(address, { target: { value: 'Via Roma 11' } });
@@ -377,7 +393,7 @@ describe('NodeSignInECForm', () => {
   test('Test error response of updateCreditorInstitution with intermediary false', async () => {
     const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
 
-    dispatchAdminSignedIndirectAndEcDetailsOnly(store);
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
 
     const address = screen.getByTestId('address-test') as HTMLInputElement;
 

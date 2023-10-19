@@ -108,6 +108,7 @@ test('Test onClick modify button', async () => {
       payload: brokerOrPspDetailsResource_PSPAndBroker,
     })
   );
+
   const modifyBtn = screen.getByTestId('modify-data-test');
   fireEvent.click(modifyBtn);
 

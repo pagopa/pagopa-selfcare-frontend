@@ -140,6 +140,18 @@ const mapECCode2BrokerAndECDetailsResource = (ecCode: string) => {
   return brokerAndEcDetailsResource_Empty;
 };
 
+const mapPSPBrokerDetailsResource = (pspBrokerCode: string) => {
+  if (
+    pspBrokerCode.toUpperCase().includes('UNSIGNED') ||
+    pspBrokerCode.toUpperCase().includes('UNDIRECT') ||
+    pspBrokerCode.toUpperCase().includes('PT_EC_SIGNED')
+  ) {
+    return {};
+  } else {
+    return pspBrokerDetails;
+  }
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
@@ -160,14 +172,7 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
 };
 
 export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
-  return new Promise((resolve) =>
-    resolve(
-      pspBrokerCode.toUpperCase().includes('UNSIGNED') ||
-        pspBrokerCode.toUpperCase().includes('PT_EC_SIGNED')
-        ? {}
-        : pspBrokerDetails
-    )
-  );
+  return new Promise((resolve) => resolve(mapPSPBrokerDetailsResource(pspBrokerCode)));
 };
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {

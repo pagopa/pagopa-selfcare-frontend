@@ -41,7 +41,7 @@ const NodeSignInPage = () => {
         <TitleBox
           title={t(`nodeSignInPage.title`)}
           subTitle={
-            selectedParty?.pspData
+            selectedParty?.institutionType === 'PSP'
               ? t(`nodeSignInPage.subtitlePSP`)
               : t(`nodeSignInPage.subtitleEC`)
           }
@@ -51,7 +51,7 @@ const NodeSignInPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        {selectedParty?.pspData ? (
+        {selectedParty?.institutionType === 'PSP' ? (
           <NodeSignInPSPForm
             goBack={goBack}
             signInData={signInData as BrokerOrPspDetailsResource}

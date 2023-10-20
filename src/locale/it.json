@@ -45,7 +45,10 @@
       },
       "intermediaryStatus": {
         "enabled": "Disponibile",
-        "disabled": "Non disponibile"
+        "disabled": "Non disponibile",
+        "psp": "PSP",
+        "ec": "EC",
+        "ecAndPsp": "EC/PSP"
       },
       "ecDetailsErrorMessageTitle": "Errore",
       "ecDetailsErrorMessageDesc": "Errore durante la ricezione del dettaglio dell’EC",
@@ -77,7 +80,8 @@
       "sections": {
         "registrationData": "Dati di registrazione",
         "digitalStamp": "Marca da bollo digitale",
-        "intermediaryAvailable": "Modalità di connessione al nodo"
+        "intermediaryAvailable": "Modalità di connessione al nodo",
+        "intermediaryType": "Che tipologia di ente vuoi intermediare?"
       },
       "pspFields": {
         "name": "Nome",
@@ -123,6 +127,7 @@
       "ecErrorMessageTitle": "Errore",
       "ecErrorMessageDesc": "Errore durante la creazione, EC già censito",
       "ecUpdateErrorMessageDesc": "Errore durante la modifica dei dati",
+      "ptErrorMessageDesc": "Errore durante la creazione del PT",
       "backButton": "Annulla",
       "continueButton": "Conferma"
     },

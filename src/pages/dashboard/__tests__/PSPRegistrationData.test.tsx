@@ -9,7 +9,12 @@ import '../../../locale';
 import { Router } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
-import { pspAdminSignedDirect, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
+import {
+  PTECPSPSigned,
+  ecAdminSignedDirect,
+  pspAdminSignedDirect,
+  pspAdminUnsigned,
+} from '../../../services/__mocks__/partyService';
 import PSPRegistrationData from '../components/PSPRegistrationData';
 import { SigninData } from '../../../model/Node';
 import { brokerOrPspDetailsResource_PSPAndBroker } from '../../../services/__mocks__/nodeService';
@@ -113,4 +118,21 @@ test('Test onClick modify button', async () => {
   fireEvent.click(modifyBtn);
 
   expect(history.location.pathname).toBe(ROUTES.NODE_SIGNIN);
+});
+
+test('test commonDetails function', async () => {
+  const { store } = renderApp();
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: ecAdminSignedDirect,
+    });
+  });
+
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTECPSPSigned,
+    });
+  });
 });

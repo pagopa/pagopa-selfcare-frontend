@@ -10,26 +10,41 @@ import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { Party } from '../../../model/Party';
 
-export const commonDetails = (t: any, selectedParty?: Party) => (
-  <>
-    <Grid item xs={4}>
-      <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
-    </Grid>
-    <Grid item xs={8}>
-      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-        {selectedParty?.description}
-      </Typography>
-    </Grid>
-    <Grid item xs={4}>
-      <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
-    </Grid>
-    <Grid item xs={8}>
-      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-        {selectedParty?.pspData?.legalRegisterName ?? selectedParty?.description}
-      </Typography>
-    </Grid>
-  </>
-);
+export const commonDetails = (t: any, selectedParty?: Party) => {
+  const companyNameField = () => {
+    switch (selectedParty?.institutionType) {
+      case 'PSP':
+        return selectedParty?.pspData?.legalRegisterName;
+      case 'PA':
+        return selectedParty?.description;
+      case 'PT':
+        return selectedParty?.fiscalCode;
+      default:
+        return undefined;
+    }
+  };
+
+  return (
+    <>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+          {selectedParty?.description}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+          {companyNameField()}
+        </Typography>
+      </Grid>
+    </>
+  );
+};
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();

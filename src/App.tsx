@@ -71,10 +71,13 @@ const SecuredRoutes = withLogin(
             </ProtectedRoute>
           </Route>
           <Route path={routes.APIKEYS_CREATE} exact={true}>
-            <ProtectedRoute permission="apikey">
+            {ENV.FEATURES.DASHBOARD.ENABLED ? (
+              <ProtectedRoute permission="apikey">
+                <AddApiKeyPage />
+              </ProtectedRoute>
+            ) : (
               <AddApiKeyPage />
-            </ProtectedRoute>
-            <AddApiKeyPage />
+            )}
           </Route>
 
           <Route path={routes.CHANNELS} exact={true}>

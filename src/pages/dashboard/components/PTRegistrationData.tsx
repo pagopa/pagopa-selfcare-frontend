@@ -9,6 +9,7 @@ import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { isEcBrokerSigned, isEcSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
+import { commonDetails } from './PSPRegistrationData';
 
 const PTRegistrationData = () => {
   const { t } = useTranslation();
@@ -21,23 +22,7 @@ const PTRegistrationData = () => {
 
   return (
     <>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.description}
-        </Typography>
-      </Grid>
-
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.fiscalCode}
-        </Typography>
-      </Grid>
+      {commonDetails(t, selectedParty)}
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>

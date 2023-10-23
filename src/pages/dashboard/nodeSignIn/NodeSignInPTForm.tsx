@@ -81,11 +81,17 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
     mb: 3,
   };
 
+  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   const submit = async () => {
+    const pspAndEcCheckedWithNoBrokers = checked[0] && checked[1] && !isParterPSP && !isParterEC;
+    const pspCheckedWithEcBroker = checked[0] && !isParterPSP && isParterEC;
+    const pspCheckedWithNoBroker = checked[0] && !checked[1] && !isParterPSP && !isParterEC;
+    const ecCheckedWithPspBroker = checked[1] && isParterPSP && !isParterEC;
+    const ecCheckedWithNoBroker = !checked[0] && checked[1] && !isParterPSP && !isParterEC;
     setLoading(true);
     if (selectedParty) {
       try {
-        if (checked[0] && checked[1] && !isParterPSP && !isParterEC) {
+        if (pspAndEcCheckedWithNoBrokers) {
           await createPspBroker({
             broker_psp_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -99,7 +105,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (checked[0] && !isParterPSP && isParterEC) {
+        if (pspCheckedWithEcBroker || pspCheckedWithNoBroker) {
           await createPspBroker({
             broker_psp_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -108,7 +114,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (checked[1] && isParterPSP && !isParterEC) {
+        if (ecCheckedWithPspBroker || ecCheckedWithNoBroker) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,

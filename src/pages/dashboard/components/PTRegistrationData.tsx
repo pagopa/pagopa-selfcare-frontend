@@ -9,7 +9,7 @@ import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { isEcBrokerSigned, isEcSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { commonDetails } from './PSPRegistrationData';
+import { commonDetails } from '../DashboardPage';
 
 const PTRegistrationData = () => {
   const { t } = useTranslation();

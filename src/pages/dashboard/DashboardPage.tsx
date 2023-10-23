@@ -6,11 +6,48 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { ENV } from '../../utils/env';
+import { Party } from '../../model/Party';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
 import OperativeTable from './components/OperativeTable';
 import PTRegistrationData from './components/PTRegistrationData';
+
+export const commonDetails = (t: any, selectedParty?: Party) => {
+  const companyNameField = () => {
+    switch (selectedParty?.institutionType) {
+      case 'PSP':
+        return selectedParty?.pspData?.legalRegisterName;
+      case 'PA':
+        return selectedParty?.description;
+      case 'PT':
+        return selectedParty?.fiscalCode;
+      default:
+        return undefined;
+    }
+  };
+
+  return (
+    <>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+          {selectedParty?.description}
+        </Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+          {companyNameField()}
+        </Typography>
+      </Grid>
+    </>
+  );
+};
 
 const DashboardPage = () => {
   const { t } = useTranslation();

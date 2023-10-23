@@ -8,7 +8,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { commonDetails } from './PSPRegistrationData';
+import { commonDetails } from '../DashboardPage';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();

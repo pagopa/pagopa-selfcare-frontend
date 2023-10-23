@@ -119,20 +119,3 @@ test('Test onClick modify button', async () => {
 
   expect(history.location.pathname).toBe(ROUTES.NODE_SIGNIN);
 });
-
-test('test commonDetails function', async () => {
-  const { store } = renderApp();
-  await waitFor(() => {
-    store.dispatch({
-      type: 'parties/setPartySelected',
-      payload: ecAdminSignedDirect,
-    });
-  });
-
-  await waitFor(() => {
-    store.dispatch({
-      type: 'parties/setPartySelected',
-      payload: PTECPSPSigned,
-    });
-  });
-});

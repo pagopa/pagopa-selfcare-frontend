@@ -5,28 +5,28 @@ import { Party } from '../model/Party';
 import { ROLE } from '../model/RolePermission';
 import { isOperator } from '../pages/components/commonFunctions';
 
-export const isPspBrokerSigned = (signInData: SigninData) =>
+export const isPspBrokerSigned = (signInData: SigninData | null) =>
   signInData?.brokerPspDetailsResource &&
   Object.keys(signInData?.brokerPspDetailsResource).length > 0;
 
-export const isPspSigned = (signInData: SigninData) =>
-  signInData.paymentServiceProviderDetailsResource &&
+export const isPspSigned = (signInData: SigninData | null) =>
+  signInData?.paymentServiceProviderDetailsResource &&
   Object.keys(signInData?.paymentServiceProviderDetailsResource).length > 0;
 
-export const isEcBrokerSigned = (signInData: SigninData) =>
+export const isEcBrokerSigned = (signInData: SigninData | null) =>
   signInData?.brokerDetailsResource && Object.keys(signInData?.brokerDetailsResource).length > 0;
 
-export const isEcSigned = (signInData: SigninData) =>
-  signInData.creditorInstitutionDetailsResource &&
+export const isEcSigned = (signInData: SigninData | null) =>
+  signInData?.creditorInstitutionDetailsResource &&
   Object.keys(signInData?.creditorInstitutionDetailsResource).length > 0;
 
-export const isSigned = (signInData: SigninData) =>
+export const isSigned = (signInData: SigninData | null) =>
   isPspBrokerSigned(signInData) ||
   isPspSigned(signInData) ||
   isEcBrokerSigned(signInData) ||
   isEcSigned(signInData);
 
-export const getUserRole = (party: Party, signInData?: SigninData): ROLE | undefined => {
+export const getUserRole = (party: Party, signInData?: SigninData | null): ROLE | undefined => {
   const roleKey = party.roles[0].roleKey;
   const isPSPBroker =
     signInData?.brokerPspDetailsResource &&

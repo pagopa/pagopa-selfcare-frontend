@@ -219,6 +219,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
                     checked={checked[0]}
                     onChange={handleChangePtPSP}
                     disabled={isParterPSP}
+                    data-testid="psp-checkbox-test"
                   />
                 }
               />
@@ -229,6 +230,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
                     checked={checked[1]}
                     onChange={handleChangePtEC}
                     disabled={isParterEC}
+                    data-testid="ec-checkbox-test"
                   />
                 }
               />

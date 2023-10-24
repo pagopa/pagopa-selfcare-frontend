@@ -1,5 +1,7 @@
 import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsResource } from '../api/generated/portal/BrokerPspDetailsResource';
+import { BrokerResource } from '../api/generated/portal/BrokerResource';
 
 export type NodeOnSignInPSP = {
   name: string;
@@ -10,5 +12,12 @@ export type NodeOnSignInPSP = {
   bicCode: string;
   digitalStamp: boolean;
 };
+
+export type NodeOnSignInPT = {
+  name: string;
+  businessName: string;
+};
+
+export type PTResource = BrokerPspDetailsResource & BrokerResource;
 
 export type SigninData = BrokerOrPspDetailsResource & BrokerAndEcDetailsResource;

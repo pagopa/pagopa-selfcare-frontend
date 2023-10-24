@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
@@ -12,7 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 import NodeSignInPage from '../NodeSignInPage';
 import { createStore } from '../../../../redux/store';
 import { Party } from '../../../../model/Party';
-import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
+import { PTECSigned, pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import { pspDetails } from '../../../../services/__mocks__/nodeService';
 
 beforeEach(() => {
@@ -65,6 +65,18 @@ test('Test rendering with ec', async () => {
     })
   );
   expect(screen.getAllByText(/Domicilio Fiscale/i).length).toBeGreaterThan(0);
+});
+
+test('Test rendering with pt', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTECSigned,
+    })
+  );
+  expect(screen.getByText(/Che tipologia di ente vuoi intermediare?/i)).toBeVisible();
+  fireEvent.click(screen.getByText(/Esci/i));
 });
 
 const pspPartySelected: Party = {

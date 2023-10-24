@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import ROUTES from '../../../routes';
 import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
+import CommonDetails from './CommonDetails';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();
@@ -24,22 +24,7 @@ const PSPRegistrationData = () => {
 
   return (
     <>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.description}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.pspData?.legalRegisterName}
-        </Typography>
-      </Grid>
+      <CommonDetails t={t} selectedParty={selectedParty} />
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>

@@ -6,9 +6,9 @@ import { useHistory } from 'react-router';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
+import CommonDetails from './CommonDetails';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();
@@ -20,22 +20,7 @@ const ECRegistrationData = () => {
 
   return (
     <>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.name')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.description}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.companyName')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.description}
-        </Typography>
-      </Grid>
+      <CommonDetails t={t} selectedParty={selectedParty} />
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>

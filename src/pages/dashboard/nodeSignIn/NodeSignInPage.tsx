@@ -9,8 +9,10 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import { PTResource } from '../../../model/Node';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInECForm from './NodeSignInECForm';
+import NodeSignInPTForm from './NodeSignInPTForm';
 
 const NodeSignInPage = () => {
   const { t } = useTranslation();
@@ -56,6 +58,8 @@ const NodeSignInPage = () => {
             goBack={goBack}
             signInData={signInData as BrokerOrPspDetailsResource}
           />
+        ) : !selectedParty?.pspData && selectedParty?.institutionType === 'PT' ? (
+          <NodeSignInPTForm goBack={goBack} signInData={signInData as PTResource} />
         ) : (
           <NodeSignInECForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource} />
         )}

@@ -8,8 +8,19 @@ import { BrowserRouter, MemoryRouter, Route, Router } from 'react-router-dom';
 
 import DashboardPage from '../DashboardPage';
 import { createStore, store } from '../../../redux/store';
-import { ecAdminSignedDirect, mockedParties } from '../../../services/__mocks__/partyService';
-import { brokerAndEcDetailsResource_ECAndBroker } from '../../../services/__mocks__/nodeService';
+import {
+  PTECPSPSigned,
+  PTECSigned,
+  PTPSPSigned,
+  PTUnsigned,
+  ecAdminSignedDirect,
+  mockedParties,
+} from '../../../services/__mocks__/partyService';
+import {
+  brokerAndEcDetailsResource_ECAndBroker,
+  brokerOrPspDetailsResource_Empty,
+  brokerOrPspDetailsResource_PSPAndBroker,
+} from '../../../services/__mocks__/nodeService';
 import { createMemoryHistory } from 'history';
 import { BASE_ROUTE } from '../../../routes';
 
@@ -62,6 +73,17 @@ test('Test rendering EC', async () => {
     })
   );
   expect(screen.getAllByText(/Ente Creditore S.r.l./i)[0]).toBeVisible();
+});
+
+test('Test rendering PT', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTECPSPSigned,
+    })
+  );
+  expect(screen.getAllByText(/PT ECPSP Signed/i)[0]).toBeVisible();
 });
 
 test('Test rendering button', async () => {
@@ -119,6 +141,108 @@ test('Test - EC signed - admin', async () => {
       payload: ecAdminSignedDirect,
     });
   });
+
+  expect(
+    screen.queryByRole('link', {
+      name: /Genera API Key/i,
+    })
+  ).toBeVisible();
+});
+
+test('Test PT unsigned', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTUnsigned,
+    })
+  );
+
+  expect(screen.getAllByText(/PT unsigned/i)[0]).toBeInTheDocument();
+
+  expect(
+    screen.getByRole('link', {
+      name: /Completa registrazione/i,
+    })
+  ).toBeVisible();
+});
+
+test('Test PT - EC/PSP - signed', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTECPSPSigned,
+    })
+  );
+
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: {
+        brokerDetailsResource: brokerAndEcDetailsResource_ECAndBroker.brokerDetailsResource,
+        brokerPspDetailsResource: brokerOrPspDetailsResource_Empty.brokerPspDetailsResource,
+      },
+    });
+  });
+
+  expect(screen.getAllByText(/PT ECPSP Signed/i)[0]).toBeVisible();
+
+  expect(
+    screen.queryByRole('link', {
+      name: /Genera API Key/i,
+    })
+  ).toBeVisible();
+});
+
+test('Test PT - PSP - signed', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTPSPSigned,
+    })
+  );
+
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: {
+        brokerDetailsResource: {},
+        brokerPspDetailsResource: brokerOrPspDetailsResource_PSPAndBroker.brokerPspDetailsResource,
+      },
+    });
+  });
+
+  expect(screen.getAllByText(/PT PSP Signed/i)[0]).toBeVisible();
+
+  expect(
+    screen.queryByRole('link', {
+      name: /Genera API Key/i,
+    })
+  ).toBeVisible();
+});
+
+test('Test PT - EC - signed', async () => {
+  const { store } = renderApp();
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: PTECSigned,
+    })
+  );
+
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: {
+        brokerDetailsResource: brokerAndEcDetailsResource_ECAndBroker.brokerDetailsResource,
+        brokerPspDetailsResource: {},
+      },
+    });
+  });
+
+  expect(screen.getAllByText(/PT EC Signed/i)[0]).toBeVisible();
 
   expect(
     screen.queryByRole('link', {

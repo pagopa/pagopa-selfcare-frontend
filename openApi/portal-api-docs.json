@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.4.29"
+    "version": "0.4.37"
   },
   "servers": [
     {
@@ -2873,6 +2873,92 @@
         ]
       }
     },
+    "/creditor-institutions/ec-broker/{code}": {
+      "put": {
+        "tags": ["creditor-institutions"],
+        "summary": "updateBrokerEc",
+        "description": "Service to update specific ec broker",
+        "operationId": "updateBrokerEcUsingPUT",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Broker code filter for search",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerEcDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerDetailsResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/creditor-institutions/get-creditor-institutions": {
       "get": {
         "tags": ["creditor-institutions"],
@@ -4541,11 +4627,97 @@
         ]
       }
     },
+    "/payment-service-provider/brokerpsp/{brokercode}": {
+      "put": {
+        "tags": ["PSP"],
+        "summary": "updateBrokerPSP",
+        "description": "Update Broker payment service provider",
+        "operationId": "updateBrokerPSPUsingPUT",
+        "parameters": [
+          {
+            "name": "brokercode",
+            "in": "path",
+            "description": "Broker code filter for search",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerPspDetailsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerPspDetailsResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
     "/payment-service-provider/{pspcode}": {
       "put": {
         "tags": ["PSP"],
         "summary": "updatePSP",
-        "description": "Create a channel",
+        "description": "Update payment service provider",
         "operationId": "updatePSPUsingPUT",
         "parameters": [
           {
@@ -6523,6 +6695,9 @@
           "broker_details": {
             "type": "string"
           },
+          "description": {
+            "type": "string"
+          },
           "enabled": {
             "type": "boolean"
           },
@@ -6540,6 +6715,31 @@
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "BrokerEcDto": {
+        "title": "BrokerEcDto",
+        "required": ["brokerCode", "description", "enabled", "extendedFaultBean"],
+        "type": "object",
+        "properties": {
+          "brokerCode": {
+            "type": "string",
+            "description": "broker code"
+          },
+          "description": {
+            "type": "string",
+            "description": "broker code"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Creditor Institution activation state on ApiConfig",
+            "example": false
+          },
+          "extendedFaultBean": {
+            "type": "boolean",
+            "description": "xxx",
+            "example": false
           }
         }
       },

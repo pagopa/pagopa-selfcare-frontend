@@ -9,7 +9,12 @@ import '../../../locale';
 import { Router } from 'react-router-dom';
 
 import { createStore } from '../../../redux/store';
-import { pspAdminSignedDirect, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
+import {
+  PTECPSPSigned,
+  ecAdminSignedDirect,
+  pspAdminSignedDirect,
+  pspAdminUnsigned,
+} from '../../../services/__mocks__/partyService';
 import PSPRegistrationData from '../components/PSPRegistrationData';
 import { SigninData } from '../../../model/Node';
 import { brokerOrPspDetailsResource_PSPAndBroker } from '../../../services/__mocks__/nodeService';

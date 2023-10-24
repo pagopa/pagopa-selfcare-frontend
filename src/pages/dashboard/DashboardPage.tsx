@@ -10,6 +10,7 @@ import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
 import OperativeTable from './components/OperativeTable';
+import PTRegistrationData from './components/PTRegistrationData';
 
 const DashboardPage = () => {
   const { t } = useTranslation();
@@ -57,6 +58,8 @@ const DashboardPage = () => {
                 <Grid container spacing={3} pb={4}>
                   {selectedParty?.institutionType === 'PSP' ? (
                     <PSPRegistrationData />
+                  ) : selectedParty?.institutionType === 'PT' ? (
+                    <PTRegistrationData />
                   ) : (
                     <ECRegistrationData />
                   )}

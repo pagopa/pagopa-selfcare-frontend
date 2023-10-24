@@ -1,9 +1,10 @@
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
+import { TFunction } from 'react-i18next';
 import { Party } from '../../../model/Party';
 
 type Props = {
-  t: any;
+  t: TFunction;
   selectedParty?: Party;
 };
 

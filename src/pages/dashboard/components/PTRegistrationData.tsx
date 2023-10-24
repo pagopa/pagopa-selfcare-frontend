@@ -6,10 +6,9 @@ import { useHistory } from 'react-router';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
-import { isEcBrokerSigned, isEcSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
+import { isEcBrokerSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { commonDetails } from '../DashboardPage';
+import CommonDetails from './CommonDetails';
 
 const PTRegistrationData = () => {
   const { t } = useTranslation();
@@ -22,7 +21,7 @@ const PTRegistrationData = () => {
 
   return (
     <>
-      {commonDetails(t, selectedParty)}
+      <CommonDetails t={t} selectedParty={selectedParty} />
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>

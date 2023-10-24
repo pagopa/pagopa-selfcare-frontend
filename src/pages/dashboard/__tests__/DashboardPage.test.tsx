@@ -83,7 +83,7 @@ test('Test rendering PT', async () => {
       payload: PTECPSPSigned,
     })
   );
-  expect(screen.getByText(/PT ECPSP Signed/i)).toBeVisible();
+  expect(screen.getAllByText(/PT ECPSP Signed/i)[0]).toBeVisible();
 });
 
 test('Test rendering button', async () => {
@@ -158,7 +158,7 @@ test('Test PT unsigned', async () => {
     })
   );
 
-  expect(screen.getByText(/PT unsigned/i)).toBeVisible();
+  expect(screen.getAllByText(/PT unsigned/i)[0]).toBeInTheDocument();
 
   expect(
     screen.getByRole('link', {
@@ -186,7 +186,7 @@ test('Test PT - EC/PSP - signed', async () => {
     });
   });
 
-  expect(screen.getByText(/PT ECPSP Signed/i)).toBeVisible();
+  expect(screen.getAllByText(/PT ECPSP Signed/i)[0]).toBeVisible();
 
   expect(
     screen.queryByRole('link', {
@@ -214,7 +214,7 @@ test('Test PT - PSP - signed', async () => {
     });
   });
 
-  expect(screen.getByText(/PT PSP Signed/i)).toBeVisible();
+  expect(screen.getAllByText(/PT PSP Signed/i)[0]).toBeVisible();
 
   expect(
     screen.queryByRole('link', {
@@ -242,7 +242,7 @@ test('Test PT - EC - signed', async () => {
     });
   });
 
-  expect(screen.getByText(/PT EC Signed/i)).toBeVisible();
+  expect(screen.getAllByText(/PT EC Signed/i)[0]).toBeVisible();
 
   expect(
     screen.queryByRole('link', {

@@ -8,7 +8,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { commonDetails } from '../DashboardPage';
+import CommonDetails from './CommonDetails';
 
 const ECRegistrationData = () => {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const ECRegistrationData = () => {
 
   return (
     <>
-      {commonDetails(t, selectedParty)}
+      <CommonDetails t={t} selectedParty={selectedParty} />
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>

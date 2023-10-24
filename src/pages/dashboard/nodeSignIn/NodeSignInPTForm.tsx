@@ -42,30 +42,32 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const isParterPSP = isPspBrokerSigned(signInData) ?? false;
   const isParterEC = isEcBrokerSigned(signInData) ?? false;
 
-  const [checked, setChecked] = useState([isParterPSP, isParterEC]);
+  const [isPartnerPSPChecked, setIsParterPSPChecked] = useState(isParterPSP);
+  const [isPartnerECChecked, setIsPartnerECChecked] = useState(isParterEC);
 
   useEffect(() => {
     if (selectedParty) {
       if (isParterPSP && isParterEC) {
-        setChecked([true, true]);
+        setIsParterPSPChecked(true);
+        setIsPartnerECChecked(true);
       } else if (isParterPSP) {
-        setChecked([true, false]);
+        setIsParterPSPChecked(true);
+        setIsPartnerECChecked(false);
       } else if (isParterEC) {
-        setChecked([false, true]);
+        setIsParterPSPChecked(false);
+        setIsPartnerECChecked(true);
       } else {
-        setChecked([false, false]);
+        setIsParterPSPChecked(false);
+        setIsPartnerECChecked(false);
       }
     }
   }, [selectedParty, signInData]);
-
-  useEffect(() => {}, [selectedParty, signInData]);
-
   const handleChangePtPSP = (event: any) => {
-    setChecked([event.target.checked, checked[1]]);
+    setIsParterPSPChecked(event.target.checked);
   };
 
   const handleChangePtEC = (event: any) => {
-    setChecked([checked[0], event.target.checked]);
+    setIsPartnerECChecked(event.target.checked);
   };
 
   const initialFormData = (selectedParty?: Party) => ({
@@ -83,11 +85,14 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
 
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   const submit = async () => {
-    const pspAndEcCheckedWithNoBrokers = checked[0] && checked[1] && !isParterPSP && !isParterEC;
-    const pspCheckedWithEcBroker = checked[0] && !isParterPSP && isParterEC;
-    const pspCheckedWithNoBroker = checked[0] && !checked[1] && !isParterPSP && !isParterEC;
-    const ecCheckedWithPspBroker = checked[1] && isParterPSP && !isParterEC;
-    const ecCheckedWithNoBroker = !checked[0] && checked[1] && !isParterPSP && !isParterEC;
+    const pspAndEcCheckedWithNoBrokers =
+      isPartnerPSPChecked && isPartnerECChecked && !isParterPSP && !isParterEC;
+    const pspCheckedWithEcBroker = isPartnerPSPChecked && !isParterPSP && isParterEC;
+    const pspCheckedWithNoBroker =
+      isPartnerPSPChecked && !isPartnerECChecked && !isParterPSP && !isParterEC;
+    const ecCheckedWithPspBroker = isPartnerECChecked && isParterPSP && !isParterEC;
+    const ecCheckedWithNoBroker =
+      !isPartnerPSPChecked && isPartnerECChecked && !isParterPSP && !isParterEC;
     setLoading(true);
     if (selectedParty) {
       try {
@@ -143,9 +148,9 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   };
 
   const enabledSubmit = () =>
-    (!checked[0] && !checked[1]) ||
-    (isParterPSP && !checked[1]) ||
-    (!checked[0] && isParterEC) ||
+    (!isPartnerPSPChecked && !isPartnerECChecked) ||
+    (isParterPSP && !isPartnerECChecked) ||
+    (!isPartnerPSPChecked && isParterEC) ||
     (isParterPSP && isParterEC);
 
   const formik = useFormik<NodeOnSignInPT>({
@@ -222,7 +227,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
                 label="PSP"
                 control={
                   <Checkbox
-                    checked={checked[0]}
+                    checked={isPartnerPSPChecked}
                     onChange={handleChangePtPSP}
                     disabled={isParterPSP}
                     data-testid="psp-checkbox-test"
@@ -233,7 +238,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
                 label="EC"
                 control={
                   <Checkbox
-                    checked={checked[1]}
+                    checked={isPartnerECChecked}
                     onChange={handleChangePtEC}
                     disabled={isParterEC}
                     data-testid="ec-checkbox-test"

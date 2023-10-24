@@ -4,12 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import ROUTES from '../../../routes';
 import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { Party } from '../../../model/Party';
-import { commonDetails } from '../DashboardPage';
+import CommonDetails from './CommonDetails';
 
 const PSPRegistrationData = () => {
   const { t } = useTranslation();
@@ -26,7 +24,7 @@ const PSPRegistrationData = () => {
 
   return (
     <>
-      {commonDetails(t, selectedParty)}
+      <CommonDetails t={t} selectedParty={selectedParty} />
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>

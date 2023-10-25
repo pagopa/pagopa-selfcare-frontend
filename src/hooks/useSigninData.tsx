@@ -32,7 +32,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
       const ecAndBrokerDetails = await getBrokerAndEcDetails(party.fiscalCode);
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
-        brokerDetailsResource: { ...ecAndBrokerDetails.brokerDetailsResource },
+        brokerDetailsResource: { ...(ecAndBrokerDetails?.brokerDetailsResource || {}) },
       };
     }
 

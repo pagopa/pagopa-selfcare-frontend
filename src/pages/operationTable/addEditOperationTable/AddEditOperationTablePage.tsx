@@ -5,16 +5,40 @@ import { useHistory, useParams } from 'react-router';
 import { Trans, useTranslation } from 'react-i18next';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { ArrowBack } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { getOperationTableDetails } from '../../../services/operationTable';
+import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource';
 import AddEditOperationTableForm from './AddEditOperationTableForm';
 
 const AddEditOperationTablePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.HOME);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [operationTableDetail, setOperationTableDetail] = useState<TavoloOpResource>();
+
+  useEffect(() => {
+    if (selectedParty) {
+      getOperationTableDetails(selectedParty.fiscalCode)
+        .then((response) => setOperationTableDetail(response))
+        .catch((reason) => {
+          addError({
+            id: 'GET_OPERATIONTABLE',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while retrieving Operation Table detail`,
+            toNotify: true,
+            displayableTitle: t('addEditOperationTableForm.errors.getOperationTableTitle'),
+            displayableDescription: t('addEditOperationTableForm.errors.getOperationTableDesc'),
+            component: 'Toast',
+          });
+        });
+    }
+  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -54,7 +78,13 @@ const AddEditOperationTablePage = () => {
             mb: 3,
           }}
         >
-          <AddEditOperationTableForm goBack={goBack} />
+          {selectedParty && (
+            <AddEditOperationTableForm
+              selectedParty={selectedParty}
+              goBack={goBack}
+              operationTableDetail={operationTableDetail}
+            />
+          )}
         </Paper>
       </Grid>
     </Grid>

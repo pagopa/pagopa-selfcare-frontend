@@ -1,13 +1,27 @@
 import { CallMade } from '@mui/icons-material';
-import { Button, Card, Grid, Typography } from '@mui/material';
+import { Alert, Button, Card, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
+import { getOperationTableDetails } from '../../../services/operationTable';
+import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource';
 
-const OperativeTable = () => {
+type Props = {
+  ecCode: string;
+};
+
+const OperationTable = ({ ecCode }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const [operationTable, setOperationTable] = useState<TavoloOpResource>();
+
+  useEffect(() => {
+    getOperationTableDetails(ecCode)
+      .then((response) => setOperationTable(response))
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <Grid item xs={6}>
@@ -21,8 +35,7 @@ const OperativeTable = () => {
           </Grid>
           <Grid item xs={8}>
             <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-              {/* TODO: get from service */}
-              marco.rossi@regionelombardia.it
+              {operationTable?.email}
             </Typography>
           </Grid>
           <Grid item xs={4}>
@@ -30,10 +43,16 @@ const OperativeTable = () => {
           </Grid>
           <Grid item xs={8}>
             <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-              {/* TODO: get from service */}
-              080 0000000
+              {operationTable?.telephone}
             </Typography>
           </Grid>
+          {!operationTable && (
+            <Grid item xs={12}>
+              <Alert severity="warning">
+                {t(`dashboardPage.operationTable.completeDataAlert`)}
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Button
               variant="contained"
@@ -51,4 +70,4 @@ const OperativeTable = () => {
   );
 };
 
-export default OperativeTable;
+export default OperationTable;

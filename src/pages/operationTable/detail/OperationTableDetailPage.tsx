@@ -4,16 +4,53 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { useHistory, useParams } from 'react-router';
 import { Trans, useTranslation } from 'react-i18next';
 import { ArrowBack } from '@mui/icons-material';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { getOperationTableDetails } from '../../../services/operationTable';
+import { LOADING_TASK_OPERATION_TABLE_LIST } from '../../../utils/constants';
+import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource';
 
 const OperationTableDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const goBack = () => history.push(ROUTES.HOME);
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_OPERATION_TABLE_LIST);
+
+  const goBack = () => history.push(ROUTES.OPERATION_TABLE_LIST);
   const { operationTableId } = useParams<{ operationTableId: string }>();
-  /* const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [operationTable, setOperationTable] = useState<TavoloOpResource>();
+
+  useEffect(() => {
+    setLoading(true);
+    getOperationTableDetails(operationTableId)
+      .then((response) => {
+        setOperationTable(response);
+      })
+      .catch((reason) => {
+        handleErrors([
+          {
+            id: `FETCH_OPERATIONTABLE_DETAIL_ERROR`,
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while fetching Operation Table detail`,
+            toNotify: false,
+          },
+        ]);
+        addError({
+          id: 'FETCH_OPERATIONTABLE_DETAIL_ERROR',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while retrieving Operation Table detail`,
+          toNotify: true,
+          displayableTitle: t('operationTableDetailPage.error.getOperationTableTitle'),
+          displayableDescription: t('operationTableDetailPage.error.getOperationTableDesc'),
+          component: 'Toast',
+        });
+        setOperationTable(undefined);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -30,19 +67,19 @@ const OperationTableDetailPage = () => {
             {t('general.exit')}
           </ButtonNaked>
           <Breadcrumbs>
-            <Typography>{t('general.operationTable')}</Typography>
+            <Typography>{t('operationTableDetailPage.title')}</Typography>
             <Typography color={'text.disaled'}>{operationTableId}</Typography>
           </Breadcrumbs>
         </Stack>
         <Grid container mt={3}>
           <Grid item xs={6}>
             <TitleBox
-              title={operationTableId}
+              title={t('operationTableDetailPage.title')}
+              subTitle={t('operationTableDetailPage.subtitle', { target: operationTableId })}
               mbTitle={2}
               variantTitle="h4"
               variantSubTitle="body1"
             />
-            <Typography mb={5}>sottotitolo</Typography>
           </Grid>
         </Grid>
 
@@ -52,13 +89,75 @@ const OperationTableDetailPage = () => {
             borderRadius: 4,
             p: 4,
             mb: 3,
+            mt: 3,
           }}
-        ></Paper>
+        >
+          <Box mt={2}>
+            <Grid container item alignContent="center" spacing={2} pb={4}>
+              <Grid item xs={12}>
+                <Typography variant="sidenav">{t('operationTableDetailPage.registry')}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.name')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.name ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.taxCode')}</Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.taxCode ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.mail')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.email ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.phone')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.telephone ?? '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="sidenav">{t('operationTableDetailPage.edit')}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.createData')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.createdAt
+                    ? operationTable?.createdAt.toLocaleDateString('en-GB')
+                    : '-'}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="body2">{t('operationTableDetailPage.editData')} </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                  {operationTable?.modifiedAt
+                    ? operationTable?.modifiedAt?.toLocaleDateString('en-GB')
+                    : '-'}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
       </Grid>
     </Grid>
-  ); */
-
-  return <>{'OperationTableDetailPage'}</>;
+  );
 };
 
 export default OperationTableDetailPage;

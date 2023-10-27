@@ -148,7 +148,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
               window.location.assign(
                 `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${
                   selectedParty.id
-                }&productId=prod-pagopa${ENV.ENV === 'uat' ? 'environment=Collaudo' : ''}`
+                }&productId=prod-pagopa${ENV.ENV === 'uat' ? '&environment=Collaudo' : ''}`
               );
             }
           });

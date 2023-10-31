@@ -92,7 +92,7 @@ beforeEach(() => {
   updatePSPInfoMocked = jest.spyOn(require('../../../../services/nodeService'), 'updatePSPInfo');
   getBrokerAndPspDetailsMocked = jest.spyOn(
     require('../../../../services/nodeService'),
-    'getBrokerAndPspDetails'
+    'getPSPDetails'
   );
   createPspBroker = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
 

@@ -8,6 +8,7 @@ import { CreditorInstitutionDetailsResource } from '../api/generated/portal/Cred
 import { CreditorInstitutionDto } from '../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/PaymentServiceProviderDetailsDto';
 import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { PaymentServiceProvidersResource } from '../api/generated/portal/PaymentServiceProvidersResource';
 import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
 import { PortalApi } from '../api/PortalApiClient';
 import { NodeOnSignInPSP } from '../model/Node';
@@ -26,6 +27,8 @@ import {
   getECDetails as getCreditorInstitutionDetailsMocked,
   updatePSPInfo as updatePSPInfoMocked,
   updateECDirect,
+  getPaymentServiceProviders as getPaymentServiceProvidersMocked,
+  getPSPDetails as getPSPDetailsMoked,
 } from './__mocks__/nodeService';
 
 export const createPSPDirect = (
@@ -83,6 +86,31 @@ export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDet
     return getPSPBrokerDetailsMocked(pspBrokerCode);
   } else {
     return PortalApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
+  }
+};
+
+export const getPSPDetails = (pspCode: string): Promise<PaymentServiceProviderDetailsResource> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getPSPBrokerDetailsMocked(pspCode);
+  } else {
+    return PortalApi.getPSPDetails(pspCode).then((resources) => resources);
+  }
+};
+
+export const getPaymentServiceProviders = (
+  page: number,
+  name?: string,
+  limit?: number,
+  pspCode?: string,
+  taxCode?: string
+): Promise<PaymentServiceProvidersResource> => {
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getPaymentServiceProvidersMocked(page, name, limit, pspCode, taxCode);
+  } else {
+    return PortalApi.getPaymentServiceProviders(page, name, limit, pspCode, taxCode).then(
+      (resources) => resources
+    );
   }
 };
 

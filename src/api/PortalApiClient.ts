@@ -59,6 +59,7 @@ import { BrokerDto } from './generated/portal/BrokerDto';
 import { BrokerPspDetailsDto } from './generated/portal/BrokerPspDetailsDto';
 import { BrokerResource } from './generated/portal/BrokerResource';
 import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
+import { PaymentServiceProvidersResource } from './generated/portal/PaymentServiceProvidersResource';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -190,6 +191,28 @@ export const PortalApi = {
 
   getPSPBrokerDetails: async (brokerpspcode: string): Promise<BrokerPspDetailsResource> => {
     const result = await apiConfigClient.getBrokerPspUsingGET({ brokerpspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
+    const result = await apiConfigClient.getPSPDetailsUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getPaymentServiceProviders: async (
+    page: number,
+    name?: string,
+    limit?: number,
+    pspCode?: string,
+    taxCode?: string
+  ): Promise<PaymentServiceProvidersResource> => {
+    const result = await apiConfigClient.getPaymentServiceProvidersUsingGET({
+      page,
+      name,
+      limit,
+      pspCode,
+      taxCode,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

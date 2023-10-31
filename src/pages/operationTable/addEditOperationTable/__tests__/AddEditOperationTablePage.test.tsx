@@ -10,9 +10,14 @@ import AddEditOperationTablePage from '../AddEditOperationTablePage';
 import ROUTES from '../../../../routes';
 import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 
+let getOperationTableDetailsMocked;
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  getOperationTableDetailsMocked = jest.spyOn(
+    require('../../../../services/operationTable'),
+    'getOperationTableDetails'
+  );
 });
 
 const renderApp = (
@@ -34,7 +39,7 @@ const renderApp = (
 };
 
 describe('AddEditOperationTablePage', () => {
-  it('Test render AddEditOperationTablePage', async () => {
+  test('Test render AddEditOperationTablePage', async () => {
     const { store, history } = renderApp();
     await waitFor(() =>
       store.dispatch({
@@ -45,5 +50,10 @@ describe('AddEditOperationTablePage', () => {
     const backBtn = screen.getByTestId('back-button-test');
     await waitFor(() => fireEvent.click(backBtn));
     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.HOME));
+  });
+
+  test('Test render OperationTableDetailPage error', async () => {
+    getOperationTableDetailsMocked.mockRejectedValueOnce(new Error('Fetch error'));
+    const { history } = renderApp();
   });
 });

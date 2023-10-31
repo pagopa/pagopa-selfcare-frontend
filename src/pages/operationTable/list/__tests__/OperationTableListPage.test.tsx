@@ -9,11 +9,16 @@ import { createMemoryHistory } from 'history';
 import OperationTableListPage from '../OperationTableListPage';
 import ROUTES from '../../../../routes';
 
+let getOperationTableListMocked;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  getOperationTableListMocked = jest.spyOn(
+    require('../../../../services/operationTable'),
+    'getOperationTableList'
+  );
 });
-
 const renderApp = (
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
   injectedStore?: ReturnType<typeof createStore>
@@ -34,6 +39,11 @@ const renderApp = (
 
 describe('OperationTableListPage', () => {
   test('Test render OperationTableListPage', async () => {
+    const { history } = renderApp();
+  });
+
+  test('Test render OperationTableList error', async () => {
+    getOperationTableListMocked.mockRejectedValueOnce(new Error('Fetch error'));
     const { history } = renderApp();
   });
 });

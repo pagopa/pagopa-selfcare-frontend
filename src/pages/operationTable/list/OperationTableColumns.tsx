@@ -79,7 +79,7 @@ export function buildColumnDefs(
         >
           <IconButton
             onClick={onRowClick ? () => onRowClick(p.row.taxCode) : undefined}
-            data-testid={`open-${p.row.fiscalCode}`}
+            data-testid={`open-${p.row.taxCode}`}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },

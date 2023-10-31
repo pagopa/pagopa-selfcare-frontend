@@ -53,6 +53,18 @@ export const operationTableDetail: TavoloOpResource = {
   telephone: 'phoneValue',
 };
 
+export const tavoloOpDto: TavoloOpResource = {
+  createdAt: new Date('10/10/2023'),
+  createdBy: 'createdByValue',
+  email: 'test@test.dummy.it',
+  modifiedAt: new Date(),
+  modifiedBy: 'modifiedByValue',
+  name: 'nameValue',
+  referent: 'referentValue',
+  taxCode: 'taxCodeValue',
+  telephone: 'phoneValue',
+};
+
 export const getOperationTableList = (): Promise<TavoloOpResourceList> =>
   new Promise((resolve) => resolve(operationTableList));
 

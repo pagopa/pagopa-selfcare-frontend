@@ -39,7 +39,6 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
     }
 
     if (party.institutionType === 'PSP') {
-      /* TODO: to be updated with new service that retrive psp by fiscalcode. Now works only for pspSigned with pspCode that match fiscal code. */
       const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
 
       const pspList: PaymentServiceProvidersResource = await getPaymentServiceProviders(

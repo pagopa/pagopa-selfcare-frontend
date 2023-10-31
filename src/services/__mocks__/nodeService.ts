@@ -9,6 +9,8 @@ import { CreditorInstitutionDetailsResource } from '../../api/generated/portal/C
 import { CreditorInstitutionDto } from '../../api/generated/portal/CreditorInstitutionDto';
 import { PaymentServiceProviderDetailsDto } from '../../api/generated/portal/PaymentServiceProviderDetailsDto';
 import { PaymentServiceProviderDetailsResource } from '../../api/generated/portal/PaymentServiceProviderDetailsResource';
+import { PaymentServiceProviderResource } from '../../api/generated/portal/PaymentServiceProviderResource';
+import { PaymentServiceProvidersResource } from '../../api/generated/portal/PaymentServiceProvidersResource';
 import { UpdateCreditorInstitutionDto } from '../../api/generated/portal/UpdateCreditorInstitutionDto';
 import { NodeOnSignInPSP } from '../../model/Node';
 import { PSPDirectDTO } from '../../model/PSP';
@@ -111,6 +113,27 @@ export const brokerAndEcDetailsResource_ECAndBroker: BrokerAndEcDetailsResource 
   creditorInstitutionDetailsResource: ecDirectUpdated,
 };
 
+export const pspListOfABroker: PaymentServiceProvidersResource = {
+  page_info: {
+    items_found: 2,
+    limit: 10,
+    page: 0,
+    total_pages: 1,
+  },
+  payment_service_providers: [
+    {
+      business_name: 'businessName',
+      enabled: true,
+      psp_code: '112233445566',
+    },
+    {
+      business_name: 'businessName',
+      enabled: false,
+      psp_code: '112233445566',
+    },
+  ],
+};
+
 const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
   if (pspCode.toUpperCase().includes('UNSIGNED')) {
     return brokerOrPspDetailsResource_Empty;
@@ -173,6 +196,20 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
 
 export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
   return new Promise((resolve) => resolve(mapPSPBrokerDetailsResource(pspBrokerCode)));
+};
+
+export const getPSPDetails = (_pspCode: string): Promise<PaymentServiceProviderDetailsResource> => {
+  return new Promise((resolve) => resolve(pspDetails));
+};
+
+export const getPaymentServiceProviders = (
+  _page: number,
+  _name?: string,
+  _limit?: number,
+  _pspCode?: string,
+  _taxCode?: string
+): Promise<PaymentServiceProvidersResource> => {
+  return new Promise((resolve) => resolve(pspListOfABroker));
 };
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {

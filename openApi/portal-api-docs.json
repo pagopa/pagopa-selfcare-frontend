@@ -3,7 +3,7 @@
   "info": {
     "title": "pagopa-selfcare-ms-backoffice",
     "description": "PagoPa backoffice API documentation",
-    "version": "0.4.45"
+    "version": "0.4.52"
   },
   "servers": [
     {
@@ -3005,7 +3005,7 @@
           {
             "name": "name",
             "in": "query",
-            "description": "Creditor institution name",
+            "description": "Creditor institution name or PSP name",
             "required": false,
             "style": "form",
             "schema": {
@@ -4605,6 +4605,125 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      }
+    },
+    "/payment-service-provider": {
+      "get": {
+        "tags": ["PSP"],
+        "summary": "getPaymentServiceProviders",
+        "description": "Get the PSP list of a broker",
+        "operationId": "getPaymentServiceProvidersUsingGET",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of elements on one page. Default = 50",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number. Page value starts from 0",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pspCode",
+            "in": "query",
+            "description": "Code of the payment service provider",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taxCode",
+            "in": "query",
+            "description": "Fiscal code of PSP",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Creditor institution name or PSP name",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentServiceProvidersResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -6376,6 +6495,141 @@
       }
     },
     "/tavolo-operativo": {
+      "get": {
+        "tags": ["Tavolo Operativo"],
+        "summary": "getAllTavoloOpDetails",
+        "description": "Get All tavoli operativi details",
+        "operationId": "getAllTavoloOpDetailsUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TavoloOpResourceList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Tavolo Operativo"],
+        "summary": "update",
+        "description": "Update Tavolo operativo",
+        "operationId": "updateUsingPUT",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TavoloOpDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TavoloOpOperations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": ["global"]
+          }
+        ]
+      },
       "post": {
         "tags": ["Tavolo Operativo"],
         "summary": "insert",
@@ -8331,7 +8585,7 @@
           "institutionType": {
             "type": "string",
             "description": "Institution's type",
-            "enum": ["GSP", "PA", "PSP", "PT", "SCP"]
+            "enum": ["GSP", "PA", "PSP", "PT", "SA", "SCP"]
           },
           "origin": {
             "type": "string",
@@ -8398,7 +8652,7 @@
           "institutionType": {
             "type": "string",
             "description": "Institution's type",
-            "enum": ["GSP", "PA", "PSP", "PT", "SCP"]
+            "enum": ["GSP", "PA", "PSP", "PT", "SA", "SCP"]
           },
           "mailAddress": {
             "type": "string",
@@ -9550,7 +9804,6 @@
       "TavoloOpResource": {
         "title": "TavoloOpResource",
         "required": [
-          "createdAt",
           "createdBy",
           "email",
           "modifiedAt",
@@ -9598,6 +9851,20 @@
           },
           "telephone": {
             "type": "string"
+          }
+        }
+      },
+      "TavoloOpResourceList": {
+        "title": "TavoloOpResourceList",
+        "required": ["tavoloOpResourceList"],
+        "type": "object",
+        "properties": {
+          "tavoloOpResourceList": {
+            "type": "array",
+            "description": "All Tavolo operativo details",
+            "items": {
+              "$ref": "#/components/schemas/TavoloOpResource"
+            }
           }
         }
       },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { Provider } from 'react-redux';
@@ -8,6 +8,7 @@ import { createStore, store } from '../../../../redux/store';
 import { createMemoryHistory } from 'history';
 import AddEditOperationTableForm from '../AddEditOperationTableForm';
 import ROUTES from '../../../../routes';
+import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -25,7 +26,7 @@ const renderApp = (
       <MemoryRouter initialEntries={[`${ROUTES.OPERATION_TABLE_ADDEDIT}`]}>
         <Route path={ROUTES.OPERATION_TABLE_ADDEDIT}>
           <ThemeProvider theme={theme}>
-            <AddEditOperationTableForm goBack={() => {}} />
+            <AddEditOperationTableForm goBack={() => {}} selectedParty={ecAdminSignedDirect} />
           </ThemeProvider>
         </Route>
       </MemoryRouter>
@@ -35,7 +36,13 @@ const renderApp = (
 };
 
 describe('AddEditOperationTableForm', () => {
-  it('Test render AddEditOperationTableForm', () => {
+  it('Test render AddEditOperationTableForm', async () => {
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecAdminSignedDirect,
+      })
+    );
     renderApp();
   });
 

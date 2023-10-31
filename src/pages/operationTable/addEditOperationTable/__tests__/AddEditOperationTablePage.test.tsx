@@ -8,6 +8,7 @@ import { createStore, store } from '../../../../redux/store';
 import { createMemoryHistory } from 'history';
 import AddEditOperationTablePage from '../AddEditOperationTablePage';
 import ROUTES from '../../../../routes';
+import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -34,7 +35,13 @@ const renderApp = (
 
 describe('AddEditOperationTablePage', () => {
   it('Test render AddEditOperationTablePage', async () => {
-    const { history } = renderApp();
+    const { store, history } = renderApp();
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecAdminSignedDirect,
+      })
+    );
     const backBtn = screen.getByTestId('back-button-test');
     await waitFor(() => fireEvent.click(backBtn));
     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.HOME));

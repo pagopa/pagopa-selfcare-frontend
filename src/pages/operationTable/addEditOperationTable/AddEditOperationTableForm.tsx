@@ -6,14 +6,14 @@ import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon } from '@mui/icons-material';
-import { useEffect } from 'react';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_CREATE_OPERATION_TABLE } from '../../../utils/constants';
-import { OperationTableFormAction, OperationTableOnCreation } from '../../../model/OperationTable';
+import { OperationTableOnCreation } from '../../../model/OperationTable';
 import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource';
-import { createOperationTable } from '../../../services/operationTable';
+import { createOperationTable, updateOperationTable } from '../../../services/operationTable';
 import { Party } from '../../../model/Party';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
+import { TavoloOpDto } from '../../../api/generated/portal/TavoloOpDto';
 
 type Props = {
   selectedParty: Party;
@@ -75,20 +75,17 @@ const AddEditOperationTableForm = ({ selectedParty, goBack, operationTableDetail
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async (values: OperationTableOnCreation) => {
+    const payload: TavoloOpDto = {
+      email: values.email,
+      name: selectedParty.description,
+      referent: operationTableDetail?.referent ?? '',
+      taxCode: selectedParty.fiscalCode,
+      telephone: values.phone,
+    };
     setLoading(true);
     try {
-      if (isUpdate) {
-        // TODO: connect to real service
-        console.log('update OPTABLE');
-      } else {
-        await createOperationTable({
-          email: values.email,
-          name: selectedParty.description,
-          referent: '',
-          taxCode: selectedParty.fiscalCode,
-          telephone: values.phone,
-        });
-      }
+      await (isUpdate ? updateOperationTable(payload) : createOperationTable(payload));
+
       history.push(ROUTES.HOME);
     } catch (reason: any) {
       addError({

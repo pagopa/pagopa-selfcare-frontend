@@ -1,27 +1,42 @@
 import { TavoloOpDto } from '../../api/generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from '../../api/generated/portal/TavoloOpOperations';
 import { TavoloOpResource } from '../../api/generated/portal/TavoloOpResource';
+import { TavoloOpResourceList } from '../../api/generated/portal/TavoloOpResourceList';
 
-// TODO: fix with right type
-export const operationTableList: any = {
-  operationTableList: [
+export const operationTableList: TavoloOpResourceList = {
+  tavoloOpResourceList: [
     {
-      companyName: 'AAA s.r.l',
-      fiscalCode: '012345678910',
+      createdAt: new Date(),
+      createdBy: 'ownerUser',
       email: 'aaa@bbb.dummy.it',
-      phone: '0039012345678910',
+      modifiedAt: new Date(),
+      modifiedBy: 'modifierUser',
+      name: 'AAA s.r.l',
+      referent: 'referent',
+      taxCode: '012345678910',
+      telephone: '0039012345678910',
     },
     {
-      companyName: 'BBB s.r.l',
-      fiscalCode: '012345678911',
+      createdAt: new Date(),
+      createdBy: 'ownerUser',
       email: 'bbb@bbb.dummy.it',
-      phone: '0039012345678911',
+      modifiedAt: new Date(),
+      modifiedBy: 'modifierUser',
+      name: 'BBB s.r.l',
+      referent: 'referent',
+      taxCode: '012345678911',
+      telephone: '0039012345678911',
     },
     {
-      companyName: 'CCC s.r.l',
-      fiscalCode: '012345678912',
+      createdAt: new Date(),
+      createdBy: 'ownerUser',
       email: 'ccc@bbb.dummy.it',
-      phone: '0039012345678912',
+      modifiedAt: new Date(),
+      modifiedBy: 'modifierUser',
+      name: 'CCC s.r.l',
+      referent: 'referent',
+      taxCode: '012345678912',
+      telephone: '0039012345678912',
     },
   ],
 };
@@ -38,10 +53,14 @@ export const operationTableDetail: TavoloOpResource = {
   telephone: 'phoneValue',
 };
 
-export const getOperationTableList = (): Promise<any> =>
+export const getOperationTableList = (): Promise<TavoloOpResourceList> =>
   new Promise((resolve) => resolve(operationTableList));
 
 export const createOperationTable = (
+  _operationTableDto: TavoloOpDto
+): Promise<TavoloOpOperations> => new Promise((resolve) => resolve({}));
+
+export const updateOperationTable = (
   _operationTableDto: TavoloOpDto
 ): Promise<TavoloOpOperations> => new Promise((resolve) => resolve({}));
 

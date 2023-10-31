@@ -10,7 +10,7 @@ export function buildColumnDefs(
 ) {
   return [
     {
-      field: 'companyName',
+      field: 'name',
       cellClassName: 'justifyContentBold',
       headerName: t('operationTableListPage.column.companyName'),
       align: 'left',
@@ -18,7 +18,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => renderCell(params, params.row.companyName),
+      renderCell: (params: any) => renderCell(params, params.row.name),
       sortable: false,
       flex: 4,
     },
@@ -31,7 +31,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.fiscalCode),
+      renderCell: (params) => renderCell(params, params.row.taxCode),
       sortable: false,
       flex: 3,
     },
@@ -49,7 +49,7 @@ export function buildColumnDefs(
       flex: 3,
     },
     {
-      field: 'phone',
+      field: 'telephone',
       cellClassName: 'justifyContentNormal',
       headerName: t('operationTableListPage.column.phone'),
       align: 'left',
@@ -57,7 +57,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.phone),
+      renderCell: (params) => renderCell(params, params.row.telephone),
       sortable: false,
       flex: 3,
     },
@@ -78,7 +78,7 @@ export function buildColumnDefs(
           sx={{ cursor: 'pointer' }}
         >
           <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.fiscalCode) : undefined}
+            onClick={onRowClick ? () => onRowClick(p.row.taxCode) : undefined}
             data-testid={`open-${p.row.fiscalCode}`}
             sx={{
               width: '100%',

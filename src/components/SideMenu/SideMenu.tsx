@@ -111,8 +111,7 @@ export default function SideMenu() {
               dataTestId="commission-packages-test"
             />
           )}
-          {/* TODO: enabled only for ROLE.PAGOPA_OPERATOR */}
-          {ENV.FEATURES.OPERATIONTABLE.ENABLED && selectedParty?.institutionType !== 'PSP' && (
+          {ENV.FEATURES.OPERATIONTABLE.ENABLED && hasPermission('operation-table-list') && (
             <SidenavItem
               title={t('sideMenu.operationTable.title')}
               handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}

@@ -19,9 +19,13 @@ const OperationTable = ({ ecCode }: Props) => {
 
   useEffect(() => {
     getOperationTableDetails(ecCode)
-      .then((response) => setOperationTable(response))
-      .catch((error) => console.error(error));
-  }, []);
+      .then((response) => {
+        setOperationTable(response);
+      })
+      .catch((error) => {
+        console.log(JSON.stringify(error));
+      });
+  }, [ecCode]);
 
   return (
     <Grid item xs={6}>
@@ -30,20 +34,20 @@ const OperationTable = ({ ecCode }: Props) => {
           <Typography variant="h6">{t('dashboardPage.operationTable.title')}</Typography>
         </Box>
         <Grid container spacing={3} pb={4}>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Typography variant="body2">{t('dashboardPage.operationTable.mail')}</Typography>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-              {operationTable?.email}
+              {operationTable?.email ?? '-'}
             </Typography>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Typography variant="body2">{t('dashboardPage.operationTable.phone')}</Typography>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-              {operationTable?.telephone}
+              {operationTable?.telephone ?? '-'}
             </Typography>
           </Grid>
           {!operationTable && (

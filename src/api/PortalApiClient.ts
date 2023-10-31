@@ -63,6 +63,7 @@ import { PaymentServiceProvidersResource } from './generated/portal/PaymentServi
 import { TavoloOpDto } from './generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from './generated/portal/TavoloOpOperations';
 import { TavoloOpResource } from './generated/portal/TavoloOpResource';
+import { TavoloOpResourceList } from './generated/portal/TavoloOpResourceList';
 
 const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: any) => {
   const token = storageTokenOps.read();
@@ -791,18 +792,23 @@ export const PortalApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  // getOperationTableList: async (): Promise<TavoloOpOperations> => {
-  //   const result = await apiClient.getOperationTableList();
-  //   return extractResponse(result, 201, onRedirectToLogin);
-  // },
+  getOperationTableList: async (): Promise<TavoloOpResourceList> => {
+    const result = await apiConfigClient.getAllTavoloOpDetailsUsingGET({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
 
   createOperationTable: async (operationTableDto: TavoloOpDto): Promise<TavoloOpOperations> => {
-    const result = await apiClient.insertUsingPOST({ body: operationTableDto });
+    const result = await apiConfigClient.insertUsingPOST({ body: operationTableDto });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
+  updateOperationTable: async (operationTableDto: TavoloOpDto): Promise<TavoloOpOperations> => {
+    const result = await apiConfigClient.updateUsingPUT({ body: operationTableDto });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getOperationTableDetails: async (ecCode: string): Promise<TavoloOpResource> => {
-    const result = await apiClient.getTavoloOpDetailsUsingGET({ ecCode });
+    const result = await apiConfigClient.getTavoloOpDetailsUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

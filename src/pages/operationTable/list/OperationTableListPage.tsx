@@ -10,11 +10,11 @@ import ROUTES from '../../../routes';
 import { LOADING_TASK_OPERATION_TABLE_LIST } from '../../../utils/constants';
 import { getOperationTableList } from '../../../services/operationTable';
 import SideMenu from '../../../components/SideMenu/SideMenu';
+import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
 import OperationTableList from './OperationTableList';
 
-// TODO: fix with right type
-const emptyOperationTableList: any = {
-  operationTableList: [],
+const emptyOperationTableList: TavoloOpResourceList = {
+  tavoloOpResourceList: [],
 };
 
 const OperationTableListPage = () => {
@@ -53,8 +53,8 @@ const OperationTableListPage = () => {
           error: reason,
           techDescription: `An error occurred while retrieving Operation Table list`,
           toNotify: true,
-          displayableTitle: t('operationTableListPage.error.getOperationTableListTitle'),
-          displayableDescription: t('operationTableListPage.error.getOperationTableListDesc'),
+          displayableTitle: t('operationTableListPage.errors.getOperationTableListTitle'),
+          displayableDescription: t('operationTableListPage.errors.getOperationTableListDesc'),
           component: 'Toast',
         });
         setOperationTableList(emptyOperationTableList);

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
 import ROUTES from '../../../routes';
+import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
 import { buildColumnDefs } from './OperationTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import OperationTableEmpty from './OperationTableEmpty';
@@ -68,7 +69,7 @@ const CustomDataGrid = styled(DataGrid)({
 });
 
 type OperationTableListProps = {
-  operationTableList: any; // TODO: fix with right type
+  operationTableList: TavoloOpResourceList;
   error: boolean;
   loading: boolean;
 };
@@ -100,7 +101,7 @@ const OperationTableList = ({ operationTableList, error, loading }: OperationTab
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && operationTableList.operationTableList.length === 0 ? (
+        ) : !error && !loading && operationTableList.tavoloOpResourceList.length === 0 ? (
           <OperationTableEmpty />
         ) : (
           <>
@@ -154,7 +155,7 @@ const OperationTableList = ({ operationTableList, error, loading }: OperationTab
                   quickFilterProps: { debounceMs: 100 },
                 },
               }}
-              getRowId={(r) => r.fiscalCode}
+              getRowId={(r) => r.taxCode}
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="server"
@@ -162,8 +163,8 @@ const OperationTableList = ({ operationTableList, error, loading }: OperationTab
               pageSize={3}
               pagination
               rowHeight={rowHeight}
-              rows={operationTableList.operationTableList ?? []}
-              rowCount={operationTableList.operationTableList.length}
+              rows={operationTableList.tavoloOpResourceList ?? []}
+              rowCount={operationTableList.tavoloOpResourceList.length}
               sortingMode="server"
             />
           </>

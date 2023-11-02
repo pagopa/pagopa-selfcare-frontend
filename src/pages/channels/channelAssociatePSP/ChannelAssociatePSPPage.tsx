@@ -14,7 +14,6 @@ import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
-import { PSP } from '../../../model/PSP';
 import {
   associatePSPtoChannel,
   getDelegatedPSPbyBroker,
@@ -24,8 +23,9 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import { Party } from '../../../model/Party';
-import { fetchPartyDetails } from '../../../services/partyService';
 import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { PaymentServiceProvidersResource } from '../../../api/generated/portal/PaymentServiceProvidersResource';
+import { getPSPDetails, getPaymentServiceProviders } from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
@@ -61,12 +61,24 @@ function ChannelAssociatePSPPage() {
     if (selectedPSP && selectedPSP.institutionId) {
       setLoading(true);
 
-      const selectedPSPpartyDetails = await fetchPartyDetails(selectedPSP.institutionId);
+      const pspsByTaxCode: PaymentServiceProvidersResource = await getPaymentServiceProviders(
+        0,
+        undefined,
+        undefined,
+        undefined,
+        selectedPSP.taxCode
+      );
+      const pspToBeAssociatedDetails =
+        pspsByTaxCode &&
+        pspsByTaxCode.payment_service_providers &&
+        pspsByTaxCode.payment_service_providers[0].psp_code
+          ? await getPSPDetails(pspsByTaxCode.payment_service_providers[0].psp_code)
+          : null;
 
-      if (selectedPSPpartyDetails?.pspData?.abiCode) {
+      if (pspToBeAssociatedDetails?.psp_code) {
         associatePSPtoChannel(
           channelId,
-          selectedPSPpartyDetails?.pspData?.abiCode,
+          pspToBeAssociatedDetails.psp_code,
           channelDetail?.payment_types ?? []
         )
           .then((_data) => {
@@ -109,7 +121,6 @@ function ChannelAssociatePSPPage() {
         .then((data) => {
           if (data && selectedParty) {
             // A PSP that is a broker can associate itself to the channel
-            // TODO check if service return current psp
             const availablePSPfromService = addCurrentPSP(data, selectedParty);
 
             setAvailablePSP(availablePSPfromService);
@@ -213,6 +224,7 @@ const addCurrentPSP = (availablePSP: Array<DelegationResource>, selectedParty: P
   const value = {
     institutionName: selectedParty?.description ?? '',
     institutionId: selectedParty.partyId,
+    taxCode: selectedParty.fiscalCode,
   };
 
   const index = availablePSP.findIndex(

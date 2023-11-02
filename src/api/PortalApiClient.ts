@@ -73,7 +73,7 @@ const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: a
   });
 };
 
-const apiClient = createClient({
+export const apiClient = createClient({
   baseUrl: ENV.URL_API.PORTAL,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),

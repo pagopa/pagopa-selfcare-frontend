@@ -73,7 +73,7 @@ describe('<ChannelAssociatePSPPage />', () => {
 
     const searchInput = screen.getByTestId('psp-selection-search');
 
-    await waitFor(() => userEvent.type(searchInput, 'PSP1{enter}'));
+    await userEvent.type(searchInput, 'PSP1{enter}');
 
     const selection = screen.getByTestId('PartyItemContainer: PSP1');
     const selectionBtn = selection.querySelector('[role="button"]') as HTMLElement;

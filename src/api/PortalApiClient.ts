@@ -73,7 +73,7 @@ const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: a
   });
 };
 
-const apiClient = createClient({
+export const apiClient = createClient({
   baseUrl: ENV.URL_API.PORTAL,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
@@ -444,6 +444,12 @@ export const PortalApi = {
 
   getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
     const result = await apiConfigClient.getChannelCodeUsingGET({ pspcode });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getDelegatedPSPbyBroker: async (brokerId: string): Promise<Array<DelegationResource>> => {
+    const institutionId = undefined;
+    const result = await apiClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

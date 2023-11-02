@@ -14,16 +14,18 @@ import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
-import { PSP } from '../../../model/PSP';
 import {
   associatePSPtoChannel,
-  getChannelAvailablePSP,
+  getDelegatedPSPbyBroker,
   getChannelDetail,
 } from '../../../services/channelService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import { Party } from '../../../model/Party';
+import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { PaymentServiceProvidersResource } from '../../../api/generated/portal/PaymentServiceProvidersResource';
+import { getPSPDetails, getPaymentServiceProviders } from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
@@ -34,8 +36,8 @@ function ChannelAssociatePSPPage() {
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const [selectedPSP, setSelectedPSP] = useState<PSP | undefined>();
-  const [availablePSP, setAvailablePSP] = useState<Array<PSP>>([]);
+  const [selectedPSP, setSelectedPSP] = useState<DelegationResource | undefined>();
+  const [availablePSP, setAvailablePSP] = useState<Array<DelegationResource>>([]);
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
 
   const formik = useFormik({
@@ -55,63 +57,81 @@ function ChannelAssociatePSPPage() {
     );
   };
 
-  const handleSubmit = () => {
-    if (selectedPSP) {
+  const handleSubmit = async () => {
+    if (selectedPSP && selectedPSP.institutionId) {
       setLoading(true);
-      associatePSPtoChannel(
-        channelId,
-        selectedPSP.broker_psp_code,
-        channelDetail?.payment_types ?? []
-      )
-        .then((_data) => {
-          history.push(
-            generatePath(ROUTES.CHANNEL_PSP_LIST, {
-              channelId,
-            }),
-            {
-              alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
-            }
-          );
-        })
-        .catch((reason) =>
-          addError({
-            id: 'ASSOCIATE_PSP',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while psp association`,
-            toNotify: true,
-            displayableTitle: t('channelAssociatePSPPage.associationForm.errorMessageTitle'),
-            displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
-            component: 'Toast',
-          })
+
+      const pspsByTaxCode: PaymentServiceProvidersResource = await getPaymentServiceProviders(
+        0,
+        undefined,
+        undefined,
+        undefined,
+        selectedPSP.taxCode
+      );
+      const pspToBeAssociatedDetails =
+        pspsByTaxCode &&
+        pspsByTaxCode.payment_service_providers &&
+        pspsByTaxCode.payment_service_providers[0].psp_code
+          ? await getPSPDetails(pspsByTaxCode.payment_service_providers[0].psp_code)
+          : null;
+
+      if (pspToBeAssociatedDetails?.psp_code) {
+        associatePSPtoChannel(
+          channelId,
+          pspToBeAssociatedDetails.psp_code,
+          channelDetail?.payment_types ?? []
         )
-        .finally(() => {
-          setLoading(false);
-        });
+          .then((_data) => {
+            history.push(
+              generatePath(ROUTES.CHANNEL_PSP_LIST, {
+                channelId,
+              }),
+              {
+                alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
+              }
+            );
+          })
+          .catch((reason) =>
+            addError({
+              id: 'ASSOCIATE_PSP',
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while psp association`,
+              toNotify: true,
+              displayableTitle: t('channelAssociatePSPPage.associationForm.errorMessageTitle'),
+              displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
+              component: 'Toast',
+            })
+          )
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
   };
 
   useEffect(() => {
     setLoading(true);
+    if (selectedParty) {
+      getChannelDetail(channelId)
+        .then((channel) => setChannelDetail(channel))
+        .catch((reason) => console.error(reason));
 
-    getChannelDetail(channelId)
-      .then((channel) => setChannelDetail(channel))
-      .catch((reason) => console.error(reason));
+      getDelegatedPSPbyBroker(selectedParty?.partyId)
+        .then((data) => {
+          if (data && selectedParty) {
+            // A PSP that is a broker can associate itself to the channel
+            const availablePSPfromService = addCurrentPSP(data, selectedParty);
 
-    getChannelAvailablePSP()
-      .then((data) => {
-        if (data && selectedParty) {
-          // TODO:  remove when real service is available
-          const availablePSPfromService = addCurrentPSP(data, selectedParty);
-
-          setAvailablePSP(availablePSPfromService);
-        }
-      })
-      .catch((reason) => console.error(reason))
-      .finally(() => setLoading(false));
+            setAvailablePSP(availablePSPfromService);
+          }
+        })
+        .catch((reason) => console.error(reason))
+        .finally(() => setLoading(false));
+    }
 
     setLoading(false);
-  }, []);
+  }, [selectedParty]);
 
   return (
     <Box
@@ -165,7 +185,7 @@ function ChannelAssociatePSPPage() {
                   label={t('channelAssociatePSPPage.associationForm.PSPSelectionInputPlaceholder')}
                   availablePSP={availablePSP}
                   selectedPSP={selectedPSP}
-                  onPSPSelectionChange={(selectedPSP: PSP | undefined) => {
+                  onPSPSelectionChange={(selectedPSP: DelegationResource | undefined) => {
                     setSelectedPSP(selectedPSP);
                   }}
                 />
@@ -200,16 +220,15 @@ function ChannelAssociatePSPPage() {
 
 export default ChannelAssociatePSPPage;
 
-const addCurrentPSP = (availablePSP: Array<PSP>, selectedParty: Party) => {
+const addCurrentPSP = (availablePSP: Array<DelegationResource>, selectedParty: Party) => {
   const value = {
-    broker_psp_code: selectedParty?.fiscalCode ?? '',
-    description: selectedParty?.description ?? '',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionName: selectedParty?.description ?? '',
+    institutionId: selectedParty.partyId,
+    taxCode: selectedParty.fiscalCode,
   };
 
   const index = availablePSP.findIndex(
-    (object) => object.broker_psp_code === selectedParty.fiscalCode ?? ''
+    (object) => object.institutionId === selectedParty.partyId ?? ''
   );
 
   if (index === -1) {

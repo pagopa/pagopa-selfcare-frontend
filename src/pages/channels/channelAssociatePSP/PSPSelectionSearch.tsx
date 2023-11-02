@@ -1,23 +1,26 @@
-import React, {useState} from 'react';
-import {Box, Grid} from '@mui/material';
-import {styled} from '@mui/material/styles';
-import {PSP} from '../../../model/PSP';
+import React, { useState } from 'react';
+import { Box, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { PSP } from '../../../model/PSP';
+import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
 import PSPSelectionSearchInput from './PSPSelectionSearchInput';
 import PSPItemContainer from './PSPSelectionSearchItemContainer';
 import PSPAccountItemSelection from './PSPAccountItemSelection';
 
 type Props = {
-  availablePSP: Array<PSP>;
-  selectedPSP: PSP | undefined;
-  onPSPSelectionChange: (selectedPSP: PSP | undefined) => void;
+  availablePSP: Array<DelegationResource>;
+  selectedPSP: DelegationResource | undefined;
+  onPSPSelectionChange: (selectedPSP: DelegationResource | undefined) => void;
   label?: string;
   iconColor?: string;
   iconMarginRight?: string;
   PSPTitle?: string;
 };
 
-const verifyPSPFilter = (psp: PSP, filter: string) =>
-  psp.description.toUpperCase().indexOf(filter.toUpperCase()) >= 0;
+const verifyPSPFilter = (psp: DelegationResource, filter: string) =>
+  psp?.institutionName
+    ? psp.institutionName.toUpperCase().indexOf(filter.toUpperCase()) >= 0
+    : false;
 
 const CustomBox = styled(Box)({
   '&::-webkit-scrollbar': {
@@ -43,21 +46,24 @@ export default function PSPSelectionSearch({
   iconMarginRight,
 }: Props) {
   const [input, setInput] = useState<string>('');
-  const [filteredParties, setFilteredParties] = useState<Array<PSP>>([]);
+  const [filteredParties, setFilteredParties] = useState<Array<DelegationResource>>([]);
 
   const onFilterChange = (value: string) => {
     setInput(value);
     if (!value || value.length < 3) {
       setFilteredParties([]);
     } else {
-      setFilteredParties(availablePSP?.filter((e) => verifyPSPFilter(e, value)));
+      setFilteredParties(availablePSP.filter((e) => verifyPSPFilter(e, value)));
     }
     if (value && selectedPSP && !verifyPSPFilter(selectedPSP, value)) {
       onPSPSelectionChange(undefined);
     }
   };
 
-  const handleListItemClick = (_event: React.MouseEvent<HTMLDivElement, MouseEvent>, PSP: PSP) => {
+  const handleListItemClick = (
+    _event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    PSP: DelegationResource
+  ) => {
     onPSPSelectionChange(PSP);
   };
 
@@ -96,8 +102,8 @@ export default function PSPSelectionSearch({
               {filteredParties &&
                 filteredParties.map((PSP) => (
                   <PSPItemContainer
-                    key={PSP.broker_psp_code}
-                    title={PSP.description}
+                    key={PSP.institutionId}
+                    title={PSP.institutionName}
                     subTitle={/* t(roleLabels[PSP.userRole].longLabelKey) */ ''}
                     image={/* PSP.urlLogo */ ''}
                     action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>

@@ -1,5 +1,5 @@
 import { tavoloOpDto } from '../../services/__mocks__/operationTable';
-import { PortalApi, apiConfigClient } from '../PortalApiClient';
+import { PortalApi, apiClient, apiConfigClient } from '../PortalApiClient';
 import * as apiUtils from '@pagopa/selfcare-common-frontend/utils/api-utils';
 
 const spyOnExtractResponse = jest
@@ -24,7 +24,15 @@ const spyOnCreateOperationTable = jest.spyOn(apiConfigClient, 'insertUsingPOST')
 
 const spyOnUpdateOperationTable = jest.spyOn(apiConfigClient, 'updateUsingPUT');
 
+const spyOnGetDelegatedPSPbyBroker = jest.spyOn(apiClient, 'getBrokerDelegationUsingGET');
+
 describe('Testing that PortalApi methods calls apiConfigClient', () => {
+  test('Testing getDelegatedPSPbyBroker calls getBrokerDelegationUsingGET', async () => {
+    await PortalApi.getDelegatedPSPbyBroker('123');
+    expect(spyOnGetDelegatedPSPbyBroker).toBeCalled();
+    expect(spyOnExtractResponse).toBeCalled();
+  });
+
   test('Testing getBrokerAndEcDetails calls getBrokerAndEcDetailsUsingGET', async () => {
     await PortalApi.getBrokerAndEcDetails('test');
     expect(spyOngetBrokerAndEcDetailsUsingGET).toBeCalled();

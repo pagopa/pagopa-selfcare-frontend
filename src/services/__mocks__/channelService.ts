@@ -20,6 +20,7 @@ import {
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
 import { WfespPluginConfs } from '../../api/generated/portal/WfespPluginConfs';
+import { DelegationResource } from '../../api/generated/portal/DelegationResource';
 
 export const mockedChannels: ChannelsResource = {
   channels: [
@@ -359,48 +360,31 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
   },
 };
 
-export const mockedChannelAvailablePSP: Array<PSP> = [
+export const mockedDelegatedPSP: Array<DelegationResource> = [
   {
-    broker_psp_code: '0000001',
-    description: 'Intesa San Paolo S.P.A',
-    enabled: true,
-    extended_fault_bean: true,
+    brokerId: '12345',
+    institutionId: '0000001',
+    institutionName: 'PSP1',
   },
   {
-    broker_psp_code: '0000002',
-    description: 'Sogei',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionId: '0000002',
+    institutionName: 'PSP2',
   },
   {
-    broker_psp_code: '0000003',
-    description: 'BNP',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionId: '0000003',
+    institutionName: 'PSP3',
   },
   {
-    broker_psp_code: '0000004',
-    description: 'Banca Nazionale',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionId: '0000004',
+    institutionName: 'PSP4',
   },
   {
-    broker_psp_code: '0000005',
-    description: 'Banca Regionale',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionId: '0000005',
+    institutionName: 'PSP5',
   },
   {
-    broker_psp_code: '0000006',
-    description: 'Banca Estera',
-    enabled: true,
-    extended_fault_bean: true,
-  },
-  {
-    broker_psp_code: '14847241008',
-    description: 'ICONTO S.R.L.',
-    enabled: true,
-    extended_fault_bean: true,
+    institutionId: '0000006',
+    institutionName: 'PSP6',
   },
 ];
 
@@ -477,8 +461,8 @@ export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
 export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
-export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
-  new Promise((resolve) => resolve(mockedChannelAvailablePSP));
+export const getDelegatedPSPbyBroker = (): Promise<Array<DelegationResource>> =>
+  new Promise((resolve) => resolve(mockedDelegatedPSP));
 
 export const associatePSPtoChannel = (
   _channelcode: string,

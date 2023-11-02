@@ -14,6 +14,7 @@ import { PortalApi } from '../api/PortalApiClient';
 import { PSP } from '../model/PSP';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
+import { DelegationResource } from '../api/generated/portal/DelegationResource';
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -22,7 +23,7 @@ import {
   updateChannel as updateChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
-  getChannelAvailablePSP as getChannelAvailablePSPMocked,
+  getDelegatedPSPbyBroker as getDelegatedPSPbyBrokerMocked,
   getChannelPSPs as getChannelPSPsMocked,
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
@@ -136,14 +137,14 @@ export const getChannelPSPs = (
   }
 };
 
-export const getChannelAvailablePSP = (): Promise<Array<PSP>> =>
+export const getDelegatedPSPbyBroker = (brokerId: string): Promise<Array<DelegationResource>> => {
   /* istanbul ignore if */
-  /* if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getChannelAvailablePSPMocked(page);
+  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+    return getDelegatedPSPbyBrokerMocked();
   } else {
-    return PortalApi.getChannelAvailablePSP(page).then((resources) => resources);
-  } */
-  getChannelAvailablePSPMocked();
+    return PortalApi.getDelegatedPSPbyBroker(brokerId).then((resources) => resources);
+  }
+};
 
 export const associatePSPtoChannel = (
   channelcode: string,

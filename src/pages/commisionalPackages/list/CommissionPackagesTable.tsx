@@ -11,6 +11,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
 import { CommissionPackageListResource } from '../../../model/CommissionPackage';
+import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 
 type Props = {
   packageNameFilter: string;
@@ -29,64 +30,6 @@ const emptyCommissionPackageList: CommissionPackageListResource = {
     total_pages: 0,
   },
 };
-
-const CustomDataGrid = styled(DataGrid)({
-  border: 'none !important',
-  '& .MuiDataGrid-main': {
-    background: `${theme.palette.background.default}`,
-    padding: '0 24px 24px 24px',
-    marginTop: '24px',
-  },
-  '& .MuiDataGrid-main > div::first-of-type': {
-    zIndex: 1,
-  },
-  '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
-    { outline: 'none' },
-  '&.MuiDataGrid-root .MuiDataGrid-cell': {
-    whiteSpace: 'normal !important',
-    wordWrap: 'break-word !important',
-    lineHeight: '25px !important',
-  },
-  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
-  '.justifyContentBold': {
-    fontSize: '16px',
-    fontWeight: '600',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.MuiDataGrid-columnSeparator': { display: 'none' },
-  '.MuiDataGrid-cell ': { padding: '0px', borderBottom: 'none' },
-  '.MuiDataGrid-columnHeaders': { borderBottom: 'none' },
-  '.MuiDataGrid-row': {
-    backgroundColor: 'white',
-    '&.Mui-selected': {
-      backgroundColor: 'transparent',
-      '&:hover': { backgroundColor: 'transparent' },
-    },
-    '&:hover': {
-      backgroundColor: 'rgba(23, 50, 77, 0.04)',
-    },
-  },
-  '.justifyContentNormal': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.justifyContentNormalRight': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-      justifyContent: 'right',
-    },
-  },
-});
 
 const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const { t } = useTranslation();

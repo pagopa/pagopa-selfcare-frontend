@@ -13,6 +13,7 @@ import { getChannelsMerged } from '../../../services/channelService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { WrapperChannelsResource } from '../../../api/generated/portal/WrapperChannelsResource';
 import { useAppSelector } from '../../../redux/hooks';
+import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './ChannelsTableColumns';
 import ChannelTableEmpty from './ChannelTableEmpty';
 
@@ -23,62 +24,6 @@ const emptyChannelsResource: WrapperChannelsResource = {
   channels: [],
   page_info: {},
 };
-
-const CustomDataGrid = styled(DataGrid)({
-  border: 'none !important',
-  '& .MuiDataGrid-main': {
-    background: `${theme.palette.background.default}`,
-    padding: '0 24px 24px 24px',
-    marginTop: '24px',
-  },
-  '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
-    { outline: 'none' },
-  '&.MuiDataGrid-root .MuiDataGrid-cell': {
-    whiteSpace: 'normal !important',
-    wordWrap: 'break-word !important',
-    lineHeight: '25px !important',
-  },
-  '& .MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
-  '& .MuiDataGrid-columnHeader': { paddingLeft: '16px', paddingRight: '16px' },
-  '.justifyContentBold': {
-    fontSize: '16px',
-    fontWeight: '600',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.MuiDataGrid-columnSeparator': { display: 'none' },
-  '.MuiDataGrid-cell ': { padding: '0px', borderBottom: 'none' },
-  '.MuiDataGrid-columnHeaders': { borderBottom: 'none' },
-  '.MuiDataGrid-row': {
-    backgroundColor: 'white',
-    '&.Mui-selected': {
-      backgroundColor: 'transparent',
-      '&:hover': { backgroundColor: 'transparent' },
-    },
-    '&:hover': {
-      backgroundColor: 'rgba(23, 50, 77, 0.04)',
-    },
-  },
-  '.justifyContentNormal': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.justifyContentNormalRight': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-      justifyContent: 'right',
-    },
-  },
-});
 
 export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter: string }) {
   const { t } = useTranslation();

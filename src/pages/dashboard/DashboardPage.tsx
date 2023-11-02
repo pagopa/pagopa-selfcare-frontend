@@ -9,7 +9,7 @@ import { ENV } from '../../utils/env';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
-import OperativeTable from './components/OperativeTable';
+import OperationTable from './components/OperationTable';
 import PTRegistrationData from './components/PTRegistrationData';
 
 const DashboardPage = () => {
@@ -70,9 +70,11 @@ const DashboardPage = () => {
               <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
             </Grid>
 
-            {selectedParty?.institutionType !== 'PSP' && ENV.FEATURES.OPERATIONTABLE.ENABLED && (
-              <OperativeTable />
-            )}
+            {selectedParty &&
+              selectedParty?.institutionType !== 'PSP' &&
+              ENV.FEATURES.OPERATIONTABLE.ENABLED && (
+                <OperationTable ecCode={selectedParty.fiscalCode} />
+              )}
           </Grid>
         </Box>
       </Grid>

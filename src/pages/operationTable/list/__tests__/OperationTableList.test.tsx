@@ -6,19 +6,15 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { createStore, store } from '../../../../redux/store';
 import { createMemoryHistory } from 'history';
-import OperationTableListPage from '../OperationTableListPage';
+import OperationTableList from '../OperationTableList';
 import ROUTES from '../../../../routes';
-
-let getOperationTableListMocked;
+import { operationTableList } from '../../../../services/__mocks__/operationTable';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  getOperationTableListMocked = jest.spyOn(
-    require('../../../../services/operationTable'),
-    'getOperationTableList'
-  );
 });
+
 const renderApp = (
   injectedHistory?: ReturnType<typeof createMemoryHistory>,
   injectedStore?: ReturnType<typeof createStore>
@@ -29,7 +25,11 @@ const renderApp = (
     <ThemeProvider theme={theme}>
       <Router history={history}>
         <Provider store={store}>
-          <OperationTableListPage />
+          <OperationTableList
+            loading={false}
+            operationTableList={operationTableList}
+            error={false}
+          />
         </Provider>
       </Router>
     </ThemeProvider>
@@ -37,13 +37,18 @@ const renderApp = (
   return { store, history };
 };
 
-describe('OperationTableListPage', () => {
-  test('Test render OperationTableListPage', async () => {
+describe('OperationTableList', () => {
+  test('Test render OperationTableList', async () => {
     const { history } = renderApp();
   });
 
-  test('Test render OperationTableList error', async () => {
-    getOperationTableListMocked.mockRejectedValueOnce(new Error('Fetch error'));
+  test('Test render OperationTableList and click on detail button', async () => {
     const { history } = renderApp();
+
+    await waitFor(() => expect(screen.getByText(new RegExp('AAA s.r.l', 'i'))).toBeInTheDocument());
+    const detailBtn = screen.getByTestId('open-012345678910');
+
+    await waitFor(() => fireEvent.click(detailBtn));
+    await waitFor(() => expect(history.location.pathname).toBe('/ui/operation-table/012345678910'));
   });
 });

@@ -6,33 +6,33 @@ import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon } from '@mui/icons-material';
-import { useEffect } from 'react';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
-// import { useAppSelector } from '../../../redux/hooks';
-// import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { OperationTableFormAction, OperationTableOnCreation } from '../../../model/OperationTable';
-import AddEditIbanFormSectionTitle from '../../iban/addEditIban/components/AddEditIbanFormSectionTitle';
+import { LOADING_TASK_CREATE_OPERATION_TABLE } from '../../../utils/constants';
+import { OperationTableOnCreation } from '../../../model/OperationTable';
+import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource';
+import { createOperationTable, updateOperationTable } from '../../../services/operationTable';
+import { Party } from '../../../model/Party';
+import FormSectionTitle from '../../../components/Form/FormSectionTitle';
+import { TavoloOpDto } from '../../../api/generated/portal/TavoloOpDto';
 
 type Props = {
+  selectedParty: Party;
   goBack: () => void;
-  operationTableDetail?: OperationTableOnCreation;
+  operationTableDetail?: TavoloOpResource;
 };
 
-const AddEditOperationTableForm = ({ goBack, operationTableDetail }: Props) => {
+const AddEditOperationTableForm = ({ selectedParty, goBack, operationTableDetail }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
-  const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
-  // const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  // const ecCode = selectedParty ? selectedParty.fiscalCode : '';
-  const isUpdate = true; // TODO: fix getting previous operationTable
+  const setLoading = useLoading(LOADING_TASK_CREATE_OPERATION_TABLE);
+  const isUpdate = !!operationTableDetail;
 
-  const initialFormData = (operationTableDetail?: OperationTableOnCreation) =>
+  const initialFormData = (operationTableDetail?: TavoloOpResource) =>
     operationTableDetail
       ? {
           email: operationTableDetail.email,
-          phone: operationTableDetail.phone,
+          phone: operationTableDetail.telephone,
         }
       : {
           email: '',
@@ -75,22 +75,24 @@ const AddEditOperationTableForm = ({ goBack, operationTableDetail }: Props) => {
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async (values: OperationTableOnCreation) => {
+    const payload: TavoloOpDto = {
+      email: values.email,
+      name: selectedParty.description,
+      referent: operationTableDetail?.referent ?? '',
+      taxCode: selectedParty.fiscalCode,
+      telephone: values.phone,
+    };
     setLoading(true);
     try {
-      if (isUpdate) {
-        console.log('update OPTABLE');
-        // TODO: connect to real service
-      } else {
-        console.log('create OPTABLE');
-        // TODO: connect to real service
-      }
+      await (isUpdate ? updateOperationTable(payload) : createOperationTable(payload));
+
       history.push(ROUTES.HOME);
     } catch (reason: any) {
       addError({
-        id: 'CREATE_UPDATE_IBAN',
+        id: 'CREATE_UPDATE_OPERATIONTABLE',
         blocking: false,
         error: reason as Error,
-        techDescription: `An error occurred while adding/editing iban`,
+        techDescription: `An error occurred while adding/editing Operation Table`,
         toNotify: true,
         displayableTitle: t('addEditOperationTableForm.errors.createOperationTableTitle'),
         displayableDescription: t('addEditOperationTableForm.errors.createOperationTableDesc'),
@@ -124,7 +126,7 @@ const AddEditOperationTableForm = ({ goBack, operationTableDetail }: Props) => {
     <form onSubmit={formik.handleSubmit} data-testid="operationTable-form">
       <Box>
         <Box sx={inputGroupStyle}>
-          <AddEditIbanFormSectionTitle
+          <FormSectionTitle
             title={t('addEditOperationTableForm.form.sections.main')}
             icon={<BadgeIcon />}
             isRequired

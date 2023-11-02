@@ -9,9 +9,16 @@ import { createMemoryHistory } from 'history';
 import OperationTableDetailPage from '../OperationTableDetailPage';
 import ROUTES from '../../../../routes';
 
+let getOperationTableDetailsMocked;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  getOperationTableDetailsMocked = jest.spyOn(
+    require('../../../../services/operationTable'),
+    'getOperationTableDetails'
+  );
 });
 
 const renderApp = (
@@ -33,10 +40,12 @@ const renderApp = (
 };
 
 describe('OperationTableDetailPage', () => {
-  it('Test render OperationTableDetailPage', async () => {
+  test('Test render OperationTableDetailPage', async () => {
     const { history } = renderApp();
-    /* const backBtn = screen.getByText('general.exit');
-    await waitFor(() => fireEvent.click(backBtn));
-    await waitFor(() => expect(history.location.pathname).toBe(ROUTES.HOME)); */
+  });
+
+  test('Test render OperationTableDetailPage error', async () => {
+    getOperationTableDetailsMocked.mockRejectedValueOnce(new Error('Fetch error'));
+    const { history } = renderApp();
   });
 });

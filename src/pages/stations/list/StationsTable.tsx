@@ -1,15 +1,16 @@
-import {theme} from '@pagopa/mui-italia';
-import {Box, Pagination, styled, Typography} from '@mui/material';
-import {DataGrid, GridColDef, GridSortModel} from '@mui/x-data-grid';
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Trans, useTranslation} from 'react-i18next';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {WrapperStationsResource} from '../../../api/generated/portal/WrapperStationsResource';
-import {getStationsMerged} from '../../../services/stationService';
-import {LOADING_TASK_RETRIEVE_STATIONS} from '../../../utils/constants';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {buildColumnDefs} from './StationsTableColumns';
+import { theme } from '@pagopa/mui-italia';
+import { Box, Pagination, styled, Typography } from '@mui/material';
+import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { WrapperStationsResource } from '../../../api/generated/portal/WrapperStationsResource';
+import { getStationsMerged } from '../../../services/stationService';
+import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { buildColumnDefs } from './StationsTableColumns';
 import StationTableEmpty from './StationTableEmpty';
 
 const rowHeight = 64;
@@ -19,64 +20,6 @@ const emptyStationsResource: WrapperStationsResource = {
   stationsList: [],
   pageInfo: {},
 };
-
-const CustomDataGrid = styled(DataGrid)({
-  border: 'none !important',
-  '& .MuiDataGrid-main': {
-    background: `${theme.palette.background.default}`,
-    padding: '0 24px 24px 24px',
-    marginTop: '24px',
-  },
-  '& .MuiDataGrid-main > div::first-of-type': {
-    zIndex: 1,
-  },
-  '&.MuiDataGrid-root .MuiDataGrid-columnHeader:focus-within, &.MuiDataGrid-root .MuiDataGrid-cell:focus-within':
-    { outline: 'none' },
-  '&.MuiDataGrid-root .MuiDataGrid-cell': {
-    whiteSpace: 'normal !important',
-    wordWrap: 'break-word !important',
-    lineHeight: '25px !important',
-  },
-  '&.MuiDataGrid-columnHeaders': { borderBottom: 'none !important', padding: '24px' },
-  '.justifyContentBold': {
-    fontSize: '16px',
-    fontWeight: '600',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.MuiDataGrid-columnSeparator': { display: 'none' },
-  '.MuiDataGrid-cell ': { padding: '0px', borderBottom: 'none' },
-  '.MuiDataGrid-columnHeaders': { borderBottom: 'none' },
-  '.MuiDataGrid-row': {
-    backgroundColor: 'white',
-    '&.Mui-selected': {
-      backgroundColor: 'transparent',
-      '&:hover': { backgroundColor: 'transparent' },
-    },
-    '&:hover': {
-      backgroundColor: 'rgba(23, 50, 77, 0.04)',
-    },
-  },
-  '.justifyContentNormal': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-    },
-  },
-  '.justifyContentNormalRight': {
-    fontSize: '16px',
-    fontWeight: 'normal',
-    '&>div': {
-      display: 'flex !important',
-      alignItems: 'center',
-      justifyContent: 'right',
-    },
-  },
-});
 
 export default function StationsTable({ stationCode }: { stationCode: string }) {
   const { t } = useTranslation();

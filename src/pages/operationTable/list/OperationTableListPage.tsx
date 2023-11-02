@@ -1,62 +1,126 @@
-import { Breadcrumbs, Divider, Box, Grid, Paper, Stack, Typography, Chip } from '@mui/material';
+import { Box, Breadcrumbs, Grid, Paper, Stack, Typography } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useHistory, useParams } from 'react-router';
-import { Trans, useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { ArrowBack } from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { LOADING_TASK_OPERATION_TABLE_LIST } from '../../../utils/constants';
+import { getOperationTableList } from '../../../services/operationTable';
+import SideMenu from '../../../components/SideMenu/SideMenu';
+import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
+import OperationTableList from './OperationTableList';
+
+const emptyOperationTableList: TavoloOpResourceList = {
+  tavoloOpResourceList: [],
+};
 
 const OperationTableListPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const addError = useErrorDispatcher();
+
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const setLoadingOverlay = useLoading(LOADING_TASK_OPERATION_TABLE_LIST);
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+    setLoadingOverlay(status);
+  };
+  const [operationTableList, setOperationTableList] = useState(emptyOperationTableList);
   const goBack = () => history.push(ROUTES.HOME);
-  const { ibanId } = useParams<{ ibanId: string }>();
-  /* 
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+  useEffect(() => {
+    setLoadingStatus(true);
+    getOperationTableList()
+      .then((r) => (r ? setOperationTableList(r) : setOperationTableList(emptyOperationTableList)))
+      .catch((reason) => {
+        handleErrors([
+          {
+            id: `FETCH_STATIONS_ERROR`,
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while fetching stations`,
+            toNotify: false,
+          },
+        ]);
+        setError(true);
+        addError({
+          id: 'GET_OPERATION_TABLE_LIST',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while retrieving Operation Table list`,
+          toNotify: true,
+          displayableTitle: t('operationTableListPage.errors.getOperationTableListTitle'),
+          displayableDescription: t('operationTableListPage.errors.getOperationTableListDesc'),
+          component: 'Toast',
+        });
+        setOperationTableList(emptyOperationTableList);
+      })
+      .finally(() => setLoadingStatus(false));
+  }, []);
 
   return (
-    <Grid container justifyContent={'center'}>
-      <Grid item p={3} xs={8}>
-        <Stack direction="row">
+    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
+      <Grid item xs={2}>
+        <Box>
+          <SideMenu />
+        </Box>
+      </Grid>
+      <Grid
+        container
+        item
+        xs={10}
+        display="flex"
+        flexDirection="column"
+        justifyContent="flex-start"
+        sx={{ backgroundColor: '#F5F5F5' }}
+        pb={8}
+        pt={4}
+        px={3}
+      >
+        <Stack direction="row" mb={3}>
           <ButtonNaked
             size="small"
             component="button"
             onClick={goBack}
             startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px' }}
+            sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
             weight="default"
           >
-            {t('general.exit')}
+            {t('general.back')}
           </ButtonNaked>
           <Breadcrumbs>
-            <Typography>{t('general.operationTable')}</Typography>
+            <Typography fontWeight={'fontWeightMedium'}>{t('general.operationTable')}</Typography>
           </Breadcrumbs>
         </Stack>
-        <Grid container mt={3}>
-          <Grid item xs={6}>
-            <TitleBox title={ibanId} mbTitle={2} variantTitle="h4" variantSubTitle="body1" />
-            <Typography mb={5}>sottotitolo</Typography>
-          </Grid>
-          <Grid item xs={6}></Grid>
-        </Grid>
 
-        <Paper
-          elevation={8}
-          sx={{
-            borderRadius: 4,
-            p: 4,
-            mb: 3,
-          }}
-        ></Paper>
+        <Stack direction="row" justifyContent={'space-between'}>
+          <Box>
+            <TitleBox
+              title={t('operationTableListPage.title')}
+              subTitle={t('operationTableListPage.subtitle')}
+              mbTitle={2}
+              mbSubTitle={3}
+              variantTitle="h4"
+              variantSubTitle="body1"
+            />
+          </Box>
+        </Stack>
+        <Box display="flex" width="100%" mt={0}>
+          <Box pt={0} display="flex" width="100%">
+            <OperationTableList
+              operationTableList={operationTableList}
+              error={error}
+              loading={loading}
+            />
+          </Box>
+        </Box>
       </Grid>
     </Grid>
   );
-  */
-  return <>{'OperationTableListPage'}</>;
 };
 
 export default OperationTableListPage;

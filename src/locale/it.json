@@ -891,7 +891,50 @@
     },
     "errors": {
       "createOperationTableTitle": "Errore",
-      "createOperationTableDesc": "Errore durante l'inserimento dei dati"
+      "createOperationTableDesc": "Errore durante l'inserimento dei dati",
+      "getOperationTableTitle": "Errore",
+      "getOperationTableDesc": "Errore durante il recupero dei dati"
+    }
+  },
+  "operationTableDetailPage": {
+    "title": "Tavolo Operativo",
+    "subtitle": "Dettagli del Tavolo Operativo {{ target }}",
+    "registry": "Anagrafica",
+    "name": "Ragione Sociale",
+    "taxCode": "Codice Fiscale",
+    "mail": "Email",
+    "phone": "Telefono",
+    "edit": "Modifiche",
+    "createData": "Data Inserimento",
+    "editData": "Data Modifica",
+
+    "errors": {
+      "getOperationTableTitle": "Errore",
+      "getOperationTableDesc": "Errore durante il recupero dei dati"
+    }
+  },
+  "operationTableListPage": {
+    "title": "Tavoli Operativi",
+    "subtitle": "Cerca e visualizza i tavoli operativi presenti.",
+
+    "search": {
+      "placeholder": "Cerca tavolo operativo"
+    },
+    "column": {
+      "companyName": "Ragione Sociale",
+      "taxCode": "Codice Fiscale",
+      "email": "Email",
+      "phone": "Telefono"
+    },
+    "list": {
+      "search": "Cerca",
+      "noResults": "Nessun risultato",
+      "loading": "Caricamento..."
+    },
+
+    "errors": {
+      "getOperationTableListTitle": "Errore",
+      "getOperationTableListDesc": "Errore durante il recupero dei dati"
     }
   },
   "sideMenu": {

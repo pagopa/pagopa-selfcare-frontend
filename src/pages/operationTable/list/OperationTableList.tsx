@@ -1,30 +1,35 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Typography } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
-import { IbansResource } from '../../../api/generated/portal/IbansResource';
 import ROUTES from '../../../routes';
+import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
-import { buildColumnDefs } from './IbanTableColumns';
+import { buildColumnDefs } from './OperationTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
-import IbanTableEmpty from './IbanTableEmpty';
+import OperationTableEmpty from './OperationTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-type IbanTableProps = { ibanList: IbansResource; error: boolean; loading: boolean };
+type OperationTableListProps = {
+  operationTableList: TavoloOpResourceList;
+  error: boolean;
+  loading: boolean;
+};
 
-const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
+const OperationTableList = ({ operationTableList, error, loading }: OperationTableListProps) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const [_selectedIban, setSelectedIban] = useState<string>('');
+  const [_selectedOperationTable, setSelectedOperationTable] = useState<string>('');
 
-  const onRowClick = (ibanRow: string) => {
-    setSelectedIban(ibanRow);
-    history.push(generatePath(ROUTES.IBAN_DETAIL, { ibanId: ibanRow }));
+  const onRowClick = (operationTableRow: string) => {
+    setSelectedOperationTable(operationTableRow);
+    history.push(
+      generatePath(ROUTES.OPERATION_TABLE_DETAILS, { operationTableId: operationTableRow })
+    );
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
 
@@ -41,8 +46,8 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && ibanList.ibanList.length === 0 ? (
-          <IbanTableEmpty />
+        ) : !error && !loading && operationTableList.tavoloOpResourceList.length === 0 ? (
+          <OperationTableEmpty />
         ) : (
           <>
             <CustomDataGrid
@@ -66,9 +71,9 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
                     <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
                       <Typography variant="body2">
                         {loading ? (
-                          <Trans i18nKey="ibanPage.list.loading">Loading...</Trans>
+                          <Trans i18nKey="operationTableListPage.list.loading">Loading...</Trans>
                         ) : (
-                          <Trans i18nKey="ibanPage.list.noResults">No results</Trans>
+                          <Trans i18nKey="operationTableListPage.list.noResults">No results</Trans>
                         )}
                       </Typography>
                     </Box>
@@ -79,9 +84,11 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
                     <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
                       <Typography variant="body2">
                         {loading ? (
-                          <Trans i18nKey="ibanPage.list.loading">Loading...</Trans>
+                          <Trans i18nKey="operationTableListPage.list.loading">Loading...</Trans>
                         ) : (
-                          <Trans i18nKey="ibanPage.list.noResults">No search results</Trans>
+                          <Trans i18nKey="operationTableListPage.list.noResults">
+                            No search results
+                          </Trans>
                         )}
                       </Typography>
                     </Box>
@@ -93,7 +100,7 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
                   quickFilterProps: { debounceMs: 100 },
                 },
               }}
-              getRowId={(r) => r.iban}
+              getRowId={(r) => r.taxCode}
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="server"
@@ -101,8 +108,8 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
               pageSize={3}
               pagination
               rowHeight={rowHeight}
-              rows={ibanList.ibanList ?? []}
-              rowCount={ibanList.ibanList.length}
+              rows={operationTableList.tavoloOpResourceList ?? []}
+              rowCount={operationTableList.tavoloOpResourceList.length}
               sortingMode="server"
             />
           </>
@@ -112,4 +119,4 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
   );
 };
 
-export default IbanTable;
+export default OperationTableList;

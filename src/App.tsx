@@ -158,7 +158,9 @@ const SecuredRoutes = withLogin(
           </Route>
 
           <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
-            <OperationTableListPage />
+            <ProtectedRoute permission="operation-table-list">
+              <OperationTableListPage />
+            </ProtectedRoute>
           </Route>
 
           <Route path={routes.TOS} exact={true}>

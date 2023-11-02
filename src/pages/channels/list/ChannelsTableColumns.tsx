@@ -7,6 +7,7 @@ import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { StatusChip } from '../../../components/StatusChip';
+import { StatusEnum } from '../../../api/generated/portal/ChannelDetailsDto';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -119,7 +120,7 @@ export function buildColumnDefs(
           />
         );
 
-        if (params.row.enabled) {
+        if (params.row.wrapperStatus === StatusEnum.APPROVED) {
           return [manageChannelAction, manageChannelPSPAction, duplicateChannelAction];
         } else {
           return [manageChannelAction, editChannelAction];

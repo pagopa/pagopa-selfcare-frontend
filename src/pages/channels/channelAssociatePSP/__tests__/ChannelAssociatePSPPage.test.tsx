@@ -12,7 +12,7 @@ import {
   mockedDelegatedPSP,
   mockedChannelDetail,
 } from '../../../../services/__mocks__/channelService';
-import { pspAdminUnsigned, pspOperatorSigned } from '../../../../services/__mocks__/partyService';
+import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import ROUTES from '../../../../routes';
 
 const mockHistoryPush = jest.fn();
@@ -42,7 +42,7 @@ const renderApp = (
   render(
     <Provider store={store}>
       <MemoryRouter initialEntries={[`channels/${channelId}/associate-psp`]}>
-        <Route histroy={history} path={'channels/:channelId/associate-psp'}>
+        <Route path={'channels/:channelId/associate-psp'}>
           <ThemeProvider theme={theme}>
             <ChannelAssociatePSPPage />
           </ThemeProvider>
@@ -60,7 +60,7 @@ describe('<ChannelAssociatePSPPage />', () => {
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
-        payload: pspOperatorSigned,
+        payload: pspAdminSignedDirect,
       })
     );
     const confirm = screen.getByTestId('confirm-btn-test');
@@ -73,9 +73,9 @@ describe('<ChannelAssociatePSPPage />', () => {
 
     const searchInput = screen.getByTestId('psp-selection-search');
 
-    await userEvent.type(searchInput, 'PSP S.p.A{enter}');
+    await waitFor(() => userEvent.type(searchInput, 'PSP1{enter}'));
 
-    const selection = screen.getByTestId('PartyItemContainer: PSP S.p.A.');
+    const selection = screen.getByTestId('PartyItemContainer: PSP1');
     const selectionBtn = selection.querySelector('[role="button"]') as HTMLElement;
     await waitFor(() => fireEvent.click(selectionBtn));
 

@@ -1,12 +1,13 @@
-import {Box, Chip, Grid, Typography} from '@mui/material';
-import {GridColDef, GridColumnHeaderParams, GridRenderCellParams} from '@mui/x-data-grid';
+import { Box, Chip, Grid, Typography } from '@mui/material';
+import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
-import {TFunction} from 'react-i18next';
-import React, {CSSProperties, ReactNode} from 'react';
-import {generatePath} from 'react-router-dom';
+import { TFunction } from 'react-i18next';
+import React, { CSSProperties, ReactNode } from 'react';
+import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
-import {FormAction} from '../../../model/Station';
+import { FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
+import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -135,7 +136,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           />
         );
 
-        if (params.row.enabled) {
+        if (params.row.wrapperStatus === StatusEnum.APPROVED) {
           return [manageStationAction, manageStationECAction, duplicateStationAction];
         } else {
           return [manageStationAction, editStationAction];

@@ -52,6 +52,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
       const pspDetails =
         pspList &&
         pspList.payment_service_providers &&
+        pspList.payment_service_providers[0] &&
         pspList.payment_service_providers[0].psp_code
           ? await getPSPDetails(pspList.payment_service_providers[0].psp_code)
           : {};

@@ -115,7 +115,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {`${channelDetWrap.target_host}${channelDetWrap.target_port}${channelDetWrap.target_path}`}
+                    {`${channelDetWrap.target_host}:${channelDetWrap.target_port}${channelDetWrap.target_path}`}
                   </Typography>
                 </Grid>
 

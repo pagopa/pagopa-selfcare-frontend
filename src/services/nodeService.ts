@@ -92,7 +92,7 @@ export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDet
 export const getPSPDetails = (pspCode: string): Promise<PaymentServiceProviderDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getPSPBrokerDetailsMocked(pspCode);
+    return getPSPDetailsMoked(pspCode);
   } else {
     return PortalApi.getPSPDetails(pspCode).then((resources) => resources);
   }

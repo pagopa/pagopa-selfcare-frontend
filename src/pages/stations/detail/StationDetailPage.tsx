@@ -2,7 +2,8 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getStationDetail } from '../../../services/stationService';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import { getECListByStationCode, getStationDetail } from '../../../services/stationService';
 import { LOADING_TASK_STATION_DETAILS_WRAPPER } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -16,6 +17,7 @@ const StationDetailPage = () => {
   const { t } = useTranslation();
   const { stationId } = useParams<{ stationId: string }>();
   const [stationDetail, setStationDetail] = useState<StationDetailResource>();
+  const [ecAssociatedNumber, setECAssociatedNumber] = useState<number>(0);
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoadingWrap = useLoading(LOADING_TASK_STATION_DETAILS_WRAPPER);
@@ -26,9 +28,10 @@ const StationDetailPage = () => {
 
   useEffect(() => {
     setLoadingWrap(true);
-    getStationDetail(stationId)
-      .then((response) => {
-        setStationDetail(response);
+    Promise.all([getStationDetail(stationId), getECListByStationCode(stationId, 0)])
+      .then(([stationDetail, ecList]) => {
+        setStationDetail(stationDetail);
+        setECAssociatedNumber(ecList?.page_info?.items_found ?? 0);
       })
       .catch((reason) => {
         addError({
@@ -48,7 +51,11 @@ const StationDetailPage = () => {
   return operator ? (
     <StationDetailsValidation stationDetail={stationDetail} />
   ) : (
-    <StationDetails stationDetail={stationDetail} goBack={goBack} />
+    <StationDetails
+      stationDetail={stationDetail}
+      goBack={goBack}
+      ecAssociatedNumber={ecAssociatedNumber}
+    />
   );
 };
 

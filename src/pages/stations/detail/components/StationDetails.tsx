@@ -18,10 +18,11 @@ import DetailButtonsStation from './DetailButtonsStation';
 type Prop = {
   stationDetail?: StationDetailResource;
   goBack: () => void;
+  ecAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const StationDetails = ({ stationDetail, goBack }: Prop) => {
+const StationDetails = ({ stationDetail, goBack, ecAssociatedNumber }: Prop) => {
   const { t } = useTranslation();
   const { stationId } = useParams<{ stationId: string }>();
 
@@ -167,7 +168,7 @@ const StationDetails = ({ stationDetail, goBack }: Prop) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.associatedCreditorInstitutions}
+                    {ecAssociatedNumber}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>

@@ -23,15 +23,15 @@ type Props = {
   channelDetail: ChannelDetailsResource;
   channelId: string;
   goBack: () => void;
+  PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
+const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber }: Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
-
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
       return password;
@@ -186,8 +186,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {/* TODO: TODO: get from channelDetail when will be available */}
-                    {0}
+                    {PSPAssociatedNumber}
                   </Typography>
                 </Grid>
                 {/* TODO: get from channelDetail when will be available */}

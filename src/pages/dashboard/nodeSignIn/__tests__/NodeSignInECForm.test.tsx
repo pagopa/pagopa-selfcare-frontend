@@ -30,7 +30,7 @@ const renderApp = (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router history={history}>
-          <NodeSignInECForm goBack={jest.fn()} signInData={signInData} />
+          <NodeSignInECForm goBack={jest.fn()} signInData={signInData} handleChangeIntermediaryAvailable={jest.fn()} intermediaryAvailableValue={false} setIntermediaryAvailableValue={jest.fn()} />
         </Router>
       </ThemeProvider>
     </Provider>

@@ -4,15 +4,18 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
+import { ChangeEvent, useState } from 'react';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import { PTResource } from '../../../model/Node';
+import ConfirmModal from '../../components/ConfirmModal';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInECForm from './NodeSignInECForm';
 import NodeSignInPTForm from './NodeSignInPTForm';
+
 
 const NodeSignInPage = () => {
   const { t } = useTranslation();
@@ -20,6 +23,16 @@ const NodeSignInPage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const goBack = () => history.push(ROUTES.HOME);
   const signInData = useAppSelector(partiesSelectors.selectSigninData);
+  const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleChangeIntermediaryAvailable = (event: ChangeEvent<HTMLInputElement> | undefined) => {
+    if (event?.target.value === "true") {
+      setShowConfirmModal(true);
+    } else {
+      setIntermediaryAvailableValue(!intermediaryAvailableValue);
+    }
+  };
 
   return (
     <Grid container justifyContent={'center'}>
@@ -57,13 +70,33 @@ const NodeSignInPage = () => {
           <NodeSignInPSPForm
             goBack={goBack}
             signInData={signInData as BrokerOrPspDetailsResource}
+            handleChangeIntermediaryAvailable={handleChangeIntermediaryAvailable}
+            intermediaryAvailableValue={intermediaryAvailableValue}
+            setIntermediaryAvailableValue={setIntermediaryAvailableValue}
           />
         ) : !selectedParty?.pspData && selectedParty?.institutionType === 'PT' ? (
           <NodeSignInPTForm goBack={goBack} signInData={signInData as PTResource} />
         ) : (
-          <NodeSignInECForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource} />
+          <NodeSignInECForm 
+            goBack={goBack} 
+            signInData={signInData as BrokerAndEcDetailsResource} 
+            handleChangeIntermediaryAvailable={handleChangeIntermediaryAvailable} 
+            intermediaryAvailableValue={intermediaryAvailableValue} 
+            setIntermediaryAvailableValue={setIntermediaryAvailableValue} />
         )}
       </Grid>
+      <ConfirmModal
+        title={t('nodeSignInPage.confirmIntermediaryModal.title')}
+        message={ t(`nodeSignInPage.confirmIntermediaryModal.${selectedParty?.institutionType === 'PSP' ? "messagePSP" : "messageEC"}`)}
+        openConfirmModal={showConfirmModal}
+        onConfirmLabel={t('nodeSignInPage.confirmIntermediaryModal.confirmLabel')}
+        onCloseLabel={t('nodeSignInPage.confirmIntermediaryModal.closeLabel')}
+        handleCloseConfirmModal={() => setShowConfirmModal(false)}
+        handleConfrimSubmit={async () => {
+          setIntermediaryAvailableValue(!intermediaryAvailableValue);          
+          setShowConfirmModal(false);
+        }}
+      />
     </Grid>
   );
 };

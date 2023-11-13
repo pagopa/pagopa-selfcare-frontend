@@ -12,3 +12,6 @@
 
 ## To build a configured workspace execute the following command
 - yarn build
+
+## To execute a coverage check based on unit test execute the following command
+- yarn test:coverage

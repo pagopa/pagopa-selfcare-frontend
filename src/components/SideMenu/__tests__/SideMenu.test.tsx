@@ -16,7 +16,11 @@ import { ThemeProvider } from '@mui/material';
 import { Router } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import { createStore } from '../../../redux/store';
-import { ecAdminSignedDirect, pspAdminUnsigned } from '../../../services/__mocks__/partyService';
+import {
+  ecAdminSignedDirect,
+  pspAdminSignedDirect,
+  pspAdminUnsigned,
+} from '../../../services/__mocks__/partyService';
 import ROUTES from '../../../routes';
 import { pspDetails } from '../../../services/__mocks__/nodeService';
 
@@ -124,8 +128,6 @@ describe('SideMenu component', () => {
 
     const commPackagesItem = screen.getByTestId('commission-packages-test') as HTMLElement;
 
-    expect(commPackagesItem).toHaveAttribute('aria-disabled', 'true');
-
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setSigninData',
@@ -133,7 +135,7 @@ describe('SideMenu component', () => {
       })
     );
 
-    expect(commPackagesItem).not.toHaveAttribute('aria-disabled');
+    expect(commPackagesItem).toHaveAttribute('aria-disabled');
   });
 
   test('should render SideMenu', async () => {

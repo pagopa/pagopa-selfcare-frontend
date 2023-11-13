@@ -98,7 +98,7 @@ export default function PSPSelectionSearch({
               clearField={() => onPSPSelectionChange(undefined)}
             />
           ) : (
-            <CustomBox sx={{ pointerEvents: availablePSP.length !== 1 ? 'auto' : 'none' }}>
+            <CustomBox>
               {filteredParties &&
                 filteredParties.map((PSP) => (
                   <PSPItemContainer

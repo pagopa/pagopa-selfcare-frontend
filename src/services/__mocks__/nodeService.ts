@@ -134,6 +134,16 @@ export const pspListOfABroker: PaymentServiceProvidersResource = {
   ],
 };
 
+export const pspListOfABrokerEmpty: PaymentServiceProvidersResource = {
+  page_info: {
+    items_found: 0,
+    limit: 10,
+    page: 0,
+    total_pages: 1,
+  },
+  payment_service_providers: [],
+};
+
 const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
   if (pspCode.toUpperCase().includes('UNSIGNED')) {
     return brokerOrPspDetailsResource_Empty;
@@ -175,6 +185,14 @@ const mapPSPBrokerDetailsResource = (pspBrokerCode: string) => {
   }
 };
 
+const mapPaymentServiceProviders = (taxcode?: string) => {
+  if (taxcode && taxcode.toUpperCase().includes('UNSIGNED')) {
+    return pspListOfABrokerEmpty;
+  } else {
+    return pspListOfABroker;
+  }
+};
+
 export const createPSPDirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
   new Promise((resolve) => resolve(pspDirect));
 
@@ -207,9 +225,9 @@ export const getPaymentServiceProviders = (
   _name?: string,
   _limit?: number,
   _pspCode?: string,
-  _taxCode?: string
+  taxCode?: string
 ): Promise<PaymentServiceProvidersResource> => {
-  return new Promise((resolve) => resolve(pspListOfABroker));
+  return new Promise((resolve) => resolve(mapPaymentServiceProviders(taxCode)));
 };
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {

@@ -15,10 +15,11 @@ type Props = {
   channelDetWrap?: ChannelDetailsResource;
   channelId: string;
   goBack: () => void;
+  PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
+const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack, PSPAssociatedNumber }: Props) => {
   const { t } = useTranslation();
 
   return channelDetWrap ? (
@@ -160,7 +161,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack }: Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    0
+                    {PSPAssociatedNumber}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sx={{ mt: 2 }}>

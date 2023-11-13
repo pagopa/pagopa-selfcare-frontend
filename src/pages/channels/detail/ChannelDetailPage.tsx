@@ -3,8 +3,9 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import ROUTES from '../../../routes';
-import { getChannelDetail } from '../../../services/channelService';
+import { getChannelDetail, getChannelPSPs } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -18,6 +19,7 @@ const ChannelDetailPage = () => {
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_CHANNEL_DETAIL);
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>({});
+  const [PSPAssociatedNumber, setPSPAssociatedNumber] = useState<number>(0);
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -26,8 +28,11 @@ const ChannelDetailPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    getChannelDetail(channelId)
-      .then((channelDetailResponse) => setChannelDetail(channelDetailResponse))
+    Promise.all([getChannelDetail(channelId), getChannelPSPs(channelId, 0)])
+      .then(([channelDetailResponse, channelPSPList]) => {
+        setChannelDetail(channelDetailResponse);
+        setPSPAssociatedNumber(channelPSPList?.page_info?.items_found ?? 0);
+      })
       .catch((reason) => {
         addError({
           id: 'GET_CHANNEL_DETAILS',
@@ -44,9 +49,19 @@ const ChannelDetailPage = () => {
   }, [selectedParty]);
 
   return operator ? (
-    <ChannelDetails channelDetail={channelDetail} channelId={channelId} goBack={goBack} />
+    <ChannelDetails
+      channelDetail={channelDetail}
+      channelId={channelId}
+      goBack={goBack}
+      PSPAssociatedNumber={PSPAssociatedNumber}
+    />
   ) : (
-    <ChannelDetailsWrap channelDetWrap={channelDetail} channelId={channelId} goBack={goBack} />
+    <ChannelDetailsWrap
+      channelDetWrap={channelDetail}
+      channelId={channelId}
+      goBack={goBack}
+      PSPAssociatedNumber={PSPAssociatedNumber}
+    />
   );
 };
 

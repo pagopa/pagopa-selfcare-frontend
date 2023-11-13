@@ -126,20 +126,18 @@ const ECRegistrationData = () => {
       </Grid>
 
       <Grid item xs={8}>
-        {signinData?.creditorInstitutionDetailsResource?.enabled ? (
-          <ButtonNaked
-            size="medium"
-            component="button"
-            disabled={!hasPermission('node-signin')}
-            onClick={() => history.push(ROUTES.NODE_SIGNIN)}
-            endIcon={<EditIcon />}
-            sx={{ color: 'primary.main', mr: '20px' }}
-            weight="default"
-            data-testid="modify-data-test"
-          >
-            {t('dashboardPage.registrationData.modifyData')}
-          </ButtonNaked>
-        ) : null}
+        <ButtonNaked
+          size="medium"
+          component="button"
+          disabled={!hasPermission('node-signin')}
+          onClick={() => history.push(ROUTES.NODE_SIGNIN)}
+          endIcon={<EditIcon />}
+          sx={{ color: 'primary.main', mr: '20px' }}
+          weight="default"
+          data-testid="modify-data-test"
+        >
+          {t('dashboardPage.registrationData.modifyData')}
+        </ButtonNaked>
       </Grid>
     </>
   );

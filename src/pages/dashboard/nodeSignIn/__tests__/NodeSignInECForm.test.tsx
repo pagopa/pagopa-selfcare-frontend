@@ -25,7 +25,6 @@ const renderApp = (
 ) => {
     const store = injectedStore ? injectedStore : createStore();
     const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
     const {rerender} = render(
         <Provider store={store}>
             <ThemeProvider theme={theme}>
@@ -40,6 +39,21 @@ const renderApp = (
     );
     return {store, history, rerender};
 };
+
+const reRender = (store: any, history: any, rerender: any, signInData: any, value: boolean) => {
+  rerender( 
+    <Provider store={store}>
+        <ThemeProvider theme={theme}>
+            <Router history={history}>
+                <NodeSignInECForm goBack={jest.fn()} signInData={signInData}
+                                  handleChangeIntermediaryAvailable={jest.fn()}
+                                  intermediaryAvailableValue={value}
+                                  setIntermediaryAvailableValue={jest.fn()}/>
+            </Router>
+        </ThemeProvider>
+    </Provider>
+  );
+}
 
 const setupForm = () => {
     const address = screen.getByTestId('address-test') as HTMLInputElement;
@@ -154,16 +168,7 @@ describe('NodeSignInECForm', () => {
 
         fireEvent.click(intermediaryTrue);
 
-        rerender( <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <NodeSignInECForm goBack={jest.fn()} signInData={{}}
-                                      handleChangeIntermediaryAvailable={jest.fn()}
-                                      intermediaryAvailableValue={true}
-                                      setIntermediaryAvailableValue={jest.fn()}/>
-                </Router>
-            </ThemeProvider>
-        </Provider>);
+        reRender(store, history, rerender, {}, true);
 
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
@@ -211,16 +216,7 @@ describe('NodeSignInECForm', () => {
 
         fireEvent.click(intermediaryTrue);
 
-        rerender( <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <NodeSignInECForm goBack={jest.fn()} signInData={brokerAndEcDetailsResource_ECOnly}
-                                      handleChangeIntermediaryAvailable={jest.fn()}
-                                      intermediaryAvailableValue={true}
-                                      setIntermediaryAvailableValue={jest.fn()}/>
-                </Router>
-            </ThemeProvider>
-        </Provider>);
+        reRender(store, history, rerender, brokerAndEcDetailsResource_ECOnly, true);
 
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
@@ -309,16 +305,7 @@ describe('NodeSignInECForm', () => {
 
         expect(intermediaryTrue.checked).toBe(false);
         fireEvent.click(intermediaryTrue);
-        rerender( <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <NodeSignInECForm goBack={jest.fn()} signInData={brokerAndEcDetailsResource_ECOnly}
-                                      handleChangeIntermediaryAvailable={jest.fn()}
-                                      intermediaryAvailableValue={true}
-                                      setIntermediaryAvailableValue={jest.fn()}/>
-                </Router>
-            </ThemeProvider>
-        </Provider>);
+        reRender(store, history, rerender, brokerAndEcDetailsResource_ECOnly, true);
         expect(intermediaryTrue.checked).toBe(true);
 
         const confirmBtn = await screen.findByTestId('continue-button-test');

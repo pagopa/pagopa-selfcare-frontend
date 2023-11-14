@@ -40,6 +40,39 @@ const renderApp = (
   return { store, history };
 };
 
+test('Test rendering modal', async () => {
+  const { store } = renderApp();
+  await waitFor(() => {
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspAdminSignedDirect,
+    });
+
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: pspDetails,
+    });
+  });
+
+  // testing confirm button
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
+  fireEvent.click(intermediaryTrue);
+  expect(screen.getByTestId('fade-test')).toBeVisible();
+  fireEvent.click(screen.getByTestId('confirm-button-modal-test'));
+  expect(screen.getByTestId('fade-test')).not.toBeVisible();
+
+  // testing cancel button
+  const intermediaryFalse = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=false]') as HTMLInputElement;
+  fireEvent.click(intermediaryFalse);
+  fireEvent.click(intermediaryTrue);
+  fireEvent.click(screen.getByTestId('cancel-button-modal-test'));
+  expect(screen.getByTestId('fade-test')).not.toBeVisible();
+});
+
 test('Test rendering with psp', async () => {
   const { store } = renderApp();
   await waitFor(() => {
@@ -54,6 +87,14 @@ test('Test rendering with psp', async () => {
     });
   });
   expect(screen.getByText(/Marca da bollo digitale/i)).toBeVisible();
+
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
+  fireEvent.click(intermediaryTrue);
+  expect(screen.getByTestId('fade-test')).toBeVisible();
+  fireEvent.click(screen.getByTestId('confirm-button-modal-test'));
+  expect(screen.getByTestId('fade-test')).not.toBeVisible();
 });
 
 test('Test rendering with ec', async () => {
@@ -65,6 +106,12 @@ test('Test rendering with ec', async () => {
     })
   );
   expect(screen.getAllByText(/Domicilio Fiscale/i).length).toBeGreaterThan(0);
+
+  const intermediaryTrue = screen
+    .getByTestId('intermediary-available-test')
+    .querySelector('[value=true]') as HTMLInputElement;
+  fireEvent.click(intermediaryTrue);
+  expect(screen.getByTestId('fade-test')).toBeVisible();
 });
 
 test('Test rendering with pt', async () => {

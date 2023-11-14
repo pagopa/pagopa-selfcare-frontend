@@ -22,29 +22,18 @@ const renderApp = (
     signInData: BrokerAndEcDetailsResource,
     injectedStore?: ReturnType<typeof createStore>,
     injectedHistory?: ReturnType<typeof createMemoryHistory>,
-    intermediaryAvailable?: boolean,
-    setIntermediaryAvailable?: any,
-    handleChangeIntermediaryAvailable?: any
 ) => {
     const store = injectedStore ? injectedStore : createStore();
     const history = injectedHistory ? injectedHistory : createMemoryHistory();
-    intermediaryAvailable = false;
-    setIntermediaryAvailable = (value: boolean) => {
-        intermediaryAvailable = value
-    }
-    handleChangeIntermediaryAvailable = (event: ChangeEvent<HTMLInputElement> | undefined) => {
-        // @ts-ignore
-        setIntermediaryAvailable(!intermediaryAvailable);
-    }
 
     const {rerender} = render(
         <Provider store={store}>
             <ThemeProvider theme={theme}>
                 <Router history={history}>
                     <NodeSignInECForm goBack={jest.fn()} signInData={signInData}
-                                      handleChangeIntermediaryAvailable={handleChangeIntermediaryAvailable}
-                                      intermediaryAvailableValue={intermediaryAvailable}
-                                      setIntermediaryAvailableValue={setIntermediaryAvailable}/>
+                                      handleChangeIntermediaryAvailable={jest.fn}
+                                      intermediaryAvailableValue={false}
+                                      setIntermediaryAvailableValue={jest.fn}/>
                 </Router>
             </ThemeProvider>
         </Provider>

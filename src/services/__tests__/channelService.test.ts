@@ -1,7 +1,7 @@
 import { getDelegatedPSPbyBroker } from '../channelService';
 import { mockedDelegatedPSP } from '../__mocks__/channelService';
 
-// jest.mock('../../api/PortalApiClient');
+// jest.mock('../../api/BackofficeClient');
 
 describe('ChannelService test', () => {
   test('Test getDelegatedPSPbyBroker', async () => {

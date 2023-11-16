@@ -10,7 +10,7 @@ import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource
 import { WrapperChannelsResource } from '../api/generated/portal/WrapperChannelsResource';
 import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannelDetailsDto';
 import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { PSP } from '../model/PSP';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
@@ -39,7 +39,7 @@ export const getChannels = (page: number): Promise<ChannelsResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getChannelsMocked(page);
   } else {
-    return PortalApi.getChannels(page).then((resources) => resources);
+    return BackofficeApi.getChannels(page).then((resources) => resources);
   }
 };
 
@@ -54,7 +54,7 @@ export const getChannelsMerged = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getChannelsMergedMocked(page, brokerCode, channelcodefilter, limit, sorting);
   } else {
-    return PortalApi.getChannelsMerged(page, brokerCode, channelcodefilter, limit, sorting).then(
+    return BackofficeApi.getChannelsMerged(page, brokerCode, channelcodefilter, limit, sorting).then(
       (resources) => resources
     );
   }
@@ -65,7 +65,7 @@ export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsRes
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getChannelDetailMocked(channelcode);
   } else {
-    return PortalApi.getChannelDetail(channelcode).then((resources) => resources);
+    return BackofficeApi.getChannelDetail(channelcode).then((resources) => resources);
   }
 };
 
@@ -74,7 +74,7 @@ export const getPSPChannels = (pspCode: string): Promise<PspChannelsResource> =>
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getPSPChannelsMocked(pspCode);
   } else {
-    return PortalApi.getPSPChannels(pspCode).then((resources) => resources);
+    return BackofficeApi.getPSPChannels(pspCode).then((resources) => resources);
   }
 };
 
@@ -82,7 +82,7 @@ export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return mockedGetWfespPlugins();
   } else {
-    return PortalApi.getWfespPlugins().then((resources) => resources);
+    return BackofficeApi.getWfespPlugins().then((resources) => resources);
   }
 };
 
@@ -91,7 +91,7 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createChannelMocked(channel);
   } else {
-    return PortalApi.createChannel(channel).then((resources) => resources);
+    return BackofficeApi.createChannel(channel).then((resources) => resources);
   }
 };
 
@@ -103,7 +103,7 @@ export const updateChannel = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateChannelMocked(code, channel);
   } else {
-    return PortalApi.updateChannel(code, channel).then((resources) => resources);
+    return BackofficeApi.updateChannel(code, channel).then((resources) => resources);
   }
 };
 
@@ -111,7 +111,7 @@ export const getPaymentTypes = (): Promise<PaymentTypesResource> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getPaymentTypesMocked();
   } else {
-    return PortalApi.getPaymentTypes().then((resources) => resources);
+    return BackofficeApi.getPaymentTypes().then((resources) => resources);
   }
 };
 
@@ -120,7 +120,7 @@ export const getChannelCode = (pspCode: string): Promise<ChannelCodeResource> =>
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getChannelCodeMocked(pspCode);
   } else {
-    return PortalApi.getChannelCode(pspCode).then((resources) => resources);
+    return BackofficeApi.getChannelCode(pspCode).then((resources) => resources);
   }
 };
 
@@ -133,7 +133,7 @@ export const getChannelPSPs = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getChannelPSPsMocked(page);
   } else {
-    return PortalApi.getChannelPSPs(channelcode, page, limit).then((resources) => resources);
+    return BackofficeApi.getChannelPSPs(channelcode, page, limit).then((resources) => resources);
   }
 };
 
@@ -142,7 +142,7 @@ export const getDelegatedPSPbyBroker = (brokerId: string): Promise<Array<Delegat
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getDelegatedPSPbyBrokerMocked();
   } else {
-    return PortalApi.getDelegatedPSPbyBroker(brokerId).then((resources) => resources);
+    return BackofficeApi.getDelegatedPSPbyBroker(brokerId).then((resources) => resources);
   }
 };
 
@@ -155,7 +155,7 @@ export const associatePSPtoChannel = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return associatePSPtoChannelMocked(channelcode, pspcode, payment_type);
   } else {
-    return PortalApi.associatePSPtoChannel(channelcode, pspcode, payment_type).then(
+    return BackofficeApi.associatePSPtoChannel(channelcode, pspcode, payment_type).then(
       (resources) => resources
     );
   }
@@ -166,7 +166,7 @@ export const dissociatePSPfromChannel = (channelcode: string, pspcode: string): 
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return dissociatePSPfromChannelMocked(channelcode, pspcode);
   } else {
-    return PortalApi.dissociatePSPfromChannel(channelcode, pspcode).then((resources) => resources);
+    return BackofficeApi.dissociatePSPfromChannel(channelcode, pspcode).then((resources) => resources);
   }
 };
 
@@ -174,7 +174,7 @@ export const getWrapperEntities = (pspCode: string): Promise<WrapperEntitiesOper
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getWrapperChannel(pspCode);
   } else {
-    return PortalApi.getWrapperEntities(pspCode).then((resources) => resources);
+    return BackofficeApi.getWrapperEntities(pspCode).then((resources) => resources);
   }
 };
 
@@ -185,7 +185,7 @@ export const createWrapperChannelDetails = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.createWrapperChannelDetails(channel, validationUrl).then(
+    return BackofficeApi.createWrapperChannelDetails(channel, validationUrl).then(
       (resources) => resources
     );
   }
@@ -198,7 +198,7 @@ export const updateWrapperChannelDetailsToCheck = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
+    return BackofficeApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
       (resources) => resources
     );
   }
@@ -211,7 +211,7 @@ export const updateWrapperChannelDetailsToCheckUpdate = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
+    return BackofficeApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
       (resources) => resources
     );
   }
@@ -224,7 +224,7 @@ export const updateWrapperChannelDetailsByOpt = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return PortalApi.updateWrapperChannelDetailsByOpt(channel, validationUrl).then(
+    return BackofficeApi.updateWrapperChannelDetailsByOpt(channel, validationUrl).then(
       (resources) => resources
     );
   }

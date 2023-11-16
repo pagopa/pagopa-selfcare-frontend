@@ -1,4 +1,4 @@
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { institutionDetailResource2Party, institutionResource2Party, Party } from '../model/Party';
 import { mockedParties } from './__mocks__/partyService';
 
@@ -7,7 +7,7 @@ export const fetchParties = (): Promise<Array<Party>> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return new Promise((resolve) => resolve(mockedParties));
   } else {
-    return PortalApi.getInstitutions('prod-pagopa').then((institutionResources) =>
+    return BackofficeApi.getInstitutions('prod-pagopa').then((institutionResources) =>
       institutionResources ? institutionResources.map(institutionResource2Party) : []
     );
   }
@@ -24,7 +24,7 @@ export const fetchPartyDetails = (
     );
   }
 
-  return PortalApi.getInstitution(partyId).then((institutionResource) =>
+  return BackofficeApi.getInstitution(partyId).then((institutionResource) =>
     institutionResource ? institutionDetailResource2Party(institutionResource) : null
   );
 };

@@ -124,7 +124,7 @@ jobs:
 
           export REACT_APP_URL_API_PORTAL='${{ vars.SELFCARE_API_BE }}/selfcare/pagopa/v1'
           export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
-          export REACT_APP_URL_API_APICONFIG='${{ vars.SELFCARE_API_BE }}/backoffice/apiconfig/auth/v1'
+          export REACT_APP_URL_API_APICONFIG='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
 
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
 

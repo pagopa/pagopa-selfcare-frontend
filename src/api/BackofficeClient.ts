@@ -73,14 +73,7 @@ const withBearer: WithDefaultsT<'bearerAuth'> = (wrappedOperation) => (params: a
   });
 };
 
-export const apiClient = createClient({
-  baseUrl: ENV.URL_API.PORTAL,
-  basePath: '',
-  fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
-  withDefaults: withBearer,
-});
-
-export const apiConfigClient = createClient({
+export const backofficeClient = createClient({
   baseUrl: ENV.URL_API.APICONFIG,
   basePath: '',
   fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.PORTAL),
@@ -142,28 +135,28 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   timeout_c: channel.timeout_c,
 });
 
-export const PortalApi = {
+export const BackofficeApi = {
   getInstitutions: async (productId: string): Promise<Array<InstitutionResource>> => {
-    const result = await apiClient.getInstitutionsUsingGET({
+    const result = await backofficeClient.getInstitutionsUsingGET({
       productId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getInstitution: async (institutionId: string): Promise<InstitutionDetailResource> => {
-    const result = await apiClient.getInstitutionUsingGET({
+    const result = await backofficeClient.getInstitutionUsingGET({
       institutionId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getProducts: async (institutionId: string): Promise<Array<ProductsResource>> => {
-    const result = await apiClient.getInstitutionProductsUsingGET({ institutionId });
+    const result = await backofficeClient.getInstitutionProductsUsingGET({ institutionId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getInstitutionApiKeys: async (institutionId: string): Promise<Array<ProductKeys>> => {
-    const result = await apiClient.getInstitutionApiKeysUsingGET({ institutionId });
+    const result = await backofficeClient.getInstitutionApiKeysUsingGET({ institutionId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -171,7 +164,7 @@ export const PortalApi = {
     institutionId: string,
     subscriptionCode: string
   ): Promise<Array<ProductKeys>> => {
-    const result = await apiClient.createInstitutionApiKeysUsingPOST({
+    const result = await backofficeClient.createInstitutionApiKeysUsingPOST({
       institutionId,
       subscriptionCode,
     });
@@ -179,27 +172,27 @@ export const PortalApi = {
   },
 
   regeneratePrimaryKey: async (subscriptionid: string): Promise<string> => {
-    const result = await apiClient.regeneratePrimaryKeyUsingPOST({ subscriptionid });
+    const result = await backofficeClient.regeneratePrimaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 
   regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
-    const result = await apiClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
+    const result = await backofficeClient.regenerateSecondaryKeyUsingPOST({ subscriptionid });
     return extractResponse(result, 204, onRedirectToLogin);
   },
 
   getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
-    const result = await apiConfigClient.getBrokerAndPspDetailsUsingGET({ code });
+    const result = await backofficeClient.getBrokerAndPspDetailsUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getPSPBrokerDetails: async (brokerpspcode: string): Promise<BrokerPspDetailsResource> => {
-    const result = await apiConfigClient.getBrokerPspUsingGET({ brokerpspcode });
+    const result = await backofficeClient.getBrokerPspUsingGET({ brokerpspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-    const result = await apiConfigClient.getPSPDetailsUsingGET({ pspcode });
+    const result = await backofficeClient.getPSPDetailsUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -210,7 +203,7 @@ export const PortalApi = {
     pspCode?: string,
     taxCode?: string
   ): Promise<PaymentServiceProvidersResource> => {
-    const result = await apiConfigClient.getPaymentServiceProvidersUsingGET({
+    const result = await backofficeClient.getPaymentServiceProvidersUsingGET({
       page,
       name,
       limit,
@@ -221,12 +214,12 @@ export const PortalApi = {
   },
 
   getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
-    const result = await apiConfigClient.getBrokerAndEcDetailsUsingGET({ code });
+    const result = await backofficeClient.getBrokerAndEcDetailsUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   createPSPDirect: async (psp: NodeOnSignInPSP): Promise<PSPDirectDTO> => {
-    const result = await apiConfigClient.createPSPDirectUsingPOST({
+    const result = await backofficeClient.createPSPDirectUsingPOST({
       body: {
         abi: psp.abiCode,
         agid_psp: false,
@@ -244,7 +237,7 @@ export const PortalApi = {
   },
 
   createPspBroker: async (broker: BrokerPspDetailsDto): Promise<BrokerPspDetailsResource> => {
-    const result = await apiConfigClient.createBrokerPspUsingPOST({
+    const result = await backofficeClient.createBrokerPspUsingPOST({
       body: {
         broker_psp_code: broker.broker_psp_code,
         description: broker.description,
@@ -258,7 +251,7 @@ export const PortalApi = {
   createPSPIndirect: async (
     psp: NodeOnSignInPSP
   ): Promise<PaymentServiceProviderDetailsResource> => {
-    const result = await apiConfigClient.createPaymentServiceProviderUsingPOST({
+    const result = await backofficeClient.createPaymentServiceProviderUsingPOST({
       body: {
         abi: psp.abiCode,
         agid_psp: false,
@@ -279,7 +272,7 @@ export const PortalApi = {
     pspcode: string,
     psp: NodeOnSignInPSP
   ): Promise<PaymentServiceProviderDetailsResource> => {
-    const result = await apiConfigClient.updatePSPUsingPUT({
+    const result = await backofficeClient.updatePSPUsingPUT({
       pspcode,
       body: {
         business_name: psp.businessName,
@@ -297,7 +290,7 @@ export const PortalApi = {
   },
 
   getChannels: async (page: number): Promise<ChannelsResource> => {
-    const result = await apiConfigClient.getChannelsUsingGET({ page });
+    const result = await backofficeClient.getChannelsUsingGET({ page });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -308,7 +301,7 @@ export const PortalApi = {
     limit?: number,
     sorting?: string
   ): Promise<WrapperChannelsResource> => {
-    const result = await apiConfigClient.getAllChannelsMergedUsingGET({
+    const result = await backofficeClient.getAllChannelsMergedUsingGET({
       limit,
       channelcodefilter,
       brokerCode,
@@ -320,12 +313,12 @@ export const PortalApi = {
 
   // retrive of channel detail before on db and then on the node
   getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
-    const result = await apiConfigClient.getChannelDetailUsingGET({ channelcode });
+    const result = await backofficeClient.getChannelDetailUsingGET({ channelcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getPSPChannels: async (pspcode: string): Promise<PspChannelsResource> => {
-    const result = await apiConfigClient.getPspChannelsUsingGET({ pspcode });
+    const result = await backofficeClient.getPspChannelsUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -335,7 +328,7 @@ export const PortalApi = {
     limit?: number
   ): Promise<ChannelPspListResource> => {
     // return all PSP associated to the channel
-    const result = await apiConfigClient.getChannelPaymentServiceProvidersUsingGET({
+    const result = await backofficeClient.getChannelPaymentServiceProvidersUsingGET({
       page,
       channelcode,
       limit,
@@ -344,13 +337,13 @@ export const PortalApi = {
   },
 
   getWfespPlugins: async (): Promise<WfespPluginConfs> => {
-    const result = await apiConfigClient.getWfespPluginsUsingGET({});
+    const result = await backofficeClient.getWfespPluginsUsingGET({});
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
-    const result = await apiConfigClient.createChannelUsingPOST({
+    const result = await backofficeClient.createChannelUsingPOST({
       body: { ...channelBody2Send, status: StatusEnum.APPROVED },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -360,7 +353,7 @@ export const PortalApi = {
     channel: WrapperChannelDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.createWrapperChannelDetailsUsingPOST({
+    const result = await backofficeClient.createWrapperChannelDetailsUsingPOST({
       body: {
         broker_psp_code: channel.broker_psp_code,
         broker_description: channel.broker_description,
@@ -386,7 +379,7 @@ export const PortalApi = {
     channel: ChannelDetailsDto
   ): Promise<ChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
-    const result = await apiConfigClient.updateChannelUsingPUT({
+    const result = await backofficeClient.updateChannelUsingPUT({
       channelcode: code,
       body: { ...channelBody2Send, status: StatusEnum.APPROVED },
     });
@@ -398,7 +391,7 @@ export const PortalApi = {
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const channelBody2Send = channelBody(channel);
-    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
+    const result = await backofficeClient.updateWrapperChannelDetailsUsingPUT({
       body: {
         ...channelBody2Send,
         status: StatusEnum.APPROVED,
@@ -413,7 +406,7 @@ export const PortalApi = {
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const channelBody2Send = channelBody(channel);
-    const result = await apiConfigClient.updateWrapperChannelDetailsUsingPUT({
+    const result = await backofficeClient.updateWrapperChannelDetailsUsingPUT({
       body: {
         ...channelBody2Send,
         validationUrl,
@@ -427,7 +420,7 @@ export const PortalApi = {
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
     const channelBody2Send = channelBody(channel);
-    const result = await apiConfigClient.updateWrapperChannelDetailsByOptUsingPUT({
+    const result = await backofficeClient.updateWrapperChannelDetailsByOptUsingPUT({
       body: {
         ...channelBody2Send,
         status: StatusEnum.APPROVED,
@@ -438,18 +431,18 @@ export const PortalApi = {
   },
 
   getPaymentTypes: async (): Promise<PaymentTypesResource> => {
-    const result = await apiConfigClient.getPaymentTypesUsingGET({});
+    const result = await backofficeClient.getPaymentTypesUsingGET({});
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
-    const result = await apiConfigClient.getChannelCodeUsingGET({ pspcode });
+    const result = await backofficeClient.getChannelCodeUsingGET({ pspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getDelegatedPSPbyBroker: async (brokerId: string): Promise<Array<DelegationResource>> => {
     const institutionId = undefined;
-    const result = await apiClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
+    const result = await backofficeClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -459,7 +452,7 @@ export const PortalApi = {
     payment_types: PspChannelPaymentTypes
   ): Promise<PspChannelPaymentTypesResource> => {
     const payment_types_array = payment_types as ReadonlyArray<string>;
-    const result = await apiConfigClient.updatePaymentServiceProvidersChannelsUsingPUT({
+    const result = await backofficeClient.updatePaymentServiceProvidersChannelsUsingPUT({
       channelcode,
       pspcode,
       body: { payment_types: payment_types_array },
@@ -468,7 +461,7 @@ export const PortalApi = {
   },
 
   dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
-    const result = await apiConfigClient.deletePaymentServiceProvidersChannelsUsingDELETE({
+    const result = await backofficeClient.deletePaymentServiceProvidersChannelsUsingDELETE({
       channelcode,
       pspcode,
     });
@@ -476,7 +469,7 @@ export const PortalApi = {
   },
 
   createStation: async (station: StationOnCreation): Promise<StationDetailResource> => {
-    const result = await apiConfigClient.createStationUsingPOST({
+    const result = await backofficeClient.createStationUsingPOST({
       body: {
         ...station,
       },
@@ -491,7 +484,7 @@ export const PortalApi = {
     limit?: number,
     ordering?: string
   ): Promise<StationsResource> => {
-    const result = await apiConfigClient.getStationsUsingGET({
+    const result = await backofficeClient.getStationsUsingGET({
       page,
       creditorInstitutionCode,
       stationCode,
@@ -508,7 +501,7 @@ export const PortalApi = {
     limit?: number,
     sorting?: string
   ): Promise<WrapperStationsResource> => {
-    const result = await apiConfigClient.getAllStationsMergedUsingGET({
+    const result = await backofficeClient.getAllStationsMergedUsingGET({
       limit,
       stationcodefilter,
       brokerCode,
@@ -519,7 +512,7 @@ export const PortalApi = {
   },
 
   getStationCode: async (ecCode: string): Promise<StationCodeResource> => {
-    const result = await apiConfigClient.getStationCodeUsingGET({ ecCode });
+    const result = await backofficeClient.getStationCodeUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -527,7 +520,7 @@ export const PortalApi = {
     ecCode: string,
     station: CreditorInstitutionStationDto
   ): Promise<CreditorInstitutionStationEditResource> => {
-    const result = await apiConfigClient.associateStationToCreditorInstitutionUsingPOST({
+    const result = await backofficeClient.associateStationToCreditorInstitutionUsingPOST({
       ecCode,
       body: {
         auxDigit: station.auxDigit,
@@ -540,7 +533,7 @@ export const PortalApi = {
   },
 
   dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
-    const result = await apiConfigClient.deleteCreditorInstitutionStationRelationshipUsingDELETE({
+    const result = await backofficeClient.deleteCreditorInstitutionStationRelationshipUsingDELETE({
       ecCode,
       stationcode,
     });
@@ -552,7 +545,7 @@ export const PortalApi = {
     page: number,
     limit?: number
   ): Promise<CreditorInstitutionsResource> => {
-    const result = await apiConfigClient.getCreditorInstitutionsByStationCodeUsingGET({
+    const result = await backofficeClient.getCreditorInstitutionsByStationCodeUsingGET({
       stationcode,
       limit,
       page,
@@ -563,7 +556,7 @@ export const PortalApi = {
   createECAndBroker: async (
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
-    const result = await apiConfigClient.createCreditorInstitutionAndBrokerUsingPOST({
+    const result = await backofficeClient.createCreditorInstitutionAndBrokerUsingPOST({
       body: {
         brokerDto: {
           broker_code: ec.creditorInstitutionCode,
@@ -585,7 +578,7 @@ export const PortalApi = {
   },
 
   createEcBroker: async (broker: BrokerDto): Promise<BrokerResource> => {
-    const result = await apiConfigClient.createBrokerUsingPOST({
+    const result = await backofficeClient.createBrokerUsingPOST({
       body: {
         broker_code: broker.broker_code,
         description: broker.description,
@@ -597,7 +590,7 @@ export const PortalApi = {
   createECIndirect: async (
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
-    const result = await apiConfigClient.createCreditorInstitutionUsingPOST({
+    const result = await backofficeClient.createCreditorInstitutionUsingPOST({
       body: {
         address: ec.address,
         businessName: ec.businessName,
@@ -616,7 +609,7 @@ export const PortalApi = {
     ecCode: string,
     ec: UpdateCreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
-    const result = await apiConfigClient.updateCreditorInstitutionDetailsUsingPUT({
+    const result = await backofficeClient.updateCreditorInstitutionDetailsUsingPUT({
       ecCode,
       body: {
         address: ec.address,
@@ -632,7 +625,7 @@ export const PortalApi = {
   },
 
   getWrapperEntities: async (code: string): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.getWrapperEntitiesUsingGET({ code });
+    const result = await backofficeClient.getWrapperEntitiesUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -640,7 +633,7 @@ export const PortalApi = {
     station: WrapperStationDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.createWrapperStationDetailsUsingPOST({
+    const result = await backofficeClient.createWrapperStationDetailsUsingPOST({
       body: {
         brokerCode: station.brokerCode,
         broker_description: station.broker_description,
@@ -666,7 +659,7 @@ export const PortalApi = {
     station: StationDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
+    const result = await backofficeClient.updateWrapperStationDetailsUsingPUT({
       body: {
         ...station,
         status: StatusEnum.TO_CHECK,
@@ -680,7 +673,7 @@ export const PortalApi = {
     station: StationDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperStationDetailsUsingPUT({
+    const result = await backofficeClient.updateWrapperStationDetailsUsingPUT({
       body: {
         ...station,
         status: StatusEnum.TO_CHECK_UPDATE,
@@ -693,7 +686,7 @@ export const PortalApi = {
     station: StationDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.updateWrapperStationDetailsByOptUsingPUT({
+    const result = await backofficeClient.updateWrapperStationDetailsByOptUsingPUT({
       body: {
         ...station,
         status: StatusEnum.TO_CHECK_UPDATE,
@@ -706,7 +699,7 @@ export const PortalApi = {
     station: StationDetailsDto,
     stationcode: string
   ): Promise<StationDetailResource> => {
-    const result = await apiConfigClient.updateStationUsingPUT({
+    const result = await backofficeClient.updateStationUsingPUT({
       body: {
         ...station,
         status: StatusEnum.APPROVED,
@@ -717,19 +710,19 @@ export const PortalApi = {
   },
 
   getWrapperEntitiesStation: async (code: string): Promise<WrapperEntitiesOperations> => {
-    const result = await apiConfigClient.getWrapperEntitiesStationUsingGET({ code });
+    const result = await backofficeClient.getWrapperEntitiesStationUsingGET({ code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   // before tries to get the detail from the DB, if doesn't finds anything, will try to get the detail form apim
   getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await apiConfigClient.getStationDetailUsingGET({ stationId });
+    const result = await backofficeClient.getStationDetailUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   // get the detail directly from apim
   getStation: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await apiConfigClient.getStationUsingGET({ stationId });
+    const result = await backofficeClient.getStationUsingGET({ stationId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -737,7 +730,7 @@ export const PortalApi = {
     creditorinstitutioncode: string,
     labelName?: string
   ): Promise<IbansResource> => {
-    const result = await apiConfigClient.getCreditorInstitutionIbansUsingGET({
+    const result = await backofficeClient.getCreditorInstitutionIbansUsingGET({
       creditorinstitutioncode,
       labelName,
     });
@@ -745,7 +738,7 @@ export const PortalApi = {
   },
 
   createIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
-    const result = await apiConfigClient.createCreditorInstitutionIbansUsingPOST({
+    const result = await backofficeClient.createCreditorInstitutionIbansUsingPOST({
       body: {
         iban: ibanBody.iban,
         description: ibanBody.description,
@@ -759,7 +752,7 @@ export const PortalApi = {
   },
 
   updateIban: async (ibanBody: IbanCreateRequestDto): Promise<IbanResource> => {
-    const result = await apiConfigClient.updateCreditorInstitutionIbansUsingPUT({
+    const result = await backofficeClient.updateCreditorInstitutionIbansUsingPUT({
       body: {
         iban: ibanBody.iban,
         description: ibanBody.description,
@@ -774,7 +767,7 @@ export const PortalApi = {
   },
 
   deleteIban: async (creditorinstitutioncode: string, ibanValue: string): Promise<void> => {
-    const result = await apiConfigClient.deleteCreditorInstitutionIbansUsingDELETE({
+    const result = await backofficeClient.deleteCreditorInstitutionIbansUsingDELETE({
       creditorinstitutioncode,
       ibanValue,
     });
@@ -784,7 +777,7 @@ export const PortalApi = {
   getCreditorInstitutionSegregationcodes: async (
     ecCode: string
   ): Promise<CreditorInstitutionAssociatedCodeList> => {
-    const result = await apiConfigClient.getCreditorInstitutionSegregationcodesUsingGET({
+    const result = await backofficeClient.getCreditorInstitutionSegregationcodesUsingGET({
       ecCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -794,27 +787,27 @@ export const PortalApi = {
     institutionId?: string,
     brokerId?: string
   ): Promise<DelegationResource> => {
-    const result = await apiClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
+    const result = await backofficeClient.getBrokerDelegationUsingGET({ institutionId, brokerId });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getOperationTableList: async (): Promise<TavoloOpResourceList> => {
-    const result = await apiConfigClient.getAllTavoloOpDetailsUsingGET({});
+    const result = await backofficeClient.getAllTavoloOpDetailsUsingGET({});
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   createOperationTable: async (operationTableDto: TavoloOpDto): Promise<TavoloOpOperations> => {
-    const result = await apiConfigClient.insertUsingPOST({ body: operationTableDto });
+    const result = await backofficeClient.insertUsingPOST({ body: operationTableDto });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
   updateOperationTable: async (operationTableDto: TavoloOpDto): Promise<TavoloOpOperations> => {
-    const result = await apiConfigClient.updateUsingPUT({ body: operationTableDto });
+    const result = await backofficeClient.updateUsingPUT({ body: operationTableDto });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getOperationTableDetails: async (ecCode: string): Promise<TavoloOpResource> => {
-    const result = await apiConfigClient.getTavoloOpDetailsUsingGET({ ecCode });
+    const result = await backofficeClient.getTavoloOpDetailsUsingGET({ ecCode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

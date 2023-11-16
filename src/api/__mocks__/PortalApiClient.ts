@@ -50,7 +50,7 @@ export const mockedProductResources: Array<ProductsResource> = [
   },
 ];
 
-export const PortalApi = {
+export const BackofficeApi = {
   getInstitutions: async (_productId: string): Promise<Array<InstitutionResource>> =>
     new Promise((resolve) => resolve(mockedInstitutions)),
 

@@ -1,4 +1,4 @@
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { TavoloOpDto } from '../api/generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from '../api/generated/portal/TavoloOpOperations';
 import { TavoloOpResource } from '../api/generated/portal/TavoloOpResource';
@@ -15,7 +15,7 @@ export const getOperationTableList = (): Promise<TavoloOpResourceList> => {
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getOperationTableListMocked();
   } else {
-    return PortalApi.getOperationTableList().then((resources) => resources);
+    return BackofficeApi.getOperationTableList().then((resources) => resources);
   }
 };
 
@@ -26,7 +26,7 @@ export const createOperationTable = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return createOperationTableMocked(operationTableDto);
   } else {
-    return PortalApi.createOperationTable(operationTableDto).then((resources) => resources);
+    return BackofficeApi.createOperationTable(operationTableDto).then((resources) => resources);
   }
 };
 
@@ -37,7 +37,7 @@ export const updateOperationTable = (
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return updateOperationTableMocked(operationTableDto);
   } else {
-    return PortalApi.updateOperationTable(operationTableDto).then((resources) => resources);
+    return BackofficeApi.updateOperationTable(operationTableDto).then((resources) => resources);
   }
 };
 
@@ -46,6 +46,6 @@ export const getOperationTableDetails = (ecCode: string): Promise<TavoloOpResour
   if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
     return getOperationTableDetailsMocked(ecCode);
   } else {
-    return PortalApi.getOperationTableDetails(ecCode).then((resources) => resources);
+    return BackofficeApi.getOperationTableDetails(ecCode).then((resources) => resources);
   }
 };

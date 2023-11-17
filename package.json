@@ -21,7 +21,8 @@
     "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
     "generate": "npm-run-all generate:*",
     "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
-    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
+    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js",
+    "generate:openapi3": "jq  'del(.. | .security? | select(. != null))' ./openApi/portal-api-docs.json > ./openApi/portal-api-docs.json.temp && mv ./openApi/portal-api-docs.json.temp ./openApi/portal-api-docs.json && gen-api-models --api-spec ./openApi/portal-api-docs.json --no-strict --out-dir src/api/generated/portal --request-types --response-decoders --client"
   },
   "dependencies": {
     "@mui/icons-material": "^5.8.2",
@@ -54,7 +55,7 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
     "@craco/craco": "^6.4.3",
-    "@pagopa/openapi-codegen-ts": "^12.2.1",
+    "@pagopa/openapi-codegen-ts": "^13.1.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.0.4",

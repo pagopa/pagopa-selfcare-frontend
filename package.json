@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.1.0-1-PASELC-596-fase-di-registrazione-codice-bic-formato-errato",
+  "version": "0.1.1",
   "homepage": "ui",
   "private": true,
   "scripts": {

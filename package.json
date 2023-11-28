@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.3.0-1-PASELC-595-conteggio-ec-psp-nella-form-di-riepilogo-della-stazione-canale-errato",
+  "version": "0.3.1",
   "homepage": "ui",
   "private": true,
   "scripts": {

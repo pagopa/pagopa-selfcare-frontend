@@ -131,6 +131,13 @@
       "backButton": "Annulla",
       "continueButton": "Conferma"
     },
+    "confirmIntermediaryModal": {
+      "title": "Disponibile come intermediario",
+      "messagePSP": "Confermi la tua disponibilità a intermediare PSP indiretti?",
+      "messageEC": "Confermi la tua disponibilità a intermediare EC indiretti?",
+      "confirmLabel": "Conferma",
+      "closeLabel": "Annulla"
+    },
     "validationMessage": {
       "requiredField": "Campo obbligatorio"
     }

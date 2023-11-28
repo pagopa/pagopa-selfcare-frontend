@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -38,9 +38,12 @@ import CommonRadioGroup from './components/CommonRadioGroup';
 type Props = {
   goBack: () => void;
   signInData: BrokerOrPspDetailsResource;
+  handleChangeIntermediaryAvailable: (event:  ChangeEvent<HTMLInputElement> | undefined) => void;
+  intermediaryAvailableValue: boolean;
+  setIntermediaryAvailableValue: (value: boolean) => void;
 };
 
-const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
+const NodeSignInPSPForm = ({ goBack, signInData, handleChangeIntermediaryAvailable, intermediaryAvailableValue, setIntermediaryAvailableValue }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -49,7 +52,6 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
   const pspDirect = isPspBrokerSigned(signInData) && isPspSigned(signInData);
 
   useEffect(() => {
@@ -180,9 +182,6 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
       }
     }
   };
-
-  const changeIntermediaryAvailable = () =>
-    setIntermediaryAvailableValue(!intermediaryAvailableValue);
 
   const enebledSubmit = (values: NodeOnSignInPSP) =>
     values.bicCode !== '' &&
@@ -341,7 +340,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                 labelTrue={t('nodeSignInPage.form.pspFields.intermediaryAvailable.yes')}
                 labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
                 value={intermediaryAvailableValue}
-                onChange={changeIntermediaryAvailable}
+                onChange={(event:  ChangeEvent<HTMLInputElement> | undefined) => handleChangeIntermediaryAvailable(event)}
                 pspDirect={pspDirect}
               />
             </Box>

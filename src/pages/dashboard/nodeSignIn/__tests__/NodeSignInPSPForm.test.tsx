@@ -35,19 +35,41 @@ const renderApp = (
 ) => {
   const store = injectedStore ? injectedStore : createStore();
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
-  render(
+  const {rerender} = render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <MemoryRouter initialEntries={[`/node-signin`]}>
           <Route path="/node-signin">
-            <NodeSignInPSPForm goBack={jest.fn()} signInData={signInData} />
+            <NodeSignInPSPForm goBack={jest.fn()} 
+                               signInData={signInData}
+                               handleChangeIntermediaryAvailable={jest.fn}
+                               intermediaryAvailableValue={false}
+                               setIntermediaryAvailableValue={jest.fn}/>
           </Route>
         </MemoryRouter>
       </ThemeProvider>
     </Provider>
   );
-  return { store, history };
+  return { store, history, rerender };
 };
+
+const reRender = (store: any, rerender: any, signinData: any, value: boolean) => {
+  rerender(
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <MemoryRouter initialEntries={[`/node-signin`]}>
+          <Route path="/node-signin">
+            <NodeSignInPSPForm goBack={jest.fn()} 
+                               signInData={signinData}
+                               handleChangeIntermediaryAvailable={jest.fn}
+                               intermediaryAvailableValue={value}
+                               setIntermediaryAvailableValue={jest.fn}/>
+          </Route>
+        </MemoryRouter>
+      </ThemeProvider>
+    </Provider>
+  );
+}
 
 const setupFormAndSubmit = async (store) => {
   await waitFor(() =>
@@ -129,7 +151,7 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit', async () => {
-    const { store } = renderApp({});
+    const { store, rerender } = renderApp({});
 
     await waitFor(() =>
       store.dispatch({
@@ -152,6 +174,8 @@ describe('NodeSignInPSPForm', () => {
       .querySelector('[value=true]') as HTMLInputElement;
 
     fireEvent.click(intermediaryTrue);
+
+    reRender(store, rerender, {}, true);
 
     await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
@@ -187,7 +211,7 @@ describe('NodeSignInPSPForm', () => {
   });
 
   test('Test rendering NodeSignInPSPForm with intermediary true and Sumbit with createPspBroker api call', async () => {
-    const { store } = renderApp(brokerOrPspDetailsResource_PSPOnly);
+    const { store, rerender } = renderApp(brokerOrPspDetailsResource_PSPOnly);
 
     await waitFor(() =>
       store.dispatch({
@@ -204,12 +228,14 @@ describe('NodeSignInPSPForm', () => {
     );
 
     await setupFormAndSubmit(store);
-
+    
     const intermediaryTrue = screen
       .getByTestId('intermediary-available-test')
       .querySelector('[value=true]') as HTMLInputElement;
 
     fireEvent.click(intermediaryTrue);
+
+    reRender(store, rerender, brokerOrPspDetailsResource_PSPOnly, true);
 
     await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
@@ -276,7 +302,7 @@ test('Test rendering NodeSignInPSPForm in case of updating the form with a psp d
 });
 
 test('Test rendering NodeSignInPSPForm in case of updating the form with a psp indirect', async () => {
-  const { store } = renderApp(brokerOrPspDetailsResource_PSPOnly);
+  const { store, rerender } = renderApp(brokerOrPspDetailsResource_PSPOnly);
 
   await waitFor(() =>
     store.dispatch({
@@ -309,6 +335,7 @@ test('Test rendering NodeSignInPSPForm in case of updating the form with a psp i
 
   expect(intermediaryTrue.checked).toBe(false);
   fireEvent.click(intermediaryTrue);
+  reRender(store, rerender, brokerOrPspDetailsResource_PSPOnly, true);
   expect(intermediaryTrue.checked).toBe(true);
 
   const confirmBtn = await screen.findByTestId('continue-button-test');

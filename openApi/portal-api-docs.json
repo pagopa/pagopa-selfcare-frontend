@@ -8725,6 +8725,10 @@
           "total_pages": {
             "type": "integer",
             "format": "int32"
+          },
+          "total_items": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

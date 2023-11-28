@@ -441,7 +441,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       segregationCode: '11',
     },
   ],
-  page_info: { page: 0, limit: 10, items_found: 11, total_pages: 2 },
+  page_info: { page: 0, limit: 10, items_found: 10, total_pages: 2, total_items: 11 },
 };
 
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
@@ -453,7 +453,7 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
       broadcast: false,
     },
   ],
-  page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
+  page_info: { page: 1, limit: 10, items_found: 10, total_pages: 2, total_items: 11 },
 };
 export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
   brokerCode: 'string',

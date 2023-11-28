@@ -8541,10 +8541,8 @@
       "InstitutionDetailResource": {
         "title": "InstitutionDetailResource",
         "required": [
-          "address",
           "attributes",
           "description",
-          "digitalAddress",
           "externalId",
           "id",
           "institutionType",
@@ -8608,15 +8606,12 @@
       "InstitutionResource": {
         "title": "InstitutionResource",
         "required": [
-          "address",
           "externalId",
           "fiscalCode",
           "id",
-          "mailAddress",
           "name",
           "origin",
           "originId",
-          "status",
           "userProductRoles"
         ],
         "type": "object",

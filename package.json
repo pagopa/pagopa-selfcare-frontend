@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.3.1",
+  "version": "0.3.1-1-PASELC-623-be-errore-di-validazione-campi-institution",
   "homepage": "ui",
   "private": true,
   "scripts": {

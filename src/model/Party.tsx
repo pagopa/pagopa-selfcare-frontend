@@ -13,13 +13,13 @@ export type Party = {
   originId: string;
   origin: string;
   description: string;
-  digitalAddress: string;
+  digitalAddress?: string;
   status: UserStatus;
   roles: Array<UserRole>;
   category?: string;
   urlLogo?: string;
   fiscalCode: string;
-  registeredOffice: string;
+  registeredOffice?: string;
   institutionType?: string;
   pspData?: PspDataResource;
 };

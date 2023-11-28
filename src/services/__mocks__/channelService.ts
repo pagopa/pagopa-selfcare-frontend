@@ -55,6 +55,7 @@ export const mockedChannels: ChannelsResource = {
     limit: 50,
     items_found: 50,
     total_pages: 8,
+    total_items: 400
   },
 };
 
@@ -218,6 +219,7 @@ export const mockedStationsMerged: WrapperChannelsResource = {
     limit: 10,
     items_found: 5,
     total_pages: 1,
+    total_items: 5
   },
   channels: [
     {
@@ -327,8 +329,9 @@ export const mockedChannelPSPs: ChannelPspListResource = {
   page_info: {
     page: 0,
     limit: 5,
-    items_found: 8,
+    items_found: 5,
     total_pages: 2,
+    total_items: 8
   },
 };
 export const mockedChannelPSPsPage2: ChannelPspListResource = {
@@ -355,8 +358,9 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
   page_info: {
     page: 1,
     limit: 5,
-    items_found: 8,
+    items_found: 5,
     total_pages: 2,
+    total_items: 8
   },
 };
 

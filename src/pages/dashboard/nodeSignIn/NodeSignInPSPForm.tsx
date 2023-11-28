@@ -92,14 +92,14 @@ const NodeSignInPSPForm = ({ goBack, signInData, handleChangeIntermediaryAvailab
       }).filter(([_key, value]) => value)
     );
 
-  const handleChangeNumberOnly = (
+  const handleChangeAlphanumericOnly = (
     e: React.ChangeEvent<any>,
     field: string,
     formik: FormikProps<NodeOnSignInPSP>
   ) => {
-    const regex = /^[0-9\b]+$/;
+    const regex = /^[0-9a-zA-Z\b]+$/;
     if (e.target.value === '' || regex.test(e.target.value)) {
-      formik.setFieldValue(field, e.target.value);
+      formik.setFieldValue(field, e.target.value.toUpperCase());
     }
   };
 
@@ -289,13 +289,13 @@ const NodeSignInPSPForm = ({ goBack, signInData, handleChangeIntermediaryAvailab
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
                     inputProps={{
-                      maxLength: 5,
-                      inputMode: 'numeric',
-                      pattern: '[0-9]*',
+                      maxLength: 11,
+                      inputMode: 'text',
+                      pattern: '[0-9a-zA-Z]*',
                       'data-testid': 'bicCode-test',
                     }}
                     value={formik.values.bicCode}
-                    onChange={(e) => handleChangeNumberOnly(e, 'bicCode', formik)}
+                    onChange={(e) => handleChangeAlphanumericOnly(e, 'bicCode', formik)}
                     error={formik.touched.bicCode && Boolean(formik.errors.bicCode)}
                     helperText={formik.touched.bicCode && formik.errors.bicCode}
                   />

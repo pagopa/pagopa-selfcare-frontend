@@ -241,7 +241,7 @@ describe('NodeSignInPSPForm', () => {
     await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
   });
 
-  test('Test bicCode empty', async () => {
+  test('Test bicCode with chars', async () => {
     const { store } = renderApp({});
 
     await waitFor(() =>
@@ -261,7 +261,7 @@ describe('NodeSignInPSPForm', () => {
     const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
 
     fireEvent.change(bicCode, { target: { value: 'abc' } });
-    expect(bicCode.value).toBe('');
+    expect(bicCode.value).toBe('ABC');
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);

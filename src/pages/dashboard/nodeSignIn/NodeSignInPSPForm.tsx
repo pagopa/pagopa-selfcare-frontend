@@ -67,7 +67,7 @@ const NodeSignInPSPForm = ({ goBack, signInData, handleChangeIntermediaryAvailab
     businessName: selectedParty?.description ?? '',
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abiCode ?? '',
-    pspCode: signInData.paymentServiceProviderDetailsResource?.psp_code ?? `PSP${selectedParty?.fiscalCode}` ?? '',
+    pspCode: signInData.paymentServiceProviderDetailsResource?.psp_code ?? `PSP${selectedParty?.fiscalCode}`,
     bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
     digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });

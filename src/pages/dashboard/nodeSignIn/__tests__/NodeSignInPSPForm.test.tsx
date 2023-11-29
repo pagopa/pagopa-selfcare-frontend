@@ -347,6 +347,34 @@ test('Test rendering NodeSignInPSPForm in case of updating the form with a psp i
   });
 });
 
+test('Test rendering NodeSignInPSPForm for unsigned PSP', async () => {
+  var updatedBrokerOrPspDetailsResource_PSPAndBroker = { 
+    brokerPspDetailsResource: brokerOrPspDetailsResource_PSPAndBroker.brokerPspDetailsResource, 
+    paymentServiceProviderDetailsResource: {...brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource}
+  };
+  updatedBrokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource!.psp_code = undefined;
+  const { store } = renderApp(updatedBrokerOrPspDetailsResource_PSPAndBroker);
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setSigninData',
+      payload: updatedBrokerOrPspDetailsResource_PSPAndBroker,
+    })
+  );
+
+  await waitFor(() =>
+    store.dispatch({
+      type: 'parties/setPartySelected',
+      payload: pspAdminUnsigned,
+    })
+  );
+  const pspCode = screen.getByTestId('pspCode-test') as HTMLInputElement;
+
+  expect(pspCode.value).toBe(
+    "PSP" + pspAdminUnsigned.fiscalCode
+  );
+});
+
 const pspPartySelected = {
   partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
   externalId: '15376371009',

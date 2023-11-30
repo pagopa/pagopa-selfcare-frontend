@@ -11,7 +11,7 @@ window._env_ = {
   REACT_APP_ONE_TRUST_BASE_URL: "https://cdn.cookielaw.org",
   REACT_APP_OPERATOR_EMAIL_ADDRESSES: "'stefano.bafaro@pagopa.it;'",
   REACT_APP_PAGOPA_HELP_EMAIL: "assistenza@selfcare.it",
-  REACT_APP_URL_BACKOFFICE: "https://api.dev.platform.pagopa.it/backoffice/apiconfig/auth/v1",
+  REACT_APP_URL_BACKOFFICE: "https://api.dev.platform.pagopa.it/backoffice/v1",
   REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED: "true",
   REACT_APP_ONETRUST_DOMAIN_ID: "a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test",
   REACT_APP_URL_CDN: "https://dev.portal.welfare.pagopa.it",

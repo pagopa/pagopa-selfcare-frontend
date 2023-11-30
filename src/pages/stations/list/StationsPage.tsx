@@ -16,11 +16,10 @@ export default function StationsPage() {
   const history = useHistory();
 
   const [stationCodeInput, setStationCodeInput] = useState<string>('');
-  const [stationCode, setStationCode] = useState<string>('');
 
   useEffect(() => {
     const setSearchValue = setTimeout(() => {
-      setStationCode(stationCodeInput);
+      setStationCodeInput(stationCodeInput);
     }, 500);
 
     return () => clearTimeout(setSearchValue);
@@ -65,7 +64,7 @@ export default function StationsPage() {
 
         <Box display="flex" width="100%" mt={3}>
           <Box pt={2} display="flex" width="100%">
-            <StationsTable stationCode={stationCode} />
+            <StationsTable stationCode={stationCodeInput} />
           </Box>
         </Box>
       </Grid>

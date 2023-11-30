@@ -27,7 +27,9 @@ export default function StationsTableSearchBar({ stationCodeInput, setStationCod
           sx: { height: 48 },
         }}
         value={stationCodeInput}
-        onChange={(event) => setStationCodeInput(event.target.value)}
+        onChange={(event) => {
+            console.log("onchange search bar", event);
+            setStationCodeInput(event.target.value);}}
         fullWidth
         placeholder={t('stationsPage.searchPlaceholder')}
       />

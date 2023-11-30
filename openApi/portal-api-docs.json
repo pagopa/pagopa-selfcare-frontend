@@ -3,7 +3,7 @@
   "info" : {
     "title" : "pagopa-selfcare-ms-backoffice",
     "description" : "PagoPa backoffice API documentation",
-    "version" : "0.5.2-1-PASELC-623-be-errore-di-validazione-campi-institution"
+    "version" : "0.5.1"
   },
   "servers" : [ {
     "url" : "http://localhost:80",
@@ -7665,7 +7665,6 @@
       },
       "CreditorInstitutionAddressResource" : {
         "title" : "CreditorInstitutionAddressResource",
-        "required" : [ "city", "countryCode", "location", "zipCode" ],
         "type" : "object",
         "properties" : {
           "city" : {

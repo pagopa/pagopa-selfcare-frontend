@@ -2,16 +2,18 @@ import { ArrowForward } from '@mui/icons-material';
 import { Alert, Box, Button, Card, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { Party } from '../../../model/Party';
 import { SigninData } from '../../../model/Node';
 import { usePermissions } from '../../../hooks/usePermissions';
-import { isSigned } from '../../../utils/rbac-utils';
+import { isSigned, hasGeneratedApiKey } from '../../../utils/rbac-utils';
 
 type Props = {
   selectedParty?: Party;
   signinData?: SigninData;
 };
+
 
 const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
@@ -19,6 +21,13 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
   const isAdmin = selectedParty?.roles.find((r) => r.roleKey === 'admin');
   const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
   const { hasPermission } = usePermissions();
+  const [hasApiKey, setApiKey] = useState(false);
+
+  useEffect(() => {
+    hasGeneratedApiKey(selectedParty)
+      .then((hasAlreadyGeneratedKeys) => setApiKey(hasAlreadyGeneratedKeys))
+      .catch(console.error);
+  }, []);
 
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
@@ -26,19 +35,25 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
         {t('dashboardPage.nextStep.title')}
       </Typography>
       <Box mb={3}>
-        <Alert severity="warning">
-          {t(
-            `dashboardPage.nextStep.${
-              isSignedIn && isPSP
-                ? 'generateApiKeysStepAlertPSP'
-                : isSignedIn
-                ? 'generateApiKeyStepAlertEC'
-                : 'signInStepAlert'
-            }`
-          )}
-        </Alert>
+        {isSignedIn && hasApiKey ? (
+          <Alert severity="info">
+            {t(`dashboardPage.nextStep.${isPSP ? 'completedAllStepsPSP' : 'completedAllStepsEC'}`)}
+          </Alert>
+        ) : (
+          <Alert severity="warning">
+            {t(
+              `dashboardPage.nextStep.${
+                isSignedIn && isPSP
+                  ? 'generateApiKeysStepAlertPSP'
+                  : (isSignedIn
+                  ? 'generateApiKeyStepAlertEC'
+                  : 'signInStepAlert')
+              }`
+            )}
+          </Alert>
+        )}        
       </Box>
-      {isSignedIn && hasPermission('apikey') ? (
+      {isSignedIn && !hasApiKey && hasPermission('apikey') ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}

@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 import { SigninData } from '../model/Node';
 import { Party } from '../model/Party';
 import { ROLE } from '../model/RolePermission';
 import { isOperator } from '../pages/components/commonFunctions';
+import { getInstitutionApiKeys } from '../services/apiKeyService';
 
 export const isPspBrokerSigned = (signInData: SigninData | null) =>
   signInData?.brokerPspDetailsResource &&
@@ -19,6 +19,14 @@ export const isEcBrokerSigned = (signInData: SigninData | null) =>
 export const isEcSigned = (signInData: SigninData | null) =>
   signInData?.creditorInstitutionDetailsResource &&
   Object.keys(signInData?.creditorInstitutionDetailsResource).length > 0;
+
+export const hasGeneratedApiKey = async (selectedParty: Party | undefined): Promise<boolean> => {
+  if (selectedParty) {
+    const apiKeys = await getInstitutionApiKeys(selectedParty.partyId);
+    return apiKeys && apiKeys.filter(key => key.id.startsWith('nodauth')).length > 0;
+  }
+  return false;
+};
 
 export const isSigned = (signInData: SigninData | null) =>
   isPspBrokerSigned(signInData) ||

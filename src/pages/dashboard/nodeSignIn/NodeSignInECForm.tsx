@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useEffect } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
@@ -26,19 +26,22 @@ import { createEcBroker } from '../../../services/nodeService';
 import { isEcBrokerSigned, isEcSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
+
 type Props = {
   goBack: () => void;
   signInData: BrokerAndEcDetailsResource;
+  handleChangeIntermediaryAvailable: (event:  ChangeEvent<HTMLInputElement> | undefined) => void;
+  intermediaryAvailableValue: boolean;
+  setIntermediaryAvailableValue: (value: boolean) => void;
 };
 
-const NodeSignInECForm = ({ goBack, signInData }: Props) => {
+const NodeSignInECForm = ({ goBack, signInData, handleChangeIntermediaryAvailable, intermediaryAvailableValue, setIntermediaryAvailableValue }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
   const ecDirect = signInData && isEcBrokerSigned(signInData) && isEcSigned(signInData);
 
   useEffect(() => {
@@ -203,8 +206,6 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
     }
   };
 
-  const changeIntermediaryAvailable = () =>
-    setIntermediaryAvailableValue(!intermediaryAvailableValue);
 
   const enebledSubmit = (values: CreditorInstitutionAddressDto) =>
     !!(
@@ -332,7 +333,7 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
               labelTrue={t('nodeSignInPage.form.ecFields.intermediaryAvailable.yes')}
               labelFalse={t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
               value={intermediaryAvailableValue}
-              onChange={changeIntermediaryAvailable}
+              onChange={(event:  ChangeEvent<HTMLInputElement> | undefined) => handleChangeIntermediaryAvailable(event)}
               ecDirect={ecDirect}
             />
           </Box>

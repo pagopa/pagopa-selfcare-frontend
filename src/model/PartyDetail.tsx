@@ -6,8 +6,8 @@ export type PartyDetail = {
   originId: string;
   origin: string;
   description: string;
-  digitalAddress: string;
-  address: string;
+  digitalAddress?: string;
+  address?: string;
   zipCode: string;
   fiscalCode: string;
   institutionType?: string;

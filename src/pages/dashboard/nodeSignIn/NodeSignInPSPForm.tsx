@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 
 import { useAppSelector } from '../../../redux/hooks';
@@ -38,9 +38,12 @@ import CommonRadioGroup from './components/CommonRadioGroup';
 type Props = {
   goBack: () => void;
   signInData: BrokerOrPspDetailsResource;
+  handleChangeIntermediaryAvailable: (event:  ChangeEvent<HTMLInputElement> | undefined) => void;
+  intermediaryAvailableValue: boolean;
+  setIntermediaryAvailableValue: (value: boolean) => void;
 };
 
-const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
+const NodeSignInPSPForm = ({ goBack, signInData, handleChangeIntermediaryAvailable, intermediaryAvailableValue, setIntermediaryAvailableValue }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -49,7 +52,6 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
   const pspDirect = isPspBrokerSigned(signInData) && isPspSigned(signInData);
 
   useEffect(() => {
@@ -90,14 +92,14 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
       }).filter(([_key, value]) => value)
     );
 
-  const handleChangeNumberOnly = (
+  const handleChangeAlphanumericOnly = (
     e: React.ChangeEvent<any>,
     field: string,
     formik: FormikProps<NodeOnSignInPSP>
   ) => {
-    const regex = /^[0-9\b]+$/;
+    const regex = /^[0-9a-zA-Z\b]+$/;
     if (e.target.value === '' || regex.test(e.target.value)) {
-      formik.setFieldValue(field, e.target.value);
+      formik.setFieldValue(field, e.target.value.toUpperCase());
     }
   };
 
@@ -180,9 +182,6 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
       }
     }
   };
-
-  const changeIntermediaryAvailable = () =>
-    setIntermediaryAvailableValue(!intermediaryAvailableValue);
 
   const enebledSubmit = (values: NodeOnSignInPSP) =>
     values.bicCode !== '' &&
@@ -290,13 +289,13 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
                     inputProps={{
-                      maxLength: 5,
-                      inputMode: 'numeric',
-                      pattern: '[0-9]*',
+                      maxLength: 11,
+                      inputMode: 'text',
+                      pattern: '[0-9a-zA-Z]*',
                       'data-testid': 'bicCode-test',
                     }}
                     value={formik.values.bicCode}
-                    onChange={(e) => handleChangeNumberOnly(e, 'bicCode', formik)}
+                    onChange={(e) => handleChangeAlphanumericOnly(e, 'bicCode', formik)}
                     error={formik.touched.bicCode && Boolean(formik.errors.bicCode)}
                     helperText={formik.touched.bicCode && formik.errors.bicCode}
                   />
@@ -341,7 +340,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                 labelTrue={t('nodeSignInPage.form.pspFields.intermediaryAvailable.yes')}
                 labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
                 value={intermediaryAvailableValue}
-                onChange={changeIntermediaryAvailable}
+                onChange={(event:  ChangeEvent<HTMLInputElement> | undefined) => handleChangeIntermediaryAvailable(event)}
                 pspDirect={pspDirect}
               />
             </Box>

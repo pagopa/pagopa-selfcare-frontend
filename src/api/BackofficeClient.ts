@@ -1,7 +1,10 @@
+import {agent} from "italia-ts-commons";
+import {AbortableFetch, setFetchTimeout, toFetch} from 'italia-ts-commons/lib/fetch';
+import {Millisecond} from "italia-ts-commons/lib/units";
 import {ReactNode} from 'react';
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import {appStateActions} from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
-import {buildFetchApi, extractResponse} from '@pagopa/selfcare-common-frontend/utils/api-utils';
+import {extractResponse} from '@pagopa/selfcare-common-frontend/utils/api-utils';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import {store} from '../redux/store';
 import {ENV} from '../utils/env';
@@ -55,7 +58,7 @@ import {Ibans} from './generated/portal/Ibans';
 import {IbanCreate} from './generated/portal/IbanCreate';
 import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
-import { Delegation } from './generated/portal/Delegation';
+import {Delegation} from './generated/portal/Delegation';
 
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
@@ -65,10 +68,33 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => 
     });
 };
 
+// const abortableFetch = AbortableFetch(agent.getHttpFetch(process.env));
+// const timeout = ENV.API_TIMEOUT_MS.BACKOFFICE;
+// const fetchWithTimeout = toFetch(
+//     setFetchTimeout(
+//         timeout as Millisecond,
+//         abortableFetch
+//     )
+// );
+// const fetchApi: typeof fetchWithTimeout = (fetch as any) as typeof fetchWithTimeout;
+
+function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit):Promise<Response> {
+
+    const defaultHeaders = {
+        'X-Canary': 'canary'
+    };
+    // eslint-disable-next-line functional/immutable-data
+    const headers = {
+        ...defaultHeaders,
+        ...(init?.headers || {})
+    };
+    return fetch(input, {...init, headers});
+}
+
 export const backofficeClient = createClient({
     baseUrl: ENV.URL_API.BACKOFFICE,
     basePath: '',
-    fetchApi: buildFetchApi(ENV.API_TIMEOUT_MS.BACKOFFICE) as any,
+    fetchApi: fetchWithHeader as any,
     withDefaults: withBearer,
 });
 
@@ -131,7 +157,7 @@ const channelBody = (channel: ChannelDetailsDto) => ({
 export const BackofficeApi = {
     getInstitutions: async (): Promise<Array<InstitutionDetail>> => {
         const result = await backofficeClient.getInstitutions({});
-        
+
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -144,7 +170,7 @@ export const BackofficeApi = {
 
     getProducts: async (institutionId: string): Promise<Array<Product>> => {
         const result = await backofficeClient.getInstitutionProducts({'institution-id': institutionId});
-        
+
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -185,7 +211,7 @@ export const BackofficeApi = {
     },
 
     getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code':pspcode});
+        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code': pspcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -200,14 +226,14 @@ export const BackofficeApi = {
             page,
             name,
             limit,
-            'psp-code':pspCode,
-            'tax-code':taxCode,
+            'psp-code': pspCode,
+            'tax-code': taxCode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndEcDetails({'ci-code':code});
+        const result = await backofficeClient.getBrokerAndEcDetails({'ci-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -267,7 +293,7 @@ export const BackofficeApi = {
         psp: NodeOnSignInPSP
     ): Promise<PaymentServiceProviderDetailsResource> => {
         const result = await backofficeClient.updatePSP({
-            'psp-code':pspcode,
+            'psp-code': pspcode,
             body: {
                 business_name: psp.businessName,
                 enabled: true,
@@ -307,12 +333,12 @@ export const BackofficeApi = {
 
     // retrive of channel detail before on db and then on the node
     getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
-        const result = await backofficeClient.getChannelDetail({'channel-code':channelcode});
+        const result = await backofficeClient.getChannelDetail({'channel-code': channelcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     getPSPChannels: async (pspcode: string): Promise<PspChannelsResource> => {
-        const result = await backofficeClient.getPspChannels({'psp-code':pspcode});
+        const result = await backofficeClient.getPspChannels({'psp-code': pspcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -324,7 +350,7 @@ export const BackofficeApi = {
         // return all PSP associated to the channel
         const result = await backofficeClient.getChannelPaymentServiceProviders({
             page,
-            'channel-code':channelcode,
+            'channel-code': channelcode,
             limit,
         });
         return extractResponse(result, 200, onRedirectToLogin);
@@ -463,7 +489,8 @@ export const BackofficeApi = {
     },
 
     createStation: async (station: StationOnCreation): Promise<StationDetailResource> => {
-        const result = await backofficeClient.createStation({body: {...station,} as any,
+        const result = await backofficeClient.createStation({
+            body: {...station,} as any,
         });
         return extractResponse(result, 201, onRedirectToLogin);
     },
@@ -525,8 +552,8 @@ export const BackofficeApi = {
 
     dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
         const result = await backofficeClient.deleteCreditorInstitutionStationRelationship({
-            'ci-code' : ecCode,
-            'station-code' : stationcode,
+            'ci-code': ecCode,
+            'station-code': stationcode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },
@@ -537,7 +564,7 @@ export const BackofficeApi = {
         limit?: number
     ): Promise<CreditorInstitutionsResource> => {
         const result = await backofficeClient.getCreditorInstitutionsByStationCode({
-            'station-code':stationcode,
+            'station-code': stationcode,
             limit,
             page,
         });
@@ -604,7 +631,7 @@ export const BackofficeApi = {
         ec: UpdateCreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
         const result = await backofficeClient.updateCreditorInstitutionDetails({
-            'ci-code':ecCode,
+            'ci-code': ecCode,
             body: {
                 address: ec.address,
                 businessName: ec.businessName,
@@ -750,7 +777,7 @@ export const BackofficeApi = {
     updateIban: async (
         creditorinstitutioncode: string,
         ibanBody: IbanCreate
-        ): Promise<Iban> => {
+    ): Promise<Iban> => {
         const result = await backofficeClient.updateCreditorInstitutionIbans({
             'ci-code': creditorinstitutioncode,
             'iban-value': ibanBody.iban!,

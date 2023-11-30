@@ -26,6 +26,7 @@ export const ENV = {
   URL_API: {
     TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
     BACKOFFICE: getConfig('REACT_APP_URL_BACKOFFICE', {required: true}),
+    REACT_APP_URL_BETA: getConfig('REACT_APP_URL_BETA'),
   },
 
   MOCK: {

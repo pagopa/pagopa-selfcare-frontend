@@ -1,7 +1,7 @@
 import * as env from 'env-var';
 import {getConfig, Type} from "./config";
 
-const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/ui';
+const PUBLIC_URL_INNER: string | undefined = env.get('REACT_APP_PUBLIC_URL').asString() || '/ui';
 export const ENV = {
   ENV: env.get('REACT_APP_ENV').required().asString(),
   PUBLIC_URL: PUBLIC_URL_INNER,

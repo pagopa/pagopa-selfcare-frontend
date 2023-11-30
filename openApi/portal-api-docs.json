@@ -3,7 +3,7 @@
   "info" : {
     "title" : "pagopa-selfcare-ms-backoffice",
     "description" : "PagoPa backoffice API documentation",
-    "version" : "0.4.64"
+    "version" : "0.5.1"
   },
   "servers" : [ {
     "url" : "http://localhost:80",
@@ -7665,7 +7665,6 @@
       },
       "CreditorInstitutionAddressResource" : {
         "title" : "CreditorInstitutionAddressResource",
-        "required" : [ "city", "countryCode", "location", "zipCode" ],
         "type" : "object",
         "properties" : {
           "city" : {
@@ -8162,7 +8161,7 @@
       },
       "InstitutionDetailResource" : {
         "title" : "InstitutionDetailResource",
-        "required" : [ "address", "attributes", "description", "digitalAddress", "externalId", "id", "institutionType", "origin", "originId", "taxCode", "zipCode" ],
+        "required" : [ "attributes", "description", "externalId", "id", "institutionType", "origin", "originId", "taxCode", "zipCode" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -8195,7 +8194,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "origin" : {
             "type" : "string",
@@ -8217,7 +8216,7 @@
       },
       "InstitutionResource" : {
         "title" : "InstitutionResource",
-        "required" : [ "address", "externalId", "fiscalCode", "id", "mailAddress", "name", "origin", "originId", "status", "userProductRoles" ],
+        "required" : [ "externalId", "fiscalCode", "id", "name", "origin", "originId", "userProductRoles" ],
         "type" : "object",
         "properties" : {
           "address" : {
@@ -8251,7 +8250,7 @@
           "institutionType" : {
             "type" : "string",
             "description" : "Institution's type",
-            "enum" : [ "GSP", "PA", "PSP", "PT", "SA", "SCP" ]
+            "enum" : [ "AS", "GSP", "PA", "PG", "PSP", "PT", "SA", "SCP" ]
           },
           "mailAddress" : {
             "type" : "string",
@@ -8320,6 +8319,10 @@
           "page" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "total_items" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "total_pages" : {
             "type" : "integer",

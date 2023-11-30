@@ -1,7 +1,7 @@
-import { PortalApi } from '../api/PortalApiClient';
-import { IbanCreateRequestDto } from '../api/generated/portal/IbanCreateRequestDto';
-import { IbanResource } from '../api/generated/portal/IbanResource';
-import { IbansResource } from '../api/generated/portal/IbansResource';
+import { BackofficeApi } from '../api/BackofficeClient';
+import {Ibans} from "../api/generated/portal/Ibans";
+import {Iban} from "../api/generated/portal/Iban";
+import {IbanCreate} from "../api/generated/portal/IbanCreate";
 import {
   getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
   createIban as createIbanMocked,
@@ -14,58 +14,58 @@ import {
 export const getIbanList = (
   creditorInstitutionCode: string,
   labelName?: string
-): Promise<IbansResource> => {
+): Promise<Ibans> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionIbansMocked(creditorInstitutionCode, labelName);
   } else {
-    return PortalApi.getCreditorInstitutionIbans(creditorInstitutionCode, labelName).then(
+    return BackofficeApi.getCreditorInstitutionIbans(creditorInstitutionCode, labelName).then(
       (resources) => resources
     );
   }
 };
 
-export const createIban = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
+export const createIban = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createIbanMocked(iban);
   } else {
-    return PortalApi.createIban(iban).then((resources) => resources);
+    return BackofficeApi.createIban(ciCode, iban).then((resources) => resources);
   }
 };
 
-export const updateIban = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
+export const updateIban = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateIbanMocked(iban);
   } else {
-    return PortalApi.updateIban(iban).then((resources) => resources);
+    return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
   }
 };
 
-export const updateIbanStandIn = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
+export const updateIbanStandIn = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateIbanStandInMocked(iban);
   } else {
-    return PortalApi.updateIban(iban).then((resources) => resources);
+    return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
   }
 };
 
-export const updateIbanCup = (iban: IbanCreateRequestDto): Promise<IbanResource> => {
+export const updateIbanCup = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateIbanCupMocked(iban);
   } else {
-    return PortalApi.updateIban(iban).then((resources) => resources);
+    return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
   }
 };
 
 export const deleteIban = (ecCode: string, ibanValue: string): Promise<void> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return deleteIbanMocked(ecCode, ibanValue);
   } else {
-    return PortalApi.deleteIban(ecCode, ibanValue).then((resources) => resources);
+    return BackofficeApi.deleteIban(ecCode, ibanValue).then((resources) => resources);
   }
 };

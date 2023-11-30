@@ -5,7 +5,7 @@ import {
 } from '@mui/icons-material';
 import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
-import { ChangeEvent, useEffect } from 'react';
+import { useEffect } from 'react';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
@@ -14,7 +14,7 @@ type Props = {
   labelTrue: string;
   labelFalse: string;
   value: boolean;
-  onChange: (event: ChangeEvent<HTMLInputElement> | undefined) => void;
+  onChange: () => void;
   ecDirect?: BrokerAndEcDetailsResource;
   pspDirect?: BrokerOrPspDetailsResource;
 };

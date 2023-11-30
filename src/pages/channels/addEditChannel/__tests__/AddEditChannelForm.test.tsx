@@ -14,7 +14,7 @@ import {
   pspOperatorSignedDirect,
 } from '../../../../services/__mocks__/partyService';
 import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
-import { PortalApi } from '../../../../api/PortalApiClient';
+import { BackofficeApi } from '../../../../api/BackofficeClient';
 import { Party } from '../../../../model/Party';
 import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
 
@@ -92,7 +92,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('test catch case api getPaymentTypes', async () => {
-    PortalApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
+    BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
     render(
       <Provider store={store}>
         <Router history={history}>

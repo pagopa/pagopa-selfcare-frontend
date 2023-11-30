@@ -1,15 +1,15 @@
-import { ProductsResource } from '../api/generated/portal/ProductsResource';
+import { Product } from '../api/generated/portal/Product';
 import { SelfcareRole, UserRole } from './Party';
 
 export type ProductStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING';
 
-export type Product = {
+export type ProductModel = {
   activationDateTime?: Date;
   description: string;
   id: string;
   logo?: string;
   title: string;
-  urlBO: string;
+  urlBO?: string;
   urlPublic?: string;
   selfcareRole?: SelfcareRole;
   roles: Array<UserRole>;
@@ -26,12 +26,12 @@ export type SubProduct = {
 };
 export type ProductsMap = { [id: string]: Product };
 
-export const productResource2Product = (resource: ProductsResource): Product => ({
+export const productResource2Product = (resource: Product): ProductModel => ({
   description: resource.description,
   id: resource.id,
   title: resource.title,
-  urlBO: resource.urlBO,
-  urlPublic: resource.urlPublic,
+  urlBO: resource.url_bo,
+  urlPublic: resource.url_public,
   selfcareRole: 'ADMIN', // TODO maybe it will be added to the API?
   roles: [],
   authorized: true,

@@ -7,7 +7,7 @@ import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsS
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { useMemo } from 'react';
 import withParties, { WithPartiesProps } from '../decorators/withParties';
-import { Product } from '../model/Product';
+import { ProductModel } from '../model/Product';
 import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
@@ -29,7 +29,7 @@ const pagoPAProduct: ProductEntity = {
   linkType: 'internal',
 };
 
-const selfcareProduct: Product = {
+const selfcareProduct: ProductModel = {
   authorized: true,
   description: '',
   id: 'prod-selfcare',
@@ -74,14 +74,14 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
 
   const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   // const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
-  const activeProducts: Array<Product> = useMemo(
+  const activeProducts: Array<ProductModel> = useMemo(
     () =>
       [
         {
           id: pagoPAProduct.id,
           title: pagoPAProduct.title,
           publicUrl: pagoPAProduct.productUrl,
-        } as unknown as Product,
+        } as unknown as ProductModel,
         selfcareProduct,
       ].concat(
         products?.filter(

@@ -17,6 +17,7 @@ import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { usePermissions } from '../../hooks/usePermissions';
 import { isPspBrokerSigned, isSigned } from '../../utils/rbac-utils';
+import {getConfig} from "../../utils/config";
 import SidenavItem from './SidenavItem';
 
 /** The side menu of the application */

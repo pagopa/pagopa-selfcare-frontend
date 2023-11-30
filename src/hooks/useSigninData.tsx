@@ -61,7 +61,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         paymentServiceProviderDetailsResource: {
           ...pspDetails,
-        },
+        }  as any,
       };
     } else {
       return await getBrokerAndEcDetails(party.fiscalCode);

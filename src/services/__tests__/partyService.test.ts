@@ -5,13 +5,13 @@ import {
   Party,
 } from '../../model/Party';
 
-import { mockedInstitutionDetailResource, PortalApi } from '../../api/__mocks__/PortalApiClient';
+import { mockedInstitutionDetailResource, BackofficeApi } from '../../api/__mocks__/BackofficeClient';
 import {
   InstitutionResource,
   InstitutionTypeEnum,
 } from '../../api/generated/portal/InstitutionResource';
 
-jest.mock('../../api/PortalApiClient');
+jest.mock('../../api/BackofficeClient');
 
 let portalApiGetInstitutionsSpy: jest.SpyInstance<any, unknown[]>;
 
@@ -164,9 +164,9 @@ describe('Test fetchPartyDetails', () => {
   };
 
   const checkPortalApiInvocation = (expectedCallsNumber: number) => {
-    expect(PortalApi.getInstitutions).toBeCalledTimes(expectedCallsNumber);
+    expect(BackofficeApi.getInstitutions).toBeCalledTimes(expectedCallsNumber);
     if (expectedCallsNumber > 0) {
-      expect(PortalApi.getInstitutions).toBeCalledWith('prod-pagopa');
+      expect(BackofficeApi.getInstitutions).toBeCalledWith('prod-pagopa');
     }
   };
 

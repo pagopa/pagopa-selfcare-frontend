@@ -1,6 +1,4 @@
-import { IbanCreateRequestDto } from '../api/generated/portal/IbanCreateRequestDto';
 import { IbanLabel } from '../api/generated/portal/IbanLabel';
-import { IbanResource } from '../api/generated/portal/IbanResource';
 
 export enum IbanFormAction {
   Create = 'create',

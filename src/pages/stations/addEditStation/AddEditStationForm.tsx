@@ -321,7 +321,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         stationId: formik.values.stationCode,
       })}`;
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values, validationUrl);
+        await createWrapperStation(values);
         redirect(stationCode4Redirect);
       }
 
@@ -332,7 +332,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await createStation(values);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheck(values, validationUrl);
+              await updateWrapperStationToCheck(values);
               redirect(stationCode4Redirect);
             }
             break;
@@ -342,12 +342,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
               await updateStation(values, stationCode);
               redirect(stationCode4Redirect);
             } else {
-              await updateWrapperStationToCheckUpdate(values, validationUrl);
+              await updateWrapperStationToCheckUpdate(values);
               redirect(stationCode4Redirect);
             }
             break;
           case WrapperStatusEnum.TO_FIX:
-            await updateWrapperStationToCheck(values, validationUrl);
+            await updateWrapperStationToCheck(values);
             redirect(stationCode4Redirect);
             break;
           default:

@@ -1,6 +1,6 @@
-import { Product } from '../../model/Product';
+import { ProductModel } from '../../model/Product';
 
-export const mockedPartyProducts: Array<Product> = [
+export const mockedPartyProducts: Array<ProductModel> = [
   {
     logo: 'https://selcdcheckoutsa.z6.web.core.windows.net/resources/products/prod-io/logo.png',
     title: 'App IO',
@@ -33,7 +33,7 @@ export const mockedPartyProducts: Array<Product> = [
   },
 ];
 
-export const verifyFetchPartyProductsMockExecution = (partyProducts: Array<Product>) => {
+export const verifyFetchPartyProductsMockExecution = (partyProducts: Array<ProductModel>) => {
   expect(partyProducts).toStrictEqual(mockedPartyProducts);
 };
 

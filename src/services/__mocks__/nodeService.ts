@@ -213,6 +213,7 @@ export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDeta
 };
 
 export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
+  // @ts-ignore
   return new Promise((resolve) => resolve(mapPSPBrokerDetailsResource(pspBrokerCode)));
 };
 

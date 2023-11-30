@@ -17,7 +17,7 @@ import { useTranslation, Trans } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import { IbanLabel } from '../../../api/generated/portal/IbanLabel';
-import { IbansResource } from '../../../api/generated/portal/IbansResource';
+import { Ibans } from '../../../api/generated/portal/Ibans';
 import { IbanOnCreation } from '../../../model/Iban';
 import { updateIbanStandIn, updateIbanCup } from '../../../services/ibanService';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP } from '../../../utils/constants';
@@ -28,7 +28,7 @@ import IbanTable from '../list/IbanTable';
 import GenericModal from '../../../components/Form/GenericModal';
 
 type Props = {
-  ibanList: IbansResource;
+  ibanList: Ibans;
   error: boolean;
   loading: boolean;
 };
@@ -42,36 +42,36 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const [ibanCupTriggered, setIbanCupTriggered] = useState(false);
   const [showMaganeButton, setShowMaganeButton] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [ibanActiveList, setIbanActiveList] = useState<IbansResource>({ ibanList: [] });
+  const [ibanActiveList, setIbanActiveList] = useState<Ibans>({ ibans_enhanced: [] });
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
   const { t } = useTranslation();
   const ecCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
-    if (ibanList.ibanList.length > 0) {
+    if (ibanList.ibans_enhanced.length > 0) {
       filterListStandInAndCup();
-      const ibanListFiltered = ibanList.ibanList.filter((list) => list.active === true);
-      setIbanActiveList({ ibanList: [...ibanListFiltered] });
+      const ibanListFiltered = ibanList.ibans_enhanced.filter((list) => list.is_active === true);
+      setIbanActiveList({ ibans_enhanced: [...ibanListFiltered] });
     }
   }, [selectedParty, ibanList]);
 
   const filterListStandInAndCup = () => {
-    const ibanStandInFiltered = ibanList.ibanList.find(
+    const ibanStandInFiltered = ibanList.ibans_enhanced.find(
       (e) => e.labels && e.labels.find((label) => label.name === 'STANDIN')
     );
-    const ibanCupFiltered = ibanList.ibanList.find(
+    const ibanCupFiltered = ibanList.ibans_enhanced.find(
       (e) => e.labels && e.labels.find((label) => label.name === '0201138TS')
     );
 
     if (ibanStandInFiltered) {
       setSelectedIbanStandIn({
-        iban: ibanStandInFiltered.iban,
+        iban: ibanStandInFiltered.iban!,
         description: ibanStandInFiltered.description,
-        validityDate: ibanStandInFiltered.validityDate,
-        dueDate: ibanStandInFiltered.dueDate,
-        creditorInstitutionCode: ibanStandInFiltered.ecOwner ?? ecCode,
+        validityDate: ibanStandInFiltered.validity_date!,
+        dueDate: ibanStandInFiltered.due_date!,
+        creditorInstitutionCode: ibanStandInFiltered.ci_owner ?? ecCode,
         labels: ibanStandInFiltered.labels,
-        active: ibanStandInFiltered.active,
+        active: ibanStandInFiltered.is_active!,
       });
     } else {
       setSelectedIbanStandIn(emptyIban);
@@ -79,13 +79,13 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
     if (ibanCupFiltered) {
       setSelectedIbanCup({
-        iban: ibanCupFiltered.iban,
+        iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
-        validityDate: ibanCupFiltered.validityDate,
-        dueDate: ibanCupFiltered.dueDate,
-        creditorInstitutionCode: ibanCupFiltered.ecOwner ?? ecCode,
+        validityDate: ibanStandInFiltered!.validity_date!,
+        dueDate: ibanStandInFiltered!.due_date!,
+        creditorInstitutionCode: ibanStandInFiltered?.ci_owner ?? ecCode,
         labels: ibanCupFiltered.labels,
-        active: ibanCupFiltered.active,
+        active: ibanStandInFiltered!.is_active!,
       });
     } else {
       setSelectedIbanCup(emptyIban);
@@ -142,18 +142,18 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       name: 'STANDIN',
     };
 
-    const selectedIndex = ibanList.ibanList.findIndex((e) => e.iban === event.target.value);
-    const selectedIban = ibanList.ibanList[selectedIndex];
+    const selectedIndex = ibanList.ibans_enhanced.findIndex((e: any) => e.iban === event.target.value);
+    const selectedIban = ibanList.ibans_enhanced[selectedIndex];
     const updatedLabels = [newLabel];
 
     setSelectedIbanStandIn({
-      iban: selectedIban.iban,
+      iban: selectedIban.iban!,
       description: selectedIban.description,
-      validityDate: selectedIban.validityDate,
-      dueDate: selectedIban.dueDate,
-      creditorInstitutionCode: selectedIban.ecOwner ?? ecCode,
+      validityDate: selectedIban.validity_date!,
+      dueDate: selectedIban.due_date!,
+      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
       labels: updatedLabels,
-      active: selectedIban.active,
+      active: selectedIban.is_active!,
     });
   };
 
@@ -164,18 +164,18 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       name: '0201138TS',
     };
 
-    const selectedIndex = ibanList.ibanList.findIndex((e) => e.iban === event.target.value);
-    const selectedIban = ibanList.ibanList[selectedIndex];
+    const selectedIndex = ibanList.ibans_enhanced.findIndex((e) => e.iban === event.target.value);
+    const selectedIban = ibanList.ibans_enhanced[selectedIndex];
     const updatedLabels = [newLabel];
 
     setSelectedIbanCup({
-      iban: selectedIban.iban,
+      iban: selectedIban.iban!,
       description: selectedIban.description,
-      validityDate: selectedIban.validityDate,
-      dueDate: selectedIban.dueDate,
-      creditorInstitutionCode: selectedIban.ecOwner ?? ecCode,
+      validityDate: selectedIban.validity_date!,
+      dueDate: selectedIban.due_date!,
+      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
       labels: updatedLabels,
-      active: selectedIban.active,
+      active: selectedIban.is_active!,
     });
   };
 
@@ -197,16 +197,16 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setLoadingIban(true);
     try {
       if (ibanStandInTriggered && ibanCupTriggered && iban1 && iban2) {
-        await updateIbanStandIn(iban1);
-        await updateIbanCup(iban2);
+        await updateIbanStandIn(iban1.ecOwner!, iban1);
+        await updateIbanCup(iban2.ecOwner!, iban2);
       }
 
       if (ibanStandInTriggered && !ibanCupTriggered && iban1) {
-        await updateIbanStandIn(iban1);
+        await updateIbanStandIn(iban1.ecOwner!, iban1);
       }
 
       if (!ibanStandInTriggered && ibanCupTriggered && iban2) {
-        await updateIbanCup(iban2);
+        await updateIbanCup(iban2.ecOwner!, iban2);
       }
     } catch (reason) {
       addError({
@@ -319,7 +319,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           }}
                           disabled
                         >
-                          {ibanActiveList.ibanList.map((r, i) => (
+                          {ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
                             <MenuItem key={i} value={r.iban}>
                               {r.iban}
                             </MenuItem>
@@ -386,7 +386,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         >
                           {
                             // eslint-disable-next-line sonarjs/no-identical-functions
-                            ibanActiveList.ibanList.map((r, i) => (
+                            ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
                               <MenuItem key={i} value={r.iban}>
                                 {r.iban}
                               </MenuItem>
@@ -404,7 +404,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     <ButtonNaked
                       size="small"
                       component="button"
-                      disabled={ibanList.ibanList.length <= 0}
+                      disabled={ibanList.ibans_enhanced.length <= 0}
                       onClick={() => setShowMaganeButton(false)}
                       endIcon={<EditIcon />}
                       sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}

@@ -1,10 +1,13 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.4.1",
+  "version": "0.1.0",
   "homepage": "ui",
   "private": true,
   "scripts": {
+    "envconfig": "chmod +x env.sh && ./env.sh",
+    "envconfig:local": "export $(grep -v '^#' .env.development.local) && chmod +x env.sh && ./env.sh",
     "clean": "npm-run-all clean:*",
+    "prestart": "npm-run-all envconfig",
     "start": "craco start",
     "build": "craco build",
     "clean:build": "rimraf build",
@@ -21,7 +24,7 @@
     "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
     "generate": "npm-run-all generate:*",
     "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
-    "generate:api-portal": "yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
+    "generate:api-portal": "jq 'walk(if type == \"object\" and has(\"parameters\") then .parameters |= map(select(.name != \"X-Request-Id\")) else . end)' ./openApi/portal-api-docs.json > ./openApi/portal-api-docs.json.temp && mv ./openApi/portal-api-docs.json.temp ./openApi/portal-api-docs.json && yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
   },
   "dependencies": {
     "@mui/icons-material": "^5.8.2",
@@ -36,6 +39,7 @@
     "@types/react-router-dom": "^5.1.8",
     "@types/react-router-hash-link": "^2.4.5",
     "axios": "^0.23.0",
+    "buffer": "^6.0.3",
     "date-fns": "^2.30.0",
     "formik": "^2.2.9",
     "node-fetch": "^3.3.0",
@@ -47,14 +51,15 @@
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "5.0.1",
     "react-use-scrollspy": "^3.0.1",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "@types/node": "^20.9.4"
   },
   "devDependencies": {
     "@babel/core": "7.18.6",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-react": "^7.14.5",
     "@craco/craco": "^6.4.3",
-    "@pagopa/openapi-codegen-ts": "^12.2.1",
+    "@pagopa/openapi-codegen-ts": "^13.1.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.0.4",

@@ -189,7 +189,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
               pagination
               rowHeight={rowHeight}
               rows={ecListPage.creditor_institutions ?? []}
-              rowCount={ecListPage.page_info.items_found}
+              rowCount={ecListPage!.page_info!.items_found}
               sortingMode="server"
             />
           </>

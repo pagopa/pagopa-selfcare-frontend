@@ -544,7 +544,7 @@ const login = (async () => {
     });
   }
 
-  console.log('logged');
+  
 
   {
     const targetPage = page;

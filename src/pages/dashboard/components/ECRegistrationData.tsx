@@ -60,7 +60,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address.city
+          {signinData?.creditorInstitutionDetailsResource?.address?.city
             ? signinData.creditorInstitutionDetailsResource.address.city
             : '-'}
         </Typography>

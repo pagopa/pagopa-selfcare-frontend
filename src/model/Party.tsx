@@ -1,6 +1,6 @@
-import { InstitutionDetailResource } from '../api/generated/portal/InstitutionDetailResource';
-import { InstitutionResource } from '../api/generated/portal/InstitutionResource';
-import { PspDataResource } from '../api/generated/portal/PspDataResource';
+import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
+import {Institution} from '../api/generated/portal/Institution';
+import { PspData } from '../api/generated/portal/PspData';
 import { ENV } from '../utils/env';
 
 export type SelfcareRole = 'ADMIN' | 'LIMITED';
@@ -13,15 +13,15 @@ export type Party = {
   originId: string;
   origin: string;
   description: string;
-  digitalAddress?: string;
+  digitalAddress: string;
   status: UserStatus;
   roles: Array<UserRole>;
   category?: string;
   urlLogo?: string;
   fiscalCode: string;
-  registeredOffice?: string;
+  registeredOffice: string;
   institutionType?: string;
-  pspData?: PspDataResource;
+  pspData?: PspData;
 };
 
 export type UserRole = {
@@ -32,45 +32,46 @@ export type UserRole = {
 const buildUrlLog = (partyId: string) =>
   `${ENV.URL_INSTITUTION_LOGO.PREFIX}${partyId}${ENV.URL_INSTITUTION_LOGO.SUFFIX}`;
 
-export const institutionResource2Party = (institutionResource: InstitutionResource): Party => {
+export const institutionResource2Party = (institutionResource: InstitutionDetail): Party => {
+  
   const urlLogo = institutionResource.id && buildUrlLog(institutionResource.id);
   return {
     partyId: institutionResource.id,
-    externalId: institutionResource.externalId,
-    originId: institutionResource.originId,
+    externalId: institutionResource.external_id,
+    originId: institutionResource.origin_id,
     origin: institutionResource.origin,
     description: institutionResource.name,
-    digitalAddress: institutionResource.mailAddress,
+    digitalAddress: institutionResource.mail_address!,
     status: institutionResource.status as 'ACTIVE' | 'PENDING',
-    roles: institutionResource.userProductRoles.map(
-      (u) => ({ partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u } as UserRole)
+    roles: institutionResource.user_product_roles.map(
+        (u) => ({ partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u } as UserRole)
     ),
     urlLogo,
-    fiscalCode: institutionResource.fiscalCode,
-    registeredOffice: institutionResource.address,
-    institutionType: institutionResource.institutionType,
-    pspData: institutionResource.pspData,
+    fiscalCode: institutionResource.tax_code,
+    registeredOffice: institutionResource.address!,
+    institutionType: institutionResource.institution_type,
+    pspData: institutionResource.psp_data,
   };
 };
 
 export const institutionDetailResource2Party = (
-  institutionResource: InstitutionDetailResource
+  institutionResource: Institution
 ): Party => {
   const urlLogo = institutionResource.id && buildUrlLog(institutionResource.id);
   return {
     partyId: institutionResource.id,
-    externalId: institutionResource.externalId,
-    originId: institutionResource.originId,
+    externalId: institutionResource.external_id,
+    originId: institutionResource.origin_id,
     origin: institutionResource.origin,
     description: institutionResource.description,
-    digitalAddress: institutionResource.digitalAddress,
+    digitalAddress: institutionResource.digital_address!,
     status: 'ACTIVE', // 'ACTIVE' | 'PENDING',
     roles: [] /* institutionResource.userProductRoles.map(
       (u) => ({ partyRole: u, roleKey: u } as UserRole)
     ), */,
     urlLogo,
-    fiscalCode: institutionResource.taxCode,
-    registeredOffice: institutionResource.address,
-    institutionType: institutionResource.institutionType,
+    fiscalCode: institutionResource.tax_code,
+    registeredOffice: institutionResource.address!,
+    institutionType: institutionResource.institution_type,
   };
 };

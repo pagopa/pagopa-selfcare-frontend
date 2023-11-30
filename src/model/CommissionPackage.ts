@@ -1,4 +1,4 @@
-import { PaymentTypeResource } from '../api/generated/portal/PaymentTypeResource';
+import { PaymentType } from '../api/generated/portal/PaymentType';
 
 export enum FormAction {
   Create = 'create',
@@ -17,7 +17,7 @@ export type CommissionPackageOnCreation = {
   minPaymentAmount?: number;
   name?: string;
   paymentAmount?: number;
-  paymentType?: PaymentTypeResource;
+  paymentType?: PaymentType;
   touchpoint?: TouchpointsResource;
   transferCategoryList?: Array<string>;
   type?: 'GLOBAL' | 'PUBLIC' | 'PRIVATE';
@@ -30,7 +30,7 @@ export type CommissionPackageResource = {
   startDate: Date;
   endDate: Date;
   touchpoint: string;
-  paymentType: PaymentTypeResource;
+  paymentType: PaymentType;
   rangeAmountFrom: number;
   rangeAmountTo: number;
 };

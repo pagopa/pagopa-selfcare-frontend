@@ -219,23 +219,21 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          await createIban({
+          await createIban(values.creditorInstitutionCode, {
             iban: values.iban,
             description: values.description,
-            validityDate: values.validityDate,
-            dueDate: values.dueDate,
-            creditorInstitutionCode: values.creditorInstitutionCode,
-            active: true,
+            validity_date: values.validityDate!,
+            due_date: values.dueDate,
+            is_active: true,
           });
         } else {
-          await updateIban({
+          await updateIban(values.creditorInstitutionCode, {
             iban: values.iban,
             description: values.description,
-            validityDate: values.validityDate,
-            dueDate: values.dueDate,
-            creditorInstitutionCode: values.creditorInstitutionCode,
+            validity_date: values.validityDate!,
+            due_date: values.dueDate,
             labels: values.labels ?? undefined,
-            active: true,
+            is_active: true,
           });
         }
         history.push(ROUTES.IBAN);

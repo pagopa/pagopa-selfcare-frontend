@@ -23,7 +23,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import { Party } from '../../../model/Party';
-import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
 import { PaymentServiceProvidersResource } from '../../../api/generated/portal/PaymentServiceProvidersResource';
 import { getPSPDetails, getPaymentServiceProviders } from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';
@@ -36,8 +36,8 @@ function ChannelAssociatePSPPage() {
 
   const { channelId } = useParams<{ channelId: string }>();
 
-  const [selectedPSP, setSelectedPSP] = useState<DelegationResource | undefined>();
-  const [availablePSP, setAvailablePSP] = useState<Array<DelegationResource>>([]);
+  const [selectedPSP, setSelectedPSP] = useState<Delegation | undefined>();
+  const [availablePSP, setAvailablePSP] = useState<Array<Delegation>>([]);
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
 
   const formik = useFormik({
@@ -58,7 +58,7 @@ function ChannelAssociatePSPPage() {
   };
 
   const handleSubmit = async () => {
-    if (selectedPSP && selectedPSP.institutionId) {
+    if (selectedPSP && selectedPSP.institution_id) {
       setLoading(true);
 
       const pspsByTaxCode: PaymentServiceProvidersResource = await getPaymentServiceProviders(
@@ -66,7 +66,7 @@ function ChannelAssociatePSPPage() {
         undefined,
         undefined,
         undefined,
-        selectedPSP.taxCode
+        selectedPSP.tax_code
       );
       const pspToBeAssociatedDetails =
         pspsByTaxCode &&
@@ -79,7 +79,7 @@ function ChannelAssociatePSPPage() {
         associatePSPtoChannel(
           channelId,
           pspToBeAssociatedDetails.psp_code,
-          channelDetail?.payment_types ?? []
+            (channelDetail?.payment_types ?? []) as any
         )
           .then((_data) => {
             history.push(
@@ -185,7 +185,7 @@ function ChannelAssociatePSPPage() {
                   label={t('channelAssociatePSPPage.associationForm.PSPSelectionInputPlaceholder')}
                   availablePSP={availablePSP}
                   selectedPSP={selectedPSP}
-                  onPSPSelectionChange={(selectedPSP: DelegationResource | undefined) => {
+                  onPSPSelectionChange={(selectedPSP: Delegation | undefined) => {
                     setSelectedPSP(selectedPSP);
                   }}
                 />
@@ -220,7 +220,7 @@ function ChannelAssociatePSPPage() {
 
 export default ChannelAssociatePSPPage;
 
-const addCurrentPSP = (availablePSP: Array<DelegationResource>, selectedParty: Party) => {
+const addCurrentPSP = (availablePSP: Array<Delegation>, selectedParty: Party) => {
   const value = {
     institutionName: selectedParty?.description ?? '',
     institutionId: selectedParty.partyId,
@@ -228,7 +228,7 @@ const addCurrentPSP = (availablePSP: Array<DelegationResource>, selectedParty: P
   };
 
   const index = availablePSP.findIndex(
-    (object) => object.institutionId === selectedParty.partyId ?? ''
+    (object) => object.institution_id === selectedParty.partyId ?? ''
   );
 
   if (index === -1) {

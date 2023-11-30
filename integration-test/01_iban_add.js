@@ -11,7 +11,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
-    console.log("Iban add - start");
+    
 
     {
         const targetPage = page;
@@ -441,7 +441,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
     await browser.close();
 
-    console.log("Iban add - end");
+    
 
     async function waitForSelectors(selectors, frame, options) {
         for (const selector of selectors) {

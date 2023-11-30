@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { PSP } from '../../../model/PSP';
-import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
 import PSPSelectionSearchInput from './PSPSelectionSearchInput';
 import PSPItemContainer from './PSPSelectionSearchItemContainer';
 import PSPAccountItemSelection from './PSPAccountItemSelection';
 
 type Props = {
-  availablePSP: Array<DelegationResource>;
-  selectedPSP: DelegationResource | undefined;
-  onPSPSelectionChange: (selectedPSP: DelegationResource | undefined) => void;
+  availablePSP: Array<Delegation>;
+  selectedPSP: Delegation | undefined;
+  onPSPSelectionChange: (selectedPSP: Delegation | undefined) => void;
   label?: string;
   iconColor?: string;
   iconMarginRight?: string;
   PSPTitle?: string;
 };
 
-const verifyPSPFilter = (psp: DelegationResource, filter: string) =>
-  psp?.institutionName
-    ? psp.institutionName.toUpperCase().indexOf(filter.toUpperCase()) >= 0
+const verifyPSPFilter = (psp: Delegation, filter: string) =>
+  psp?.institution_name
+    ? psp.institution_name.toUpperCase().indexOf(filter.toUpperCase()) >= 0
     : false;
 
 const CustomBox = styled(Box)({
@@ -46,7 +46,7 @@ export default function PSPSelectionSearch({
   iconMarginRight,
 }: Props) {
   const [input, setInput] = useState<string>('');
-  const [filteredParties, setFilteredParties] = useState<Array<DelegationResource>>([]);
+  const [filteredParties, setFilteredParties] = useState<Array<Delegation>>([]);
 
   const onFilterChange = (value: string) => {
     setInput(value);
@@ -62,7 +62,7 @@ export default function PSPSelectionSearch({
 
   const handleListItemClick = (
     _event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    PSP: DelegationResource
+    PSP: Delegation
   ) => {
     onPSPSelectionChange(PSP);
   };
@@ -102,8 +102,8 @@ export default function PSPSelectionSearch({
               {filteredParties &&
                 filteredParties.map((PSP) => (
                   <PSPItemContainer
-                    key={PSP.institutionId}
-                    title={PSP.institutionName}
+                    key={PSP.institution_id}
+                    title={PSP.institution_name}
                     subTitle={/* t(roleLabels[PSP.userRole].longLabelKey) */ ''}
                     image={/* PSP.urlLogo */ ''}
                     action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>

@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
-import { IbansResource } from '../../../api/generated/portal/IbansResource';
+import { Ibans } from '../../../api/generated/portal/Ibans';
 import ROUTES from '../../../routes';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './IbanTableColumns';
@@ -14,7 +14,7 @@ import IbanTableEmpty from './IbanTableEmpty';
 const rowHeight = 64;
 const headerHeight = 56;
 
-type IbanTableProps = { ibanList: IbansResource; error: boolean; loading: boolean };
+type IbanTableProps = { ibanList: Ibans; error: boolean; loading: boolean };
 
 const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
   const { t } = useTranslation();
@@ -41,7 +41,7 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && ibanList.ibanList.length === 0 ? (
+        ) : !error && !loading && ibanList.ibans_enhanced.length === 0 ? (
           <IbanTableEmpty />
         ) : (
           <>
@@ -101,8 +101,8 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
               pageSize={3}
               pagination
               rowHeight={rowHeight}
-              rows={ibanList.ibanList ?? []}
-              rowCount={ibanList.ibanList.length}
+              rows={ibanList.ibans_enhanced ?? []}
+              rowCount={ibanList.ibans_enhanced.length}
               sortingMode="server"
             />
           </>

@@ -21,11 +21,6 @@ on:
         type: boolean
         description: skip the release. Only deploy
         default: false
-      beta:
-        required: false
-        type: boolean
-        description: it is a beta
-        default: false
 
 permissions:
   packages: write
@@ -130,12 +125,7 @@ jobs:
           export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
           export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
-
-          if [ "${{ inputs.beta }}" = "true" ]; then
-            export REACT_APP_URL_BETA='true'
-            export REACT_APP_PUBLIC_URL='/beta'
-            echo "beta"
-          fi
+          export REACT_APP_URL_BETA='false'
   
           export REACT_APP_API_MOCK_BACKOFFICE='false'
           export REACT_APP_API_MOCK_TOKEN='false'
@@ -195,19 +185,11 @@ jobs:
 
       - name: Deploy Stable
         uses: azure/CLI@v1
-        if: ${{ !inputs.beta }}
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}' --exclude-path beta
+            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
 
-      - name: Deploy Beta
-        uses: azure/CLI@v1
-        if: ${{ inputs.beta }}
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'beta/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}' --exclude-path ui
 
       - name: Purge
         uses: azure/CLI@v1

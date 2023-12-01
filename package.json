@@ -9,6 +9,7 @@
     "prestart": "npm-run-all envconfig",
     "start": "craco start",
     "start:local": "export $(grep -v '^#' .env.development.local) && ./env.sh && craco start",
+    "prebuild": "npm-run-all envconfig",
     "build": "craco build",
     "clean:build": "rimraf build",
     "test": "craco test -i",

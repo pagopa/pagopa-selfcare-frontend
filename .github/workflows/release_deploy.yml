@@ -193,7 +193,7 @@ jobs:
 
       - name: Deploy Stable
         uses: azure/CLI@v1
-        if: ${{ inputs.beta != 'true' }}
+        if: ${{ !inputs.beta }}
         with:
           azcliversion: latest
           inlineScript: |
@@ -201,7 +201,7 @@ jobs:
 
       - name: Deploy Beta
         uses: azure/CLI@v1
-        if: ${{ inputs.beta != 'true' }}
+        if: ${{ inputs.beta }}
         with:
           azcliversion: latest
           inlineScript: |

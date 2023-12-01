@@ -36,7 +36,7 @@ import {
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
 } from '../../../services/channelService';
-import { PaymentTypesResource } from '../../../api/generated/portal/PaymentTypesResource';
+import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
 import { Party } from '../../../model/Party';
 import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
 import { sortPaymentType } from '../../../model/PaymentType';
@@ -67,7 +67,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoading = useLoading(LOADING_TASK_CHANNEL_ADD_EDIT);
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [paymentOptions, setPaymentOptions] = useState<PaymentTypesResource>({ payment_types: [] });
+  const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>({ payment_types: [] });
   const operator = isOperator();
 
   const forwarder01 =
@@ -125,6 +125,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         timeout_a: channelDetail.timeout_a ?? 0,
         timeout_b: channelDetail.timeout_b ?? 0,
         timeout_c: channelDetail.timeout_c ?? 0,
+        validationUrl: ''
       };
     } else {
       return {
@@ -151,6 +152,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         timeout_a: 0,
         timeout_b: 0,
         timeout_c: 0,
+        validationUrl: ''
       };
     }
   };
@@ -405,7 +407,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       })}`;
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
-        await createWrapperChannelDetails(values, validationUrl);
+        await createWrapperChannelDetails(values as any, validationUrl);
         redirect();
       }
 
@@ -637,7 +639,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         required
                       >
                         {paymentOptions &&
-                          sortPaymentType(paymentOptions.payment_types).map((option: any) => (
+                          sortPaymentType(paymentOptions!.payment_types!).map((option: any) => (
                             <MenuItem key={option.payment_type} value={option.payment_type}>
                               {`${option.description} - ${option.payment_type}`}
                             </MenuItem>

@@ -14,13 +14,13 @@ import {
   WrapperStatusEnum,
 } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
-import { WrapperEntitiesOperations } from '../../api/generated/portal/WrapperEntitiesOperations';
-import { TypeEnum } from '../../api/generated/portal/WrapperEntityOperationsOfobject';
+import {TypeEnum, WrapperEntitiesOperations} from '../../api/generated/portal/WrapperEntitiesOperations';
 import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
 
+// @ts-ignore
 const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
   brokerCode: '97735020584',
@@ -37,9 +37,10 @@ const mockedStation: StationDetailResource = {
   targetPort: 3001,
 };
 
+// @ts-ignore
 export const mockedWrapperStation: WrapperStationDetailsDto = {
   stationCode: '81001870922_01',
-  primitiveVersion: 1,
+  primitiveVersion: 2,
   redirectProtocol: RedirectProtocolEnum.HTTPS,
   redirectPort: 3000,
   redirectIp: 'Esempio Ip',
@@ -50,6 +51,7 @@ export const mockedWrapperStation: WrapperStationDetailsDto = {
   targetPort: 3001,
 };
 
+// @ts-ignore
 export const mockedFullStation: StationDetailResource = {
   wrapperStatus: WrapperStatusEnum.TO_CHECK,
   stationCode: '81001870922_04',
@@ -441,7 +443,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       segregationCode: '11',
     },
   ],
-  page_info: { page: 0, limit: 10, items_found: 10, total_pages: 2, total_items: 11 },
+  page_info: { page: 0, limit: 10, items_found: 11, total_pages: 2 },
 };
 
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
@@ -453,7 +455,7 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
       broadcast: false,
     },
   ],
-  page_info: { page: 1, limit: 10, items_found: 10, total_pages: 2, total_items: 11 },
+  page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
 export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
   brokerCode: 'string',
@@ -612,8 +614,7 @@ export const getStationCodeMocked = (_code: string): Promise<StationCodeResource
   new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
-  _station: WrapperStationDetailsDto,
-  _validationUrl: string
+  _station: WrapperStationDetailsDto
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
@@ -624,13 +625,11 @@ export const getECListByStationCode = (
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
 
 export const updateWrapperStation = (
-  _stations: StationDetailsDto,
-  _validationUrl: string
+  _stations: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateWrapperStationByOpt = (
-  _stations: StationDetailsDto,
-  _validationUrl: string
+  _stations: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateStation = (

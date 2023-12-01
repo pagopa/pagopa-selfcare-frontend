@@ -27,7 +27,7 @@ import { Party } from '../../../model/Party';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionAssociatedCodeList } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { getStationAvailableEC } from '../../../services/stationService';
-import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -37,8 +37,8 @@ function StationAssociateECPage() {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
-  const [selectedEC, setSelectedEC] = useState<DelegationResource | undefined>();
-  const [availableEC, setAvailableEC] = useState<Array<DelegationResource>>([]);
+  const [selectedEC, setSelectedEC] = useState<Delegation | undefined>();
+  const [availableEC, setAvailableEC] = useState<Array<Delegation>>([]);
   const [segregationCodeList, setSegregationCodeList] =
     useState<CreditorInstitutionAssociatedCodeList>([
       {
@@ -55,7 +55,7 @@ function StationAssociateECPage() {
       getStationAvailableEC(selectedParty.partyId)
         .then((data) => {
           if (data) {
-            setAvailableEC(data as Array<DelegationResource>);
+            setAvailableEC(data as Array<Delegation>);
           }
         })
         .catch((reason) =>
@@ -78,9 +78,9 @@ function StationAssociateECPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedEC && selectedEC.brokerId) {
+    if (selectedEC && selectedEC.broker_id) {
       setLoadingList(true);
-      getCreditorInstitutionSegregationcodes(selectedEC.brokerId)
+      getCreditorInstitutionSegregationcodes(selectedEC.broker_id)
         .then((res) => {
           if (res && Array.isArray(res.unused)) {
             setSegregationCodeList(res);
@@ -136,9 +136,9 @@ function StationAssociateECPage() {
     values.stationCode !== '' && values.auxDigit !== 0 && values.segregationCode !== '';
 
   const submit = (values: CreditorInstitutionStationDto) => {
-    if (selectedEC && selectedEC.brokerId) {
+    if (selectedEC && selectedEC.broker_id) {
       setLoading(true);
-      associateEcToStation(selectedEC.brokerId, { ...values, stationCode: stationId })
+      associateEcToStation(selectedEC.broker_id, { ...values, stationCode: stationId })
         .then((_data) => {
           history.push(
             generatePath(ROUTES.STATION_EC_LIST, {
@@ -227,7 +227,7 @@ function StationAssociateECPage() {
                         )}
                         availableEC={availableEC}
                         selectedEC={selectedEC}
-                        onECSelectionChange={(selectedEC: DelegationResource | undefined) => {
+                        onECSelectionChange={(selectedEC: Delegation | undefined) => {
                           setSelectedEC(selectedEC);
                         }}
                       />
@@ -272,7 +272,7 @@ function StationAssociateECPage() {
                         {t('stationAssociateECPage.associationForm.segregationCode')}
                       </InputLabel>
                       <Select
-                        disabled={selectedEC?.brokerId === undefined}
+                        disabled={selectedEC?.broker_id === undefined}
                         id="segregationCode"
                         name="segregationCode"
                         label={t('stationAssociateECPage.associationForm.segregationCode')}

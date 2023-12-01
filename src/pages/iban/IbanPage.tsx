@@ -7,14 +7,14 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { IbansResource } from '../../api/generated/portal/IbansResource';
+import { Ibans } from '../../api/generated/portal/Ibans';
 import { LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
 import { IbanOnCreation } from '../../model/Iban';
 import { getIbanList } from '../../services/ibanService';
 import StandInAndCupForm from './StandInAndCupForm/StandInAndCupForm';
 
-const emptyIbanList: IbansResource = {
-  ibanList: [],
+const emptyIbanList: Ibans = {
+  ibans_enhanced: [],
 };
 
 export const emptyIban: IbanOnCreation = {
@@ -39,7 +39,7 @@ const IbanPage = () => {
   };
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [ibanList, setIbanList] = useState<IbansResource>(emptyIbanList);
+  const [ibanList, setIbanList] = useState<Ibans>(emptyIbanList);
 
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {

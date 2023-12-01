@@ -3,7 +3,6 @@ import { ChannelDetailsDto, ProtocolEnum } from '../../api/generated/portal/Chan
 import { ChannelDetailsResource } from '../../api/generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from '../../api/generated/portal/ChannelPspListResource';
 import { ChannelsResource } from '../../api/generated/portal/ChannelsResource';
-import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesResource';
 import { PspChannelPaymentTypes } from '../../api/generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from '../../api/generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from '../../api/generated/portal/PspChannelsResource';
@@ -20,7 +19,8 @@ import {
 import { ChannelOnCreation } from '../../model/Channel';
 import { PSP } from '../../model/PSP';
 import { WfespPluginConfs } from '../../api/generated/portal/WfespPluginConfs';
-import { DelegationResource } from '../../api/generated/portal/DelegationResource';
+import {PaymentTypes} from "../../api/generated/portal/PaymentTypes";
+import {Delegation} from "../../api/generated/portal/Delegation";
 
 export const mockedChannels: ChannelsResource = {
   channels: [
@@ -55,7 +55,6 @@ export const mockedChannels: ChannelsResource = {
     limit: 50,
     items_found: 50,
     total_pages: 8,
-    total_items: 400
   },
 };
 
@@ -86,7 +85,7 @@ const channelEnabled = (channel: PspChannelsResource) => {
   return newList;
 };
 
-export const mockedPaymentTypes: PaymentTypesResource = {
+export const mockedPaymentTypes: PaymentTypes = {
   payment_types: [
     {
       description: 'PostePay',
@@ -161,6 +160,7 @@ export const mockedWfespPlugIn: WfespPluginConfs = {
   ],
 };
 
+// @ts-ignore
 export const mockedChannel: ChannelDetailsDto = {
   agid: false,
   broker_description: 'string',
@@ -178,7 +178,7 @@ export const mockedChannel: ChannelDetailsDto = {
   on_us: false,
   password: 'string',
   payment_model: undefined,
-  payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
+  payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type) as any,
   port: 0,
   primitive_version: 1,
   protocol: ProtocolEnum.HTTPS,
@@ -201,6 +201,7 @@ export const mockedChannel: ChannelDetailsDto = {
   timeout_c: 3000,
 };
 
+// @ts-ignore
 export const mockedWrapperChannel: WrapperChannelDetailsDto = {
   broker_psp_code: 'broker_psp_code',
   broker_description: 'broker_description',
@@ -208,7 +209,7 @@ export const mockedWrapperChannel: WrapperChannelDetailsDto = {
   target_path: 'target_path',
   target_port: 8081,
   target_host: 'target_host',
-  payment_types: mockedPaymentTypes.payment_types.map(
+  payment_types: mockedPaymentTypes.payment_types!.map(
     (e, _i) => `${e.description} - ${e.payment_type}`
   ),
   status: StatusEnum.TO_CHECK,
@@ -219,7 +220,6 @@ export const mockedStationsMerged: WrapperChannelsResource = {
     limit: 10,
     items_found: 5,
     total_pages: 1,
-    total_items: 5
   },
   channels: [
     {
@@ -271,7 +271,7 @@ export const mockedChannelDetail = (channelId: string): ChannelDetailsResource =
   on_us: true,
   password: 'password',
   payment_model: undefined,
-  payment_types: mockedPaymentTypes.payment_types.map((e, _i) => e.payment_type),
+  payment_types: mockedPaymentTypes.payment_types!.map((e: any, _i: any) => e.payment_type),
   port: 8080,
   primitive_version: 1,
   protocol: ProtocolEnum.HTTPS,
@@ -329,9 +329,8 @@ export const mockedChannelPSPs: ChannelPspListResource = {
   page_info: {
     page: 0,
     limit: 5,
-    items_found: 5,
+    items_found: 8,
     total_pages: 2,
-    total_items: 8
   },
 };
 export const mockedChannelPSPsPage2: ChannelPspListResource = {
@@ -358,37 +357,36 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
   page_info: {
     page: 1,
     limit: 5,
-    items_found: 5,
+    items_found: 8,
     total_pages: 2,
-    total_items: 8
   },
 };
 
-export const mockedDelegatedPSP: Array<DelegationResource> = [
+export const mockedDelegatedPSP: Array<Delegation> = [
   {
-    brokerId: '12345',
-    institutionId: '0000001',
-    institutionName: 'PSP1',
+    broker_id: '12345',
+    institution_id: '0000001',
+    broker_name: 'PSP1',
   },
   {
-    institutionId: '0000002',
-    institutionName: 'PSP2',
+    institution_id: '0000002',
+    broker_name: 'PSP2',
   },
   {
-    institutionId: '0000003',
-    institutionName: 'PSP3',
+    institution_id: '0000003',
+    broker_name: 'PSP3',
   },
   {
-    institutionId: '0000004',
-    institutionName: 'PSP4',
+    institution_id: '0000004',
+    broker_name: 'PSP4',
   },
   {
-    institutionId: '0000005',
-    institutionName: 'PSP5',
+    institution_id: '0000005',
+    broker_name: 'PSP5',
   },
   {
-    institutionId: '0000006',
-    institutionName: 'PSP6',
+    institution_id: '0000006',
+    broker_name: 'PSP6',
   },
 ];
 
@@ -417,7 +415,7 @@ export const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations
         target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
         target_port: 8081,
         target_host: ' lab.link.it',
-        payment_types: mockedPaymentTypes.payment_types.map((e) => e.payment_type),
+        payment_types: mockedPaymentTypes.payment_types!.map((e: any) => e.payment_type),
         status: StatusEnum.TO_CHECK,
       },
       id: 'string',
@@ -452,20 +450,26 @@ export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =
   new Promise((resolve) => resolve(channelEnabled(mockedPSPChannels)));
 
 export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>
-  new Promise((resolve) => resolve(mockedChannel));
+  new Promise((resolve) => {
+    // @ts-ignore
+    resolve(mockedChannel);
+  });
 
 export const updateChannel = (
   _code: string,
   _channel: ChannelOnCreation
-): Promise<ChannelDetailsResource> => new Promise((resolve) => resolve(mockedChannel));
+): Promise<ChannelDetailsResource> => new Promise((resolve) => {
+  // @ts-ignore
+  resolve(mockedChannel);
+});
 
-export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
+export const getPaymentTypes = (): Promise<PaymentTypes> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));
 
 export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
-export const getDelegatedPSPbyBroker = (): Promise<Array<DelegationResource>> =>
+export const getDelegatedPSPbyBroker = (): Promise<Array<Delegation>> =>
   new Promise((resolve) => resolve(mockedDelegatedPSP));
 
 export const associatePSPtoChannel = (
@@ -484,7 +488,7 @@ export const createWrapperChannel = (
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
 export const updateWrapperChannel = (
-  _channel: WrapperChannelDetailsDto,
+  _channel: ChannelDetailsDto,
   _validationUrl: string
 ): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
 

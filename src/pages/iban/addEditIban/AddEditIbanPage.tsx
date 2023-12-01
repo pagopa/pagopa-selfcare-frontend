@@ -33,15 +33,15 @@ const AddEditIbanPage = () => {
       setLoading(true);
       getIbanList(creditorInstitutionCode)
         .then((response) => {
-          const filteredIban = response.ibanList.filter((e) => e.iban === ibanId);
+          const filteredIban = response.ibans_enhanced.filter((e: any) => e.iban === ibanId);
           setIban({
-            iban: filteredIban[0].iban,
+            iban: filteredIban[0].iban!,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ecOwner ?? creditorInstitutionCode,
-            validityDate: filteredIban[0].validityDate,
-            dueDate: filteredIban[0].dueDate,
+            creditorInstitutionCode: filteredIban[0].ci_owner ?? creditorInstitutionCode,
+            validityDate: filteredIban[0].validity_date!,
+            dueDate: filteredIban[0].due_date!,
             labels: filteredIban[0].labels,
-            active: filteredIban[0].active,
+            active: filteredIban[0].is_active!,
           });
         })
         .catch((reason) => {

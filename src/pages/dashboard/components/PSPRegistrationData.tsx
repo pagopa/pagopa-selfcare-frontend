@@ -38,7 +38,7 @@ const PSPRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {selectedParty?.pspData?.abiCode ?? '-'}
+          {selectedParty?.pspData?.abi_code ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>

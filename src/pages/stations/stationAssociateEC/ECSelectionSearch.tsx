@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { EC } from '../../../model/EC';
-import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
 import ECSelectionSearchInput from './ECSelectionSearchInput';
 import ECSelectionSearchItemContainer from './ECSelectionSearchItemContainer';
 import ECAccountItemSelection from './ECAccountItemSelection';
 
 type Props = {
-  availableEC: Array<DelegationResource>;
-  selectedEC: DelegationResource | undefined;
-  onECSelectionChange: (selectedEC: DelegationResource | undefined) => void;
+  availableEC: Array<Delegation>;
+  selectedEC: Delegation | undefined;
+  onECSelectionChange: (selectedEC: Delegation | undefined) => void;
   label?: string;
   iconColor?: string;
   iconMarginRight?: string;
   ECTitle?: string;
 };
 
-const verifyECFilter = (ec: DelegationResource, filter: string) =>
-  ec.brokerName && ec.brokerName.toUpperCase().indexOf(filter.toUpperCase()) >= 0;
+const verifyECFilter = (ec: Delegation, filter: string) =>
+  ec.broker_name && ec.broker_name.toUpperCase().indexOf(filter.toUpperCase()) >= 0;
 
 const CustomBox = styled(Box)({
   '&::-webkit-scrollbar': {
@@ -44,7 +44,7 @@ export default function ECSelectionSearch({
   iconMarginRight,
 }: Props) {
   const [input, setInput] = useState<string>('');
-  const [filteredParties, setFilteredParties] = useState<Array<DelegationResource>>([]);
+  const [filteredParties, setFilteredParties] = useState<Array<Delegation>>([]);
 
   const onFilterChange = (value: string) => {
     setInput(value);
@@ -53,7 +53,7 @@ export default function ECSelectionSearch({
     } else {
       setFilteredParties(
         availableEC.filter(
-          (e) => e.brokerName && e.brokerName.toUpperCase().includes(value.toUpperCase())
+          (e) => e.broker_name && e.broker_name.toUpperCase().includes(value.toUpperCase())
         )
       );
     }
@@ -65,7 +65,7 @@ export default function ECSelectionSearch({
 
   const handleListItemClick = (
     _event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    EC: DelegationResource
+    EC: Delegation
   ) => {
     onECSelectionChange(EC);
   };
@@ -105,8 +105,8 @@ export default function ECSelectionSearch({
               {filteredParties &&
                 filteredParties.map((EC) => (
                   <ECSelectionSearchItemContainer
-                    key={EC.brokerId}
-                    title={EC.brokerName}
+                    key={EC.broker_id}
+                    title={EC.broker_name}
                     subTitle={/* t(roleLabels[EC.userRole].longLabelKey) */ ''}
                     image={/* EC.urlLogo */ ''}
                     action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

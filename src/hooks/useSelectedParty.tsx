@@ -34,7 +34,7 @@ export const retrieveSelectedPartyIdConfig = (): PartyJwtConfig | null => {
   }
 };
 
-/** A custom hook to read the current partyId from JWT and then fetch it's information, caching the result into redux */
+/** A custom hook to read the current partyId from JWT and then fetch its information, caching the result into redux */
 export const useSelectedParty = (): (() => Promise<Party>) => {
   const dispatch = useAppDispatch();
   const partyJwtConfig: PartyJwtConfig | null = retrieveSelectedPartyIdConfig();
@@ -72,7 +72,6 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
       return new Promise<Party>((_, reject) => reject());
     } else if (!selectedParty || selectedParty.partyId !== partyJwtConfig.partyId) {
       setLoadingDetails(true);
-
       return fetchParty(partyJwtConfig.partyId)
         .finally(() => setLoadingDetails(false))
         .catch((e) => {
@@ -80,6 +79,7 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
           throw e;
         });
     } else {
+      
       return new Promise<Party>((resolve) => resolve(selectedParty));
     }
   };

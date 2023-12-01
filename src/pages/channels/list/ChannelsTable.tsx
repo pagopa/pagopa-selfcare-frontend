@@ -111,7 +111,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && channels.channels.length === 0 ? (
+        ) : !error && !loading && channels?.channels?.length === 0 ? (
           <>
             <ChannelTableEmpty></ChannelTableEmpty>
           </>
@@ -130,7 +130,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
                 <>
                   <Pagination
                     color="primary"
-                    count={channels.page_info.total_pages ?? 0}
+                    count={channels?.page_info?.total_pages ?? 0}
                     page={pagePaginator + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => {
                       setPage(value - 1);
@@ -179,9 +179,9 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="server"
-            rowCount={channels.channels.length}
+            rowCount={channels.channels!.length}
             rowHeight={rowHeight}
-            rows={channels.channels}
+            rows={channels.channels as any}
             sortingMode="server"
             onSortModelChange={handleSortModelChange}
           />

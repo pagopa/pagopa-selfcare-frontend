@@ -1,4 +1,4 @@
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { StationsResource } from '../api/generated/portal/StationsResource';
 import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
 import {
@@ -27,23 +27,23 @@ import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStation
 import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
-import { DelegationResource } from '../api/generated/portal/DelegationResource';
+import {Delegation} from "../api/generated/portal/Delegation";
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createStationMocked(station);
   }
-  return PortalApi.createStation(station).then((resources) => resources);
+  return BackofficeApi.createStation(station).then((resources) => resources);
 };
 
 export const getStations = (
   page: number,
   creditorInstitutionCode?: string
 ): Promise<StationsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationsMocked(0);
   }
-  return PortalApi.getStations(page, creditorInstitutionCode).then((resource) => resource);
+  return BackofficeApi.getStations(page, creditorInstitutionCode).then((resource) => resource);
 };
 
 export const getStationsMerged = (
@@ -53,27 +53,26 @@ export const getStationsMerged = (
   limit?: number,
   sorting?: string
 ): Promise<WrapperStationsResource> => {
-  // if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-  //   return getStationsMergedMocked(page, brokerCode, stationcode, limit, sorting);
-  // }
-  console.log("");
-  return PortalApi.getStationsMerged(page, brokerCode, stationcode, limit, sorting).then(
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getStationsMergedMocked(page, brokerCode, stationcode, limit, sorting);
+  }
+  return BackofficeApi.getStationsMerged(page, brokerCode, stationcode, limit, sorting).then(
     (resource) => resource
   );
 };
 
 export const getStation = (stationId: string): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationDetail(stationId);
   }
-  return PortalApi.getStation(stationId).then((resource) => resource);
+  return BackofficeApi.getStation(stationId).then((resource) => resource);
 };
 
 export const getStationCode = (code: string): Promise<StationCodeResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationCodeMocked(code);
   }
-  return PortalApi.getStationCode(code).then((resource) => resource);
+  return BackofficeApi.getStationCode(code).then((resource) => resource);
 };
 
 export const getECListByStationCode = (
@@ -82,10 +81,10 @@ export const getECListByStationCode = (
   limit?: number
 ): Promise<CreditorInstitutionsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getECListByStationCodeMocked(stationcode, page, limit);
   } else {
-    return PortalApi.getECListByStationCode(stationcode, page, limit).then(
+    return BackofficeApi.getECListByStationCode(stationcode, page, limit).then(
       (resources) => resources
     );
   }
@@ -93,10 +92,10 @@ export const getECListByStationCode = (
 
 export const dissociateECfromStation = (ecCode: string, stationCode: string): Promise<void> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return dissociateECfromStationMocked(ecCode, stationCode);
   } else {
-    return PortalApi.dissociateECfromStation(ecCode, stationCode).then((resources) => resources);
+    return BackofficeApi.dissociateECfromStation(ecCode, stationCode).then((resources) => resources);
   }
 };
 
@@ -104,75 +103,71 @@ export const associateEcToStation = (
   code: string,
   station: CreditorInstitutionStationDto
 ): Promise<CreditorInstitutionStationEditResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return associateEcToStationMocked(code, station);
   }
-  return PortalApi.associateEcToStation(code, station).then((resource) => resource);
+  return BackofficeApi.associateEcToStation(code, station).then((resource) => resource);
 };
 
 export const getStationAvailableEC = (
   institutionId?: string,
   brokerId?: string
-): Promise<DelegationResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+): Promise<Delegation> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationAvailableECMocked();
   } else {
-    return PortalApi.getStationAvailableEc(institutionId, brokerId).then((resource) => resource);
+    return BackofficeApi.getStationAvailableEc(institutionId!).then((resource) => resource);
   }
 };
 
 export const createWrapperStation = (
   station: WrapperStationDetailsDto,
-  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return createStationWrap(station, validationUrl);
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return createStationWrap(station);
   }
-  return PortalApi.createWrapperStation(station, validationUrl).then((resources) => resources);
+  return BackofficeApi.createWrapperStation(station).then((resources) => resources);
 };
 
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationWrap(ecCode);
   } else {
-    return PortalApi.getWrapperEntitiesStation(ecCode).then((resources) => resources);
+    return BackofficeApi.getWrapperEntitiesStation(ecCode).then((resources) => resources);
   }
 };
 
 export const updateWrapperStationToCheck = (
   station: StationDetailsDto,
-  validationUrl: string
 ): Promise<WrapperEntitiesOperations> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrap(station, validationUrl);
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateStationWrap(station);
   } else {
-    return PortalApi.updateWrapperStationToCheck(station, validationUrl).then(
+    return BackofficeApi.updateWrapperStationToCheck(station.stationCode, station).then(
       (resources) => resources
     );
   }
 };
 
 export const updateWrapperStationToCheckUpdate = (
-  station: StationDetailsDto,
-  validationUrl: string
+  station: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrap(station, validationUrl);
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateStationWrap(station);
   } else {
-    return PortalApi.updateWrapperStationToCheckUpdate(station, validationUrl).then(
+    return BackofficeApi.updateWrapperStationToCheckUpdate(station.stationCode, station).then(
       (resources) => resources
     );
   }
 };
 
 export const updateWrapperStationByOpt = (
-  station: StationDetailsDto,
-  validationUrl: string
+  station: StationDetailsDto
 ): Promise<WrapperEntitiesOperations> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return updateStationWrapByOpt(station, validationUrl);
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateStationWrapByOpt(station);
   } else {
-    return PortalApi.updateWrapperStationByOpt(station, validationUrl).then(
+    return BackofficeApi.updateWrapperStationByOpt(station).then(
       (resources) => resources
     );
   }
@@ -182,25 +177,25 @@ export const updateStation = (
   station: StationDetailsDto,
   stationCode: string
 ): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return UpdateStationMocked(station, stationCode);
   } else {
-    return PortalApi.updateStation(station, stationCode).then((resources) => resources);
+    return BackofficeApi.updateStation(station, stationCode).then((resources) => resources);
   }
 };
 
 export const getStationDetail = (stationId: string): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationDetailMock(stationId);
   } else {
-    return PortalApi.getStationDetail(stationId).then((resource) => resource);
+    return BackofficeApi.getStationDetail(stationId).then((resource) => resource);
   }
 };
 
 export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionSegregationcodesMocked(ecCode);
   } else {
-    return PortalApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
+    return BackofficeApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
   }
 };

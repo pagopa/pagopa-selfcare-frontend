@@ -46,7 +46,7 @@ jobs:
             const additions = context.payload.pull_request.additions || 0
             const deletions = context.payload.pull_request.deletions || 0
             var changes = additions + deletions
-            console.log('additions: '+additions+' + deletions: '+deletions+ ' = total changes: ' + changes);
+            
 
             const { IGNORED_FILES } = process.env
             const ignored_files = IGNORED_FILES.trim().split(',').filter(word => word.length > 0);
@@ -68,7 +68,7 @@ jobs:
                 ignored += ignored_additions + ignored_deletions;
               }
               changes -= ignored
-              console.log('ignored lines: ' + ignored + ' , consider changes: ' + changes);
+              
             }
 
             if (changes < 200){

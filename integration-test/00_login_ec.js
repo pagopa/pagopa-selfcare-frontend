@@ -29,69 +29,45 @@ const login = (async () => {
     await targetPage.goto('https://dev.selfcare.pagopa.it/auth/login');
     await Promise.all(promises);
   }
-  {
-    const targetPage = page;
-    await scrollIntoViewIfNeeded(
-      [
-        ['aria/Entra con SPID'],
-        ['#spidButton'],
-        ['xpath///*[@id="spidButton"]'],
-        ['pierce/#spidButton'],
-        ['text/Entra con SPID'],
-      ],
-      targetPage,
-      timeout
-    );
-    const element = await waitForSelectors(
-      [
-        ['aria/Entra con SPID'],
-        ['#spidButton'],
-        ['xpath///*[@id="spidButton"]'],
-        ['pierce/#spidButton'],
-        ['text/Entra con SPID'],
-      ],
-      targetPage,
-      { timeout, visible: true }
-    );
-    await element.click({
-      offset: {
-        x: 194,
-        y: 29.203125,
-      },
-    });
-  }
-  {
-    const targetPage = page;
-    const promises = [];
-    promises.push(targetPage.waitForNavigation());
-    await scrollIntoViewIfNeeded(
-      [
-        ['aria/test[role="img"]'],
-        ['div:nth-of-type(12) img'],
-        ['xpath///*[@id="xx_testenv2"]/span[1]/img'],
-        ['pierce/div:nth-of-type(12) img'],
-      ],
-      targetPage,
-      timeout
-    );
-    const element = await waitForSelectors(
-      [
-        ['aria/test[role="img"]'],
-        ['div:nth-of-type(12) img'],
-        ['xpath///*[@id="xx_testenv2"]/span[1]/img'],
-        ['pierce/div:nth-of-type(12) img'],
-      ],
-      targetPage,
-      { timeout, visible: true }
-    );
-    await element.click({
-      offset: {
-        x: 47.5,
-        y: 31,
-      },
-    });
-    await Promise.all(promises);
-  }
+    {
+        const targetPage = page;
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(Entra da qui)'),
+            targetPage.locator('div.css-11byk5y a'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div/div[1]/div[4]/div/div/div[2]/a)'),
+            targetPage.locator(':scope >>> div.css-11byk5y a'),
+            targetPage.locator('::-p-text(Entra da qui)')
+        ])
+            .setTimeout(timeout)
+            .click({
+                offset: {
+                    x: 30.9375,
+                    y: 15.203125,
+                },
+            });
+    }
+    {
+        const targetPage = page;
+        const promises = [];
+        const startWaitingForEvents = () => {
+            promises.push(targetPage.waitForNavigation());
+        }
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(test[role=\\"image\\"])'),
+            targetPage.locator('div:nth-of-type(13) img'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"xx_testenv2\\"]/span[1]/img)'),
+            targetPage.locator(':scope >>> div:nth-of-type(13) img')
+        ])
+            .setTimeout(timeout)
+            .on('action', () => startWaitingForEvents())
+            .click({
+                offset: {
+                    x: 65.5,
+                    y: 18,
+                },
+            });
+        await Promise.all(promises);
+    }
   {
     const targetPage = page;
     await scrollIntoViewIfNeeded(
@@ -357,37 +333,37 @@ const login = (async () => {
     );
     const inputType = await element.evaluate((el) => el.type);
     if (inputType === 'select-one') {
-      await changeSelectElement(element, 'comune di Portoscuso');
+      await changeSelectElement(element, 'EC Signed Direct');
     } else if (
       ['textarea', 'text', 'url', 'tel', 'search', 'password', 'number', 'email'].includes(
         inputType
       )
     ) {
-      await typeIntoElement(element, 'comune di Portoscuso');
+      await typeIntoElement(element, 'EC Signed Direct');
     } else {
-      await changeElementValue(element, 'comune di Portoscuso');
+      await changeElementValue(element, 'EC Signed Direct');
     }
   }
   {
     const targetPage = page;
     await scrollIntoViewIfNeeded(
       [
-        ['aria/Comune di Portoscuso'],
+        ['aria/EC Signed Direct'],
         ['h6'],
-        ['xpath///*[@data-testid="PartyItemContainer: Comune di Portoscuso"]/div/div/div[2]/h6'],
+        ['xpath///*[@data-testid="PartyItemContainer: EC Signed Direct"]/div/div/div[2]/h6'],
         ['pierce/h6'],
-        ['text/Comune di Portoscuso'],
+        ['text/EC Signed Direct'],
       ],
       targetPage,
       timeout
     );
     const element = await waitForSelectors(
       [
-        ['aria/Comune di Portoscuso'],
+        ['aria/EC Signed Direct'],
         ['h6'],
-        ['xpath///*[@data-testid="PartyItemContainer: Comune di Portoscuso"]/div/div/div[2]/h6'],
+        ['xpath///*[@data-testid="PartyItemContainer: EC Signed Direct"]/div/div/div[2]/h6'],
         ['pierce/h6'],
-        ['text/Comune di Portoscuso'],
+        ['text/EC Signed Direct'],
       ],
       targetPage,
       { timeout, visible: true }
@@ -544,7 +520,7 @@ const login = (async () => {
     });
   }
 
-  console.log('logged');
+  
 
   {
     const targetPage = page;

@@ -73,7 +73,7 @@ export const getStationCategoryFromDetail = (station: StationOnCreation, env: st
   return undefined;
 };
 
-export const alterStationValuesToFitCategories = (station: StationOnCreation, env: string) => {
+export const alterStationValuesToFitCategories = (station: StationOnCreation, env: string): any => {
   /* Stations can be created in three different flavours:
    ** 1. Async GPD -> Creditor Institution doesn't set Target field and Operator set GPD field
    **    a. IP/PORT/SERVICE/PROTOCOL fields will be valorized with GPD values

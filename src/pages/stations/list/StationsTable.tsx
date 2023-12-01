@@ -44,16 +44,14 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      console.log("request getStationsMerged", brokerCode, stationCode);
       getStationsMerged(
         page,
         brokerCode,
-        stationCode,
+        stationCode ? stationCode : undefined,
         undefined,
         stationCodeSort
       )
         .then((res) => {
-          console.log("set stations filtered", res);
           setStations(res);
           setError(false);
         })

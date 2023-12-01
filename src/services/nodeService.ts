@@ -10,7 +10,7 @@ import { PaymentServiceProviderDetailsDto } from '../api/generated/portal/Paymen
 import { PaymentServiceProviderDetailsResource } from '../api/generated/portal/PaymentServiceProviderDetailsResource';
 import { PaymentServiceProvidersResource } from '../api/generated/portal/PaymentServiceProvidersResource';
 import { UpdateCreditorInstitutionDto } from '../api/generated/portal/UpdateCreditorInstitutionDto';
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
 
@@ -35,18 +35,18 @@ export const createPSPDirect = (
   psp: NodeOnSignInPSP
 ): Promise<PaymentServiceProviderDetailsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createPSPDirectMocked(psp);
   } else {
-    return PortalApi.createPSPDirect(psp).then((resources) => resources);
+    return BackofficeApi.createPSPDirect(psp).then((resources) => resources);
   }
 };
 
 export const createPspBroker = (broker: BrokerPspDetailsDto): Promise<BrokerPspDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createPspBrokerMocked(broker);
   } else {
-    return PortalApi.createPspBroker(broker).then((resources) => resources);
+    return BackofficeApi.createPspBroker(broker).then((resources) => resources);
   }
 };
 
@@ -54,47 +54,47 @@ export const updatePSPInfo = (
   pspcode: string,
   psp: NodeOnSignInPSP
 ): Promise<PaymentServiceProviderDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updatePSPInfoMocked(pspcode, psp);
   } else {
-    return PortalApi.updatePaymentServiceProvider(pspcode, psp);
+    return BackofficeApi.updatePaymentServiceProvider(pspcode, psp);
   }
 };
 
 export const createPSPIndirect = (
   psp: NodeOnSignInPSP
 ): Promise<PaymentServiceProviderDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createPSPIndirectMocked(psp);
   } else {
-    return PortalApi.createPSPIndirect(psp);
+    return BackofficeApi.createPSPIndirect(psp);
   }
 };
 
 export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBrokerAndPspDetailsMocked(pspcode);
   } else {
-    return PortalApi.getBrokerAndPspDetails(pspcode).then((resources) => resources);
+    return BackofficeApi.getBrokerAndPspDetails(pspcode).then((resources) => resources);
   }
 };
 
 export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getPSPBrokerDetailsMocked(pspBrokerCode);
   } else {
-    return PortalApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
+    return BackofficeApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
   }
 };
 
 export const getPSPDetails = (pspCode: string): Promise<PaymentServiceProviderDetailsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getPSPDetailsMoked(pspCode);
   } else {
-    return PortalApi.getPSPDetails(pspCode).then((resources) => resources);
+    return BackofficeApi.getPSPDetails(pspCode).then((resources) => resources);
   }
 };
 
@@ -105,10 +105,10 @@ export const getPaymentServiceProviders = (
   pspCode?: string,
   taxCode?: string
 ): Promise<PaymentServiceProvidersResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getPaymentServiceProvidersMocked(page, name, limit, pspCode, taxCode);
   } else {
-    return PortalApi.getPaymentServiceProviders(page, name, limit, pspCode, taxCode).then(
+    return BackofficeApi.getPaymentServiceProviders(page, name, limit, pspCode, taxCode).then(
       (resources) => resources
     );
   }
@@ -116,38 +116,38 @@ export const getPaymentServiceProviders = (
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBrokerAndEcDetailsMocked(ecCode);
   } else {
-    return PortalApi.getBrokerAndEcDetails(ecCode).then((resources) => resources);
+    return BackofficeApi.getBrokerAndEcDetails(ecCode).then((resources) => resources);
   }
 };
 
 export const createECAndBroker = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createECAndBrokerMocked(ec);
   } else {
-    return PortalApi.createECAndBroker(ec).then((resources) => resources);
+    return BackofficeApi.createECAndBroker(ec).then((resources) => resources);
   }
 };
 
 export const createEcBroker = (broker: BrokerDto): Promise<BrokerResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createEcBrokerMocked(broker);
   } else {
-    return PortalApi.createEcBroker(broker).then((resources) => resources);
+    return BackofficeApi.createEcBroker(broker).then((resources) => resources);
   }
 };
 
 export const createECIndirect = (
   ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createECIndirectMocked(ec);
   } else {
-    return PortalApi.createECIndirect(ec).then((resources) => resources);
+    return BackofficeApi.createECIndirect(ec).then((resources) => resources);
   }
 };
 
@@ -155,9 +155,9 @@ export const updateCreditorInstitution = (
   ecCode: string,
   ec: UpdateCreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateECDirect(ecCode, ec);
   } else {
-    return PortalApi.updateCreditorInstitution(ecCode, ec).then((resources) => resources);
+    return BackofficeApi.updateCreditorInstitution(ecCode, ec).then((resources) => resources);
   }
 };

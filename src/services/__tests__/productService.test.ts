@@ -1,14 +1,14 @@
-import { mockedProductResources } from '../../api/__mocks__/PortalApiClient';
+import { mockedProductResources } from '../../api/__mocks__/BackofficeClient';
 import { fetchProducts } from '../productService';
 import { productResource2Product } from '../../model/Product';
 
-//jest.mock('../../api/PortalApiClient');
+//jest.mock('../../api/BackofficeClient');
 
 //let fetchProductsSpy: any;
 
 beforeEach(() => {
   //fetchProductsSpy = jest.spyOn(require('../productService'), 'fetchProducts');
-  //jest.spyOn(PortalApi, 'getProductRoles');
+  //jest.spyOn(BackofficeApi, 'getProductRoles');
 });
 
 test('Test fetchProducts', async () => {

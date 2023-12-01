@@ -84,7 +84,7 @@ const AddEditOperationTableForm = ({ selectedParty, goBack, operationTableDetail
     };
     setLoading(true);
     try {
-      await (isUpdate ? updateOperationTable(payload) : createOperationTable(payload));
+      await (isUpdate ? updateOperationTable(selectedParty.partyId, payload) : createOperationTable(payload));
 
       history.push(ROUTES.HOME);
     } catch (reason: any) {

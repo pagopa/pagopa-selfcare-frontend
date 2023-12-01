@@ -31,7 +31,7 @@ const StationDetailPage = () => {
     Promise.all([getStationDetail(stationId), getECListByStationCode(stationId, 0)])
       .then(([stationDetail, ecList]) => {
         setStationDetail(stationDetail);
-        setECAssociatedNumber(ecList?.page_info?.total_items ?? 0);
+        setECAssociatedNumber(ecList?.page_info?.items_found ?? 0);
       })
       .catch((reason) => {
         addError({

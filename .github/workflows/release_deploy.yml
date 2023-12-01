@@ -143,7 +143,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='true'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='jacopo.carlini@pagopa.it;stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;g.lor.bernini@test.email.it;a.canova@test.emai.it'
+            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;g.lor.bernini@test.email.it;a.canova@test.emai.it'
           fi
 
           if [ "${{ inputs.environment }}" = "uat" ]; then
@@ -153,7 +153,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='jacopo.carlini@pagopa.it;stefano.bafaro@pagopa.it;'
+            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='cristiano.sticca@pagopa.it;stefano.bafaro@pagopa.it;'
           fi
 
           if [ "${{ inputs.environment }}" = "prod" ]; then
@@ -163,7 +163,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='false'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='jacopo.carlini@pagopa.it;stefano.bafaro@pagopa.it;'
+            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='cristiano.sticca@pagopa.it;stefano.bafaro@pagopa.it;'
           fi
 
           yarn install

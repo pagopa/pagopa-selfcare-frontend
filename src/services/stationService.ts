@@ -53,9 +53,10 @@ export const getStationsMerged = (
   limit?: number,
   sorting?: string
 ): Promise<WrapperStationsResource> => {
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
-    return getStationsMergedMocked(page, brokerCode, stationcode, limit, sorting);
-  }
+  // if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  //   return getStationsMergedMocked(page, brokerCode, stationcode, limit, sorting);
+  // }
+  console.log("");
   return PortalApi.getStationsMerged(page, brokerCode, stationcode, limit, sorting).then(
     (resource) => resource
   );

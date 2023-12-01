@@ -1,10 +1,9 @@
 import * as env from 'env-var';
 import {getConfig, Type} from "./config";
 
-const PUBLIC_URL_INNER: string | undefined = env.get('REACT_APP_PUBLIC_URL').asString() || '/ui';
 export const ENV = {
   ENV: env.get('REACT_APP_ENV').required().asString(),
-  PUBLIC_URL: PUBLIC_URL_INNER,
+  PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', {default: 'ui'}),
 
   PAGOPA_OPERATOR: {
     MAIL_ADDRESSES: getConfig('REACT_APP_OPERATOR_EMAIL_ADDRESSES', {required: true}),

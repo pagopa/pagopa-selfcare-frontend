@@ -135,8 +135,8 @@ jobs:
             echo "beta"
           fi
   
-          export REACT_APP_API_MOCK_BACKOFFICE=false
-          export REACT_APP_API_MOCK_TOKEN=true
+          export REACT_APP_API_MOCK_BACKOFFICE='false'
+          export REACT_APP_API_MOCK_TOKEN='false'
           
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
 

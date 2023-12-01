@@ -3,8 +3,8 @@
   "info": {
     "description": "Microservice to manage PagoPA Backoffice",
     "termsOfService": "https://www.pagopa.gov.it/",
-    "title": "pagopa-selfcare-ms-backoffice",
-    "version": "0.4.66"
+    "title": "spring-boot-starter-parent",
+    "version": "0.4.66-5-reengineering"
   },
   "servers": [
     {
@@ -17,12 +17,12 @@
           "default": "/backoffice/v1"
         },
         "host": {
-          "default": "api.dev.platform.pagopa.it",
           "enum": [
             "api.dev.platform.pagopa.it",
             "api.uat.platform.pagopa.it",
             "api.platform.pagopa.it"
-          ]
+          ],
+          "default": "api.dev.platform.pagopa.it"
         }
       }
     }
@@ -838,6 +838,12 @@
             }
           }
         },
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "summary": "Get channel's details from cosmos db merged whit apiConfig",
         "tags": [
           "Channels"
         ]
@@ -1092,6 +1098,12 @@
             }
           }
         },
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "summary": "Get channel's details",
         "tags": [
           "Channels"
         ]
@@ -2237,6 +2249,42 @@
         "summary": "delete the relationship between the created station and the creditorInstitution",
         "tags": [
           "Creditor institutions"
+        ]
+      },
+      "parameters": []
+    },
+    "/info": {
+      "get": {
+        "description": "Return OK if application is started",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppInfo"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "X-Request-Id": {
+                "description": "This header identifies the call",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "summary": "health check",
+        "tags": [
+          "Home"
         ]
       },
       "parameters": []
@@ -4308,6 +4356,20 @@
   },
   "components": {
     "schemas": {
+      "AppInfo": {
+        "type": "object",
+        "properties": {
+          "environment": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
       "AssistanceContact": {
         "type": "object",
         "properties": {
@@ -5980,7 +6042,8 @@
         "required": [
           "description",
           "id",
-          "title"
+          "title",
+          "url_bo"
         ],
         "type": "object",
         "properties": {

@@ -129,6 +129,8 @@ jobs:
 
           export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
           export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
+          export REACT_APP_PUBLIC_URL='/ui'
+
           if [ "${{ inputs.beta }}" = "true" ]; then
             export REACT_APP_URL_BETA='true'
             export REACT_APP_PUBLIC_URL='/beta'

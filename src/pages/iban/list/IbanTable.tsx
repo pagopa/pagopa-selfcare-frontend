@@ -24,6 +24,7 @@ const IbanTable = ({ ibanList, error, loading }: IbanTableProps) => {
 
   const onRowClick = (ibanRow: string) => {
     setSelectedIban(ibanRow);
+    console.log(ibanRow);
     history.push(generatePath(ROUTES.IBAN_DETAIL, { ibanId: ibanRow }));
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);

@@ -45,7 +45,7 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params, params.row.validityDate.toLocaleDateString('en-GB')),
+        renderCell(params, params.row.validity_date.toLocaleDateString('en-GB')),
       sortable: false,
       flex: 3,
     },
@@ -190,7 +190,7 @@ export function showStatus(params: GridRenderCellParams) {
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.active ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.active ? 'primary.main' : 'error.light',
+          backgroundColor: params.row.is_active ? 'primary.main' : 'error.light',
           paddingBottom: '1px',
           height: '24px',
         }}

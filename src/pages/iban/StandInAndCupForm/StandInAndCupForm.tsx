@@ -317,7 +317,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           inputProps={{
                             'data-testid': 'stand-in-test',
                           }}
-                          disabled
                         >
                           {ibanActiveList.ibanList.map((r, i) => (
                             <MenuItem key={i} value={r.iban}>

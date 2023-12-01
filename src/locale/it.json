@@ -62,7 +62,9 @@
       "signInCTA": "Completa registrazione",
       "generateApiKeysStepAlertPSP": "Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.",
       "generateApiKeyStepAlertEC": "Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.",
-      "generateApiKeysCTA": "Genera API Key"
+      "generateApiKeysCTA": "Genera API Key",
+      "completedAllStepsPSP": "La registrazione sul Nodo e la generazione delle API Key è stata ultimata. Sei pronto per la creazione dei canali.",
+      "completedAllStepsEC": "La registrazione sul Nodo e la generazione delle API Key è stata ultimata. Sei pronto per la creazione delle stazioni."
     },
     "operationTable": {
       "title": "Tavolo operativo",

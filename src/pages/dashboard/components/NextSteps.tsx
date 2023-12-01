@@ -37,7 +37,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
       <Box mb={3}>
         {isSignedIn && hasApiKey ? (
           <Alert severity="info">
-            {t(`dashboardPage.nextStep.${isPSP ? 'completedAllStepsPSP' : 'completedAllStepsEC'}`)}
+            {t(`dashboardPage.nextStep.completedAllSteps`)}
           </Alert>
         ) : (
           <Alert severity="warning">

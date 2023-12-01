@@ -142,6 +142,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
               const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
               setParty(partyToSwitch);
               if (partyToSwitch) {
+                  console.log('Header', partyToSwitch);
                 void updateSigninData(partyToSwitch);
               }
             } else {

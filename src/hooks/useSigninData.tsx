@@ -21,6 +21,7 @@ export const useSigninData = () => {
   return async (party: Party) => {
     await fetchSigninData(party)
       .then((result) => {
+        console.log('UPDATE Signin DATA', result);
         setSigninData(result);
       })
       .catch((error) => console.error(error));
@@ -39,7 +40,15 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
     }
 
     if (party.institutionType === 'PSP') {
-      const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      // eslint-disable-next-line functional/no-let
+      let pspBrokerDetails: any = {};
+      try{
+       pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      }
+      catch (e){
+        // not found
+      }
+
 
       const pspList: PaymentServiceProvidersResource = await getPaymentServiceProviders(
         0,
@@ -56,14 +65,16 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
         pspList.payment_service_providers[0].psp_code
           ? await getPSPDetails(pspList.payment_service_providers[0].psp_code)
           : {};
-
+      console.log('pspBrokerDetails',pspBrokerDetails);
+      console.log('pspDetails',pspList);
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         paymentServiceProviderDetailsResource: {
           ...pspDetails,
         }  as any,
       };
-    } else {
+    }
+    else {
       return await getBrokerAndEcDetails(party.fiscalCode);
     }
   } catch (error) {

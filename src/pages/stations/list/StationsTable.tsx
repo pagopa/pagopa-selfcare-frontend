@@ -42,7 +42,6 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
   };
 
   useEffect(() => {
-    console.log("useEffect page", brokerCode);
     if (brokerCode) {
       setLoadingStatus(true);
       console.log("request getStationsMerged", brokerCode, stationCode);

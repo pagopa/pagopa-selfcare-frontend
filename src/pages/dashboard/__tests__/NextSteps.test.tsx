@@ -94,7 +94,7 @@ test('Test - EC direct signed - admin', async () => {
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeVisible();
+  ).toBeNull();
 });
 
 test('Test - PSP direct signed - operator', async () => {
@@ -118,7 +118,7 @@ test('Test - PSP direct signed - operator', async () => {
     screen.queryByRole('link', {
       name: /Genera API Key/i,
     })
-  ).toBeVisible();
+  ).toBeNull();
 });
 
 test('Test - PSP unsigned - operator', async () => {

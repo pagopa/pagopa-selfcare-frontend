@@ -95,7 +95,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     field: string,
     formik: FormikProps<NodeOnSignInPSP>
   ) => {
-    const regex = /^[0-9\b]+$/;
+    const regex = /^[A-Z0-9]+$/;
     if (e.target.value === '' || regex.test(e.target.value)) {
       formik.setFieldValue(field, e.target.value);
     }
@@ -293,8 +293,8 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                     size="small"
                     inputProps={{
                       maxLength: 5,
-                      inputMode: 'numeric',
-                      pattern: '[0-9]*',
+                      inputMode: 'text',
+                      pattern: '[A-Z0-9]*',
                       'data-testid': 'bicCode-test',
                     }}
                     value={formik.values.bicCode}

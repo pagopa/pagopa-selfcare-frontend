@@ -45,7 +45,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const [ibanActiveList, setIbanActiveList] = useState<Ibans>({ ibans_enhanced: [] });
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
   const { t } = useTranslation();
-  const ecCode = selectedParty?.fiscalCode ?? '';
+  const creditorInstitutionCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
     if (ibanList.ibans_enhanced.length > 0) {
@@ -57,7 +57,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
   const filterListStandInAndCup = () => {
     const ibanStandInFiltered = ibanList.ibans_enhanced.find(
-      (e) => e.labels && e.labels.find((label) => label.name === 'STANDIN')
+      (e) => e.labels && e.labels.find((label) => label.name === 'ACA')
     );
     const ibanCupFiltered = ibanList.ibans_enhanced.find(
       (e) => e.labels && e.labels.find((label) => label.name === '0201138TS')
@@ -69,7 +69,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         description: ibanStandInFiltered.description,
         validityDate: ibanStandInFiltered.validity_date!,
         dueDate: ibanStandInFiltered.due_date!,
-        creditorInstitutionCode: ibanStandInFiltered.ci_owner ?? ecCode,
+        creditorInstitutionCode: ibanStandInFiltered.ci_owner ?? creditorInstitutionCode,
         labels: ibanStandInFiltered.labels,
         active: ibanStandInFiltered.is_active!,
       });
@@ -81,11 +81,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setSelectedIbanCup({
         iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
-        validityDate: ibanStandInFiltered!.validity_date!,
-        dueDate: ibanStandInFiltered!.due_date!,
-        creditorInstitutionCode: ibanStandInFiltered?.ci_owner ?? ecCode,
+        validityDate: ibanCupFiltered!.validity_date!,
+        dueDate: ibanCupFiltered!.due_date!,
+        creditorInstitutionCode: ibanCupFiltered?.ci_owner ?? creditorInstitutionCode,
         labels: ibanCupFiltered.labels,
-        active: ibanStandInFiltered!.is_active!,
+        active: ibanCupFiltered!.is_active!,
       });
     } else {
       setSelectedIbanCup(emptyIban);
@@ -139,7 +139,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setIbanStandInTriggered(true);
     const newLabel: IbanLabel = {
       description: 'The IBAN to use for STANDIN process',
-      name: 'STANDIN',
+      name: 'ACA',
     };
 
     const selectedIndex = ibanList.ibans_enhanced.findIndex((e: any) => e.iban === event.target.value);
@@ -151,7 +151,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       description: selectedIban.description,
       validityDate: selectedIban.validity_date!,
       dueDate: selectedIban.due_date!,
-      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
+      creditorInstitutionCode: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
       active: selectedIban.is_active!,
     });
@@ -173,7 +173,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       description: selectedIban.description,
       validityDate: selectedIban.validity_date!,
       dueDate: selectedIban.due_date!,
-      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
+      creditorInstitutionCode: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
       active: selectedIban.is_active!,
     });
@@ -197,16 +197,16 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setLoadingIban(true);
     try {
       if (ibanStandInTriggered && ibanCupTriggered && iban1 && iban2) {
-        await updateIbanStandIn(iban1.ecOwner!, iban1);
-        await updateIbanCup(iban2.ecOwner!, iban2);
+        await updateIbanStandIn(iban1.creditorInstitutionCode!, iban1);
+        await updateIbanCup(iban2.creditorInstitutionCode!, iban2);
       }
 
       if (ibanStandInTriggered && !ibanCupTriggered && iban1) {
-        await updateIbanStandIn(iban1.ecOwner!, iban1);
+        await updateIbanStandIn(iban1.creditorInstitutionCode!, iban1);
       }
 
       if (!ibanStandInTriggered && ibanCupTriggered && iban2) {
-        await updateIbanCup(iban2.ecOwner!, iban2);
+        await updateIbanCup(iban2.creditorInstitutionCode!, iban2);
       }
     } catch (reason) {
       addError({
@@ -317,7 +317,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           inputProps={{
                             'data-testid': 'stand-in-test',
                           }}
-                          disabled
                         >
                           {ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
                             <MenuItem key={i} value={r.iban}>

@@ -1,14 +1,14 @@
 {
-  "name": "pagopa-selfcare-frontend",
+  "name": "pagopa-selfcare-backoffice-frontend",
   "version": "1.3.1",
   "homepage": "ui",
   "private": true,
   "scripts": {
-    "envconfig": "chmod +x env.sh && ./env.sh",
+    "envconfig": "chmod +x env.sh && ./env.sh && chmod +x version.sh && ./version.sh",
     "clean": "npm-run-all clean:*",
     "prestart": "npm-run-all envconfig",
     "start": "craco start",
-    "start:local": "export $(grep -v '^#' .env.development.local) && ./env.sh && craco start",
+    "start:local": "export $(grep -v '^#' .env.development.local) && ./env.sh && ./version.sh && craco start",
     "prebuild": "npm-run-all envconfig",
     "build": "craco build",
     "clean:build": "rimraf build",

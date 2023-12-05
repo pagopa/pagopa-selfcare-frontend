@@ -64,4 +64,5 @@ yarn-error.log
 /openApi/portal-api-docs.json
 .DS_Store
 public/env-config.js
+public/version.json
 

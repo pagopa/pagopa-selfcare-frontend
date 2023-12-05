@@ -50,19 +50,19 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
   useEffect(() => {
     if (subject === 'me') {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('creditorInstitutionCode', ecCode);
+      formik.setFieldValue('creditor_institution_code', ecCode);
     } else {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('creditorInstitutionCode', '');
+      formik.setFieldValue('creditor_institution_code', '');
     }
   }, [subject, ecCode]);
 
   useEffect(() => {
     if (typeof ibanBody === 'undefined') {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('validityDate', getTomorrowDate(new Date()));
+      formik.setFieldValue('validity_date', getTomorrowDate(new Date()));
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('dueDate', getTomorrowDate(new Date()));
+      formik.setFieldValue('due_date', getTomorrowDate(new Date()));
     }
   }, []);
 
@@ -85,19 +85,19 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       ? {
           iban: ibanBody.iban,
           description: ibanBody.description,
-          validityDate: ibanBody.validityDate,
-          dueDate: ibanBody.dueDate,
-          creditorInstitutionCode: ibanBody.creditorInstitutionCode,
+          validity_date: ibanBody.validity_date,
+          due_date: ibanBody.due_date,
+          creditor_institution_code: ibanBody.creditor_institution_code,
           labels: ibanBody.labels ?? undefined,
-          active: ibanBody.active,
+          is_active: ibanBody.is_active,
         }
       : {
           iban: '',
           description: '',
-          validityDate: new Date(),
-          dueDate: new Date(),
-          creditorInstitutionCode: ecCode,
-          active: true,
+          validity_date: new Date(),
+          due_date: new Date(),
+          creditor_institution_code: ecCode,
+          is_active: true,
         };
 
   const ibanFormatValidator = (iban: string) => {
@@ -158,26 +158,26 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             ? t('addEditIbanPage.validationMessage.ibanNotValid')
             : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
-          validityDate: !values.validityDate
+          validity_date: !values.validity_date
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.validityDate.getTime() < minDate.getTime()
+            : values.validity_date.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.dueDate && values.validityDate.getTime() > values.dueDate.getTime()
+            : values.due_date && values.validity_date.getTime() > values.due_date.getTime()
             ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
             : undefined,
-          dueDate: !values.dueDate
+          due_date: !values.due_date
             ? t('addEditIbanPage.validationMessage.requiredField')
-            : values.dueDate.getTime() < minDate.getTime()
+            : values.due_date.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
-            : values.validityDate && values.dueDate.getTime() < values.validityDate.getTime()
+            : values.validity_date && values.due_date.getTime() < values.validity_date.getTime()
             ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
             : undefined,
-          // creditorInstitutionCode:
+          // creditor_institution_code:
           //   subject === 'me'
           //     ? undefined
-          //     : !values.creditorInstitutionCode
+          //     : !values.creditor_institution_code
           //     ? t('addEditIbanPage.validationMessage.requiredField')
-          //     : !validateFiscalCode(values.creditorInstitutionCode)
+          //     : !validateFiscalCode(values.creditor_institution_code)
           //     ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
           //     : undefined,
         }).filter(([_key, value]) => value)
@@ -191,10 +191,10 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     const baseCondition =
       values.iban !== '' &&
       values.description !== '' &&
-      values.validityDate &&
-      values.validityDate.getTime() > 0 &&
-      values.dueDate &&
-      values.dueDate.getTime() > 0;
+      values.validity_date &&
+      values.validity_date.getTime() > 0 &&
+      values.due_date &&
+      values.due_date.getTime() > 0;
 
     if (uploadType === 'single') {
       if (baseCondition && subject === 'me') {
@@ -202,7 +202,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       } else if (
         baseCondition &&
         subject === 'anotherOne' &&
-        values.creditorInstitutionCode !== ''
+        values.creditor_institution_code !== ''
       ) {
         return true;
       } else {
@@ -219,19 +219,19 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          await createIban(values.creditorInstitutionCode, {
+          await createIban(values.creditor_institution_code, {
             iban: values.iban,
             description: values.description,
-            validity_date: values.validityDate!,
-            due_date: values.dueDate,
+            validity_date: values.validity_date!,
+            due_date: values.due_date,
             is_active: true,
           });
         } else {
-          await updateIban(values.creditorInstitutionCode, {
+          await updateIban(values.creditor_institution_code, {
             iban: values.iban,
             description: values.description,
-            validity_date: values.validityDate!,
-            due_date: values.dueDate,
+            validity_date: values.validity_date!,
+            due_date: values.due_date,
             labels: values.labels ?? undefined,
             is_active: true,
           });
@@ -385,11 +385,11 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               <Grid container item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    disabled={ibanBody?.active && formAction === IbanFormAction.Edit}
+                    disabled={ibanBody?.is_active && formAction === IbanFormAction.Edit}
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.validityDate}
-                    onChange={(e) => formik.setFieldValue('validityDate', e)}
+                    value={formik.values.validity_date}
+                    onChange={(e) => formik.setFieldValue('validity_date', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
@@ -402,8 +402,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         name="validityDate"
                         type="date"
                         size="small"
-                        error={formik.touched.validityDate && Boolean(formik.errors.validityDate)}
-                        helperText={formik.touched.validityDate && formik.errors.validityDate}
+                        error={formik.touched.validity_date && Boolean(formik.errors.validity_date)}
+                        helperText={formik.touched.validity_date && formik.errors.validity_date}
                       />
                     )}
                     shouldDisableDate={shouldDisableDate}
@@ -415,8 +415,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                   <DesktopDatePicker
                     label={t('addEditIbanPage.addForm.fields.dates.end')}
                     inputFormat="dd/MM/yyyy"
-                    value={formik.values.dueDate}
-                    onChange={(e) => formik.setFieldValue('dueDate', e)}
+                    value={formik.values.due_date}
+                    onChange={(e) => formik.setFieldValue('due_date', e)}
                     renderInput={(params: TextFieldProps) => (
                       <TextField
                         {...params}
@@ -429,8 +429,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         name="dueDate"
                         type="date"
                         size="small"
-                        error={formik.touched.dueDate && Boolean(formik.errors.dueDate)}
-                        helperText={formik.touched.dueDate && formik.errors.dueDate}
+                        error={formik.touched.due_date && Boolean(formik.errors.due_date)}
+                        helperText={formik.touched.due_date && formik.errors.due_date}
                       />
                     )}
                     shouldDisableDate={shouldDisableDate}

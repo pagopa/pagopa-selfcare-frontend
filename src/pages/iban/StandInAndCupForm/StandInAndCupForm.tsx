@@ -138,7 +138,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const handleIbanStandInSelected = (event: any) => {
     setIbanStandInTriggered(true);
     const newLabel: IbanLabel = {
-      description: '',
+      description: 'The IBAN to use for STANDIN process',
       name: 'ACA',
     };
 
@@ -196,7 +196,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const submit = async (iban1?: IbanOnCreation, iban2?: IbanOnCreation) => {
     setLoadingIban(true);
     try {
-      console.log("OW: ", iban1, " - ", iban2);
       if (ibanStandInTriggered && ibanCupTriggered && iban1 && iban2) {
         await updateIbanStandIn(iban1.creditorInstitutionCode!, iban1);
         await updateIbanCup(iban2.creditorInstitutionCode!, iban2);

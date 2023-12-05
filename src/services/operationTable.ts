@@ -1,4 +1,4 @@
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { TavoloOpDto } from '../api/generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from '../api/generated/portal/TavoloOpOperations';
 import { TavoloOpResource } from '../api/generated/portal/TavoloOpResource';
@@ -12,10 +12,10 @@ import {
 
 export const getOperationTableList = (): Promise<TavoloOpResourceList> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getOperationTableListMocked();
   } else {
-    return PortalApi.getOperationTableList().then((resources) => resources);
+    return BackofficeApi.getOperationTableList().then((resources) => resources);
   }
 };
 
@@ -23,29 +23,30 @@ export const createOperationTable = (
   operationTableDto: TavoloOpDto
 ): Promise<TavoloOpOperations> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createOperationTableMocked(operationTableDto);
   } else {
-    return PortalApi.createOperationTable(operationTableDto).then((resources) => resources);
+    return BackofficeApi.createOperationTable(operationTableDto).then((resources) => resources);
   }
 };
 
 export const updateOperationTable = (
+    ecCode: string,
   operationTableDto: TavoloOpDto
 ): Promise<TavoloOpOperations> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateOperationTableMocked(operationTableDto);
   } else {
-    return PortalApi.updateOperationTable(operationTableDto).then((resources) => resources);
+    return BackofficeApi.updateOperationTable(ecCode, operationTableDto).then((resources) => resources);
   }
 };
 
 export const getOperationTableDetails = (ecCode: string): Promise<TavoloOpResource> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getOperationTableDetailsMocked(ecCode);
   } else {
-    return PortalApi.getOperationTableDetails(ecCode).then((resources) => resources);
+    return BackofficeApi.getOperationTableDetails(ecCode).then((resources) => resources);
   }
 };

@@ -62,7 +62,8 @@
       "signInCTA": "Completa registrazione",
       "generateApiKeysStepAlertPSP": "Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.",
       "generateApiKeyStepAlertEC": "Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.",
-      "generateApiKeysCTA": "Genera API Key"
+      "generateApiKeysCTA": "Genera API Key",
+      "completedAllSteps": "La registrazione sul Nodo è stata ultimata."
     },
     "operationTable": {
       "title": "Tavolo operativo",
@@ -130,13 +131,6 @@
       "ptErrorMessageDesc": "Errore durante la creazione del PT",
       "backButton": "Annulla",
       "continueButton": "Conferma"
-    },
-    "confirmIntermediaryModal": {
-      "title": "Disponibile come intermediario",
-      "messagePSP": "Confermi la tua disponibilità a intermediare PSP indiretti?",
-      "messageEC": "Confermi la tua disponibilità a intermediare EC indiretti?",
-      "confirmLabel": "Conferma",
-      "closeLabel": "Annulla"
     },
     "validationMessage": {
       "requiredField": "Campo obbligatorio"

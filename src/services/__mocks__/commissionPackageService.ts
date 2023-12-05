@@ -1,5 +1,4 @@
-import { PaymentTypeResource } from '../../api/generated/portal/PaymentTypeResource';
-import { PaymentTypesResource } from '../../api/generated/portal/PaymentTypesResource';
+import { PaymentTypes } from '../../api/generated/portal/PaymentTypes';
 import {
   CommissionPackageListResource,
   CommissionPackageOnCreation,
@@ -15,7 +14,7 @@ export const mockedCommissionPackagePspList: CommissionPackageListResource = {
       startDate: new Date(),
       endDate: new Date(),
       touchpoint: 'Checkout',
-      paymentType: mockedPaymentTypes.payment_types[0],
+      paymentType: mockedPaymentTypes!.payment_types![0],
       rangeAmountFrom: 0,
       rangeAmountTo: 150,
     },
@@ -48,7 +47,7 @@ export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {
   minPaymentAmount: 150,
   name: 'Pacchetto 1',
   paymentAmount: 10,
-  paymentType: mockedPaymentTypes.payment_types[0],
+  paymentType: mockedPaymentTypes!.payment_types![0],
   touchpoint: mockedTouchpoints,
   transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.) '],
   type: 'GLOBAL',
@@ -56,7 +55,7 @@ export const mockedCommissionPackagePspDetail: CommissionPackageOnCreation = {
   validityDateTo: new Date(),
 };
 
-export const mockedChannelsIdList: Array<string> = mockedStationsMerged.channels.map((e) =>
+export const mockedChannelsIdList: Array<string> = mockedStationsMerged!.channels!.map((e) =>
   typeof e.channel_code !== 'undefined' ? e.channel_code : ''
 );
 
@@ -68,7 +67,7 @@ export const getCommissionPackagePsp = (
 ): Promise<CommissionPackageListResource> =>
   new Promise((resolve) => resolve(mockedCommissionPackagePspList));
 
-export const getPaymentTypes = (): Promise<PaymentTypesResource> =>
+export const getPaymentTypes = (): Promise<PaymentTypes> =>
   new Promise((resolve) => resolve(mockedPaymentTypes));
 
 export const getCommissionPackageDetails = (_name: string): Promise<CommissionPackageOnCreation> =>

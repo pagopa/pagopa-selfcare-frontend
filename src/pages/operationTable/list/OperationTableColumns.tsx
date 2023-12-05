@@ -31,7 +31,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.taxCode),
+      renderCell: (params) => renderCell(params, params.row.tax_code),
       sortable: false,
       flex: 3,
     },

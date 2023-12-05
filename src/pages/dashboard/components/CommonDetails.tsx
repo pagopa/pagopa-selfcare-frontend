@@ -11,7 +11,7 @@ type Props = {
 const CommonDetails = ({ t, selectedParty }: Props) => {
   const companyNameField = () => {
     if (selectedParty?.institutionType === 'PSP') {
-      return selectedParty?.pspData?.legalRegisterName;
+      return selectedParty?.pspData?.legal_register_name;
     } else {
       return selectedParty?.description;
     }

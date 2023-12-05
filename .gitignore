@@ -61,3 +61,7 @@ yarn-error.log
 /.identity/.terraform
 /integration-test/package-lock.json
 /integration-test/user-data/
+/openApi/portal-api-docs.json
+.DS_Store
+public/env-config.js
+

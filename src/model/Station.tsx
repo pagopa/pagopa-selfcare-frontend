@@ -76,6 +76,7 @@ export type StationOnCreation = {
   wrapperStatus?: WrapperStatusEnum;
   gdpConcat: string;
   newConnConcat: string;
+  validationUrl?: string;
 };
 
 export type StationDetail = {

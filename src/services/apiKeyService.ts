@@ -1,5 +1,6 @@
-import { PortalApi } from '../api/PortalApiClient';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { ProductKeys } from '../model/ApiKey';
+import {ENV} from "../utils/env";
 import {
   getInstitutionApiKeys as getInstitutionApiKeysMocked,
   createInstitutionApiKeys as createInstitutionApiKeysMocked,
@@ -9,10 +10,10 @@ import {
 
 export const getInstitutionApiKeys = (institutionId: string): Promise<Array<ProductKeys>> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (ENV.MOCK.TOKEN) {
     return getInstitutionApiKeysMocked(institutionId);
   } else {
-    return PortalApi.getInstitutionApiKeys(institutionId).then((resources) => resources);
+    return BackofficeApi.getInstitutionApiKeys(institutionId).then((resources) => resources);
   }
 };
 
@@ -21,10 +22,10 @@ export const createInstitutionApiKeys = (
   subscriptionCode: string
 ): Promise<Array<ProductKeys>> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createInstitutionApiKeysMocked(institutionId, subscriptionCode);
   } else {
-    return PortalApi.createInstitutionApiKeys(institutionId, subscriptionCode).then(
+    return BackofficeApi.createInstitutionApiKeys(institutionId, subscriptionCode).then(
       (resources) => resources
     );
   }
@@ -32,18 +33,18 @@ export const createInstitutionApiKeys = (
 
 export const regeneratePrimaryKey = (institutionId: string): Promise<string> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return regeneratePrimaryKeyMocked(institutionId);
   } else {
-    return PortalApi.regeneratePrimaryKey(institutionId).then((resource) => resource);
+    return BackofficeApi.regeneratePrimaryKey(institutionId).then((resource) => resource);
   }
 };
 
 export const regenerateSecondaryKey = (institutionId: string): Promise<string> => {
   /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_PORTAL === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return regenerateSecondaryKeyMocked(institutionId);
   } else {
-    return PortalApi.regenerateSecondaryKey(institutionId).then((resources) => resources);
+    return BackofficeApi.regenerateSecondaryKey(institutionId).then((resources) => resources);
   }
 };

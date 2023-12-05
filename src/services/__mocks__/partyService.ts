@@ -2,7 +2,7 @@ import { Party } from '../../model/Party';
 import { PartyDetail } from '../../model/PartyDetail';
 
 export const pspAdminSignedDirect: Party = {
-  partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
+  partyId: 'c05d6e41-943a-4c73-bfd8-bd79472853e8',
   externalId: 'pspAdminSigned',
   originId: 'PSP_pspAdminSigned',
   origin: 'SELC',
@@ -20,11 +20,11 @@ export const pspAdminSignedDirect: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09879',
-    abiCode: 'pspAdminSigned_DIRECT',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09879',
+    abi_code: 'pspAdminSigned_DIRECT',
+    vat_number_group: false,
   },
 };
 
@@ -47,11 +47,11 @@ export const pspAdminSignedUndirect: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspAdminSignedUndirect/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000001',
-    legalRegisterName: 'ISTITUTO DI PAGAMENTO',
-    legalRegisterNumber: '09880',
-    abiCode: 'pspAdminSigned_UNDIRECT',
-    vatNumberGroup: true,
+    business_register_number: '00000000001',
+    legal_register_name: 'ISTITUTO DI PAGAMENTO',
+    legal_register_number: '09880',
+    abi_code: 'pspAdminSigned_UNDIRECT',
+    vat_number_group: true,
   },
 };
 
@@ -74,11 +74,11 @@ export const pspAdminUnsigned: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspAdminUnsigned/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09879',
-    abiCode: 'pspAdmin_UNSIGNED',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09879',
+    abi_code: 'pspAdmin_UNSIGNED',
+    vat_number_group: false,
   },
 };
 
@@ -101,11 +101,11 @@ export const pspOperatorSignedDirect: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspOperatorSigned/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: 'pspOperatorSigned_DIRECT',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09878',
+    abi_code: 'pspOperatorSigned_DIRECT',
+    vat_number_group: false,
   },
 };
 
@@ -128,11 +128,11 @@ export const pspOperatorSignedUndirect: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspOperatorSignedUndirect/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: 'pspOperatorSigned_UNDIRECT',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09878',
+    abi_code: 'pspOperatorSigned_UNDIRECT',
+    vat_number_group: false,
   },
 };
 
@@ -155,22 +155,22 @@ export const pspOperatorUnsigned: Party = {
   urlLogo: 'https://checkout.selfcare/institutions/pspOperatorUnsigned/logo.png',
   institutionType: 'PSP',
   pspData: {
-    businessRegisterNumber: '00000000001',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09880',
-    abiCode: 'pspOperator_UNSIGNED',
-    vatNumberGroup: false,
+    business_register_number: '00000000001',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09880',
+    abi_code: 'pspOperator_UNSIGNED',
+    vat_number_group: false,
   },
 };
 
 export const ecAdminSignedDirect: Party = {
-  partyId: 'e162ca3b-fe5a-4bfd-a0b7-1ca1586d079e',
+  partyId: 'ecAdminSignedDirect',
   externalId: '1122334455',
   originId: 'c_g922',
   origin: 'IPA',
   institutionType: 'PA',
   description: 'EC Admin Signed Direct',
-  fiscalCode: 'ecAdminSigned_DIRECT',
+  fiscalCode: '00104330493',
   digitalAddress: 'email-ec@test.dummy',
   status: 'ACTIVE',
   registeredOffice: 'Via degli Enti Creditori 1',

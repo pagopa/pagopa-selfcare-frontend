@@ -1,10 +1,10 @@
 import withRetrievedValue from '@pagopa/selfcare-common-frontend/decorators/withRetrievedValue';
 import { useSelectedPartyProducts } from '../hooks/useSelectedPartyProducts';
-import { Product } from '../model/Product';
+import { ProductModel } from '../model/Product';
 import withSelectedParty, { WithSelectedPartyProps } from './withSelectedParty';
 
 export type WithSelectedPartyProductsProps = {
-  products: Array<Product>;
+  products: Array<ProductModel>;
 } & WithSelectedPartyProps;
 
 /**

@@ -3,7 +3,7 @@ import { createStation /* getStations */ } from '../stationService';
 // import { mockedStations } from '../__mocks__/stationService';
 import { RedirectProtocolEnum } from '../../api/generated/portal/WrapperStationDetailsDto';
 
-jest.mock('../../api/PortalApiClient');
+jest.mock('../../api/BackofficeClient');
 
 let portalApiGetStationSpy: jest.SpyInstance<any, unknown[]>;
 let portalApiCreateWrapSpy: jest.SpyInstance<any, unknown[]>;

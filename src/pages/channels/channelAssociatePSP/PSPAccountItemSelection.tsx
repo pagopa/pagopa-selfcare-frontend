@@ -2,10 +2,10 @@ import { PartyAccountItem } from '@pagopa/mui-italia';
 import { Box, IconButton } from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { PSP } from '../../../model/PSP';
-import { DelegationResource } from '../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
 
 type Props = {
-  selectedPSP: DelegationResource | null;
+  selectedPSP: Delegation | null;
   clearField: () => void;
 };
 
@@ -14,7 +14,7 @@ export default function PSPAccountItemSelection({ selectedPSP, clearField }: Pro
     <Box display="flex" p={2}>
       <Box width="100%">
         <PartyAccountItem
-          partyName={selectedPSP?.institutionName ?? ''}
+          partyName={selectedPSP?.institution_name ?? ''}
           partyRole={/* selectedPSP ? t(roleLabels[selectedPSP.userRole].longLabelKey) : */ ''}
           image={/* selectedPSP?.urlLogo */ ''}
           maxCharactersNumberMultiLine={20}

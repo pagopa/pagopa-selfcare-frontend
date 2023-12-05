@@ -23,7 +23,7 @@ const OperationTable = ({ ecCode }: Props) => {
         setOperationTable(response);
       })
       .catch((error) => {
-        console.log(JSON.stringify(error));
+        
       });
   }, [ecCode]);
 

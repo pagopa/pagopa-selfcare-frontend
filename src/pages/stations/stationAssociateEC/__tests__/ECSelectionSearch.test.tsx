@@ -6,7 +6,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import ECSelectionSearch from '../ECSelectionSearch';
-import { DelegationResource } from '../../../../api/generated/portal/DelegationResource';
+import { Delegation } from '../../../../api/generated/portal/Delegation';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -18,7 +18,7 @@ afterEach(cleanup);
 describe('<ECSelectionSearch />', () => {
   const stationId = 'XPAY_03_ONUS';
 
-  const availableEC: Array<DelegationResource> = [
+  const availableEC: Array<Delegation> = [
     {
       brokerId: '01234567890',
       brokerName: 'EC 1',

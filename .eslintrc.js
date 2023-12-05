@@ -15,6 +15,8 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react', 'react-hooks', 'import', 'functional', 'sonarjs'],
   rules: {
+    "@typescript-eslint/ban-ts-comment": "off",
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'no-case-declarations': 'off',
     'no-inner-declarations': 'off',
     'prefer-const': 'error',

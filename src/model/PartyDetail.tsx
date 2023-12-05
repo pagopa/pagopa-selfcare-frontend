@@ -1,4 +1,4 @@
-import { InstitutionDetailResource } from '../api/generated/portal/InstitutionDetailResource';
+import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
 
 export type PartyDetail = {
   partyId: string;
@@ -6,24 +6,24 @@ export type PartyDetail = {
   originId: string;
   origin: string;
   description: string;
-  digitalAddress?: string;
-  address?: string;
+  digitalAddress: string;
+  address: string;
   zipCode: string;
   fiscalCode: string;
   institutionType?: string;
 };
 
-export const institutionDetailResource2PartyDetail = (
-  institutionDetailResource: InstitutionDetailResource
-): PartyDetail => ({
-  partyId: institutionDetailResource.id,
-  externalId: institutionDetailResource.externalId,
-  originId: institutionDetailResource.originId,
-  origin: institutionDetailResource.origin,
-  description: institutionDetailResource.description,
-  digitalAddress: institutionDetailResource.digitalAddress,
-  address: institutionDetailResource.address,
-  zipCode: institutionDetailResource.zipCode,
-  fiscalCode: institutionDetailResource.taxCode,
-  institutionType: institutionDetailResource.institutionType,
-});
+// export const institutionDetailResource2PartyDetail = (
+//   institutionDetailResource: InstitutionDetail
+// ): PartyDetail => ({
+//   partyId: institutionDetailResource.id,
+//   externalId: institutionDetailResource.external_id,
+//   originId: institutionDetailResource.origin_id,
+//   origin: institutionDetailResource.origin,
+//   description: institutionDetailResource.description,
+//   digitalAddress: institutionDetailResource.digitalAddress,
+//   address: institutionDetailResource.address,
+//   zipCode: institutionDetailResource.zipCode,
+//   fiscalCode: institutionDetailResource.tax_code,
+//   institutionType: institutionDetailResource.institution_type,
+// });

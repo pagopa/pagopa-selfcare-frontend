@@ -34,16 +34,16 @@ const IbanDetailPage = () => {
       setLoading(true);
       getIbanList(selectedParty.fiscalCode)
         .then((response) => {
-          const filteredIban = response.ibanList.filter((e) => e.iban === ibanId);
+          const filteredIban = response!.ibans_enhanced!.filter((e) => e.iban === ibanId);
           setIban({
-            iban: filteredIban[0].iban,
+            iban: filteredIban[0].iban!,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ecOwner ?? selectedParty.fiscalCode,
-            validityDate: filteredIban[0].validityDate,
-            publicationDate: filteredIban[0].publicationDate,
-            dueDate: filteredIban[0].dueDate,
+            creditorInstitutionCode: filteredIban[0].ci_owner ?? selectedParty.fiscalCode,
+            validityDate: filteredIban[0].validity_date!,
+            publicationDate: filteredIban[0].publication_date!,
+            dueDate: filteredIban[0].due_date!,
             labels: filteredIban[0].labels,
-            active: filteredIban[0].active,
+            active: filteredIban[0].is_active!,
           });
         })
         .catch((reason) => {

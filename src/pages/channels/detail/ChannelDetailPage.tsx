@@ -18,7 +18,7 @@ const ChannelDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_CHANNEL_DETAIL);
-  const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>({});
+  const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>({} as any);
   const [PSPAssociatedNumber, setPSPAssociatedNumber] = useState<number>(0);
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
@@ -31,7 +31,7 @@ const ChannelDetailPage = () => {
     Promise.all([getChannelDetail(channelId), getChannelPSPs(channelId, 0)])
       .then(([channelDetailResponse, channelPSPList]) => {
         setChannelDetail(channelDetailResponse);
-        setPSPAssociatedNumber(channelPSPList?.page_info?.total_items ?? 0);
+        setPSPAssociatedNumber(channelPSPList?.page_info?.items_found ?? 0);
       })
       .catch((reason) => {
         addError({

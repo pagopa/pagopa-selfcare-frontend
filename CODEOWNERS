@@ -1,5 +1,3 @@
 # see https://help.github.com/en/articles/about-code-owners#example-of-a-codeowners-file
 
-# TODO fix contributors team
-
-- @pagopa/pagopa-backoffice-team @pagopa/selfcare-contributors @kaiban @GabrieleMaiocchiFilippo @loremedda @esignore @biaMurNtt @GiacomoBrancazi
+- @pagopa/pagopa-team-backoffice

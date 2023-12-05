@@ -1,12 +1,12 @@
 import * as env from 'env-var';
+import {getConfig, Type} from "./config";
 
-const PUBLIC_URL_INNER: string | undefined = env.get('PUBLIC_URL').asString() || '/ui';
 export const ENV = {
   ENV: env.get('REACT_APP_ENV').required().asString(),
-  PUBLIC_URL: PUBLIC_URL_INNER,
+  PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', {default: 'ui'}),
 
   PAGOPA_OPERATOR: {
-    MAIL_ADDRESSES: env.get('REACT_APP_OPERATOR_EMAIL_ADDRESSES').required().asString(),
+    MAIL_ADDRESSES: getConfig('REACT_APP_OPERATOR_EMAIL_ADDRESSES', {required: true}),
   },
 
   ASSISTANCE: {
@@ -23,13 +23,18 @@ export const ENV = {
   },
 
   URL_API: {
-    PORTAL: env.get('REACT_APP_URL_API_PORTAL').required().asString(),
     TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
-    APICONFIG: env.get('REACT_APP_URL_API_APICONFIG').required().asString(),
+    BACKOFFICE: getConfig('REACT_APP_URL_BACKOFFICE', {required: true}),
+    REACT_APP_URL_BETA: getConfig('REACT_APP_URL_BETA', {default: false, type: Type.boolean}),
+  },
+
+  MOCK: {
+    TOKEN: getConfig('REACT_APP_API_MOCK_TOKEN', {required: true, type:Type.boolean}),
+    BACKOFFICE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type:Type.boolean}),
   },
 
   API_TIMEOUT_MS: {
-    PORTAL: env.get('REACT_APP_API_PORTAL_TIMEOUT_MS').required().asInt(),
+    BACKOFFICE: env.get('REACT_APP_API_BACKOFFICE_TIMEOUT_MS').required().asInt(),
   },
 
   URL_INSTITUTION_LOGO: {
@@ -39,22 +44,22 @@ export const ENV = {
 
   FEATURES: {
     DASHBOARD: {
-      ENABLED: env.get('REACT_APP_FEATURES_DASHBOARD_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_DASHBOARD_ENABLED', {default: false, type: Type.boolean}),
     },
     CHANNELS: {
-      ENABLED: env.get('REACT_APP_FEATURES_CHANNELS_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_CHANNELS_ENABLED', {default: false, type: Type.boolean}),
     },
     STATIONS: {
-      ENABLED: env.get('REACT_APP_FEATURES_STATIONS_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_STATIONS_ENABLED', {default: false, type: Type.boolean}),
     },
     IBAN: {
-      ENABLED: env.get('REACT_APP_FEATURES_IBAN_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_IBAN_ENABLED', {default: false, type: Type.boolean}),
     },
     COMMISSION_PACKAGES: {
-      ENABLED: env.get('REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED', {default: false, type: Type.boolean}),
     },
     OPERATIONTABLE: {
-      ENABLED: env.get('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED').default('false').asBool(),
+      ENABLED: getConfig('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED', {default: false, type: Type.boolean}),
     },
   },
 

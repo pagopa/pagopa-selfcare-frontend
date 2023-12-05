@@ -37,11 +37,11 @@ const AddEditIbanPage = () => {
           setIban({
             iban: filteredIban[0].iban!,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ci_owner ?? creditorInstitutionCode,
-            validityDate: filteredIban[0].validity_date!,
-            dueDate: filteredIban[0].due_date!,
+            creditor_institution_code: filteredIban[0].ci_owner ?? creditorInstitutionCode,
+            validity_date: filteredIban[0].validity_date!,
+            due_date: filteredIban[0].due_date!,
             labels: filteredIban[0].labels,
-            active: filteredIban[0].is_active!,
+            is_active: filteredIban[0].is_active!,
           });
         })
         .catch((reason) => {

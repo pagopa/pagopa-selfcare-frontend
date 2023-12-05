@@ -38,12 +38,12 @@ const IbanDetailPage = () => {
           setIban({
             iban: filteredIban[0].iban!,
             description: filteredIban[0].description,
-            creditorInstitutionCode: filteredIban[0].ci_owner ?? selectedParty.fiscalCode,
-            validityDate: filteredIban[0].validity_date!,
-            publicationDate: filteredIban[0].publication_date!,
-            dueDate: filteredIban[0].due_date!,
+            creditor_institution_code: filteredIban[0].ci_owner ?? selectedParty.fiscalCode,
+            validity_date: filteredIban[0].validity_date!,
+            publication_date: filteredIban[0].publication_date!,
+            due_date: filteredIban[0].due_date!,
             labels: filteredIban[0].labels,
-            active: filteredIban[0].is_active!,
+            is_active: filteredIban[0].is_active!,
           });
         })
         .catch((reason) => {
@@ -127,13 +127,13 @@ const IbanDetailPage = () => {
             <Typography mb={5}>
               {t('ibanDetailPage.createdOn')}{' '}
               <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                {iban.publicationDate?.toLocaleDateString('en-GB') ?? '-'}
+                {iban.publication_date?.toLocaleDateString('en-GB') ?? '-'}
               </Typography>
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <IbanDetailButtons
-              active={iban.active}
+              active={iban.is_active}
               iban={ibanId}
               setShowDeleteModal={setShowDeleteModal}
             />
@@ -206,7 +206,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban.validityDate?.toLocaleDateString('en-GB')}
+                  {iban.validity_date?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -214,7 +214,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban.dueDate?.toLocaleDateString('en-GB')}
+                  {iban.due_date?.toLocaleDateString('en-GB')}
                 </Typography>
               </Grid>
             </Grid>
@@ -228,7 +228,7 @@ const IbanDetailPage = () => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {iban.creditorInstitutionCode}
+                  {iban.creditor_institution_code}
                 </Typography>
               </Grid>
             </Grid>

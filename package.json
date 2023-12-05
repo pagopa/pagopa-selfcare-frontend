@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "1.3.1",
+  "version": "1.3.1-1-bugfix-invalid-iban-request-body",
   "homepage": "ui",
   "private": true,
   "scripts": {

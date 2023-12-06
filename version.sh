@@ -9,5 +9,5 @@ done
 
 echo $(printf '\t"name": "%s",\n' "${npm_package_name}") >> ./public/version.json
 echo $(printf '\t"version": "%s",\n' "${npm_package_version}") >> ./public/version.json
-echo $(printf '\t"environment": "%s",\n' "${appenv}") >> ./public/version.json
+echo $(printf '\t"environment": "%s"\n' "${appenv}") >> ./public/version.json
 echo "}" >> ./public/version.json

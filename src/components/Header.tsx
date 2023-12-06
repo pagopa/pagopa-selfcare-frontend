@@ -11,10 +11,10 @@ import { ProductModel } from '../model/Product';
 import { Party } from '../model/Party';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { partiesActions, partiesSelectors } from '../redux/slices/partiesSlice';
-import { useSigninData } from '../hooks/useSigninData';
 import { isOperator } from '../pages/components/commonFunctions';
 import { ENV } from './../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
+import {contextActions} from "../redux/slices/contextSlice";
 
 type Props = WithPartiesProps & {
   onExit: (exitAction: () => void) => void;
@@ -70,7 +70,6 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   // const selectPartiesList = useAppSelector(partiesSelectors.selectPartiesList);
 
-  const updateSigninData = useSigninData();
 
   const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
   // const parties2Show = parties.filter((party) => party.status === 'ACTIVE');
@@ -142,8 +141,7 @@ const Header = ({ onExit, loggedUser, parties }: Props) => {
               const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
               setParty(partyToSwitch);
               if (partyToSwitch) {
-                  console.log('Header', partyToSwitch);
-                void updateSigninData(partyToSwitch);
+                void dispatch(contextActions.signIn(partyToSwitch.fiscalCode));
               }
             } else {
               window.location.assign(

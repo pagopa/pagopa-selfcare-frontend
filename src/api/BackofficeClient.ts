@@ -1,6 +1,3 @@
-import {agent} from "italia-ts-commons";
-import {AbortableFetch, setFetchTimeout, toFetch} from 'italia-ts-commons/lib/fetch';
-import {Millisecond} from "italia-ts-commons/lib/units";
 import {ReactNode} from 'react';
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import {appStateActions} from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
@@ -42,7 +39,6 @@ import {WrapperChannelsResource} from './generated/portal/WrapperChannelsResourc
 import {WrapperChannelDetailsResource} from './generated/portal/WrapperChannelDetailsResource';
 import {CreditorInstitutionAssociatedCodeList} from './generated/portal/CreditorInstitutionAssociatedCodeList';
 import {BrokerOrPspDetailsResource} from './generated/portal/BrokerOrPspDetailsResource';
-import {BrokerAndEcDetailsResource} from './generated/portal/BrokerAndEcDetailsResource';
 import {BrokerPspDetailsResource} from './generated/portal/BrokerPspDetailsResource';
 import {BrokerDto} from './generated/portal/BrokerDto';
 import {BrokerPspDetailsDto} from './generated/portal/BrokerPspDetailsDto';
@@ -59,6 +55,7 @@ import {IbanCreate} from './generated/portal/IbanCreate';
 import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
+import {Actor} from "./generated/portal/Actor";
 
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
@@ -78,7 +75,7 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => 
 // );
 // const fetchApi: typeof fetchWithTimeout = (fetch as any) as typeof fetchWithTimeout;
 
-function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit):Promise<Response> {
+function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
 
     const defaultHeaders = {
         'X-Canary': 'canary'
@@ -232,8 +229,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndEcDetails({'ci-code': code});
+    getActor: async (taxCode: string): Promise<Actor> => {
+        const result = await backofficeClient.getActor({'tax-code': taxCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

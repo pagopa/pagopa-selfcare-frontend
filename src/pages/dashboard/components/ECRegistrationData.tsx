@@ -14,7 +14,7 @@ const ECRegistrationData = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const actor = useAppSelector(contextSelectors.selectDetails);
   const { hasPermission } = usePermissions();
   const isEcBroker = signinData && isEcBrokerSigned(signinData) && isEcSigned(signinData);
 
@@ -50,9 +50,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address?.location
-            ? signinData.creditorInstitutionDetailsResource.address.location
-            : '-'}
+          {actor?.ci?.address?.location ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -60,9 +58,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address?.city
-            ? signinData.creditorInstitutionDetailsResource.address.city
-            : '-'}
+          {signinData?.ci?.address?.city ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -70,9 +66,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address?.countryCode
-            ? signinData.creditorInstitutionDetailsResource.address.countryCode
-            : '-'}
+          {signinData?.ci?.address?.countryCode ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -80,9 +74,7 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address?.zipCode
-            ? signinData.creditorInstitutionDetailsResource.address.zipCode
-            : '-'}
+          {signinData?.ci?.address?.zipCode ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
@@ -92,16 +84,14 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {signinData?.creditorInstitutionDetailsResource?.address?.taxDomicile
-            ? signinData.creditorInstitutionDetailsResource.address.taxDomicile
-            : '-'}
+          {signinData?.ci?.address?.taxDomicile ?? '-'}
         </Typography>
       </Grid>
       <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>
-        {signinData?.creditorInstitutionDetailsResource?.enabled ? (
+        {signinData?.ci?.enabled ? (
           <Chip label={t('dashboardPage.registrationData.status.enabled')} color="primary"></Chip>
         ) : (
           <Chip label={t('dashboardPage.registrationData.status.disabled')}></Chip>

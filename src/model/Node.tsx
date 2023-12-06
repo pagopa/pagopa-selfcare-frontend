@@ -1,5 +1,3 @@
-import { BrokerAndEcDetailsResource } from '../api/generated/portal/BrokerAndEcDetailsResource';
-import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 import { BrokerPspDetailsResource } from '../api/generated/portal/BrokerPspDetailsResource';
 import { BrokerResource } from '../api/generated/portal/BrokerResource';
 
@@ -20,4 +18,3 @@ export type NodeOnSignInPT = {
 
 export type PTResource = BrokerPspDetailsResource & BrokerResource;
 
-export type SigninData = BrokerOrPspDetailsResource & BrokerAndEcDetailsResource;

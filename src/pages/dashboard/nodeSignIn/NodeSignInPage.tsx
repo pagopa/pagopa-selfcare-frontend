@@ -7,7 +7,6 @@ import { useHistory } from 'react-router';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import { PTResource } from '../../../model/Node';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
@@ -19,7 +18,7 @@ const NodeSignInPage = () => {
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const goBack = () => history.push(ROUTES.HOME);
-  const signInData = useAppSelector(partiesSelectors.selectSigninData);
+  const actor = useAppSelector(contextSelectors.selectDetails);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -59,9 +58,9 @@ const NodeSignInPage = () => {
             signInData={signInData as BrokerOrPspDetailsResource}
           />
         ) : !selectedParty?.pspData && selectedParty?.institutionType === 'PT' ? (
-          <NodeSignInPTForm goBack={goBack} signInData={signInData as PTResource} />
+          <NodeSignInPTForm goBack={goBack} signInData={actor} />
         ) : (
-          <NodeSignInECForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource} />
+          <NodeSignInECForm goBack={goBack} signInData={actor} />
         )}
       </Grid>
     </Grid>

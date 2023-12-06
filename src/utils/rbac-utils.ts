@@ -1,24 +1,24 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { SigninData } from '../model/Node';
+import { Actor } from '../api/generated/portal/Actor';
 import { Party } from '../model/Party';
 import { ROLE } from '../model/RolePermission';
 import { isOperator } from '../pages/components/commonFunctions';
 import { getInstitutionApiKeys } from '../services/apiKeyService';
 
-export const isPspBrokerSigned = (signInData: SigninData | null) =>
-  signInData?.brokerPspDetailsResource &&
-  Object.keys(signInData?.brokerPspDetailsResource).length > 0;
+export const isPspBrokerSigned = (actor: Actor | null) =>
+  actor?.broker_psp &&
+  Object.keys(actor?.broker_psp).length > 0;
 
-export const isPspSigned = (signInData: SigninData | null) =>
-  signInData?.paymentServiceProviderDetailsResource &&
-  Object.keys(signInData?.paymentServiceProviderDetailsResource).length > 0;
+export const isPspSigned = (actor: Actor | null) =>
+  actor?.psp &&
+  Object.keys(actor?.psp).length > 0;
 
-export const isEcBrokerSigned = (signInData: SigninData | null) =>
-  signInData?.brokerDetailsResource && Object.keys(signInData?.brokerDetailsResource).length > 0;
+export const isEcBrokerSigned = (actor: Actor | null) =>
+  actor?.broker_ci && Object.keys(actor?.broker_ci).length > 0;
 
-export const isEcSigned = (signInData: SigninData | null) =>
-  signInData?.creditorInstitutionDetailsResource &&
-  Object.keys(signInData?.creditorInstitutionDetailsResource).length > 0;
+export const isEcSigned = (actor: Actor | null) =>
+  actor?.ci &&
+  Object.keys(actor?.ci).length > 0;
 
 export const hasGeneratedApiKey = async (selectedParty: Party | undefined): Promise<boolean> => {
   if (selectedParty) {
@@ -28,19 +28,19 @@ export const hasGeneratedApiKey = async (selectedParty: Party | undefined): Prom
   return false;
 };
 
-export const isSigned = (signInData: SigninData | null) =>
-  isPspBrokerSigned(signInData) ||
-  isPspSigned(signInData) ||
-  isEcBrokerSigned(signInData) ||
-  isEcSigned(signInData);
+export const isSigned = (actor: Actor | null) =>
+  isPspBrokerSigned(actor) ||
+  isPspSigned(actor) ||
+  isEcBrokerSigned(actor) ||
+  isEcSigned(actor);
 
-export const getUserRole = (party: Party, signInData?: SigninData | null): ROLE | undefined => {
+export const getUserRole = (party: Party, actor?: Actor | null): ROLE | undefined => {
   const roleKey = party.roles[0].roleKey;
   const isPSPBroker =
-    signInData?.brokerPspDetailsResource &&
-    Object.keys(signInData?.brokerPspDetailsResource).length > 0;
+    actor?.broker_psp &&
+    Object.keys(actor?.broker_psp).length > 0;
   const isECBroker =
-    signInData?.brokerDetailsResource && Object.keys(signInData?.brokerDetailsResource).length > 0;
+    actor?.broker_ci && Object.keys(actor?.broker_ci).length > 0;
 
   if (isOperator()) {
     return ROLE.PAGOPA_OPERATOR;

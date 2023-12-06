@@ -9,7 +9,7 @@ import { LOADING_TASK_SEARCH_PARTY } from '../utils/constants';
 import { parseJwt } from '../utils/jwt-utils';
 import { ENV } from '../utils/env';
 import { JWTUser } from '../model/JwtUser';
-import { useSigninData } from './useSigninData';
+import {dispatchSignUp} from "./useSigninData";
 
 export type PartyJwtConfig = {
   partyId: string;
@@ -40,7 +40,6 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
   const partyJwtConfig: PartyJwtConfig | null = retrieveSelectedPartyIdConfig();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-  const updateSigninData = useSigninData();
   const setLoadingDetails = useLoading(LOADING_TASK_SEARCH_PARTY);
   const fetchParty = (partyId: string): Promise<Party> =>
     fetchParties().then((parties) => {
@@ -59,7 +58,7 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
         };
         setParty(partyToSave);
         console.log('use selected party', party);
-        void updateSigninData(party);
+        void dispatchSignUp(party.fiscalCode);
         return partyToSave;
       } else {
         throw new Error(`Cannot find partyId ${partyId}`);

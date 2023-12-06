@@ -460,8 +460,7 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getDelegatedPSPbyBroker: async (brokerId: string): Promise<Array<Delegation>> => {
-        const institutionId = '';
+    getDelegatedPSPbyBroker: async (institutionId?: string | undefined, brokerId?: string): Promise<Array<Delegation>> => {
         const result = await backofficeClient.getBrokerDelegation({'institution-id': institutionId, brokerId});
         return extractResponse(result, 200, onRedirectToLogin);
     },

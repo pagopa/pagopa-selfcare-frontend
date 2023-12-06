@@ -136,12 +136,12 @@ export const getChannelPSPs = (
   }
 };
 
-export const getDelegatedPSPbyBroker = (brokerId: string): Promise<Array<Delegation>> => {
+export const getDelegatedPSPbyBroker = (partyId: string): Promise<Array<Delegation>> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getDelegatedPSPbyBrokerMocked();
   } else {
-    return BackofficeApi.getDelegatedPSPbyBroker(brokerId).then((resources) => resources);
+    return BackofficeApi.getDelegatedPSPbyBroker(undefined, partyId).then((resources) => resources);
   }
 };
 

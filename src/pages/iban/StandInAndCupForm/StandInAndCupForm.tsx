@@ -45,7 +45,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const [ibanActiveList, setIbanActiveList] = useState<Ibans>({ ibans_enhanced: [] });
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
   const { t } = useTranslation();
-  const ecCode = selectedParty?.fiscalCode ?? '';
+  const creditorInstitutionCode = selectedParty?.fiscalCode ?? '';
 
   useEffect(() => {
     if (ibanList.ibans_enhanced.length > 0) {
@@ -57,7 +57,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
   const filterListStandInAndCup = () => {
     const ibanStandInFiltered = ibanList.ibans_enhanced.find(
-      (e) => e.labels && e.labels.find((label) => label.name === 'STANDIN')
+      (e) => e.labels && e.labels.find((label) => label.name === 'ACA')
     );
     const ibanCupFiltered = ibanList.ibans_enhanced.find(
       (e) => e.labels && e.labels.find((label) => label.name === '0201138TS')
@@ -67,11 +67,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setSelectedIbanStandIn({
         iban: ibanStandInFiltered.iban!,
         description: ibanStandInFiltered.description,
-        validityDate: ibanStandInFiltered.validity_date!,
-        dueDate: ibanStandInFiltered.due_date!,
-        creditorInstitutionCode: ibanStandInFiltered.ci_owner ?? ecCode,
+        validity_date: ibanStandInFiltered.validity_date!,
+        due_date: ibanStandInFiltered.due_date!,
+        creditor_institution_code: ibanStandInFiltered.ci_owner ?? creditorInstitutionCode,
         labels: ibanStandInFiltered.labels,
-        active: ibanStandInFiltered.is_active!,
+        is_active: ibanStandInFiltered.is_active!,
       });
     } else {
       setSelectedIbanStandIn(emptyIban);
@@ -81,11 +81,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setSelectedIbanCup({
         iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
-        validityDate: ibanStandInFiltered!.validity_date!,
-        dueDate: ibanStandInFiltered!.due_date!,
-        creditorInstitutionCode: ibanStandInFiltered?.ci_owner ?? ecCode,
+        validity_date: ibanCupFiltered!.validity_date!,
+        due_date: ibanCupFiltered!.due_date!,
+        creditor_institution_code: ibanCupFiltered?.ci_owner ?? creditorInstitutionCode,
         labels: ibanCupFiltered.labels,
-        active: ibanStandInFiltered!.is_active!,
+        is_active: ibanCupFiltered!.is_active!,
       });
     } else {
       setSelectedIbanCup(emptyIban);
@@ -97,20 +97,20 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       ? {
           iban: ibanSelected.iban,
           description: ibanSelected.description,
-          validityDate: ibanSelected.validityDate,
-          dueDate: ibanSelected.dueDate,
-          creditorInstitutionCode: ibanSelected.creditorInstitutionCode,
-          publicationDate: ibanSelected.publicationDate,
+          validity_date: ibanSelected.validity_date,
+          due_date: ibanSelected.due_date,
+          creditor_institution_code: ibanSelected.creditor_institution_code,
+          publication_date: ibanSelected.publication_date,
           labels: ibanSelected.labels,
-          active: ibanSelected.active,
+          is_active: ibanSelected.is_active,
         }
       : {
           iban: ibanSelected.iban,
           description: ibanSelected.description,
-          validityDate: ibanSelected.validityDate,
-          dueDate: ibanSelected.dueDate,
-          creditorInstitutionCode: ibanSelected.creditorInstitutionCode,
-          active: false,
+          validity_date: ibanSelected.validity_date,
+          due_date: ibanSelected.due_date,
+          creditor_institution_code: ibanSelected.creditor_institution_code,
+          is_active: false,
         };
 
   // eslint-disable-next-line sonarjs/no-identical-functions
@@ -119,27 +119,27 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       ? {
           iban: ibanSelected.iban,
           description: ibanSelected.description,
-          validityDate: ibanSelected.validityDate,
-          dueDate: ibanSelected.dueDate,
-          creditorInstitutionCode: ibanSelected.creditorInstitutionCode,
+          validity_date: ibanSelected.validity_date,
+          due_date: ibanSelected.due_date,
+          creditor_institution_code: ibanSelected.creditor_institution_code,
           labels: ibanSelected.labels,
-          publicationDate: ibanSelected.publicationDate,
-          active: ibanSelected.active,
+          publication_date: ibanSelected.publication_date,
+          is_active: ibanSelected.is_active,
         }
       : {
           iban: ibanSelected.iban,
           description: ibanSelected.description,
-          validityDate: ibanSelected.validityDate,
-          dueDate: ibanSelected.dueDate,
-          creditorInstitutionCode: ibanSelected.creditorInstitutionCode,
-          active: false,
+          validity_date: ibanSelected.validity_date,
+          due_date: ibanSelected.due_date,
+          creditor_institution_code: ibanSelected.creditor_institution_code,
+          is_active: false,
         };
 
   const handleIbanStandInSelected = (event: any) => {
     setIbanStandInTriggered(true);
     const newLabel: IbanLabel = {
       description: 'The IBAN to use for STANDIN process',
-      name: 'STANDIN',
+      name: 'ACA',
     };
 
     const selectedIndex = ibanList.ibans_enhanced.findIndex((e: any) => e.iban === event.target.value);
@@ -149,11 +149,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setSelectedIbanStandIn({
       iban: selectedIban.iban!,
       description: selectedIban.description,
-      validityDate: selectedIban.validity_date!,
-      dueDate: selectedIban.due_date!,
-      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
+      validity_date: selectedIban.validity_date!,
+      due_date: selectedIban.due_date!,
+      creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
-      active: selectedIban.is_active!,
+      is_active: selectedIban.is_active!,
     });
   };
 
@@ -171,11 +171,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setSelectedIbanCup({
       iban: selectedIban.iban!,
       description: selectedIban.description,
-      validityDate: selectedIban.validity_date!,
-      dueDate: selectedIban.due_date!,
-      creditorInstitutionCode: selectedIban.ci_owner ?? ecCode,
+      validity_date: selectedIban.validity_date!,
+      due_date: selectedIban.due_date!,
+      creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
-      active: selectedIban.is_active!,
+      is_active: selectedIban.is_active!,
     });
   };
 
@@ -197,16 +197,16 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setLoadingIban(true);
     try {
       if (ibanStandInTriggered && ibanCupTriggered && iban1 && iban2) {
-        await updateIbanStandIn(iban1.ecOwner!, iban1);
-        await updateIbanCup(iban2.ecOwner!, iban2);
+        await updateIbanStandIn(iban1.creditor_institution_code!, iban1);
+        await updateIbanCup(iban2.creditor_institution_code!, iban2);
       }
 
       if (ibanStandInTriggered && !ibanCupTriggered && iban1) {
-        await updateIbanStandIn(iban1.ecOwner!, iban1);
+        await updateIbanStandIn(iban1.creditor_institution_code!, iban1);
       }
 
       if (!ibanStandInTriggered && ibanCupTriggered && iban2) {
-        await updateIbanCup(iban2.ecOwner!, iban2);
+        await updateIbanCup(iban2.creditor_institution_code!, iban2);
       }
     } catch (reason) {
       addError({
@@ -317,7 +317,6 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           inputProps={{
                             'data-testid': 'stand-in-test',
                           }}
-                          disabled
                         >
                           {ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
                             <MenuItem key={i} value={r.iban}>

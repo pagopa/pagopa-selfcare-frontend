@@ -20,10 +20,10 @@ const emptyIbanList: Ibans = {
 export const emptyIban: IbanOnCreation = {
   iban: '',
   description: '',
-  validityDate: new Date(),
-  dueDate: new Date(),
-  creditorInstitutionCode: '',
-  active: true,
+  validity_date: new Date(),
+  due_date: new Date(),
+  creditor_institution_code: '',
+  is_active: true,
   labels: [],
 };
 

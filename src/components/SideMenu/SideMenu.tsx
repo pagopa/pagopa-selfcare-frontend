@@ -44,17 +44,6 @@ export default function SideMenu() {
         setIsDisabled(!isSignedOnNode ?? true);
     }, [signinData]);
 
-    const apiKeyItem = (
-        <SidenavItem
-            title={t('sideMenu.apikeys.title')}
-            handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
-            isSelected={pathname === ROUTES.APIKEYS}
-            disabled={isDisabled || (!isDisabled && !hasPermission('apikey'))}
-            icon={VpnKeyIcon}
-            dataTestId="apikeys-test"
-        />
-    );
-
     return (
         <Box display="grid" mt={1}>
             <Box gridColumn="auto">
@@ -74,7 +63,7 @@ export default function SideMenu() {
                             title={t('sideMenu.apikeys.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
                             isSelected={pathname === ROUTES.APIKEYS}
-                            disabled={isDisabled || (!isDisabled && !hasPermission('apikey'))}
+                            disabled={isDisabled}
                             icon={VpnKeyIcon}
                             dataTestId="apikeys-test"
                         />

@@ -132,7 +132,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
           );
         }
 
-        console.log('NodeSignin PSP', selectedParty);
+       
         await updateSigninData(selectedParty);
       } catch (reason) {
         addError({
@@ -161,7 +161,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
           await createPSPIndirect(formik.values);
         }
 
-        console.log('NodeSignin PSP 2', selectedParty);
+       
         await updateSigninData(selectedParty);
       } catch (reason) {
         addError({

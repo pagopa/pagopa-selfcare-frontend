@@ -24,12 +24,12 @@ const spyOnCreateOperationTable = jest.spyOn(backofficeClient, 'insertUsingPOST'
 
 const spyOnUpdateOperationTable = jest.spyOn(backofficeClient, 'updateUsingPUT');
 
-const spyOnGetDelegatedPSPbyBroker = jest.spyOn(backofficeClient, 'getBrokerDelegationUsingGET');
+const spyOngetBrokerDelegation = jest.spyOn(backofficeClient, 'getBrokerDelegationUsingGET');
 
 describe('Testing that BackofficeApi methods calls backofficeClient', () => {
-  test('Testing getDelegatedPSPbyBroker calls getBrokerDelegationUsingGET', async () => {
-    await BackofficeApi.getDelegatedPSPbyBroker('123');
-    expect(spyOnGetDelegatedPSPbyBroker).toBeCalled();
+  test('Testing getBrokerDelegation calls getBrokerDelegationUsingGET', async () => {
+    await BackofficeApi.getBrokerDelegation('123');
+    expect(spyOngetBrokerDelegation).toBeCalled();
     expect(spyOnExtractResponse).toBeCalled();
   });
 

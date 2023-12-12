@@ -16,7 +16,7 @@ import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
 import {
   associatePSPtoChannel,
-  getDelegatedPSPbyBroker,
+  getBrokerDelegation,
   getChannelDetail,
 } from '../../../services/channelService';
 import { useAppSelector } from '../../../redux/hooks';
@@ -117,7 +117,7 @@ function ChannelAssociatePSPPage() {
         .then((channel) => setChannelDetail(channel))
         .catch((reason) => console.error(reason));
 
-      getDelegatedPSPbyBroker(selectedParty?.partyId)
+      getBrokerDelegation(selectedParty?.partyId)
         .then((data) => {
           if (data && selectedParty) {
             // A PSP that is a broker can associate itself to the channel

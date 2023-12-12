@@ -30,19 +30,34 @@ const StationDetailPage = () => {
 
         async function getDetail(): Promise<any> {
             // eslint-disable-next-line functional/no-let
-            let station = null;
+            let station: StationDetailResource;
             // eslint-disable-next-line functional/no-let
-            let wrapper = null;
+            let wrapper: any;
             try {
-
                 station = await getStationDetail(stationId);
+                return {
+                    wrapperStatus: 'APPROVED',
+                    ...station
+                };
             } catch (e) {
                 wrapper = await getWrapperStation(stationId);
+                return {
+                    wrapperStatus: wrapper.status,
+                    ...wrapper.entities![0],
+                    ...wrapper
+                };
             }
-            return station ?? wrapper ?? {};
         }
 
-        Promise.all([getDetail(), getECListByStationCode(stationId, 0)])
+        async function getEcListByStationCode(): Promise<any> {
+            try {
+                return await getECListByStationCode(stationId, 0);
+            } catch (e) {
+                return {};
+            }
+        }
+
+        Promise.all([getDetail(), getEcListByStationCode()])
             .then(([stationDetail, ecList]) => {
                 setStationDetail(stationDetail);
                 setECAssociatedNumber(ecList?.page_info?.items_found ?? 0);

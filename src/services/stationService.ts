@@ -24,10 +24,10 @@ import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorI
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
-import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import {Delegation} from "../api/generated/portal/Delegation";
+import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -122,14 +122,14 @@ export const getStationAvailableEC = (
 
 export const createWrapperStation = (
   station: WrapperStationDetailsDto,
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createStationWrap(station);
   }
   return BackofficeApi.createWrapperStation(station).then((resources) => resources);
 };
 
-export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> => {
+export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationWrap(ecCode);
   } else {
@@ -139,7 +139,7 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperat
 
 export const updateWrapperStationToCheck = (
   station: StationDetailsDto,
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrap(station);
   } else {
@@ -151,7 +151,7 @@ export const updateWrapperStationToCheck = (
 
 export const updateWrapperStationToCheckUpdate = (
   station: StationDetailsDto
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrap(station);
   } else {
@@ -163,7 +163,7 @@ export const updateWrapperStationToCheckUpdate = (
 
 export const updateWrapperStationByOpt = (
   station: StationDetailsDto
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrapByOpt(station);
   } else {

@@ -33,7 +33,6 @@ import {WrapperStationsResource} from './generated/portal/WrapperStationsResourc
 import {CreditorInstitutionsResource} from './generated/portal/CreditorInstitutionsResource';
 import {WrapperStationDetailsDto} from './generated/portal/WrapperStationDetailsDto';
 import {StationDetailsDto, StatusEnum} from './generated/portal/StationDetailsDto';
-import {WrapperEntitiesOperations} from './generated/portal/WrapperEntitiesOperations';
 import {ChannelDetailsDto, Payment_modelEnum, ProtocolEnum,} from './generated/portal/ChannelDetailsDto';
 import {UpdateCreditorInstitutionDto} from './generated/portal/UpdateCreditorInstitutionDto';
 import {Redirect_protocolEnum, WrapperChannelDetailsDto,} from './generated/portal/WrapperChannelDetailsDto';
@@ -59,6 +58,7 @@ import {IbanCreate} from './generated/portal/IbanCreate';
 import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
+import { WrapperEntities } from "./generated/portal/WrapperEntities";
 
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
@@ -372,7 +372,7 @@ export const BackofficeApi = {
     createWrapperChannelDetails: async (
         channel: WrapperChannelDetailsDto,
         validationUrl: string
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const result = await backofficeClient.createWrapperChannelDetails({
             body: {
                 broker_psp_code: channel.broker_psp_code,
@@ -409,7 +409,7 @@ export const BackofficeApi = {
     updateWrapperChannelDetailsToCheck: async (
         channel: ChannelDetailsDto,
         validationUrl: string
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const channelBody2Send = channelBody(channel);
         const result = await backofficeClient.updateWrapperChannelDetails({
             body: {
@@ -424,7 +424,7 @@ export const BackofficeApi = {
     updateWrapperChannelDetailsToCheckUpdate: async (
         channel: ChannelDetailsDto,
         validationUrl: string
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const channelBody2Send = channelBody(channel);
         const result = await backofficeClient.updateWrapperChannelDetails({
             body: {
@@ -438,7 +438,7 @@ export const BackofficeApi = {
     updateWrapperChannelDetailsByOpt: async (
         channel: ChannelDetailsDto,
         validationUrl: string
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const channelBody2Send = channelBody(channel);
         const result = await backofficeClient.updateWrapperChannelDetailsByOpt({
             body: {
@@ -644,14 +644,14 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getWrapperEntities: async (code: string): Promise<WrapperEntitiesOperations> => {
+    getWrapperEntities: async (code: string): Promise<WrapperEntities> => {
         const result = await backofficeClient.getStation({'station-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     createWrapperStation: async (
         station: WrapperStationDetailsDto,
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const result = await backofficeClient.createWrapperStationDetails({
             body: {
                 brokerCode: station.brokerCode,
@@ -677,7 +677,7 @@ export const BackofficeApi = {
     updateWrapperStationToCheck: async (
         stationCode: string,
         station: StationDetailsDto,
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const result = await backofficeClient.updateWrapperStationDetails({
             'station-code': stationCode,
             body: {
@@ -691,7 +691,7 @@ export const BackofficeApi = {
     updateWrapperStationToCheckUpdate: async (
         stationCode: string,
         station: StationDetailsDto
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const result = await backofficeClient.updateWrapperStationDetails({
             'station-code': stationCode,
             body: {
@@ -704,7 +704,7 @@ export const BackofficeApi = {
 
     updateWrapperStationByOpt: async (
         station: StationDetailsDto
-    ): Promise<WrapperEntitiesOperations> => {
+    ): Promise<WrapperEntities> => {
         const result = await backofficeClient.updateWrapperStationDetailsByOpt({
             body: {
                 ...station,
@@ -728,7 +728,7 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getWrapperEntitiesStation: async (code: string): Promise<WrapperEntitiesOperations> => {
+    getWrapperEntitiesStation: async (code: string): Promise<WrapperEntities> => {
         const result = await backofficeClient.getWrapperEntitiesStation_1({'station-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },

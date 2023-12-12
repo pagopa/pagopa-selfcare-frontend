@@ -453,7 +453,7 @@
         "path": "Path",
         "proxy": "Indirizzo",
         "newConnLabel": "Nuova connettività",
-        "GDPLabel": "GDP",
+        "GDPLabel": "GPD",
         "proxyValues": {
           "newConnectivity": "Nuova Connettività",
           "oldConnectivity": "Vecchia Connettività"
@@ -648,7 +648,7 @@
       "proxy": "Proxy",
       "proxyAddress": "Indirizzo",
       "configuration": "Configurazione",
-      "GDP": "GDP",
+      "GPD": "GPD",
       "newConn": "Nuova Connettività",
       "forwarderNewConn": "FORWARDER01",
       "gdpDetail": "GDP01",

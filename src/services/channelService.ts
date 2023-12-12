@@ -22,7 +22,7 @@ import {
   updateChannel as updateChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
-  getDelegatedPSPbyBroker as getDelegatedPSPbyBrokerMocked,
+  getBrokerDelegation as getBrokerDelegationMocked,
   getChannelPSPs as getChannelPSPsMocked,
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
@@ -136,12 +136,12 @@ export const getChannelPSPs = (
   }
 };
 
-export const getDelegatedPSPbyBroker = (partyId: string): Promise<Array<Delegation>> => {
+export const getBrokerDelegation = (partyId: string): Promise<Array<Delegation>> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getDelegatedPSPbyBrokerMocked();
+    return getBrokerDelegationMocked();
   } else {
-    return BackofficeApi.getDelegatedPSPbyBroker(undefined, partyId).then((resources) => resources);
+    return BackofficeApi.getBrokerDelegation(undefined, partyId).then((resources) => resources);
   }
 };
 

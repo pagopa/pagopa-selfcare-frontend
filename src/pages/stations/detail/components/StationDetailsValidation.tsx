@@ -350,7 +350,7 @@ Props) => {
                   <>
                     <Grid item xs={3}>
                       <Typography variant="body2">
-                        {t('stationDetailPageValidation.infoToComplete.GDP')}
+                        {t('stationDetailPageValidation.infoToComplete.GPD')}
                       </Typography>
                     </Grid>
                     <Grid item xs={9}>
@@ -387,7 +387,7 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.infoToComplete.GDP')}
+                    {t('stationDetailPageValidation.infoToComplete.GPD')}
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>

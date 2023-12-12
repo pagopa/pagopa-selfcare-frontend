@@ -21,7 +21,6 @@ export const useSigninData = () => {
   return async (party: Party) => {
     await fetchSigninData(party)
       .then((result) => {
-        console.log('UPDATE Signin DATA', result);
         setSigninData(result);
       })
       .catch((error) => console.error(error));
@@ -65,8 +64,8 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
         pspList.payment_service_providers[0].psp_code
           ? await getPSPDetails(pspList.payment_service_providers[0].psp_code)
           : {};
-      console.log('pspBrokerDetails',pspBrokerDetails);
-      console.log('pspDetails',pspList);
+     
+     
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         paymentServiceProviderDetailsResource: {

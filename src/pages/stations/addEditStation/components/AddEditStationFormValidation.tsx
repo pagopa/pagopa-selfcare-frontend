@@ -65,7 +65,7 @@ Props) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
-    if (value === 'GDP') {
+    if (value === 'GPD') {
       setNewConn(false);
       formik.setFieldValue('newConnConcat', '');
       setGDP(true);
@@ -213,7 +213,7 @@ Props) => {
 
                   <Grid container item xs={12} pt={2}>
                     <FormControlLabel
-                      value="GDP"
+                      value="GPD"
                       data-testid="radio-button-gdp"
                       control={<Radio />}
                       checked={gdp}

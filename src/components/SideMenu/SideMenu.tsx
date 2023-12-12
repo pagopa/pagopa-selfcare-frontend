@@ -39,7 +39,7 @@ export default function SideMenu() {
     });
 
     useEffect(() => {
-        console.log(signinData);
+       
         const isSignedOnNode = signinData ? isSigned(signinData) : true;
         setIsDisabled(!isSignedOnNode ?? true);
     }, [signinData]);

@@ -1,15 +1,14 @@
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
-import { getECListByStationCode, getStationDetail } from '../../../services/stationService';
-import { LOADING_TASK_STATION_DETAILS_WRAPPER } from '../../../utils/constants';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {getECListByStationCode, getStationDetail} from '../../../services/stationService';
+import {LOADING_TASK_STATION_DETAILS_WRAPPER} from '../../../utils/constants';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { isOperator } from '../../components/commonFunctions';
-import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import {isOperator} from '../../components/commonFunctions';
+import {StationDetailResource} from '../../../api/generated/portal/StationDetailResource';
 import StationDetails from './components/StationDetails';
 import StationDetailsValidation from './components/StationDetailsValidation';
 
@@ -24,7 +23,7 @@ const StationDetailPage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const goBack = () => history.push(ROUTES.STATIONS);
 
-  const operator = isOperator();
+    const operator = isOperator();
 
   useEffect(() => {
     setLoadingWrap(true);
@@ -48,15 +47,15 @@ const StationDetailPage = () => {
       .finally(() => setLoadingWrap(false));
   }, [selectedParty]);
 
-  return operator ? (
-    <StationDetailsValidation stationDetail={stationDetail} />
-  ) : (
-    <StationDetails
-      stationDetail={stationDetail}
-      goBack={goBack}
-      ecAssociatedNumber={ecAssociatedNumber}
-    />
-  );
+    return operator ? (
+        <StationDetailsValidation stationDetail={stationDetail}/>
+    ) : (
+        <StationDetails
+            stationDetail={stationDetail}
+            goBack={goBack}
+            ecAssociatedNumber={ecAssociatedNumber}
+        />
+    );
 };
 
 export default StationDetailPage;

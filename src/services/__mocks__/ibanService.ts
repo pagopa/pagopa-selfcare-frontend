@@ -89,7 +89,7 @@ export const mockedIbanCup: Iban = {
       name: 'CUP',
     },
   ],
-  is_active: true,
+  is_active: false,
 };
 
 export const mockedIbanStandIn: Iban = {

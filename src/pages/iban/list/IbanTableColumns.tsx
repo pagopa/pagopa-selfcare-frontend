@@ -190,7 +190,7 @@ export function showStatus(params: GridRenderCellParams) {
           fontSize: '14px',
           fontWeight: 'fontWeightMedium',
           color: params.row.active ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.is_active ? 'primary.main' : 'error.light',
+          backgroundColor: 'primary.main',
           paddingBottom: '1px',
           height: '24px',
         }}

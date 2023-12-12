@@ -50,7 +50,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   useEffect(() => {
     if (ibanList.ibans_enhanced.length > 0) {
       filterListStandInAndCup();
-      const ibanListFiltered = ibanList.ibans_enhanced.filter((list) => list.is_active === true);
+      const ibanListFiltered = ibanList.ibans_enhanced;
       setIbanActiveList({ ibans_enhanced: [...ibanListFiltered] });
     }
   }, [selectedParty, ibanList]);

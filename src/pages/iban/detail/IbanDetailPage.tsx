@@ -133,7 +133,7 @@ const IbanDetailPage = () => {
           </Grid>
           <Grid item xs={6}>
             <IbanDetailButtons
-              active={iban.is_active}
+              active={true}
               iban={ibanId}
               setShowDeleteModal={setShowDeleteModal}
             />

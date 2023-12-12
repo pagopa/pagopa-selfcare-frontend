@@ -469,7 +469,7 @@ export const getPaymentTypes = (): Promise<PaymentTypes> =>
 export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
-export const getDelegatedPSPbyBroker = (): Promise<Array<Delegation>> =>
+export const getBrokerDelegation = (): Promise<Array<Delegation>> =>
   new Promise((resolve) => resolve(mockedDelegatedPSP));
 
 export const associatePSPtoChannel = (

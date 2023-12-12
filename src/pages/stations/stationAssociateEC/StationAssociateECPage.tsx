@@ -28,6 +28,7 @@ import { CreditorInstitutionStationDto } from '../../../api/generated/portal/Cre
 import { CreditorInstitutionAssociatedCodeList } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { getStationAvailableEC } from '../../../services/stationService';
 import { Delegation } from '../../../api/generated/portal/Delegation';
+import {getBrokerDelegation} from "../../../services/channelService";
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -52,10 +53,10 @@ function StationAssociateECPage() {
   useEffect(() => {
     setLoading(true);
     if (selectedParty) {
-      getStationAvailableEC(selectedParty.partyId)
+        getBrokerDelegation(selectedParty.partyId)
         .then((data) => {
           if (data) {
-            setAvailableEC(data as Array<Delegation>);
+            setAvailableEC(data);
           }
         })
         .catch((reason) =>

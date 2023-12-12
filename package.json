@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-frontend",
-  "version": "0.0.56",
+  "version": "0.0.56-1-release-iban-1.0",
   "homepage": "ui",
   "private": true,
   "scripts": {

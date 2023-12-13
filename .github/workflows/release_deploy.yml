@@ -183,7 +183,7 @@ jobs:
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
-      - name: Deploy Stable
+      - name: Deploy ${{ inputs.environment }}
         uses: azure/CLI@v1
         with:
           azcliversion: latest

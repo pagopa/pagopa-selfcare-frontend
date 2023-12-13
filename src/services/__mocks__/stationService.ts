@@ -14,11 +14,11 @@ import {
   WrapperStatusEnum,
 } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
-import {TypeEnum, WrapperEntitiesOperations} from '../../api/generated/portal/WrapperEntitiesOperations';
 import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
+import {TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 
 // @ts-ignore
 const mockedStation: StationDetailResource = {
@@ -457,7 +457,7 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },
 };
-export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
+export const stationWrapperMockedGet = (code: string): WrapperEntities => ({
   brokerCode: 'string',
   createdAt: new Date(),
   createdBy: 'EC S.p.A',
@@ -468,7 +468,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntitiesOperations
   note: 'string',
   status: StatusEnum.TO_CHECK,
   type: TypeEnum.STATION,
-  wrapperEntityOperationsSortedList: [
+  entities: [
     {
       createdAt: new Date(),
       entity: {
@@ -615,7 +615,7 @@ export const getStationCodeMocked = (_code: string): Promise<StationCodeResource
 
 export const createWrapperStation = (
   _station: WrapperStationDetailsDto
-): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
   _stationcode: string,
@@ -626,11 +626,11 @@ export const getECListByStationCode = (
 
 export const updateWrapperStation = (
   _stations: StationDetailsDto
-): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateWrapperStationByOpt = (
   _stations: StationDetailsDto
-): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateStation = (
   _stations: StationDetailsDto,
@@ -649,7 +649,7 @@ export const associateEcToStation = (
 ): Promise<CreditorInstitutionStationEditResource> =>
   new Promise((resolve) => resolve({ stationCode: '123' }));
 
-export const getWrapperStation = (ecCode: string): Promise<WrapperEntitiesOperations> =>
+export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
 export const getCreditorInstitutionSegregationcodes = (

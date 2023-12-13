@@ -14,10 +14,9 @@ import {
 } from '../../api/generated/portal/WrapperChannelDetailsDto';
 import {
   TypeEnum,
-  WrapperEntitiesOperations,
-} from '../../api/generated/portal/WrapperEntitiesOperations';
+  WrapperEntities,
+} from '../../api/generated/portal/WrapperEntities';
 import { ChannelOnCreation } from '../../model/Channel';
-import { PSP } from '../../model/PSP';
 import { WfespPluginConfs } from '../../api/generated/portal/WfespPluginConfs';
 import {PaymentTypes} from "../../api/generated/portal/PaymentTypes";
 import {Delegation} from "../../api/generated/portal/Delegation";
@@ -394,7 +393,7 @@ export const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
 };
 
-export const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations => ({
+export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
   brokerCode: 'string',
   createdAt: new Date(),
   createdBy: 'PSP S.p.A',
@@ -405,7 +404,7 @@ export const channelWrapperMockedGet = (code: string): WrapperEntitiesOperations
   note: 'string',
   status: StatusEnum.APPROVED,
   type: TypeEnum.CHANNEL,
-  wrapperEntityOperationsSortedList: [
+  entities: [
     {
       createdAt: new Date(),
       entity: {
@@ -485,14 +484,14 @@ export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string)
 export const createWrapperChannel = (
   _channel: WrapperChannelDetailsDto,
   _validationUrl: string
-): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
+): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
 export const updateWrapperChannel = (
   _channel: ChannelDetailsDto,
   _validationUrl: string
-): Promise<WrapperEntitiesOperations> => new Promise((resolve) => resolve(mockedWrapperChannel));
+): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperChannel));
 
-export const getWrapperChannel = (pspCode: string): Promise<WrapperEntitiesOperations> =>
+export const getWrapperChannel = (pspCode: string): Promise<WrapperEntities> =>
   new Promise((resolve) => resolve(channelWrapperMockedGet(pspCode)));
 
 export const getWfespPlugins = (): Promise<WfespPluginConfs> =>

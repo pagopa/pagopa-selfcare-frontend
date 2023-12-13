@@ -79,9 +79,9 @@ function StationAssociateECPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedEC && selectedEC.broker_id) {
+    if (selectedEC && selectedEC.tax_code) {
       setLoadingList(true);
-      getCreditorInstitutionSegregationcodes(selectedEC.broker_id)
+      getCreditorInstitutionSegregationcodes(selectedEC.tax_code)
         .then((res) => {
           if (res && Array.isArray(res.unused)) {
             setSegregationCodeList(res);

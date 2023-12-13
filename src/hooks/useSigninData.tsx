@@ -11,6 +11,7 @@ import {
   getPaymentServiceProviders,
 } from '../services/nodeService';
 import { PaymentServiceProvidersResource } from '../api/generated/portal/PaymentServiceProvidersResource';
+import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 
 /* A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux. */
 export const useSigninData = () => {
@@ -30,8 +31,22 @@ export const useSigninData = () => {
 const fetchSigninData = async (party: Party): Promise<SigninData> => {
   try {
     if (party.institutionType === 'PT') {
-      const pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
-      const ecAndBrokerDetails = await getBrokerAndEcDetails(party.fiscalCode);
+      // eslint-disable-next-line functional/no-let
+      let pspBrokerDetails: any;
+      try {
+        pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      } catch (e) {
+        pspBrokerDetails = {};
+      }
+
+      // eslint-disable-next-line functional/no-let
+      let ecAndBrokerDetails; 
+      try {
+        ecAndBrokerDetails = await getBrokerAndEcDetails(party.fiscalCode);
+      } catch (e) {
+        ecAndBrokerDetails = undefined;
+      }
+      
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         brokerDetailsResource: { ...(ecAndBrokerDetails?.brokerDetailsResource || {}) },

@@ -15,6 +15,7 @@ import { IbanOnCreation } from '../../../model/Iban';
 import { emptyIban } from '../IbanPage';
 import { deleteIban, getIbanList } from '../../../services/ibanService';
 import GenericModal from '../../../components/Form/GenericModal';
+import { isIbanValid } from '../../../utils/common-utils';
 import IbanDetailButtons from './components/IbanDetailButtons';
 
 const IbanDetailPage = () => {
@@ -133,7 +134,7 @@ const IbanDetailPage = () => {
           </Grid>
           <Grid item xs={6}>
             <IbanDetailButtons
-              active={iban.is_active}
+              active={isIbanValid(iban)}
               iban={ibanId}
               setShowDeleteModal={setShowDeleteModal}
             />

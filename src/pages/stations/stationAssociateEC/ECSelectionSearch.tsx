@@ -18,7 +18,7 @@ type Props = {
 };
 
 const verifyECFilter = (ec: Delegation, filter: string) =>
-  ec.broker_name && ec.broker_name.toUpperCase().indexOf(filter.toUpperCase()) >= 0;
+  ec.institution_name && ec.institution_name.toUpperCase().indexOf(filter.toUpperCase()) >= 0;
 
 const CustomBox = styled(Box)({
   '&::-webkit-scrollbar': {
@@ -53,7 +53,7 @@ export default function ECSelectionSearch({
     } else {
       setFilteredParties(
         availableEC.filter(
-          (e) => e.broker_name && e.broker_name.toUpperCase().includes(value.toUpperCase())
+          (e) => e.institution_name && e.institution_name.toUpperCase().includes(value.toUpperCase())
         )
       );
     }
@@ -105,8 +105,8 @@ export default function ECSelectionSearch({
               {filteredParties &&
                 filteredParties.map((EC) => (
                   <ECSelectionSearchItemContainer
-                    key={EC.broker_id}
-                    title={EC.broker_name}
+                    key={EC.institution_id}
+                    title={EC.institution_name}
                     subTitle={/* t(roleLabels[EC.userRole].longLabelKey) */ ''}
                     image={/* EC.urlLogo */ ''}
                     action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

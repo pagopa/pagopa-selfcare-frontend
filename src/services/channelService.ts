@@ -8,12 +8,12 @@ import { PspChannelPaymentTypesResource } from '../api/generated/portal/PspChann
 import { PspChannelsResource } from '../api/generated/portal/PspChannelsResource';
 import { WrapperChannelsResource } from '../api/generated/portal/WrapperChannelsResource';
 import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannelDetailsDto';
-import { WrapperEntitiesOperations } from '../api/generated/portal/WrapperEntitiesOperations';
 import { BackofficeApi } from '../api/BackofficeClient';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
 import {PaymentTypes} from "../api/generated/portal/PaymentTypes";
 import {Delegation} from "../api/generated/portal/Delegation";
+import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -22,7 +22,7 @@ import {
   updateChannel as updateChannelMocked,
   getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
-  getDelegatedPSPbyBroker as getDelegatedPSPbyBrokerMocked,
+  getBrokerDelegation as getBrokerDelegationMocked,
   getChannelPSPs as getChannelPSPsMocked,
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
@@ -136,12 +136,12 @@ export const getChannelPSPs = (
   }
 };
 
-export const getDelegatedPSPbyBroker = (brokerId: string): Promise<Array<Delegation>> => {
+export const getBrokerDelegation = (partyId: string): Promise<Array<Delegation>> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getDelegatedPSPbyBrokerMocked();
+    return getBrokerDelegationMocked();
   } else {
-    return BackofficeApi.getDelegatedPSPbyBroker(brokerId).then((resources) => resources);
+    return BackofficeApi.getBrokerDelegation(undefined, partyId).then((resources) => resources);
   }
 };
 
@@ -169,7 +169,7 @@ export const dissociatePSPfromChannel = (channelcode: string, pspcode: string): 
   }
 };
 
-export const getWrapperEntities = (pspCode: string): Promise<WrapperEntitiesOperations> => {
+export const getWrapperEntities = (pspCode: string): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getWrapperChannel(pspCode);
   } else {
@@ -180,7 +180,7 @@ export const getWrapperEntities = (pspCode: string): Promise<WrapperEntitiesOper
 export const createWrapperChannelDetails = (
   channel: WrapperChannelDetailsDto,
   validationUrl: string
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createWrapperChannel(channel, validationUrl);
   } else {
@@ -193,7 +193,7 @@ export const createWrapperChannelDetails = (
 export const updateWrapperChannelDetailsToCheck = (
   channel: ChannelDetailsDto,
   validationUrl: string
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
@@ -206,7 +206,7 @@ export const updateWrapperChannelDetailsToCheck = (
 export const updateWrapperChannelDetailsToCheckUpdate = (
   channel: ChannelDetailsDto,
   validationUrl: string
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
@@ -219,7 +219,7 @@ export const updateWrapperChannelDetailsToCheckUpdate = (
 export const updateWrapperChannelDetailsByOpt = (
   channel: ChannelDetailsDto,
   validationUrl: string
-): Promise<WrapperEntitiesOperations> => {
+): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {

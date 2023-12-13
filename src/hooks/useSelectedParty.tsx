@@ -58,7 +58,7 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
             })) ?? [], */
         };
         setParty(partyToSave);
-        console.log('use selected party', party);
+       
         void updateSigninData(party);
         return partyToSave;
       } else {

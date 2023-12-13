@@ -29,6 +29,7 @@ import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { createIban, updateIban } from '../../../services/ibanService';
+import { isIbanValid } from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -385,7 +386,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               <Grid container item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    disabled={ibanBody?.is_active && formAction === IbanFormAction.Edit}
+                    disabled={isIbanValid(ibanBody) && formAction === IbanFormAction.Edit}
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validity_date}

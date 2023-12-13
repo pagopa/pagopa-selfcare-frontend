@@ -3,7 +3,7 @@ name: Release And Deploy
 # Controls when the workflow will run
 on:
   pull_request:
-    types: [closed]
+    types: [ closed ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,11 +16,15 @@ on:
           - dev
           - uat
           - prod
-      skip_release:
+      version:
         required: false
-        type: boolean
-        description: skip the release. Only deploy
-        default: false
+        type: choice
+        description: Select the version
+        options:
+          - ''
+          - skip_or_promote
+          - new_release
+          - breaking_change
 
 permissions:
   packages: write
@@ -50,16 +54,17 @@ jobs:
       - if: ${{ (github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'breaking-change')) }}
         run: echo "SEMVER=major" >> $GITHUB_ENV
 
-      - if: ${{ inputs.environment == 'uat' }}
+      # force semver if dev, !=main or skip release
+      - if: ${{ inputs.version == 'new_release' }}
         run: echo "SEMVER=minor" >> $GITHUB_ENV
 
-      - if: ${{ inputs.environment == 'prod' }}
-        run: echo "SEMVER=skip" >> $GITHUB_ENV
+      - if: ${{ inputs.version == 'breaking_change' }}
+        run: echo "SEMVER=major" >> $GITHUB_ENV
 
       - if: ${{ github.ref_name != 'main' }}
         run: echo "SEMVER=buildNumber" >> $GITHUB_ENV
 
-      - if: ${{ inputs.skip_release }}
+      - if: ${{ inputs.version == 'skip_or_promote' }}
         run: echo "SEMVER=skip" >> $GITHUB_ENV
 
       - id: get_semver
@@ -79,7 +84,7 @@ jobs:
   release:
     name: Create a New Release
     runs-on: ubuntu-latest
-    needs: [setup]
+    needs: [ setup ]
     outputs:
       version: ${{ steps.release.outputs.version }}
     steps:
@@ -93,10 +98,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy
-    if: ${{ inputs.semver != 'skip' }}
-    environment: ${{ inputs.environment }}
-    needs: [release]
+    needs: [ setup, release ]
+    name: Deploy ${{ needs.setup.outputs.environment }}
+    environment: ${{ needs.setup.outputs.environment }}
     steps:
       - name: Checkout
         id: checkout
@@ -126,7 +130,7 @@ jobs:
           export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
           export REACT_APP_URL_BETA='false'
-  
+          
           export REACT_APP_API_MOCK_BACKOFFICE='false'
           export REACT_APP_API_MOCK_TOKEN='false'
           
@@ -199,7 +203,7 @@ jobs:
             az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n ${{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
 
   notify:
-    needs: [setup, release, deploy]
+    needs: [ setup, release, deploy ]
     runs-on: ubuntu-latest
     name: Notify
     if: always()

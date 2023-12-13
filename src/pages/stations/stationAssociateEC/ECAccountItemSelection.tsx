@@ -13,7 +13,7 @@ export default function ECAccountItemSelection({ selectedEC, clearField }: Props
     <Box display="flex" p={2}>
       <Box width="100%">
         <PartyAccountItem
-          partyName={selectedEC?.broker_name ? selectedEC.broker_name : ''}
+          partyName={selectedEC?.institution_name ? selectedEC.institution_name : ''}
           partyRole={/* selectedEC ? t(roleLabels[selectedEC.userRole].longLabelKey) : */ ''}
           image={/* selectedEC?.urlLogo */ ''}
           maxCharactersNumberMultiLine={20}

@@ -273,7 +273,7 @@ function StationAssociateECPage() {
                         {t('stationAssociateECPage.associationForm.segregationCode')}
                       </InputLabel>
                       <Select
-                        disabled={selectedEC?.broker_id === undefined}
+                        disabled={selectedEC?.institution_id === undefined}
                         id="segregationCode"
                         name="segregationCode"
                         label={t('stationAssociateECPage.associationForm.segregationCode')}

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.9.0-1-PASELC-641-fe-modifica-iban-bloccata-da-data-non-valida",
+  "version": "1.9.0-2-PASELC-641-fe-modifica-iban-bloccata-da-data-non-valida",
   "homepage": "ui",
   "private": true,
   "scripts": {

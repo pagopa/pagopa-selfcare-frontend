@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.10.0-2-PASELC-656-fe-aggiungere-bottone-per-generazione-export-csv",
+  "version": "1.10.0-3-PASELC-656-fe-aggiungere-bottone-per-generazione-export-csv",
   "homepage": "ui",
   "private": true,
   "scripts": {

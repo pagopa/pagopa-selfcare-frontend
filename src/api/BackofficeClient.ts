@@ -57,6 +57,9 @@ import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 
+// eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
+window.Buffer = window.Buffer || require("buffer").Buffer; 
+
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
     return wrappedOperation({
@@ -826,6 +829,11 @@ export const BackofficeApi = {
 
     getOperationTableDetails: async (ecCode: string): Promise<TavoloOpResource> => {
         const result = await backofficeClient.getOperativeTable({'ci-code': ecCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
+        const result = await backofficeClient.exportIbansToCsv({'broker_code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

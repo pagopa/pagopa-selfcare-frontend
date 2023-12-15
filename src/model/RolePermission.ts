@@ -63,6 +63,25 @@ export const permissions = {
   ],
   'operation-table-write': [ROLE.EC_DIRECT_OPERATOR, ROLE.PT_EC_OPERATOR, ROLE.PT_PSPEC_OPERATOR],
   'operation-table-list': [ROLE.PAGOPA_OPERATOR],
+  'download-iban': [
+    // ROLE.PT_EC_OPERATOR,
+    // ROLE.PT_PSPEC_OPERATOR,
+    // FOR TEST PURPOSE ONLY
+    ROLE.PAGOPA_OPERATOR,
+    ROLE.PSP_ADMIN,
+    ROLE.PSP_OPERATOR,
+    ROLE.PSP_DIRECT_ADMIN,
+    ROLE.PSP_DIRECT_OPERATOR,
+    ROLE.EC_ADMIN,
+    ROLE.EC_OPERATOR,
+    ROLE.EC_DIRECT_ADMIN,
+    ROLE.EC_DIRECT_OPERATOR,
+    ROLE.PT_UNSIGNED,
+    ROLE.PT_EC_OPERATOR,
+    ROLE.PT_PSP_OPERATOR,
+    ROLE.PT_PSPEC_OPERATOR,
+  ],
+  'download-creditor-institutions': [ROLE.PAGOPA_OPERATOR],
 };
 
 export type PermissionName = keyof typeof permissions;

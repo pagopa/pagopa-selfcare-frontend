@@ -108,6 +108,9 @@ export const mockedIbanStandIn: Iban = {
   is_active: true,
 };
 
+export const mockedIbansCSV: Buffer = Buffer.from("denominazioneEnte;codiceFiscale;iban;stato;dataAttivazioneIban;dataScadenzaIban;descrizione;etichetta\nComune di Brunello;00290400126;IT00X000001111129385748000;ATTIVO;2023-12-18T09:10:29.249+01:00;2035-12-31T09:10:29.249+01:00;string;0201138TS\nComune di Brunello;00290400126;IT00X000001111129385748001;ATTIVO;2023-12-18T09:10:29.249+01:00;2035-12-31T09:10:29.249+01:00;1 iban;ACA");
+
+
 export const getCreditorInstitutionIbans = (
   _creditorInstitutionCode: string,
   _labelName?: string
@@ -139,3 +142,6 @@ export const updateIbanCup = (_iban: IbanCreate): Promise<Iban> =>
 
 export const deleteIban = (_creditorInstitutionCode: string, _ibanValue: string): Promise<void> =>
   new Promise((resolve) => resolve());
+
+export const exportIbansToCsv = (_creditorInstitutionCode: string): Promise<any> =>
+  new Promise((resolve) => resolve(mockedIbansCSV));

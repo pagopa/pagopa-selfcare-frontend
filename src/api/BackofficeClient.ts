@@ -833,7 +833,7 @@ export const BackofficeApi = {
     },
 
     exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportIbansToCsv({'broker_code': brokerCode});
+        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

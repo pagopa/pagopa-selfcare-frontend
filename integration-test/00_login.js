@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 const fs = require('fs');
 
 const login = (async () => {
-  const browser = await puppeteer.launch({ headless: 'new', userDataDir: './user-data' });
+  const browser = await puppeteer.launch({ headless: false, userDataDir: './user-data' });
   const page = await browser.newPage();
   const timeout = 30000;
   page.setDefaultTimeout(timeout);
@@ -32,19 +32,14 @@ const login = (async () => {
     {
         const targetPage = page;
         await puppeteer.Locator.race([
-            targetPage.locator('::-p-aria(Entra da qui)'),
-            targetPage.locator('div.css-11byk5y a'),
-            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div/div[1]/div[4]/div/div/div[2]/a)'),
-            targetPage.locator(':scope >>> div.css-11byk5y a'),
-            targetPage.locator('::-p-text(Entra da qui)')
+            targetPage.locator('::-p-aria(Entra con SPID) >>>> ::-p-aria([role=\\"paragraph\\"])'),
+            targetPage.locator('#root > div > div.MuiGrid-root > div.MuiGrid-grid-xs-6 p'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"spidButton\\"]/p)'),
+            targetPage.locator(':scope >>> #root > div > div.MuiGrid-root > div.MuiGrid-grid-xs-6 p'),
+            targetPage.locator('::-p-text(Entra con SPID)')
         ])
             .setTimeout(timeout)
-            .click({
-                offset: {
-                    x: 30.9375,
-                    y: 15.203125,
-                },
-            });
+            .click();
     }
     {
         const targetPage = page;

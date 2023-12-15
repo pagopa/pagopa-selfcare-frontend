@@ -586,6 +586,8 @@ const login = (async () => {
 
     await browser.close();
 
+    console.log("logged");
+
     async function waitForSelectors(selectors, frame, options) {
         for (const selector of selectors) {
             try {

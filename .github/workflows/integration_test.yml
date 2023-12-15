@@ -28,14 +28,14 @@ jobs:
       - name: Run Integration Tests
         shell: bash
         run: |
-          yarn install
           cd ./integration-test
+          yarn install
 
           chmod +x ./run_integration.sh
           ./run_integration.sh
 
   notify:
-    needs: [integration_test]
+    needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
     #if: ${{ always() }}

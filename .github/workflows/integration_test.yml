@@ -35,7 +35,7 @@ jobs:
           ./run_integration.sh
 
   notify:
-    needs: [integration_test]
+    needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
     #if: ${{ always() }}

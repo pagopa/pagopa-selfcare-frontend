@@ -9,6 +9,7 @@ import {
   updateIbanStandIn as updateIbanStandInMocked,
   updateIbanCup as updateIbanCupMocked,
   deleteIban as deleteIbanMocked,
+  exportIbansToCsv as exportIbansToCsvMocked
 } from './__mocks__/ibanService';
 
 export const getIbanList = (
@@ -67,5 +68,14 @@ export const deleteIban = (ecCode: string, ibanValue: string): Promise<void> => 
     return deleteIbanMocked(ecCode, ibanValue);
   } else {
     return BackofficeApi.deleteIban(ecCode, ibanValue).then((resources) => resources);
+  }
+};
+
+export const exportIbanToCSV = (ecCode: string): Promise<Buffer> => {
+  /* istanbul ignore if */
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return exportIbansToCsvMocked(ecCode);
+  } else {
+    return BackofficeApi.exportIbansToCsv(ecCode).then((resources) => resources);
   }
 };

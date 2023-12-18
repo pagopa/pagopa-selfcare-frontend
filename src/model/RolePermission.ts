@@ -63,6 +63,11 @@ export const permissions = {
   ],
   'operation-table-write': [ROLE.EC_DIRECT_OPERATOR, ROLE.PT_EC_OPERATOR, ROLE.PT_PSPEC_OPERATOR],
   'operation-table-list': [ROLE.PAGOPA_OPERATOR],
+  'download-iban': [
+    ROLE.PT_EC_OPERATOR,
+    ROLE.PT_PSPEC_OPERATOR,
+  ],
+  'download-creditor-institutions': [ROLE.PAGOPA_OPERATOR],
 };
 
 export type PermissionName = keyof typeof permissions;

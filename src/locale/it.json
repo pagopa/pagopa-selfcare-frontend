@@ -70,6 +70,11 @@
       "mail": "E-Mail",
       "phone": "Telefono",
       "completeDataAlert": "Completa i dati del Tavolo Operativo dell’ente per cui operi."
+    },
+    "downloadSection": {
+      "title": "Sezione download",
+      "downloadIbans": "Scarica lista IBAN",
+      "downloadCI": "Scarica lista enti"
     }
   },
   "nodeSignInPage": {

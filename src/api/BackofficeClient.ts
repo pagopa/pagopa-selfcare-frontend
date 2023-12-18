@@ -1,6 +1,3 @@
-import {agent} from "italia-ts-commons";
-import {AbortableFetch, setFetchTimeout, toFetch} from 'italia-ts-commons/lib/fetch';
-import {Millisecond} from "italia-ts-commons/lib/units";
 import {ReactNode} from 'react';
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import {appStateActions} from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
@@ -58,7 +55,10 @@ import {IbanCreate} from './generated/portal/IbanCreate';
 import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
-import { WrapperEntities } from "./generated/portal/WrapperEntities";
+import {WrapperEntities} from "./generated/portal/WrapperEntities";
+
+// eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
+window.Buffer = window.Buffer || require("buffer").Buffer; 
 
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
@@ -78,7 +78,7 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => 
 // );
 // const fetchApi: typeof fetchWithTimeout = (fetch as any) as typeof fetchWithTimeout;
 
-function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit):Promise<Response> {
+function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
 
     const defaultHeaders = {
         'X-Canary': 'canary'
@@ -596,12 +596,10 @@ export const BackofficeApi = {
     },
 
     createEcBroker: async (broker: BrokerDto): Promise<BrokerResource> => {
-        const result = await backofficeClient.createBroker({
+        const result = await backofficeClient.createBroker_1({
             body: {
-                broker_psp_code: broker.broker_code!,
+                broker_code: broker.broker_code!,
                 description: broker.description!,
-                enabled: true,
-                extended_fault_bean: false
             },
         });
         return extractResponse(result, 201, onRedirectToLogin);
@@ -831,6 +829,11 @@ export const BackofficeApi = {
 
     getOperationTableDetails: async (ecCode: string): Promise<TavoloOpResource> => {
         const result = await backofficeClient.getOperativeTable({'ci-code': ecCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
+        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

@@ -1,85 +1,80 @@
-import { ArrowDownward, ArrowForward, FileDownloadSharp } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Stack, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import ROUTES from '../../../routes';
-import { Party } from '../../../model/Party';
-import { SigninData } from '../../../model/Node';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { isSigned, hasGeneratedApiKey } from '../../../utils/rbac-utils';
-import { exportIbanToCSV } from '../../../services/ibanService';
-import { downloadBlobAsCSV } from '../../../utils/common-utils';
+import {FileDownloadSharp} from '@mui/icons-material';
+import {Box, Button, Card, Stack, Typography} from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {Party} from '../../../model/Party';
+import {usePermissions} from '../../../hooks/usePermissions';
+import {exportIbanToCSV} from '../../../services/ibanService';
+import {downloadBlobAsCSV} from '../../../utils/common-utils';
 
 type Props = {
-  selectedParty?: Party;
+    selectedParty?: Party;
 };
 
-const downloadIbansAsCSV = (ciCode: string) => {
-  exportIbanToCSV(ciCode)
-  .then((response) => {
-    downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+const downloadIbansAsCSV = (partyId: string) => {
+    exportIbanToCSV(partyId)
+        .then((response) => {
+            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 };
 
 const downloadCreditorInstitutionAsCSV = () => {
 };
 
-const DownloadSection = ({ selectedParty }: Props) => {
-  const { t } = useTranslation();
-  
-  const fiscalCode = selectedParty?.fiscalCode;
-  const exportIbanToCSV = () => downloadIbansAsCSV(fiscalCode!);
+const DownloadSection = ({selectedParty}: Props) => {
+    const {t} = useTranslation();
 
-  const { hasPermission } = usePermissions();
-  const canDownloadIBANs = hasPermission('download-iban');
-  const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
-  const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
-  
-  return (
-    <>
-    {canSeeDownloadSection && (
-      <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
-        <Typography variant="h6" mb={3}>
-          {t('dashboardPage.downloadSection.title')}
-        </Typography>
-        <Box mb={3}>
-          <Stack direction="row" mt={1}>
-            {canDownloadIBANs && (
-              <Stack display="flex" mr={1}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  endIcon={<FileDownloadSharp />}
-                  onClick={exportIbanToCSV}
-                  data-testid="export-iban-test"
-                >
-                  {t('dashboardPage.downloadSection.downloadIbans')}
-                </Button>
-              </Stack>
+    const partyId = selectedParty?.partyId;
+    const exportIbanToCSV = () => downloadIbansAsCSV(partyId!);
+
+    const {hasPermission} = usePermissions();
+    const canDownloadIBANs = hasPermission('download-iban');
+    const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
+    const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
+
+    return (
+        <>
+            {canSeeDownloadSection && (
+                <Card variant="outlined" sx={{border: 0, borderRadius: 0, p: 3, mb: 1}}>
+                    <Typography variant="h6" mb={3}>
+                        {t('dashboardPage.downloadSection.title')}
+                    </Typography>
+                    <Box mb={3}>
+                        <Stack direction="row" mt={1}>
+                            {canDownloadIBANs && (
+                                <Stack display="flex" mr={1}>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        endIcon={<FileDownloadSharp/>}
+                                        onClick={exportIbanToCSV}
+                                        data-testid="export-iban-test"
+                                    >
+                                        {t('dashboardPage.downloadSection.downloadIbans')}
+                                    </Button>
+                                </Stack>
+                            )}
+                            {canDownloadCreditorInstitutions && (
+                                <Stack display="flex" mr={1}>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        endIcon={<FileDownloadSharp/>}
+                                        onClick={downloadCreditorInstitutionAsCSV}
+                                        data-testid="export-creditorinstitution-test"
+                                    >
+                                        {t('dashboardPage.downloadSection.downloadCI')}
+                                    </Button>
+                                </Stack>
+                            )}
+                        </Stack>
+                    </Box>
+                </Card>
             )}
-            {canDownloadCreditorInstitutions && (
-              <Stack display="flex" mr={1}>
-                <Button
-                  variant="contained"
-                  size="small"
-                  endIcon={<FileDownloadSharp />}
-                  onClick={downloadCreditorInstitutionAsCSV}
-                  data-testid="export-creditorinstitution-test"
-                >
-                  {t('dashboardPage.downloadSection.downloadCI')}
-                </Button>
-              </Stack>
-            )}
-          </Stack>
-        </Box>
-      </Card>
-    )}
-    </>
-  );
+        </>
+    );
 };
 
 export default DownloadSection;

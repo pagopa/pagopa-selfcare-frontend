@@ -58,7 +58,7 @@ import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
-window.Buffer = window.Buffer || require("buffer").Buffer; 
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
     const token = storageTokenOps.read();
@@ -832,8 +832,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
+    exportIbansToCsv: async (partyId: string): Promise<Buffer> => {
+        const result = await backofficeClient.exportIbansToCsv({'broker-id': partyId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

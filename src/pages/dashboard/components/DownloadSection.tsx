@@ -1,6 +1,7 @@
 import {FileDownloadSharp} from '@mui/icons-material';
 import {Box, Button, Card, Stack, Typography} from '@mui/material';
 import {useTranslation} from 'react-i18next';
+import {useState} from "react";
 import {Party} from '../../../model/Party';
 import {usePermissions} from '../../../hooks/usePermissions';
 import {exportIbanToCSV} from '../../../services/ibanService';
@@ -10,29 +11,33 @@ type Props = {
     selectedParty?: Party;
 };
 
-const downloadIbansAsCSV = (partyId: string) => {
-    exportIbanToCSV(partyId)
-        .then((response) => {
-            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-};
-
-const downloadCreditorInstitutionAsCSV = () => {
-};
-
 const DownloadSection = ({selectedParty}: Props) => {
     const {t} = useTranslation();
 
     const partyId = selectedParty?.partyId;
-    const exportIbanToCSV = () => downloadIbansAsCSV(partyId!);
 
     const {hasPermission} = usePermissions();
     const canDownloadIBANs = hasPermission('download-iban');
     const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
     const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
+    const [downloadDisabled, setDownloadDisabled] = useState<boolean>(false);
+
+    const downloadCreditorInstitutionAsCSV = () => {
+    };
+
+    const downloadIbansAsCSV = () => {
+        setDownloadDisabled(true);
+        exportIbanToCSV(partyId!)
+            .then((response) => {
+                downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+            .finally(() => {
+                setDownloadDisabled(false);
+            });
+    };
 
     return (
         <>
@@ -49,8 +54,9 @@ const DownloadSection = ({selectedParty}: Props) => {
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
-                                        onClick={exportIbanToCSV}
+                                        onClick={downloadIbansAsCSV}
                                         data-testid="export-iban-test"
+                                        disabled={downloadDisabled}
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>

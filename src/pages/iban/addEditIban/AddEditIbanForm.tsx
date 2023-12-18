@@ -29,7 +29,7 @@ import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { createIban, updateIban } from '../../../services/ibanService';
-import { isIbanValid } from '../../../utils/common-utils';
+import { isIbanValidityDateEditable } from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -159,12 +159,14 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             ? t('addEditIbanPage.validationMessage.ibanNotValid')
             : undefined,
           description: !values.description ? 'Campo obbligatorio' : undefined,
-          validity_date: !values.validity_date
+          validity_date: isIbanValidityDateEditable(ibanBody) ?
+            (!values.validity_date
             ? t('addEditIbanPage.validationMessage.requiredField')
             : values.validity_date.getTime() < minDate.getTime()
             ? t('addEditIbanPage.validationMessage.dateNotValid')
             : values.due_date && values.validity_date.getTime() > values.due_date.getTime()
             ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
+            : undefined) 
             : undefined,
           due_date: !values.due_date
             ? t('addEditIbanPage.validationMessage.requiredField')
@@ -386,7 +388,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
               <Grid container item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    disabled={isIbanValid(ibanBody) && formAction === IbanFormAction.Edit}
+                    disabled={!isIbanValidityDateEditable(ibanBody) && formAction === IbanFormAction.Edit}
                     label={t('addEditIbanPage.addForm.fields.dates.start')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validity_date}

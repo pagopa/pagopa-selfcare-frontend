@@ -1,7 +1,10 @@
 import { Iban } from "../api/generated/portal/Iban";
 
 export const isIbanValid = (iban?: Iban) : boolean =>
-    iban && iban.due_date && (new Date(iban.due_date) > new Date()) || false;
+    iban !== undefined && iban.due_date !== undefined && (new Date(iban.due_date) > new Date());
+
+export const isIbanValidityDateEditable = (iban?: Iban) : boolean =>
+    iban !== undefined && iban.validity_date !== undefined && (new Date(iban.validity_date) > new Date());
 
 export const downloadBlobAsCSV = (data: any) : void => {
     const objectTempURL = window.URL.createObjectURL(data);
@@ -16,3 +19,4 @@ export const downloadBlobAsCSV = (data: any) : void => {
     tempLink.click();
     tempLink.parentNode?.removeChild(tempLink);
 };
+

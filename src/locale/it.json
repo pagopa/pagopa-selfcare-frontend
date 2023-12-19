@@ -587,6 +587,7 @@
     "stationsTableColumns": {
       "headerFields": {
         "name": "Nome EC",
+        "fiscalCode": "Codice Fiscale",
         "auxdigit": "Auxdigit",
         "segregationCode": "Segregation code",
         "appCode": "Application code",

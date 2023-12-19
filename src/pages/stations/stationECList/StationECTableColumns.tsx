@@ -24,6 +24,19 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
+      field: 'fiscalCode',
+      cellClassName: 'justifyContentBold',
+      headerName: t('stationECList.stationsTableColumns.headerFields.fiscalCode'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params: any) => showEcFiscalCode(params),
+      sortable: false,
+      flex: 4,
+    },
+    {
       field: 'auxDigit',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationECList.stationsTableColumns.headerFields.auxdigit'),
@@ -181,6 +194,36 @@ export function showEcName(params: GridRenderCellParams) {
                 }}
               >
                 {params.row.businessName}
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </React.Fragment>
+  );
+}
+
+export function showEcFiscalCode(params: GridRenderCellParams) {
+  return (
+    <React.Fragment>
+      {renderCell(
+        params,
+        <>
+          <Grid container sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
+              <Typography
+                variant="body2"
+                color="primary"
+                sx={{
+                  fontWeight: 'fontWeightMedium',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical' as const,
+                }}
+              >
+                {params.row.creditorInstitutionCode}
               </Typography>
             </Grid>
           </Grid>

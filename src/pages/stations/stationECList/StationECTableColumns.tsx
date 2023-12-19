@@ -3,6 +3,7 @@ import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x
 import React, { CSSProperties, ReactNode } from 'react';
 import { TFunction } from 'react-i18next';
 import { RemoveCircle } from '@mui/icons-material';
+import { formatCodeInDoubleDigit } from '../../../utils/common-utils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -31,7 +32,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.auxDigit ?? '-'),
+      renderCell: (params) => renderCell(params, params.row.auxDigit ?? '0'),
       sortable: false,
       flex: 3,
     },
@@ -44,7 +45,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.segregationCode),
+      renderCell: (params) => renderCell(params, formatCodeInDoubleDigit(params.row.segregationCode)),
       sortable: false,
       flex: 3,
     },
@@ -57,7 +58,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.applicationCode ?? '-'),
+      renderCell: (params) => renderCell(params, formatCodeInDoubleDigit(params.row.applicationCode)),
       sortable: false,
       flex: 3,
     },

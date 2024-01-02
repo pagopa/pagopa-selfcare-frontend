@@ -40,9 +40,9 @@ const IbanDetailPage = () => {
             iban: filteredIban[0].iban!,
             description: filteredIban[0].description,
             creditor_institution_code: filteredIban[0].ci_owner ?? selectedParty.fiscalCode,
-            validity_date: filteredIban[0].validity_date!,
-            publication_date: filteredIban[0].publication_date!,
-            due_date: filteredIban[0].due_date!,
+            validity_date: new Date(filteredIban[0].validity_date!),
+            publication_date: new Date(filteredIban[0].publication_date!),
+            due_date: new Date(filteredIban[0].due_date!),
             labels: filteredIban[0].labels,
             is_active: filteredIban[0].is_active!,
           });

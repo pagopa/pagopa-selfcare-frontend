@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.11.3-1-iban-test",
+  "version": "1.11.3-2-iban-test",
   "homepage": "ui",
   "private": true,
   "scripts": {

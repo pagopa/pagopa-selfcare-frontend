@@ -51,6 +51,7 @@ function StationAssociateECPage() {
             getBrokerDelegation(selectedParty.partyId)
                 .then((data) => {
                     if (data) {
+                        addItselfAsAvaliableEC(data);
                         setAvailableEC(data);
                     }
                 })
@@ -127,6 +128,21 @@ function StationAssociateECPage() {
             })
         );
     };
+
+    const addItselfAsAvaliableEC = (delegations : Array<Delegation>) => {
+        const validInstitutionTypes = ["PA", "GSP", "SCP"];
+        const institutionType = selectedParty?.institutionType;
+        if (institutionType && validInstitutionTypes.includes(institutionType)) {
+            // eslint-disable-next-line functional/immutable-data
+            delegations.push({
+                institution_id: selectedParty.partyId,
+                broker_id: selectedParty.fiscalCode,
+                tax_code: selectedParty.fiscalCode,
+                institution_name: selectedParty.description
+            });
+        }
+    };
+
 
     const enableSubmit = (values: CreditorInstitutionStationDto) =>
         values.stationCode !== '' && values.auxDigit !== 0 && values.segregationCode !== '';

@@ -10,7 +10,6 @@ import { dissociatePSPfromChannel, getChannelPSPs } from '../../../services/chan
 import { ChannelPspListResource } from '../../../api/generated/portal/ChannelPspListResource';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
-import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 
 const rowHeight = 64;
@@ -26,9 +25,12 @@ const emptyPSPList: ChannelPspListResource = {
   },
 };
 
-type ChannelPSPTableProps = { setAlertMessage: any };
+type ChannelPSPTableProps = { 
+  setAlertMessage: any;
+  pspNameFilter: string;
+};
 
-export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProps) {
+export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: ChannelPSPTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [error, setError] = useState(false);
@@ -42,6 +44,7 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
 
   const [pspListPage, setPSPListPage] = useState<ChannelPspListResource>(emptyPSPList);
   const [page, setPage] = useState<number>(0);
+  const [pagePaginator, setPagePaginator] = useState(0);
   const [rowCountState, setRowCountState] = useState(
     pspListPage.page_info?.total_pages && pspListPage.page_info?.items_found
       ? pspListPage.page_info?.total_pages * pspListPage.page_info?.items_found
@@ -51,6 +54,15 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
   const [selectedPSPCode, setSelectedPSPCode] = useState<string>('');
 
   const { channelId } = useParams<{ channelId: string }>();
+
+  useEffect(() => {
+    fetchChannelPSPs(page);
+  }, [page, channelId]);
+
+  useEffect(() => {
+    setPagePaginator(0);
+    fetchChannelPSPs(0);
+  }, [pspNameFilter]);
 
   const onRowClick = (pspIdRow: string) => {
     setSelectedPSPCode(pspIdRow);
@@ -95,7 +107,7 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
   const fetchChannelPSPs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getChannelPSPs(channelId, selectedPSPCode, currentPage)
+    getChannelPSPs(channelId, pspNameFilter, currentPage)
       .then((r) => (r ? setPSPListPage(r) : setPSPListPage(emptyPSPList)))
       .catch((reason) => {
         console.error('reason', reason);
@@ -113,8 +125,6 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
       })
       .finally(() => setLoadingStatus(false));
   };
-
-  useEffect(() => fetchChannelPSPs(page), [page]);
 
   return (
     <>
@@ -148,17 +158,16 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
                     <Pagination
                       color="primary"
                       count={pspListPage.page_info?.total_pages ?? 0}
-                      page={page + 1}
-                      onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                      page={pagePaginator + 1}
+                      onChange={(_event: ChangeEvent<unknown>, value: number) => {
+                        setPage(value - 1);
+                        setPagePaginator(value - 1);
+                      }}
                     />
                   ) : (
                     <></>
                   ),
-                Toolbar: () => (
-                  <>
-                    <GridToolbarQuickFilter channelId={channelId}></GridToolbarQuickFilter>
-                  </>
-                ),
+                Toolbar: () => <></>,
                 NoRowsOverlay: () => (
                   <>
                     <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>

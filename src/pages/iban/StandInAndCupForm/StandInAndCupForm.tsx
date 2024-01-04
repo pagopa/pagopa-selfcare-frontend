@@ -68,8 +68,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setSelectedIbanStandIn({
         iban: ibanStandInFiltered.iban!,
         description: ibanStandInFiltered.description,
-        validity_date: ibanStandInFiltered.validity_date!,
-        due_date: ibanStandInFiltered.due_date!,
+        validity_date: new Date(ibanStandInFiltered.validity_date!),
+        due_date: new Date(ibanStandInFiltered.due_date!),
         creditor_institution_code: ibanStandInFiltered.ci_owner ?? creditorInstitutionCode,
         labels: ibanStandInFiltered.labels,
         is_active: ibanStandInFiltered.is_active!,
@@ -82,8 +82,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setSelectedIbanCup({
         iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
-        validity_date: ibanCupFiltered!.validity_date!,
-        due_date: ibanCupFiltered!.due_date!,
+        validity_date: new Date(ibanCupFiltered!.validity_date!),
+        due_date: new Date(ibanCupFiltered!.due_date!),
         creditor_institution_code: ibanCupFiltered?.ci_owner ?? creditorInstitutionCode,
         labels: ibanCupFiltered.labels,
         is_active: ibanCupFiltered!.is_active!,
@@ -150,8 +150,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setSelectedIbanStandIn({
       iban: selectedIban.iban!,
       description: selectedIban.description,
-      validity_date: selectedIban.validity_date!,
-      due_date: selectedIban.due_date!,
+      validity_date: new Date(selectedIban.validity_date!),
+      due_date: new Date(selectedIban.due_date!),
       creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
       is_active: selectedIban.is_active!,
@@ -172,8 +172,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setSelectedIbanCup({
       iban: selectedIban.iban!,
       description: selectedIban.description,
-      validity_date: selectedIban.validity_date!,
-      due_date: selectedIban.due_date!,
+      validity_date: new Date(selectedIban.validity_date!),
+      due_date: new Date(selectedIban.due_date!),
       creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
       labels: updatedLabels,
       is_active: selectedIban.is_active!,

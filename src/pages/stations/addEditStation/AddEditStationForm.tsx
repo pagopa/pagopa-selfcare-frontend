@@ -28,6 +28,7 @@ import {
   createStation,
   createWrapperStation,
   getStationCode,
+  getStationCodeV2,
   updateStation,
   updateWrapperStationToCheck,
   updateWrapperStationToCheckUpdate,
@@ -84,7 +85,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   useEffect(() => {
     if (formAction !== StationFormAction.Edit) {
       setLoadingGeneration(true);
-      getStationCode(stationCodeCleaner)
+      getStationCodeV2(stationCodeCleaner)
         .then((res) => {
           setStationCodeGenerated(res.stationCode);
         })

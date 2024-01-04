@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.12.3",
+  "version": "1.12.3-1-PASELC-649-extended-station-channel-find",
   "homepage": "ui",
   "private": true,
   "scripts": {

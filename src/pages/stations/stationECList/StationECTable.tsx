@@ -84,7 +84,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
   const fetchStationECs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getECListByStationCode(stationId, currentPage)
+    getECListByStationCode(stationId, selectedECCode, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
       .catch((reason) => {
         handleErrors([

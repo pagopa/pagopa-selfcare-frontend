@@ -95,7 +95,7 @@ export default function ChannelPSPTable({ setAlertMessage }: ChannelPSPTableProp
   const fetchChannelPSPs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getChannelPSPs(channelId, currentPage)
+    getChannelPSPs(channelId, selectedPSPCode, currentPage)
       .then((r) => (r ? setPSPListPage(r) : setPSPListPage(emptyPSPList)))
       .catch((reason) => {
         console.error('reason', reason);

@@ -21,3 +21,14 @@ export const downloadBlobAsCSV = (data: any) : void => {
     tempLink.parentNode?.removeChild(tempLink);
 };
 
+export const formatCodeInDoubleDigit = (code: string | undefined) : string => {
+    if (code === undefined) {
+        return "-";
+    }
+    const castedCode: number = +code;
+    if (castedCode < 10) {
+        return "0" + code;
+    } else {
+        return code;
+    }
+};

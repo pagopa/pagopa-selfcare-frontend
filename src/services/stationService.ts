@@ -85,6 +85,7 @@ export const getStationCodeV2 = (code: string): Promise<StationCodeResource> => 
 
 export const getECListByStationCode = (
   stationcode: string,
+  ciName: string,
   page: number,
   limit?: number
 ): Promise<CreditorInstitutionsResource> => {
@@ -92,7 +93,7 @@ export const getECListByStationCode = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getECListByStationCodeMocked(stationcode, page, limit);
   } else {
-    return BackofficeApi.getECListByStationCode(stationcode, page, limit).then(
+    return BackofficeApi.getECListByStationCode(stationcode, ciName, page, limit).then(
       (resources) => resources
     );
   }

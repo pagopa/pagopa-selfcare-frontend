@@ -321,6 +321,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
         stationId: formik.values.stationCode,
       })}`;
+      // eslint-disable-next-line functional/immutable-data
+      values.validationUrl = validationUrl;
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
         await createWrapperStation(values);
         redirect(stationCode4Redirect);

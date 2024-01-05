@@ -344,6 +344,7 @@ export const BackofficeApi = {
 
     getChannelPSPs: async (
         channelcode: string,
+        pspName: string,
         page: number,
         limit?: number
     ): Promise<ChannelPspListResource> => {
@@ -351,6 +352,7 @@ export const BackofficeApi = {
         const result = await backofficeClient.getChannelPaymentServiceProviders({
             page,
             'channel-code': channelcode,
+            'psp-name': pspName,
             limit,
         });
         return extractResponse(result, 200, onRedirectToLogin);
@@ -564,11 +566,13 @@ export const BackofficeApi = {
 
     getECListByStationCode: async (
         stationcode: string,
+        ciName: string,
         page: number,
         limit?: number
     ): Promise<CreditorInstitutionsResource> => {
         const result = await backofficeClient.getCreditorInstitutionsByStationCode({
             'station-code': stationcode,
+            'ci-name': ciName,
             limit,
             page,
         });

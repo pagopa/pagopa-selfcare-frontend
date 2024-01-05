@@ -28,7 +28,7 @@ const ChannelDetailPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([getChannelDetail(channelId), getChannelPSPs(channelId, 0)])
+    Promise.all([getChannelDetail(channelId), getChannelPSPs(channelId, "", 0)])
       .then(([channelDetailResponse, channelPSPList]) => {
         setChannelDetail(channelDetailResponse);
         setPSPAssociatedNumber(channelPSPList?.page_info?.total_items ?? 0);

@@ -49,7 +49,9 @@ const AddEditChannelValidationForm = ({
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
-  const newConnectivity = `${channelDetail?.ip}${channelDetail?.service}`;
+  const newConnectivity = `${
+    channelDetail?.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+  }${channelDetail?.ip}${channelDetail?.service}`;
 
   useEffect(() => {
     if (forwarder01 === newConnectivity) {
@@ -71,8 +73,8 @@ Props) => {
   };
 
   const oldConnectionValue =
-    ENV.ENV === 'prod' ? `10.102.1.85:8080` : `10.101.1.95:8080`;
-  const newConnectionValue = ENV.ENV === 'prod' ? `10.79.20.35:80` : `10.79.20.33:80`;
+    ENV.ENV === 'prod' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
+  const newConnectionValue = ENV.ENV === 'prod' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
 
   const proxyOptions = [
     {
@@ -222,6 +224,7 @@ Props) => {
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
                   value={
+                    
                     formik.values.proxyUnion === oldConnectionValue ||
                     formik.values.proxyUnion === newConnectionValue
                       ? formik.values.proxyUnion

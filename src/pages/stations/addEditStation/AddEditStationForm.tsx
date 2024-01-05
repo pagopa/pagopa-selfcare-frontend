@@ -49,13 +49,13 @@ import {
   StationOnCreation,
 } from '../../../model/Station';
 import { isOperator } from '../../components/commonFunctions';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import {
   alterStationValuesToFitCategories,
   getStationCategoryFromDetail,
   splitURL,
 } from '../../../utils/station-utils';
 import { ENV } from '../../../utils/env';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
@@ -323,6 +323,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       })}`;
       // eslint-disable-next-line functional/immutable-data
       values.validationUrl = validationUrl;
+
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
         await createWrapperStation(values);
         redirect(stationCode4Redirect);
@@ -435,6 +436,10 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   useEffect(() => {
     if (formik.values.proxyConcat && formik.values.proxyConcat !== '') {
+      if (!formik.values.proxyConcat.startsWith("http")) {
+        // eslint-disable-next-line functional/immutable-data
+        formik.values.proxyConcat = "http://".concat(formik.values.proxyConcat);
+      }
       const { protocolSplit, hostSplit, portSplit } = splitURL(formik.values.proxyConcat);
 
       formik

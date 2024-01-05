@@ -291,7 +291,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     if (formik.values.proxyUnion && formik.values.proxyUnion !== '') {
       if (!formik.values.proxyUnion.startsWith("http")) {
         // eslint-disable-next-line functional/immutable-data
-        formik.values.proxyUnion = "http://" + formik.values.proxyUnion;
+        formik.values.proxyUnion = "http://".concat(formik.values.proxyUnion);
       }
       const splitProxyUnion = splitURL(formik.values.proxyUnion);
       if (splitProxyUnion) {

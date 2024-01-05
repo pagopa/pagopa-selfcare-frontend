@@ -438,7 +438,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     if (formik.values.proxyConcat && formik.values.proxyConcat !== '') {
       if (!formik.values.proxyConcat.startsWith("http")) {
         // eslint-disable-next-line functional/immutable-data
-        formik.values.proxyConcat = "http://" + formik.values.proxyConcat;
+        formik.values.proxyConcat = "http://".concat(formik.values.proxyConcat);
       }
       const { protocolSplit, hostSplit, portSplit } = splitURL(formik.values.proxyConcat);
 

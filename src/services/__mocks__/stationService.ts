@@ -613,6 +613,9 @@ export const getStationDetail = (_stationCode: any): Promise<StationDetailResour
 export const getStationCodeMocked = (_code: string): Promise<StationCodeResource> =>
   new Promise((resolve) => resolve(mockedStationCode));
 
+export const getStationCodeV2Mocked = (_code: string): Promise<StationCodeResource> =>
+new Promise((resolve) => resolve(mockedStationCode));
+
 export const createWrapperStation = (
   _station: WrapperStationDetailsDto
 ): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));

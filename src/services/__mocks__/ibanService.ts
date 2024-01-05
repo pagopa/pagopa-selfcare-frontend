@@ -68,9 +68,9 @@ export const ibanList: Ibans = {
 export const mockedIban: Iban = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
-  validity_date: new Date('2023-04-01T13:49:19.897Z'),
-  due_date: new Date('2033-04-01T13:49:19.897Z'),
-  publication_date: new Date('2023-04-01T13:49:19.897Z'),
+  validity_date: '2023-04-01T13:49:19.897Z',
+  due_date: '2033-04-01T13:49:19.897Z',
+  publication_date: '2023-04-01T13:49:19.897Z',
   is_active: true,
   ci_owner: '1234567890',
   labels: [],
@@ -79,9 +79,9 @@ export const mockedIban: Iban = {
 export const mockedIbanCup: Iban = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
-  validity_date: new Date('2023-04-01T13:49:19.897Z'),
-  due_date: new Date('2033-04-01T13:49:19.897Z'),
-  publication_date: new Date('2023-04-01T13:49:19.897Z'),
+  validity_date: '2023-04-01T13:49:19.897Z',
+  due_date: '2033-04-01T13:49:19.897Z',
+  publication_date: '2023-04-01T13:49:19.897Z',
   ci_owner: 'RSSMRA98H27F205Q',
   labels: [
     {
@@ -95,9 +95,9 @@ export const mockedIbanCup: Iban = {
 export const mockedIbanStandIn: Iban = {
   iban: 'IT99C0222211111000000000003',
   description: 'Tassa di concorso - servizio tesoreria comunale',
-  validity_date: new Date('2023-04-01T13:49:19.897Z'),
-  due_date: new Date('2033-04-01T13:49:19.897Z'),
-  publication_date: new Date('2023-04-01T13:49:19.897Z'),
+  validity_date: '2023-04-01T13:49:19.897Z',
+  due_date: '2033-04-01T13:49:19.897Z',
+  publication_date: '2023-04-01T13:49:19.897Z',
   ci_owner: '',
   labels: [
     {

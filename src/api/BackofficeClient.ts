@@ -456,7 +456,7 @@ export const BackofficeApi = {
     },
 
     getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': pspcode});
+        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': pspcode, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -530,6 +530,11 @@ export const BackofficeApi = {
 
     getStationCode: async (ecCode: string): Promise<StationCodeResource> => {
         const result = await backofficeClient.getStationCode({'ec-code': ecCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getStationCodeV2: async (ecCode: string): Promise<StationCodeResource> => {
+        const result = await backofficeClient.getStationCodeV2({'ec-code': ecCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -808,7 +813,7 @@ export const BackofficeApi = {
     getStationAvailableEc: async (
         institutionId: string
     ): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': institutionId});
+        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': institutionId, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

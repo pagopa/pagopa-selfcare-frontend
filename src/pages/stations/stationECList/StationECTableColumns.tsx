@@ -5,6 +5,22 @@ import { TFunction } from 'react-i18next';
 import { RemoveCircle } from '@mui/icons-material';
 import { formatCodeInDoubleDigit } from '../../../utils/common-utils';
 
+const getAuxDigit = (station: any) => {
+  const hasSegregationCode = station.segregationCode !== undefined;
+  const hasApplicationCode = station.applicationCode !== undefined;
+  if (hasSegregationCode && !hasApplicationCode) {
+    return '3';
+  } else if (!hasSegregationCode && hasApplicationCode) {
+    return '0';
+  } else if (hasSegregationCode && hasApplicationCode) {
+    return '0/3';
+  } else if (station.auxDigit) {
+    return station.auxDigit;
+  } else {
+    return '-';
+  }
+};
+
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   onRowClick: (ec_code: string) => void
@@ -45,7 +61,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.auxDigit ?? '0'),
+      renderCell: (params) => renderCell(params, getAuxDigit(params.row)),
       sortable: false,
       flex: 3,
     },

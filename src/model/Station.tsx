@@ -117,16 +117,16 @@ export interface IProxyConfig {
 
 export const ProxyConfigs: IProxyConfig = {
   LOCAL_DEV: {
-    newConnectivity: 'http://10.79.20.33:80',
-    oldConnectivity: 'http://10.101.1.95:8080',
+    newConnectivity: '10.79.20.33:80',
+    oldConnectivity: '10.101.1.95:8080',
   },
   TEST: {
-    newConnectivity: 'http://10.79.20.33:80',
-    oldConnectivity: 'http://10.101.1.95:8080',
+    newConnectivity: '10.79.20.33:80',
+    oldConnectivity: '10.101.1.95:8080',
   },
-  dev: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
-  uat: { newConnectivity: 'http://10.79.20.33:80', oldConnectivity: 'http://10.101.1.95:8080' },
-  prod: { newConnectivity: 'http://10.79.20.35:80', oldConnectivity: 'http://10.102.1.85:8080' },
+  dev: { newConnectivity: '10.79.20.33:80', oldConnectivity: '10.101.1.95:8080' },
+  uat: { newConnectivity: '10.79.20.33:80', oldConnectivity: '10.101.1.95:8080' },
+  prod: { newConnectivity: '10.79.20.35:80', oldConnectivity: '10.102.1.85:8080' },
 };
 
 export interface INewConnConfigItem {

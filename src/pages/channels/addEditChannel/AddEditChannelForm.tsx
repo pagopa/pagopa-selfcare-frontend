@@ -289,6 +289,10 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   const splitProxy = (values: ChannelOnCreation) => {
     if (formik.values.proxyUnion && formik.values.proxyUnion !== '') {
+      if (!formik.values.proxyUnion.startsWith("http")) {
+        // eslint-disable-next-line functional/immutable-data
+        formik.values.proxyUnion = "http://" + formik.values.proxyUnion;
+      }
       const splitProxyUnion = splitURL(formik.values.proxyUnion);
       if (splitProxyUnion) {
         const { protocolSplit, hostSplit, portSplit } = splitProxyUnion;
@@ -400,6 +404,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     setLoading(true);
 
     splitNewConnection(formik.values);
+    splitProxy(formik.values);
 
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {

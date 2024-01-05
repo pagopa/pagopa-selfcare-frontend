@@ -22,13 +22,13 @@ import {
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
-import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
+import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {

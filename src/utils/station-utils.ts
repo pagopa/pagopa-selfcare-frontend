@@ -98,6 +98,10 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     Object.entries(gpdAddresses)
       .map(([key, value]) => value)
       .some((d) => d.includes(station.gdpConcat));
+  
+  const { protocolSplit, hostSplit, portSplit } = splitURL(station.proxyConcat);
+  // eslint-disable-next-line functional/immutable-data
+  station.proxyHost = hostSplit;
 
   // Async GPD
   if (station.targetHost === '' && isGPD) {

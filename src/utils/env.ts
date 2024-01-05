@@ -62,6 +62,10 @@ export const ENV = {
         OPERATIONTABLE: {
             ENABLED: getConfig('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED', {default: false, type: Type.boolean}),
         },
+        FDR: {
+            ENABLED: getConfig('REACT_APP_FEATURES_FDR_ENABLED', {default: false, type: Type.boolean}),
+        },
+
     },
 
     ANALYTCS: {

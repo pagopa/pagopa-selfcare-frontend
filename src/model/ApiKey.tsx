@@ -26,17 +26,17 @@ export const FDR_ORG = 'FdR - Flussi di Rendicontazione [ORG]';
 export const FDR_PSP = 'FdR - Flussi di Rendicontazione [PSP]';
 
 export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
-    let list = [{id: 'NODOAUTH', key: NODOAUTH}];
+    const list = [{id: 'NODOAUTH', key: NODOAUTH}];
 
     if (ENV.FEATURES.FDR) {
-        list.push({id: 'FDR_PSP', key: FDR_PSP});
+        return [...list, {id: 'FDR_PSP', key: FDR_PSP}];
     }
     return list;
 };
 
 
 export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
-    let list = [
+    const list = [
         {id: 'NODOAUTH', key: NODOAUTH},
         {id: 'GPD_REP', key: GPD_REP},
         {id: 'GPD', key: GPD},
@@ -44,7 +44,7 @@ export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
     ];
 
     if (ENV.FEATURES.FDR) {
-        list.push({id: 'FDR_ORG', key: FDR_ORG});
+        return [...list, {id: 'FDR_ORG', key: FDR_ORG}];
     }
     return list;
 };

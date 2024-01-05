@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.12.3",
+  "version": "1.12.3-1-PASELC-652-gestione-ec-aggiunta-codice-fiscale",
   "homepage": "ui",
   "private": true,
   "scripts": {

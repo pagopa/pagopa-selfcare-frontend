@@ -4,6 +4,7 @@ import { WrapperStationsResource } from '../api/generated/portal/WrapperStations
 import {
   createStationMocked,
   getStationCodeMocked,
+  getStationCodeV2Mocked,
   getStationDetail as getStationDetailMock,
   getStations as getStationsMocked,
   getStationsMerged as getStationsMergedMocked,
@@ -73,6 +74,13 @@ export const getStationCode = (code: string): Promise<StationCodeResource> => {
     return getStationCodeMocked(code);
   }
   return BackofficeApi.getStationCode(code).then((resource) => resource);
+};
+
+export const getStationCodeV2 = (code: string): Promise<StationCodeResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getStationCodeV2Mocked(code);
+  }
+  return BackofficeApi.getStationCodeV2(code).then((resource) => resource);
 };
 
 export const getECListByStationCode = (

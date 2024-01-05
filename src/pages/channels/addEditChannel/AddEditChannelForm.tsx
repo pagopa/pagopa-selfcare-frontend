@@ -294,7 +294,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         const { protocolSplit, hostSplit, portSplit } = splitProxyUnion;
 
         // eslint-disable-next-line functional/immutable-data
-        values.proxy_host = `${protocolSplit + '//'}${hostSplit}`;
+        values.proxy_host = `${hostSplit}`;
         // eslint-disable-next-line functional/immutable-data
         values.proxy_port = portSplit;
       }

@@ -132,6 +132,7 @@ jobs:
           export REACT_APP_URL_BETA='false'
           
           export REACT_APP_API_MOCK_BACKOFFICE='false'
+          export REACT_APP_API_MOCK_SELFCARE='false'
           export REACT_APP_API_MOCK_TOKEN='false'
           
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
@@ -151,6 +152,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='true'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
+            export REACT_APP_FEATURES_FDR_ENABLED='true'
             export REACT_APP_OPERATOR_EMAIL_ADDRESSES='barbara.rossato@pagopa.it;stefano.bafaro@pagopa.it;lombardigiancarlo@fiore-ruggiero.com;iferrari@barone.eu;g.lor.bernini@test.email.it;a.canova@test.emai.it'
           fi
 
@@ -161,6 +163,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
+            export REACT_APP_FEATURES_FDR_ENABLED='true'
             export REACT_APP_OPERATOR_EMAIL_ADDRESSES='andrea.ferracci@pagopa.it;alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
@@ -171,6 +174,7 @@ jobs:
             export REACT_APP_FEATURES_IBAN_ENABLED='true'
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
+            export REACT_APP_FEATURES_FDR_ENABLED='false'
             export REACT_APP_OPERATOR_EMAIL_ADDRESSES='alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 

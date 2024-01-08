@@ -4,14 +4,10 @@ import {mockedParties} from './__mocks__/partyService';
 
 export const fetchParties = (): Promise<Array<Party>> => {
     /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        
+    if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
         return new Promise((resolve) => resolve(mockedParties));
     } else {
-        
-
-        return BackofficeApi.getInstitutions().then((institutionResources) => institutionResources ? institutionResources.map(institutionResource2Party) : []
-        );
+        return BackofficeApi.getInstitutions().then((institutionResources) => institutionResources ? institutionResources.map(institutionResource2Party) : []);
     }
 };
 
@@ -20,7 +16,7 @@ export const fetchPartyDetails = (
     _parties?: Array<Party>
 ): Promise<Party | null> => {
     /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
         return new Promise((resolve) =>
             resolve(mockedParties.find((p) => p.partyId === partyId) ?? null)
         );

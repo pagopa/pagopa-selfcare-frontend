@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.12.6",
+  "version": "1.12.6-1-PASELC-643-configurazione-api-key-fdr",
   "homepage": "ui",
   "private": true,
   "scripts": {

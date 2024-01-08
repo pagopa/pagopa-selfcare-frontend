@@ -164,7 +164,7 @@ jobs:
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
             export REACT_APP_FEATURES_FDR_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it'
+            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='andrea.ferracci@pagopa.it;alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
           if [ "${{ inputs.environment }}" = "prod" ]; then
@@ -175,7 +175,7 @@ jobs:
             export REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED='false'
             export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
             export REACT_APP_FEATURES_FDR_ENABLED='false'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='stefano.bafaro@pagopa.it'
+            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
           yarn install

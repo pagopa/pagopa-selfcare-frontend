@@ -51,7 +51,7 @@ const StationDetailPage = () => {
 
         async function getEcListByStationCode(): Promise<any> {
             try {
-                return await getECListByStationCode(stationId, 0);
+                return await getECListByStationCode(stationId, "", 0);
             } catch (e) {
                 return {};
             }

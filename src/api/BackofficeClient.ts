@@ -344,6 +344,7 @@ export const BackofficeApi = {
 
     getChannelPSPs: async (
         channelcode: string,
+        pspName: string,
         page: number,
         limit?: number
     ): Promise<ChannelPspListResource> => {
@@ -351,6 +352,7 @@ export const BackofficeApi = {
         const result = await backofficeClient.getChannelPaymentServiceProviders({
             page,
             'channel-code': channelcode,
+            'psp-name': pspName,
             limit,
         });
         return extractResponse(result, 200, onRedirectToLogin);
@@ -564,11 +566,13 @@ export const BackofficeApi = {
 
     getECListByStationCode: async (
         stationcode: string,
+        ciName: string,
         page: number,
         limit?: number
     ): Promise<CreditorInstitutionsResource> => {
         const result = await backofficeClient.getCreditorInstitutionsByStationCode({
             'station-code': stationcode,
+            'ci-name': ciName,
             limit,
             page,
         });
@@ -732,13 +736,13 @@ export const BackofficeApi = {
     },
 
     getWrapperEntitiesStation: async (code: string): Promise<WrapperEntities> => {
-        const result = await backofficeClient.getWrapperEntitiesStation_1({'station-code': code});
+        const result = await backofficeClient.getWrapperEntitiesStation({'station-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     // before tries to get the detail from the DB, if it doesn't find anything, will try to get the detail form apim
     getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
-        const result = await backofficeClient.getStation({'station-code': stationId});
+        const result = await backofficeClient.getStationDetail({'station-code': stationId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

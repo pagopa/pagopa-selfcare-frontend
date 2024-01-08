@@ -10,6 +10,7 @@ import SideMenu from '../../../components/SideMenu/SideMenu';
 import ROUTES from '../../../routes';
 // import { mockedStationECs } from '../../../services/__mocks__/stationService';
 import StationECTable from './StationECTable';
+import StationECTableSearchBar from './StationECTableSearchBar';
 
 const StationECListPage = () => {
   const { t } = useTranslation();
@@ -17,7 +18,17 @@ const StationECListPage = () => {
   const { stationId } = useParams<{ stationId: string }>();
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.STATIONS);
-  const [open, setOpen] = useState(false);
+  
+  const [ciNameInput, setCiNameInput] = useState<string>('');
+  const [ciNameFilter, setCiNameFilter] = useState<string>('');
+
+  useEffect(() => {
+    const setSearchValue = setTimeout(() => {
+      setCiNameFilter(ciNameInput);
+    }, 500);
+
+    return () => clearTimeout(setSearchValue);
+  }, [ciNameInput]);
 
   useEffect(() => {
     if (history.location.state && (history.location.state as any).alertSuccessMessage) {
@@ -105,9 +116,15 @@ const StationECListPage = () => {
             {alertMessage}
           </Alert>
         )}
+
+        <StationECTableSearchBar
+          stationId={stationId}
+          ciNameInput={ciNameInput}
+          setCiNameInput={setCiNameInput}
+        />
         <Box display="flex" width="100%" mt={0}>
           <Box pt={0} display="flex" width="100%">
-            <StationECTable setAlertMessage={setAlertMessage} />
+            <StationECTable ciNameFilter={ciNameFilter} setAlertMessage={setAlertMessage} />
           </Box>
         </Box>
       </Grid>

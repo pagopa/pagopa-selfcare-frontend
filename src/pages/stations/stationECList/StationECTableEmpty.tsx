@@ -11,32 +11,6 @@ const StationECTableEmpty = ({ stationId }: StationECTableEmptyProps) => {
   const { t } = useTranslation();
   return (
     <>
-      <Box width="100%" display="flex">
-        <TextField
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="disabled" />
-              </InputAdornment>
-            ),
-            sx: { height: 48, backgroundColor: '#FFFFFF' },
-          }}
-          fullWidth
-          placeholder={t('stationECList.searchPlaceholder')}
-        />
-
-        <Button
-          component={RouterLink}
-          to={generatePath(ROUTES.STATION_ASSOCIATE_EC, {
-            stationId,
-          })}
-          variant="contained"
-          sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
-          startIcon={<Add />}
-        >
-          {t('stationECList.associateEcButtonLabel')}
-        </Button>
-      </Box>
       <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }}>
         <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
           <Typography variant="body2">

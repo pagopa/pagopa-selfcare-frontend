@@ -189,8 +189,8 @@
       "GPD_REP": "GPD - Gestione flussi di rendicontazione",
       "GPD_PAY": "GPD - Recupero ricevute",
       "BIZ": "BIZ - Recupero ricevute Ente Creditore",
-      "FDR_ORG": "FdR - Flussi di Rendicontazione (ORG)",
-      "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)"
+      "FDR_ORG": "FdR - Flussi di Rendicontazione",
+      "FDR_PSP": "FdR - Flussi di Rendicontazione"
     }
   },
   "channelsPage": {

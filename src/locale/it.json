@@ -193,7 +193,9 @@
       "NODOAUTH": "Connessione con nodo",
       "GPD": "Integrazione Asincrona",
       "BIZ": "Recupero Ricevuta",
-      "GPD_REP": "Gestione Flussi di Rendicontazione"
+      "GPD_REP": "Gestione Flussi di Rendicontazione",
+      "FDR_ORG": "FdR - Flussi di Rendicontazione ORG",
+      "FDR_PSP": "FdR - Flussi di Rendicontazione PSP"
     }
   },
   "channelsPage": {
@@ -914,7 +916,6 @@
     "edit": "Modifiche",
     "createData": "Data Inserimento",
     "editData": "Data Modifica",
-
     "errors": {
       "getOperationTableTitle": "Errore",
       "getOperationTableDesc": "Errore durante il recupero dei dati"
@@ -923,7 +924,6 @@
   "operationTableListPage": {
     "title": "Tavoli Operativi",
     "subtitle": "Cerca e visualizza i tavoli operativi presenti.",
-
     "search": {
       "placeholder": "Cerca tavolo operativo"
     },
@@ -938,7 +938,6 @@
       "noResults": "Nessun risultato",
       "loading": "Caricamento..."
     },
-
     "errors": {
       "getOperationTableListTitle": "Errore",
       "getOperationTableListDesc": "Errore durante il recupero dei dati"

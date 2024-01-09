@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.13.0-1-PASELC-688-rivedere-label-apikey-fdr",
+  "version": "1.13.1",
   "homepage": "ui",
   "private": true,
   "scripts": {

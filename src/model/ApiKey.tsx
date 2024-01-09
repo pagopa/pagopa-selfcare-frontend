@@ -23,8 +23,8 @@ export const GPD = 'GPD - Posizioni Debitorie';
 export const GPD_REP = 'GPD - Gestione flussi di rendicontazione';
 export const GPD_PAY = 'GPD - Recupero ricevute';
 export const BIZ = 'BIZ - Recupero ricevute Ente Creditore';
-export const FDR_ORG = 'FdR - Flussi di Rendicontazione ORG';
-export const FDR_PSP = 'FdR - Flussi di Rendicontazione PSP';
+export const FDR_ORG = 'FdR - Flussi di Rendicontazione (ORG)';
+export const FDR_PSP = 'FdR - Flussi di Rendicontazione (PSP)';
 
 export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
     const list = [{id: 'NODOAUTH', key: NODOAUTH}];

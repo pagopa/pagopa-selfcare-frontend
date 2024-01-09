@@ -47,7 +47,7 @@ const ApiKeysPage = () => {
                 })
                 .finally(() => setLoading(false));
         }
-    });
+    }, [selectedParty]);
 
     const createKeys = () => {
         history.push(ROUTES.APIKEYS_CREATE);

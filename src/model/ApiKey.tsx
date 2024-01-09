@@ -19,11 +19,12 @@ export type ConfiguredProductKeys = {
 };
 
 export const NODOAUTH = 'Connessione con nodo';
-export const GPD = 'GPD - Integrazione Asincrona';
-export const GPD_REP = 'GPD - Gestione Flussi di Rendicontazione';
-export const BIZ = 'BIZ - Recupero Ricevuta';
-export const FDR_ORG = 'FdR - Flussi di Rendicontazione [ORG]';
-export const FDR_PSP = 'FdR - Flussi di Rendicontazione [PSP]';
+export const GPD = 'GPD - Posizioni Debitorie';
+export const GPD_REP = 'GPD - Gestione flussi di rendicontazione';
+export const GPD_PAY = 'GPD - Recupero ricevute';
+export const BIZ = 'BIZ - Recupero ricevute Ente Creditore';
+export const FDR_ORG = 'FdR - Flussi di Rendicontazione (ORG)';
+export const FDR_PSP = 'FdR - Flussi di Rendicontazione (PSP)';
 
 export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
     const list = [{id: 'NODOAUTH', key: NODOAUTH}];
@@ -38,8 +39,9 @@ export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
 export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
     const list = [
         {id: 'NODOAUTH', key: NODOAUTH},
-        {id: 'GPD_REP', key: GPD_REP},
         {id: 'GPD', key: GPD},
+        {id: 'GPD_PAY', key: GPD_PAY},
+        {id: 'GPD_REP', key: GPD_REP},
         {id: 'BIZ', key: BIZ},
     ];
 

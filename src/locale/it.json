@@ -614,7 +614,7 @@
       "successMessage": "EC associato con successo.",
       "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
-      "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito per la Piattaforma PagoPA",
+      "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageSegregationCodesGet": "Errore durante la ricezione della lista dei codici di segregazione",
       "errorMessageDelegatedEd": "Errore durante la ricezione della lista degli EC disponibili per l'associazione",
       "backButton": "Annulla",

@@ -28,7 +28,7 @@ import {IbanFormAction, IbanOnCreation} from '../../../model/Iban';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {createIban, updateIban} from '../../../services/ibanService';
-import {isIbanValidityDateEditable} from '../../../utils/common-utils';
+import {datePlusDays, isIbanValidityDateEditable} from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -60,24 +60,14 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
     useEffect(() => {
         if (typeof ibanBody === 'undefined') {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            formik.setFieldValue('validity_date', getTomorrowDate(new Date()));
+            formik.setFieldValue('validity_date', datePlusDays(new Date(), 1));
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            formik.setFieldValue('due_date', getTomorrowDate(new Date()));
+            formik.setFieldValue('due_date', datePlusDays(new Date(), 2));
         }
     }, []);
 
     const changeUploadType = (event: any) => {
         setUploadType(event.target.value);
-    };
-
-    // const changeSubject = (e: any) => {
-    //   setSubject(e.target.value);
-    // };
-
-    const getTomorrowDate = (currentDate: Date) => {
-        const tomorrow = new Date(currentDate);
-        tomorrow.setDate(currentDate.getDate() + 1);
-        return tomorrow;
     };
 
     const initialFormData = (ibanBody?: IbanOnCreation) =>
@@ -94,60 +84,18 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
             : {
                 iban: '',
                 description: '',
-                validity_date: new Date(),
-                due_date: new Date(),
+                validity_date: datePlusDays(new Date(), 1),
+                due_date: datePlusDays(new Date(), 2),
                 creditor_institution_code: ecCode,
                 is_active: true,
             };
 
-    const ibanFormatValidator = (iban: string) => {
-        if (iban.length !== 27) {
-            return false;
-        }
+    const ibanFormatValidator = (iban: string) => /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/.test(iban);
 
-        const char1and2 = iban.substring(0, 2);
-        if (char1and2 !== 'IT') {
-            return false;
-        }
-
-        const char3 = /[0-9]/.test(iban[2]);
-        const char4 = /[0-9]/.test(iban[3]);
-
-        if (!char3) {
-            return false;
-        }
-
-        if (!char4) {
-            return false;
-        }
-
-        const char5 = /[A-Za-z]/.test(iban[4]);
-        if (!char5) {
-            return false;
-        }
-
-        const remainingChars = iban.slice(5);
-        const from5To27Characters = /^[A-Z0-9]{22}$/.test(remainingChars);
-        // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-        if (!from5To27Characters) {
-            return false;
-        }
-
-        return true;
-    };
-
-    // const validateFiscalCode = (fiscalCode: string | undefined) => {
-    //   if (fiscalCode) {
-    //     const fiscalCodeNumber = parseInt(fiscalCode, 10);
-    //     return !isNaN(fiscalCodeNumber);
-    //   } else {
-    //     return false;
-    //   }
-    // };
 
     // eslint-disable-next-line sonarjs/cognitive-complexity
     const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
-        const minDate = new Date();
+        const minDate: Date = datePlusDays(new Date(), 1);
 
         if (uploadType === 'single') {
             return Object.fromEntries(
@@ -279,7 +227,6 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
         validateOnMount: true,
     });
 
-    const shouldDisableDate = (date: Date) => date < new Date();
 
     const inputGroupStyle = {
         borderRadius: 1,
@@ -408,7 +355,7 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                                                 helperText={formik.touched.validity_date && formik.errors.validity_date}
                                             />
                                         )}
-                                        shouldDisableDate={shouldDisableDate}
+                                        shouldDisableDate={(date: Date) => date < new Date()}
                                     />
                                 </LocalizationProvider>
                             </Grid>
@@ -435,69 +382,12 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                                                 helperText={formik.touched.due_date && formik.errors.due_date}
                                             />
                                         )}
-                                        shouldDisableDate={shouldDisableDate}
+                                        shouldDisableDate={(date: Date) => date < formik.values.validity_date}
                                     />
                                 </LocalizationProvider>
                             </Grid>
                         </Grid>
                     </Box>
-                    {/* <Box sx={inputGroupStyle}>
-             <AddEditIbanFormSectionTitle
-              title={t('addEditIbanPage.addForm.sections.ibanHolder')}
-              icon={<MenuBookIcon />}
-            />
-            <Grid container spacing={2} mt={1}>
-              <Grid container item xs={12}>
-                <FormControl>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="iban-holder"
-                    // onChange={(e) => changeSubject(e)}
-                  >
-                    <FormControlLabel
-                      checked={subject === 'me'}
-                      value="me"
-                      control={<Radio />}
-                      label={t('addEditIbanPage.addForm.fields.holder.me')}
-                      sx={{ mr: 5 }}
-                      data-testid="holder-me-test"
-                    />
-                    {/* <FormControlLabel
-                      checked={subject === 'anotherOne'}
-                      value="anotherOne"
-                      control={<Radio />}
-                      label={t('addEditIbanPage.addForm.fields.holder.anotherOne')}
-                      data-testid="holder-anotherOne-test"
-                    /> 
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid container item xs={6}>
-                <TextField
-                  disabled={subject === 'me'}
-                  fullWidth
-                  id="creditorInstitutionCode"
-                  name="creditorInstitutionCode"
-                  label={t('addEditIbanPage.addForm.fields.holder.holderFiscalCode')}
-                  placeholder="AAAAAAAAAAAAAAAAAAA"
-                  size="small"
-                  value={formik.values.creditorInstitutionCode}
-                  onChange={(e) => formik.handleChange(e)}
-                  inputProps={{
-                    'data-testid': 'holder-fiscal-code-test',
-                  }}
-                  error={
-                    formik.touched.creditorInstitutionCode &&
-                    Boolean(formik.errors.creditorInstitutionCode)
-                  }
-                  helperText={
-                    formik.touched.creditorInstitutionCode && formik.errors.creditorInstitutionCode
-                  }
-                />
-              </Grid>
-            </Grid> 
-          </Box> */}
                 </Box>
             </Paper>
             <Stack direction="row" justifyContent="space-between" mt={5}>

@@ -189,8 +189,8 @@
       "GPD_REP": "GPD - Gestione flussi di rendicontazione",
       "GPD_PAY": "GPD - Recupero ricevute",
       "BIZ": "BIZ - Recupero ricevute Ente Creditore",
-      "FDR_ORG": "FdR - Flussi di Rendicontazione",
-      "FDR_PSP": "FdR - Flussi di Rendicontazione"
+      "FDR_ORG": "FdR - Flussi di Rendicontazione (EC)",
+      "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)"
     }
   },
   "channelsPage": {
@@ -611,6 +611,7 @@
       "successMessage": "EC associato con successo.",
       "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
+      "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageSegregationCodesGet": "Errore durante la ricezione della lista dei codici di segregazione",
       "errorMessageDelegatedEd": "Errore durante la ricezione della lista degli EC disponibili per l'associazione",
       "backButton": "Annulla",

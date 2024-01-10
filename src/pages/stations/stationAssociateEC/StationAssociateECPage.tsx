@@ -24,6 +24,8 @@ import {
 } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import {Delegation} from '../../../api/generated/portal/Delegation';
 import {getBrokerDelegation} from "../../../services/channelService";
+import {ProblemJson} from '../../../api/generated/portal/ProblemJson';
+import {isErrorResponse} from '../../../utils/client-utils';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -149,17 +151,31 @@ function StationAssociateECPage() {
 
     const submit = (values: CreditorInstitutionStationDto) => {
         if (selectedEC && selectedEC.broker_id) {
-            setLoading(true);
+            setLoading(true);            
             associateEcToStation(selectedEC.tax_code!, {...values, stationCode: stationId})
-                .then((_data) => {
-                    history.push(
-                        generatePath(ROUTES.STATION_EC_LIST, {
-                            stationId,
-                        }),
-                        {
-                            alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
+                .then((data) => {
+                    if (isErrorResponse(data)) {
+                        const problemJson = data as ProblemJson;
+                        if (problemJson.status === 404) {
+                            addError({
+                                id: 'ASSOCIATE_EC',
+                                blocking: false,
+                                error: new Error(problemJson.detail),
+                                techDescription: problemJson.title!,
+                                toNotify: true,
+                                displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
+                                displayableDescription: t('stationAssociateECPage.associationForm.errorMessageECNotValid'),
+                                component: 'Toast',
+                            });
                         }
-                    );
+                    } else {
+                        history.push(
+                            generatePath(ROUTES.STATION_EC_LIST, {stationId,}),
+                            {
+                                alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
+                            }
+                        );
+                    }
                 })
                 .catch((reason) =>
                     addError({

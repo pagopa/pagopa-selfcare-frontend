@@ -145,12 +145,6 @@
     "title": "API Key",
     "subtitle": "Genera le API Key per gestire l’autenticazione dei soggetti connessi al nodo pagoPA.",
     "decription": "API Key generate",
-    "apiKey": {
-      "Connessione con nodo": "Connessione con nodo",
-      "Integrazione Asincrona": "Integrazione Asincrona",
-      "Recupero Ricevuta": "Recupero Ricevuta",
-      "Gestione flussi di rendicontazione": "Gestione Flussi di Rendicontazione"
-    },
     "apiNotPresent": {
       "apiNotPresentDescription": "Non è stata ancora generata nessuna chiave API per questo ente.<1><0> Genera API Key</0></1>",
       "buttonLabel": "Genera API Key"
@@ -191,9 +185,12 @@
     },
     "products": {
       "NODOAUTH": "Connessione con nodo",
-      "GPD": "Integrazione Asincrona",
-      "BIZ": "Recupero Ricevuta",
-      "GPD_REP": "Gestione Flussi di Rendicontazione"
+      "GPD": "GPD - Posizioni Debitorie",
+      "GPD_REP": "GPD - Gestione flussi di rendicontazione",
+      "GPD_PAY": "GPD - Recupero ricevute",
+      "BIZ": "BIZ - Recupero ricevute Ente Creditore",
+      "FDR_ORG": "FdR - Flussi di Rendicontazione (EC)",
+      "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)"
     }
   },
   "channelsPage": {
@@ -915,7 +912,6 @@
     "edit": "Modifiche",
     "createData": "Data Inserimento",
     "editData": "Data Modifica",
-
     "errors": {
       "getOperationTableTitle": "Errore",
       "getOperationTableDesc": "Errore durante il recupero dei dati"
@@ -924,7 +920,6 @@
   "operationTableListPage": {
     "title": "Tavoli Operativi",
     "subtitle": "Cerca e visualizza i tavoli operativi presenti.",
-
     "search": {
       "placeholder": "Cerca tavolo operativo"
     },
@@ -939,7 +934,6 @@
       "noResults": "Nessun risultato",
       "loading": "Caricamento..."
     },
-
     "errors": {
       "getOperationTableListTitle": "Errore",
       "getOperationTableListDesc": "Errore durante il recupero dei dati"

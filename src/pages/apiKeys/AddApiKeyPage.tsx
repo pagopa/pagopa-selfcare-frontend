@@ -212,11 +212,11 @@ const buildAvailableProduct = (
     products: Array<ConfiguredProductKeys>,
     setAvailableProduct: any
 ) => {
-    if (data.some((el) => el.displayName === NODOAUTH)) {
+    if (data.some((el) => el.displayName.includes(NODOAUTH))) {
         // if nodeAuth was created, elements that are present in both lists will be disabled
         setAvailableProduct(
             products.map((p) =>
-                data.some((el) => el.displayName === p.key)
+                data.some((el) => el.displayName.includes(p.key))
                     ? {
                         id: p.id,
                         title: p.key,
@@ -233,7 +233,7 @@ const buildAvailableProduct = (
         // if no apikeys was created, nodeAuth is the only items enabled
         setAvailableProduct(
             products.map((p) =>
-                p.key === NODOAUTH
+                p.key.includes(NODOAUTH)
                     ? {
                         id: p.id,
                         title: p.key,

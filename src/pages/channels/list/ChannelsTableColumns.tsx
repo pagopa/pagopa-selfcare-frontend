@@ -232,7 +232,7 @@ export function showCreationData(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.createdAt ? params.row.createdAt?.toLocaleDateString('en-GB') : '-'}
+                {params.row.createdAt?.toLocaleDateString('en-GB')}
               </Typography>
             </Grid>
           </Grid>
@@ -262,7 +262,7 @@ export function showModifiedData(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.modifiedAt ? params.row.modifiedAt?.toLocaleDateString('en-GB') : '-'}
+                {params.row.modifiedAt?.toLocaleDateString('en-GB')}
               </Typography>
             </Grid>
           </Grid>

@@ -841,8 +841,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    exportIbansToCsv: async (partyId: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportIbansToCsv({'broker-id': partyId});
+    exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
+        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

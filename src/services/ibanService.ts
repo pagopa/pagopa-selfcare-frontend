@@ -3,13 +3,13 @@ import {Ibans} from "../api/generated/portal/Ibans";
 import {Iban} from "../api/generated/portal/Iban";
 import {IbanCreate} from "../api/generated/portal/IbanCreate";
 import {
-  createIban as createIbanMocked,
-  deleteIban as deleteIbanMocked,
-  exportIbansToCsv as exportIbansToCsvMocked,
-  getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
-  updateIban as updateIbanMocked,
-  updateIbanCup as updateIbanCupMocked,
-  updateIbanStandIn as updateIbanStandInMocked
+    createIban as createIbanMocked,
+    deleteIban as deleteIbanMocked,
+    exportIbansToCsv as exportIbansToCsvMocked,
+    getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    updateIban as updateIbanMocked,
+    updateIbanCup as updateIbanCupMocked,
+    updateIbanStandIn as updateIbanStandInMocked
 } from './__mocks__/ibanService';
 
 export const getIbanList = (
@@ -71,11 +71,11 @@ export const deleteIban = (ecCode: string, ibanValue: string): Promise<void> => 
     }
 };
 
-export const exportIbanToCSV = (partyId: string): Promise<Buffer> => {
+export const exportIbanToCSV = (brokerCode: string): Promise<Buffer> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return exportIbansToCsvMocked(partyId);
+        return exportIbansToCsvMocked(brokerCode);
     } else {
-        return BackofficeApi.exportIbansToCsv(partyId).then((resources) => resources);
+        return BackofficeApi.exportIbansToCsv(brokerCode).then((resources) => resources);
     }
 };

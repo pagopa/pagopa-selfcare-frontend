@@ -1,6 +1,7 @@
 import {FileDownloadSharp} from '@mui/icons-material';
-import {Box, Button, Card, Stack, Typography} from '@mui/material';
+import {Alert, Box, Button, Card, Stack, Typography} from '@mui/material';
 import {useTranslation} from 'react-i18next';
+import {format} from "date-fns";
 import {Party} from '../../../model/Party';
 import {usePermissions} from '../../../hooks/usePermissions';
 import {exportIbanToCSV} from '../../../services/ibanService';
@@ -10,8 +11,8 @@ type Props = {
     selectedParty?: Party;
 };
 
-const downloadIbansAsCSV = (partyId: string) => {
-    exportIbanToCSV(partyId)
+const downloadIbansAsCSV = (brokerCode: string) => {
+    exportIbanToCSV(brokerCode)
         .then((response) => {
             downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
         })
@@ -26,14 +27,15 @@ const downloadCreditorInstitutionAsCSV = () => {
 const DownloadSection = ({selectedParty}: Props) => {
     const {t} = useTranslation();
 
-    const partyId = selectedParty?.partyId;
-    const exportIbanToCSV = () => downloadIbansAsCSV(partyId!);
+    const brokerCode = selectedParty?.fiscalCode;
+    const exportIbanToCSV = () => downloadIbansAsCSV(brokerCode!);
 
     const {hasPermission} = usePermissions();
     const canDownloadIBANs = hasPermission('download-iban');
     const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
     const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
 
+    const today = format(new Date(), "dd/MM/yyyy");
     return (
         <>
             {canSeeDownloadSection && (
@@ -45,6 +47,10 @@ const DownloadSection = ({selectedParty}: Props) => {
                         <Stack direction="row" mt={1}>
                             {canDownloadIBANs && (
                                 <Stack display="flex" mr={1}>
+                                    <Alert severity="info" sx={{mb: 3}}>
+                                        Dati aggiornati al {today} alle ore 03:00 am
+                                    </Alert>
+
                                     <Button
                                         variant="contained"
                                         size="small"
@@ -54,6 +60,8 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
+
+
                                 </Stack>
                             )}
                             {canDownloadCreditorInstitutions && (

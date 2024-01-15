@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.13.5-2-PASELC-691-fe-export-iban-modifica-etichetta",
+  "version": "1.13.6",
   "homepage": "ui",
   "private": true,
   "scripts": {

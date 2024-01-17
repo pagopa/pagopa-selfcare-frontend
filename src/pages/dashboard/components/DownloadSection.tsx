@@ -45,9 +45,10 @@ const DownloadSection = ({selectedParty}: Props) => {
                     </Typography>
                     <Box mb={3}>
                         <Stack direction="row" mt={1}>
-                            <Stack display="flex" mr={1}>
-                                {canDownloadIBANs && (
+                            {canDownloadIBANs && (
+                                <>
                                     <Button
+                                        sx={{mt: 1, mr: 2}}
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
@@ -56,9 +57,17 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
-                                )}
-                                {canDownloadCreditorInstitutions && (
+                                    <Alert severity="info" sx={{mb: 3}}>
+                                        Dati aggiornati al {today} alle ore 03:00 am
+                                    </Alert>
+                                </>
+                            )}
+                        </Stack>
+                        <Stack direction="row" mt={1}>
+                            {canDownloadCreditorInstitutions && (
+                                <>
                                     <Button
+                                        sx={{mt: 1, mr: 3}}
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
@@ -67,21 +76,15 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>
-                                )}
-                            </Stack>
-
-                            <Stack display="flex" mr={1}>
-                                {canDownloadIBANs && (
+                                    {
+                                    /* 
                                     <Alert severity="info" sx={{mb: 3}}>
                                         Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert>
-                                )}
-                                {/* canDownloadCreditorInstitutions && (
-                                    <Alert severity="info" sx={{mb: 3}}>
-                                        Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert>
-                                ) */}
-                            </Stack>
+                                    </Alert> 
+                                    */
+                                    }
+                                </>
+                            )}
                         </Stack>
                     </Box>
                 </Card>

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.13.6",
+  "version": "1.13.6-1-PASELC-707-fe-abilitazione-export-ec-iban-anche-agli-intermediari",
   "homepage": "ui",
   "private": true,
   "scripts": {

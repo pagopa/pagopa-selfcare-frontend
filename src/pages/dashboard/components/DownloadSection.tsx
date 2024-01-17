@@ -45,12 +45,8 @@ const DownloadSection = ({selectedParty}: Props) => {
                     </Typography>
                     <Box mb={3}>
                         <Stack direction="row" mt={1}>
-                            {canDownloadIBANs && (
-                                <Stack display="flex" mr={1}>
-                                    <Alert severity="info" sx={{mb: 3}}>
-                                        Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert>
-
+                            <Stack display="flex" mr={1}>
+                                {canDownloadIBANs && (
                                     <Button
                                         variant="contained"
                                         size="small"
@@ -60,12 +56,8 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
-
-
-                                </Stack>
-                            )}
-                            {canDownloadCreditorInstitutions && (
-                                <Stack display="flex" mr={1}>
+                                )}
+                                {canDownloadCreditorInstitutions && (
                                     <Button
                                         variant="contained"
                                         size="small"
@@ -75,8 +67,21 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>
-                                </Stack>
-                            )}
+                                )}
+                            </Stack>
+
+                            <Stack display="flex" mr={1}>
+                                {canDownloadIBANs && (
+                                    <Alert severity="info" sx={{mb: 3}}>
+                                        Dati aggiornati al {today} alle ore 03:00 am
+                                    </Alert>
+                                )}
+                                {/* canDownloadCreditorInstitutions && (
+                                    <Alert severity="info" sx={{mb: 3}}>
+                                        Dati aggiornati al {today} alle ore 03:00 am
+                                    </Alert>
+                                ) */}
+                            </Stack>
                         </Stack>
                     </Box>
                 </Card>

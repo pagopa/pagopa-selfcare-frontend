@@ -66,8 +66,15 @@ export const permissions = {
     'download-iban': [
         ROLE.PT_EC_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.EC_DIRECT_OPERATOR,
     ],
-    'download-creditor-institutions': [ROLE.PAGOPA_OPERATOR],
+    'download-creditor-institutions': [
+        ROLE.PT_EC_OPERATOR,
+        ROLE.PT_PSPEC_OPERATOR,
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.EC_DIRECT_OPERATOR,
+    ],
 };
 
 export type PermissionName = keyof typeof permissions;

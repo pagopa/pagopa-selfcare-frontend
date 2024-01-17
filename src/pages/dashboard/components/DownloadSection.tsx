@@ -76,13 +76,6 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>
-                                    {
-                                    /* 
-                                    <Alert severity="info" sx={{mb: 3}}>
-                                        Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert> 
-                                    */
-                                    }
                                 </>
                             )}
                         </Stack>

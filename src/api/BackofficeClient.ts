@@ -56,6 +56,7 @@ import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
+import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -848,6 +849,11 @@ export const BackofficeApi = {
 
     exportCreditorInstitutionsToCsv: async (brokerCode: string): Promise<Buffer> => {
         const result = await backofficeClient.exportCreditorInstitutionToCsv({'broker-code': brokerCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBrokerExportStatus: async (brokerCode: string): Promise<BrokerECExportStatus> => {
+        const result = await backofficeClient.getBrokerExportStatus({'broker-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 };

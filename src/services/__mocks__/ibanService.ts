@@ -1,6 +1,7 @@
 import {Ibans} from "../../api/generated/portal/Ibans";
 import {Iban} from "../../api/generated/portal/Iban";
 import {IbanCreate} from "../../api/generated/portal/IbanCreate";
+import { BrokerECExportStatus } from "../../api/generated/portal/BrokerECExportStatus";
 
 export const ibanList: Ibans = {
 // @ts-ignore
@@ -108,6 +109,11 @@ export const mockedIbanStandIn: Iban = {
   is_active: true,
 };
 
+export const mockedBrokerExportStatus: BrokerECExportStatus = {
+  broker_ibans_last_update: new Date('2024-01-01T12:00:00.000Z'),
+  broker_institutions_last_update: new Date('2024-01-01T12:00:00.000Z')
+}
+
 export const mockedIbansCSV: Buffer = Buffer.from("denominazioneEnte;codiceFiscale;iban;stato;dataAttivazioneIban;dataScadenzaIban;descrizione;etichetta\nComune di Brunello;00290400126;IT00X000001111129385748000;ATTIVO;2023-12-18T09:10:29.249+01:00;2035-12-31T09:10:29.249+01:00;string;0201138TS\nComune di Brunello;00290400126;IT00X000001111129385748001;ATTIVO;2023-12-18T09:10:29.249+01:00;2035-12-31T09:10:29.249+01:00;1 iban;ACA");
 
 export const mockedCreditorInstitutionsCSV: Buffer = Buffer.from("companyName;administrativeCode;taxCode;intermediated;brokerCompanyName;brokerTaxCode;model;auxDigit;segregationCode;applicationCode;cbillCode;stationId;stationState;activationDate;version;broadcast\nComune di X;XX;1928477588;NO;Fake broker;1245678901;3;3;01;;XXXXX;1245678901_01;ACTIVE;2024-01-17T10:45:02.523Z;2;INACTIVE");
@@ -150,4 +156,6 @@ export const exportIbansToCsv = (_brokerCode: string): Promise<any> =>
 export const exportCreditorInstitutionsToCsv = (_brokerCode: string): Promise<any> =>
     new Promise((resolve) => resolve(mockedCreditorInstitutionsCSV));
 
+export const getBrokerExportStatus = (_brokerCode: string): Promise<any> =>
+    new Promise((resolve) => resolve(mockedBrokerExportStatus));
   

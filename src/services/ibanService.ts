@@ -2,11 +2,14 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {Ibans} from "../api/generated/portal/Ibans";
 import {Iban} from "../api/generated/portal/Iban";
 import {IbanCreate} from "../api/generated/portal/IbanCreate";
+import { BrokerECExportStatus } from '../api/generated/portal/BrokerECExportStatus';
 import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,
     exportIbansToCsv as exportIbansToCsvMocked,
+    exportCreditorInstitutionsToCsv as exportCreditorInstitutionsToCsvMocked,
     getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    getBrokerExportStatus as getBrokerExportStatusMocked,
     updateIban as updateIbanMocked,
     updateIbanCup as updateIbanCupMocked,
     updateIbanStandIn as updateIbanStandInMocked
@@ -77,5 +80,25 @@ export const exportIbanToCSV = (brokerCode: string): Promise<Buffer> => {
         return exportIbansToCsvMocked(brokerCode);
     } else {
         return BackofficeApi.exportIbansToCsv(brokerCode).then((resources) => resources);
+    }
+};
+
+export const exportCreditorInstitutionToCSV = (brokerCode: string): Promise<Buffer> => {
+    /* istanbul ignore if */
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return exportCreditorInstitutionsToCsvMocked(brokerCode);
+    } else {
+        return BackofficeApi.exportCreditorInstitutionsToCsv(brokerCode).then((resources) => resources);
+    }
+};
+
+export const getBrokerExportStatus = (brokerCode: string): Promise<BrokerECExportStatus> => {
+    /* istanbul ignore if */
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return getBrokerExportStatusMocked(brokerCode);
+    } else {
+        return BackofficeApi.getBrokerExportStatus(brokerCode).then(
+            (resources) => resources
+        );
     }
 };

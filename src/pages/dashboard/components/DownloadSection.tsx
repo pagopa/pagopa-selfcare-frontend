@@ -2,9 +2,10 @@ import {FileDownloadSharp} from '@mui/icons-material';
 import {Alert, Box, Button, Card, Stack, Typography} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {format} from "date-fns";
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import {Party} from '../../../model/Party';
 import {usePermissions} from '../../../hooks/usePermissions';
-import {exportIbanToCSV} from '../../../services/ibanService';
+import {exportCreditorInstitutionToCSV, exportIbanToCSV, getBrokerExportStatus} from '../../../services/ibanService';
 import {downloadBlobAsCSV} from '../../../utils/common-utils';
 
 type Props = {
@@ -21,7 +22,14 @@ const downloadIbansAsCSV = (brokerCode: string) => {
         });
 };
 
-const downloadCreditorInstitutionAsCSV = () => {
+const downloadCreditorInstitutionsAsCSV = (brokerCode: string) => {
+    exportCreditorInstitutionToCSV(brokerCode)
+        .then((response) => {
+            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 };
 
 const DownloadSection = ({selectedParty}: Props) => {
@@ -29,13 +37,26 @@ const DownloadSection = ({selectedParty}: Props) => {
 
     const brokerCode = selectedParty?.fiscalCode;
     const exportIbanToCSV = () => downloadIbansAsCSV(brokerCode!);
+    const downloadCreditorInstitutionToCSV = () => downloadCreditorInstitutionsAsCSV(brokerCode!);
 
     const {hasPermission} = usePermissions();
     const canDownloadIBANs = hasPermission('download-iban');
     const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
     const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
+    const [ibanExportUpdatedAt, setIbanExportUpdatedAt] = useState<Date | undefined>();
+    const [ciExportUpdatedAt, setCiExportUpdatedAt] = useState<Date | undefined>();
 
-    const today = format(new Date(), "dd/MM/yyyy");
+    useEffect(() => {
+        getBrokerExportStatus(brokerCode!)
+            .then((response) => {
+                setIbanExportUpdatedAt(response.broker_ibans_last_update);
+                setCiExportUpdatedAt(response.broker_institutions_last_update);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+      }, []);
+    
     return (
         <>
             {canSeeDownloadSection && (
@@ -57,9 +78,18 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
-                                    <Alert severity="info" sx={{mb: 3}}>
-                                        Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert>
+                                
+                                    {ibanExportUpdatedAt !== undefined &&
+                                        <Alert severity="info" sx={{mb: 3}}>
+                                            <>Dati aggiornati al {format(ibanExportUpdatedAt, "dd/MM/yyyy")} alle ore {format(ibanExportUpdatedAt, "hh:mm")}</>                                    
+                                        </Alert>
+                                    }
+
+                                    {ibanExportUpdatedAt === undefined &&
+                                        <Alert severity="warning" sx={{mb: 3}}>
+                                            <>Nessun dato presente</>
+                                        </Alert>
+                                    }
                                 </>
                             )}
                         </Stack>
@@ -71,11 +101,21 @@ const DownloadSection = ({selectedParty}: Props) => {
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
-                                        onClick={downloadCreditorInstitutionAsCSV}
+                                        onClick={downloadCreditorInstitutionToCSV}
                                         data-testid="export-creditorinstitution-test"
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>
+                                    {ciExportUpdatedAt !== undefined &&
+                                        <Alert severity="info" sx={{mb: 3}}>
+                                            <>Dati aggiornati al {format(ciExportUpdatedAt, "dd/MM/yyyy")} alle ore {format(ciExportUpdatedAt, "hh:mm")}</>
+                                        </Alert>
+                                    }
+                                    {ciExportUpdatedAt === undefined &&
+                                        <Alert severity="warning" sx={{mb: 3}}>
+                                            <>Nessun dato presente</>
+                                        </Alert>
+                                    }
                                 </>
                             )}
                         </Stack>

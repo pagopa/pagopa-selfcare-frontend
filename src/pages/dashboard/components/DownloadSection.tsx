@@ -46,12 +46,9 @@ const DownloadSection = ({selectedParty}: Props) => {
                     <Box mb={3}>
                         <Stack direction="row" mt={1}>
                             {canDownloadIBANs && (
-                                <Stack display="flex" mr={1}>
-                                    <Alert severity="info" sx={{mb: 3}}>
-                                        Dati aggiornati al {today} alle ore 03:00 am
-                                    </Alert>
-
+                                <>
                                     <Button
+                                        sx={{mt: 1, mr: 2}}
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
@@ -60,13 +57,17 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
-
-
-                                </Stack>
+                                    <Alert severity="info" sx={{mb: 3}}>
+                                        Dati aggiornati al {today} alle ore 03:00 am
+                                    </Alert>
+                                </>
                             )}
+                        </Stack>
+                        <Stack direction="row" mt={1}>
                             {canDownloadCreditorInstitutions && (
-                                <Stack display="flex" mr={1}>
+                                <>
                                     <Button
+                                        sx={{mt: 1, mr: 3}}
                                         variant="contained"
                                         size="small"
                                         endIcon={<FileDownloadSharp/>}
@@ -75,7 +76,7 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>
-                                </Stack>
+                                </>
                             )}
                         </Stack>
                     </Box>

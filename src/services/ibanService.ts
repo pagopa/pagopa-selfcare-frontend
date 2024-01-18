@@ -6,6 +6,7 @@ import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,
     exportIbansToCsv as exportIbansToCsvMocked,
+    exportCreditorInstitutionsToCsv as exportCreditorInstitutionsToCsvMocked,
     getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
     updateIban as updateIbanMocked,
     updateIbanCup as updateIbanCupMocked,
@@ -77,5 +78,14 @@ export const exportIbanToCSV = (brokerCode: string): Promise<Buffer> => {
         return exportIbansToCsvMocked(brokerCode);
     } else {
         return BackofficeApi.exportIbansToCsv(brokerCode).then((resources) => resources);
+    }
+};
+
+export const exportCreditorInstitutionToCSV = (brokerCode: string): Promise<Buffer> => {
+    /* istanbul ignore if */
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return exportCreditorInstitutionsToCsvMocked(brokerCode);
+    } else {
+        return BackofficeApi.exportCreditorInstitutionsToCsv(brokerCode).then((resources) => resources);
     }
 };

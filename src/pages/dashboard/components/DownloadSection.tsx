@@ -75,6 +75,7 @@ const DownloadSection = ({selectedParty}: Props) => {
                                         endIcon={<FileDownloadSharp/>}
                                         onClick={exportIbanToCSV}
                                         data-testid="export-iban-test"
+                                        disabled={ibanExportUpdatedAt === undefined}
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
@@ -103,6 +104,7 @@ const DownloadSection = ({selectedParty}: Props) => {
                                         endIcon={<FileDownloadSharp/>}
                                         onClick={downloadCreditorInstitutionToCSV}
                                         data-testid="export-creditorinstitution-test"
+                                        disabled={ciExportUpdatedAt === undefined}
                                     >
                                         {t('dashboardPage.downloadSection.downloadCI')}
                                     </Button>

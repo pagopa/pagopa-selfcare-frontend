@@ -31,6 +31,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
   const { t } = useTranslation();
   const operator = isOperator();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [targetValue, setTargetValue] = useState("");
   const hidePassword = 'XXXXXXXXXXXXXX';
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
@@ -48,7 +49,8 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
     channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
   }${channelDetail.ip}${channelDetail.service}`;
 
-  const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${channelDetail.target_path}`;
+  const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
+  setTargetValue(`${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`);
 
   return (
     <Grid container justifyContent={'center'}>

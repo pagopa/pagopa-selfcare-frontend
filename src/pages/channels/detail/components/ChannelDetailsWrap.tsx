@@ -5,6 +5,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import ROUTES from '../../../../routes';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
@@ -116,7 +117,7 @@ const ChannelDetailsWrap = ({ channelDetWrap, channelId, goBack, PSPAssociatedNu
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {`${channelDetWrap.target_host}:${channelDetWrap.target_port}${channelDetWrap.target_path}`}
+                    {`${channelDetWrap.target_host}:${channelDetWrap.target_port}${(!channelDetWrap.target_path?.startsWith("/") ? "/" : "")}${channelDetWrap.target_path}`}
                   </Typography>
                 </Grid>
 

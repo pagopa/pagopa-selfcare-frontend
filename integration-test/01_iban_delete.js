@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: 'new',
         userDataDir: './user-data',
         // slowMo: 50,
         // dumpio: true,

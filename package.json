@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.14.1-1-PASELC-713-gestione-cbill",
+  "version": "1.14.2",
   "homepage": "ui",
   "private": true,
   "scripts": {

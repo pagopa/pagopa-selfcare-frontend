@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.14.0-1-PASELC-720-retrieve-codici-segregazione",
+  "version": "1.14.1",
   "homepage": "ui",
   "private": true,
   "scripts": {

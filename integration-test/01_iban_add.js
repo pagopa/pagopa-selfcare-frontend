@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: "new",
+        headless: false,
         userDataDir: './user-data',
     });
     const page = await browser.newPage();
@@ -110,7 +110,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         ], targetPage, {timeout, visible: true});
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-            await changeSelectElement(element, 'IT60X0542811101000000123456')
+            await changeSelectElement(element, 'IT60X0542811101000000123457')
         } else if ([
             'textarea',
             'text',
@@ -121,9 +121,9 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-            await typeIntoElement(element, 'IT60X0542811101000000123456');
+            await typeIntoElement(element, 'IT60X0542811101000000123457');
         } else {
-            await changeElementValue(element, 'IT60X0542811101000000123456');
+            await changeElementValue(element, 'IT60X0542811101000000123457');
         }
     }
     {
@@ -421,18 +421,18 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         await targetPage.waitForNetworkIdle();
         await scrollIntoViewIfNeeded([
             [
-                'div[data-id="IT60X0542811101000000123456"]'
+                'div[data-id="IT60X0542811101000000123457"]'
             ],
             [
-                'text/IT60X0542811101000000123456'
+                'text/IT60X0542811101000000123457'
             ]
         ], targetPage, timeout);
         const element = await waitForSelectors([
             [
-                'div[data-id="IT60X0542811101000000123456"]'
+                'div[data-id="IT60X0542811101000000123457"]'
             ],
             [
-                'text/IT60X0542811101000000123456'
+                'text/IT60X0542811101000000123457'
             ]
         ], targetPage, {timeout, visible: true});
     }

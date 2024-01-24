@@ -36,6 +36,7 @@ function StationAssociateECPage() {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const {stationId} = useParams<{ stationId: string }>();
     const [selectedEC, setSelectedEC] = useState<Delegation | undefined>();
+    const [isECUsable, setIsECUsable] = useState<boolean>();
     const [availableEC, setAvailableEC] = useState<Array<Delegation>>([]);
     const [segregationCodeList, setSegregationCodeList] =
         useState<CreditorInstitutionAssociatedCodeList>([
@@ -80,10 +81,28 @@ function StationAssociateECPage() {
         if (selectedEC && selectedEC.tax_code) {
             setLoadingList(true);
             getCreditorInstitutionSegregationcodes(selectedEC.tax_code)
-                .then((res) => {
-                    if (res && Array.isArray(res.unused)) {
-                        setSegregationCodeList(res);
-                    }
+                .then((data) => {
+                    if (isErrorResponse(data)) {
+                        const problemJson = data as ProblemJson;
+                        setIsECUsable(false);
+                        if (problemJson.status === 404) {
+                            addError({
+                                id: 'ASSOCIATE_EC',
+                                blocking: false,
+                                error: new Error(problemJson.detail),
+                                techDescription: problemJson.title!,
+                                toNotify: true,
+                                displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
+                                displayableDescription: t('stationAssociateECPage.associationForm.errorMessageECNotValid'),
+                                component: 'Toast',
+                            });
+                        }
+                    } else {
+                        if (data && Array.isArray(data.unused)) {
+                            setSegregationCodeList(data);
+                            setIsECUsable(true);
+                        }
+                    }                    
                 })
                 .catch((reason) =>
                     addError({
@@ -165,6 +184,17 @@ function StationAssociateECPage() {
                                 toNotify: true,
                                 displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
                                 displayableDescription: t('stationAssociateECPage.associationForm.errorMessageECNotValid'),
+                                component: 'Toast',
+                            });
+                        } else if (problemJson.status === 409) {
+                            addError({
+                                id: 'ASSOCIATE_EC',
+                                blocking: false,
+                                error: new Error(problemJson.detail),
+                                techDescription: problemJson.title!,
+                                toNotify: true,
+                                displayableTitle: t('stationAssociateECPage.associationForm.errorMessageTitle'),
+                                displayableDescription: t('stationAssociateECPage.associationForm.errorMessageAlreadyAssociated'),
                                 component: 'Toast',
                             });
                         }
@@ -371,7 +401,7 @@ function StationAssociateECPage() {
                 <Stack display="flex" justifyContent="flex-end">
                     <Button
                         onClick={() => submit(formik.values)}
-                        disabled={!enableSubmit(formik.values) && !selectedEC}
+                        disabled={!enableSubmit(formik.values) && !selectedEC || !isECUsable}
                         color="primary"
                         variant="contained"
                         data-testid="confirm-btn-test"

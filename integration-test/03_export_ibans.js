@@ -87,6 +87,8 @@ const puppeteer = require('puppeteer'); // v20.7.4 or later
     }
 
     await browser.close();
+    console.log("export ibans");
+
 
     async function waitForElement(step, frame, timeout) {
         const {

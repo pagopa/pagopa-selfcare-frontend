@@ -169,6 +169,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 
     await browser.close();
+    console.log("iban deleted");
 
 
     async function waitForSelectors(selectors, frame, options) {

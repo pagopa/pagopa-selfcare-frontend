@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.14.2",
+  "version": "1.14.2-1-hotfix-fdr-apikey-disabling",
   "homepage": "ui",
   "private": true,
   "scripts": {

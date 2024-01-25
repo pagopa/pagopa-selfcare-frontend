@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 
 (async () => {
-    const browser = await puppeteer.launch({headless: 'new', slowMo: 10, userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: false, slowMo: 10, userDataDir: './user-data'});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -344,6 +344,7 @@ const puppeteer = require('puppeteer'); // v20.7.4 or later
     }
 
     await browser.close();
+    console.log("associate station");
 
     async function waitForElement(step, frame, timeout) {
         const {

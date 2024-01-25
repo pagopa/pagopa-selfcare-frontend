@@ -109,27 +109,19 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                     validity_date: isIbanValidityDateEditable(ibanBody) ?
                         (!values.validity_date
                             ? t('addEditIbanPage.validationMessage.requiredField')
-                            : values.validity_date.getTime() < minDate.getTime()
+                            : values.validity_date.getDate() < minDate.getDate()
                                 ? t('addEditIbanPage.validationMessage.dateNotValid')
-                                : values.due_date && values.validity_date.getTime() > values.due_date.getTime()
+                                : values.due_date && values.validity_date.getDate() > values.due_date.getDate()
                                     ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
                                     : undefined)
                         : undefined,
                     due_date: !values.due_date
                         ? t('addEditIbanPage.validationMessage.requiredField')
-                        : values.due_date.getTime() < minDate.getTime()
+                        : values.due_date.getDate() < minDate.getDate()
                             ? t('addEditIbanPage.validationMessage.dateNotValid')
-                            : values.validity_date && values.due_date.getTime() < values.validity_date.getTime()
+                            : values.validity_date && values.due_date.getDate() < values.validity_date.getDate()
                                 ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
                                 : undefined,
-                    // creditor_institution_code:
-                    //   subject === 'me'
-                    //     ? undefined
-                    //     : !values.creditor_institution_code
-                    //     ? t('addEditIbanPage.validationMessage.requiredField')
-                    //     : !validateFiscalCode(values.creditor_institution_code)
-                    //     ? t('addEditIbanPage.validationMessage.ecOwnerNotValid')
-                    //     : undefined,
                 }).filter(([_key, value]) => value)
             );
         }

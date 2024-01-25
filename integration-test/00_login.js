@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 const fs = require('fs');
 
 const login = (async () => {
-    const browser = await puppeteer.launch({headless: 'new', slowMo: 10, userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: false, slowMo: 10, userDataDir: './user-data'});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);

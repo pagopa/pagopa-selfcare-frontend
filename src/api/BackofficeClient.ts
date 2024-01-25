@@ -56,7 +56,7 @@ import {Product} from "./generated/portal/Product";
 import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
-import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
+import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -80,10 +80,13 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => 
 // const fetchApi: typeof fetchWithTimeout = (fetch as any) as typeof fetchWithTimeout;
 
 function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-
-    const defaultHeaders = {
-        'X-Canary': 'canary'
-    };
+    // eslint-disable-next-line functional/no-let
+    let defaultHeaders = {};
+    if (ENV.URL_API.REACT_APP_URL_BETA) {
+        defaultHeaders = {
+            'X-Canary': 'canary'
+        };
+    }
     // eslint-disable-next-line functional/immutable-data
     const headers = {
         ...defaultHeaders,

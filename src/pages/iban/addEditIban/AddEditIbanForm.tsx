@@ -62,7 +62,7 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             formik.setFieldValue('validity_date', datePlusDays(new Date(), 1));
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            formik.setFieldValue('due_date', datePlusDays(new Date(), 2));
+            formik.setFieldValue('due_date', datePlusDays(new Date(), 365));
         }
     }, []);
 

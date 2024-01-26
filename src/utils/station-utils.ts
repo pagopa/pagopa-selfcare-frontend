@@ -13,9 +13,10 @@ import {
 
 export const splitURL = (targetURL: string) => {
   try {
-    const url = new URL(targetURL);
+    const hasProtocol = targetURL.startsWith("http");
+    const url = new URL(hasProtocol ? targetURL : `http://${targetURL}`);
     return {
-      protocolSplit: url.protocol,
+      protocolSplit: hasProtocol ? url.protocol : undefined,
       hostSplit: url.hostname,
       portSplit: Number(url.port),
       pathSplit: url.pathname + url.search + url.hash,
@@ -113,10 +114,11 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     } = splitURL(station.gdpConcat);
 
     const protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-    const port = portSplit > 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+    console.log(JSON.stringify(station));
+    const port = portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https:' ? 443 : 80);
 
     // IP/PORT/SERVICE/PROTOCOL fields will be valorized with GPD values
-    return { ...station, protocol, ip, port, service };
+    return { ...station, protocol, ip, port, service, pofService: service };
   }
 
   // Sync New Connectivity
@@ -129,7 +131,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     } = splitURL(station.targetConcat);
 
     const targetPort =
-      targetPortSplit > 0 ? targetPortSplit : targetProtocol === 'https:' ? 443 : 80;
+      targetPortSplit > 0 ? targetPortSplit : (targetProtocol && targetProtocol === 'https:' ? 443 : 80);
 
     const {
       protocolSplit: protocolForwarder,
@@ -139,24 +141,16 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     } = splitURL(station.newConnConcat);
 
     const protocol = protocolForwarder === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-    const port = portSplit > 0 ? portSplit : targetProtocol === 'https:' ? 443 : 80;
-
-    const targetHostPof = targetProtocol + '//' + targetHost;
-    const targetPortPof = targetPort;
-    const targetPathPof = targetPath;
-
-    // a. target_host_pof/target_port_pof/target_path_pof will be valorized with Target values
-    //   B. IP/PORT/SERVICE/PROTOCOL fields will be valorized with Forwarder values
-
+    const port = portSplit > 0 ? portSplit : (targetProtocol && targetProtocol === 'https:' ? 443 : 80);
+    
+    // IP/PORT/SERVICE/PROTOCOL fields will be valorized with Forwarder values
     return {
       ...station,
-      targetHostPof,
-      targetPortPof,
-      targetPathPof,
       protocol,
       ip,
       port,
       service,
+      pofService: service,
     };
   }
 

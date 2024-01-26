@@ -676,6 +676,9 @@ export const BackofficeApi = {
                 targetHost: station.targetHost ? station.targetHost : undefined,
                 targetPath: station.targetPath ? station.targetPath : undefined,
                 targetPort: station.targetPort ? station.targetPort : undefined,
+                targetHostPof: station.targetHostPof,
+                targetPathPof: station.targetPathPof,
+                targetPortPof: station.targetPortPof,
                 validationUrl: station.validationUrl
             },
         });

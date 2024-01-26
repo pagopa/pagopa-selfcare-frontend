@@ -43,7 +43,6 @@ export type StationOnCreation = {
   password?: string | undefined;
   port?: number | undefined;
   port4Mod?: number | undefined;
-  primitiveVersion: number;
   protocol?: ProtocolEnum | undefined;
   protocol4Mod?: Protocol4ModEnum | undefined;
   proxyConcat: string;
@@ -52,22 +51,11 @@ export type StationOnCreation = {
   proxyPassword?: string | undefined;
   proxyPort?: number | undefined;
   proxyUsername?: string | undefined;
-  redirectIp: string;
-  redirectPath: string;
-  redirectPort: number;
-  redirectProtocol: RedirectProtocolEnum;
-  redirectQueryString: string;
   rtInstantaneousDispatch?: boolean | undefined;
   service?: string | undefined;
+  pofService?: string | undefined;
   service4Mod?: string | undefined;
   stationCode: string;
-  targetConcat: string;
-  targetHost: string;
-  targetHostPof?: string;
-  targetPath: string;
-  targetPathPof?: string;
-  targetPort: number;
-  targetPortPof?: number;
   threadNumber?: number | undefined;
   timeoutA?: number | undefined;
   timeoutB?: number | undefined;
@@ -77,6 +65,24 @@ export type StationOnCreation = {
   gdpConcat: string;
   newConnConcat: string;
   validationUrl?: string;
+  // fields for redirect endpoint
+  redirectConcat: string;
+  redirectIp: string;
+  redirectPath: string;
+  redirectPort?: number;
+  redirectProtocol: RedirectProtocolEnum;
+  redirectQueryString: string;
+  // fields for RT endpoint
+  targetConcat: string;
+  targetHost: string;
+  targetPath: string;
+  targetPort?: number;
+  // fields for Modello Unico endpoint
+  targetPofConcat: string;
+  targetHostPof?: string;
+  targetPathPof?: string;
+  targetPortPof?: number;
+  primitiveVersion: number;
 };
 
 export type StationDetail = {
@@ -165,12 +171,12 @@ export interface IGPDConfig {
 
 export const GPDConfigs = {
   LOCAL_DEV: {
-    gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1',
+    gdp01: 'https://api.uat.platform.pagopa.it/gpd-payments/api/v1',
   },
   TEST: {
-    gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1',
+    gdp01: 'https://api.uat.platform.pagopa.it/gpd-payments/api/v1',
   },
-  dev: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
-  uat: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1' },
-  prod: { gdp01: 'https://api.platform.pagopa.it/gpd-paymements/api/v1' },
+  dev: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-payments/api/v1' },
+  uat: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-payments/api/v1' },
+  prod: { gdp01: 'https://api.platform.pagopa.it/gpd-payments/api/v1' },
 };

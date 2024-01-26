@@ -39,7 +39,7 @@ test('Test getStationCategoryFromDetail AsyncGPD', () => {
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     redirectQueryString: 'string',
     stationCode: 'string',
-    service: '/gpd-paymements/api/v1',
+    service: '/gpd-payments/api/v1',
     proxyConcat: '',
     targetConcat: '',
     targetHost: '',
@@ -147,7 +147,7 @@ test('Test Async GPD', () => {
     targetPort: 0,
     proxyConcat: '',
     targetConcat: '',
-    gdpConcat: 'https://api.platform.pagopa.it/gpd-paymements/api/v1',
+    gdpConcat: 'https://api.platform.pagopa.it/gpd-payments/api/v1',
     newConnConcat: '',
   };
 
@@ -157,7 +157,7 @@ test('Test Async GPD', () => {
 
   expect(stationOutput.ip).toStrictEqual('api.platform.pagopa.it');
   expect(stationOutput.port).toStrictEqual(443);
-  expect(stationOutput.service).toStrictEqual('/gpd-paymements/api/v1');
+  expect(stationOutput.service).toStrictEqual('/gpd-payments/api/v1');
   expect(stationOutput.protocol).toStrictEqual('HTTPS');
 });
 

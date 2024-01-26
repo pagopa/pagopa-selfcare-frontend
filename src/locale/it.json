@@ -428,12 +428,15 @@
       "confirmButton": "Conferma",
       "sections": {
         "registry": "Anagrafica",
-        "targetService": "Target"
+        "modello1": "Modello 1",
+        "modelloUnico": "Modello Unico"
       },
       "fields": {
         "stationCode": "Codice stazione",
         "brokerCode": "Codice intermediario",
-        "targetConcat": "Endpoint",
+        "endpointMUConcat": "Endpoint",
+        "endpointRTConcat": "Endpoint RT",
+        "endpointRedirectConcat": "Endpoint Redirect",
         "primitiveVersion": "Versione primitive"
       }
     },
@@ -528,7 +531,11 @@
     "anagraphic": "Anagrafica",
     "stationId": "Codice stazione",
     "version": "Versione",
+    "modello1": "Modello 1",
+    "modelloUnico": "Modello Unico",
     "endpoint": "Endpoint",
+    "endpointRT": "Endpoint RT",
+    "endpointRedirect": "Endpoint Redirect",
     "primitiveVersion": "Versione Primitive",
     "password": "Password",
     "activationDate": "Data di attivazione",
@@ -628,8 +635,6 @@
       "subtitle": "Informazioni a carico dell’ente.",
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
-      "endpoint": "Endpoint",
-      "primitiveVersion": "Versione Primitive",
       "intermediaryCode": "Codice intermediario",
       "protocol": "Protocollo",
       "port": "Porta",
@@ -641,6 +646,14 @@
       "lastUpgrade": "Ultima modifica",
       "operatedBy": "Operata da",
       "changeHistory": "Storico modifiche"
+    },
+    "endpoints": {
+      "modello1": "Modello 1",
+      "modelloUnico": "Modello Unico",
+      "endpointMUConcat": "Endpoint",
+      "endpointRTConcat": "Endpoint RT",
+      "endpointRedirectConcat": "Endpoint Redirect",
+      "primitiveVersion": "Versione Primitive"
     },
     "infoToComplete": {
       "endpoint": "Endpoint",

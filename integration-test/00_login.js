@@ -412,7 +412,7 @@ const login = (async () => {
                     'div.css-1jp97fw > div:nth-of-type(2) > div:nth-of-type(1) p',
                     'xpath///*[@id="prod-pagopa"]/div[1]/div/div/div[2]/div/p',
                     'pierce/div.css-1jp97fw > div:nth-of-type(2) > div:nth-of-type(1) p',
-                    'text/Piattaforma pagoPa',
+                    'text/Piattaforma pagoPA',
                 ],
                 count: 1,
                 visible: true,

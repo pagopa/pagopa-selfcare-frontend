@@ -54,7 +54,7 @@ function StationAssociateECPage() {
             getBrokerDelegation(selectedParty.partyId)
                 .then((data) => {
                     if (data) {
-                        addItselfAsAvaliableEC(data);
+                        addItselfAsAvailableEC(data);
                         setAvailableEC(data);
                     }
                 })
@@ -102,7 +102,7 @@ function StationAssociateECPage() {
                             setSegregationCodeList(data);
                             setIsECUsable(true);
                         }
-                    }                    
+                    }
                 })
                 .catch((reason) =>
                     addError({
@@ -150,7 +150,7 @@ function StationAssociateECPage() {
         );
     };
 
-    const addItselfAsAvaliableEC = (delegations : Array<Delegation>) => {
+    const addItselfAsAvailableEC = (delegations: Array<Delegation>) => {
         const validInstitutionTypes = ["PA", "GSP", "SCP"];
         const institutionType = selectedParty?.institutionType;
         if (institutionType && validInstitutionTypes.includes(institutionType)) {
@@ -170,7 +170,7 @@ function StationAssociateECPage() {
 
     const submit = (values: CreditorInstitutionStationDto) => {
         if (selectedEC && selectedEC.broker_id) {
-            setLoading(true);            
+            setLoading(true);
             associateEcToStation(selectedEC.tax_code!, {...values, stationCode: stationId})
                 .then((data) => {
                     if (isErrorResponse(data)) {

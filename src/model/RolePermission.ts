@@ -70,13 +70,10 @@ export const permissions = {
         ROLE.EC_DIRECT_OPERATOR,
     ],
     'download-creditor-institutions': [
-        ROLE.PAGOPA_OPERATOR, // temporarely set for exclude functionality from release, this will be replaced in the next release
-        /*
         ROLE.PT_EC_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,
-        */
     ],
 };
 

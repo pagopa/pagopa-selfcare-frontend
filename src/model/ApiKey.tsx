@@ -29,7 +29,7 @@ export const FDR_PSP = 'FdR - Flussi di Rendicontazione (PSP)';
 export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
     const list = [{id: 'NODOAUTH', key: NODOAUTH}];
 
-    if (ENV.FEATURES.FDR) {
+    if (ENV.FEATURES.FDR.ENABLED) {
         return [...list, {id: 'FDR_PSP', key: FDR_PSP}];
     }
     return list;
@@ -45,7 +45,7 @@ export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
         {id: 'BIZ', key: BIZ},
     ];
 
-    if (ENV.FEATURES.FDR) {
+    if (ENV.FEATURES.FDR.ENABLED) {
         return [...list, {id: 'FDR_ORG', key: FDR_ORG}];
     }
     return list;

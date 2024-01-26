@@ -2,7 +2,7 @@ import {FileDownloadSharp} from '@mui/icons-material';
 import {Alert, Box, Button, Card, Stack, Typography} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {format} from "date-fns";
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {Party} from '../../../model/Party';
 import {usePermissions} from '../../../hooks/usePermissions';
 import {exportCreditorInstitutionToCSV, exportIbanToCSV, getBrokerExportStatus} from '../../../services/ibanService';
@@ -15,7 +15,7 @@ type Props = {
 const downloadIbansAsCSV = (brokerCode: string) => {
     exportIbanToCSV(brokerCode)
         .then((response) => {
-            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
+            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}), 'export-ibans.csv');
         })
         .catch((error) => {
             console.error(error);
@@ -25,7 +25,7 @@ const downloadIbansAsCSV = (brokerCode: string) => {
 const downloadCreditorInstitutionsAsCSV = (brokerCode: string) => {
     exportCreditorInstitutionToCSV(brokerCode)
         .then((response) => {
-            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}));
+            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}), 'export-ci.csv');
         })
         .catch((error) => {
             console.error(error);
@@ -55,8 +55,8 @@ const DownloadSection = ({selectedParty}: Props) => {
             .catch((error) => {
                 console.error(error);
             });
-      }, []);
-    
+    }, []);
+
     return (
         <>
             {canSeeDownloadSection && (
@@ -79,10 +79,11 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     >
                                         {t('dashboardPage.downloadSection.downloadIbans')}
                                     </Button>
-                                
+
                                     {ibanExportUpdatedAt !== undefined &&
                                         <Alert severity="info" sx={{mb: 3}}>
-                                            <>Dati aggiornati al {format(ibanExportUpdatedAt, "dd/MM/yyyy")} alle ore {format(ibanExportUpdatedAt, "hh:mm")}</>                                    
+                                            <>Dati aggiornati al {format(ibanExportUpdatedAt, "dd/MM/yyyy")} alle
+                                                ore {format(ibanExportUpdatedAt, "hh:mm")}</>
                                         </Alert>
                                     }
 
@@ -110,7 +111,8 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     </Button>
                                     {ciExportUpdatedAt !== undefined &&
                                         <Alert severity="info" sx={{mb: 3}}>
-                                            <>Dati aggiornati al {format(ciExportUpdatedAt, "dd/MM/yyyy")} alle ore {format(ciExportUpdatedAt, "hh:mm")}</>
+                                            <>Dati aggiornati al {format(ciExportUpdatedAt, "dd/MM/yyyy")} alle
+                                                ore {format(ciExportUpdatedAt, "hh:mm")}</>
                                         </Alert>
                                     }
                                     {ciExportUpdatedAt === undefined &&

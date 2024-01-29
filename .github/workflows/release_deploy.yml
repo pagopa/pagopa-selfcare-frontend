@@ -74,7 +74,7 @@ jobs:
       # Set Environment
       - run: echo "ENVIRNOMENT=${{ inputs.environment}}" >> $GITHUB_ENV
 
-      - if: ${{ inputs.environment == null }}
+      - if: ${{ inputs.environment == null || inputs.environment == '' }}
         run: echo "ENVIRNOMENT=dev" >> $GITHUB_ENV
 
       - id: get_env

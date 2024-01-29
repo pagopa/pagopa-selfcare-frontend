@@ -29,6 +29,7 @@ import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
+import { ProblemJson } from '../api/generated/portal/ProblemJson';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -111,7 +112,7 @@ export const dissociateECfromStation = (ecCode: string, stationCode: string): Pr
 export const associateEcToStation = (
   code: string,
   station: CreditorInstitutionStationDto
-): Promise<CreditorInstitutionStationEditResource> => {
+): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return associateEcToStationMocked(code, station);
   }

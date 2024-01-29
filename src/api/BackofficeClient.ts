@@ -57,6 +57,7 @@ import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
+import { ProblemJson } from './generated/portal/ProblemJson';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -547,7 +548,7 @@ export const BackofficeApi = {
     associateEcToStation: async (
         ecCode: string,
         station: CreditorInstitutionStationDto
-    ): Promise<CreditorInstitutionStationEditResource> => {
+    ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
         const result = await backofficeClient.associateStationToCreditorInstitution({
             'ci-code': ecCode,
             body: {

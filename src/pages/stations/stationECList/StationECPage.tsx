@@ -19,16 +19,16 @@ const StationECListPage = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.STATIONS);
   
-  const [ciNameInput, setCiNameInput] = useState<string>('');
-  const [ciNameFilter, setCiNameFilter] = useState<string>('');
+  const [ciNameOrFiscalCodeInput, setCiNameInput] = useState<string>('');
+  const [ciNameOrFiscalCodeFilter, setCiNameOrFiscalCodeFilter] = useState<string>('');
 
   useEffect(() => {
     const setSearchValue = setTimeout(() => {
-      setCiNameFilter(ciNameInput);
+      setCiNameOrFiscalCodeFilter(ciNameOrFiscalCodeInput);
     }, 500);
 
     return () => clearTimeout(setSearchValue);
-  }, [ciNameInput]);
+  }, [ciNameOrFiscalCodeInput]);
 
   useEffect(() => {
     if (history.location.state && (history.location.state as any).alertSuccessMessage) {
@@ -119,12 +119,12 @@ const StationECListPage = () => {
 
         <StationECTableSearchBar
           stationId={stationId}
-          ciNameInput={ciNameInput}
+          ciNameOrFiscalCodeInput={ciNameOrFiscalCodeInput}
           setCiNameInput={setCiNameInput}
         />
         <Box display="flex" width="100%" mt={0}>
           <Box pt={0} display="flex" width="100%">
-            <StationECTable ciNameFilter={ciNameFilter} setAlertMessage={setAlertMessage} />
+            <StationECTable ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter} setAlertMessage={setAlertMessage} />
           </Box>
         </Box>
       </Grid>

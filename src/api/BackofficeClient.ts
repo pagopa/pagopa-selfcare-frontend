@@ -570,13 +570,13 @@ export const BackofficeApi = {
 
     getECListByStationCode: async (
         stationcode: string,
-        ciName: string,
+        ciNameOrFiscalCode: string,
         page: number,
         limit?: number
     ): Promise<CreditorInstitutionsResource> => {
         const result = await backofficeClient.getCreditorInstitutionsByStationCode({
             'station-code': stationcode,
-            'ci-name': ciName,
+            'ci-name-or-fiscalcode': ciNameOrFiscalCode,
             limit,
             page,
         });

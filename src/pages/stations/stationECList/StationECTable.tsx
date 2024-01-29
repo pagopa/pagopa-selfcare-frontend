@@ -28,10 +28,10 @@ const emptyECList: CreditorInstitutionsResource = {
 
 type StationECTableProps = { 
   setAlertMessage: any;
-  ciNameFilter: string;
+  ciNameOrFiscalCodeFilter: string;
 };
 
-export default function StationECTable({ setAlertMessage, ciNameFilter }: StationECTableProps) {
+export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilter }: StationECTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [error, setError] = useState(false);
@@ -60,7 +60,7 @@ export default function StationECTable({ setAlertMessage, ciNameFilter }: Statio
   useEffect(() => {
     setPagePaginator(0);
     fetchStationECs(0);
-  }, [ciNameFilter]);
+  }, [ciNameOrFiscalCodeFilter]);
 
   const onRowClick = (ecIdRow: string) => {
     setSelectedECCode(ecIdRow);
@@ -96,7 +96,7 @@ export default function StationECTable({ setAlertMessage, ciNameFilter }: Statio
   const fetchStationECs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getECListByStationCode(stationId, ciNameFilter, currentPage)
+    getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
       .catch((reason) => {
         handleErrors([

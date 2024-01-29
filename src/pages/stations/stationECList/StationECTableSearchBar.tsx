@@ -8,11 +8,11 @@ import { isOperator } from '../../components/commonFunctions';
 
 type Props = {
   stationId: string;
-  ciNameInput: string;
+  ciNameOrFiscalCodeInput: string;
   setCiNameInput: (ciName: string) => void;
 };
 
-export default function StationECTableSearchBar({ stationId, ciNameInput, setCiNameInput }: Props) {
+export default function StationECTableSearchBar({ stationId, ciNameOrFiscalCodeInput, setCiNameInput }: Props) {
   const { t } = useTranslation();
   const operator = isOperator();
 
@@ -28,7 +28,7 @@ export default function StationECTableSearchBar({ stationId, ciNameInput, setCiN
           ),
           sx: { height: 48 },
         }}
-        value={ciNameInput}
+        value={ciNameOrFiscalCodeInput}
         onChange={(event) => setCiNameInput(event.target.value)}
         fullWidth
         placeholder={t('stationECList.searchPlaceholder')}

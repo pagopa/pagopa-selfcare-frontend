@@ -577,7 +577,7 @@
   "stationECList": {
     "title": "Gestisci EC",
     "subtitle": "Gestisci e associa nuovi EC.",
-    "searchPlaceholder": "Cerca per nome EC",
+    "searchPlaceholder": "Cerca per nome EC o codice fiscale EC",
     "csvDownload": "Scarica CSV",
     "associateEcButtonLabel": "Associa EC",
     "dissociateEcSuccessMessage": "EC dissociato con successo",

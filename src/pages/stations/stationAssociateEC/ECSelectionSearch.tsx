@@ -53,7 +53,7 @@ export default function ECSelectionSearch({
     } else {
       setFilteredParties(
         availableEC.filter(
-          (e) => e.institution_name && e.institution_name.toUpperCase().includes(value.toUpperCase())
+          (e) => (e.institution_name && e.institution_name.toUpperCase().includes(value.toUpperCase()) || e.tax_code && e.tax_code.includes(value) )
         )
       );
     }

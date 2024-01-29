@@ -2,7 +2,7 @@ import * as env from 'env-var';
 import {getConfig, Type} from "./config";
 
 export const ENV = {
-    ENV: env.get('REACT_APP_ENV').required().asString(),
+    ENV: env.get('REACT_APP_ENV').required().default('dev').asString(),
     PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', {default: 'ui'}),
 
     PAGOPA_OPERATOR: {
@@ -86,3 +86,4 @@ export const ENV = {
         },
     },
 };
+

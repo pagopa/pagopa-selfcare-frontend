@@ -193,7 +193,7 @@ Props) => {
                           <MenuItem
                             key={key}
                             selected={
-                              formik.values.service && value.includes(formik.values.service)
+                              formik.values.pofService && value.includes(formik.values.pofService)
                                 ? true
                                 : false
                             }

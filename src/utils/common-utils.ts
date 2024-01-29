@@ -13,14 +13,14 @@ export const datePlusDays = (startDate: Date, days: number): Date => {
     return result;
 };
 
-export const downloadBlobAsCSV = (data: any): void => {
+export const downloadBlobAsCSV = (data: any, name: string): void => {
     const objectTempURL = window.URL.createObjectURL(data);
 
     // eslint-disable-next-line no-var
     var tempLink = document.createElement('a');
     // eslint-disable-next-line functional/immutable-data
     tempLink.href = objectTempURL;
-    tempLink.setAttribute('download', 'export-ibans.csv');
+    tempLink.setAttribute('download', name);
 
     document.body.appendChild(tempLink);
     tempLink.click();

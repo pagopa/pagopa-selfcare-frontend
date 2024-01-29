@@ -62,8 +62,8 @@ Props) => {
         Object.entries(forwarderAddresses)
           .map(([key, value]) => value)
           .some((d) =>
-            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
-              ? d.includes(stationDetail.service)
+            stationDetail.pofService && stationDetail.pofService !== '/' && stationDetail.pofService !== ''
+              ? d.includes(stationDetail.pofService)
               : false
           )
       );
@@ -71,8 +71,8 @@ Props) => {
         Object.entries(gpdAddresses)
           .map(([key, value]) => value)
           .some((gpd) =>
-            stationDetail.service && stationDetail.service !== '/' && stationDetail.service !== ''
-              ? gpd.includes(stationDetail.service)
+            stationDetail.pofService && stationDetail.pofService !== '/' && stationDetail.pofService !== ''
+              ? gpd.includes(stationDetail.pofService)
               : false
           )
       );
@@ -171,16 +171,6 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.primitiveVersion')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.primitiveVersion ?? '-'}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
                     {t('stationDetailPageValidation.configuration.intermediaryCode')}
                   </Typography>
                 </Grid>
@@ -189,19 +179,43 @@ Props) => {
                     {stationDetail?.brokerCode ?? '-'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} mt={4}>
-                  <Typography variant="sidenav">
-                    {t('stationDetailPageValidation.configuration.targetService')}
-                  </Typography>
+                
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">{t('stationDetailPageValidation.endpoints.modello1')}</Typography>
                 </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {t('stationDetailPageValidation.configuration.endpoint')}
-                  </Typography>
+                  <Typography variant="body2">{t('stationDetailPageValidation.endpoints.endpointRTConcat')}</Typography>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {endpoint}
+                    {stationDetail?.targetHost}:{stationDetail?.targetPort}{stationDetail?.targetPath}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPageValidation.endpoints.endpointRedirectConcat')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.redirectProtocol ? `${stationDetail?.redirectProtocol.toLowerCase()}://` : ""}{stationDetail?.redirectIp}{stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ""}{stationDetail?.redirectPath}{stationDetail?.redirectQueryString ? `?${stationDetail?.redirectQueryString}` : ""}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">{t('stationDetailPageValidation.endpoints.modelloUnico')}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPageValidation.endpoints.endpointMUConcat')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetHostPof}{stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}{stationDetail?.targetPathPof}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">{t('stationDetailPageValidation.endpoints.primitiveVersion')}</Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.primitiveVersion}
                   </Typography>
                 </Grid>
 
@@ -342,7 +356,7 @@ Props) => {
                     </Grid>
                     <Grid item xs={9}>
                       <Typography variant="body2">
-                        {t('stationDetailPageValidation.infoToComplete.forwarderNewConn')}
+                        {t('stationDetailPageValidation.infoToComplete.forwarderNewConn')} - {stationDetail.ip}{stationDetail.pofService}
                       </Typography>
                     </Grid>
                   </>
@@ -355,7 +369,7 @@ Props) => {
                     </Grid>
                     <Grid item xs={9}>
                       <Typography variant="body2">
-                        {t('stationDetailPageValidation.infoToComplete.gdpDetail')}
+                        {t('stationDetailPageValidation.infoToComplete.gdpDetail')} - {stationDetail.ip}{stationDetail.pofService}
                       </Typography>
                     </Grid>
                   </>

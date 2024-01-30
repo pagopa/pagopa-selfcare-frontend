@@ -171,6 +171,16 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
+                    {t('stationDetailPageValidation.configuration.version')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.version ?? '-'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
                     {t('stationDetailPageValidation.configuration.intermediaryCode')}
                   </Typography>
                 </Grid>

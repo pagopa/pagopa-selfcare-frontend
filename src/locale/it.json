@@ -635,6 +635,7 @@
       "subtitle": "Informazioni a carico dell’ente.",
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
+      "version": "Versione stazione",
       "intermediaryCode": "Codice intermediario",
       "protocol": "Protocollo",
       "port": "Porta",

@@ -668,7 +668,7 @@ export const BackofficeApi = {
             body: {
                 brokerCode: station.brokerCode,
                 broker_description: station.broker_description,
-                version: 1,
+                version: 2,
                 enabled: station.enabled,
                 stationCode: station.stationCode,
                 primitiveVersion: station.primitiveVersion,

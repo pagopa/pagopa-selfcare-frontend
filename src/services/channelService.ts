@@ -125,6 +125,7 @@ export const getChannelCode = (pspCode: string): Promise<ChannelCodeResource> =>
 
 export const getChannelPSPs = (
   channelcode: string,
+  pspName: string,
   page: number,
   limit?: number
 ): Promise<ChannelPspListResource> => {
@@ -132,7 +133,7 @@ export const getChannelPSPs = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getChannelPSPsMocked(page);
   } else {
-    return BackofficeApi.getChannelPSPs(channelcode, page, limit).then((resources) => resources);
+    return BackofficeApi.getChannelPSPs(channelcode, pspName, page, limit).then((resources) => resources);
   }
 };
 

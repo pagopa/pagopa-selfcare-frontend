@@ -283,7 +283,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
                 ...stationDetail,
                 ip: '/api.uat.platform.pagopa.it',
                 protocol: ProtocolEnum.HTTPS,
-                service: '/gpd-paymements/api/v1',
+                service: '/gpd-payments/api/v1',
                 port: 443,
                 targetHost: '',
               }}
@@ -306,7 +306,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     ) as HTMLInputElement;
 
     expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
-      'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
+      'https://api.uat.platform.pagopa.it/gpd-payments/api/v1'
     );
     expect(radioGPD.checked).toBeTruthy();
   });
@@ -344,7 +344,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
 
     expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
-      'https://api.uat.platform.pagopa.it/gpd-paymements/api/v1'
+      'https://api.uat.platform.pagopa.it/gpd-payments/api/v1'
     );
 
     await waitFor(() => userEvent.click(newConnRadio));

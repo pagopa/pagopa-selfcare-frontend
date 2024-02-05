@@ -2,16 +2,13 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: "new", 
+        headless: 'new',
         userDataDir: './user-data',
-        // slowMo: 50,
-        // dumpio: true,
-        // devtools: true
     });
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
-    
+
 
     {
         const targetPage = page;
@@ -57,7 +54,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'pierce/div.MuiGrid-grid-xs-2 div:nth-of-type(4)'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
             offset: {
                 x: 54,
@@ -71,12 +68,15 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     }
     {
         const targetPage = page;
-        const element = await waitForSelector('[id="StationsSearchTableBox"] button.MuiButton-root', targetPage, { timeout, visible: true });
+        const element = await waitForSelector('[id="StationsSearchTableBox"] button.MuiButton-root', targetPage, {
+            timeout,
+            visible: true
+        });
         await element.click();
     }
     {
         const targetPage = page;
-        await targetPage.waitForNetworkIdle({idleTime:3000});
+        await targetPage.waitForNetworkIdle({idleTime: 3000});
     }
     {
         const targetPage = page;
@@ -107,10 +107,10 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'pierce/#iban'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-            await changeSelectElement(element, 'IT60X0542811101000000123456')
+            await changeSelectElement(element, 'IT60X0542811101000000123457')
         } else if ([
             'textarea',
             'text',
@@ -121,9 +121,9 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-            await typeIntoElement(element, 'IT60X0542811101000000123456');
+            await typeIntoElement(element, 'IT60X0542811101000000123457');
         } else {
-            await changeElementValue(element, 'IT60X0542811101000000123456');
+            await changeElementValue(element, 'IT60X0542811101000000123457');
         }
     }
     {
@@ -155,7 +155,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'pierce/#description'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
             offset: {
                 x: 202.34375,
@@ -193,7 +193,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'pierce/#description'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
             await changeSelectElement(element, 'Created by Puppeteer')
@@ -244,12 +244,12 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 "pierce/[data-testid='start-date-test']"
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
-          offset: {
-            x: 8.5,
-            y: 18.875,
-          },
+            offset: {
+                x: 8.5,
+                y: 18.875,
+            },
         });
     }
     {
@@ -281,10 +281,10 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 "pierce/[data-testid='start-date-test']"
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-          await changeSelectElement(element, '10/10/2030')
+            await changeSelectElement(element, '10/10/2030')
         } else if ([
             'textarea',
             'text',
@@ -295,12 +295,11 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-          await typeIntoElement(element, '10/10/2030');
+            await typeIntoElement(element, '10/10/2030');
         } else {
-          await changeElementValue(element, '10/10/2030');
+            await changeElementValue(element, '10/10/2030');
         }
     }
-   
 
 
     /* datePicking startDate - END */
@@ -351,10 +350,10 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 "pierce/[data-testid='end-date-test']"
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         const inputType = await element.evaluate(el => el.type);
         if (inputType === 'select-one') {
-          await changeSelectElement(element, '11/10/2030')
+            await changeSelectElement(element, '11/10/2030')
         } else if ([
             'textarea',
             'text',
@@ -365,12 +364,12 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             'number',
             'email'
         ].includes(inputType)) {
-          await typeIntoElement(element, '11/10/2030');
+            await typeIntoElement(element, '11/10/2030');
         } else {
-          await changeElementValue(element, '11/10/2030');
+            await changeElementValue(element, '11/10/2030');
         }
     }
-    
+
     /* datePicking endDate - END */
 
     {
@@ -408,7 +407,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'text/Conferma'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
             offset: {
                 x: 44.875,
@@ -422,26 +421,26 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         await targetPage.waitForNetworkIdle();
         await scrollIntoViewIfNeeded([
             [
-                'div[data-id="IT60X0542811101000000123456"]'
+                'div[data-id="IT60X0542811101000000123457"]'
             ],
             [
-                'text/IT60X0542811101000000123456'
+                'text/IT60X0542811101000000123457'
             ]
         ], targetPage, timeout);
         const element = await waitForSelectors([
             [
-                'div[data-id="IT60X0542811101000000123456"]'
+                'div[data-id="IT60X0542811101000000123457"]'
             ],
             [
-                'text/IT60X0542811101000000123456'
+                'text/IT60X0542811101000000123457'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
     }
-       
+
 
     await browser.close();
+    console.log("iban added");
 
-    
 
     async function waitForSelectors(selectors, frame, options) {
         for (const selector of selectors) {
@@ -455,7 +454,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     }
 
     async function scrollIntoViewIfNeeded(selectors, frame, timeout) {
-        const element = await waitForSelectors(selectors, frame, { visible: false, timeout });
+        const element = await waitForSelectors(selectors, frame, {visible: false, timeout});
         if (!element) {
             throw new Error(
                 'The element could not be found.'
@@ -656,8 +655,8 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         await element.focus();
         await element.evaluate((input, value) => {
             input.value = value;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            input.dispatchEvent(new Event('change', {bubbles: true}));
         }, value);
     }
 

@@ -11,6 +11,7 @@ import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
 import OperationTable from './components/OperationTable';
 import PTRegistrationData from './components/PTRegistrationData';
+import DownloadSection from './components/DownloadSection';
 
 const DashboardPage = () => {
   const { t } = useTranslation();
@@ -68,8 +69,9 @@ const DashboardPage = () => {
             </Grid>
             <Grid item xs={6}>
               <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
+              <DownloadSection selectedParty={selectedParty}></DownloadSection>
             </Grid>
-
+            
             {selectedParty &&
               selectedParty?.institutionType !== 'PSP' &&
               ENV.FEATURES.OPERATIONTABLE.ENABLED && (

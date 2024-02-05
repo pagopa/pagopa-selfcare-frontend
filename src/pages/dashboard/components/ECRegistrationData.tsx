@@ -34,7 +34,9 @@ const ECRegistrationData = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {'-'}
+          {signinData?.creditorInstitutionDetailsResource?.cbillCode
+            ? signinData?.creditorInstitutionDetailsResource?.cbillCode
+            : "-"}
         </Typography>
       </Grid>
       <Grid item xs={4}>

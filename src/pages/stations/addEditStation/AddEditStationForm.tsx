@@ -28,6 +28,7 @@ import {
   createStation,
   createWrapperStation,
   getStationCode,
+  getStationCodeV2,
   updateStation,
   updateWrapperStationToCheck,
   updateWrapperStationToCheckUpdate,
@@ -48,13 +49,13 @@ import {
   StationOnCreation,
 } from '../../../model/Station';
 import { isOperator } from '../../components/commonFunctions';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import {
   alterStationValuesToFitCategories,
   getStationCategoryFromDetail,
   splitURL,
 } from '../../../utils/station-utils';
 import { ENV } from '../../../utils/env';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
@@ -84,7 +85,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   useEffect(() => {
     if (formAction !== StationFormAction.Edit) {
       setLoadingGeneration(true);
-      getStationCode(stationCodeCleaner)
+      getStationCodeV2(stationCodeCleaner)
         .then((res) => {
           setStationCodeGenerated(res.stationCode);
         })
@@ -126,7 +127,6 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           ip: detail.ip ?? '',
           password: detail.password ?? '',
           port: detail.port ?? 443,
-          primitiveVersion: detail.primitiveVersion ?? 2,
           protocol: detail.protocol ?? undefined,
           proxyConcat: `${detail.proxyHost ?? ''}${
             detail.proxyPort ? ':'.concat(detail.proxyPort.toString()) : ''
@@ -134,25 +134,13 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           proxyHost: detail.proxyHost ?? '',
           proxyPort: detail.proxyPort ?? undefined,
           proxyEnabled: detail.proxyEnabled ?? false,
-          redirectIp: detail.redirectIp ?? '',
-          redirectPath: detail.redirectPath ?? '',
-          redirectPort: detail.redirectPort ?? 443,
-          redirectProtocol: detail.redirectProtocol ?? '',
-          redirectQueryString: detail.redirectQueryString ?? '',
+          
           service: detail.service ?? '',
           stationCode:
             formAction === StationFormAction.Duplicate
               ? stationCodeGenerated
               : detail.stationCode ?? '',
           status: detail?.wrapperStatus,
-          targetHost: detail.targetHost ?? '',
-          targetPath: detail.targetPath ?? '',
-          targetPort: detail.targetPort ?? undefined,
-          targetConcat: `${detail.targetHost ?? ''}${
-            detail.targetPort && detail.targetPort !== 443
-              ? ':'.concat(detail.targetPort.toString())
-              : ''
-          }${detail.targetPath ?? ''}`,
 
           timeoutA: detail.timeoutA ?? 15,
           timeoutB: detail.timeoutB ?? 30,
@@ -162,34 +150,66 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             Object.entries(forwarderAddresses)
               .map(([key, value]) => value)
               .find((d) =>
-                detail.service && detail.service !== '' && detail.service !== '/'
-                  ? d.includes(detail.service)
+                detail.pofService && detail.pofService !== '' && detail.pofService !== '/'
+                  ? d.includes(detail.pofService)
                   : false
               ) ?? '',
           gdpConcat:
             Object.entries(gpdAddresses)
               .map(([key, value]) => value)
               .find((gpd) =>
-                detail.service && detail.service !== '' && detail.service !== '/'
-                  ? gpd.includes(detail.service)
+                detail.pofService && detail.pofService !== '' && detail.pofService !== '/'
+                  ? gpd.includes(detail.pofService)
                   : false
               ) ?? '',
           threadNumber: 1,
+
+          // fields for redirect endpoint
+          redirectIp: detail.redirectIp ?? '',
+          redirectPath: detail.redirectPath ?? '',
+          redirectPort: detail.redirectPort ?? 443,
+          redirectProtocol: detail.redirectProtocol ?? '',
+          redirectQueryString: detail.redirectQueryString ?? '',
+          redirectConcat: `${detail.redirectIp === undefined ? '' : 
+            `${detail.redirectProtocol}://${detail.redirectIp}:${detail.redirectPort}${detail.redirectPath.startsWith('/') ? '' : '/'}${detail.redirectPath}?${detail.redirectQueryString}`
+          }`,
+
+          // fields for RT endpoint
+          targetHost: detail.targetHost ?? '',
+          targetPath: detail.targetPath ?? '',
+          targetPort: detail.targetPort ?? undefined,
+          targetConcat: `${detail.targetHost ?? ''}${
+            detail.targetPort && detail.targetPort !== 443
+              ? ':'.concat(detail.targetPort.toString())
+              : ''
+          }${detail.targetPath ?? ''}`,
+
+          targetHostPof: detail.targetHostPof,
+          targetPathPof: detail.targetPathPof,
+          targetPortPof: detail.targetPortPof,
+          primitiveVersion: detail.primitiveVersion ?? 2,
+          targetPofConcat: `${detail.targetHostPof ?? ''}${
+            detail.targetPortPof && detail.targetPortPof !== 443
+              ? ':'.concat(detail.targetPortPof.toString())
+              : ''
+          }${detail.targetPathPof ?? ''}`,
+
         }
       : {
           brokerCode: brokerCodeCleaner,
           ip: '',
           password: '',
-          port: 443,
+          port: undefined,
           primitiveVersion: 2,
           protocol: undefined,
           proxyConcat: '',
           proxyHost: '',
           proxyPort: undefined,
           proxyEnabled: false,
+          redirectConcat: '',
           redirectIp: '',
           redirectPath: '',
-          redirectPort: 443,
+          redirectPort: undefined,
           redirectProtocol: RedirectProtocolEnum.HTTPS,
           redirectQueryString: '',
           service: '',
@@ -198,7 +218,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           targetConcat: '',
           targetHost: '',
           targetPath: '',
-          targetPort: 443,
+          targetPort: undefined,
+          targetPofConcat: '',
           timeoutA: 15,
           timeoutB: 30,
           timeoutC: 120,
@@ -223,14 +244,14 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     return false;
   };
 
-  const validateURL = (urlToValidate: string) => {
+  const validateURL = (urlToValidate: string, checkProtocol: boolean) => {
     if (urlToValidate === '') {
       return undefined;
     }
     try {
       const url = new URL(urlToValidate);
       // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-      if (!(url.protocol.toString() === 'http:' || url.protocol.toString() === 'https:')) {
+      if (checkProtocol && !(url.protocol.toString() === 'http:' || url.protocol.toString() === 'https:')) {
         return 'Protocollo non valido';
       }
       return undefined;
@@ -258,7 +279,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
             : validatePrimitiveVersion(values.primitiveVersion)
             ? t('addEditStationPage.validation.overVersion')
             : undefined,
-          targetConcat: validateURL(values.targetConcat),
+          targetConcat: validateURL(values.targetConcat, false),
+          redirectConcat: validateURL(values.redirectConcat, true),
+          targetPofConcat: validateURL(values.targetPofConcat, false),
         },
         ...(operator && formAction !== StationFormAction.Create
           ? {
@@ -320,6 +343,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
         stationId: formik.values.stationCode,
       })}`;
+      // eslint-disable-next-line functional/immutable-data
+      values.validationUrl = validationUrl;
+
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
         await createWrapperStation(values);
         redirect(stationCode4Redirect);
@@ -412,7 +438,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         .setValues({
           ...formik.values,
           targetHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
-          targetPort: portSplit > 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+          targetPort: portSplit > 0 ? portSplit : (protocolSplit === 'https:' ? 443 : 80),
           targetPath: pathSplit,
         })
         .catch((e) => console.error(e));
@@ -423,7 +449,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         .setValues({
           ...formik.values,
           targetHost: '',
-          targetPort: 443,
+          targetPort: undefined,
           targetPath: '',
         })
         .catch((e) => console.error(e));
@@ -431,7 +457,74 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   }, [formik.values.targetConcat]);
 
   useEffect(() => {
+    if (formik.values.redirectConcat && formik.values.redirectConcat !== '') {
+      const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
+        formik.values.redirectConcat
+      );
+      const pathSplitBySearch = pathSplit.split("?");
+      
+      formik
+        .setValues({
+          ...formik.values,
+          redirectProtocol: protocolSplit ? protocolSplit.toUpperCase().replace(":", "") as RedirectProtocolEnum : RedirectProtocolEnum.HTTPS,
+          redirectIp: hostSplit,
+          redirectPort: portSplit > 0 ? portSplit : (protocolSplit && protocolSplit.toUpperCase() as RedirectProtocolEnum === RedirectProtocolEnum.HTTPS ? 443 : 80),
+          redirectPath: pathSplitBySearch[0],
+          redirectQueryString: pathSplitBySearch[1],
+        })
+        .catch((e) => console.error(e));
+    }
+
+    if (formik.values.redirectConcat === '') {
+      formik
+        .setValues({
+          ...formik.values,
+          redirectProtocol: RedirectProtocolEnum.HTTPS,
+          redirectIp: '',
+          redirectPort: 443,
+          redirectPath: '',
+          redirectQueryString: ''
+        })
+        .catch((e) => console.error(e));
+    }
+  }, [formik.values.redirectConcat]);
+
+
+  useEffect(() => {
+    if (formik.values.targetPofConcat && formik.values.targetPofConcat !== '') {
+      const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
+        formik.values.targetPofConcat
+      );
+
+      formik
+        .setValues({
+          ...formik.values,
+          targetHostPof: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
+          targetPortPof: portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https:' ? 443 : 80),
+          targetPathPof: pathSplit,
+        })
+        .catch((e) => console.error(e));
+    }
+
+    if (formik.values.targetPofConcat === '') {
+      formik
+        .setValues({
+          ...formik.values,
+          targetHostPof: '',
+          targetPortPof: undefined,
+          targetPathPof: '',
+        })
+        .catch((e) => console.error(e));
+    }
+  }, [formik.values.targetPofConcat]);
+
+
+  useEffect(() => {
     if (formik.values.proxyConcat && formik.values.proxyConcat !== '') {
+      if (!formik.values.proxyConcat.startsWith("http")) {
+        // eslint-disable-next-line functional/immutable-data
+        formik.values.proxyConcat = "http://".concat(formik.values.proxyConcat);
+      }
       const { protocolSplit, hostSplit, portSplit } = splitURL(formik.values.proxyConcat);
 
       formik
@@ -516,36 +609,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   />
                 </Grid>
               ) : null}
-              <Grid container item xs={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  id="primitiveVersion"
-                  name="primitiveVersion"
-                  label={t('addEditStationPage.addForm.fields.primitiveVersion')}
-                  placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
-                  size="small"
-                  disabled={!operator}
-                  InputLabelProps={{ shrink: formik.values.primitiveVersion ? true : false }}
-                  value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
-                  onChange={(e) => handleChangeNumberOnly(e, 'primitiveVersion', formik)}
-                  error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
-                  helperText={formik.touched.primitiveVersion && formik.errors.primitiveVersion}
-                  inputProps={{
-                    type: 'number',
-                    min: 1,
-                    max: 2,
-                    'data-testid': 'primitive-version-test',
-                  }}
-                  required
-                />
-              </Grid>
             </Grid>
           </Box>
 
           <Box sx={inputGroupStyle}>
             <AddEditStationFormSectionTitle
-              title={t('addEditStationPage.addForm.sections.targetService')}
+              title={t('addEditStationPage.addForm.sections.modello1')}
               icon={<MenuBook />}
             />
             <Grid container spacing={2} mt={1}>
@@ -554,8 +623,8 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   fullWidth
                   id="targetConcat"
                   name="targetConcat"
-                  label={t('addEditStationPage.addForm.fields.targetConcat')}
-                  placeholder={t('addEditStationPage.addForm.fields.targetConcat')}
+                  label={t('addEditStationPage.addForm.fields.endpointRTConcat')}
+                  placeholder={t('addEditStationPage.addForm.fields.endpointRTConcat')}
                   size="small"
                   value={formik.values.targetConcat}
                   onChange={formik.handleChange}
@@ -563,9 +632,90 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                   error={formik.touched.targetConcat && Boolean(formik.errors.targetConcat)}
                   helperText={formik.touched.targetConcat && formik.errors.targetConcat}
                   inputProps={{
-                    'data-testid': 'target-targetConcat-test',
+                    'data-testid': 'targetConcat-test',
                   }}
                 />
+              </Grid>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="redirectConcat"
+                  name="redirectConcat"
+                  label={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
+                  placeholder={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
+                  size="small"
+                  value={formik.values.redirectConcat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.redirectConcat && Boolean(formik.errors.redirectConcat)}
+                  helperText={formik.touched.redirectConcat && formik.errors.redirectConcat}
+                  inputProps={{
+                    'data-testid': 'redirectConcat-test',
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={inputGroupStyle}>
+            <AddEditStationFormSectionTitle
+              title={t('addEditStationPage.addForm.sections.modelloUnico')}
+              icon={<MenuBook />}
+            />
+            <Grid container spacing={2} mt={1}>
+              <Grid container item xs={6}>
+                <TextField
+                  fullWidth
+                  id="targetPofConcat"
+                  name="targetPofConcat"
+                  label={t('addEditStationPage.addForm.fields.endpointMUConcat')}
+                  placeholder={t('addEditStationPage.addForm.fields.endpointMUConcat')}
+                  size="small"
+                  value={formik.values.targetPofConcat}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.targetPofConcat && Boolean(formik.errors.targetPofConcat)}
+                  helperText={formik.touched.targetPofConcat && formik.errors.targetPofConcat}
+                  inputProps={{
+                    'data-testid': 'targetPofConcat-test',
+                  }}
+                />
+              </Grid>
+              <Grid container item xs={6}>
+                <FormControl fullWidth>
+                  <InputLabel size="small">
+                    {t('addEditStationPage.addForm.fields.primitiveVersion')}
+                  </InputLabel>
+                  <Select
+                    fullWidth
+                    type="number"
+                    id="primitiveVersion"
+                    name="primitiveVersion"
+                    label={t('addEditStationPage.addForm.fields.primitiveVersion')}
+                    placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
+                    size="small"
+                    value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
+                    onChange={formik.handleChange}
+                    error={formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)}
+                    inputProps={{
+                      'data-testid': 'primitive-version-test',
+                    }}
+                  >
+                    {Object.entries([1, 2]).map(([key, value]) => (
+                      <MenuItem
+                        key={key}
+                        selected={
+                          formik.values.primitiveVersion && value === formik.values.primitiveVersion
+                            ? true
+                            : false
+                          }
+                          value={value}
+                      >
+                        {`${value}`}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Box>

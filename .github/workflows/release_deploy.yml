@@ -116,7 +116,7 @@ jobs:
 
       - name: Build
         run: |
-          export REACT_APP_ENV='${{ inputs.environment }}'
+          export REACT_APP_ENV='${{ needs.setup.outputs.environment }}'
           export INLINE_RUNTIME_CHUNK='false'
 
           export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'

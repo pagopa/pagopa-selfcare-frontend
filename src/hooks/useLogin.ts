@@ -11,7 +11,7 @@ import {fetchPagoPAToken} from '../services/tokenExchangeService';
 
 const mockedUser = {
     uid: '0',
-    taxCode: 'AAAAAA00A00A000A',
+    taxCode: '11111111111',
     name: 'loggedName',
     surname: 'loggedSurname',
     email: 'loggedEmail@aa.aa',
@@ -57,7 +57,7 @@ export const useLogin = () => {
             setUser(mockedUser);
             storageTokenOps.write(CONFIG.TEST.JWT);
             storageUserOps.write(mockedUser);
-            // return;
+            return;
         }
 
         // 2. Check if we are coming from Self Care and have a new token

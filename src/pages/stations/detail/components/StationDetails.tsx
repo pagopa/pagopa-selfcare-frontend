@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {ArrowBack, ManageAccounts} from '@mui/icons-material';
 import {Breadcrumbs, Divider, Grid, Paper, Stack, Typography} from '@mui/material';
 import {Box} from '@mui/system';
@@ -30,6 +31,7 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                     : ''
             }${stationDetail?.targetPath}`;
 
+    // eslint-disable-next-line complexity
     return (
         <Grid container justifyContent={'center'} mb={5}>
             <Grid item p={3} xs={8}>
@@ -145,7 +147,7 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.targetHost}:{stationDetail?.targetPort}{stationDetail?.targetPath}
+                                        {stationDetail && stationDetail.targetHost ? `${stationDetail.targetHost ?? ''}${stationDetail.targetPort ? ':'.concat(stationDetail.targetPort.toString()) : ''}${stationDetail.targetPath ?? ''}` : ''}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
@@ -153,7 +155,7 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.redirectProtocol ? `${stationDetail?.redirectProtocol.toLowerCase()}://` : ""}{stationDetail?.redirectIp}{stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ""}{stationDetail?.redirectPath}{stationDetail?.redirectQueryString ? `?${stationDetail?.redirectQueryString}` : ""}
+                                        {stationDetail && stationDetail.redirectPath ? `${stationDetail.redirectProtocol}://${stationDetail.redirectIp}${stationDetail.redirectPort ? ':'.concat(stationDetail.redirectPort.toString()) : ''}${stationDetail.redirectPath ?? ''}${stationDetail.redirectQueryString ? '?' + stationDetail.redirectQueryString : ''}` : ''}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} mt={2}>
@@ -164,7 +166,7 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.targetHostPof}{stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}{stationDetail?.targetPathPof}
+                                        {stationDetail && stationDetail.targetHostPof ? `${stationDetail.targetHostPof ?? ''}${stationDetail.targetPortPof ? ':'.concat(stationDetail.targetPortPof.toString()) : ''}${stationDetail.targetPathPof ?? ''}` : ''}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>

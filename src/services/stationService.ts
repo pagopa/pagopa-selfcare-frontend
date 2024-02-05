@@ -4,6 +4,7 @@ import { WrapperStationsResource } from '../api/generated/portal/WrapperStations
 import {
   createStationMocked,
   getStationCodeMocked,
+  getStationCodeV2Mocked,
   getStationDetail as getStationDetailMock,
   getStations as getStationsMocked,
   getStationsMerged as getStationsMergedMocked,
@@ -21,13 +22,14 @@ import {
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
-import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
 import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
+import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
+import { ProblemJson } from '../api/generated/portal/ProblemJson';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -75,8 +77,16 @@ export const getStationCode = (code: string): Promise<StationCodeResource> => {
   return BackofficeApi.getStationCode(code).then((resource) => resource);
 };
 
+export const getStationCodeV2 = (code: string): Promise<StationCodeResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getStationCodeV2Mocked(code);
+  }
+  return BackofficeApi.getStationCodeV2(code).then((resource) => resource);
+};
+
 export const getECListByStationCode = (
   stationcode: string,
+  ciName: string,
   page: number,
   limit?: number
 ): Promise<CreditorInstitutionsResource> => {
@@ -84,7 +94,7 @@ export const getECListByStationCode = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getECListByStationCodeMocked(stationcode, page, limit);
   } else {
-    return BackofficeApi.getECListByStationCode(stationcode, page, limit).then(
+    return BackofficeApi.getECListByStationCode(stationcode, ciName, page, limit).then(
       (resources) => resources
     );
   }
@@ -102,7 +112,7 @@ export const dissociateECfromStation = (ecCode: string, stationCode: string): Pr
 export const associateEcToStation = (
   code: string,
   station: CreditorInstitutionStationDto
-): Promise<CreditorInstitutionStationEditResource> => {
+): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return associateEcToStationMocked(code, station);
   }

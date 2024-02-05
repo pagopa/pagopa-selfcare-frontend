@@ -11,7 +11,6 @@ import { dissociateECfromStation, getECListByStationCode } from '../../../servic
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './StationECTableColumns';
-import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import StationECTableEmpty from './StationECTableEmpty';
 
 const rowHeight = 64;
@@ -27,9 +26,12 @@ const emptyECList: CreditorInstitutionsResource = {
   },
 };
 
-type StationECTableProps = { setAlertMessage: any };
+type StationECTableProps = { 
+  setAlertMessage: any;
+  ciNameOrFiscalCodeFilter: string;
+};
 
-export default function StationECTable({ setAlertMessage }: StationECTableProps) {
+export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilter }: StationECTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [error, setError] = useState(false);
@@ -45,10 +47,20 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
 
   const [ecListPage, setECListPage] = useState<CreditorInstitutionsResource>(emptyECList);
   const [page, setPage] = useState<number>(0);
-
+  const [pagePaginator, setPagePaginator] = useState(0);
+  
   const [selectedECCode, setSelectedECCode] = useState<string>('');
 
   const { stationId } = useParams<{ stationId: string }>();
+
+  useEffect(() => {
+    fetchStationECs(page);
+  }, [page, stationId]);
+
+  useEffect(() => {
+    setPagePaginator(0);
+    fetchStationECs(0);
+  }, [ciNameOrFiscalCodeFilter]);
 
   const onRowClick = (ecIdRow: string) => {
     setSelectedECCode(ecIdRow);
@@ -84,7 +96,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
   const fetchStationECs = (currentPage: number) => {
     setLoadingStatus(true);
 
-    getECListByStationCode(stationId, currentPage)
+    getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
       .catch((reason) => {
         handleErrors([
@@ -101,8 +113,6 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
       })
       .finally(() => setLoadingStatus(false));
   };
-
-  useEffect(() => fetchStationECs(page), [page]);
 
   return (
     <>
@@ -142,11 +152,7 @@ export default function StationECTable({ setAlertMessage }: StationECTableProps)
                   ) : (
                     <></>
                   ),
-                Toolbar: () => (
-                  <>
-                    <GridToolbarQuickFilter stationId={stationId}></GridToolbarQuickFilter>
-                  </>
-                ),
+                Toolbar: () => <></>,
                 NoRowsOverlay: () => (
                   <>
                     <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>

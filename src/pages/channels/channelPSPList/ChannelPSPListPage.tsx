@@ -8,8 +8,8 @@ import {useHistory, useParams} from 'react-router';
 
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import ROUTES from '../../../routes';
-// import { mockedChannelPSPs } from '../../../services/__mocks__/channelService';
 import ChannelPSPTable from './ChannelPSPTable';
+import ChannelPSPTableSearchBar from './ChannelPSPTableSearchBar';
 
 const ChannelPSPListPage = () => {
   const { t } = useTranslation();
@@ -17,6 +17,19 @@ const ChannelPSPListPage = () => {
   const { channelId } = useParams<{ channelId: string }>();
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.CHANNELS);
+
+
+  const [pspNameInput, setPspNameInput] = useState<string>('');
+  const [pspNameFilter, setPspNameFilter] = useState<string>('');
+
+  useEffect(() => {
+    const setSearchValue = setTimeout(() => {
+      setPspNameFilter(pspNameInput);
+    }, 500);
+
+    return () => clearTimeout(setSearchValue);
+  }, [pspNameInput]);
+
 
   useEffect(() => {
     if (history.location.state && (history.location.state as any).alertSuccessMessage) {
@@ -106,9 +119,15 @@ const ChannelPSPListPage = () => {
             {alertMessage}
           </Alert>
         )}
+
+        <ChannelPSPTableSearchBar
+          channelId={channelId}
+          pspNameInput={pspNameInput}
+          setPspNameInput={setPspNameInput}
+        />
         <Box display="flex" width="100%" mt={0}>
           <Box pt={0} display="flex" width="100%">
-            <ChannelPSPTable setAlertMessage={setAlertMessage} />
+            <ChannelPSPTable pspNameFilter={pspNameFilter} setAlertMessage={setAlertMessage}  />
           </Box>
         </Box>
       </Grid>

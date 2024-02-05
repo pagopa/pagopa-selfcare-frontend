@@ -51,7 +51,7 @@ const StationDetailPage = () => {
 
         async function getEcListByStationCode(): Promise<any> {
             try {
-                return await getECListByStationCode(stationId, 0);
+                return await getECListByStationCode(stationId, "", 0);
             } catch (e) {
                 return {};
             }
@@ -60,7 +60,7 @@ const StationDetailPage = () => {
         Promise.all([getDetail(), getEcListByStationCode()])
             .then(([stationDetail, ecList]) => {
                 setStationDetail(stationDetail);
-                setECAssociatedNumber(ecList?.page_info?.items_found ?? 0);
+                setECAssociatedNumber(ecList?.page_info?.total_items ?? 0);
             })
             .catch((reason) => {
                 addError({

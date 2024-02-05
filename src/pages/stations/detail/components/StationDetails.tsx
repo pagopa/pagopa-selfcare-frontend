@@ -118,11 +118,13 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.primitiveVersion')}</Typography>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.configuration.version')}
+                                    </Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.primitiveVersion}
+                                        {stationDetail?.version ?? '-'}
                                     </Typography>
                                 </Grid>
 
@@ -134,15 +136,43 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                         {stationDetail?.activationDate?.toLocaleDateString('en-GB') ?? '-'}
                                     </Typography>
                                 </Grid>
+
                                 <Grid item xs={12} mt={2}>
-                                    <Typography variant="sidenav">{t('stationDetailPage.target')}</Typography>
+                                    <Typography variant="sidenav">{t('stationDetailPage.modello1')}</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">{t('stationDetailPage.endpointRT')}</Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.targetHost}:{stationDetail?.targetPort}{stationDetail?.targetPath}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">{t('stationDetailPage.endpointRedirect')}</Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.redirectProtocol ? `${stationDetail?.redirectProtocol.toLowerCase()}://` : ""}{stationDetail?.redirectIp}{stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ""}{stationDetail?.redirectPath}{stationDetail?.redirectQueryString ? `?${stationDetail?.redirectQueryString}` : ""}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} mt={2}>
+                                    <Typography variant="sidenav">{t('stationDetailPage.modelloUnico')}</Typography>
                                 </Grid>
                                 <Grid item xs={3}>
                                     <Typography variant="body2">{t('stationDetailPage.endpoint')}</Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {endpoint}
+                                        {stationDetail?.targetHostPof}{stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}{stationDetail?.targetPathPof}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">{t('stationDetailPage.primitiveVersion')}</Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.primitiveVersion}
                                     </Typography>
                                 </Grid>
 

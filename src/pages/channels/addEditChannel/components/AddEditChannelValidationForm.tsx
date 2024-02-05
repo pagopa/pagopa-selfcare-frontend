@@ -224,6 +224,7 @@ Props) => {
                   label={t('addEditChannelPage.addForm.validationForm.fields.proxyAddress')}
                   size="small"
                   value={
+                    
                     formik.values.proxyUnion === oldConnectionValue ||
                     formik.values.proxyUnion === newConnectionValue
                       ? formik.values.proxyUnion

@@ -184,6 +184,27 @@ export const ecAdminSignedDirect: Party = {
   pspData: undefined,
 };
 
+export const c3f1: Party = {
+  partyId: 'c3f11597-9584-4342-80df-a39571eb7843',
+  externalId: '1122334456',
+  originId: 'c_g922',
+  origin: 'IPA',
+  institutionType: 'PA',
+  description: 'Comune di Portoscuso',
+  fiscalCode: '81001870922',
+  digitalAddress: 'email-ec@test.dummy',
+  status: 'ACTIVE',
+  registeredOffice: 'Via degli Enti Creditori 1',
+  roles: [
+    {
+      partyRole: 'OPERATOR',
+      roleKey: 'operator', // TODO use real product role
+    },
+  ],
+  urlLogo: 'https://checkout.selfcare/institutions/PTECPSPSigned/logo.png',
+  pspData: undefined,
+}
+
 export const ecAdminSignedUndirect: Party = {
   partyId: 'ecAdminSignedUndirect',
   externalId: '1122334455',
@@ -390,6 +411,7 @@ export const mockedParties: Array<Party> = [
   PTPSPSigned,
   PTECSigned,
   PTECPSPSigned,
+  c3f1,
 ];
 
 export const mockedPartyDetail: PartyDetail = {

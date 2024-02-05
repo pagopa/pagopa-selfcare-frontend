@@ -164,7 +164,7 @@ export const pspOperatorUnsigned: Party = {
 };
 
 export const ecAdminSignedDirect: Party = {
-    partyId: '21079fe3-b5eb-4978-bef0-5588d11ab53f',
+    partyId: 'ecAdminSignedDirect',
     externalId: '1122334455',
     originId: 'c_g922',
     origin: 'IPA',

@@ -163,7 +163,6 @@ export function renderCell(
         paddingTop: '-16px',
         paddingBottom: '-16px',
         marginLeft: '11px',
-        cursor: 'pointer',
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
       }}
@@ -233,7 +232,7 @@ export function showStationID(params: GridRenderCellParams) {
 export function showStatus(params: GridRenderCellParams) {
   return renderCell(
     params,
-    <Box sx={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Chip
         label={
           params.row.wrapperStatus === 'APPROVED'
@@ -245,7 +244,6 @@ export function showStatus(params: GridRenderCellParams) {
         }
         aria-label="Status"
         sx={{
-          cursor: 'pointer',
           fontSize: '10px',
           fontWeight: 'fontWeightRegular',
           color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',

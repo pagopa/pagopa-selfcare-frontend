@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: "new", 
+        headless: 'new',
         userDataDir: './user-data',
         // slowMo: 50,
         // dumpio: true,
@@ -11,7 +11,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
-    
+
 
     {
         const targetPage = page;
@@ -57,7 +57,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'pierce/div.MuiGrid-grid-xs-2 div:nth-of-type(4)'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
             offset: {
                 x: 54,
@@ -75,20 +75,20 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         const targetPage = page;
         await scrollIntoViewIfNeeded([
             [
-                'button[data-testid="open-IT60X0542811101000000123456"]'
+                'button[data-testid="open-IT60X0542811101000000123457"]'
             ]
-            
+
         ], targetPage, timeout);
         const element = await waitForSelectors([
             [
-                'button[data-testid="open-IT60X0542811101000000123456"]'
+                'button[data-testid="open-IT60X0542811101000000123457"]'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
-          offset: {
-            x: 10.953125,
-            y: 13.8125,
-          },
+            offset: {
+                x: 10.953125,
+                y: 13.8125,
+            },
         });
     }
     {
@@ -97,7 +97,9 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     }
     {
         const targetPage = page;
-        await page.evaluate(() => { window.scroll(0,0); });
+        await page.evaluate(() => {
+            window.scroll(0, 0);
+        });
         await scrollIntoViewIfNeeded([
             [
                 'aria/Elimina'
@@ -131,12 +133,12 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
             [
                 'text/Elimina'
             ]
-        ], targetPage, { timeout, visible: true });
+        ], targetPage, {timeout, visible: true});
         await element.click({
-          offset: {
-            x: 49.4375,
-            y: 24,
-          },
+            offset: {
+                x: 49.4375,
+                y: 24,
+            },
         });
         {
             const targetPage = page;
@@ -144,24 +146,31 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         }
         {
             const targetPage = page;
-            await targetPage.waitForNetworkIdle();
-            await scrollIntoViewIfNeeded([
-                [
-                    'text/Codice IBAN'
-                ]
-            ], targetPage, timeout);
-            const element = await waitForSelectors([            
-                [
-                    'text/Codice IBAN'
-                ]
-            ], targetPage, { timeout, visible: true });
+            await puppeteer.Locator.race([
+                targetPage.locator('::-p-aria(Elimina IBAN[role=\\"button\\"])'),
+                targetPage.locator("[data-testid='confirm-button-test']"),
+                targetPage.locator('::-p-xpath(//*[@data-testid=\\"confirm-button-test\\"])'),
+                targetPage.locator(":scope >>> [data-testid='confirm-button-test']")
+            ])
+                .setTimeout(timeout)
+                .click({
+                    offset: {
+                        x: 65,
+                        y: 34.703125,
+                    },
+                });
         }
+
     }
-       
+    {
+        const targetPage = page;
+        await targetPage.waitForNetworkIdle();
+    }
+
 
     await browser.close();
+    console.log("iban deleted");
 
-    
 
     async function waitForSelectors(selectors, frame, options) {
         for (const selector of selectors) {
@@ -175,7 +184,7 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
     }
 
     async function scrollIntoViewIfNeeded(selectors, frame, timeout) {
-        const element = await waitForSelectors(selectors, frame, { visible: false, timeout });
+        const element = await waitForSelectors(selectors, frame, {visible: false, timeout});
         if (!element) {
             throw new Error(
                 'The element could not be found.'
@@ -376,8 +385,8 @@ const puppeteer = require('puppeteer'); // v13.0.0 or later
         await element.focus();
         await element.evaluate((input, value) => {
             input.value = value;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            input.dispatchEvent(new Event('change', {bubbles: true}));
         }, value);
     }
 

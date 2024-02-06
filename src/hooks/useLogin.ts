@@ -78,7 +78,7 @@ export const useLogin = () => {
         const jwt = JSON.parse(atob(token.split('.')[1]));
 
         // If there are no credentials, it is impossible to get the user, so
-        if (!token || jwt.exp < Date.now()) {
+        if (!token || (jwt.exp * 1000) < Date.now()) {
             // Remove any partial data that might have remained, just for safety
             storageUserOps.delete();
             // Go to the login view

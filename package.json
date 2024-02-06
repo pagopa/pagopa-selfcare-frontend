@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.14.18-2-PASELC-745-problema-creazione-stazione",
+  "version": "1.14.19",
   "homepage": "ui",
   "private": true,
   "scripts": {

@@ -77,8 +77,9 @@ export const useLogin = () => {
         const token = storageTokenOps.read();
         const jwt = JSON.parse(atob(token.split('.')[1]));
 
+        console.log("Expired?", jwt.exp, Date.now(), jwt.exp < Date.now());
         // If there are no credentials, it is impossible to get the user, so
-        if (!token || jwt.exp < Date.now()) {
+        if (!token) {
             // Remove any partial data that might have remained, just for safety
             storageUserOps.delete();
             // Go to the login view

@@ -113,7 +113,6 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
         } = splitURL(station.gdpConcat);
 
         const protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        console.log(JSON.stringify(station));
         const port = portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https:' ? 443 : 80);
 
         // IP/PORT/SERVICE/PROTOCOL fields will be valorized with GPD values

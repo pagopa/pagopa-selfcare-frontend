@@ -140,7 +140,6 @@ const IbanDetailPage = () => {
                             active={isIbanValid(iban)}
                             iban={ibanId}
                             setShowDeleteModal={(value) => {
-                                console.log("click delete", lastIban);
                                 if (!lastIban) {
                                     return setShowDeleteModal(value);
                                 } else {

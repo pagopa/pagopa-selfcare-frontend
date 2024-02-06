@@ -162,7 +162,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 redirectPort: detail.redirectPort ?? undefined,
                 redirectPath: detail.redirectPath ?? '',
                 redirectQueryString: detail.redirectQueryString ?? '',
-                redirectConcat: detail.redirectPath ? `${detail.redirectProtocol}://${detail.redirectIp}${detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''}${detail.redirectPath ?? ''}${detail.redirectQueryString ? '?' + detail.redirectQueryString : ''}` : '',
+                redirectConcat: detail.redirectPath ? `${detail.redirectProtocol.toLowerCase()}://${detail.redirectIp}${detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''}${detail.redirectPath ?? ''}${detail.redirectQueryString ? '?' + detail.redirectQueryString : ''}` : '',
 
 
                 // fields for RT endpoint
@@ -421,13 +421,12 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             formik
                 .setValues({
                     ...formik.values,
-                    targetHost: hostSplit ? protocolSplit ?? '' + "//" + hostSplit : '',
-                    targetPort: portSplit > 0 ? portSplit : (protocolSplit === 'https:' ? 443 : 80),
+                    targetHost: hostSplit ? hostSplit : '',
+                    targetPort: portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
                     targetPath: pathSplit,
                 })
                 .catch((e) => console.error(e));
         }
-
         if (formik.values.targetConcat === '') {
             formik
                 .setValues({
@@ -450,7 +449,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             formik
                 .setValues({
                     ...formik.values,
-                    redirectProtocol: protocolSplit ? protocolSplit.toUpperCase().replace(":", "") as RedirectProtocolEnum : RedirectProtocolEnum.HTTPS.toLowerCase(),
+                    redirectProtocol: protocolSplit ? protocolSplit.toUpperCase() as RedirectProtocolEnum : RedirectProtocolEnum.HTTPS.toUpperCase(),
                     redirectIp: hostSplit,
                     redirectPort: portSplit > 0 ? portSplit : (protocolSplit && protocolSplit.toUpperCase() as RedirectProtocolEnum === RedirectProtocolEnum.HTTPS ? 443 : 80),
                     redirectPath: pathSplitBySearch[0] ?? '',
@@ -463,7 +462,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             formik
                 .setValues({
                     ...formik.values,
-                    redirectProtocol: RedirectProtocolEnum.HTTPS,
+                    redirectProtocol: RedirectProtocolEnum.HTTPS.toUpperCase(),
                     redirectIp: '',
                     redirectPort: 443,
                     redirectPath: '',
@@ -483,8 +482,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             formik
                 .setValues({
                     ...formik.values,
-                    targetHostPof: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
-                    targetPortPof: portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https:' ? 443 : 80),
+                    targetHostPof: hostSplit ? hostSplit : '',
+                    targetPortPof: portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https' ? 443 : 80),
                     targetPathPof: pathSplit,
                 })
                 .catch((e) => console.error(e));
@@ -514,8 +513,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             formik
                 .setValues({
                     ...formik.values,
-                    proxyHost: `${protocolSplit ? protocolSplit + '//' : ''}${hostSplit}`,
-                    proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80,
+                    proxyHost: `${protocolSplit ? protocolSplit + '://' : ''}${hostSplit}`,
+                    proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https' ? 443 : 80,
                     proxyEnabled: true,
                 })
                 .catch((e) => console.error(e));

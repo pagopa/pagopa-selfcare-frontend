@@ -66,7 +66,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, "PPAYITR1XXX")
+      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
         .then((res) => {
       
             if(res?.bundles){

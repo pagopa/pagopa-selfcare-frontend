@@ -1,17 +1,16 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import { Box, Pagination, Typography } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { getCommissionPackagePsp } from '../../../services/__mocks__/commissionPackageService';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
-import { CommissionPackageListResource } from '../../../model/CommissionPackage';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { getBundleListByPSP } from '../../../services/bundleService';
+import { Bundles } from '../../../api/generated/portal/Bundles';
 
 type Props = {
   packageNameFilter: string;
@@ -21,14 +20,27 @@ type Props = {
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyCommissionPackageList: CommissionPackageListResource = {
-  commPackagesList: [],
-  pageInfo: {
+const emptyCommissionPackageList: Bundles = {
+  bundles: [],
+  page_info: {
     items_found: 0,
     limit: 0,
     page: 0,
     total_pages: 0,
   },
+};
+
+const mapBundle = (packageType : string) => {
+  switch(packageType) {
+    case "commissionPackagesPage.globalPackages":
+      return "GLOBAL";
+    case"commissionPackagesPage.publicPackages":
+      return "PUBLIC";
+    case"commissionPackagesPage.privatePackages":
+      return "PRIVATE";
+    default:
+      return "";
+  }
 };
 
 const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
@@ -40,13 +52,8 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
-  const [commissionPackagePsp, setCommissionPackagePsp] = useState<CommissionPackageListResource>(
-    emptyCommissionPackageList
-  );
 
-  const [listFiltered, setListFiltered] = useState<CommissionPackageListResource>(
-    emptyCommissionPackageList
-  );
+  const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionPackageList);
   const [page, setPage] = useState(0);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
@@ -55,31 +62,19 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
     setLoadingTable(status);
   };
 
-  const filterList = (name: string) => {
-    if (name !== '') {
-      return commissionPackagePsp.commPackagesList.filter((item) =>
-        item.packageName.toUpperCase().includes(name.toUpperCase())
-      );
-    }
-    return commissionPackagePsp.commPackagesList;
-  };
-
+  const pageLimit = 5;
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getCommissionPackagePsp(brokerCode)
+      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
         .then((res) => {
-          setCommissionPackagePsp(res);
+            console.log("RSASDSADAS", res);
+            setListFiltered(res);
         })
-        .catch((reason) => console.error(reason))
+        .catch((reason) => setError(reason))
         .finally(() => setLoadingStatus(false));
     }
   }, [page, brokerCode]);
-
-  useEffect(() => {
-    const filteredList = filterList(packageNameFilter);
-    setListFiltered({ ...commissionPackagePsp, commPackagesList: [...filteredList] });
-  }, [packageNameFilter, commissionPackagePsp]);
 
   return (
     <React.Fragment>
@@ -94,8 +89,8 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
       >
         {error && !loading ? (
           <>{error}</>
-        ) : !error && !loading && listFiltered.commPackagesList.length === 0 ? (
-          <CommissionPackagesEmpty packageType={packageType} />
+        ) : !error && !loading && listFiltered?.bundles?.length === 0 ? (
+          <CommissionPackagesEmpty packageType={t(packageType)} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -111,7 +106,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                 <>
                   <Pagination
                     color="primary"
-                    count={listFiltered.pageInfo.total_pages ?? 0}
+                    count={listFiltered?.page_info?.total_pages ?? 0}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />
@@ -154,9 +149,9 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"
-            rowCount={listFiltered.commPackagesList.length}
+            rowCount={listFiltered?.bundles?.length}
             rowHeight={rowHeight}
-            rows={listFiltered.commPackagesList}
+            rows={listFiltered?.bundles ?? []}
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />

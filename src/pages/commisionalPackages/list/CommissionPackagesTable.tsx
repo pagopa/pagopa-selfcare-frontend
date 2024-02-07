@@ -66,12 +66,15 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   useEffect(() => {
     if (brokerCode) {
       setLoadingStatus(true);
-      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
+      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, "PPAYITR1XXX")
         .then((res) => {
-            console.log("RSASDSADAS", res);
-            setListFiltered(res);
+      
+            if(res?.bundles){
+              const formattedBundles = res?.bundles?.map((el, ind) => ({...el, id: `bundle-${ind}`}));
+              setListFiltered({bundles: formattedBundles, page_info: res.page_info});
+            }
         })
-        .catch((reason) => setError(reason))
+        .catch((reason) => console.log(reason))
         .finally(() => setLoadingStatus(false));
     }
   }, [page, brokerCode]);
@@ -111,41 +114,13 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />
                 </>
-              ),
-              NoRowsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
-              // eslint-disable-next-line sonarjs/no-identical-functions
-              NoResultsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="stationsPage.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="stationsPage.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
+              )
             }}
             componentsProps={{
               toolbar: {
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
-            getRowId={(r) => r.packageName}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"

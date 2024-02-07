@@ -11,12 +11,12 @@ import ROUTES from '../../../routes';
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
-      field: 'packageName',
+      field: 'name',
       cellClassName: 'justifyContentBold',
       headerName: t('commissionPackagesPage.list.headerFields.packageName'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 485,
+      minWidth: 400,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -25,39 +25,39 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'startDate',
+      field: 'validity_date_from',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.startDate'),
       align: 'left',
       headerAlign: 'left',
-      maxWidth: 200,
+      maxWidth: 150,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.startDate?.toLocaleDateString('en-GB'), undefined),
+        renderCell(params.row.validity_date_from?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'endDate',
+      field: 'validity_date_to',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.endDate'),
       align: 'left',
       headerAlign: 'left',
-      maxWidth: 200,
+      maxWidth: 150,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.endDate?.toLocaleDateString('en-GB'), undefined),
+        renderCell(params.row.validity_date_to?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'Touchpoint',
+      field: 'touchpoint',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.Touchpoint'),
+      headerName: t('commissionPackagesPage.list.headerFields.touchpoint'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 220,
@@ -69,7 +69,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'paymentType',
+      field: 'payment_type',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.paymentType'),
       align: 'left',
@@ -78,7 +78,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.touchpoint),
+      renderCell: (params) => renderCell(params.row.payment_type),
       sortable: false,
       flex: 4,
     },
@@ -88,7 +88,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       headerName: t('commissionPackagesPage.list.headerFields.amountRange'),
       align: 'left',
       headerAlign: 'left',
-      width: 145,
+      width: 200,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -172,15 +172,14 @@ export function renderCell(
 
 export function showCustomHeader(params: GridColumnHeaderParams) {
   return (
-    <React.Fragment>
       <Typography
         color="colorTextPrimary"
         variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 5 }}
+        justifyContent="center"
+        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 2}}
       >
         {params.colDef.headerName}
       </Typography>
-    </React.Fragment>
   );
 }
 
@@ -204,7 +203,7 @@ export function showPackageName(params: GridRenderCellParams) {
                   WebkitBoxOrient: 'vertical' as const,
                 }}
               >
-                {params.row.packageName}
+                {params.row.name}
               </Typography>
             </Grid>
           </Grid>
@@ -223,7 +222,7 @@ export function showAmountRange(params: GridRenderCellParams) {
           <Grid container sx={{ width: '100%' }}>
             <Grid item xs={9} sx={{ width: '100%' }}>
               <Typography variant="body2">
-                {`${params.row.rangeAmountFrom} € - ${params.row.rangeAmountTo} €`}
+                {`${params.row.min_payment_amount} € - ${params.row.max_payment_amount} €`}
               </Typography>
             </Grid>
           </Grid>

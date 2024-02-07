@@ -100,7 +100,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {ENV.FEATURES.COMMISSION_PACKAGES.ENABLED && selectedParty?.institutionType === 'PSP' && (
+                    {ENV.FEATURES.COMMISSION_PACKAGES.ENABLED && hasPermission("commission-packages") && (
                         <SidenavItem
                             title={t('sideMenu.commPackages.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_PACKAGES))}

@@ -50,8 +50,6 @@ export const permissions = {
     ],
     iban: [ROLE.EC_DIRECT_ADMIN, ROLE.EC_ADMIN],
     'commission-packages': [
-        ROLE.EC_DIRECT_ADMIN,
-        ROLE.EC_ADMIN,
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_ADMIN,
     ],

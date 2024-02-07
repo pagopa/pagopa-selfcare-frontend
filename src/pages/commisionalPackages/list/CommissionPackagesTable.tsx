@@ -1,9 +1,9 @@
-import { Box, Pagination, Typography } from '@mui/material';
+import { Box, Pagination } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import { LOADING_TASK_COMMISSION_PACKAGE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
@@ -30,53 +30,59 @@ const emptyCommissionPackageList: Bundles = {
   },
 };
 
-const mapBundle = (packageType : string) => {
-  switch(packageType) {
-    case "commissionPackagesPage.globalPackages":
-      return "GLOBAL";
-    case"commissionPackagesPage.publicPackages":
-      return "PUBLIC";
-    case"commissionPackagesPage.privatePackages":
-      return "PRIVATE";
+const mapBundle = (packageType: string) => {
+  switch (packageType) {
+    case 'commissionPackagesPage.globalPackages':
+      return 'GLOBAL';
+    case 'commissionPackagesPage.publicPackages':
+      return 'PUBLIC';
+    case 'commissionPackagesPage.privatePackages':
+      return 'PRIVATE';
     default:
-      return "";
+      return '';
   }
 };
 
+
 const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const { t } = useTranslation();
-
-  const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [loading, setLoadingTable] = useState(false);
   const [error, setError] = useState(false);
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
-
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_LIST);
+  const columns: Array<GridColDef> = buildColumnDefs(t);
   const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionPackageList);
   const [page, setPage] = useState(0);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
-    setLoadingTable(status);
   };
 
   const pageLimit = 5;
+  const getBundleList = () => {
+    setLoadingStatus(true);
+    getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
+      .then((res) => {
+        if (res?.bundles) {
+          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+          setListFiltered({ bundles: formattedBundles, page_info: res.page_info });
+        }
+      })
+      .catch((reason) => setError(reason))
+      .finally(() => setLoadingStatus(false));
+  };
+
   useEffect(() => {
     if (brokerCode) {
-      setLoadingStatus(true);
-      getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
-        .then((res) => {
-      
-            if(res?.bundles){
-              const formattedBundles = res?.bundles?.map((el, ind) => ({...el, id: `bundle-${ind}`}));
-              setListFiltered({bundles: formattedBundles, page_info: res.page_info});
-            }
-        })
-        .catch((reason) => console.log(reason))
-        .finally(() => setLoadingStatus(false));
+      const identifier = setTimeout(() => {
+        getBundleList();
+      }, 500);
+      return () => {
+        clearTimeout(identifier);
+      };
     }
+    return () => null;
   }, [page, brokerCode]);
 
   return (
@@ -90,9 +96,9 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
         }}
         justifyContent="start"
       >
-        {error && !loading ? (
+        {error ? (
           <>{error}</>
-        ) : !error && !loading && listFiltered?.bundles?.length === 0 ? (
+        ) : listFiltered?.bundles?.length === 0 ? (
           <CommissionPackagesEmpty packageType={t(packageType)} />
         ) : (
           <CustomDataGrid
@@ -114,7 +120,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />
                 </>
-              )
+              ),
             }}
             componentsProps={{
               toolbar: {

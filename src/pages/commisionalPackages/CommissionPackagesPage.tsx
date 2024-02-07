@@ -1,13 +1,14 @@
 import { Alert, Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { LOADING_TASK_RETRIEVE_STATIONS } from '../../utils/constants';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import CommissionPackagesEmpty from './list/CommissionPackagesEmpty';
 import CommissionPackagesTable from './list/CommissionPackagesTable';
 import CommissionPackagesSearchBar from './list/CommissionPackagesSearchBar';
+
 
 type Props = {
   children?: React.ReactNode;

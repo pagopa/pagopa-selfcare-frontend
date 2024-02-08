@@ -22,7 +22,7 @@ const headerHeight = 56;
 
 const emptyCommissionPackageList: Bundles = {
   bundles: [],
-  page_info: {
+  pageInfo: {
     items_found: 0,
     limit: 0,
     page: 0,
@@ -66,7 +66,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
       .then((res) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
-          setListFiltered({ bundles: formattedBundles, page_info: res.page_info });
+          setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
         }
       })
       .catch((reason) => setError(reason))
@@ -115,7 +115,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                 <>
                   <Pagination
                     color="primary"
-                    count={listFiltered?.page_info?.total_pages ?? 1}
+                    count={listFiltered?.pageInfo?.total_pages ?? 1}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />

@@ -12,15 +12,15 @@ export const mockedCommissionPackagePspList: Bundles = {
   bundles: [
     {
       name: 'Lorem ipsum',
-      validity_date_from: new Date(),
-      validity_date_to: new Date(),
+      validityDateFrom: new Date(),
+      validityDateTo: new Date(),
       touchpoint: 'Checkout',
-      payment_type: mockedPaymentTypes?.payment_types?.[0]?.payment_type,
-      min_payment_amount: 0,
-      max_payment_amount: 150,
+      paymentType: mockedPaymentTypes?.payment_types?.[0]?.payment_type,
+      minPaymentAmount: 0,
+      maxPaymentAmount: 150,
     },
   ],
-  page_info: {
+  pageInfo: {
     items_found: 1,
     limit: 10,
     page: 0,

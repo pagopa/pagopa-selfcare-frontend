@@ -25,7 +25,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'validity_date_from',
+      field: 'validityDateFrom',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.startDate'),
       align: 'left',
@@ -35,12 +35,12 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.validity_date_from?.toLocaleDateString('en-GB'), undefined),
+        renderCell(params.row.validityDateFrom?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
     {
-      field: 'validity_date_to',
+      field: 'validityDateTo',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.endDate'),
       align: 'left',
@@ -50,7 +50,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.validity_date_to?.toLocaleDateString('en-GB'), undefined),
+        renderCell(params.row.validityDateTo?.toLocaleDateString('en-GB'), undefined),
       sortable: false,
       flex: 4,
     },
@@ -69,7 +69,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'payment_type',
+      field: 'paymentType',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionPackagesPage.list.headerFields.paymentType'),
       align: 'left',
@@ -78,7 +78,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.payment_type),
+      renderCell: (params) => renderCell(params.row.paymentType),
       sortable: false,
       flex: 4,
     },
@@ -222,7 +222,7 @@ export function showAmountRange(params: GridRenderCellParams) {
           <Grid container sx={{ width: '100%' }}>
             <Grid item xs={9} sx={{ width: '100%' }}>
               <Typography variant="body2">
-                {`${params.row.min_payment_amount} € - ${params.row.max_payment_amount} €`}
+                {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
               </Typography>
             </Grid>
           </Grid>

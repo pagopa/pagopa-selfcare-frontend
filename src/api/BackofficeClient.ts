@@ -10,7 +10,6 @@ import {NodeOnSignInPSP} from '../model/Node';
 import {PSPDirectDTO} from '../model/PSP';
 import {StationOnCreation} from '../model/Station';
 import {ChannelsResource} from './generated/portal/ChannelsResource';
-import {createClient, WithDefaultsT} from './generated/portal/client';
 import {PspChannelsResource} from './generated/portal/PspChannelsResource';
 import {ChannelDetailsResource} from './generated/portal/ChannelDetailsResource';
 import {PspChannelPaymentTypes} from './generated/portal/PspChannelPaymentTypes';
@@ -61,11 +60,12 @@ import { ProblemJson } from './generated/portal/ProblemJson';
 import { Bundles } from './generated/portal/Bundles';
 import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
+import { WithDefaultsT, createClient } from './generated/portal/client';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
-const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
+const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation : any) => (params: any) => {
     const token = storageTokenOps.read();
     return wrappedOperation({
         ...params,

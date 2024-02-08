@@ -1,13 +1,14 @@
 import { Alert, Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { TitleBox, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { LOADING_TASK_RETRIEVE_STATIONS } from '../../utils/constants';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import CommissionPackagesEmpty from './list/CommissionPackagesEmpty';
 import CommissionPackagesTable from './list/CommissionPackagesTable';
 import CommissionPackagesSearchBar from './list/CommissionPackagesSearchBar';
+
 
 type Props = {
   children?: React.ReactNode;
@@ -20,11 +21,6 @@ const CommissionPackagesPage = () => {
   const history = useHistory();
   const [value, setValue] = useState(2);
   const [packageNameInput, setPackageNameInput] = useState<string>('');
-  const [packageName, setPackageName] = useState<string>('');
-
-  useEffect(() => {
-    setPackageName(packageNameInput);
-  }, [packageNameInput]);
 
   useEffect(() => {
     window.addEventListener('beforeunload', clearLocationState);
@@ -109,21 +105,27 @@ const CommissionPackagesPage = () => {
                 centered
                 variant="fullWidth"
               >
-                <Tab label={t('commissionPackagesPage.globalPackages')} {...a11yProps(0)} />
+                <Tab label={t('commissionPackagesPage.globalPackages')} {...a11yProps(0)}/>
                 <Tab label={t('commissionPackagesPage.publicPackages')} {...a11yProps(1)} />
                 <Tab label={t('commissionPackagesPage.privatePackages')} {...a11yProps(2)} />
               </Tabs>
             </Box>
             <CustomTabPanel valueTab={value} index={0}>
-              <CommissionPackagesEmpty packageType={t('commissionPackagesPage.globalPackages')} />
+              <CommissionPackagesTable
+                packageType={'commissionPackagesPage.globalPackages'}
+                packageNameFilter={packageNameInput}
+              />
             </CustomTabPanel>
             <CustomTabPanel valueTab={value} index={1}>
-              <CommissionPackagesEmpty packageType={t('commissionPackagesPage.publicPackages')} />
+              <CommissionPackagesTable
+                packageType={'commissionPackagesPage.publicPackages'}
+                packageNameFilter={packageNameInput}
+              />
             </CustomTabPanel>
             <CustomTabPanel valueTab={value} index={2}>
               <CommissionPackagesTable
-                packageType={t('commissionPackagesPage.privatePackages')}
-                packageNameFilter={packageName}
+                packageType={'commissionPackagesPage.privatePackages'}
+                packageNameFilter={packageNameInput}
               />
             </CustomTabPanel>
           </Box>

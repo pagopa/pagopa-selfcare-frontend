@@ -824,9 +824,9 @@
       "noCommPackages": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
       "headerFields": {
         "packageName": "Nome pacchetto",
-        "startDate": "inizio validità",
-        "endDate": "fine validità",
-        "Touchpoint": "Touchpoint",
+        "startDate": "Inizio validità",
+        "endDate": "Fine validità",
+        "touchpoint": "Touchpoint",
         "paymentType": "Tipo di pagamento",
         "amountRange": "Fascia importo"
       },

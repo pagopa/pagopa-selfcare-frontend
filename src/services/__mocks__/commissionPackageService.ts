@@ -1,3 +1,4 @@
+import { Bundles } from '../../api/generated/portal/Bundles';
 import { PaymentTypes } from '../../api/generated/portal/PaymentTypes';
 import {
   CommissionPackageListResource,
@@ -7,16 +8,16 @@ import {
 } from '../../model/CommissionPackage';
 import { mockedPaymentTypes, mockedStationsMerged } from '../__mocks__/channelService';
 
-export const mockedCommissionPackagePspList: CommissionPackageListResource = {
-  commPackagesList: [
+export const mockedCommissionPackagePspList: Bundles = {
+  bundles: [
     {
-      packageName: 'Lorem ipsum',
-      startDate: new Date(),
-      endDate: new Date(),
+      name: 'Lorem ipsum',
+      validityDateFrom: new Date(),
+      validityDateTo: new Date(),
       touchpoint: 'Checkout',
-      paymentType: mockedPaymentTypes!.payment_types![0],
-      rangeAmountFrom: 0,
-      rangeAmountTo: 150,
+      paymentType: mockedPaymentTypes?.payment_types?.[0]?.payment_type,
+      minPaymentAmount: 0,
+      maxPaymentAmount: 150,
     },
   ],
   pageInfo: {
@@ -64,7 +65,7 @@ export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array
 
 export const getCommissionPackagePsp = (
   _brokerCode: string
-): Promise<CommissionPackageListResource> =>
+): Promise<Bundles> =>
   new Promise((resolve) => resolve(mockedCommissionPackagePspList));
 
 export const getPaymentTypes = (): Promise<PaymentTypes> =>

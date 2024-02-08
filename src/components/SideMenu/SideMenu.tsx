@@ -108,7 +108,7 @@ export default function SideMenu() {
                                 pathname === ROUTES.COMMISSION_PACKAGES ||
                                 pathname.startsWith(ROUTES.COMMISSION_PACKAGES)
                             }
-                            icon={ExtensionIcon}
+                            icon={EuroIcon}
                             disabled={isDisabled}
                             dataTestId="commission-packages-test"
                         />

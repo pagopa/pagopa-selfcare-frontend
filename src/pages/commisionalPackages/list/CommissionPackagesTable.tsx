@@ -1,17 +1,16 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import { Box, Pagination } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { getCommissionPackagePsp } from '../../../services/__mocks__/commissionPackageService';
-import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import { LOADING_TASK_COMMISSION_PACKAGE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
-import { CommissionPackageListResource } from '../../../model/CommissionPackage';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { getBundleListByPSP } from '../../../services/bundleService';
+import { Bundles } from '../../../api/generated/portal/Bundles';
 
 type Props = {
   packageNameFilter: string;
@@ -21,8 +20,8 @@ type Props = {
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyCommissionPackageList: CommissionPackageListResource = {
-  commPackagesList: [],
+const emptyCommissionPackageList: Bundles = {
+  bundles: [],
   pageInfo: {
     items_found: 0,
     limit: 0,
@@ -31,55 +30,60 @@ const emptyCommissionPackageList: CommissionPackageListResource = {
   },
 };
 
+const mapBundle = (packageType: string) => {
+  switch (packageType) {
+    case 'commissionPackagesPage.globalPackages':
+      return 'GLOBAL';
+    case 'commissionPackagesPage.publicPackages':
+      return 'PUBLIC';
+    case 'commissionPackagesPage.privatePackages':
+      return 'PRIVATE';
+    default:
+      return '';
+  }
+};
+
+
 const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const { t } = useTranslation();
-
-  const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [loading, setLoadingTable] = useState(false);
   const [error, setError] = useState(false);
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
-  const [commissionPackagePsp, setCommissionPackagePsp] = useState<CommissionPackageListResource>(
-    emptyCommissionPackageList
-  );
-
-  const [listFiltered, setListFiltered] = useState<CommissionPackageListResource>(
-    emptyCommissionPackageList
-  );
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_LIST);
+  const columns: Array<GridColDef> = buildColumnDefs(t);
+  const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionPackageList);
   const [page, setPage] = useState(0);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
-    setLoadingTable(status);
   };
 
-  const filterList = (name: string) => {
-    if (name !== '') {
-      return commissionPackagePsp.commPackagesList.filter((item) =>
-        item.packageName.toUpperCase().includes(name.toUpperCase())
-      );
-    }
-    return commissionPackagePsp.commPackagesList;
+  const pageLimit = 5;
+  const getBundleList = () => {
+    setLoadingStatus(true);
+    getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, `PSP${brokerCode}`)
+      .then((res) => {
+        if (res?.bundles) {
+          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+          setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+        }
+      })
+      .catch((reason) => setError(reason))
+      .finally(() => setLoadingStatus(false));
   };
 
   useEffect(() => {
     if (brokerCode) {
-      setLoadingStatus(true);
-      getCommissionPackagePsp(brokerCode)
-        .then((res) => {
-          setCommissionPackagePsp(res);
-        })
-        .catch((reason) => console.error(reason))
-        .finally(() => setLoadingStatus(false));
+      const identifier = setTimeout(() => {
+        getBundleList();
+      }, 500);
+      return () => {
+        clearTimeout(identifier);
+      };
     }
+    return () => null;
   }, [page, brokerCode]);
-
-  useEffect(() => {
-    const filteredList = filterList(packageNameFilter);
-    setListFiltered({ ...commissionPackagePsp, commPackagesList: [...filteredList] });
-  }, [packageNameFilter, commissionPackagePsp]);
 
   return (
     <React.Fragment>
@@ -92,10 +96,10 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
         }}
         justifyContent="start"
       >
-        {error && !loading ? (
+        {error ? (
           <>{error}</>
-        ) : !error && !loading && listFiltered.commPackagesList.length === 0 ? (
-          <CommissionPackagesEmpty packageType={packageType} />
+        ) : listFiltered?.bundles?.length === 0 ? (
+          <CommissionPackagesEmpty packageType={t(packageType)} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -111,37 +115,10 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                 <>
                   <Pagination
                     color="primary"
-                    count={listFiltered.pageInfo.total_pages ?? 0}
+                    count={listFiltered?.pageInfo?.total_pages ?? 1}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />
-                </>
-              ),
-              NoRowsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
-              // eslint-disable-next-line sonarjs/no-identical-functions
-              NoResultsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="stationsPage.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="stationsPage.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
                 </>
               ),
             }}
@@ -150,13 +127,12 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
                 quickFilterProps: { debounceMs: 500 },
               },
             }}
-            getRowId={(r) => r.packageName}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"
-            rowCount={listFiltered.commPackagesList.length}
+            rowCount={listFiltered?.bundles?.length}
             rowHeight={rowHeight}
-            rows={listFiltered.commPackagesList}
+            rows={listFiltered?.bundles ?? []}
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />

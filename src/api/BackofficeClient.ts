@@ -58,6 +58,7 @@ import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
+import { Bundles } from './generated/portal/Bundles';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -863,4 +864,9 @@ export const BackofficeApi = {
         const result = await backofficeClient.getBrokerExportStatus({'broker-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
+        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    }
 };

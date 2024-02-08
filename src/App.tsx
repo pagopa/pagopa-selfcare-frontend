@@ -1,10 +1,13 @@
+/* eslint-disable complexity */
+/* eslint-disable sonarjs/cognitive-complexity */
+import React from 'react';
 import {
   ErrorBoundary,
   LoadingOverlay,
   UnloadEventHandler,
   UserNotifyHandle,
 } from '@pagopa/selfcare-common-frontend';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import withLogin from './decorators/withLogin';
 import Layout from './components/Layout/Layout';
@@ -55,121 +58,153 @@ const SecuredRoutes = withLogin(
 
     return (
       <Layout>
-        <Switch>
-          <Route path={routes.HOME} exact={true}>
-            {ENV.FEATURES.DASHBOARD.ENABLED ? <DashboardPage /> : <ApiKeysPage />}
-          </Route>
-          <Route path={routes.NODE_SIGNIN} exact={true}>
-            <ProtectedRoute permission="node-signin">
-              <NodeSignInPage />
-            </ProtectedRoute>
-          </Route>
-
-          <Route path={routes.APIKEYS} exact={true}>
-            <ProtectedRoute permission="apikey">
-              <ApiKeysPage />
-            </ProtectedRoute>
-          </Route>
-          <Route path={routes.APIKEYS_CREATE} exact={true}>
-            {ENV.FEATURES.DASHBOARD.ENABLED ? (
-              <ProtectedRoute permission="apikey">
-                <AddApiKeyPage />
+        <BrowserRouter>
+          <Switch>
+            <Route path={routes.HOME} exact={true}>
+              {ENV.FEATURES.DASHBOARD.ENABLED ? <DashboardPage /> : <ApiKeysPage />}
+            </Route>
+            <Route path={routes.NODE_SIGNIN} exact={true}>
+              <ProtectedRoute permission="node-signin">
+                <NodeSignInPage />
               </ProtectedRoute>
-            ) : (
-              <AddApiKeyPage />
-            )}
-          </Route>
+            </Route>
+            <Route path={routes.APIKEYS} exact={true}>
+              <ProtectedRoute permission="apikey">
+                <ApiKeysPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.APIKEYS_CREATE} exact={true}>
+              {ENV.FEATURES.DASHBOARD.ENABLED ? (
+                <ProtectedRoute permission="apikey">
+                  <AddApiKeyPage />
+                </ProtectedRoute>
+              ) : (
+                <AddApiKeyPage />
+              )}
+            </Route>
 
-          <Route path={routes.CHANNELS} exact={true}>
-            <ChannelsPage />
-          </Route>
-          <Route path={routes.CHANNEL_ADD} exact={true}>
-            <AddEditChannelPage />
-          </Route>
-          <Route path={routes.CHANNEL_DETAIL} exact={true}>
-            <ChannelDetailPage />
-          </Route>
-          <Route path={routes.CHANNEL_PSP_LIST} exact={true}>
-            <ChannelPSPListPage />
-          </Route>
-          <Route path={routes.CHANNEL_ASSOCIATE_PSP} exact={true}>
-            <ChannelAssociatePSPPage />
-          </Route>
-          <Route path={routes.CHANNEL_EDIT} exact={true}>
-            <AddEditChannelPage />
-          </Route>
+            <Route path={routes.CHANNELS} exact={true}>
+              <ProtectedRoute permission="channels">
+                <ChannelsPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.CHANNEL_ADD} exact={true}>
+              <ProtectedRoute permission="channels">
+                <AddEditChannelPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.CHANNEL_DETAIL} exact={true}>
+              <ProtectedRoute permission="channels">
+                <ChannelDetailPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.CHANNEL_PSP_LIST} exact={true}>
+              <ProtectedRoute permission="channels">
+                <ChannelPSPListPage />
+              </ProtectedRoute>
+            </Route>
 
-          <Route path={routes.STATIONS} exact={true}>
-            <StationsPage />
-          </Route>
-          <Route path={routes.STATION_ADD} exact={true}>
-            <AddEditStationPage />
-          </Route>
-          <Route path={routes.STATION_DETAIL} exact={true}>
-            <StationDetailPage />
-          </Route>
-          <Route path={routes.STATION_EC_LIST} exact={true}>
-            <StationECListPage />
-          </Route>
-          <Route path={routes.STATION_ASSOCIATE_EC} exact={true}>
-            <StationAssociateECPage />
-          </Route>
-          <Route path={routes.STATION_EDIT} exact={true}>
-            <AddEditStationPage />
-          </Route>
+            <Route path={routes.CHANNEL_ASSOCIATE_PSP} exact={true}>
+              <ProtectedRoute permission="channels">
+                <ChannelAssociatePSPPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.CHANNEL_EDIT} exact={true}>
+              <ProtectedRoute permission="channels">
+                <AddEditChannelPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATIONS} exact={true}>
+              <ProtectedRoute permission="stations">
+                <StationsPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATION_ADD} exact={true}>
+              <ProtectedRoute permission="stations">
+                <AddEditStationPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATION_DETAIL} exact={true}>
+              <ProtectedRoute permission="stations">
+                <StationDetailPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATION_EC_LIST} exact={true}>
+              <ProtectedRoute permission="stations">
+                <StationECListPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATION_ASSOCIATE_EC} exact={true}>
+              <ProtectedRoute permission="stations">
+                <StationAssociateECPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.STATION_EDIT} exact={true}>
+              <ProtectedRoute permission="stations">
+                <AddEditStationPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.IBAN} exact={true}>
+              <ProtectedRoute permission="iban">
+                <IbanPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.IBAN_ADD} exact={true}>
+              <ProtectedRoute permission="iban">
+                <AddEditIbanPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.IBAN_DETAIL} exact={true}>
+              <ProtectedRoute permission="iban">
+                <IbanDetailPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.IBAN_EDIT} exact={true}>
+              <ProtectedRoute permission="iban">
+                <AddEditIbanPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.COMMISSION_PACKAGES} exact={true}>
+              <ProtectedRoute permission="commission-packages">
+                <CommissionPackagesPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.COMMISSION_PACKAGES_ADD} exact={true}>
+              <ProtectedRoute permission="commission-packages">
+                <AddEditCommissionPackagePage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.COMMISSION_PACKAGES_EDIT} exact={true}>
+              <ProtectedRoute permission="commission-packages">
+                <AddEditCommissionPackagePage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>
+              <ProtectedRoute permission="operation-table-list">
+                <AddEditOperationTablePage />
+              </ProtectedRoute>
+            </Route>
 
-          <Route path={routes.IBAN} exact={true}>
-            <ProtectedRoute permission="iban">
-              <IbanPage />
-            </ProtectedRoute>
-          </Route>
-          <Route path={routes.IBAN_ADD} exact={true}>
-            <ProtectedRoute permission="iban">
-              <AddEditIbanPage />
-            </ProtectedRoute>
-          </Route>
-          <Route path={routes.IBAN_DETAIL} exact={true}>
-            <ProtectedRoute permission="iban">
-              <IbanDetailPage />
-            </ProtectedRoute>
-          </Route>
-          <Route path={routes.IBAN_EDIT} exact={true}>
-            <ProtectedRoute permission="iban">
-              <AddEditIbanPage />
-            </ProtectedRoute>
-          </Route>
+            <Route path={routes.OPERATION_TABLE_DETAILS} exact={true}>
+              <ProtectedRoute permission="operation-table-list">
+                <OperationTableDetailPage />
+              </ProtectedRoute>
+            </Route>
 
-          <Route path={routes.COMMISSION_PACKAGES} exact={true}>
-            <CommissionPackagesPage />
-          </Route>
-          <Route path={routes.COMMISSION_PACKAGES_ADD} exact={true}>
-            <AddEditCommissionPackagePage />
-          </Route>
-          <Route path={routes.COMMISSION_PACKAGES_EDIT} exact={true}>
-            <AddEditCommissionPackagePage />
-          </Route>
+            <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
+              <ProtectedRoute permission="operation-table-list">
+                <OperationTableListPage />
+              </ProtectedRoute>
+            </Route>
 
-          <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>
-            <AddEditOperationTablePage />
-          </Route>
-
-          <Route path={routes.OPERATION_TABLE_DETAILS} exact={true}>
-            <OperationTableDetailPage />
-          </Route>
-
-          <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
-            <ProtectedRoute permission="operation-table-list">
-              <OperationTableListPage />
-            </ProtectedRoute>
-          </Route>
-
-          <Route path={routes.TOS} exact={true}>
-            <TOS />
-          </Route>
-          <Route path="*">
-            <Redirect to={routes.HOME} />
-          </Route>
-        </Switch>
+            <Route path={routes.TOS} exact={true}>
+              <TOS />
+            </Route>
+            <Route path="*">
+              <Redirect to={routes.HOME} />
+            </Route>
+          </Switch>
+        </BrowserRouter>
       </Layout>
     );
   })

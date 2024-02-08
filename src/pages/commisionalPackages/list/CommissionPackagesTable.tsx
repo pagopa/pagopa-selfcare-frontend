@@ -9,8 +9,8 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
 import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
-import { getBundleListByPSP } from '../../../services/bundleService';
 import { Bundles } from '../../../api/generated/portal/Bundles';
+import { getBundleListByPSP } from '../../../services/bundleService';
 
 type Props = {
   packageNameFilter: string;

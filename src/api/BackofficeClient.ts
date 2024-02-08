@@ -59,6 +59,8 @@ import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
 import { Bundles } from './generated/portal/Bundles';
+import { Touchpoints } from './generated/portal/Touchpoints';
+import { Taxonomies } from './generated/portal/Taxonomies';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -867,6 +869,16 @@ export const BackofficeApi = {
 
     getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
         const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getTouchpoints: async (page: number, limit: number): Promise<Touchpoints> => {
+        const result = await backofficeClient.getTouchpoints({page, limit});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getTaxonomies: async (): Promise<Taxonomies> => {
+        const result = await backofficeClient.getTaxonomies({});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

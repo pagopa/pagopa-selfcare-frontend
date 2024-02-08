@@ -12,11 +12,9 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Paper,
-  Popper,
   Radio,
   RadioGroup,
   Select,
@@ -26,12 +24,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Female, RemoveCircleOutline } from '@mui/icons-material';
+import { RemoveCircleOutline } from '@mui/icons-material';
 import { MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -40,35 +37,23 @@ import {
   LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
 } from '../../../../utils/constants';
 import {
-  CommissionPackageOnCreation,
-  TaxonomyServicesResource,
-  TouchpointsResource,
-} from '../../../../model/CommissionPackage';
-import {
-  createCommissionPackage,
-  getPaymentTypes,
-  getTaxonomyService,
-  getTouchpoint,
-} from '../../../../services/__mocks__/commissionPackageService';
+  createCommissionPackage
+} from '../../../../services/__mocks__/bundleService';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
-import { getChannelsIdAssociatedToPSP } from '../../../../services/commissionPackageService';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import GenericModal from '../../../../components/Form/GenericModal';
-import {PaymentTypes} from "../../../../api/generated/portal/PaymentTypes";
-
+import { PaymentTypes } from '../../../../api/generated/portal/PaymentTypes';
+import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
+import { Taxonomies } from '../../../../api/generated/portal/Taxonomies';
+import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
+import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
+import { getPaymentTypes } from '../../../../services/configurationService';
+import { getTouchpoints } from '../../../../services/bundleService';
+import { getTaxonomies } from '../../../../services/taxonomyService';
 type Prop = {
-  commPackageDetails: CommissionPackageOnCreation | undefined;
-};
-
-const emptyPaymentTypes = {
-  payment_types: [
-    {
-      description: '',
-      payment_type: '',
-    },
-  ],
+  commPackageDetails: BundleRequest | undefined;
 };
 
 const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
@@ -79,13 +64,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-  const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>(emptyPaymentTypes);
-  const [touchPoint, setTouchPoint] = useState<TouchpointsResource>({
-    touchpointList: [],
-  });
-  const [taxonomyService, setTaxonomyService] = useState<TaxonomyServicesResource>({
-    taxonomyServiceList: [],
-  });
+  const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
+  const [touchpointList, setTouchpointList] = useState<Touchpoints>();
+  const [taxonomyList, setTaxonomyList] = useState<Taxonomies>();
   const [channelsId, setChannelsId] = useState<Array<string>>(['']);
 
   const inputGroupStyle = {
@@ -100,20 +81,23 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     setLoading(true);
     Promise.all([
       getPaymentTypes(),
-      getTouchpoint(),
-      getTaxonomyService(),
+      // TODO VERIFY PAGINATION FOR TOUCHPOINTS
+      getTouchpoints(0, 50),
+      // TODO API TAXONOMIES NOT WORKING (RESPONDS JSON NOT FOUND)
+      // getTaxonomies(),
+      // TODO VERIFY IF API IS CORRECT AND IN CASE PAGINATION
       getChannelsIdAssociatedToPSP(0, brokerCode),
     ])
-      .then(([paymentTypes, touchpoint, taxonomyService, channelsId]) => {
+      .then(([paymentTypes, touchpoint, /* taxonomyService , */ channelsId]) => {
         if (paymentTypes) {
           setPaymentOptions(paymentTypes);
         }
         if (touchpoint) {
-          setTouchPoint(touchpoint);
+          setTouchpointList(touchpoint);
         }
-        if (taxonomyService) {
-          setTaxonomyService(taxonomyService);
-        }
+        /* if (taxonomyService) {
+          setTaxonomyList(taxonomyService);
+        } */
         if (channelsId) {
           setChannelsId(channelsId);
         }
@@ -152,7 +136,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     return tomorrow;
   };
 
-  const initialFormData = (detail?: CommissionPackageOnCreation) => ({
+  const initialFormData = (detail?: BundleRequest) => ({
     abi: detail?.abi || '',
     description: detail?.description || '',
     digitalStamp: detail?.digitalStamp || false,
@@ -172,7 +156,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     validityDateTo: detail?.validityDateTo || undefined,
   });
 
-  const validate = (values: Partial<CommissionPackageOnCreation>) =>
+  const validate = (values: Partial<BundleRequest>) =>
     Object.fromEntries(
       Object.entries({
         ...{
@@ -227,7 +211,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       }).filter(([_key, value]) => value)
     );
 
-  const enableSubmit = (values: CommissionPackageOnCreation) =>
+  const enableSubmit = (values: BundleRequest) =>
     values.type !== undefined &&
     values.name !== '' &&
     values.minPaymentAmount !== 0 &&
@@ -248,7 +232,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     values.validityDateTo != null &&
     values.validityDateTo.getTime() > 0;
 
-  const submit = async (body: CommissionPackageOnCreation) => {
+  const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     try {
       await createCommissionPackage(body);
@@ -270,7 +254,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     }
   };
 
-  const formik = useFormik<Partial<CommissionPackageOnCreation>>({
+  const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialFormData(commPackageDetails),
     validate,
     onSubmit: async () => {
@@ -428,9 +412,10 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     onChange={formik.handleChange}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     data-testid="payment-type-test"
+                    disabled={!(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)}
                   >
-                    {paymentOptions &&
-                      sortPaymentType(paymentOptions!.payment_types!).map((option: any) => (
+                    {paymentOptions?.payment_types &&
+                      sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
                           {`${option.description} - ${option.payment_type}`}
                         </MenuItem>
@@ -456,10 +441,11 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"
+                    disabled={!(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)}
                   >
-                    {touchPoint.touchpointList.map((option, i) => (
-                      <MenuItem key={i} value={option.touchpoint}>
-                        {option.touchpoint}
+                    {touchpointList?.touchpoints?.map((el, i) => (
+                      <MenuItem key={`touchpoint${i}`} value={el.name}>
+                        {el.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -517,11 +503,12 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                           Boolean(formik.errors.transferCategoryList)
                         }
                         data-testid="transfer-category-list-test"
+                        disabled={!(taxonomyList?.taxonomies && taxonomyList.taxonomies.length > 0)}
                       >
-                        {taxonomyService &&
-                          taxonomyService.taxonomyServiceList.map((option: any) => (
-                            <MenuItem key={option.taxonomyService} value={option.taxonomyService}>
-                              {option.taxonomyService}
+                        {/* TODO VERIFY VALUE AND DESCRIPTION IF CORRECT */}
+                        {taxonomyList?.taxonomies?.map((el, i) => (
+                            <MenuItem key={`taxonomies${i}`} value={el.service_type_code}>
+                              {el.service_type_description}
                             </MenuItem>
                           ))}
                       </Select>
@@ -677,6 +664,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   // eslint-disable-next-line functional/immutable-data
                   channelsId.sort()
                 }
+                disabled={!(channelsId && channelsId.length > 0)}
                 onChange={(_event, value) => {
                   if (value === null) {
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises

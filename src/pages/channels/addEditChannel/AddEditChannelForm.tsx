@@ -31,7 +31,6 @@ import {
   // associatePSPtoChannel,
   createChannel,
   createWrapperChannelDetails,
-  getPaymentTypes,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
@@ -49,6 +48,7 @@ import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelD
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import { ENV } from '../../../utils/env';
 import ConfirmModal from '../../components/ConfirmModal';
+import { getPaymentTypes } from '../../../services/configurationService';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 

@@ -62,7 +62,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const pageLimit = 5;
   const getBundleList = () => {
     setLoadingStatus(true);
-    getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, brokerCode)
+    getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, `PSP${brokerCode}`)
       .then((res) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));

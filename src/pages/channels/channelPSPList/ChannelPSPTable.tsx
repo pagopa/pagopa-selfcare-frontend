@@ -157,7 +157,7 @@ export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: Chan
                   pspListPage.page_info?.total_pages && pspListPage.page_info?.total_pages > 1 ? (
                     <Pagination
                       color="primary"
-                      count={pspListPage.page_info?.total_pages ?? 0}
+                      count={pspListPage?.page_info?.total_pages ?? 1}
                       page={pagePaginator + 1}
                       onChange={(_event: ChangeEvent<unknown>, value: number) => {
                         setPage(value - 1);

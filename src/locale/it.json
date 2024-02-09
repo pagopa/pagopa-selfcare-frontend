@@ -865,6 +865,8 @@
         "validityPeriod": "Periodo di validità",
         "channelCode": "Codice canale",
         "noChannelsOption": "Nessun canale trovato",
+        "brokerCode": "Codice broker",
+        "noBrokersOption": "Nessun broker trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
         "yes": "Si",

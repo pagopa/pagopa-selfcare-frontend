@@ -78,7 +78,7 @@ function ChannelAssociatePSPPage() {
       if (pspToBeAssociatedDetails!.paymentServiceProviderDetailsResource && pspToBeAssociatedDetails!.paymentServiceProviderDetailsResource.psp_code) {
         await associatePSPtoChannel(
           channelId,
-          pspToBeAssociatedDetails!.paymentServiceProviderDetailsResource!.psp_code,
+          selectedPSP!.tax_code as string,
             (channelDetail?.payment_types ?? []) as any
         )
           .then((_data) => {

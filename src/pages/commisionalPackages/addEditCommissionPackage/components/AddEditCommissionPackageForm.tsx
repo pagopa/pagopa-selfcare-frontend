@@ -1,6 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
+import { add } from 'date-fns';
 import { useFormik } from 'formik';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
@@ -88,43 +89,48 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     });
   };
 
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      getPaymentTypes(),
-      getTouchpoints(0, 50),
-      getTaxonomies(),
-      // TODO ADD DELEGATIONS TO RETRIEVE CHANNELS -> brokerDelegationList
-    ])
-      .then(([paymentTypes, touchpoint, taxonomyService]) => {
-        if (paymentTypes) {
-          setPaymentOptions(paymentTypes);
-        }
-        if (touchpoint) {
-          setTouchpointList(touchpoint);
-        }
-        if (taxonomyService) {
-          setTaxonomyList(taxonomyService);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_ALL_DATA',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting data`,
-          toNotify: true,
-          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
-          displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
-          ),
-          component: 'Toast',
+  useEffect(
+    () => {
+      setLoading(true);
+      Promise.all([
+        getPaymentTypes(),
+        getTouchpoints(0, 50),
+        getTaxonomies(),
+        // TODO ADD DELEGATIONS TO RETRIEVE CHANNELS -> brokerDelegationList
+      ])
+        .then(([paymentTypes, touchpoint, taxonomyService]) => {
+          if (paymentTypes) {
+            setPaymentOptions(paymentTypes);
+          }
+          if (touchpoint) {
+            setTouchpointList(touchpoint);
+          }
+          if (taxonomyService) {
+            setTaxonomyList(taxonomyService);
+          }
+        })
+        .catch((reason) => {
+          addError({
+            id: 'GET_ALL_DATA',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while getting data`,
+            toNotify: true,
+            displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+            displayableDescription: t(
+              'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
+            ),
+            component: 'Toast',
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [ /* TODO define needed broker/psp id */]);
+    },
+    [
+      /* TODO define needed broker/psp id */
+    ]
+  );
 
   useEffect(() => {
     if (typeof commPackageDetails === 'undefined') {
@@ -194,7 +200,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             : undefined,
           validityDateFrom: !values.validityDateFrom
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateFrom.getTime() < new Date().getTime()
+            : values.validityDateFrom.getTime() < add(new Date(), { days: 1 }).getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateTo &&
               values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -464,7 +470,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
 
               {formik.values.transferCategoryList?.map((_pT, i) => (
                 <React.Fragment key={`transferCategory${i}`}>
-                  {i > 0 && 
+                  {i > 0 && (
                     <Grid item xs={1} mt={1}>
                       <RemoveCircleOutline
                         color="error"
@@ -476,7 +482,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         data-testid={`remove-payment-method${i}`}
                       />
                     </Grid>
-                  }
+                  )}
                   <Grid item xs={6}>
                     <FormControl fullWidth>
                       <InputLabel size="small">
@@ -515,10 +521,13 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         data-testid="transfer-category-list-test"
                         disabled={!(taxonomyList?.taxonomies && taxonomyList.taxonomies.length > 0)}
                       >
-                        {/* TODO VERIFY VALUE AND DESCRIPTION IF CORRECT */}
+                        {/* TODO VERIFY VALUE AND DESCRIPTION ARE CORRECT */}
                         {taxonomyList?.taxonomies?.map((el) => (
-                          <MenuItem key={`taxonomies${el.service_type_code}`} value={el.service_type_code}>
-                            {el.service_type_code + "-" + el.service_type_description}
+                          <MenuItem
+                            key={`taxonomies${el.service_type_code}`}
+                            value={el.service_type_code}
+                          >
+                            {el.service_type_code} - {el.service_type_description}
                           </MenuItem>
                         ))}
                       </Select>

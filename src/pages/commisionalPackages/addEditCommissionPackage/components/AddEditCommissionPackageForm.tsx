@@ -49,9 +49,8 @@ import { Taxonomies } from '../../../../api/generated/portal/Taxonomies';
 import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
 import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
-import { getTouchpoints } from '../../../../services/bundleService';
+import { createBundle, getTouchpoints } from '../../../../services/bundleService';
 import { getTaxonomies } from '../../../../services/taxonomyService';
-import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 
 type Prop = {
   commPackageDetails: BundleRequest | undefined;
@@ -241,7 +240,8 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     try {
-      await createCommissionPackage(body);
+      const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+      await createBundle(pspTaxCode, body);
     } catch (reason) {
       addError({
         id: 'CREATE_COMMISSION_PACKAGE',

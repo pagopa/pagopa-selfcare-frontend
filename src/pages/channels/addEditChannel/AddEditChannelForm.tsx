@@ -643,8 +643,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         }}
                         required
                       >
-                        {paymentOptions &&
-                          sortPaymentType(paymentOptions!.payment_types!).map((option: any) => (
+                        {paymentOptions?.payment_types &&
+                          sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                             <MenuItem key={option.payment_type} value={option.payment_type}>
                               {`${option.description} - ${option.payment_type}`}
                             </MenuItem>

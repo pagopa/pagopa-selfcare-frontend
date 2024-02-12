@@ -108,6 +108,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           if (taxonomyService) {
             setTaxonomyList(taxonomyService);
           }
+          // TODO if broker list empty show erro message “L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti”
         })
         .catch((reason) => {
           addError({

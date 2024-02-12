@@ -15,6 +15,8 @@ import {theme} from '@pagopa/mui-italia';
 import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_EC_AVAILABLE, LOADING_TASK_SEGREGATION_CODES_AVAILABLE,} from '../../../utils/constants';
+import {ENV} from '../../../utils/env';
+import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
 import {associateEcToStation, getCreditorInstitutionSegregationcodes} from '../../../services/stationService';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
@@ -151,9 +153,8 @@ function StationAssociateECPage() {
     };
 
     const addItselfAsAvaliableEC = (delegations : Array<Delegation>) => {
-        const validInstitutionTypes = ["PA", "GSP", "SCP"];
-        const institutionType = selectedParty?.institutionType;
-        if (institutionType && validInstitutionTypes.includes(institutionType)) {
+        if (selectedParty &&
+            checkInstitutionTypes(selectedParty.institutionType as string, ENV.INSTITUTIONS_EC_STATION_TYPES)) {
             // eslint-disable-next-line functional/immutable-data
             delegations.push({
                 institution_id: selectedParty.partyId,

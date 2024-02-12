@@ -3,7 +3,8 @@ import * as env from "env-var";
 export enum Type {
     string,
     boolean,
-    int
+    int,
+    Array
 }
 
 export function getConfig(param: string, options?: { default?: any; type?: Type; required?: boolean }) {
@@ -29,6 +30,9 @@ function getVarFromEnvironment(param: string, options?: { default?: any; type?: 
     }
     if (Type.boolean === options?.type) {
         return value.asBool()
+    }
+    if (Type.Array === options?.type) {
+        return value.asString().split(",");
     }
     return value.asString();
 }

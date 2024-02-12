@@ -52,6 +52,8 @@ import { getChannelsIdAssociatedToPSP } from '../../../../services/channelServic
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { createBundle, getTouchpoints } from '../../../../services/bundleService';
 import { getTaxonomies } from '../../../../services/taxonomyService';
+import { getBrokerDelegation } from '../../../../services/institutionService';
+import { Delegation } from '../../../../api/generated/portal/Delegation';
 
 type Prop = {
   commPackageDetails: BundleRequest | undefined;
@@ -64,13 +66,12 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  // TODO define needed broker/psp id to get relative delegations
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
   const [touchpointList, setTouchpointList] = useState<Touchpoints>();
   const [taxonomyList, setTaxonomyList] = useState<Taxonomies>();
-  const [brokerDelegationList, setBrokerDelegationList] = useState<Array<string>>([]);
+  const [brokerDelegationList, setBrokerDelegationList] = useState<Array<Delegation>>([]);
   const [channelsId, setChannelsId] = useState<Array<string>>([]);
 
   const inputGroupStyle = {
@@ -89,49 +90,59 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     });
   };
 
-  useEffect(
-    () => {
-      setLoading(true);
-      Promise.all([
-        getPaymentTypes(),
-        getTouchpoints(0, 50),
-        getTaxonomies(),
-        // TODO ADD DELEGATIONS TO RETRIEVE CHANNELS -> brokerDelegationList
-      ])
-        .then(([paymentTypes, touchpoint, taxonomyService]) => {
-          if (paymentTypes) {
-            setPaymentOptions(paymentTypes);
-          }
-          if (touchpoint) {
-            setTouchpointList(touchpoint);
-          }
-          if (taxonomyService) {
-            setTaxonomyList(taxonomyService);
-          }
-          // TODO if broker list empty show erro message “L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti”
-        })
-        .catch((reason) => {
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      getPaymentTypes(),
+      getTouchpoints(0, 50),
+      getTaxonomies(),
+      getBrokerDelegation(selectedParty?.partyId ?? ''),
+    ])
+      .then(([paymentTypes, touchpoints, taxonomyService, brokerDelegation]) => {
+        if (paymentTypes) {
+          setPaymentOptions(paymentTypes);
+        }
+        if (touchpoints) {
+          setTouchpointList(touchpoints);
+        }
+        if (taxonomyService) {
+          setTaxonomyList(taxonomyService);
+        }
+        if (brokerDelegation && brokerDelegation.length > 0) {
+          setBrokerDelegationList(brokerDelegation);
+        } else {
           addError({
-            id: 'GET_ALL_DATA',
+            id: 'GET_BROKER_DELEGATIONS_DATA',
             blocking: false,
-            error: reason as Error,
+            error: new Error(`An error occurred while getting data`),
             techDescription: `An error occurred while getting data`,
             toNotify: true,
             displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
             displayableDescription: t(
-              'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
+              'commissionPackagesPage.addEditCommissionPackage.error.errorMessageNoBrokerDelegations'
             ),
             component: 'Toast',
           });
-        })
-        .finally(() => {
-          setLoading(false);
+        }
+      })
+      .catch((reason) => {
+        addError({
+          id: 'GET_ALL_DATA',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting data`,
+          toNotify: true,
+          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+          displayableDescription: t(
+            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
+          ),
+          component: 'Toast',
         });
-    },
-    [
-      /* TODO define needed broker/psp id */
-    ]
-  );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [selectedParty]);
 
   useEffect(() => {
     if (typeof commPackageDetails === 'undefined') {
@@ -682,15 +693,14 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   disablePortal
                   options={
                     // eslint-disable-next-line functional/immutable-data
-                    brokerDelegationList.sort()
+                    brokerDelegationList?.map(el => el.institution_name)?.sort()
                   }
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   onChange={async (_event, value) => {
                     if (value !== null) {
-                      await getChannelsByBrokerCode(value);
+                      await getChannelsByBrokerCode(brokerDelegationList?.find(el => el.institution_name === value)?.broker_tax_code ?? "");
                     }
                   }}
-                  value={formik.values.idChannel}
                   fullWidth
                   renderInput={(params) => (
                     <TextField

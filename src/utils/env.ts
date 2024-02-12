@@ -79,10 +79,6 @@ export const ENV = {
             .asString(),
     },
 
-    INSTITUTIONS_PSP_CHANNEL_TYPES: getConfig("REACT_APP_INSTITUTIONS_PSP_CHANNEL_TYPES", {default: "PSP", type: Type.Array} ),
-    INSTITUTIONS_EC_STATION_TYPES: getConfig("REACT_APP_INSTITUTIONS_EC_STATION_TYPES", {default: "PA,GSP,SCP", type: Type.Array} ),
-
-
     HEADER: {
         LINK: {
             ROOTLINK: 'https://www.pagopa.it/',

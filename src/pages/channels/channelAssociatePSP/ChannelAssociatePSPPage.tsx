@@ -16,9 +16,9 @@ import ROUTES from '../../../routes';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
 import {
   associatePSPtoChannel,
-  getBrokerDelegation,
   getChannelDetail,
 } from '../../../services/channelService';
+import { getBrokerDelegation } from '../../../services/institutionService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';

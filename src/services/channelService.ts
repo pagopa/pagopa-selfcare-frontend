@@ -11,7 +11,6 @@ import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannel
 import { BackofficeApi } from '../api/BackofficeClient';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
-import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import {
   getChannels as getChannelsMocked,
@@ -20,7 +19,6 @@ import {
   createChannel as createChannelMocked,
   updateChannel as updateChannelMocked,
   getChannelDetail as getChannelDetailMocked,
-  getBrokerDelegation as getBrokerDelegationMocked,
   getChannelPSPs as getChannelPSPsMocked,
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
@@ -146,15 +144,6 @@ export const getChannelPSPs = (
     return getChannelPSPsMocked(page);
   } else {
     return BackofficeApi.getChannelPSPs(channelcode, pspName, page, limit).then((resources) => resources);
-  }
-};
-
-export const getBrokerDelegation = (partyId: string): Promise<Array<Delegation>> => {
-  /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getBrokerDelegationMocked();
-  } else {
-    return BackofficeApi.getBrokerDelegation(undefined, partyId).then((resources) => resources);
   }
 };
 

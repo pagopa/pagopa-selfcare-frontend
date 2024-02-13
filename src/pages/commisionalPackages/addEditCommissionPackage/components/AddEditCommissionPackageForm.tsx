@@ -495,8 +495,8 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       />
                     </Grid>
                   )}
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
+                  <Grid item xs={i > 0 ? 11 : 12} pr={2}>
+                    <FormControl sx={{width: "50%"}} >
                       <InputLabel size="small">
                         {t(
                           'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'

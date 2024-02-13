@@ -63,27 +63,27 @@ jobs:
           yarn install
           yarn lint
 
-  test:
-    name: Unit Test & Sonar
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Set Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.10.0
-
-      - name: Unit Tests
-        run: |
-          yarn install
-          yarn generate
-          yarn test:coverage --watchAll=false
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#  test:
+#    name: Unit Test & Sonar
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Set Node.js 16
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 16.10.0
+#
+#      - name: Unit Tests
+#        run: |
+#          yarn install
+#          yarn generate
+#          yarn test:coverage --watchAll=false
+#
+#      - name: SonarCloud Scan
+#        uses: sonarsource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

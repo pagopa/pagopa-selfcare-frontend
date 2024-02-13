@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.14.23-1-fix-export-loading-env",
+  "version": "1.14.24",
   "homepage": "ui",
   "private": true,
   "scripts": {

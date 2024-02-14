@@ -186,12 +186,6 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           description: !values.description
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
             : undefined,
-          digitalStamp: !values.digitalStamp
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
-          digitalStampRestriction: !values.digitalStampRestriction
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
           idChannel: !values.idChannel
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
             : undefined,
@@ -246,10 +240,6 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     values.idChannel !== '' &&
     values.idChannel !== undefined &&
     values.description !== '' &&
-    values.digitalStamp !== true &&
-    values.digitalStamp !== false &&
-    values.digitalStampRestriction !== true &&
-    values.digitalStampRestriction !== false &&
     values.validityDateFrom != null &&
     values.validityDateFrom.getTime() > 0 &&
     values.validityDateTo != null &&
@@ -316,18 +306,6 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       setShowConfirmModal(false);
     }
   };
-
-  async function handleDigitalStamp(type: string, value: boolean) {
-    if(value){
-      if (type === 'digitalStamp') {
-        await formik.setFieldValue('digitalStampRestriction', false);
-      } else {
-        await formik.setFieldValue('digitalStamp', false);
-      }
-    }
-
-    await formik.setFieldValue(type, value);
-  }
 
   return (
     <>
@@ -548,7 +526,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         {/* TODO VERIFY VALUE AND DESCRIPTION ARE CORRECT */}
                         {taxonomyList?.taxonomies?.map((el) => (
                           <MenuItem
-                            key={`taxonomies${el.service_type_code}`}
+                            key={`taxonomies${el.service_type_code}${el.service_type_description}`}
                             value={el.service_type_code}
                           >
                             {el.service_type_code} - {el.service_type_description}
@@ -787,21 +765,24 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStamp"
                     sx={{ pl: 1 }}
-                    onChange={(e) => handleDigitalStamp('digitalStamp', e.target.value === "true" ? true : false)}
+                    onChange={(e) =>
+                      formik.setFieldValue('digitalStamp', e.target.value === 'true')
+                    }
                     row
                     data-testid="digital-stamp-test"
                     value={formik.values.digitalStamp}
                   >
                     <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      sx={{ pr: 3 }}
-                    />
-                    <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      sx={{ pr: 3 }}
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      disabled={formik.values.digitalStampRestriction}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -817,21 +798,24 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStampRestriction"
                     sx={{ pl: 1 }}
-                    onChange={(e) => handleDigitalStamp('digitalStampRestriction', e.target.value === "true" ? true : false)}
+                    onChange={(e) =>
+                      formik.setFieldValue('digitalStampRestriction', e.target.value === 'true')
+                    }
                     row
                     data-testid="digital-stamp-restriction-test"
                     value={formik.values.digitalStampRestriction}
                   >
                     <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      sx={{ pr: 3 }}
-                    />
-                    <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      sx={{ pr: 3 }}
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      disabled={formik.values.digitalStamp}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>

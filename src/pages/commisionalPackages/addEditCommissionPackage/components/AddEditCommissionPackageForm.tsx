@@ -317,6 +317,18 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     }
   };
 
+  async function handleDigitalStamp(type: string, value: boolean) {
+    if(value){
+      if (type === 'digitalStamp') {
+        await formik.setFieldValue('digitalStampRestriction', false);
+      } else {
+        await formik.setFieldValue('digitalStamp', false);
+      }
+    }
+
+    await formik.setFieldValue(type, value);
+  }
+
   return (
     <>
       <Paper
@@ -496,7 +508,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     </Grid>
                   )}
                   <Grid item xs={i > 0 ? 11 : 12} pr={2}>
-                    <FormControl sx={{width: "50%"}} >
+                    <FormControl sx={{ width: '50%' }}>
                       <InputLabel size="small">
                         {t(
                           'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
@@ -693,12 +705,15 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   disablePortal
                   options={
                     // eslint-disable-next-line functional/immutable-data
-                    brokerDelegationList?.map(el => el.institution_name)?.sort()
+                    brokerDelegationList?.map((el) => el.institution_name)?.sort()
                   }
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   onChange={async (_event, value) => {
                     if (value !== null) {
-                      await getChannelsByBrokerCode(brokerDelegationList?.find(el => el.institution_name === value)?.broker_tax_code ?? "");
+                      await getChannelsByBrokerCode(
+                        brokerDelegationList?.find((el) => el.institution_name === value)
+                          ?.broker_tax_code ?? ''
+                      );
                     }
                   }}
                   fullWidth
@@ -772,9 +787,10 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStamp"
                     sx={{ pl: 1 }}
-                    onChange={(e) => formik.setFieldValue('digitalStamp', e.target.value)}
+                    onChange={(e) => handleDigitalStamp('digitalStamp', e.target.value === "true" ? true : false)}
                     row
                     data-testid="digital-stamp-test"
+                    value={formik.values.digitalStamp}
                   >
                     <FormControlLabel
                       value={true}
@@ -801,11 +817,10 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStampRestriction"
                     sx={{ pl: 1 }}
-                    onChange={(e) =>
-                      formik.setFieldValue('digitalStampRestriction', e.target.value)
-                    }
+                    onChange={(e) => handleDigitalStamp('digitalStampRestriction', e.target.value === "true" ? true : false)}
                     row
                     data-testid="digital-stamp-restriction-test"
+                    value={formik.values.digitalStampRestriction}
                   >
                     <FormControlLabel
                       value={true}

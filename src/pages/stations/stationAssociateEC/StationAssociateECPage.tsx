@@ -52,7 +52,8 @@ function StationAssociateECPage() {
     useEffect(() => {
         setLoading(true);
         if (selectedParty) {
-            getBrokerDelegation(selectedParty.partyId, ["EC"])
+                // TODO verify if is used instituitionId or brokerId
+            getBrokerDelegation(undefined, selectedParty?.partyId, ["EC"])
                 .then((data) => {
                     if (data) {
                         addItselfAsAvaliableEC(data);

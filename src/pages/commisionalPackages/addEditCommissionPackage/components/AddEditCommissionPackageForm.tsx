@@ -114,7 +114,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       getPaymentTypes(),
       getTouchpoints(0, 50),
       getTaxonomies(),
-      getBrokerDelegation(selectedParty?.partyId ?? ''),
+      getBrokerDelegation(undefined, selectedParty?.partyId ?? ''),
     ])
       .then(([paymentTypes, touchpoints, taxonomyService, brokerDelegation]) => {
         if (paymentTypes) {

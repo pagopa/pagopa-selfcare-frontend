@@ -14,7 +14,8 @@ import {generatePath, useHistory, useParams} from 'react-router-dom';
 import {theme} from '@pagopa/mui-italia';
 import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import ROUTES from '../../../routes';
-import {LOADING_TASK_EC_AVAILABLE, LOADING_TASK_SEGREGATION_CODES_AVAILABLE,} from '../../../utils/constants';
+import {INSTITUTIONS_EC_STATION_TYPES, LOADING_TASK_EC_AVAILABLE, LOADING_TASK_SEGREGATION_CODES_AVAILABLE,} from '../../../utils/constants';
+import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
 import {associateEcToStation, getCreditorInstitutionSegregationcodes} from '../../../services/stationService';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
@@ -51,7 +52,7 @@ function StationAssociateECPage() {
     useEffect(() => {
         setLoading(true);
         if (selectedParty) {
-            getBrokerDelegation(selectedParty.partyId)
+            getBrokerDelegation(selectedParty.partyId, ["EC"])
                 .then((data) => {
                     if (data) {
                         addItselfAsAvaliableEC(data);
@@ -151,9 +152,8 @@ function StationAssociateECPage() {
     };
 
     const addItselfAsAvaliableEC = (delegations : Array<Delegation>) => {
-        const validInstitutionTypes = ["PA", "GSP", "SCP"];
-        const institutionType = selectedParty?.institutionType;
-        if (institutionType && validInstitutionTypes.includes(institutionType)) {
+        if (selectedParty &&
+            checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_STATION_TYPES)) {
             // eslint-disable-next-line functional/immutable-data
             delegations.push({
                 institution_id: selectedParty.partyId,

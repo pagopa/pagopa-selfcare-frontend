@@ -62,6 +62,7 @@ import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { BundleRequest } from './generated/portal/BundleRequest';
+import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -873,7 +874,7 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    createBundle: async (pspTaxCode: string, bundle: BundleRequest): Promise<string> => {
+    createBundle: async (pspTaxCode: string, bundle: BundleRequest): Promise<BundleCreateResponse> => {
         const result = await backofficeClient.createBundle({"psp-code": pspTaxCode, body: bundle});
         return extractResponse(result, 201, onRedirectToLogin);
     },

@@ -1,5 +1,6 @@
 
 import { BackofficeApi } from '../api/BackofficeClient';
+import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
 import { Bundles } from '../api/generated/portal/Bundles';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
@@ -24,7 +25,7 @@ export const getBundleListByPSP = (
 export const createBundle = (
   pspTaxCode: string,
   bundle: BundleRequest
-): Promise<Bundles> => {
+): Promise<BundleCreateResponse> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createCommissionPackage(bundle);
   } else {

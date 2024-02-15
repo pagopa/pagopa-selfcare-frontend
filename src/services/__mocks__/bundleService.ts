@@ -1,6 +1,6 @@
+import { BundleCreateResponse } from '../../api/generated/portal/BundleCreateResponse';
 import { BundleRequest, TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { Bundles } from '../../api/generated/portal/Bundles';
-import { Taxonomies } from '../../api/generated/portal/Taxonomies';
 import { Touchpoints } from '../../api/generated/portal/Touchpoints';
 import { mockedStationsMerged } from './channelService';
 import { mockedPaymentTypes } from './configurationService';
@@ -58,21 +58,20 @@ export const mockedChannelsIdList: Array<string> = mockedStationsMerged!.channel
 );
 
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
-  new Promise((resolve) => resolve(mockedChannelsIdList));
+  Promise.resolve(mockedChannelsIdList);
 
 export const getCommissionPackagePsp = (_brokerCode: string): Promise<Bundles> =>
-  new Promise((resolve) => resolve(mockedCommissionPackagePspList));
+  Promise.resolve(mockedCommissionPackagePspList);
 
 export const getCommissionPackageDetails = (_name: string): Promise<BundleRequest> =>
-  new Promise((resolve) => resolve(mockedCommissionPackagePspDetail));
+  Promise.resolve(mockedCommissionPackagePspDetail);
 
-export const createCommissionPackage = (_body: BundleRequest): Promise<BundleRequest> =>
-  new Promise((resolve) => resolve(mockedCommissionPackagePspDetail));
+export const createCommissionPackage = (_body: BundleRequest): Promise<BundleCreateResponse> =>
+  Promise.resolve({idBundle:'mockedCommissionPackageId'});
 
 export const updateCommissionPackage = (
   _name: string,
   _commissionPackage: BundleRequest
-): Promise<BundleRequest> => new Promise((resolve) => resolve(mockedCommissionPackagePspDetail));
+): Promise<BundleRequest> => Promise.resolve(mockedCommissionPackagePspDetail);
 
-export const getTouchpoints = (): Promise<Touchpoints> =>
-  new Promise((resolve) => resolve(mockedTouchpoints));
+export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);

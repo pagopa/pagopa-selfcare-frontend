@@ -37,8 +37,8 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
   LOADING_TASK_CREATING_COMMISSION_PACKAGE,
   LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
+  LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
-import { createCommissionPackage } from '../../../../services/__mocks__/bundleService';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { useAppSelector } from '../../../../redux/hooks';
@@ -54,6 +54,7 @@ import { createBundle, getTouchpoints } from '../../../../services/bundleService
 import { getTaxonomies } from '../../../../services/taxonomyService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
+import ROUTES from '../../../../routes';
 
 type Prop = {
   commPackageDetails: BundleRequest | undefined;
@@ -64,6 +65,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
+  const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
@@ -83,11 +85,27 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   };
 
   const getChannelsByBrokerCode = async (selectedBrokerCode: string) => {
+    setLoadingChannels(true);
     await getChannelsIdAssociatedToPSP(0, selectedBrokerCode).then((data) => {
       if (data) {
         setChannelsId(data);
       }
-    });
+    })
+    .catch(error => {
+      addError({
+        id: 'GET_CHANNEL_IDS_DATA',
+        blocking: false,
+        error: error as Error,
+        techDescription: `An error occurred while getting data`,
+        toNotify: true,
+        displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+        displayableDescription: t(
+          'commissionPackagesPage.addEditCommissionPackage.error.errorMessageChannelIdsDataDesc'
+        ),
+        component: 'Toast',
+      });
+    })
+    .finally(() => setLoadingChannels(false));
   };
 
   useEffect(() => {
@@ -251,6 +269,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     try {
       const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
       await createBundle(pspTaxCode, body);
+      history.push(ROUTES.COMMISSION_PACKAGES);
     } catch (reason) {
       addError({
         id: 'CREATE_COMMISSION_PACKAGE',

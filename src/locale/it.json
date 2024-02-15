@@ -891,6 +891,7 @@
       "error": {
         "errorTitle": "Errore",
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
+        "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
         "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni",
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
       }

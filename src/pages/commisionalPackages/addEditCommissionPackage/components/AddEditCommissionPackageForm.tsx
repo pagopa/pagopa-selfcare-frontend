@@ -177,6 +177,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     type: detail?.type || undefined,
     validityDateFrom: detail?.validityDateFrom || undefined,
     validityDateTo: detail?.validityDateTo || undefined,
+    pspBusinessName: selectedParty?.description ?? ""
   });
 
   const validate = (values: Partial<BundleRequest>) =>

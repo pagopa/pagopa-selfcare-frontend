@@ -22,13 +22,14 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import { add, differenceInCalendarDays } from 'date-fns';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_CREATE_IBAN} from '../../../utils/constants';
 import {IbanFormAction, IbanOnCreation} from '../../../model/Iban';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {createIban, updateIban} from '../../../services/ibanService';
-import {datePlusDays, isIbanValidityDateEditable} from '../../../utils/common-utils';
+import {isIbanValidityDateEditable} from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -36,6 +37,9 @@ type Props = {
     ibanBody?: IbanOnCreation;
     formAction: string;
 };
+
+const defaultValidityDate = add(new Date(), { days: 1 });
+const defaultDueDate = add(new Date(), { years: 1 });
 
 const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
     const {t} = useTranslation();
@@ -57,15 +61,6 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
         }
     }, [subject, ecCode]);
 
-    useEffect(() => {
-        if (typeof ibanBody === 'undefined') {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            formik.setFieldValue('validity_date', datePlusDays(new Date(), 1));
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            formik.setFieldValue('due_date', datePlusDays(new Date(), 2));
-        }
-    }, []);
-
     const changeUploadType = (event: any) => {
         setUploadType(event.target.value);
     };
@@ -84,8 +79,8 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
             : {
                 iban: '',
                 description: '',
-                validity_date: datePlusDays(new Date(), 1),
-                due_date: datePlusDays(new Date(), 2),
+                validity_date: defaultValidityDate,
+                due_date: defaultDueDate,
                 creditor_institution_code: ecCode,
                 is_active: true,
             };
@@ -95,8 +90,6 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
 
     // eslint-disable-next-line sonarjs/cognitive-complexity
     const validate = (values: IbanOnCreation): { [k: string]: string | undefined } | undefined => {
-        const minDate: Date = datePlusDays(new Date(), 1);
-
         if (uploadType === 'single') {
             return Object.fromEntries(
                 Object.entries({
@@ -109,17 +102,17 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                     validity_date: isIbanValidityDateEditable(ibanBody) ?
                         (!values.validity_date
                             ? t('addEditIbanPage.validationMessage.requiredField')
-                            : values.validity_date.getDate() < minDate.getDate()
+                            : differenceInCalendarDays(values.validity_date, defaultValidityDate) < 0
                                 ? t('addEditIbanPage.validationMessage.dateNotValid')
-                                : values.due_date && values.validity_date.getDate() > values.due_date.getDate()
+                                : values.due_date && differenceInCalendarDays(values.due_date, values.validity_date) <= 0
                                     ? t('addEditIbanPage.validationMessage.startDateOverEndDate')
                                     : undefined)
                         : undefined,
                     due_date: !values.due_date
                         ? t('addEditIbanPage.validationMessage.requiredField')
-                        : values.due_date.getDate() < minDate.getDate()
+                        : differenceInCalendarDays(values.due_date, defaultValidityDate) < 0
                             ? t('addEditIbanPage.validationMessage.dateNotValid')
-                            : values.validity_date && values.due_date.getDate() < values.validity_date.getDate()
+                            : values.validity_date && differenceInCalendarDays(values.due_date, values.validity_date) <= 0
                                 ? t('addEditIbanPage.validationMessage.endDateUnderStartDate')
                                 : undefined,
                 }).filter(([_key, value]) => value)

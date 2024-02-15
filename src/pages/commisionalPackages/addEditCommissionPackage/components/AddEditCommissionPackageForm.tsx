@@ -59,6 +59,7 @@ import ROUTES from '../../../../routes';
 type Prop = {
   commPackageDetails: BundleRequest | undefined;
 };
+const minDateTomorrow = add(new Date(), { days: 1 });
 
 const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const { t } = useTranslation();
@@ -162,21 +163,6 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       });
   }, [selectedParty]);
 
-  useEffect(() => {
-    if (typeof commPackageDetails === 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('validityDateFrom', getTomorrowDate(new Date()));
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('validityDateTo', getTomorrowDate(new Date()));
-    }
-  }, [commPackageDetails]);
-
-  const getTomorrowDate = (currentDate: Date) => {
-    const tomorrow = new Date(currentDate);
-    tomorrow.setDate(currentDate.getDate() + 1);
-    return tomorrow;
-  };
-
   const initialFormData = (detail?: BundleRequest) => ({
     abi: detail?.abi || '',
     description: detail?.description || '',
@@ -192,9 +178,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     paymentType: detail?.paymentType || undefined,
     touchpoint: detail?.touchpoint || undefined,
     transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
-    type: detail?.type || undefined,
-    validityDateFrom: detail?.validityDateFrom || undefined,
-    validityDateTo: detail?.validityDateTo || undefined,
+    type: detail?.type ?? undefined,
+    validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
+    validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
     pspBusinessName: selectedParty?.description ?? ""
   });
 
@@ -225,7 +211,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             : undefined,
           validityDateFrom: !values.validityDateFrom
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateFrom.getTime() < add(new Date(), { days: 1 }).getTime()
+            : values.validityDateFrom.getTime() < minDateTomorrow.getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateTo &&
               values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -235,7 +221,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             : undefined,
           validityDateTo: !values.validityDateTo
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateTo.getTime() < new Date().getTime()
+            : values.validityDateTo.getTime() < minDateTomorrow.getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateFrom &&
               values.validityDateTo.getTime() < values.validityDateFrom.getTime()
@@ -442,7 +428,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       'commissionPackagesPage.addEditCommissionPackage.form.paymentType'
                     )}
                     size="small"
-                    value={formik.values.paymentType || ''}
+                    value={formik.values.paymentType ?? ''}
                     onChange={formik.handleChange}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     data-testid="payment-type-test"

@@ -12,6 +12,7 @@ import { BackofficeApi } from '../api/BackofficeClient';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
+
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
@@ -66,12 +67,12 @@ export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsRes
   }
 };
 
-export const getPSPChannels = (pspCode: string): Promise<PspChannelsResource> => {
+export const getPSPChannels = (taxCode: string): Promise<PspChannelsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getPSPChannelsMocked(pspCode);
+    return getPSPChannelsMocked(taxCode);
   } else {
-    return BackofficeApi.getPSPChannels(pspCode).then((resources) => resources);
+    return BackofficeApi.getPSPChannels(taxCode).then((resources) => resources);
   }
 };
 
@@ -149,14 +150,14 @@ export const getChannelPSPs = (
 
 export const associatePSPtoChannel = (
   channelcode: string,
-  pspcode: string,
+  taxcode: string,
   payment_type: PspChannelPaymentTypes
 ): Promise<PspChannelPaymentTypesResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return associatePSPtoChannelMocked(channelcode, pspcode, payment_type);
+    return associatePSPtoChannelMocked(channelcode, taxcode, payment_type);
   } else {
-    return BackofficeApi.associatePSPtoChannel(channelcode, pspcode, payment_type).then(
+    return BackofficeApi.associatePSPtoChannel(channelcode, taxcode, payment_type).then(
       (resources) => resources
     );
   }

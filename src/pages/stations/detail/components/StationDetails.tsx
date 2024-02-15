@@ -155,7 +155,7 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail && stationDetail.redirectPath ? `${stationDetail.redirectProtocol?.toString().toLowerCase()}://${stationDetail.redirectIp}${stationDetail.redirectPort ? ':'.concat(stationDetail.redirectPort.toString()) : ''}${stationDetail.redirectPath ?? ''}${stationDetail.redirectQueryString ? '?' + stationDetail.redirectQueryString : ''}` : ''}
+                                        {stationDetail && stationDetail.redirectPath ? `${stationDetail.redirectProtocol?.toString().toLowerCase()}://${stationDetail.redirectIp}${stationDetail.redirectPort ? ':'.concat(stationDetail.redirectPort.toString()) : ''}${stationDetail.redirectPath ?? ''}${stationDetail.redirectQueryString ? '?'.concat(stationDetail.redirectQueryString ?? '') : ''}` : ''}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} mt={2}>

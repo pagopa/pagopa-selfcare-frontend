@@ -347,8 +347,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getPSPChannels: async (pspcode: string): Promise<PspChannelsResource> => {
-        const result = await backofficeClient.getPspChannels({'psp-code': pspcode});
+    getPSPChannels: async (taxcode: string): Promise<PspChannelsResource> => {
+        const result = await backofficeClient.getPspChannels({'psp-tax-code': taxcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -472,20 +472,20 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBrokerDelegation: async (institutionId?: string | undefined, brokerId?: string): Promise<Array<Delegation>> => {
-        const result = await backofficeClient.getBrokerDelegation({'institution-id': institutionId, brokerId});
+    getBrokerDelegation: async (institutionId?: string | undefined, brokerId?: string, roles?: Array<string>): Promise<Array<Delegation>> => {
+        const result = await backofficeClient.getBrokerDelegation({'institution-id': institutionId, roles, brokerId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     associatePSPtoChannel: async (
         channelcode: string,
-        pspcode: string,
+        taxcode: string,
         payment_types: PspChannelPaymentTypes
     ): Promise<PspChannelPaymentTypesResource> => {
         const payment_types_array = payment_types as any;
         const result = await backofficeClient.updatePaymentServiceProvidersChannels({
             'channel-code': channelcode,
-            'psp-code': pspcode,
+            'tax-code': taxcode,
             body: {payment_types: payment_types_array},
         });
         return extractResponse(result, 200, onRedirectToLogin);

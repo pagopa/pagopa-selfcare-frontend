@@ -450,7 +450,7 @@ export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =
 export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> =>
     new Promise((resolve) => resolve(mockedChannelDetail(channelcode)));
 
-export const getPSPChannels = (_pspCode: string): Promise<PspChannelsResource> =>
+export const getPSPChannels = (_taxCode: string): Promise<PspChannelsResource> =>
     new Promise((resolve) => resolve(channelEnabled(mockedPSPChannels)));
 
 export const createChannel = (_channel: ChannelOnCreation): Promise<ChannelDetailsResource> =>

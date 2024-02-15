@@ -65,7 +65,7 @@ export const BackofficeApi = {
 
   associatePSPtoChannel: async (
     _channelcode: string,
-    _pspcode: string,
+    _taxcode: string,
     _payment_type: PspChannelPaymentTypes
   ): Promise<PspChannelPaymentTypesResource> =>
     new Promise((resolve) => resolve({ payment_types: ['ptype_test'] })),

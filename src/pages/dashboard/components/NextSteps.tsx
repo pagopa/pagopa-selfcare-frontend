@@ -14,7 +14,6 @@ type Props = {
   signinData?: SigninData;
 };
 
-
 const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
   const isSignedIn = signinData ? isSigned(signinData) : false;
@@ -29,29 +28,29 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
       .catch(console.error);
   }, []);
 
+  function nextStepsAlert() {
+    if (!isSignedIn) {
+      return <Alert severity="warning">{t('dashboardPage.nextStep.signInStepAlert')}</Alert>;
+    }
+    if (!hasPermission('apikey')) {
+      return <Alert severity="info">{t(`dashboardPage.nextStep.emptyState`)}</Alert>;
+    }
+    if (hasApiKey) {
+      return <Alert severity="info">{t(`dashboardPage.nextStep.completedAllSteps`)}</Alert>;
+    }
+    if (isPSP) {
+      return <Alert severity="warning">{t('dashboardPage.nextStep.generateApiKeysStepAlertPSP')}</Alert>;
+    }
+    return <Alert severity="warning">{t('dashboardPage.nextStep.generateApiKeyStepAlertEC')}</Alert>;
+  }
+
   return (
     <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
       <Typography variant="h6" mb={3}>
         {t('dashboardPage.nextStep.title')}
       </Typography>
       <Box mb={3}>
-        {isSignedIn && hasApiKey ? (
-          <Alert severity="info">
-            {t(`dashboardPage.nextStep.completedAllSteps`)}
-          </Alert>
-        ) : (
-          <Alert severity="warning">
-            {t(
-              `dashboardPage.nextStep.${
-                isSignedIn && isPSP
-                  ? 'generateApiKeysStepAlertPSP'
-                  : (isSignedIn
-                  ? 'generateApiKeyStepAlertEC'
-                  : 'signInStepAlert')
-              }`
-            )}
-          </Alert>
-        )}        
+        {nextStepsAlert()}
       </Box>
       {isSignedIn && !hasApiKey && hasPermission('apikey') ? (
         <Button

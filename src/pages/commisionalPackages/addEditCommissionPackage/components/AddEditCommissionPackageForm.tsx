@@ -543,7 +543,6 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         data-testid="transfer-category-list-test"
                         disabled={!(taxonomyList?.taxonomies && taxonomyList.taxonomies.length > 0)}
                       >
-                        {/* TODO VERIFY VALUE AND DESCRIPTION ARE CORRECT */}
                         {taxonomyList?.taxonomies?.map((el) => (
                           <MenuItem
                             key={`taxonomies${el.service_type_code}${el.service_type_description}`}

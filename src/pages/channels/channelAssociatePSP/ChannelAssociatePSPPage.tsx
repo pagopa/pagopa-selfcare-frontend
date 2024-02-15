@@ -117,8 +117,7 @@ function ChannelAssociatePSPPage() {
       getChannelDetail(channelId)
         .then((channel) => setChannelDetail(channel))
         .catch((reason) => console.error(reason));
-    // TODO verify if instituitionId is needed
-      getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])
+      getBrokerDelegation( selectedParty?.partyId, undefined, ["PSP"])
         .then((data) => {
           if (data && selectedParty) {
             // A PSP that is a broker can associate itself to the channel

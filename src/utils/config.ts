@@ -9,7 +9,6 @@ export enum Type {
 export function getConfig(param: string, options?: { default?: any; type?: Type; required?: boolean }) {
 
     // eslint-disable-next-line no-underscore-dangle
-
     const actual_environment = env.get('REACT_APP_ENV').required().asString();
     /*eslint-disable */
     if (actual_environment === "prod" || (!("_env_" in window) || !(window as any)._env_[param])) {

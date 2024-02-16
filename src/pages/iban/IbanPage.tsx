@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {handleErrors} from '@pagopa/selfcare-common-frontend/services/errorService';
+import { add } from 'date-fns';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
@@ -11,7 +12,6 @@ import {Ibans} from '../../api/generated/portal/Ibans';
 import {LOADING_TASK_IBAN_TABLE} from '../../utils/constants';
 import {IbanOnCreation} from '../../model/Iban';
 import {getIbanList} from '../../services/ibanService';
-import {datePlusDays} from "../../utils/common-utils";
 import StandInAndCupForm from './StandInAndCupForm/StandInAndCupForm';
 
 const emptyIbanList: Ibans = {
@@ -21,8 +21,8 @@ const emptyIbanList: Ibans = {
 export const emptyIban: IbanOnCreation = {
     iban: '',
     description: '',
-    validity_date: datePlusDays(new Date(), 1),
-    due_date: datePlusDays(new Date(), 2),
+    validity_date: add(new Date(), { days: 1 }),
+    due_date: add(new Date(), { years: 1 }),
     creditor_institution_code: '',
     is_active: true,
     labels: [],

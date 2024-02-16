@@ -54,7 +54,7 @@ resource "azurerm_key_vault_access_policy" "ad_domain_kv_group_policy" {
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = module.github_runner_app.object_id
 
-  key_permissions         = []
+  key_permissions         = ["Get", "List", "Update", "Create", "Import", "Delete", "Encrypt", "Decrypt"]
   secret_permissions      = ["Get", "List"]
   storage_permissions     = []
   certificate_permissions = []

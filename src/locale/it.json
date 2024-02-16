@@ -63,7 +63,8 @@
       "generateApiKeysStepAlertPSP": "Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.",
       "generateApiKeyStepAlertEC": "Genera le API Key di connessione al Nodo per abilitare la creazione delle stazioni.",
       "generateApiKeysCTA": "Genera API Key",
-      "completedAllSteps": "La registrazione sul Nodo è stata ultimata."
+      "completedAllSteps": "La registrazione sul Nodo è stata ultimata.",
+      "emptyState": "Non ci sono altre attività da completare al momento."
     },
     "operationTable": {
       "title": "Tavolo operativo",

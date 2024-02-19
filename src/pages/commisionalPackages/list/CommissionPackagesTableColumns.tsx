@@ -1,12 +1,10 @@
 import { Box, Grid, Typography } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { TFunction } from 'react-i18next';
 import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
-import { FormAction } from '../../../model/Station';
-import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -105,26 +103,43 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-
       getActions: (params: any) => {
+        const packageType = params.row.type;
+
         const managePackageAction = (
           <GridLinkAction
             key="Gestisci pacchetto"
             label="Gestisci pacchetto"
             to={generatePath('')}
-            showInMenu={true}
-          />
-        );
-        const manageRecipientsAction = (
-          <GridLinkAction
-            key="Gestisci destinatari"
-            label="Gestisci destinatari"
-            to={generatePath('')}
-            showInMenu={true}
+            showInMenu={packageType !== 'GLOBAL'}
+            icon={packageType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
           />
         );
 
-        return [managePackageAction, manageRecipientsAction];
+        if (packageType === 'PRIVATE') {
+          return [
+            managePackageAction,
+            <GridLinkAction
+              key="Gestisci destinatari"
+              label="Gestisci destinatari"
+              to={generatePath('')}
+              showInMenu={true}
+            />,
+          ];
+        }
+        if (packageType === 'PUBLIC') {
+          return [
+            managePackageAction,
+            <GridLinkAction
+              key="Gestisci adesioni"
+              label="Gestisci adesioni"
+              to={generatePath('')}
+              showInMenu={true}
+            />,
+          ];
+        }
+
+        return [managePackageAction];
       },
       sortable: false,
       flex: 1,
@@ -172,14 +187,14 @@ export function renderCell(
 
 export function showCustomHeader(params: GridColumnHeaderParams) {
   return (
-      <Typography
-        color="colorTextPrimary"
-        variant="caption"
-        justifyContent="center"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 2}}
-      >
-        {params.colDef.headerName}
-      </Typography>
+    <Typography
+      color="colorTextPrimary"
+      variant="caption"
+      justifyContent="center"
+      sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 2 }}
+    >
+      {params.colDef.headerName}
+    </Typography>
   );
 }
 

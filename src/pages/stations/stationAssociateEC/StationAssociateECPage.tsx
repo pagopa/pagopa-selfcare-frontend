@@ -24,7 +24,7 @@ import {
     CreditorInstitutionAssociatedCodeList
 } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import {Delegation} from '../../../api/generated/portal/Delegation';
-import {getBrokerDelegation} from "../../../services/channelService";
+import { getBrokerDelegation } from '../../../services/institutionService';
 import {ProblemJson} from '../../../api/generated/portal/ProblemJson';
 import {isErrorResponse} from '../../../utils/client-utils';
 import ECSelectionSearch from './ECSelectionSearch';
@@ -52,7 +52,7 @@ function StationAssociateECPage() {
     useEffect(() => {
         setLoading(true);
         if (selectedParty) {
-            getBrokerDelegation(selectedParty.partyId, ["EC"])
+            getBrokerDelegation(selectedParty?.partyId,undefined, ["EC"])
                 .then((data) => {
                     if (data) {
                         addItselfAsAvaliableEC(data);

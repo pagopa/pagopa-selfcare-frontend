@@ -1,9 +1,11 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
+import { add } from 'date-fns';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   Autocomplete,
   Box,
@@ -12,11 +14,9 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Paper,
-  Popper,
   Radio,
   RadioGroup,
   Select,
@@ -26,67 +26,56 @@ import {
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Female, RemoveCircleOutline } from '@mui/icons-material';
+import { RemoveCircleOutline } from '@mui/icons-material';
 import { MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
   LOADING_TASK_CREATING_COMMISSION_PACKAGE,
   LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
+  LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
-import {
-  CommissionPackageOnCreation,
-  TaxonomyServicesResource,
-  TouchpointsResource,
-} from '../../../../model/CommissionPackage';
-import {
-  createCommissionPackage,
-  getPaymentTypes,
-  getTaxonomyService,
-  getTouchpoint,
-} from '../../../../services/__mocks__/commissionPackageService';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
-import { getChannelsIdAssociatedToPSP } from '../../../../services/commissionPackageService';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import GenericModal from '../../../../components/Form/GenericModal';
-import {PaymentTypes} from "../../../../api/generated/portal/PaymentTypes";
+import { PaymentTypes } from '../../../../api/generated/portal/PaymentTypes';
+import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
+import { Taxonomies } from '../../../../api/generated/portal/Taxonomies';
+import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
+import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
+import { getPaymentTypes } from '../../../../services/configurationService';
+import { createBundle, getTouchpoints } from '../../../../services/bundleService';
+import { getTaxonomies } from '../../../../services/taxonomyService';
+import { getBrokerDelegation } from '../../../../services/institutionService';
+import { Delegation } from '../../../../api/generated/portal/Delegation';
+import ROUTES from '../../../../routes';
 
 type Prop = {
-  commPackageDetails: CommissionPackageOnCreation | undefined;
+  commPackageDetails: BundleRequest | undefined;
 };
-
-const emptyPaymentTypes = {
-  payment_types: [
-    {
-      description: '',
-      payment_type: '',
-    },
-  ],
-};
+const minDateTomorrow = add(new Date(), { days: 1 });
 
 const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   const { t } = useTranslation();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
+  const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-  const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>(emptyPaymentTypes);
-  const [touchPoint, setTouchPoint] = useState<TouchpointsResource>({
-    touchpointList: [],
-  });
-  const [taxonomyService, setTaxonomyService] = useState<TaxonomyServicesResource>({
-    taxonomyServiceList: [],
-  });
-  const [channelsId, setChannelsId] = useState<Array<string>>(['']);
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
+  const [touchpointList, setTouchpointList] = useState<Touchpoints>();
+  const [taxonomyList, setTaxonomyList] = useState<Taxonomies>();
+  const [brokerDelegationList, setBrokerDelegationList] = useState<Array<Delegation>>([]);
+  const [channelsId, setChannelsId] = useState<Array<string>>([]);
 
   const inputGroupStyle = {
     borderRadius: 1,
@@ -96,26 +85,63 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     mb: 3,
   };
 
+  const getChannelsByBrokerCode = async (selectedBrokerCode: string) => {
+    setLoadingChannels(true);
+    await getChannelsIdAssociatedToPSP(0, selectedBrokerCode).then((data) => {
+      if (data) {
+        setChannelsId(data);
+      }
+    })
+    .catch(error => {
+      addError({
+        id: 'GET_CHANNEL_IDS_DATA',
+        blocking: false,
+        error: error as Error,
+        techDescription: `An error occurred while getting data`,
+        toNotify: true,
+        displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+        displayableDescription: t(
+          'commissionPackagesPage.addEditCommissionPackage.error.errorMessageChannelIdsDataDesc'
+        ),
+        component: 'Toast',
+      });
+    })
+    .finally(() => setLoadingChannels(false));
+  };
+
   useEffect(() => {
     setLoading(true);
     Promise.all([
       getPaymentTypes(),
-      getTouchpoint(),
-      getTaxonomyService(),
-      getChannelsIdAssociatedToPSP(0, brokerCode),
+      getTouchpoints(0, 50),
+      getTaxonomies(),
+      getBrokerDelegation(undefined, selectedParty?.partyId ?? ''),
     ])
-      .then(([paymentTypes, touchpoint, taxonomyService, channelsId]) => {
+      .then(([paymentTypes, touchpoints, taxonomyService, brokerDelegation]) => {
         if (paymentTypes) {
           setPaymentOptions(paymentTypes);
         }
-        if (touchpoint) {
-          setTouchPoint(touchpoint);
+        if (touchpoints) {
+          setTouchpointList(touchpoints);
         }
         if (taxonomyService) {
-          setTaxonomyService(taxonomyService);
+          setTaxonomyList(taxonomyService);
         }
-        if (channelsId) {
-          setChannelsId(channelsId);
+        if (brokerDelegation && brokerDelegation.length > 0) {
+          setBrokerDelegationList(brokerDelegation);
+        } else {
+          addError({
+            id: 'GET_BROKER_DELEGATIONS_DATA',
+            blocking: false,
+            error: new Error(`An error occurred while getting data`),
+            techDescription: `An error occurred while getting data`,
+            toNotify: true,
+            displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+            displayableDescription: t(
+              'commissionPackagesPage.addEditCommissionPackage.error.errorMessageNoBrokerDelegations'
+            ),
+            component: 'Toast',
+          });
         }
       })
       .catch((reason) => {
@@ -135,24 +161,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [brokerCode]);
+  }, [selectedParty]);
 
-  useEffect(() => {
-    if (typeof commPackageDetails === 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('validityDateFrom', getTomorrowDate(new Date()));
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      formik.setFieldValue('validityDateTo', getTomorrowDate(new Date()));
-    }
-  }, [commPackageDetails]);
-
-  const getTomorrowDate = (currentDate: Date) => {
-    const tomorrow = new Date(currentDate);
-    tomorrow.setDate(currentDate.getDate() + 1);
-    return tomorrow;
-  };
-
-  const initialFormData = (detail?: CommissionPackageOnCreation) => ({
+  const initialFormData = (detail?: BundleRequest) => ({
     abi: detail?.abi || '',
     description: detail?.description || '',
     digitalStamp: detail?.digitalStamp || false,
@@ -167,22 +178,17 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     paymentType: detail?.paymentType || undefined,
     touchpoint: detail?.touchpoint || undefined,
     transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
-    type: detail?.type || undefined,
-    validityDateFrom: detail?.validityDateFrom || undefined,
-    validityDateTo: detail?.validityDateTo || undefined,
+    type: detail?.type ?? undefined,
+    validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
+    validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
+    pspBusinessName: selectedParty?.description ?? ""
   });
 
-  const validate = (values: Partial<CommissionPackageOnCreation>) =>
+  const validate = (values: Partial<BundleRequest>) =>
     Object.fromEntries(
       Object.entries({
         ...{
           description: !values.description
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
-          digitalStamp: !values.digitalStamp
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : undefined,
-          digitalStampRestriction: !values.digitalStampRestriction
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
             : undefined,
           idChannel: !values.idChannel
@@ -205,7 +211,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             : undefined,
           validityDateFrom: !values.validityDateFrom
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateFrom.getTime() < new Date().getTime()
+            : values.validityDateFrom.getTime() < minDateTomorrow.getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateTo &&
               values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -215,7 +221,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             : undefined,
           validityDateTo: !values.validityDateTo
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
-            : values.validityDateTo.getTime() < new Date().getTime()
+            : values.validityDateTo.getTime() < minDateTomorrow.getTime()
             ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
             : values.validityDateFrom &&
               values.validityDateTo.getTime() < values.validityDateFrom.getTime()
@@ -227,7 +233,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       }).filter(([_key, value]) => value)
     );
 
-  const enableSubmit = (values: CommissionPackageOnCreation) =>
+  const enableSubmit = (values: BundleRequest) =>
     values.type !== undefined &&
     values.name !== '' &&
     values.minPaymentAmount !== 0 &&
@@ -239,19 +245,17 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     values.idChannel !== '' &&
     values.idChannel !== undefined &&
     values.description !== '' &&
-    values.digitalStamp !== true &&
-    values.digitalStamp !== false &&
-    values.digitalStampRestriction !== true &&
-    values.digitalStampRestriction !== false &&
     values.validityDateFrom != null &&
     values.validityDateFrom.getTime() > 0 &&
     values.validityDateTo != null &&
     values.validityDateTo.getTime() > 0;
 
-  const submit = async (body: CommissionPackageOnCreation) => {
+  const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     try {
-      await createCommissionPackage(body);
+      const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+      await createBundle(pspTaxCode, body);
+      history.push(ROUTES.COMMISSION_PACKAGES);
     } catch (reason) {
       addError({
         id: 'CREATE_COMMISSION_PACKAGE',
@@ -270,7 +274,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     }
   };
 
-  const formik = useFormik<Partial<CommissionPackageOnCreation>>({
+  const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialFormData(commPackageDetails),
     validate,
     onSubmit: async () => {
@@ -371,7 +375,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               icon={<MenuBook />}
             />
             <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
                   id="name"
@@ -391,7 +395,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                 />
               </Grid>
 
-              <Grid container item xs={6}>
+              <Grid item xs={6}>
                 <TextField
                   fullWidth
                   id="description"
@@ -410,7 +414,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   }}
                 />
               </Grid>
-              <Grid container item xs={6}>
+              <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel size="small">
                     {t('commissionPackagesPage.addEditCommissionPackage.form.paymentType')}
@@ -424,13 +428,16 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       'commissionPackagesPage.addEditCommissionPackage.form.paymentType'
                     )}
                     size="small"
-                    value={formik.values.paymentType || ''}
+                    value={formik.values.paymentType ?? ''}
                     onChange={formik.handleChange}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     data-testid="payment-type-test"
+                    disabled={
+                      !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
+                    }
                   >
-                    {paymentOptions &&
-                      sortPaymentType(paymentOptions!.payment_types!).map((option: any) => (
+                    {paymentOptions?.payment_types &&
+                      sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
                           {`${option.description} - ${option.payment_type}`}
                         </MenuItem>
@@ -438,7 +445,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid container item xs={6}>
+              <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel size="small">
                     {t('commissionPackagesPage.addEditCommissionPackage.form.touchpoint')}
@@ -456,10 +463,13 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"
+                    disabled={
+                      !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
+                    }
                   >
-                    {touchPoint.touchpointList.map((option, i) => (
-                      <MenuItem key={i} value={option.touchpoint}>
-                        {option.touchpoint}
+                    {touchpointList?.touchpoints?.map((el, i) => (
+                      <MenuItem key={`touchpoint${i}`} value={el.name}>
+                        {el.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -467,9 +477,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               </Grid>
 
               {formik.values.transferCategoryList?.map((_pT, i) => (
-                <Grid container key={i} sx={{ pt: 2, px: 2 }}>
-                  {i > 0 ? (
-                    <Grid container item xs={1} key={`remove${i}`} mt={1}>
+                <React.Fragment key={`transferCategory${i}`}>
+                  {i > 0 && (
+                    <Grid item xs={1} mt={1}>
                       <RemoveCircleOutline
                         color="error"
                         sx={{
@@ -480,10 +490,10 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         data-testid={`remove-payment-method${i}`}
                       />
                     </Grid>
-                  ) : null}
-                  <Grid container item xs={i > 0 ? 5 : 6} key={`item${i}`}>
-                    <FormControl fullWidth key={`FormControl${i}`}>
-                      <InputLabel size="small" key={`InputLabel${i}_label`}>
+                  )}
+                  <Grid item xs={i > 0 ? 11 : 12} pr={2}>
+                    <FormControl sx={{ width: '50%' }}>
+                      <InputLabel size="small">
                         {t(
                           'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
                         )}
@@ -517,22 +527,25 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                           Boolean(formik.errors.transferCategoryList)
                         }
                         data-testid="transfer-category-list-test"
+                        disabled={!(taxonomyList?.taxonomies && taxonomyList.taxonomies.length > 0)}
                       >
-                        {taxonomyService &&
-                          taxonomyService.taxonomyServiceList.map((option: any) => (
-                            <MenuItem key={option.taxonomyService} value={option.taxonomyService}>
-                              {option.taxonomyService}
-                            </MenuItem>
-                          ))}
+                        {taxonomyList?.taxonomies?.map((el) => (
+                          <MenuItem
+                            key={`taxonomies${el.service_type_code}${el.service_type_description}`}
+                            value={el.service_type_code}
+                          >
+                            {el.service_type_code} - {el.service_type_description}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
-                </Grid>
+                </React.Fragment>
               ))}
             </Grid>
 
             <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
+              <Grid item xs={6}>
                 <ButtonNaked
                   size="medium"
                   component="button"
@@ -552,7 +565,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                 icon={<></>}
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
-                <Grid container item xs={6}>
+                <Grid item xs={6}>
                   <NumericFormat
                     fullWidth
                     id="minPaymentAmount"
@@ -587,7 +600,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   />
                 </Grid>
 
-                <Grid container item xs={6}>
+                <Grid item xs={6}>
                   <NumericFormat
                     fullWidth
                     id="maxPaymentAmount"
@@ -630,7 +643,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                 icon={<></>}
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
-                <Grid container item xs={6}>
+                <Grid item xs={6}>
                   <NumericFormat
                     fullWidth
                     id="paymentAmount"
@@ -668,40 +681,76 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               title={t('commissionPackagesPage.addEditCommissionPackage.form.pspdata')}
               icon={<MenuBook />}
             />
-            <Grid container item xs={6} sx={{ mt: 2, pr: 1 }}>
-              <Autocomplete
-                sx={{ mb: 5 }}
-                disablePortal
-                id="idChannel"
-                options={
-                  // eslint-disable-next-line functional/immutable-data
-                  channelsId.sort()
-                }
-                onChange={(_event, value) => {
-                  if (value === null) {
-                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                    formik.setFieldValue('idChannel', '');
-                  } else {
-                    formik.handleChange('idChannel')(value);
+            <Grid container>
+              <Grid item xs={6} sx={{ mt: 2, pr: 1 }}>
+                <Autocomplete
+                  id="brokerCodes"
+                  disablePortal
+                  options={
+                    // eslint-disable-next-line functional/immutable-data
+                    brokerDelegationList?.map((el) => el.institution_name)?.sort()
                   }
-                }}
-                value={formik.values.idChannel}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
-                    sx={{ fontWeight: 'medium' }}
-                  />
-                )}
-                PaperComponent={({ children }) => (
-                  <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
-                )}
-                noOptionsText={t(
-                  'commissionPackagesPage.addEditCommissionPackage.form.noChannelsOption'
-                )}
-                data-testid="channels-id-test"
-              />
+                  disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
+                  onChange={async (_event, value) => {
+                    if (value !== null) {
+                      await getChannelsByBrokerCode(
+                        brokerDelegationList?.find((el) => el.institution_name === value)
+                          ?.broker_tax_code ?? ''
+                      );
+                    }
+                  }}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.brokerCode')}
+                      sx={{ fontWeight: 'medium' }}
+                    />
+                  )}
+                  PaperComponent={({ children }) => (
+                    <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
+                  )}
+                  noOptionsText={t(
+                    'commissionPackagesPage.addEditCommissionPackage.form.noBrokersOption'
+                  )}
+                  data-testid="broker-code-test"
+                />
+              </Grid>
+              <Grid item xs={6} sx={{ mt: 2, pr: 1 }}>
+                <Autocomplete
+                  disablePortal
+                  id="idChannel"
+                  options={
+                    // eslint-disable-next-line functional/immutable-data
+                    channelsId.sort()
+                  }
+                  disabled={!(channelsId && channelsId.length > 0)}
+                  onChange={(_event, value) => {
+                    if (value === null) {
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      formik.setFieldValue('idChannel', '');
+                    } else {
+                      formik.handleChange('idChannel')(value);
+                    }
+                  }}
+                  value={formik.values.idChannel}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
+                      sx={{ fontWeight: 'medium' }}
+                    />
+                  )}
+                  PaperComponent={({ children }) => (
+                    <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
+                  )}
+                  noOptionsText={t(
+                    'commissionPackagesPage.addEditCommissionPackage.form.noChannelsOption'
+                  )}
+                  data-testid="channels-id-test"
+                />
+              </Grid>
             </Grid>
           </Box>
           <Box sx={inputGroupStyle}>
@@ -710,7 +759,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               icon={<BookmarkAddIcon />}
             />
             <Grid container spacing={2} mt={1}>
-              <Grid container item xs={12}>
+              <Grid item xs={12}>
                 <FormControl>
                   <FormLabel sx={{ fontWeight: 'medium', fontSize: '16px' }}>
                     {t(
@@ -721,20 +770,24 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="digitalStamp"
                     sx={{ pl: 1 }}
-                    onChange={(e) => formik.setFieldValue('digitalStamp', e.target.value)}
+                    onChange={(e) =>
+                      formik.setFieldValue('digitalStamp', e.target.value === 'true')
+                    }
                     row
                     data-testid="digital-stamp-test"
+                    value={formik.values.digitalStamp}
                   >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      sx={{ pr: 3 }}
-                    />
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      sx={{ pr: 3 }}
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      disabled={formik.values.digitalStampRestriction}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -751,21 +804,23 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     name="digitalStampRestriction"
                     sx={{ pl: 1 }}
                     onChange={(e) =>
-                      formik.setFieldValue('digitalStampRestriction', e.target.value)
+                      formik.setFieldValue('digitalStampRestriction', e.target.value === 'true')
                     }
                     row
                     data-testid="digital-stamp-restriction-test"
+                    value={formik.values.digitalStampRestriction}
                   >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
-                      sx={{ pr: 3 }}
-                    />
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
                       label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      sx={{ pr: 3 }}
+                    />
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio />}
+                      disabled={formik.values.digitalStamp}
+                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -778,7 +833,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               icon={<DateRangeIcon />}
             />
             <Grid container spacing={2} mt={1}>
-              <Grid container item xs={3}>
+              <Grid item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('commissionPackagesPage.addEditCommissionPackage.form.from')}
@@ -847,7 +902,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           <Button
             color="primary"
             variant="outlined"
-            onClick={() => ''}
+            onClick={() => history.goBack()}
             data-testid="cancel-button-test"
           >
             {t('addEditStationPage.addForm.backButton')}

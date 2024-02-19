@@ -106,7 +106,7 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
                 <>
                   <Pagination
                     color="primary"
-                    count={stations.pageInfo.total_pages ?? 0}
+                    count={stations?.pageInfo?.total_pages ?? 1}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                   />

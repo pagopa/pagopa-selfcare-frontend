@@ -145,7 +145,7 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
                   ecListPage.page_info?.total_pages && ecListPage.page_info?.total_pages > 1 ? (
                     <Pagination
                       color="primary"
-                      count={ecListPage.page_info?.total_pages ?? 0}
+                      count={ecListPage?.page_info?.total_pages ?? 1}
                       page={page + 1}
                       onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
                     />

@@ -10,7 +10,6 @@ import {NodeOnSignInPSP} from '../model/Node';
 import {PSPDirectDTO} from '../model/PSP';
 import {StationOnCreation} from '../model/Station';
 import {ChannelsResource} from './generated/portal/ChannelsResource';
-import {createClient, WithDefaultsT} from './generated/portal/client';
 import {PspChannelsResource} from './generated/portal/PspChannelsResource';
 import {ChannelDetailsResource} from './generated/portal/ChannelDetailsResource';
 import {PspChannelPaymentTypes} from './generated/portal/PspChannelPaymentTypes';
@@ -59,11 +58,16 @@ import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
 import { Bundles } from './generated/portal/Bundles';
+import { Touchpoints } from './generated/portal/Touchpoints';
+import { Taxonomies } from './generated/portal/Taxonomies';
+import { WithDefaultsT, createClient } from './generated/portal/client';
+import { BundleRequest } from './generated/portal/BundleRequest';
+import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
-const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation) => (params: any) => {
+const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation : any) => (params: any) => {
     const token = storageTokenOps.read();
     return wrappedOperation({
         ...params,
@@ -468,7 +472,7 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBrokerDelegation: async (institutionId?: string | undefined, brokerId?: string, roles?: Array<string>): Promise<Array<Delegation>> => {
+    getBrokerDelegation: async (institutionId?: string | undefined, brokerId?: string | undefined, roles?: Array<string>): Promise<Array<Delegation>> => {
         const result = await backofficeClient.getBrokerDelegation({'institution-id': institutionId, roles, brokerId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
@@ -867,6 +871,21 @@ export const BackofficeApi = {
 
     getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
         const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    createBundle: async (pspTaxCode: string, bundle: BundleRequest): Promise<BundleCreateResponse> => {
+        const result = await backofficeClient.createBundle({"psp-code": pspTaxCode, body: bundle});
+        return extractResponse(result, 201, onRedirectToLogin);
+    },
+
+    getTouchpoints: async (page: number, limit: number): Promise<Touchpoints> => {
+        const result = await backofficeClient.getTouchpoints({page, limit});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getTaxonomies: async (): Promise<Taxonomies> => {
+        const result = await backofficeClient.getTaxonomies({});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

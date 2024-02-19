@@ -130,7 +130,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
                 <>
                   <Pagination
                     color="primary"
-                    count={channels?.page_info?.total_pages ?? 0}
+                    count={channels?.page_info?.total_pages ?? 1}
                     page={pagePaginator + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) => {
                       setPage(value - 1);

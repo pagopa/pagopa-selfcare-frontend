@@ -11,18 +11,15 @@ import { WrapperChannelDetailsDto } from '../api/generated/portal/WrapperChannel
 import { BackofficeApi } from '../api/BackofficeClient';
 import { WfespPluginConfs } from '../api/generated/portal/WfespPluginConfs';
 import { ChannelOnCreation } from '../model/Channel';
-import {PaymentTypes} from "../api/generated/portal/PaymentTypes";
-import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
+
 import {
   getChannels as getChannelsMocked,
   getChannelsMerged as getChannelsMergedMocked,
   getPSPChannels as getPSPChannelsMocked,
   createChannel as createChannelMocked,
   updateChannel as updateChannelMocked,
-  getPaymentTypes as getPaymentTypesMocked,
   getChannelDetail as getChannelDetailMocked,
-  getBrokerDelegation as getBrokerDelegationMocked,
   getChannelPSPs as getChannelPSPsMocked,
   getChannelCode as getChannelCodeMocked,
   associatePSPtoChannel as associatePSPtoChannelMocked,
@@ -32,6 +29,8 @@ import {
   updateWrapperChannel,
   getWfespPlugins as mockedGetWfespPlugins,
 } from './__mocks__/channelService';
+
+// /channels endpoint
 
 export const getChannels = (page: number): Promise<ChannelsResource> => {
   /* istanbul ignore if */
@@ -77,6 +76,26 @@ export const getPSPChannels = (taxCode: string): Promise<PspChannelsResource> =>
   }
 };
 
+export const getChannelsIdAssociatedToPSP = (
+  page: number,
+  brokerCode: string,
+  channelcodefilter?: string,
+  limit?: number,
+  sorting?: string
+): Promise<Array<string>> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getChannelsMergedMocked(page, brokerCode, channelcodefilter, limit, sorting).then(
+      (resources) =>
+        resources.channels!.map((e) => (e.channel_code !== undefined ? e.channel_code : ''))
+    );
+  } else {
+    return BackofficeApi.getChannelsMerged(page, brokerCode, channelcodefilter, limit, sorting).then(
+      (resources) =>
+        resources.channels!.map((e) => (e.channel_code !== undefined ? e.channel_code : ''))
+    );
+  }
+};
+
 export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return mockedGetWfespPlugins();
@@ -106,14 +125,6 @@ export const updateChannel = (
   }
 };
 
-export const getPaymentTypes = (): Promise<PaymentTypes> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getPaymentTypesMocked();
-  } else {
-    return BackofficeApi.getPaymentTypes().then((resources) => resources);
-  }
-};
-
 export const getChannelCode = (pspCode: string): Promise<ChannelCodeResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -134,15 +145,6 @@ export const getChannelPSPs = (
     return getChannelPSPsMocked(page);
   } else {
     return BackofficeApi.getChannelPSPs(channelcode, pspName, page, limit).then((resources) => resources);
-  }
-};
-
-export const getBrokerDelegation = (partyId: string, roles: Array<string>): Promise<Array<Delegation>> => {
-  /* istanbul ignore if */
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getBrokerDelegationMocked();
-  } else {
-    return BackofficeApi.getBrokerDelegation(undefined, partyId, roles).then((resources) => resources);
   }
 };
 

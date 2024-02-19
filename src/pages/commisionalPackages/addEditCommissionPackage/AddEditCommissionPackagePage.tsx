@@ -8,10 +8,12 @@ import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CommissionPackageOnCreation, FormAction } from '../../../model/CommissionPackage';
-import { getCommissionPackageDetails } from '../../../services/__mocks__/commissionPackageService';
+import { FormAction } from '../../../model/CommissionPackage';
+import { getCommissionPackageDetails } from '../../../services/__mocks__/bundleService';
 import { LOADING_TASK_COMMISSION_PACKAGE_DETAIL } from '../../../utils/constants';
+import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import AddEditCommissionPackageForm from './components/AddEditCommissionPackageForm';
+
 
 const AddEditCommissionPackagePage = () => {
   const { t } = useTranslation();
@@ -22,7 +24,7 @@ const AddEditCommissionPackagePage = () => {
   const { nameId, actionId } = useParams<{ nameId: string; actionId: string }>();
   const goBack = () => history.push(ROUTES.COMMISSION_PACKAGES);
   const [commissionPackageDetails, setCommissionPackageDetails] = useState<
-    CommissionPackageOnCreation | undefined
+    BundleRequest | undefined
   >();
 
   const getDetails = async () => {

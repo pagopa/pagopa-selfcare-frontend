@@ -31,7 +31,6 @@ import {
   // associatePSPtoChannel,
   createChannel,
   createWrapperChannelDetails,
-  getPaymentTypes,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
@@ -49,6 +48,7 @@ import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelD
 import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import { ENV } from '../../../utils/env';
 import ConfirmModal from '../../components/ConfirmModal';
+import { getPaymentTypes } from '../../../services/configurationService';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -643,8 +643,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         }}
                         required
                       >
-                        {paymentOptions &&
-                          sortPaymentType(paymentOptions!.payment_types!).map((option: any) => (
+                        {paymentOptions?.payment_types &&
+                          sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                             <MenuItem key={option.payment_type} value={option.payment_type}>
                               {`${option.description} - ${option.payment_type}`}
                             </MenuItem>

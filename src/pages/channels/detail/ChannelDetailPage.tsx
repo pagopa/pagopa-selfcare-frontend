@@ -3,7 +3,6 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
-import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import ROUTES from '../../../routes';
 import { getChannelDetail, getChannelPSPs } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';

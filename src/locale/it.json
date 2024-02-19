@@ -866,6 +866,8 @@
         "validityPeriod": "Periodo di validità",
         "channelCode": "Codice canale",
         "noChannelsOption": "Nessun canale trovato",
+        "brokerCode": "Codice intermediario",
+        "noBrokersOption": "Nessun intermediario trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
         "yes": "Si",
@@ -890,7 +892,9 @@
       "error": {
         "errorTitle": "Errore",
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
-        "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni"
+        "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
+        "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni",
+        "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
       }
     }
   },

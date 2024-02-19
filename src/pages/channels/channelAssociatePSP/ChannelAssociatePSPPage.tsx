@@ -17,9 +17,9 @@ import { INSTITUTIONS_PSP_CHANNEL_TYPES, LOADING_TASK_PSP_AVAILABLE } from '../.
 import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
 import {
   associatePSPtoChannel,
-  getBrokerDelegation,
   getChannelDetail,
 } from '../../../services/channelService';
+import { getBrokerDelegation } from '../../../services/institutionService';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
@@ -117,8 +117,7 @@ function ChannelAssociatePSPPage() {
       getChannelDetail(channelId)
         .then((channel) => setChannelDetail(channel))
         .catch((reason) => console.error(reason));
-
-      getBrokerDelegation(selectedParty?.partyId, ["PSP"])
+      getBrokerDelegation( selectedParty?.partyId, undefined, ["PSP"])
         .then((data) => {
           if (data && selectedParty) {
             // A PSP that is a broker can associate itself to the channel

@@ -35,26 +35,37 @@ function getDynamicSection(bundleDetail: Bundle, t: TFunction<'translation'>) {
     return (
       <>
         <Grid item xs={6} alignItems={'center'}>
-        <Typography variant="sidenav">  {t(`commissionBundlesPage.commissionBundleDetail.${isPrivate ? "recipients": "subscriptions"}`)}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  textAlign={'right'}
-                  display={'flex'}
-                  alignItems={'center'}
-                  justifyContent={'flex-end'}
-                  xs={6}
-                >
-                  <ButtonNaked
-                    component={Link}
-                    to={generatePath("")} // TODO Add dynamic path to manage reciptients/subscriptions
-                    color="primary"
-                    endIcon={<ManageAccounts />}
-                    size="medium"
-                  >
-        {t(`commissionBundlesPage.commissionBundleDetail.${isPrivate ? "manageRecipients": "menageSubscriptions"}`)}
-                  </ButtonNaked>
-                </Grid>
+          <Typography variant="sidenav">
+            {' '}
+            {t(
+              `commissionBundlesPage.commissionBundleDetail.${
+                isPrivate ? 'recipients' : 'subscriptions'
+              }`
+            )}
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          textAlign={'right'}
+          display={'flex'}
+          alignItems={'center'}
+          justifyContent={'flex-end'}
+          xs={6}
+        >
+          <ButtonNaked
+            component={Link}
+            to={generatePath('')} // TODO Add dynamic path to manage reciptients/subscriptions
+            color="primary"
+            endIcon={<ManageAccounts />}
+            size="medium"
+          >
+            {t(
+              `commissionBundlesPage.commissionBundleDetail.${
+                isPrivate ? 'manageRecipients' : 'menageSubscriptions'
+              }`
+            )}
+          </ButtonNaked>
+        </Grid>
         <Grid item xs={3}>
           <Typography variant="body2">
             {t('commissionBundlesPage.commissionBundleDetail.activeEntities')}
@@ -165,7 +176,7 @@ const CommissionBundleDetailPage = () => {
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              <Button color="error" variant="outlined" onClick={() => 'TODO DELETE BUNDLE'}>
+              <Button color="error" variant="outlined" onClick={() => '' /* TODO DELETE BUTTON */}>
                 {t('general.delete')}
               </Button>
               <Button
@@ -181,7 +192,7 @@ const CommissionBundleDetailPage = () => {
             </Stack>
           </Grid>
         </Grid>
-
+        {/* TODO Add alert for packageType === Private if taxonomies not longer valid */}
         <Paper
           elevation={8}
           sx={{
@@ -192,8 +203,8 @@ const CommissionBundleDetailPage = () => {
           <Accordion defaultExpanded>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
+              aria-controls="bundle-config-content"
+              id="bundle-config-header"
             >
               <Typography variant="h6">
                 {t('commissionBundlesPage.addEditCommissionBundle.form.bundleConfiguration')}
@@ -202,182 +213,221 @@ const CommissionBundleDetailPage = () => {
             <AccordionDetails>
               <Divider sx={{ mt: 1 }}></Divider>
               <Box mt={5}>
-                <Grid container spacing={2}>
-                  <Grid container item alignContent="center" spacing={2} pb={4}>
-                    <Grid item xs={12}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.bundleStructure')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.paymentType}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.touchpoint}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.amountRange')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.minPaymentAmount}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.maxPaymentAmount}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.commission')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.commissionBundleDetail.appliedImport')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.paymentAmount}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.commissionBundleDetail.connectionData')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.brokerCode')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.idPsp}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.channelCode')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        TODO {/* TODO Retrieve channelCode */}
-                      </Typography>
-                    </Grid>
+                <Grid container spacing={2} alignContent="center" pb={4}>
+                  <Grid item xs={12}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.bundleStructure')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.paymentType}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.touchpoint}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.amountRange')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.minPaymentAmount}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.maxPaymentAmount}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.commission')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.commissionBundleDetail.appliedImport')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.paymentAmount}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.commissionBundleDetail.connectionData')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.brokerCode')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.idPsp}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.channelCode')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      TODO {/* TODO Retrieve channelCode */}
+                    </Typography>
+                  </Grid>
 
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.digitalStamp')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t(
-                          'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'
-                        )}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        TODO {/* TODO Retrieve digitalStamp */}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t(
-                          'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp'
-                        )}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        TODO {/* TODO Retrieve digitalStampRestriction */}
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.digitalStamp')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t(
+                        'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'
+                      )}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      TODO {/* TODO Retrieve digitalStamp */}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t(
+                        'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp'
+                      )}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      TODO {/* TODO Retrieve digitalStampRestriction */}
+                    </Typography>
+                  </Grid>
 
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.validityPeriod')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.from')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.validityDateFrom?.toLocaleDateString('en-GB')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.to')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.validityDateTo?.toLocaleDateString('en-GB')}
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.validityPeriod')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.from')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.validityDateFrom?.toLocaleDateString('en-GB')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.to')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.validityDateTo?.toLocaleDateString('en-GB')}
+                    </Typography>
+                  </Grid>
 
-                    {getDynamicSection(commissionBundleDetail, t)}
+                  {getDynamicSection(commissionBundleDetail, t)}
 
-                    <Grid item xs={12} mt={2}>
-                      <Typography variant="sidenav">
-                        {t('commissionBundlesPage.commissionBundleDetail.changes')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.commissionBundleDetail.lastChange')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        {commissionBundleDetail.lastUpdatedDate?.toLocaleDateString('en-GB')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">
-                        {t('commissionBundlesPage.commissionBundleDetail.operatedBy')}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                        TODO {/* TODO retrieve change operator */}
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      {t('commissionBundlesPage.commissionBundleDetail.changes')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.commissionBundleDetail.lastChange')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {commissionBundleDetail.lastUpdatedDate?.toLocaleDateString('en-GB')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">
+                      {t('commissionBundlesPage.commissionBundleDetail.operatedBy')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      TODO {/* TODO retrieve change operator */}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Paper>
+        <Paper
+          elevation={8}
+          sx={{
+            mt: 2,
+            borderRadius: 4,
+            p: 4,
+          }}
+        >
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="taxonomies-service-content"
+              id="taxonomies-service-header"
+            >
+              <Typography variant="h6">
+                {t('commissionBundlesPage.commissionBundleDetail.taxonomiesService')}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Divider sx={{ mt: 1 }}></Divider>
+              <Box mt={5}>
+                <Grid container spacing={2} alignContent="center" pb={4}>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">
+                      TODO GENERAL GROUP{' '}
+                      {/* TODO Retrieve Taxonomies and loop them grouped by general type */}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="body2">TODO SINGLE ITEM TYPE</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      TODO SINGLE ITEM VALUE
+                    </Typography>
                   </Grid>
                 </Grid>
               </Box>

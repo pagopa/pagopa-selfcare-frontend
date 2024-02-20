@@ -848,7 +848,8 @@
       "waitingEntities": "Enti in attesa",
       "subscriptions": "Adesioni",
       "manageRecipients": "Gestisci destinatari",
-      "menageSubscriptions": "Gestisci adesioni"
+      "menageSubscriptions": "Gestisci adesioni",
+      "taxonomiesService": "Servizi di incasso"
     },
     "addEditCommissionBundle": {
       "breadcrumb": {

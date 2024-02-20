@@ -836,6 +836,20 @@
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
       }
     },
+    "commissionBundleDetail": {
+      "createdOn": "Creato il",
+      "appliedImport": "Importo applicato",
+      "connectionData": "Dati di connessione",
+      "changes": "Modifiche",
+      "lastChange": "Ultima modifica",
+      "operatedBy": "Operata da",
+      "recipients": "Destinatari",
+      "activeEntities": "Enti attivi",
+      "waitingEntities": "Enti in attesa",
+      "subscriptions": "Adesioni",
+      "manageRecipients": "Gestisci destinatari",
+      "menageSubscriptions": "Gestisci adesioni"
+    },
     "addEditCommissionBundle": {
       "breadcrumb": {
         "first": "Pacchetti commissioni",
@@ -1006,12 +1020,15 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "back": "Indietro",
+    "modify": "Modifica",
+    "delete": "Elimina",
     "confirm": "Conferma",
     "manage": "Gestisci",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
+    "Bundles": "Pacchetti commissioni",
     "Iban": "IBAN",
     "operationTable": "Tavolo Operativo",
     "validation": {

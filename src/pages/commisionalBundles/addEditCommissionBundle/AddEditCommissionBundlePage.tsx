@@ -8,40 +8,40 @@ import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { FormAction } from '../../../model/CommissionPackage';
-import { getCommissionPackageDetails } from '../../../services/__mocks__/bundleService';
-import { LOADING_TASK_COMMISSION_PACKAGE_DETAIL } from '../../../utils/constants';
+import { FormAction } from '../../../model/CommissionBundle';
+import { getCommissionBundleDetails } from '../../../services/__mocks__/bundleService';
+import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
-import AddEditCommissionPackageForm from './components/AddEditCommissionPackageForm';
+import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 
 
-const AddEditCommissionPackagePage = () => {
+const AddEditCommissionBundlePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_DETAIL);
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const { nameId, actionId } = useParams<{ nameId: string; actionId: string }>();
-  const goBack = () => history.push(ROUTES.COMMISSION_PACKAGES);
-  const [commissionPackageDetails, setCommissionPackageDetails] = useState<
+  const goBack = () => history.push(ROUTES.COMMISSION_BUNDLES);
+  const [commissionBundleDetails, setCommissionBundleDetails] = useState<
     BundleRequest | undefined
   >();
 
   const getDetails = async () => {
     setLoading(true);
     try {
-      const response = await getCommissionPackageDetails(nameId);
-      setCommissionPackageDetails(response);
+      const response = await getCommissionBundleDetails(nameId);
+      setCommissionBundleDetails(response);
     } catch (reason) {
       addError({
-        id: 'GET_COMMISSION_PACKAGE_DETAILS',
+        id: 'GET_COMMISSION_BUNDLE_DETAILS',
         blocking: false,
         error: reason as Error,
-        techDescription: `An error occurred while getting commission package details`,
+        techDescription: `An error occurred while getting commission bundle details`,
         toNotify: true,
-        displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
         displayableDescription: t(
-          'commissionPackagesPage.addEditCommissionPackage.error.commissionPackageDetailsErrorMessageDesc'
+          'commissionBundlesPage.addEditCommissionBundle.error.commissionBundleDetailsErrorMessageDesc'
         ),
         component: 'Toast',
       });
@@ -73,16 +73,16 @@ const AddEditCommissionPackagePage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography variant="body2">
-              {t('commissionPackagesPage.addEditCommissionPackage.breadcrumb.first')}
+              {t('commissionBundlesPage.addEditCommissionBundle.breadcrumb.first')}
             </Typography>
             <Typography variant="body2" fontWeight={'medium'}>
-              {t('commissionPackagesPage.addEditCommissionPackage.breadcrumb.second')}
+              {t('commissionBundlesPage.addEditCommissionBundle.breadcrumb.second')}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t('commissionPackagesPage.addEditCommissionPackage.title')}
-          subTitle={t('commissionPackagesPage.addEditCommissionPackage.subtitle')}
+          title={t('commissionBundlesPage.addEditCommissionBundle.title')}
+          subTitle={t('commissionBundlesPage.addEditCommissionBundle.subtitle')}
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
@@ -90,11 +90,11 @@ const AddEditCommissionPackagePage = () => {
           variantSubTitle="body1"
         />
         {selectedParty && (
-          <AddEditCommissionPackageForm commPackageDetails={commissionPackageDetails} />
+          <AddEditCommissionBundleForm commBundleDetails={commissionBundleDetails} />
         )}
       </Grid>
     </Grid>
   );
 };
 
-export default AddEditCommissionPackagePage;
+export default AddEditCommissionBundlePage;

@@ -30,9 +30,9 @@ const ROUTES = {
   IBAN_EDIT: `${BASE_ROUTE}/iban/:ibanId/:actionId`,
   IBAN_ADD: `${BASE_ROUTE}/iban/add-iban/`,
 
-  COMMISSION_PACKAGES: `${BASE_ROUTE}/comm-packages`,
-  COMMISSION_PACKAGES_ADD: `${BASE_ROUTE}/comm-packages/add-package/`,
-  COMMISSION_PACKAGES_EDIT: `${BASE_ROUTE}/comm-packages/:nameId/:actionId`,
+  COMMISSION_BUNDLES: `${BASE_ROUTE}/comm-bundles`,
+  COMMISSION_BUNDLES_ADD: `${BASE_ROUTE}/comm-bundles/add-bundle/`,
+  COMMISSION_BUNDLES_EDIT: `${BASE_ROUTE}/comm-bundles/:nameId/:actionId`,
 
   OPERATION_TABLE_ADDEDIT: `${BASE_ROUTE}/operation-table/addedit`,
   OPERATION_TABLE_DETAILS: `${BASE_ROUTE}/operation-table/:operationTableId`,

@@ -5,14 +5,14 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionPackagesSearchBar from '../list/CommissionPackagesSearchBar';
+import CommissionBundlesSearchBar from '../list/CommissionBundlesSearchBar';
 
-let getCommissionPackagePspSpy: jest.SpyInstance;
+let getCommissionBundlePspSpy: jest.SpyInstance;
 
 beforeEach(() => {
-  getCommissionPackagePspSpy = jest.spyOn(
-    require('../../../services/__mocks__/commissionPackageService'),
-    'getCommissionPackagePsp'
+  getCommissionBundlePspSpy = jest.spyOn(
+    require('../../../services/__mocks__/commissionBundleService'),
+    'getCommissionBundlePsp'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -20,16 +20,16 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<CommissionPackagesSearchBar />', () => {
-  test('render component CommissionPackagesSearchBar with filter', () => {
+describe('<CommissionBundlesSearchBar />', () => {
+  test('render component CommissionBundlesSearchBar with filter', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages`]}>
-          <Route path="/comm-packages">
+        <MemoryRouter initialEntries={[`/comm-bundles`]}>
+          <Route path="/comm-bundles">
             <ThemeProvider theme={theme}>
-              <CommissionPackagesSearchBar
-                packageNameInput={'lorem'}
-                setPackageNameInput={jest.fn()}
+              <CommissionBundlesSearchBar
+                bundleNameInput={'lorem'}
+                setBundleNameInput={jest.fn()}
               />
             </ThemeProvider>
           </Route>
@@ -38,13 +38,13 @@ describe('<CommissionPackagesSearchBar />', () => {
     );
   });
 
-  test('render component CommissionPackagesSearchBar without filter', () => {
+  test('render component CommissionBundlesSearchBar without filter', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages`]}>
-          <Route path="/comm-packages">
+        <MemoryRouter initialEntries={[`/comm-bundles`]}>
+          <Route path="/comm-bundles">
             <ThemeProvider theme={theme}>
-              <CommissionPackagesSearchBar packageNameInput={''} setPackageNameInput={jest.fn()} />
+              <CommissionBundlesSearchBar bundleNameInput={''} setBundleNameInput={jest.fn()} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>

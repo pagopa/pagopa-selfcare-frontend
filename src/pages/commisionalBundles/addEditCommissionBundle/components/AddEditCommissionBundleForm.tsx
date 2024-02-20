@@ -3,7 +3,7 @@
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { add } from 'date-fns';
 import { useFormik } from 'formik';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
@@ -26,8 +26,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RemoveCircleOutline } from '@mui/icons-material';
-import { MenuBook } from '@mui/icons-material';
+import { RemoveCircleOutline , MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -35,8 +34,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
-  LOADING_TASK_CREATING_COMMISSION_PACKAGE,
-  LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS,
+  LOADING_TASK_CREATING_COMMISSION_BUNDLE,
+  LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
 import { sortPaymentType } from '../../../../model/PaymentType';
@@ -57,15 +56,15 @@ import { Delegation } from '../../../../api/generated/portal/Delegation';
 import ROUTES from '../../../../routes';
 
 type Prop = {
-  commPackageDetails: BundleRequest | undefined;
+  commBundleDetails: BundleRequest | undefined;
 };
 const minDateTomorrow = add(new Date(), { days: 1 });
 
-const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
+const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_SELECT_DATAS);
-  const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_PACKAGE);
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
+  const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -99,9 +98,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
         error: error as Error,
         techDescription: `An error occurred while getting data`,
         toNotify: true,
-        displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
         displayableDescription: t(
-          'commissionPackagesPage.addEditCommissionPackage.error.errorMessageChannelIdsDataDesc'
+          'commissionBundlesPage.addEditCommissionBundle.error.errorMessageChannelIdsDataDesc'
         ),
         component: 'Toast',
       });
@@ -136,9 +135,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             error: new Error(`An error occurred while getting data`),
             techDescription: `An error occurred while getting data`,
             toNotify: true,
-            displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+            displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
             displayableDescription: t(
-              'commissionPackagesPage.addEditCommissionPackage.error.errorMessageNoBrokerDelegations'
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
             ),
             component: 'Toast',
           });
@@ -151,9 +150,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           error: reason as Error,
           techDescription: `An error occurred while getting data`,
           toNotify: true,
-          displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+          displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
           displayableDescription: t(
-            'commissionPackagesPage.addEditCommissionPackage.error.errorMessageAllDataDesc'
+            'commissionBundlesPage.addEditCommissionBundle.error.errorMessageAllDataDesc'
           ),
           component: 'Toast',
         });
@@ -164,19 +163,19 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   }, [selectedParty]);
 
   const initialFormData = (detail?: BundleRequest) => ({
-    abi: detail?.abi || '',
-    description: detail?.description || '',
-    digitalStamp: detail?.digitalStamp || false,
-    digitalStampRestriction: detail?.digitalStampRestriction || false,
-    idBrokerPsp: detail?.idBrokerPsp || '',
-    idCdi: detail?.idCdi || '',
-    idChannel: detail?.idChannel || '',
-    maxPaymentAmount: detail?.maxPaymentAmount || 0,
-    minPaymentAmount: detail?.minPaymentAmount || 0,
-    name: detail?.name || '',
-    paymentAmount: detail?.paymentAmount || 0,
-    paymentType: detail?.paymentType || undefined,
-    touchpoint: detail?.touchpoint || undefined,
+    abi: detail?.abi ?? '',
+    description: detail?.description ?? '',
+    digitalStamp: detail?.digitalStamp ?? false,
+    digitalStampRestriction: detail?.digitalStampRestriction ?? false,
+    idBrokerPsp: detail?.idBrokerPsp ?? '',
+    idCdi: detail?.idCdi ?? '',
+    idChannel: detail?.idChannel ?? '',
+    maxPaymentAmount: detail?.maxPaymentAmount ?? 0,
+    minPaymentAmount: detail?.minPaymentAmount ?? 0,
+    name: detail?.name ?? '',
+    paymentAmount: detail?.paymentAmount ?? 0,
+    paymentType: detail?.paymentType ?? undefined,
+    touchpoint: detail?.touchpoint ?? undefined,
     transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
     type: detail?.type ?? undefined,
     validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
@@ -189,44 +188,44 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
       Object.entries({
         ...{
           description: !values.description
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           idChannel: !values.idChannel
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           maxPaymentAmount: !values.maxPaymentAmount
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           minPaymentAmount: !values.minPaymentAmount
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           name: !values.name
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           paymentAmount: !values.paymentAmount
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           type: !values.type
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : undefined,
           validityDateFrom: !values.validityDateFrom
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : values.validityDateFrom.getTime() < minDateTomorrow.getTime()
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
             : values.validityDateTo &&
               values.validityDateFrom.getTime() > values.validityDateTo.getTime()
             ? t(
-                'commissionPackagesPage.addEditCommissionPackage.validationMessage.startDateOverEndDate'
+                'commissionBundlesPage.addEditCommissionBundle.validationMessage.startDateOverEndDate'
               )
             : undefined,
           validityDateTo: !values.validityDateTo
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.requiredField')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
             : values.validityDateTo.getTime() < minDateTomorrow.getTime()
-            ? t('commissionPackagesPage.addEditCommissionPackage.validationMessage.dateNotValid')
+            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
             : values.validityDateFrom &&
               values.validityDateTo.getTime() < values.validityDateFrom.getTime()
             ? t(
-                'commissionPackagesPage.addEditCommissionPackage.validationMessage.endDateUnderStartDate'
+                'commissionBundlesPage.addEditCommissionBundle.validationMessage.endDateUnderStartDate'
               )
             : undefined,
         },
@@ -255,17 +254,17 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
     try {
       const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
       await createBundle(pspTaxCode, body);
-      history.push(ROUTES.COMMISSION_PACKAGES);
+      history.push(ROUTES.COMMISSION_BUNDLES);
     } catch (reason) {
       addError({
-        id: 'CREATE_COMMISSION_PACKAGE',
+        id: 'CREATE_COMMISSION_BUNDLE',
         blocking: false,
         error: reason as Error,
-        techDescription: `An error occurred while creating commission package`,
+        techDescription: `An error occurred while creating commission bundle`,
         toNotify: true,
-        displayableTitle: t('commissionPackagesPage.addEditCommissionPackage.error.errorTitle'),
+        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
         displayableDescription: t(
-          'commissionPackagesPage.addEditCommissionPackage.error.errorMessageCreatingPackage'
+          'commissionBundlesPage.addEditCommissionBundle.error.errorMessageCreatingBundle'
         ),
         component: 'Toast',
       });
@@ -275,7 +274,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   };
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: initialFormData(commPackageDetails),
+    initialValues: initialFormData(commBundleDetails),
     validate,
     onSubmit: async () => {
       setShowConfirmModal(true);
@@ -325,7 +324,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
         }}
       >
         <Typography variant="h6" mb={3}>
-          {t('commissionPackagesPage.addEditCommissionPackage.form.packageType')}
+          {t('commissionBundlesPage.addEditCommissionBundle.form.bundleType')}
         </Typography>
 
         <FormControl>
@@ -333,24 +332,24 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             name="type"
             row
             onChange={(e) => formik.setFieldValue('type', e.target.value)}
-            data-testid="package-type-test"
+            data-testid="bundle-type-test"
           >
             <FormControlLabel
               value="GLOBAL"
               control={<Radio />}
-              label={t('commissionPackagesPage.addEditCommissionPackage.form.globalPackage')}
+              label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
               sx={{ pr: 8 }}
             />
             <FormControlLabel
               value="PUBLIC"
               control={<Radio />}
-              label={t('commissionPackagesPage.addEditCommissionPackage.form.publicPackage')}
+              label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
             />
             <FormControlLabel
               value="PRIVATE"
               control={<Radio />}
-              label={t('commissionPackagesPage.addEditCommissionPackage.form.privatePackage')}
+              label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
             />
           </RadioGroup>
         </FormControl>
@@ -365,13 +364,13 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
         }}
       >
         <Typography variant="h6" mb={3}>
-          {t('commissionPackagesPage.addEditCommissionPackage.form.packageConfiguration')}
+          {t('commissionBundlesPage.addEditCommissionBundle.form.bundleConfiguration')}
         </Typography>
 
         <Box>
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('commissionPackagesPage.addEditCommissionPackage.form.packageStructure')}
+              title={t('commissionBundlesPage.addEditCommissionBundle.form.bundleStructure')}
               icon={<MenuBook />}
             />
             <Grid container spacing={2} mt={1}>
@@ -380,9 +379,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   fullWidth
                   id="name"
                   name="name"
-                  label={t('commissionPackagesPage.addEditCommissionPackage.form.packageName')}
+                  label={t('commissionBundlesPage.addEditCommissionBundle.form.bundleName')}
                   placeholder={t(
-                    'commissionPackagesPage.addEditCommissionPackage.form.packageName'
+                    'commissionBundlesPage.addEditCommissionBundle.form.bundleName'
                   )}
                   size="small"
                   value={formik.values.name}
@@ -402,7 +401,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   name="description"
                   label={t('addEditIbanPage.addForm.fields.iban.description')}
                   placeholder={t(
-                    'commissionPackagesPage.addEditCommissionPackage.form.packageDescription'
+                    'commissionBundlesPage.addEditCommissionBundle.form.bundleDescription'
                   )}
                   size="small"
                   value={formik.values.description}
@@ -417,15 +416,15 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel size="small">
-                    {t('commissionPackagesPage.addEditCommissionPackage.form.paymentType')}
+                    {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
                   </InputLabel>
                   <Select
                     id={`paymentType`}
                     labelId={`paymentTypeLabel`}
                     name={`paymentType`}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.paymentType')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
                     placeholder={t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.paymentType'
+                      'commissionBundlesPage.addEditCommissionBundle.form.paymentType'
                     )}
                     size="small"
                     value={formik.values.paymentType ?? ''}
@@ -448,18 +447,18 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               <Grid item xs={6}>
                 <FormControl fullWidth>
                   <InputLabel size="small">
-                    {t('commissionPackagesPage.addEditCommissionPackage.form.touchpoint')}
+                    {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                   </InputLabel>
                   <Select
                     id={'touchpoint'}
                     labelId={'touchpointLabel'}
                     name={'touchpoint'}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.touchpoint')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                     placeholder={t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.touchpoint'
+                      'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'
                     )}
                     size="small"
-                    value={formik.values.touchpoint === undefined ? '' : formik.values.touchpoint}
+                    value={formik.values.touchpoint ?? ''}
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"
@@ -467,8 +466,8 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                    {touchpointList?.touchpoints?.map((el, i) => (
-                      <MenuItem key={`touchpoint${i}`} value={el.name}>
+                    {touchpointList?.touchpoints?.map((el) => (
+                      <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}
                       </MenuItem>
                     ))}
@@ -495,7 +494,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     <FormControl sx={{ width: '50%' }}>
                       <InputLabel size="small">
                         {t(
-                          'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
+                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
                         )}
                       </InputLabel>
                       <Select
@@ -503,10 +502,10 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                         labelId={`transferCategoryList${i}_label`}
                         name={`transferCategoryList${i}_name`}
                         label={t(
-                          'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
+                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
                         )}
                         placeholder={t(
-                          'commissionPackagesPage.addEditCommissionPackage.form.taxonomyOfService'
+                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
                         )}
                         size="small"
                         value={
@@ -554,14 +553,14 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   weight="default"
                   data-testid="add-taxonomy-test"
                 >
-                  {t('commissionPackagesPage.addEditCommissionPackage.form.addTaxonomy')}
+                  {t('commissionBundlesPage.addEditCommissionBundle.form.addTaxonomy')}
                 </ButtonNaked>
               </Grid>
             </Grid>
 
             <Grid container spacing={2} sx={{ pl: 1, mt: 3 }}>
               <FormSectionTitle
-                title={t('commissionPackagesPage.addEditCommissionPackage.form.amountRange')}
+                title={t('commissionBundlesPage.addEditCommissionBundle.form.amountRange')}
                 icon={<></>}
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
@@ -571,9 +570,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     id="minPaymentAmount"
                     name="minPaymentAmount"
                     customInput={TextField}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.minImport')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
                     placeholder={t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.minImport'
+                      'commissionBundlesPage.addEditCommissionBundle.form.minImport'
                     )}
                     size="small"
                     value={
@@ -606,9 +605,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     id="maxPaymentAmount"
                     name="maxPaymentAmount"
                     customInput={TextField}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.maxImport')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
                     placeholder={t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.maxImport'
+                      'commissionBundlesPage.addEditCommissionBundle.form.maxImport'
                     )}
                     size="small"
                     value={
@@ -639,7 +638,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
 
             <Grid container spacing={2} sx={{ pl: 1, mt: 3 }}>
               <FormSectionTitle
-                title={t('commissionPackagesPage.addEditCommissionPackage.form.commission')}
+                title={t('commissionBundlesPage.addEditCommissionBundle.form.commission')}
                 icon={<></>}
               />
               <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
@@ -649,9 +648,9 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     id="paymentAmount"
                     name="paymentAmount"
                     customInput={TextField}
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.feeApplied')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.feeApplied')}
                     placeholder={t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.feeApplied'
+                      'commissionBundlesPage.addEditCommissionBundle.form.feeApplied'
                     )}
                     size="small"
                     value={formik.values.paymentAmount === 0 ? '' : formik.values.paymentAmount}
@@ -678,7 +677,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           </Box>
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('commissionPackagesPage.addEditCommissionPackage.form.pspdata')}
+              title={t('commissionBundlesPage.addEditCommissionBundle.form.pspdata')}
               icon={<MenuBook />}
             />
             <Grid container>
@@ -703,7 +702,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.brokerCode')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.brokerCode')}
                       sx={{ fontWeight: 'medium' }}
                     />
                   )}
@@ -711,7 +710,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
                   )}
                   noOptionsText={t(
-                    'commissionPackagesPage.addEditCommissionPackage.form.noBrokersOption'
+                    'commissionBundlesPage.addEditCommissionBundle.form.noBrokersOption'
                   )}
                   data-testid="broker-code-test"
                 />
@@ -738,7 +737,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.channelCode')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.channelCode')}
                       sx={{ fontWeight: 'medium' }}
                     />
                   )}
@@ -746,7 +745,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     <Paper sx={{ overflowY: 'auto', mb: 1 }}>{children}</Paper>
                   )}
                   noOptionsText={t(
-                    'commissionPackagesPage.addEditCommissionPackage.form.noChannelsOption'
+                    'commissionBundlesPage.addEditCommissionBundle.form.noChannelsOption'
                   )}
                   data-testid="channels-id-test"
                 />
@@ -755,7 +754,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           </Box>
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('commissionPackagesPage.addEditCommissionPackage.form.digitalStamp')}
+              title={t('commissionBundlesPage.addEditCommissionBundle.form.digitalStamp')}
               icon={<BookmarkAddIcon />}
             />
             <Grid container spacing={2} mt={1}>
@@ -763,7 +762,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                 <FormControl>
                   <FormLabel sx={{ fontWeight: 'medium', fontSize: '16px' }}>
                     {t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.paymentWithDigitalStamp'
+                      'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'
                     )}
                   </FormLabel>
                   <RadioGroup
@@ -780,14 +779,14 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       disabled={formik.values.digitalStampRestriction}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -796,7 +795,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                 <FormControl>
                   <FormLabel sx={{ fontWeight: 'medium', fontSize: '16px' }}>
                     {t(
-                      'commissionPackagesPage.addEditCommissionPackage.form.paymentOnlyDigitalStamp'
+                      'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp'
                     )}
                   </FormLabel>
                   <RadioGroup
@@ -813,14 +812,14 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.no')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       disabled={formik.values.digitalStamp}
-                      label={t('commissionPackagesPage.addEditCommissionPackage.form.yes')}
+                      label={t('commissionBundlesPage.addEditCommissionBundle.form.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -829,14 +828,14 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
           </Box>
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('commissionPackagesPage.addEditCommissionPackage.form.validityPeriod')}
+              title={t('commissionBundlesPage.addEditCommissionBundle.form.validityPeriod')}
               icon={<DateRangeIcon />}
             />
             <Grid container spacing={2} mt={1}>
               <Grid item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.from')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.from')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validityDateFrom}
                     onChange={(value) => formik.setFieldValue('validityDateFrom', value)}
@@ -867,7 +866,7 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
               <Grid container item xs={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    label={t('commissionPackagesPage.addEditCommissionPackage.form.to')}
+                    label={t('commissionBundlesPage.addEditCommissionBundle.form.to')}
                     inputFormat="dd/MM/yyyy"
                     value={formik.values.validityDateTo}
                     onChange={(value) => formik.setFieldValue('validityDateTo', value)}
@@ -920,22 +919,22 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
             type="submit"
             data-testid="confirm-button-test"
           >
-            {t('commissionPackagesPage.addEditCommissionPackage.form.confirmButton')}
+            {t('commissionBundlesPage.addEditCommissionBundle.form.confirmButton')}
           </Button>
         </Stack>
       </Stack>
       <GenericModal
-        title={t('commissionPackagesPage.addEditCommissionPackage.modal.title')}
+        title={t('commissionBundlesPage.addEditCommissionBundle.modal.title')}
         message={
-          <Trans i18nKey="commissionPackagesPage.addEditCommissionPackage.modal.message">
+          <Trans i18nKey="commissionBundlesPage.addEditCommissionBundle.modal.message">
             Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i
             destinatari in seguito.
             <br />
           </Trans>
         }
         openModal={showConfirmModal}
-        onConfirmLabel={t('commissionPackagesPage.addEditCommissionPackage.modal.confirmButton')}
-        onCloseLabel={t('commissionPackagesPage.addEditCommissionPackage.modal.backButton')}
+        onConfirmLabel={t('commissionBundlesPage.addEditCommissionBundle.modal.confirmButton')}
+        onCloseLabel={t('commissionBundlesPage.addEditCommissionBundle.modal.backButton')}
         handleCloseModal={() => setShowConfirmModal(false)}
         handleConfirm={async () => {
           await submit(formik.values);
@@ -946,4 +945,4 @@ const AddEditCommissionPackageForm = ({ commPackageDetails }: Prop) => {
   );
 };
 
-export default AddEditCommissionPackageForm;
+export default AddEditCommissionBundleForm;

@@ -1,13 +1,12 @@
-import { Alert, Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Alert, Grid, Tab, Tabs, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { TitleBox, useLoading } from '@pagopa/selfcare-common-frontend';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { LOADING_TASK_RETRIEVE_STATIONS } from '../../utils/constants';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import CommissionPackagesTable from './list/CommissionPackagesTable';
-import CommissionPackagesSearchBar from './list/CommissionPackagesSearchBar';
+import CommissionBundlesTable from './list/CommissionBundlesTable';
+import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
 
 
 type Props = {
@@ -16,11 +15,31 @@ type Props = {
   valueTab: number;
 };
 
-const CommissionPackagesPage = () => {
+const CustomTabPanel = (props: Props) => {
+  const { children, index, valueTab, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={valueTab !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {valueTab === index && (
+        <Box sx={{ px: 3, width: '100%' }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+};
+
+const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [value, setValue] = useState(2);
-  const [packageNameInput, setPackageNameInput] = useState<string>('');
+  const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
   useEffect(() => {
     window.addEventListener('beforeunload', clearLocationState);
@@ -29,25 +48,7 @@ const CommissionPackagesPage = () => {
     };
   }, []);
 
-  const CustomTabPanel = (props: Props) => {
-    const { children, index, valueTab, ...other } = props;
 
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ px: 3, width: '100%' }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  };
 
   const clearLocationState = () => {
     window.history.replaceState({}, document.title);
@@ -63,8 +64,7 @@ const CommissionPackagesPage = () => {
   };
 
   return (
-    <>
-      <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
+    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
         <Grid item xs={2}>
           <Box>
             <SideMenu />
@@ -80,8 +80,8 @@ const CommissionPackagesPage = () => {
         >
           <Box width="100%" px={2}>
             <TitleBox
-              title={t('commissionPackagesPage.title')}
-              subTitle={t('commissionPackagesPage.subtitle')}
+              title={t('commissionBundlesPage.title')}
+              subTitle={t('commissionBundlesPage.subtitle')}
               mbTitle={2}
               mtTitle={4}
               mbSubTitle={3}
@@ -93,9 +93,9 @@ const CommissionPackagesPage = () => {
                 {(history.location.state as any).alertSuccessMessage}
               </Alert>
             )}
-            <CommissionPackagesSearchBar
-              packageNameInput={packageNameInput}
-              setPackageNameInput={setPackageNameInput}
+            <CommissionBundlesSearchBar
+              bundleNameInput={bundleNameInput}
+              setBundleNameInput={setBundleNameInput}
             />
             <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
               <Tabs
@@ -105,34 +105,33 @@ const CommissionPackagesPage = () => {
                 centered
                 variant="fullWidth"
               >
-                <Tab label={t('commissionPackagesPage.globalPackages')} {...a11yProps(0)}/>
-                <Tab label={t('commissionPackagesPage.publicPackages')} {...a11yProps(1)} />
-                <Tab label={t('commissionPackagesPage.privatePackages')} {...a11yProps(2)} />
+                <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(0)}/>
+                <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} />
+                <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(2)} />
               </Tabs>
             </Box>
             <CustomTabPanel valueTab={value} index={0}>
-              <CommissionPackagesTable
-                packageType={'commissionPackagesPage.globalPackages'}
-                packageNameFilter={packageNameInput}
+              <CommissionBundlesTable
+                bundleType={'commissionBundlesPage.globalBundles'}
+                bundleNameFilter={bundleNameInput}
               />
             </CustomTabPanel>
             <CustomTabPanel valueTab={value} index={1}>
-              <CommissionPackagesTable
-                packageType={'commissionPackagesPage.publicPackages'}
-                packageNameFilter={packageNameInput}
+              <CommissionBundlesTable
+                bundleType={'commissionBundlesPage.publicBundles'}
+                bundleNameFilter={bundleNameInput}
               />
             </CustomTabPanel>
             <CustomTabPanel valueTab={value} index={2}>
-              <CommissionPackagesTable
-                packageType={'commissionPackagesPage.privatePackages'}
-                packageNameFilter={packageNameInput}
+              <CommissionBundlesTable
+                bundleType={'commissionBundlesPage.privateBundles'}
+                bundleNameFilter={bundleNameInput}
               />
             </CustomTabPanel>
           </Box>
         </Grid>
       </Grid>
-    </>
   );
 };
 
-export default CommissionPackagesPage;
+export default CommissionBundlesPage;

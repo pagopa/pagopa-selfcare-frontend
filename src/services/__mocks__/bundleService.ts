@@ -13,7 +13,7 @@ export const mockedTouchpoints: Touchpoints = {
   ],
 };
 
-export const mockedCommissionPackagePspList: Bundles = {
+export const mockedCommissionBundlePspList: Bundles = {
   bundles: [
     {
       name: 'Lorem ipsum',
@@ -33,7 +33,7 @@ export const mockedCommissionPackagePspList: Bundles = {
   },
 };
 
-export const mockedCommissionPackagePspDetail: BundleRequest = {
+export const mockedCommissionBundlePspDetail: BundleRequest = {
   abi: '12345',
   description: 'Pacchetti commissione',
   digitalStamp: true,
@@ -60,18 +60,18 @@ export const mockedChannelsIdList: Array<string> = mockedStationsMerged!.channel
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
   Promise.resolve(mockedChannelsIdList);
 
-export const getCommissionPackagePsp = (_brokerCode: string): Promise<Bundles> =>
-  Promise.resolve(mockedCommissionPackagePspList);
+export const getCommissionBundlePsp = (_brokerCode: string): Promise<Bundles> =>
+  Promise.resolve(mockedCommissionBundlePspList);
 
-export const getCommissionPackageDetails = (_name: string): Promise<BundleRequest> =>
-  Promise.resolve(mockedCommissionPackagePspDetail);
+export const getCommissionBundleDetails = (_name: string): Promise<BundleRequest> =>
+  Promise.resolve(mockedCommissionBundlePspDetail);
 
-export const createCommissionPackage = (_body: BundleRequest): Promise<BundleCreateResponse> =>
-  Promise.resolve({idBundle:'mockedCommissionPackageId'});
+export const createCommissionBundle = (_body: BundleRequest): Promise<BundleCreateResponse> =>
+  Promise.resolve({idBundle:'mockedCommissionBundleId'});
 
-export const updateCommissionPackage = (
+export const updateCommissionBundle = (
   _name: string,
-  _commissionPackage: BundleRequest
-): Promise<BundleRequest> => Promise.resolve(mockedCommissionPackagePspDetail);
+  _commissionBundle: BundleRequest
+): Promise<BundleRequest> => Promise.resolve(mockedCommissionBundlePspDetail);
 
 export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);

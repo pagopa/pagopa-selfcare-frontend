@@ -11,21 +11,21 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'name',
       cellClassName: 'justifyContentBold',
-      headerName: t('commissionPackagesPage.list.headerFields.packageName'),
+      headerName: t('commissionBundlesPage.list.headerFields.bundleName'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 400,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showPackageName(params),
+      renderCell: (params: any) => showBundleName(params),
       sortable: true,
       flex: 4,
     },
     {
       field: 'validityDateFrom',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.startDate'),
+      headerName: t('commissionBundlesPage.list.headerFields.startDate'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 150,
@@ -40,7 +40,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'validityDateTo',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.endDate'),
+      headerName: t('commissionBundlesPage.list.headerFields.endDate'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 150,
@@ -55,7 +55,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'touchpoint',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.touchpoint'),
+      headerName: t('commissionBundlesPage.list.headerFields.touchpoint'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 220,
@@ -69,7 +69,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'paymentType',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.paymentType'),
+      headerName: t('commissionBundlesPage.list.headerFields.paymentType'),
       align: 'left',
       headerAlign: 'left',
       width: 145,
@@ -83,7 +83,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'amountRange',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.amountRange'),
+      headerName: t('commissionBundlesPage.list.headerFields.amountRange'),
       align: 'left',
       headerAlign: 'left',
       width: 200,
@@ -104,21 +104,21 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       editable: false,
       getActions: (params: any) => {
-        const packageType = params.row.type;
+        const bundleType = params.row.type;
 
-        const managePackageAction = (
+        const manageBundleAction = (
           <GridLinkAction
             key="Gestisci pacchetto"
             label="Gestisci pacchetto"
             to={generatePath('')}
-            showInMenu={packageType !== 'GLOBAL'}
-            icon={packageType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
+            showInMenu={bundleType !== 'GLOBAL'}
+            icon={bundleType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
           />
         );
 
-        if (packageType === 'PRIVATE') {
+        if (bundleType === 'PRIVATE') {
           return [
-            managePackageAction,
+            manageBundleAction,
             <GridLinkAction
               key="Gestisci destinatari"
               label="Gestisci destinatari"
@@ -127,9 +127,9 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
             />,
           ];
         }
-        if (packageType === 'PUBLIC') {
+        if (bundleType === 'PUBLIC') {
           return [
-            managePackageAction,
+            manageBundleAction,
             <GridLinkAction
               key="Gestisci adesioni"
               label="Gestisci adesioni"
@@ -139,7 +139,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           ];
         }
 
-        return [managePackageAction];
+        return [manageBundleAction];
       },
       sortable: false,
       flex: 1,
@@ -198,13 +198,12 @@ export function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-export function showPackageName(params: GridRenderCellParams) {
+export function showBundleName(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
         params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
+        <Grid container sx={{ width: '100%' }}>
             <Grid item xs={9} sx={{ width: '100%' }}>
               <Typography
                 variant="body2"
@@ -222,7 +221,6 @@ export function showPackageName(params: GridRenderCellParams) {
               </Typography>
             </Grid>
           </Grid>
-        </>
       )}
     </React.Fragment>
   );
@@ -233,15 +231,13 @@ export function showAmountRange(params: GridRenderCellParams) {
     <React.Fragment>
       {renderCell(
         params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
+        <Grid container sx={{ width: '100%' }}>
             <Grid item xs={9} sx={{ width: '100%' }}>
               <Typography variant="body2">
                 {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
               </Typography>
             </Grid>
           </Grid>
-        </>
       )}
     </React.Fragment>
   );

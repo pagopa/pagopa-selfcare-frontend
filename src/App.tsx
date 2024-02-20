@@ -36,9 +36,9 @@ import StationAssociateECPage from './pages/stations/stationAssociateEC/StationA
 import IbanPage from './pages/iban/IbanPage';
 import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
 import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
-import CommissionPackagesPage from './pages/commisionalPackages/CommissionPackagesPage';
+import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
-import AddEditCommissionPackagePage from './pages/commisionalPackages/addEditCommissionPackage/AddEditCommissionPackagePage';
+import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
 import AddEditOperationTablePage from './pages/operationTable/addEditOperationTable/AddEditOperationTablePage';
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
@@ -164,19 +164,19 @@ const SecuredRoutes = withLogin(
                 <AddEditIbanPage />
               </ProtectedRoute>
             </Route>
-            <Route path={routes.COMMISSION_PACKAGES} exact={true}>
-              <ProtectedRoute permission="commission-packages">
-                <CommissionPackagesPage />
+            <Route path={routes.COMMISSION_BUNDLES} exact={true}>
+              <ProtectedRoute permission="commission-bundles">
+                <CommissionBundlesPage />
               </ProtectedRoute>
             </Route>
-            <Route path={routes.COMMISSION_PACKAGES_ADD} exact={true}>
-              <ProtectedRoute permission="commission-packages">
-                <AddEditCommissionPackagePage />
+            <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
+              <ProtectedRoute permission="commission-bundles">
+                <AddEditCommissionBundlePage />
               </ProtectedRoute>
             </Route>
-            <Route path={routes.COMMISSION_PACKAGES_EDIT} exact={true}>
-              <ProtectedRoute permission="commission-packages">
-                <AddEditCommissionPackagePage />
+            <Route path={routes.COMMISSION_BUNDLES_EDIT} exact={true}>
+              <ProtectedRoute permission="commission-bundles">
+                <AddEditCommissionBundlePage />
               </ProtectedRoute>
             </Route>
             <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>

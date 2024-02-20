@@ -1,6 +1,6 @@
 // import {GridColDef, GridColumnHeaderParams, GridRenderCellParams, GridStateColDef,} from '@mui/x-data-grid';
 // import {cleanup} from '@testing-library/react';
-// import {buildColumnDefs, renderCell, showAmountRange, showCustomHeader,} from '../list/CommissionPackagesTableColumns';
+// import {buildColumnDefs, renderCell, showAmountRange, showCustomHeader,} from '../list/CommissionBundlesTableColumns';
 //
 // beforeEach(() => {
 //     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -11,7 +11,7 @@
 //
 // afterEach(cleanup);
 //
-// describe('<CommissionPackagesTableColumns />', () => {
+// describe('<CommissionBundlesTableColumns />', () => {
 //     test('Test of all the functions inside the component', () => {
 //         const rowNode = [
 //             {
@@ -53,7 +53,7 @@
 //             {
 //                 field: 'name',
 //                 cellClassName: 'justifyContentBold',
-//                 headerName: 'Package Name',
+//                 headerName: 'Bundle Name',
 //                 align: 'left',
 //                 headerAlign: 'left',
 //                 minWidth: 400,
@@ -151,17 +151,17 @@
 //
 //         const mockTFunction = (key: string) => {
 //             switch (key) {
-//                 case 'commissionPackagesPage.list.headerFields.name':
-//                     return 'Package Name';
-//                 case 'commissionPackagesPage.list.headerFields.validityDateFrom':
+//                 case 'commissionBundlesPage.list.headerFields.name':
+//                     return 'Bundle Name';
+//                 case 'commissionBundlesPage.list.headerFields.validityDateFrom':
 //                     return 'Activation Date';
-//                 case 'commissionPackagesPage.list.headerFields.endDate':
+//                 case 'commissionBundlesPage.list.headerFields.endDate':
 //                     return 'Due Date';
-//                 case 'commissionPackagesPage.list.headerFields.Touchpoint':
+//                 case 'commissionBundlesPage.list.headerFields.Touchpoint':
 //                     return 'Touch Point';
-//                 case 'commissionPackagesPage.list.headerFields.paymentType':
+//                 case 'commissionBundlesPage.list.headerFields.paymentType':
 //                     return 'Payment Type';
-//                 case 'commissionPackagesPage.list.headerFields.amountRange':
+//                 case 'commissionBundlesPage.list.headerFields.amountRange':
 //                     return 'Amount Range';
 //                 default:
 //                     return '';

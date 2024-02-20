@@ -813,18 +813,18 @@
       "bankIbanConflict": "IBAN già censito"
     }
   },
-  "commissionPackagesPage": {
+  "commissionBundlesPage": {
     "title": "Pacchetti commissioni",
     "subtitle": "Gestisci i pacchetti commissionali.",
-    "privatePackages": "Privati",
-    "publicPackages": "Pubblici",
-    "globalPackages": "Globali",
+    "privateBundles": "Privati",
+    "publicBundles": "Pubblici",
+    "globalBundles": "Globali",
     "list": {
       "searchByName": "Cerca per Nome",
-      "createPackage": "Crea pacchetto",
-      "noCommPackages": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
+      "createBundle": "Crea pacchetto",
+      "noCommBundles": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
       "headerFields": {
-        "packageName": "Nome pacchetto",
+        "bundleName": "Nome pacchetto",
         "startDate": "Inizio validità",
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
@@ -833,10 +833,10 @@
       },
       "error": {
         "errorTitle": "Errore",
-        "commissionPackageDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
+        "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
       }
     },
-    "addEditCommissionPackage": {
+    "addEditCommissionBundle": {
       "breadcrumb": {
         "first": "Pacchetti commissioni",
         "second": "Crea pacchetto"
@@ -844,14 +844,14 @@
       "title": "Crea un nuovo pacchetto commissioni",
       "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
       "form": {
-        "packageType": "Tipologia pacchetto",
-        "privatePackage": "Privato",
-        "publicPackage": "Pubblico",
-        "globalPackage": "Globale",
-        "packageConfiguration": "Configurazione pacchetto",
-        "packageStructure": "Struttura del pacchetto",
-        "packageName": "Nome pacchetto",
-        "packageDescription": "Descrizione pacchetto",
+        "bundleType": "Tipologia pacchetto",
+        "privateBundle": "Privato",
+        "publicBundle": "Pubblico",
+        "globalBundle": "Globale",
+        "bundleConfiguration": "Configurazione pacchetto",
+        "bundleStructure": "Struttura del pacchetto",
+        "bundleName": "Nome pacchetto",
+        "bundleDescription": "Descrizione pacchetto",
         "paymentType": "Tipo di pagamento",
         "touchpoint": "Touchpoint",
         "taxonomyOfService": "Tassonomia di servizio",
@@ -893,7 +893,7 @@
         "errorTitle": "Errore",
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
         "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
-        "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni",
+        "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
       }
     }
@@ -975,7 +975,7 @@
     "iban": {
       "title": "IBAN"
     },
-    "commPackages": {
+    "commBundles": {
       "title": "Pacchetti commissioni"
     },
     "operationTable": {

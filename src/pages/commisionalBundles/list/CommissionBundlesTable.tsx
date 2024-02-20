@@ -3,24 +3,24 @@ import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { LOADING_TASK_COMMISSION_PACKAGE_LIST } from '../../../utils/constants';
+import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import CommissionPackagesEmpty from '../list/CommissionPackagesEmpty';
-import { buildColumnDefs } from '../list/CommissionPackagesTableColumns';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { Bundles } from '../../../api/generated/portal/Bundles';
 import { getBundleListByPSP } from '../../../services/bundleService';
+import { buildColumnDefs } from './CommissionBundlesTableColumns';
+import CommissionBundlesEmpty from './CommissionBundlesEmpty';
 
 type Props = {
-  packageNameFilter: string;
-  packageType: string;
+  bundleNameFilter: string;
+  bundleType: string;
 };
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyCommissionPackageList: Bundles = {
+const emptyCommissionBundleList: Bundles = {
   bundles: [],
   pageInfo: {
     items_found: 0,
@@ -30,13 +30,13 @@ const emptyCommissionPackageList: Bundles = {
   },
 };
 
-const mapBundle = (packageType: string) => {
-  switch (packageType) {
-    case 'commissionPackagesPage.globalPackages':
+const mapBundle = (bundleType: string) => {
+  switch (bundleType) {
+    case 'commissionBundlesPage.globalBundles':
       return 'GLOBAL';
-    case 'commissionPackagesPage.publicPackages':
+    case 'commissionBundlesPage.publicBundles':
       return 'PUBLIC';
-    case 'commissionPackagesPage.privatePackages':
+    case 'commissionBundlesPage.privateBundles':
       return 'PRIVATE';
     default:
       return '';
@@ -44,14 +44,14 @@ const mapBundle = (packageType: string) => {
 };
 
 
-const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
+const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
   const [error, setError] = useState(false);
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_PACKAGE_LIST);
+  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionPackageList);
+  const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
@@ -62,7 +62,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   const pageLimit = 5;
   const getBundleList = () => {
     setLoadingStatus(true);
-    getBundleListByPSP(mapBundle(packageType), pageLimit, packageNameFilter, page, `PSP${brokerCode}`)
+    getBundleListByPSP(mapBundle(bundleType), pageLimit, bundleNameFilter, page, `PSP${brokerCode}`)
       .then((res) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
@@ -86,9 +86,8 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
   }, [page, brokerCode]);
 
   return (
-    <React.Fragment>
-      <Box
-        id="commissionPackagesTable"
+    <Box
+        id="commissionBundlesTable"
         sx={{
           position: 'relative',
           width: '100% !important',
@@ -99,7 +98,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
         {error ? (
           <>{error}</>
         ) : listFiltered?.bundles?.length === 0 ? (
-          <CommissionPackagesEmpty packageType={t(packageType)} />
+          <CommissionBundlesEmpty bundleType={t(bundleType)} />
         ) : (
           <CustomDataGrid
             disableColumnFilter
@@ -138,8 +137,7 @@ const CommissionPackagesTable = ({ packageNameFilter, packageType }: Props) => {
           />
         )}
       </Box>
-    </React.Fragment>
   );
 };
 
-export default CommissionPackagesTable;
+export default CommissionBundlesTable;

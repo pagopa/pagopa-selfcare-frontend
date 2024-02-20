@@ -5,14 +5,14 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionPackagesTable from '../list/CommissionPackagesTable';
+import CommissionBundlesTable from '../list/CommissionBundlesTable';
 
-let getCommissionPackagePspSpy: jest.SpyInstance;
+let getCommissionBundlePspSpy: jest.SpyInstance;
 
 beforeEach(() => {
-  getCommissionPackagePspSpy = jest.spyOn(
-    require('../../../services/__mocks__/commissionPackageService'),
-    'getCommissionPackagePsp'
+  getCommissionBundlePspSpy = jest.spyOn(
+    require('../../../services/__mocks__/commissionBundleService'),
+    'getCommissionBundlePsp'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -20,16 +20,16 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<CommissionPackagesTable />', () => {
-  test('render component CommissionPackagesTable', () => {
+describe('<CommissionBundlesTable />', () => {
+  test('render component CommissionBundlesTable', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages`]}>
-          <Route path="/comm-packages">
+        <MemoryRouter initialEntries={[`/comm-bundles`]}>
+          <Route path="/comm-bundles">
             <ThemeProvider theme={theme}>
-              <CommissionPackagesTable
-                packageNameFilter={''}
-                packageType={'commissionPackagesPage.privatePackages'}
+              <CommissionBundlesTable
+                bundleNameFilter={''}
+                bundleType={'commissionBundlesPage.privateBundles'}
               />
             </ThemeProvider>
           </Route>

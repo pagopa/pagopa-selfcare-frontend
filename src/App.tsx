@@ -42,6 +42,7 @@ import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommi
 import AddEditOperationTablePage from './pages/operationTable/addEditOperationTable/AddEditOperationTablePage';
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
+import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -167,6 +168,11 @@ const SecuredRoutes = withLogin(
             <Route path={routes.COMMISSION_BUNDLES} exact={true}>
               <ProtectedRoute permission="commission-bundles">
                 <CommissionBundlesPage />
+              </ProtectedRoute>
+            </Route>
+            <Route path={routes.COMMISSION_BUNDLES_DETAIL} exact={true}>
+              <ProtectedRoute permission="commission-bundles">
+                <CommissionBundleDetailPage />
               </ProtectedRoute>
             </Route>
             <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>

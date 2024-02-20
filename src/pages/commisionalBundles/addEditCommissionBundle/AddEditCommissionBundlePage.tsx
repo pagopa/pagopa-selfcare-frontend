@@ -21,7 +21,7 @@ const AddEditCommissionBundlePage = () => {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
-  const { nameId, actionId } = useParams<{ nameId: string; actionId: string }>();
+  const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
   const goBack = () => history.push(ROUTES.COMMISSION_BUNDLES);
   const [commissionBundleDetails, setCommissionBundleDetails] = useState<
     BundleRequest | undefined
@@ -30,7 +30,8 @@ const AddEditCommissionBundlePage = () => {
   const getDetails = async () => {
     setLoading(true);
     try {
-      const response = await getCommissionBundleDetails(nameId);
+      // TODO verify if API for bundle detail is used
+      const response = await getCommissionBundleDetails();
       setCommissionBundleDetails(response);
     } catch (reason) {
       addError({
@@ -51,7 +52,7 @@ const AddEditCommissionBundlePage = () => {
   };
 
   useEffect(() => {
-    if (nameId && actionId === FormAction.Edit) {
+    if (bundleId && actionId === FormAction.Edit) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getDetails();
     }

@@ -48,9 +48,9 @@ describe('<AddEditCommissionBundlePage />', () => {
     });
 
     test('render component AddEditCommissionBundlePage with view on edit', () => {
-        const name = 'someNameId';
-        const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
-        const path = '/comm-bundles/:nameId/:actionId';
+        const bundleId = 'bundleId';
+        const initialEntries = `/comm-bundles/${bundleId}/${FormAction.Edit}`;
+        const path = '/comm-bundles/:bundleId/:actionId';
         renderComponent(initialEntries, path);
 
         const icon = screen.getByTestId('arrow-back-test');
@@ -61,9 +61,9 @@ describe('<AddEditCommissionBundlePage />', () => {
         const mockError = new Error('API error message getCommissionBundleDetails');
         spyOnGetCommissionBundleDetails.mockRejectedValue(mockError);
 
-        const name = 'someNameId';
-        const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
-        const path = '/comm-bundles/:nameId/:actionId';
+        const bundleId = 'bundleId';
+        const initialEntries = `/comm-bundles/${bundleId}/${FormAction.Edit}`;
+        const path = '/comm-bundles/:bundleId/:actionId';
 
         renderComponent(initialEntries, path);
 

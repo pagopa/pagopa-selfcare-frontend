@@ -5,6 +5,7 @@ import { TFunction } from 'react-i18next';
 import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
+import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -110,7 +111,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           <GridLinkAction
             key="Gestisci pacchetto"
             label="Gestisci pacchetto"
-            to={generatePath('')}
+            to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, {bundleId: params.row.idBundle})}
             showInMenu={bundleType !== 'GLOBAL'}
             icon={bundleType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
           />

@@ -6,6 +6,7 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { ENV } from '../../utils/env';
+import { usePermissions } from '../../hooks/usePermissions';
 import ECRegistrationData from './components/ECRegistrationData';
 import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -18,6 +19,7 @@ const DashboardPage = () => {
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
@@ -72,11 +74,10 @@ const DashboardPage = () => {
               <DownloadSection selectedParty={selectedParty}></DownloadSection>
             </Grid>
             
-            {selectedParty &&
-              selectedParty?.institutionType !== 'PSP' &&
-              ENV.FEATURES.OPERATIONTABLE.ENABLED && (
-                <OperationTable ecCode={selectedParty.fiscalCode} />
-              )}
+            {selectedParty 
+            && hasPermission('operation-table-read-write') 
+            && ENV.FEATURES.OPERATIONTABLE.ENABLED 
+            && (<OperationTable ecCode={selectedParty.fiscalCode}/>)}
           </Grid>
         </Box>
       </Grid>

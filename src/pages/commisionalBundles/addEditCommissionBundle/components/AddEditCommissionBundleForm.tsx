@@ -691,7 +691,12 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   }
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   onChange={async (_event, value) => {
-                    if (value !== null) {
+                    if (value === null || value === undefined) {
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                      formik.setFieldValue('idBrokerPsp', '');
+                      setChannelsId([]);
+                    } else {
+                      formik.handleChange('idBrokerPsp')(value);
                       await getChannelsByBrokerCode(
                         brokerDelegationList?.find((el) => el.institution_name === value)
                           ?.broker_tax_code ?? ''

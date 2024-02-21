@@ -134,7 +134,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         : detail.stationCode ?? '',
                 status: detail?.wrapperStatus,
 
-                timeoutA: detail.timeoutA ?? 15,
+                timeoutA: detail.timeoutA ?? 7,
                 timeoutB: detail.timeoutB ?? 30,
                 timeoutC: detail.timeoutC ?? 120,
                 version: detail.version ?? undefined,
@@ -204,7 +204,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 targetPath: '',
                 targetPort: undefined,
                 targetPofConcat: '',
-                timeoutA: 15,
+                timeoutA: 7,
                 timeoutB: 30,
                 timeoutC: 120,
                 version: stationDetail?.version ?? 0,

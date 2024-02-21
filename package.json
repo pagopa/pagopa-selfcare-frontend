@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.15.3",
+  "version": "1.15.4",
   "homepage": "ui",
   "private": true,
   "scripts": {
@@ -28,7 +28,7 @@
     "generate:api-portal": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/main/openapi/openapi.json -O ./openApi/portal-api-docs.json && jq 'walk(if type == \"object\" and has(\"parameters\") then .parameters |= map(select(.name != \"X-Request-Id\")) else . end)' ./openApi/portal-api-docs.json > ./openApi/portal-api-docs.json.temp && mv ./openApi/portal-api-docs.json.temp ./openApi/portal-api-docs.json && yarn run clean:api-portal && mkdirp openApi/generated && api-spec-converter --from=openapi_3 --to=swagger_2 openApi/portal-api-docs.json > openApi/generated/portal-swagger20.json && node openApi/scripts/api-portal_fixPreGen.js && node ./node_modules/@pagopa/selfcare-common-frontend/utils/fixSwagger20ArraySchemaDef.js openApi/generated/portal-swagger20.json && gen-api-models --api-spec openApi/generated/portal-swagger20.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.8.2",
+    "@mui/icons-material": "^5.15.9",
     "@mui/lab": "^5.0.0-alpha.80",
     "@mui/material": "^5.8.2",
     "@mui/system": "^5.8.1",
@@ -68,14 +68,14 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "api-spec-converter": "^2.12.0",
-    "babel-jest": "^27.2.5",
+    "babel-jest": "^29.7.0",
     "babel-plugin-macros": "^3.1.0",
     "craco-module-federation": "^1.1.0",
     "dotenv-cli": "^3.1.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-functional": "^4.2.1",
-    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-sonarjs": "^0.13.0",

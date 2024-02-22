@@ -163,7 +163,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
   }, [selectedParty]);
 
   const initialFormData = (detail?: BundleRequest) => ({
-    abi: detail?.abi ?? '',
+    abi: detail?.abi ?? '', // TODO insert ABI code value
     description: detail?.description ?? '',
     digitalStamp: detail?.digitalStamp ?? false,
     digitalStampRestriction: detail?.digitalStampRestriction ?? false,

@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionPackagesPage from '../CommissionPackagesPage';
+import CommissionPackagesEmpty from '../../list/CommissionPackagesEmpty';
 
 //SNAPSHOT TESTING
 it('renders correctly', () => {
@@ -14,7 +14,7 @@ it('renders correctly', () => {
       <MemoryRouter initialEntries={[`/comm-packages`]}>
         <Route path="/comm-packages">
           <ThemeProvider theme={theme}>
-          <CommissionPackagesPage />
+            <CommissionPackagesEmpty packageType={''} />
           </ThemeProvider>
         </Route>
       </MemoryRouter>

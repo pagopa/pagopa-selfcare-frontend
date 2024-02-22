@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.15.4",
+  "version": "1.15.4-1-VAS-744-fix-operation-table-box-permissions",
   "homepage": "ui",
   "private": true,
   "scripts": {

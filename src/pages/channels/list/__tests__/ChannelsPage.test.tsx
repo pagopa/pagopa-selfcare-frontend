@@ -52,3 +52,19 @@ describe('<ChannelsPage />', () => {
     expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
   });
 });
+
+//SNAPSHOT TESTING
+it('renders correctly', () => {
+  const history = createMemoryHistory();
+  const tree = render(
+    <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <Router history={history}>
+        <ChannelsPage />
+      </Router>
+    </ThemeProvider>
+  </Provider>
+  );
+  expect(tree).toMatchSnapshot();
+});
+

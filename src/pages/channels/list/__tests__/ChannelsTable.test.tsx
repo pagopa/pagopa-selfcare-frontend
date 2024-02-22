@@ -30,3 +30,18 @@ describe('<ChannelsTable />', () => {
     );
   });
 });
+
+//SNAPSHOT TESTING
+it('renders correctly', () => {
+  const history = createMemoryHistory();
+  const tree = render(
+    <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <Router history={history}>
+        <ChannelsTable  channelCodeFilter={"1"}/>
+      </Router>
+    </ThemeProvider>
+  </Provider>
+  );
+  expect(tree).toMatchSnapshot();
+});

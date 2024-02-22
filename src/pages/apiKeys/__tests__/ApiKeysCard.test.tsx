@@ -13,17 +13,7 @@ import { ProductKeys } from '../../../model/ApiKey';
 //SNAPSHOT TESTING
 it('renders correctly', () => {
   getInstitutionApiKeys('').then((data) => {
-    const tree = render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[routes.APIKEYS]}>
-          <Route path={routes.APIKEYS}>
-            <ThemeProvider theme={theme}>
-              <ApiKeysCard apiKey={data[0]} />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
+    const tree = render(<ApiKeysCard apiKey={data[0]} />);
     expect(tree).toMatchSnapshot();
   });
 });

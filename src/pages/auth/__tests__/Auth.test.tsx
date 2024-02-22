@@ -1,3 +1,4 @@
+import React from 'react';
 import {render} from '@testing-library/react';
 import Auth from '../Auth';
 import {ENV} from '../../../utils/env';
@@ -5,6 +6,12 @@ import { User } from '@pagopa/selfcare-common-frontend/model/User';
 import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import ROUTES from '../../../routes';
 import {testToken} from '../../../utils/constants';
+import routes from '../../../routes';
+import { store } from '../../../redux/store';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { theme } from '@pagopa/mui-italia';
+import { ThemeProvider } from '@mui/system';
 
 const token = testToken;
 
@@ -42,3 +49,20 @@ test('test login success no token', () => {
 
   expect(global.window.location.assign).toBeCalledWith(ENV.URL_FE.LOGIN);
 });
+
+//SNAPSHOT TESTING
+it('renders correctly', () => {
+  const tree = render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[routes.AUTH]}>
+        <Route path={routes.AUTH}>
+          <ThemeProvider theme={theme}>
+            <Auth />
+          </ThemeProvider>
+        </Route>
+      </MemoryRouter>
+    </Provider>
+  );
+  expect(tree).toMatchSnapshot();
+});
+

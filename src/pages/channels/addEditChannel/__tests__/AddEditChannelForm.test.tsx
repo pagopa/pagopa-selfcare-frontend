@@ -17,6 +17,7 @@ import { BackofficeApi } from '../../../../api/BackofficeClient';
 import { Party } from '../../../../model/Party';
 import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
 import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
+// import { wait } from '@testing-library/user-event/dist/types/utils';
 
 jest.mock('../../../components/commonFunctions.ts');
 
@@ -37,328 +38,311 @@ const channelDetail: ChannelDetailsResource = {
   payment_types: ['PPAY'],
 };
 
-// describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
-//   const history = injectedHistory ? injectedHistory : createMemoryHistory();
+describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
+  const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
-//   const adminUser: Array<Party> = [pspAdminSignedDirect];
+  const adminUser: Array<Party> = [pspAdminSignedDirect];
 
-//   const operatorUser: Array<Party> = [pspOperatorSignedDirect];
+  const operatorUser: Array<Party> = [pspOperatorSignedDirect];
 
-//   test('Test rendering AddEditChannelForm', async () => {
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Duplicate}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
-//     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
-//     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
-//     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-//     const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
-//     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
-//     const continueBtn = screen.getByText(
-//       'addEditChannelPage.addForm.continueButton'
-//     ) as HTMLButtonElement;
+  test('Test rendering AddEditChannelForm', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Duplicate}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+    const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+    const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
+    const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
+    const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
+    const continueBtn = screen.getByText(
+      'addEditChannelPage.addForm.continueButton'
+    ) as HTMLButtonElement;
 
-//     expect(businessName.value).toBe(pspOperatorSignedDirect.description);
-//     expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
-//     expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
+    expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+    expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+    expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
 
-//     fireEvent.click(businessName);
-//     fireEvent.change(businessName, { target: { value: 'businessName' } });
-//     expect(businessName.value).toBe('businessName');
+    fireEvent.click(businessName);
+    fireEvent.change(businessName, { target: { value: 'businessName' } });
+    expect(businessName.value).toBe('businessName');
 
-//     fireEvent.click(pspBrokerCode);
-//     fireEvent.change(pspBrokerCode, { target: { value: 'pspBrokerCode' } });
-//     expect(pspBrokerCode.value).toBe('pspBrokerCode');
+    fireEvent.click(pspBrokerCode);
+    fireEvent.change(pspBrokerCode, { target: { value: 'pspBrokerCode' } });
+    expect(pspBrokerCode.value).toBe('pspBrokerCode');
 
-//     fireEvent.click(channelCode);
-//     fireEvent.change(channelCode, { target: { value: 'channelCode' } });
-//     expect(channelCode.value).toBe('channelCode');
+    fireEvent.click(channelCode);
+    fireEvent.change(channelCode, { target: { value: 'channelCode' } });
+    expect(channelCode.value).toBe('channelCode');
 
-//     fireEvent.click(targetUnion);
-//     fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
-//     expect(targetUnion.value).toBe('https://www.testTarget.it/path');
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: 'https://www.testTarget.it/path' } });
+    expect(targetUnion.value).toBe('https://www.testTarget.it/path');
 
-//     fireEvent.click(paymentType);
-//     fireEvent.change(paymentType, { target: { value: 'Option 1' } });
+    fireEvent.click(paymentType);
+    fireEvent.change(paymentType, { target: { value: 'Option 1' } });
 
-//     fireEvent.click(continueBtn);
+    fireEvent.click(continueBtn);
 
-//     const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
-//     const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
+    const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
+    const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
 
-//     userEvent.click(cancelBtn);
-//     fireEvent.click(continueBtn);
+    userEvent.click(cancelBtn);
+    fireEvent.click(continueBtn);
 
-//     userEvent.click(confirmBtn);
-//   });
+    userEvent.click(confirmBtn);
+  });
 
-//   test('test catch case api getPaymentTypes', async () => {
-//     BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Create}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
-//   });
+  test('test catch case api getPaymentTypes', async () => {
+    BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Create}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
 
-//   test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Duplicate}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={'14847241008_01'}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
-//   });
+  test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Duplicate}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={'14847241008_01'}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
 
-//   test('Test rendering AddEditChannelForm with formAction edit', async () => {
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Edit}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={'14847241008_01'}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
-//   });
+  test('Test rendering AddEditChannelForm with formAction edit', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={'14847241008_01'}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
 
-//   test('Test rendering AddEditChannelForm with formAction Create', async () => {
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Create}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
+  test('Test rendering AddEditChannelForm with formAction Create', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Create}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
 
-//     const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
-//     const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
-//     const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
-//     const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
-//     const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
-//     const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
-//     const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
+    const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+    const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
+    const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
+    const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
+    const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
+    const continueBtn = screen.getByText('addEditChannelPage.addForm.continueButton');
+    const backButton = screen.getByTestId('back-btn-test') as HTMLButtonElement;
 
-//     expect(businessName.value).toBe(pspOperatorSignedDirect.description);
-//     expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
-//     expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
+    expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+    expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+    expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
 
-//     fireEvent.click(targetUnion);
-//     fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
-//     fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it:3000/path` } });
+    fireEvent.click(targetUnion);
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it/path` } });
+    fireEvent.change(targetUnion, { target: { value: `https://www.testTarget.it:3000/path` } });
 
-//     paymentType.value = 'PPAY';
+    paymentType.value = 'PPAY';
 
-//     fireEvent.change(paymentType);
-//     expect(paymentType.value).toBe('PPAY');
+    fireEvent.change(paymentType);
+    expect(paymentType.value).toBe('PPAY');
 
-//     fireEvent.click(continueBtn);
+    fireEvent.click(continueBtn);
 
-//     const confirmBtn = screen.getByText(
-//       'addEditChannelPage.addForm.continueButton'
-//     ) as HTMLButtonElement;
-//     const cancelBtn = screen.getByText(
-//       'addEditChannelPage.addForm.backButton'
-//     ) as HTMLButtonElement;
+    const confirmBtn = screen.getByText(
+      'addEditChannelPage.addForm.continueButton'
+    ) as HTMLButtonElement;
+    const cancelBtn = screen.getByText(
+      'addEditChannelPage.addForm.backButton'
+    ) as HTMLButtonElement;
 
-//     fireEvent.click(cancelBtn);
-//     fireEvent.click(continueBtn);
+    fireEvent.click(cancelBtn);
+    fireEvent.click(continueBtn);
 
-//     fireEvent.click(confirmBtn);
+    fireEvent.click(confirmBtn);
 
-//     fireEvent.click(continueBtn);
+    fireEvent.click(continueBtn);
 
-//     fireEvent.click(backButton);
-//   });
+    fireEvent.click(backButton);
+  });
 
-//   test('Test Multipayment methods add/remove', async () => {
-//     (isOperator as jest.Mock).mockReturnValue(true);
+  // test('Test Multipayment methods add/remove', async () => {
+  //   (isOperator as jest.Mock).mockReturnValue(true);
 
-//     const { getByTestId, getAllByTestId } = render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Edit}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//               channelDetail={channelDetail}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
+  //   const { getByTestId, getAllByTestId } = render(
+  //     <Provider store={store}>
+  //       <Router history={history}>
+  //         <ThemeProvider theme={theme}>
+  //           <AddEditChannelForm
+  //             formAction={FormAction.Edit}
+  //             selectedParty={pspOperatorSignedDirect}
+  //             channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+  //             channelDetail={channelDetail}
+  //           />
+  //         </ThemeProvider>
+  //       </Router>
+  //     </Provider>
+  //   );
 
-//     const addPaymentType = getByTestId('add-payment-test') as HTMLButtonElement;
+  //   const addPaymentType = getByTestId('add-payment-test') as HTMLButtonElement;
 
-//     fireEvent.click(addPaymentType);
-//     await waitFor(() => {
-//       const paymentType = getAllByTestId('payment-type-test');
-//       expect(paymentType).toHaveLength(2);
-//     });
+  //   fireEvent.click(addPaymentType);
+  //   await waitFor(() => {
+  //     const paymentType = getAllByTestId('payment-type-test');
+  //     expect(paymentType).toHaveLength(2);
+  //   });
 
-//     fireEvent.click(addPaymentType);
+  //   fireEvent.click(addPaymentType);
 
-//     await waitFor(() => {
-//       const paymentType = getAllByTestId('payment-type-test');
-//       expect(paymentType).toHaveLength(3);
+  //   await waitFor(() => {
+  //     const paymentType = getAllByTestId('payment-type-test');
+  //     expect(paymentType).toHaveLength(3);
 
-//       const deletePaymentMethod = getAllByTestId('remove-payment-method') as HTMLButtonElement[];
-//       if (deletePaymentMethod.length > 0) {
-//         fireEvent.click(deletePaymentMethod[0]);
-//       }
-//     });
-//   });
+  //     const deletePaymentMethod = getAllByTestId('remove-payment-method') as HTMLButtonElement[];
+  //     if (deletePaymentMethod.length > 0) {
+  //       fireEvent.click(deletePaymentMethod[0]);
+  //     }
+  //   });
+  // });
 
-//   test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
-//     (isOperator as jest.Mock).mockReturnValue(true);
-//     (isValidURL as jest.Mock).mockReturnValue(true);
+  test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
+    (isValidURL as jest.Mock).mockReturnValue(true);
 
-//     const { getByTestId, getByText } = render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Edit}
-//               selectedParty={operatorUser[0]}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//               channelDetail={channelDetail}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
+    const { getByTestId, getByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={operatorUser[0]}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
 
-//     const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
-//     const password = getByTestId('password-test') as HTMLInputElement;
-//     const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
-//     const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
-//     const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
-//     const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
-//     const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
-//     const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-//     const selectNewConnection = screen.getByTestId('select-new-connection-test');
-//     const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
+    const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
+    const password = getByTestId('password-test') as HTMLInputElement;
+    const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
+    const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
+    const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
+    const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
+    const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
+    const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
+    const selectNewConnection = screen.getByTestId('select-new-connection-test');
+    const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
 
-//     fireEvent.click(selectNewConnection);
+    fireEvent.click(selectNewConnection);
 
-//     fireEvent.change(newConnection, {
-//       target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
-//     });
+    fireEvent.change(newConnection, {
+      target: { value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+    });
 
-//     fireEvent.click(selectNewConnection);
+    fireEvent.click(selectNewConnection);
 
-//     expect(newConnection.value).toBe('');
+    expect(newConnection.value).toBe('');
 
-//     fireEvent.change(primitiveVersion, { target: { value: undefined } });
-//     fireEvent.change(primitiveVersion, { target: { value: 1 } });
+    fireEvent.change(primitiveVersion, { target: { value: undefined } });
+    fireEvent.change(primitiveVersion, { target: { value: 1 } });
 
-//     fireEvent.change(password, { target: { value: 1 } });
+    fireEvent.change(password, { target: { value: 1 } });
 
-//     fireEvent.change(proxyUnion, {
-//       target: { value: 'https://10.101.1.95:8080' },
-//     });
+    fireEvent.change(proxyUnion, {
+      target: { value: 'https://10.101.1.95:8080' },
+    });
 
-//     fireEvent.change(timeoutA, { target: { value: 10 } });
+    fireEvent.change(timeoutA, { target: { value: 10 } });
 
-//     fireEvent.change(timeoutB, { target: { value: 20 } });
+    fireEvent.change(timeoutB, { target: { value: 20 } });
 
-//     fireEvent.change(timeoutC, { target: { value: 30 } });
+    fireEvent.change(timeoutC, { target: { value: 30 } });
 
-//     fireEvent.click(continueBtn);
+    fireEvent.click(continueBtn);
 
-//     const confirmBtn = screen.queryByText(
-//       (_content, element) =>
-//         element?.tagName.toLowerCase() === 'button' &&
-//         element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
-//     ) as HTMLButtonElement;
+    const confirmBtn = screen.queryByText(
+      (_content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
+    ) as HTMLButtonElement;
 
-//     const cancelBtn = screen.queryByText(
-//       (_content, element) =>
-//         element?.tagName.toLowerCase() === 'button' &&
-//         element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
-//     ) as HTMLButtonElement;
+    const cancelBtn = screen.queryByText(
+      (_content, element) =>
+        element?.tagName.toLowerCase() === 'button' &&
+        element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
+    ) as HTMLButtonElement;
 
-//     if (cancelBtn) {
-//       fireEvent.click(cancelBtn);
-//     }
+    if (cancelBtn) {
+      fireEvent.click(cancelBtn);
+    }
 
-//     fireEvent.click(continueBtn);
+    fireEvent.click(continueBtn);
 
-//     if (confirmBtn) {
-//       fireEvent.click(confirmBtn);
-//     }
+    if (confirmBtn) {
+      fireEvent.click(confirmBtn);
+    }
 
-//     fireEvent.click(backButton);
-//   });
+    fireEvent.click(backButton);
+  });
 
-//   test('test targetUnion condition', async () => {
-//     (isOperator as jest.Mock).mockReturnValue(true);
+  test('test targetUnion condition', async () => {
+    (isOperator as jest.Mock).mockReturnValue(true);
 
-//     render(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ThemeProvider theme={theme}>
-//             <AddEditChannelForm
-//               formAction={FormAction.Edit}
-//               selectedParty={pspOperatorSignedDirect}
-//               channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-//               channelDetail={channelDetail}
-//             />
-//           </ThemeProvider>
-//         </Router>
-//       </Provider>
-//     );
-//   });
-// });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <AddEditChannelForm
-            formAction={FormAction.Edit}
-            selectedParty={pspOperatorSignedDirect}
-            channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
-            channelDetail={channelDetail}
-          />
-        </ThemeProvider>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <AddEditChannelForm
+              formAction={FormAction.Edit}
+              selectedParty={pspOperatorSignedDirect}
+              channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+              channelDetail={channelDetail}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    );
+  });
 });

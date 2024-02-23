@@ -23,7 +23,6 @@ import {
   getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
   getPaymentServiceProviders as getPaymentServiceProvidersMocked,
   getPSPBrokerDetails as getPSPBrokerDetailsMocked,
-  getPSPDetails as getPSPDetailsMoked,
   updateECDirect,
   updatePSPInfo as updatePSPInfoMocked,
 } from './__mocks__/nodeService';
@@ -83,15 +82,6 @@ export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDet
         return getPSPBrokerDetailsMocked(pspBrokerCode);
     } else {
         return BackofficeApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
-    }
-};
-
-export const getPSPDetails = (pspCode: string): Promise<BrokerOrPspDetailsResource> => {
-    /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getPSPDetailsMoked(pspCode);
-    } else {
-        return BackofficeApi.getPSPDetails(pspCode).then((resources) => resources);
     }
 };
 

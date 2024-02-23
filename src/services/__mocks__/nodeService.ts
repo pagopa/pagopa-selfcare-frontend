@@ -214,10 +214,6 @@ export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDet
     return new Promise((resolve) => resolve(mapPSPBrokerDetailsResource(pspBrokerCode)));
 };
 
-export const getPSPDetails = (_pspCode: string): Promise<PaymentServiceProviderDetailsResource> => {
-    return new Promise((resolve) => resolve(pspDetails));
-};
-
 export const getPaymentServiceProviders = (
     _page: number,
     _name?: string,

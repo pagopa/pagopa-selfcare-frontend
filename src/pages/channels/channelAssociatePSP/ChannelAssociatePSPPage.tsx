@@ -25,8 +25,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
 import { Party } from '../../../model/Party';
 import { Delegation } from '../../../api/generated/portal/Delegation';
-import { PaymentServiceProvidersResource } from '../../../api/generated/portal/PaymentServiceProvidersResource';
-import { getPSPDetails, getPaymentServiceProviders } from '../../../services/nodeService';
+import { getBrokerAndPspDetails } from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
@@ -62,21 +61,9 @@ function ChannelAssociatePSPPage() {
     if (selectedPSP && selectedPSP.institution_id) {
       setLoading(true);
 
-      const pspsByTaxCode: PaymentServiceProvidersResource = await getPaymentServiceProviders(
-        0,
-        undefined,
-        undefined,
-        undefined,
-        selectedPSP.tax_code
-      );
-      const pspToBeAssociatedDetails =
-        pspsByTaxCode &&
-        pspsByTaxCode.payment_service_providers &&
-        pspsByTaxCode.payment_service_providers[0].psp_code
-          ? await getPSPDetails(pspsByTaxCode.payment_service_providers[0].psp_code)
-          : null;
+      const pspToBeAssociatedDetails = selectedPSP.tax_code ? await getBrokerAndPspDetails(selectedPSP.tax_code) : null;
 
-      if (pspToBeAssociatedDetails!.paymentServiceProviderDetailsResource && pspToBeAssociatedDetails!.paymentServiceProviderDetailsResource.psp_code) {
+      if (pspToBeAssociatedDetails?.paymentServiceProviderDetailsResource?.psp_code) {
         await associatePSPtoChannel(
           channelId,
           selectedPSP!.tax_code as string,

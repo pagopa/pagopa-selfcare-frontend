@@ -299,11 +299,11 @@ export const BackofficeApi = {
     },
 
     updatePaymentServiceProvider: async (
-        pspcode: string,
+        pspTaxCode: string,
         psp: NodeOnSignInPSP
     ): Promise<PaymentServiceProviderDetailsResource> => {
         const result = await backofficeClient.updatePSP({
-            'psp-code': pspcode,
+            'psp-tax-code': pspTaxCode,
             body: {
                 business_name: psp.businessName,
                 enabled: true,

@@ -48,13 +48,13 @@ export const createPspBroker = (broker: BrokerPspDetailsDto): Promise<BrokerPspD
 };
 
 export const updatePSPInfo = (
-    pspcode: string,
+    pspTaxCode: string,
     psp: NodeOnSignInPSP
 ): Promise<PaymentServiceProviderDetailsResource> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updatePSPInfoMocked(pspcode, psp);
+        return updatePSPInfoMocked(pspTaxCode, psp);
     } else {
-        return BackofficeApi.updatePaymentServiceProvider(pspcode, psp);
+        return BackofficeApi.updatePaymentServiceProvider(pspTaxCode, psp);
     }
 };
 

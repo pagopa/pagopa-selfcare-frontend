@@ -10,8 +10,7 @@ import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import { PaymentServiceProviderDetailsResource } from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
 import {
   brokerOrPspDetailsResource_PSPAndBroker,
-  brokerOrPspDetailsResource_PSPOnly,
-  pspDetails,
+  brokerOrPspDetailsResource_PSPOnly
 } from '../../../../services/__mocks__/nodeService';
 import {
   pspAdminSignedDirect,
@@ -92,7 +91,7 @@ beforeEach(() => {
   updatePSPInfoMocked = jest.spyOn(require('../../../../services/nodeService'), 'updatePSPInfo');
   getBrokerAndPspDetailsMocked = jest.spyOn(
     require('../../../../services/nodeService'),
-    'getPSPDetails'
+    'getBrokerAndPspDetails'
   );
   createPspBroker = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
 

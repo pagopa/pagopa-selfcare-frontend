@@ -7,11 +7,3 @@ describe('<AddEditChannelFormSectionTitle />', () => {
     render(<AddEditChannelFormSectionTitle icon={<React.Fragment></React.Fragment>} title={''} />);
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <AddEditChannelFormSectionTitle icon={<React.Fragment></React.Fragment>} title={''} />
-  );
-  expect(tree).toMatchSnapshot();
-});

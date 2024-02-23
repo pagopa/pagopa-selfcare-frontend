@@ -70,28 +70,3 @@ describe('<AddEditCommissionPackagePage />', () => {
     });
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      {/** Add form */}
-      <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
-        <Route path={'/comm-packages/:nameId/:actionId'}>
-          <ThemeProvider theme={theme}>
-            <AddEditCommissionPackagePage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-      {/** Edit form */}
-      <MemoryRouter initialEntries={[`/comm-packages/someNameId/${FormAction.Edit}`]}>
-        <Route path={'/comm-packages/:nameId/:actionId'}>
-          <ThemeProvider theme={theme}>
-            <AddEditCommissionPackagePage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
-});

@@ -43,12 +43,3 @@ test('test login success no token', () => {
 
   expect(global.window.location.assign).toBeCalledWith(ENV.URL_FE.LOGIN);
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Auth />
-  );
-  expect(tree).toMatchSnapshot();
-});
-

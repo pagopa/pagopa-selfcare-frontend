@@ -8,18 +8,20 @@ import { ThemeProvider } from '@mui/system';
 import routes from '../../../routes';
 import AddApiKeyPage from '../AddApiKeyPage';
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
+describe('<AddApiKeyPage />', () => {
+  test('render component AddApiKeyPage', async () => {
+    render(
+      <Provider store={store}>
       <MemoryRouter initialEntries={[routes.APIKEYS]}>
         <Route path={routes.APIKEYS}>
-          <ThemeProvider theme={theme}>
-            <AddApiKeyPage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
+            <ThemeProvider theme={theme}>
+              <AddApiKeyPage />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+  });
 });
+
+

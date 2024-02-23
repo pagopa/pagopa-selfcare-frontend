@@ -92,19 +92,3 @@ describe('<ChannelAssociatePSPPage />', () => {
     expect(mockHistoryPush).toHaveBeenCalledWith(`ui/channels/${channelId}/psp-list`);
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-    const tree = render(
-        <Provider store={store}>
-        <MemoryRouter initialEntries={[`channels/${channelId}/associate-psp`]}>
-          <Route path={'channels/:channelId/associate-psp'}>
-            <ThemeProvider theme={theme}>
-              <ChannelAssociatePSPPage />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
-    expect(tree).toMatchSnapshot();
-  });

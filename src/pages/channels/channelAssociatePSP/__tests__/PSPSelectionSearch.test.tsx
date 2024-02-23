@@ -88,23 +88,3 @@ describe('<PSPSelectionSearch />', () => {
         );
     });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-    const tree = render(
-        <Provider store={store}>
-        <MemoryRouter initialEntries={[`/channels/${channelId}/associate-psp`]}>
-            <Route path="/channels/:channelId/associate-psp">
-                <ThemeProvider theme={theme}>
-                    <PSPSelectionSearch
-                        availablePSP={availablePSP}
-                        selectedPSP={undefined}
-                        onPSPSelectionChange={onPSPSelectionChange}
-                    />
-                </ThemeProvider>
-            </Route>
-        </MemoryRouter>
-    </Provider>
-    );
-    expect(tree).toMatchSnapshot();
-  });

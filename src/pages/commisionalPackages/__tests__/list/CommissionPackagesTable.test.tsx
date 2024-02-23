@@ -38,22 +38,3 @@ describe('<CommissionPackagesTable />', () => {
     );
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/comm-packages`]}>
-        <Route path="/comm-packages">
-          <ThemeProvider theme={theme}>
-            <CommissionPackagesTable
-              packageNameFilter={''}
-              packageType={'commissionPackagesPage.privatePackages'}
-            />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
-});

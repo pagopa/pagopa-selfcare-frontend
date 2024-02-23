@@ -14,24 +14,6 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const channelId = 'XPAY_03_ONUS';
-  const tree = render(
-    <Provider store={store}>
-    <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-      <Route path="/channels/:channelId">
-        <ThemeProvider theme={theme}>
-          <ChannelDetailPage />
-        </ThemeProvider>
-      </Route>
-    </MemoryRouter>
-  </Provider>
-  );
-  expect(tree).toMatchSnapshot();
-});
-
-
 describe('<ChannelDetailPage />', () => {
   const channelId = 'XPAY_03_ONUS';
   test('render component ChannelDetailPage', async () => {

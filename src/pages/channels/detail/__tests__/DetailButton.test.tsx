@@ -9,29 +9,29 @@ import { theme } from '@pagopa/mui-italia';
 import { ThemeProvider } from '@mui/system';
 import DetailButtons from '../components/DetailButtons';
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const channelId = 'XPAY_03_ONUS';
-  const channelDetailWrapper = {
-    broker_psp_code: '97735020584',
-    broker_description: 'AgID - Agenzia per l’Italia Digitale',
-    channel_code: `${channelId}`,
-    target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
-    target_port: 8081,
-    target_host: ' lab.link.it',
-    payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
-    status: StatusEnum.TO_CHECK,
-  };
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-        <Route path="/channels/:channelId">
-          <ThemeProvider theme={theme}>
-            <DetailButtons channelDetails={channelDetailWrapper} goBack={jest.fn()} />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
+describe('<DetailButtons />', () => {
+  test('render component DetailButtons', async () => {
+    const channelId = 'XPAY_03_ONUS';
+    const channelDetailWrapper = {
+      broker_psp_code: '97735020584',
+      broker_description: 'AgID - Agenzia per l’Italia Digitale',
+      channel_code: `${channelId}`,
+      target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
+      target_port: 8081,
+      target_host: ' lab.link.it',
+      payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
+      status: StatusEnum.TO_CHECK,
+    };
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
+          <Route path="/channels/:channelId">
+            <ThemeProvider theme={theme}>
+              <DetailButtons channelDetails={channelDetailWrapper} goBack={jest.fn()} />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+  });
 });

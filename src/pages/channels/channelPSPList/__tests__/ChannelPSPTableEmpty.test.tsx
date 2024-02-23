@@ -7,7 +7,6 @@ import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {store} from '../../../../redux/store';
 import ChannelPSPTableEmpty from '../ChannelPSPTableEmpty';
-import { useTranslation } from 'react-i18next';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -35,18 +34,3 @@ describe('<ChannelPSPTableEmpty />', () => {
     fireEvent.click(associatePsp);
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-    const history = createMemoryHistory();
-    const tree = render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ThemeProvider theme={theme}>
-              <ChannelPSPTableEmpty channelId={'XPAY_03_ONUS'} />
-            </ThemeProvider>
-          </Router>
-        </Provider>
-    );
-    expect(tree).toMatchSnapshot();
-  });

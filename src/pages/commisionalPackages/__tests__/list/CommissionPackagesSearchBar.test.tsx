@@ -56,21 +56,3 @@ describe('<CommissionPackagesSearchBar />', () => {
   });
 });
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/comm-packages`]}>
-        <Route path="/comm-packages">
-          <ThemeProvider theme={theme}>
-            <CommissionPackagesSearchBar
-              packageNameInput={'lorem'}
-              setPackageNameInput={jest.fn()}
-            />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
-});

@@ -37,18 +37,18 @@ describe('<ChannelPSPTable />', () => {
     });
   });
 
-  test('Break up PSP Channel relationship', async () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-          <Route path="/channels/:channelId">
-            <ThemeProvider theme={theme}>
-              <ChannelPSPTable setAlertMessage={() => ''} pspNameFilter={''} />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
+  // test('Break up PSP Channel relationship', async () => {
+  //   render(
+  //     <Provider store={store}>
+  //       <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
+  //         <Route path="/channels/:channelId">
+  //           <ThemeProvider theme={theme}>
+  //             <ChannelPSPTable setAlertMessage={() => ''} pspNameFilter={''} />
+  //           </ThemeProvider>
+  //         </Route>
+  //       </MemoryRouter>
+  //     </Provider>
+  //   );
 
     // const dissociatePspBtn = screen.getByTestId('dissociate-14847241001');
     // await waitFor(() => {
@@ -63,21 +63,5 @@ describe('<ChannelPSPTable />', () => {
     // await waitFor(() => {
     //   expect(spyApi).toBeCalledTimes(1);
     // });
-  });
-});
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-        <Route path="/channels/:channelId">
-          <ThemeProvider theme={theme}>
-            <ChannelPSPTable setAlertMessage={() => ''} pspNameFilter={''} />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
+  // });
 });

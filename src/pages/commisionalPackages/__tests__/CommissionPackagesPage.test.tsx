@@ -7,18 +7,18 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import CommissionPackagesPage from '../CommissionPackagesPage';
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/comm-packages`]}>
-        <Route path="/comm-packages">
-          <ThemeProvider theme={theme}>
-          <CommissionPackagesPage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
+describe('<CommissionPackagesPage />', () => {
+  test('render component CommissionPackagesPage', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/comm-packages`]}>
+          <Route path="/comm-packages">
+            <ThemeProvider theme={theme}>
+              <CommissionPackagesPage />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+  });
 });

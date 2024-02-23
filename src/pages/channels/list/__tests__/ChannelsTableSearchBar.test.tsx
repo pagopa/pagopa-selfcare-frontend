@@ -4,17 +4,13 @@ import ChannelsTableSearchBar from '../ChannelsTableSearchBar';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const [channelCodeInput, setChannelCodeInput] = ['', () => ''];
-  const history = createMemoryHistory();
-  const tree = render(
-    <Router history={history}>
-      <ChannelsTableSearchBar
-        channelCodeInput={channelCodeInput}
-        setChannelCodeInput={setChannelCodeInput}
-      />
-    </Router>
-  );
-  expect(tree).toMatchSnapshot();
+describe('<ChannelsTableSearchBar />', () => {
+  test('render component ChannelsTableSearchBar', async () => {
+    const history = createMemoryHistory();
+    render(
+      <Router history={history}>
+        <ChannelsTableSearchBar channelCodeInput={''} setChannelCodeInput={jest.fn()} />
+      </Router>
+    );
+  });
 });

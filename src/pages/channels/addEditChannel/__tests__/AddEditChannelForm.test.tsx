@@ -348,10 +348,8 @@ const channelDetail: ChannelDetailsResource = {
 
 //SNAPSHOT TESTING
 it('renders correctly', () => {
-  const history = createMemoryHistory();
   const tree = render(
     <Provider store={store}>
-      <Router history={history}>
         <ThemeProvider theme={theme}>
           <AddEditChannelForm
             formAction={FormAction.Edit}
@@ -360,7 +358,6 @@ it('renders correctly', () => {
             channelDetail={channelDetail}
           />
         </ThemeProvider>
-      </Router>
     </Provider>
   );
   expect(tree).toMatchSnapshot();

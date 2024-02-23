@@ -7,6 +7,7 @@ import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {store} from '../../../../redux/store';
 import ChannelPSPTableEmpty from '../ChannelPSPTableEmpty';
+import { useTranslation } from 'react-i18next';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -30,7 +31,7 @@ describe('<ChannelPSPTableEmpty />', () => {
       );
     });
 
-    const associatePsp = screen.getByText('channelPSPList.associatePspButtonLabel');
+    const associatePsp = screen.getByText("Associa PSP");
     fireEvent.click(associatePsp);
   });
 });

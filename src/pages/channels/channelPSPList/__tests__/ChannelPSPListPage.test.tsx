@@ -17,6 +17,22 @@ afterEach(cleanup);
 
 const channelId = 'XPAY_03_ONUS';
 
+//SNAPSHOT TESTING
+it('renders correctly', () => {
+  const tree = render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[`/channels/${channelId}/psp-list`]}>
+        <Route path="/channels/:channelId/psp-list">
+          <ThemeProvider theme={theme}>
+            <ChannelPSPListPage />
+          </ThemeProvider>
+        </Route>
+      </MemoryRouter>
+    </Provider>
+  );
+  expect(tree).toMatchSnapshot();
+});
+
 describe('<ChannelPSPTable />', () => {
   test('render component ChannelPSPTable', async () => {
     await waitFor(() => {
@@ -57,20 +73,4 @@ describe('<ChannelPSPTable />', () => {
     const alertSuccessMessage = await screen.getAllByText(/testAlertMessage/i);
     expect(alertSuccessMessage.length).toBe(1);
   });
-});
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/channels/${channelId}/psp-list`]}>
-        <Route path="/channels/:channelId/psp-list">
-          <ThemeProvider theme={theme}>
-            <ChannelPSPListPage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
 });

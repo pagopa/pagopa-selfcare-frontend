@@ -13,10 +13,10 @@ import {
   pspAdminSignedDirect,
   pspOperatorSignedDirect,
 } from '../../../../services/__mocks__/partyService';
-import { ChannelDetailsDto, StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
 import { BackofficeApi } from '../../../../api/BackofficeClient';
 import { Party } from '../../../../model/Party';
 import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
+import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
 
 jest.mock('../../../components/commonFunctions.ts');
 
@@ -26,6 +26,16 @@ beforeEach(() => {
 });
 
 afterEach(cleanup);
+
+const channelDetail: ChannelDetailsResource = {
+  broker_psp_code: '97735020584',
+  broker_description: 'AgID - Agenzia per l’Italia Digitale',
+  channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
+  target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+  target_port: 443,
+  target_host: 'www.lab.link.it',
+  payment_types: ['PPAY']
+};
 
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
@@ -197,16 +207,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
   test('Test Multipayment methods add/remove', async () => {
     (isOperator as jest.Mock).mockReturnValue(true);
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
-      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 443,
-      target_host: 'www.lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
 
     const { getByTestId, getAllByTestId } = render(
       <Provider store={store}>
@@ -247,17 +247,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
     (isOperator as jest.Mock).mockReturnValue(true);
     (isValidURL as jest.Mock).mockReturnValue(true);
-
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
-      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 8080,
-      target_host: 'https://www.lab.link.it',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
 
     const { getByTestId, getByText } = render(
       <Provider store={store}>
@@ -339,16 +328,6 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
   test('test targetUnion condition', async () => {
     (isOperator as jest.Mock).mockReturnValue(true);
-    const channelDetail: ChannelDetailsDto = {
-      broker_psp_code: '97735020584',
-      broker_description: 'AgID - Agenzia per l’Italia Digitale',
-      channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
-      target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
-      target_port: 443,
-      target_host: '',
-      payment_types: ['PPAY'],
-      status: StatusEnum.TO_CHECK,
-    };
 
     render(
       <Provider store={store}>

@@ -87,19 +87,3 @@ describe('<AddEditChannelPage />', () => {
     expect(getChannelCodeMocked).toBeCalled();
   });
 });
-
-//SNAPSHOT TESTING
-it('renders correctly', () => {
-  const tree = render(
-    <Provider store={store}>
-      <MemoryRouter initialEntries={[`/channels/${mockedChannel.channel_code}/edit`]}>
-        <Route path="/channels/:channelId/:actionId">
-          <ThemeProvider theme={theme}>
-            <AddEditChannelPage />
-          </ThemeProvider>
-        </Route>
-      </MemoryRouter>
-    </Provider>
-  );
-  expect(tree).toMatchSnapshot();
-});

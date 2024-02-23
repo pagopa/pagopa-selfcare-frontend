@@ -294,11 +294,11 @@ export const BackofficeApi = {
     },
 
     updatePaymentServiceProvider: async (
-        pspcode: string,
+        pspTaxCode: string,
         psp: NodeOnSignInPSP
     ): Promise<PaymentServiceProviderDetailsResource> => {
         const result = await backofficeClient.updatePSP({
-            'psp-code': pspcode,
+            'tax-code': pspTaxCode,
             body: {
                 business_name: psp.businessName,
                 enabled: true,
@@ -343,7 +343,7 @@ export const BackofficeApi = {
     },
 
     getPSPChannels: async (taxcode: string): Promise<PspChannelsResource> => {
-        const result = await backofficeClient.getPspChannels({'psp-tax-code': taxcode});
+        const result = await backofficeClient.getPspChannels({'tax-code': taxcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

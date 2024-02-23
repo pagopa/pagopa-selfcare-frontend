@@ -12,7 +12,7 @@ import {UpdateCreditorInstitutionDto} from '../../api/generated/portal/UpdateCre
 import {NodeOnSignInPSP} from '../../model/Node';
 import {PSPDirectDTO} from '../../model/PSP';
 
-const pspDirect: PSPDirectDTO = {
+export const pspDirect: PSPDirectDTO = {
     abi: 'abi',
     agid_psp: false,
     bic: 'bic',
@@ -202,7 +202,7 @@ export const createPspBroker = (
 export const createPSPIndirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
     new Promise((resolve) => resolve(pspDirect));
 
-export const updatePSPInfo = (_pspcode: string, _psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+export const updatePSPInfo = (_pspTaxCode: string, _psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
     new Promise((resolve) => resolve(pspDirect));
 
 export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {

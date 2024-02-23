@@ -125,9 +125,9 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (signInData.paymentServiceProviderDetailsResource?.psp_code) {
+        if (signInData.paymentServiceProviderDetailsResource?.tax_code) {
           await updatePSPInfo(
-            signInData.paymentServiceProviderDetailsResource.psp_code,
+            signInData.paymentServiceProviderDetailsResource.tax_code,
             formik.values
           );
         }

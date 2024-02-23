@@ -211,7 +211,7 @@ export const BackofficeApi = {
     },
 
     getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code': code});
+        const result = await backofficeClient.getBrokerAndPspDetails({'tax-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -219,12 +219,7 @@ export const BackofficeApi = {
         const result = await backofficeClient.getBrokerPsp({'broker-code': brokerpspcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
-
-    getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code': pspcode});
-        return extractResponse(result, 200, onRedirectToLogin);
-    },
-
+    
     getPaymentServiceProviders: async (
         page: number,
         name?: string,

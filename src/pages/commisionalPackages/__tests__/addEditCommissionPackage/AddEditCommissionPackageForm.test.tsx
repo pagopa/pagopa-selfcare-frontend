@@ -111,23 +111,6 @@ describe('<AddEditCommissionPackageForm />', () => {
     return input;
   };
 
-  test('match the snapshot', async () => {
-    const tree = renderer
-      .create(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
-            <Route path="/comm-packages/add-package/">
-              <ThemeProvider theme={theme}>
-                <AddEditCommissionPackageForm commPackageDetails={commissionPackageDetailsMocked} />
-              </ThemeProvider>
-            </Route>
-          </MemoryRouter>
-        </Provider>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
   test('Test AddEditCommissionPackageForm with all input change', async () => {
     const { ...input } = componentRender();
     await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));

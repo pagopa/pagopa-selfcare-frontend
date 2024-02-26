@@ -1,9 +1,10 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 const {waitForElement} = require('./commons.js');
 const {switchTo} = require("./switch_to");
+const {delay} = require("./commons");
 
 (async () => {
-    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
+    const browser = await puppeteer.launch({headless: false, userDataDir: './user-data', slowMo: 10});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -27,25 +28,12 @@ const {switchTo} = require("./switch_to");
     }
 
     await switchTo(page, timeout, "PSP DEMO DIRECT");
-
+    await delay(5000);
     let i = 0;
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await waitForElement({
-            type: 'waitForElement',
-            target: 'main',
-            selectors: [
-                'div.css-1ye32zt div > div > div > div.MuiBox-root span',
-                'xpath///*[@id="root"]/div[2]/div[1]/nav/div/div/div/div[2]/div/div/div/div[2]/span',
-                'pierce/div.css-1ye32zt div > div > div > div.MuiBox-root span',
-                'text/Responsabile'
-            ]
-        }, targetPage, timeout);
-    }
-    console.log(`associateChannel ${i++}`);
-    {
-        const targetPage = page;
+        await targetPage.waitForNetworkIdle();
         await waitForElement({
             type: 'waitForElement',
             target: 'main',
@@ -85,8 +73,8 @@ const {switchTo} = require("./switch_to");
             .setTimeout(timeout)
             .click({
                 offset: {
-                    x: 3.765625,
-                    y: 10.6640625,
+                    x: 15.265625,
+                    y: 10.4296875,
                 },
             });
     }

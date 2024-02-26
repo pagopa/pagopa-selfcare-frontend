@@ -1,17 +1,17 @@
-/* import { ThemeProvider } from '@mui/system';
+import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionPackagesSearchBar from '../list/CommissionPackagesSearchBar';
+import CommissionPackagesSearchBar from '../../list/CommissionPackagesSearchBar';
 
 let getCommissionPackagePspSpy: jest.SpyInstance;
 
 beforeEach(() => {
   getCommissionPackagePspSpy = jest.spyOn(
-    require('../../../services/__mocks__/commissionPackageService'),
+    require('../../../../services/__mocks__/bundleService'),
     'getCommissionPackagePsp'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -55,4 +55,4 @@ describe('<CommissionPackagesSearchBar />', () => {
     fireEvent.change(filterName, { target: { value: 'lorem' } });
   });
 });
- */
+

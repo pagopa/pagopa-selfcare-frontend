@@ -273,7 +273,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
                 >
                   {channelDetail?.password ? (
                     <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'} data-testid="password-value-test">
                         {showOrHidePassword(channelDetail?.password)}
                       </Typography>
                       <IconButton

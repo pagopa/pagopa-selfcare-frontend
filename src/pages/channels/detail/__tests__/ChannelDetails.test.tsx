@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, screen, render, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
@@ -16,6 +16,8 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+const password = 'channelDetail password';
+
 describe('<ChannelDetails />', () => {
   const channelId = 'XPAY_03_ONUS';
   const channelDetail = {
@@ -27,6 +29,7 @@ describe('<ChannelDetails />', () => {
     target_host: ' lab.link.it',
     payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
     status: StatusEnum.TO_CHECK,
+    password: password,
   };
   test('render component ChannelDetails with channelDetail', async () => {
     render(
@@ -45,6 +48,15 @@ describe('<ChannelDetails />', () => {
         </MemoryRouter>
       </Provider>
     );
+
+    const passwordField = screen.getByTestId('password-value-test') as HTMLElement;
+    expect(passwordField.innerHTML).toBe('XXXXXXXXXXXXXX');
+
+    const showPasswordButton = screen.getByTestId('show-psw-test') as HTMLElement;
+
+    fireEvent.click(showPasswordButton);
+
+    expect(passwordField.innerHTML).toBe(password);
   });
 
   test('render component ChannelDetails with empty channelDetail', async () => {
@@ -57,7 +69,7 @@ describe('<ChannelDetails />', () => {
                 channelDetail={{
                   broker_psp_code: undefined,
                   broker_description: undefined,
-                  channel_code: "",
+                  channel_code: '',
                   target_path: undefined,
                   target_port: undefined,
                   target_host: undefined,
@@ -72,5 +84,13 @@ describe('<ChannelDetails />', () => {
         </MemoryRouter>
       </Provider>
     );
-  })
+
+    let noPassword = false;
+    try{
+      screen.getByTestId('password-value-test');
+    } catch (_) {
+      noPassword = true;
+    }
+    expect(noPassword).toBeTruthy();
+  });
 });

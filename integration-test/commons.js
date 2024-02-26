@@ -233,19 +233,19 @@ function delay(time) {
 }
 
 
-const repeatUntilSuccess = async (fun, delayMs = 1000, repetition = 3) => {
+const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepetitions = 3) => {
     let i = 0;
     let result;
-    while (i < repetition) {
+    while (i < maxRepetitions) {
         try {
             result = await fun();
         } catch (e) {
-            if (repetition === i) {
+            if (maxRepetitions === i) {
                 console.log(`retry n° ${i}`);
                 throw e;
             }
         }
-        await delay(delayMs);
+        await delay(delayBetweenRepetitions);
         i = i + 1;
     }
     return result;

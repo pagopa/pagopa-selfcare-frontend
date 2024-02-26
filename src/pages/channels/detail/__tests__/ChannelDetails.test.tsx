@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-const password = 'channelDetail password';
+const passwordFieldValue = 'channelDetail password';
 
 describe('<ChannelDetails />', () => {
   const channelId = 'XPAY_03_ONUS';
@@ -29,7 +29,7 @@ describe('<ChannelDetails />', () => {
     target_host: ' lab.link.it',
     payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
     status: StatusEnum.TO_CHECK,
-    password: password,
+    password: passwordFieldValue,
   };
   test('render component ChannelDetails with channelDetail', async () => {
     render(
@@ -56,7 +56,7 @@ describe('<ChannelDetails />', () => {
 
     fireEvent.click(showPasswordButton);
 
-    expect(passwordField.innerHTML).toBe(password);
+    expect(passwordField.innerHTML).toBe(passwordFieldValue);
   });
 
   test('render component ChannelDetails with empty channelDetail', async () => {

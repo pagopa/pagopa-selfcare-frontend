@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
-const { waitForElement } = require('./commons.js');
+const {waitForElement} = require('./commons.js');
 
 (async () => {
     const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data'});

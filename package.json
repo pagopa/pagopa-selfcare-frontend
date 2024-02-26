@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.16.2-2-hotfix-delegation",
+  "version": "1.16.3",
   "homepage": "ui",
   "private": true,
   "scripts": {

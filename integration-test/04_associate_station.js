@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 const {waitForElement} = require('./commons.js');
+const {delay} = require("./commons");
 
 (async () => {
     const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data'});
@@ -347,11 +348,6 @@ const {waitForElement} = require('./commons.js');
     await browser.close();
     console.log("associate station");
 
-    function delay(time) {
-        return new Promise(function (resolve) {
-            setTimeout(resolve, time)
-        });
-    }
 
 })().catch(err => {
     console.error(err);

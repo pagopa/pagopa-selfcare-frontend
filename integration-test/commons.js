@@ -226,8 +226,25 @@ async function typeIntoElement(element, value) {
     await element.type(textToType);
 }
 
+function delay(time) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, time)
+    });
+}
+
 
 module.exports = {
-    waitForSelectors, scrollIntoViewIfNeeded, waitForConnected, waitForInViewport, waitForSelector, waitForElement,
-    querySelectorsAll, querySelectorAll, waitForFunction, changeSelectElement, changeElementValue, typeIntoElement
+    waitForSelectors,
+    scrollIntoViewIfNeeded,
+    waitForConnected,
+    waitForInViewport,
+    waitForSelector,
+    waitForElement,
+    querySelectorsAll,
+    querySelectorAll,
+    waitForFunction,
+    changeSelectElement,
+    changeElementValue,
+    typeIntoElement,
+    delay
 }

@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 const {waitForElement} = require('./commons.js');
+const {switchTo} = require("./switch_to");
 
 (async () => {
     const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
@@ -24,6 +25,9 @@ const {waitForElement} = require('./commons.js');
         await targetPage.goto('https://selfcare.dev.platform.pagopa.it/ui');
         await Promise.all(promises);
     }
+
+    await switchTo(page, timeout, "PSP DEMO DIRECT");
+
     {
         const targetPage = page;
         await waitForElement({

@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-const passwordFieldValue = 'channelDetail password';
+const passwordFieldValue = 'channelDetailpsw';
 
 describe('<ChannelDetails />', () => {
   const channelId = 'XPAY_03_ONUS';

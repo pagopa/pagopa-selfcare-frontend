@@ -237,19 +237,21 @@ const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepeti
     let i = 0;
     let result;
     while (i < maxRepetitions) {
+        i = i + 1;
+        let isSuccess = true;
         try {
             result = await fun();
         } catch (e) {
+            console.log(`retry n° ${i}`);
             if (maxRepetitions === i) {
-                console.log(`retry n° ${i}`);
                 throw e;
             }
+            isSuccess = false;
         }
-        if (result) {
+        if (isSuccess) {
             break;
         }
         await delay(delayBetweenRepetitions);
-        i = i + 1;
     }
     return result;
 };

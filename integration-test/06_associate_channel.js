@@ -69,18 +69,21 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await puppeteer.Locator.race([
-            targetPage.locator("div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']"),
-            targetPage.locator('::-p-xpath(//*[@data-testid=\\"MoreVertIcon\\"])'),
-            targetPage.locator(":scope >>> div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']")
-        ])
-            .setTimeout(timeout)
-            .click({
-                offset: {
-                    x: 15.265625,
-                    y: 10.4296875,
-                },
-            });
+        await repeatUntilSuccess(async () => {
+            await puppeteer.Locator.race([
+                targetPage.locator("div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']"),
+                targetPage.locator('::-p-xpath(//*[@data-testid=\\"MoreVertIcon\\"])'),
+                targetPage.locator(":scope >>> div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']")
+            ])
+                .setTimeout(timeout)
+                .click({
+                    offset: {
+                        x: 15.265625,
+                        y: 10.4296875,
+                    },
+                });
+        });
+
     }
     console.log(`associateChannel ${i++}`);
     {

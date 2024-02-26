@@ -55,7 +55,6 @@ const createOperationTableTest = async (page, timeout) => {
     }
     console.log(`createOperationTableTest ${i++}`);
     {
-        await targetPage.waitForNetworkIdle();
         await repeatUntilSuccess(async () => {
             await puppeteer.Locator.race([
                 targetPage.locator('::-p-aria(E-mail)'),

@@ -107,20 +107,23 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     {
         const targetPage = page;
         await targetPage.waitForNetworkIdle();
-        await puppeteer.Locator.race([
-            targetPage.locator('::-p-aria(Associa PSP)'),
-            targetPage.locator('div.MuiGrid-root a'),
-            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div[4]/a)'),
-            targetPage.locator(':scope >>> div.MuiGrid-root a'),
-            targetPage.locator('::-p-text(Associa PSP)')
-        ])
-            .setTimeout(timeout)
-            .click({
-                offset: {
-                    x: 45.8984375,
-                    y: 8,
-                },
-            });
+        await repeatUntilSuccess(async () => {
+            await puppeteer.Locator.race([
+                targetPage.locator('::-p-aria(Associa PSP)'),
+                targetPage.locator('div.MuiGrid-root a'),
+                targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div[4]/a)'),
+                targetPage.locator(':scope >>> div.MuiGrid-root a'),
+                targetPage.locator('::-p-text(Associa PSP)')
+            ])
+                .setTimeout(timeout)
+                .click({
+                    offset: {
+                        x: 45.8984375,
+                        y: 8,
+                    },
+                });
+        })
+
     }
     console.log(`associateChannel ${i++}`);
     {

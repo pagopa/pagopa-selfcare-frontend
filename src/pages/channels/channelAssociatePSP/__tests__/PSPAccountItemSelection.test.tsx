@@ -14,16 +14,16 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
+const channelId = 'XPAY_03_ONUS';
+
+const psp = {
+  broker_psp_code: 'string',
+  description: 'string',
+  enabled: true,
+  extended_fault_bean: true,
+};
+
 describe('<PSPAccountItemSelection />', () => {
-  const channelId = 'XPAY_03_ONUS';
-
-  const psp = {
-    broker_psp_code: 'string',
-    description: 'string',
-    enabled: true,
-    extended_fault_bean: true,
-  };
-
   test('render component PSPAccountItemSelection with PSP Selected', async () => {
     render(
       <Provider store={store}>

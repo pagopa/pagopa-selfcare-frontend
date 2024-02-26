@@ -30,8 +30,11 @@ type Props = {
 const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber }: Props) => {
   const { t } = useTranslation();
   const operator = isOperator();
+
+  const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
+  const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [targetValue, setTargetValue] = useState("");
   const hidePassword = 'XXXXXXXXXXXXXX';
   const showOrHidePassword = (password?: string) => {
     if (showPassword) {
@@ -48,9 +51,6 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
   const newConnectionValue = `${
     channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
   }${channelDetail.ip}${channelDetail.service}`;
-
-  const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
-  setTargetValue(`${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -273,7 +273,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
                 >
                   {channelDetail?.password ? (
                     <>
-                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'} data-testid="password-value-test">
                         {showOrHidePassword(channelDetail?.password)}
                       </Typography>
                       <IconButton

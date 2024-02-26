@@ -47,13 +47,13 @@ export const createPspBroker = (broker: BrokerPspDetailsDto): Promise<BrokerPspD
 };
 
 export const updatePSPInfo = (
-    pspcode: string,
+    pspTaxCode: string,
     psp: NodeOnSignInPSP
 ): Promise<PaymentServiceProviderDetailsResource> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updatePSPInfoMocked(pspcode, psp);
+        return updatePSPInfoMocked(pspTaxCode, psp);
     } else {
-        return BackofficeApi.updatePaymentServiceProvider(pspcode, psp);
+        return BackofficeApi.updatePaymentServiceProvider(pspTaxCode, psp);
     }
 };
 
@@ -67,12 +67,12 @@ export const createPSPIndirect = (
     }
 };
 
-export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
+export const getBrokerAndPspDetails = (taxcode: string): Promise<BrokerOrPspDetailsResource> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getBrokerAndPspDetailsMocked(pspcode);
+        return getBrokerAndPspDetailsMocked(taxcode);
     } else {
-        return BackofficeApi.getBrokerAndPspDetails(pspcode).then((resources) => resources);
+        return BackofficeApi.getBrokerAndPspDetails(taxcode).then((resources) => resources);
     }
 };
 

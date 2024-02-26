@@ -1,17 +1,17 @@
-/* import { ThemeProvider } from '@mui/system';
+import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, render } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionPackagesTable from '../list/CommissionPackagesTable';
+import CommissionPackagesTable from '../../list/CommissionPackagesTable';
 
 let getCommissionPackagePspSpy: jest.SpyInstance;
 
 beforeEach(() => {
   getCommissionPackagePspSpy = jest.spyOn(
-    require('../../../services/__mocks__/commissionPackageService'),
+    require('../../../../services/__mocks__/bundleService'),
     'getCommissionPackagePsp'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -38,4 +38,3 @@ describe('<CommissionPackagesTable />', () => {
     );
   });
 });
- */

@@ -52,3 +52,4 @@ describe('<ChannelsPage />', () => {
     expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
   });
 });
+

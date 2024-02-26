@@ -12,7 +12,7 @@ import {UpdateCreditorInstitutionDto} from '../../api/generated/portal/UpdateCre
 import {NodeOnSignInPSP} from '../../model/Node';
 import {PSPDirectDTO} from '../../model/PSP';
 
-const pspDirect: PSPDirectDTO = {
+export const pspDirect: PSPDirectDTO = {
     abi: 'abi',
     agid_psp: false,
     bic: 'bic',
@@ -141,14 +141,14 @@ export const pspListOfABrokerEmpty: PaymentServiceProvidersResource = {
     payment_service_providers: [],
 };
 
-const mapPspCode2BrokerOrPspDetailsResource = (pspCode: string) => {
-    if (pspCode.toUpperCase().includes('UNSIGNED')) {
+const mapPspCode2BrokerOrPspDetailsResource = (taxcode: string) => {
+    if (taxcode.toUpperCase().includes('UNSIGNED')) {
         return brokerOrPspDetailsResource_Empty;
     }
-    if (pspCode.toUpperCase().includes('SIGNED_DIRECT')) {
+    if (taxcode.toUpperCase().includes('SIGNED_DIRECT')) {
         return brokerOrPspDetailsResource_PSPAndBroker;
     }
-    if (pspCode.toUpperCase().includes('SIGNED_UNDIRECT')) {
+    if (taxcode.toUpperCase().includes('SIGNED_UNDIRECT')) {
         return brokerOrPspDetailsResource_PSPOnly;
     }
     return brokerOrPspDetailsResource_Empty;
@@ -202,11 +202,11 @@ export const createPspBroker = (
 export const createPSPIndirect = (_psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
     new Promise((resolve) => resolve(pspDirect));
 
-export const updatePSPInfo = (_pspcode: string, _psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
+export const updatePSPInfo = (_pspTaxCode: string, _psp: NodeOnSignInPSP): Promise<PSPDirectDTO> =>
     new Promise((resolve) => resolve(pspDirect));
 
-export const getBrokerAndPspDetails = (pspcode: string): Promise<BrokerOrPspDetailsResource> => {
-    return new Promise((resolve) => resolve(mapPspCode2BrokerOrPspDetailsResource(pspcode)));
+export const getBrokerAndPspDetails = (taxcode: string): Promise<BrokerOrPspDetailsResource> => {
+    return new Promise((resolve) => resolve(mapPspCode2BrokerOrPspDetailsResource(taxcode)));
 };
 
 export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDetailsResource> => {

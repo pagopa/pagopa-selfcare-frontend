@@ -1,8 +1,8 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
-const { waitForElement } = require('./commons.js');
+const {waitForElement} = require('./commons.js');
 
 (async () => {
-    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -60,10 +60,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 38.578125,
-                y: 16.9453125,
-              },
+                offset: {
+                    x: 38.578125,
+                    y: 16.9453125,
+                },
             });
     }
     {
@@ -75,10 +75,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 3.765625,
-                y: 10.6640625,
-              },
+                offset: {
+                    x: 3.765625,
+                    y: 10.6640625,
+                },
             });
     }
     {
@@ -92,26 +92,28 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 81.1875,
-                y: 9,
-              },
+                offset: {
+                    x: 81.1875,
+                    y: 9,
+                },
             });
     }
     {
         const targetPage = page;
+        await targetPage.waitForNetworkIdle();
         await puppeteer.Locator.race([
-            targetPage.locator('div.MuiGrid-root strong'),
-            targetPage.locator('::-p-xpath(//*[@id=\\"ChannelsSearchTableBox\\"]/div/div/p/a/strong)'),
-            targetPage.locator(':scope >>> div.MuiGrid-root strong'),
-            targetPage.locator('::-p-aria( Associa PSP) >>>> ::-p-aria([role=\\"strong\\"])')
+            targetPage.locator('::-p-aria(Associa PSP)'),
+            targetPage.locator('div.MuiGrid-root a'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div[4]/a)'),
+            targetPage.locator(':scope >>> div.MuiGrid-root a'),
+            targetPage.locator('::-p-text(Associa PSP)')
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 45.8984375,
-                y: 8,
-              },
+                offset: {
+                    x: 45.8984375,
+                    y: 8,
+                },
             });
     }
     {
@@ -124,10 +126,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 294.578125,
-                y: 27.7734375,
-              },
+                offset: {
+                    x: 294.578125,
+                    y: 27.7734375,
+                },
             });
     }
     {
@@ -167,10 +169,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 12,
-                y: 18.5859375,
-              },
+                offset: {
+                    x: 12,
+                    y: 18.5859375,
+                },
             });
     }
     {
@@ -184,10 +186,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 76.34375,
-                y: 39.3359375,
-              },
+                offset: {
+                    x: 76.34375,
+                    y: 39.3359375,
+                },
             });
     }
     {
@@ -212,10 +214,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 11.96875,
-                y: 4.6015625,
-              },
+                offset: {
+                    x: 11.96875,
+                    y: 4.6015625,
+                },
             });
     }
     {
@@ -228,10 +230,10 @@ const { waitForElement } = require('./commons.js');
         ])
             .setTimeout(timeout)
             .click({
-              offset: {
-                x: 86.0703125,
-                y: 28.5,
-              },
+                offset: {
+                    x: 86.0703125,
+                    y: 28.5,
+                },
             });
     }
 

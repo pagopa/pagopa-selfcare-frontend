@@ -28,8 +28,8 @@ jobs:
       - name: Run Integration Tests
         shell: bash
         run: |
-          yarn install
           cd ./integration-test
+          yarn install
 
           chmod +x ./run_integration.sh
           ./run_integration.sh

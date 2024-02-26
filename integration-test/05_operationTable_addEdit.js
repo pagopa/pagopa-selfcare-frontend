@@ -34,7 +34,8 @@ const {switchTo} = require("./switch_to"); // v20.7.4 or later
 });
 
 const createOperationTableTest = async (page, timeout) => {
-
+    let i = 0;
+    console.log(`createOperationTableTest ${i++}`);
     const targetPage = page;
     {
         await targetPage.waitForNetworkIdle();
@@ -52,6 +53,7 @@ const createOperationTableTest = async (page, timeout) => {
                 },
             });
     }
+    console.log(`createOperationTableTest ${i++}`);
     {
         await targetPage.waitForNetworkIdle();
         await puppeteer.Locator.race([
@@ -69,6 +71,7 @@ const createOperationTableTest = async (page, timeout) => {
                 },
             });
     }
+    console.log(`createOperationTableTest ${i++}`);
     {
         await puppeteer.Locator.race([
             targetPage.locator('::-p-aria(E-mail)'),
@@ -79,6 +82,7 @@ const createOperationTableTest = async (page, timeout) => {
             .setTimeout(timeout)
             .fill('mail@test.com');
     }
+    console.log(`createOperationTableTest ${i++}`);
     {
         await puppeteer.Locator.race([
             targetPage.locator('::-p-aria(Telefono)'),
@@ -95,6 +99,7 @@ const createOperationTableTest = async (page, timeout) => {
                 },
             });
     }
+    console.log(`createOperationTableTest ${i++}`);
     {
         await puppeteer.Locator.race([
             targetPage.locator('::-p-aria(Telefono)'),
@@ -106,6 +111,7 @@ const createOperationTableTest = async (page, timeout) => {
             .setTimeout(timeout)
             .fill('1234567');
     }
+    console.log(`createOperationTableTest ${i++}`);
     await puppeteer.Locator.race([
         targetPage.locator('::-p-aria(Conferma)'),
         targetPage.locator("[data-testid='submit-button-test']"),
@@ -119,6 +125,5 @@ const createOperationTableTest = async (page, timeout) => {
                 y: 18.703125,
             },
         });
-
-
+    console.log(`createOperationTableTest ${i++}`);
 };

@@ -28,6 +28,8 @@ const {switchTo} = require("./switch_to");
 
     await switchTo(page, timeout, "PSP DEMO DIRECT");
 
+    let i = 0;
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -41,6 +43,7 @@ const {switchTo} = require("./switch_to");
             ]
         }, targetPage, timeout);
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -54,6 +57,7 @@ const {switchTo} = require("./switch_to");
             ]
         }, targetPage, timeout);
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -70,6 +74,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -85,6 +90,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -102,6 +108,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await targetPage.waitForNetworkIdle();
@@ -120,6 +127,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -136,6 +144,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -147,6 +156,7 @@ const {switchTo} = require("./switch_to");
             .setTimeout(timeout)
             .fill('psp');
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -163,6 +173,7 @@ const {switchTo} = require("./switch_to");
             ]
         }, targetPage, timeout);
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -179,6 +190,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -196,6 +208,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -208,6 +221,7 @@ const {switchTo} = require("./switch_to");
             ]
         }, targetPage, timeout);
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -224,6 +238,7 @@ const {switchTo} = require("./switch_to");
                 },
             });
     }
+    console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([

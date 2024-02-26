@@ -2,7 +2,9 @@ const {waitForElement, delay} = require("./commons");
 const puppeteer = require("puppeteer");
 
 const switchTo = async (page, timeout, actor) => {
+    let i = 0;
     await delay(2000);
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -15,7 +17,7 @@ const switchTo = async (page, timeout, actor) => {
             ]
         }, targetPage, timeout);
     }
-
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -31,6 +33,7 @@ const switchTo = async (page, timeout, actor) => {
                 },
             });
     }
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -47,7 +50,7 @@ const switchTo = async (page, timeout, actor) => {
                 },
             });
     }
-
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         await puppeteer.Locator.race([
@@ -59,7 +62,7 @@ const switchTo = async (page, timeout, actor) => {
             .setTimeout(timeout)
             .fill(actor);
     }
-
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         await waitForElement({
@@ -73,7 +76,7 @@ const switchTo = async (page, timeout, actor) => {
             ]
         }, targetPage, timeout);
     }
-
+    console.log(`switchTo ${i++}`);
     {
         const targetPage = page;
         const promises = [];

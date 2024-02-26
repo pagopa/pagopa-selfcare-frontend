@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {waitForElement, delay} = require("./commons");
+const {waitForElement, delay, repeatUntilSuccess} = require("./commons");
 const {switchTo} = require("./switch_to"); // v20.7.4 or later
 
 (async () => {
@@ -56,20 +56,23 @@ const createOperationTableTest = async (page, timeout) => {
     console.log(`createOperationTableTest ${i++}`);
     {
         await targetPage.waitForNetworkIdle();
-        await puppeteer.Locator.race([
-            targetPage.locator('::-p-aria(E-mail)'),
-            targetPage.locator("[data-testid='email-test']"),
-            targetPage.locator('::-p-xpath(//*[@data-testid=\\"email-test\\"])'),
-            targetPage.locator(":scope >>> [data-testid='email-test']")
-        ])
-            .setTimeout(timeout)
-            .click({
-                count: 3,
-                offset: {
-                    x: 94,
-                    y: 18.578125,
-                },
-            });
+        await repeatUntilSuccess(async () => {
+            await puppeteer.Locator.race([
+                targetPage.locator('::-p-aria(E-mail)'),
+                targetPage.locator("[data-testid='email-test']"),
+                targetPage.locator('::-p-xpath(//*[@data-testid=\\"email-test\\"])'),
+                targetPage.locator(":scope >>> [data-testid='email-test']")
+            ])
+                .setTimeout(timeout)
+                .click({
+                    count: 3,
+                    offset: {
+                        x: 94,
+                        y: 18.578125,
+                    },
+                });
+        });
+
     }
     console.log(`createOperationTableTest ${i++}`);
     {

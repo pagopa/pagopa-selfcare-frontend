@@ -245,6 +245,9 @@ const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepeti
                 throw e;
             }
         }
+        if (result) {
+            break;
+        }
         await delay(delayBetweenRepetitions);
         i = i + 1;
     }

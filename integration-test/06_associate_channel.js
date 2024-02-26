@@ -4,7 +4,7 @@ const {switchTo} = require("./switch_to");
 const {delay} = require("./commons");
 
 (async () => {
-    const browser = await puppeteer.launch({headless: false, userDataDir: './user-data', slowMo: 10});
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);

@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 const {waitForElement} = require('./commons.js');
 const {switchTo} = require("./switch_to");
-const {delay} = require("./commons");
+const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
 
 (async () => {
     const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
@@ -28,7 +28,6 @@ const {delay} = require("./commons");
     }
 
     await switchTo(page, timeout, "PSP DEMO DIRECT");
-    await delay(5000);
     let i = 0;
     console.log(`associateChannel ${i++}`);
     {
@@ -48,19 +47,22 @@ const {delay} = require("./commons");
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await puppeteer.Locator.race([
-            targetPage.locator("[data-testid='channels-test'] span"),
-            targetPage.locator('::-p-xpath(//*[@data-testid=\\"channels-test\\"]/div[2]/span)'),
-            targetPage.locator(":scope >>> [data-testid='channels-test'] span"),
-            targetPage.locator('::-p-text(Canali)')
-        ])
-            .setTimeout(timeout)
-            .click({
-                offset: {
-                    x: 38.578125,
-                    y: 16.9453125,
-                },
-            });
+        await repeatUntilSuccess(async () => {
+            await puppeteer.Locator.race([
+                targetPage.locator("[data-testid='channels-test'] span"),
+                targetPage.locator('::-p-xpath(//*[@data-testid=\\"channels-test\\"]/div[2]/span)'),
+                targetPage.locator(":scope >>> [data-testid='channels-test'] span"),
+                targetPage.locator('::-p-text(Canali)')
+            ])
+                .setTimeout(timeout)
+                .click({
+                    offset: {
+                        x: 38.578125,
+                        y: 16.9453125,
+                    },
+                });
+        });
+
     }
     console.log(`associateChannel ${i++}`);
     {

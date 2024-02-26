@@ -233,6 +233,25 @@ function delay(time) {
 }
 
 
+const repeatUntilSuccess = async (fun, delayMs = 1000, repetition = 3) => {
+    let i = 0;
+    let result;
+    while (i < repetition) {
+        try {
+            result = await fun();
+        } catch (e) {
+            if (repetition === i) {
+                console.log(`retry n° ${i}`);
+                throw e;
+            }
+        }
+        await delay(delayMs);
+        i = i + 1;
+    }
+    return result;
+};
+
+
 module.exports = {
     waitForSelectors,
     scrollIntoViewIfNeeded,
@@ -246,5 +265,6 @@ module.exports = {
     changeSelectElement,
     changeElementValue,
     typeIntoElement,
-    delay
+    delay,
+    repeatUntilSuccess,
 }

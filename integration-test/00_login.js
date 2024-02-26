@@ -7,7 +7,7 @@ const {
 } = require('./commons.js');
 
 const login = (async () => {
-    const browser = await puppeteer.launch({headless: false, slowMo: 10, userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data'});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);

@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer'); // v20.7.4 or later
 const { waitForElement } = require('./commons.js');
 
 (async () => {
-    const browser = await puppeteer.launch({headless: false, slowMo: 100, userDataDir: './user-data'});
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data'});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -235,6 +235,7 @@ const { waitForElement } = require('./commons.js');
             });
     }
 
+    console.log("associate channel");
     await browser.close();
 
 })().catch(err => {

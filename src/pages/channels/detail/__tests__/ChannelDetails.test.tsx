@@ -18,7 +18,7 @@ afterEach(cleanup);
 
 describe('<ChannelDetails />', () => {
   const channelId = 'XPAY_03_ONUS';
-  const channelDetailWrapper = {
+  const channelDetail = {
     broker_psp_code: '97735020584',
     broker_description: 'AgID - Agenzia per l’Italia Digitale',
     channel_code: `${channelId}`,
@@ -28,14 +28,14 @@ describe('<ChannelDetails />', () => {
     payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
     status: StatusEnum.TO_CHECK,
   };
-  test('render component ChannelDetails with channelDetail and channelDetailWrapper', async () => {
+  test('render component ChannelDetails with channelDetail', async () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
           <Route path="/channels/:channelId">
             <ThemeProvider theme={theme}>
               <ChannelDetails
-                channelDetail={channelDetailWrapper}
+                channelDetail={channelDetail}
                 channelId={channelId}
                 goBack={jest.fn()}
                 PSPAssociatedNumber={0}
@@ -47,14 +47,22 @@ describe('<ChannelDetails />', () => {
     );
   });
 
-  test('render component ChannelDetails with only channelDetailWrapper', async () => {
+  test('render component ChannelDetails with empty channelDetail', async () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
           <Route path="/channels/:channelId">
             <ThemeProvider theme={theme}>
               <ChannelDetails
-                channelDetail={channelDetailWrapper}
+                channelDetail={{
+                  broker_psp_code: undefined,
+                  broker_description: undefined,
+                  channel_code: "",
+                  target_path: undefined,
+                  target_port: undefined,
+                  target_host: undefined,
+                  payment_types: undefined,
+                }}
                 channelId={channelId}
                 goBack={jest.fn()}
                 PSPAssociatedNumber={0}
@@ -64,5 +72,5 @@ describe('<ChannelDetails />', () => {
         </MemoryRouter>
       </Provider>
     );
-  });
+  })
 });

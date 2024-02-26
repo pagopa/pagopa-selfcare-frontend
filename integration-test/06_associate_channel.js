@@ -28,11 +28,11 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     }
 
     await switchTo(page, timeout, "PSP DEMO DIRECT");
+    await delay(5000);
     let i = 0;
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await targetPage.waitForNetworkIdle();
         await repeatUntilSuccess(async () => {
             await waitForElement({
                 type: 'waitForElement',
@@ -82,7 +82,7 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
                         y: 10.4296875,
                     },
                 });
-        });
+        }, 5000, 5);
 
     }
     console.log(`associateChannel ${i++}`);

@@ -242,7 +242,6 @@ const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepeti
         try {
             result = await fun();
         } catch (e) {
-            console.log(`retry n° ${i}`);
             if (maxRepetitions === i) {
                 throw e;
             }
@@ -251,6 +250,7 @@ const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepeti
         if (isSuccess) {
             break;
         }
+        console.log(`retry n° ${i}`);
         await delay(delayBetweenRepetitions);
     }
     return result;

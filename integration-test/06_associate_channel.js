@@ -33,16 +33,18 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     {
         const targetPage = page;
         await targetPage.waitForNetworkIdle();
-        await waitForElement({
-            type: 'waitForElement',
-            target: 'main',
-            selectors: [
-                "[data-testid='channels-test'] span",
-                'xpath///*[@data-testid="channels-test"]/div[2]/span',
-                "pierce/[data-testid='channels-test'] span",
-                'text/Canali'
-            ]
-        }, targetPage, timeout);
+        await repeatUntilSuccess(async () => {
+            await waitForElement({
+                type: 'waitForElement',
+                target: 'main',
+                selectors: [
+                    "[data-testid='channels-test'] span",
+                    'xpath///*[@data-testid="channels-test"]/div[2]/span',
+                    "pierce/[data-testid='channels-test'] span",
+                    'text/Canali'
+                ]
+            }, targetPage, timeout);
+        });
     }
     console.log(`associateChannel ${i++}`);
     {

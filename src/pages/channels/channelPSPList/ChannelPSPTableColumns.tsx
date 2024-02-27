@@ -6,7 +6,7 @@ import {RemoveCircle} from '@mui/icons-material';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  onRowClick: (psp_code: string) => void
+  onRowClick: (psp_tax_code: string) => void
 ) {
   return [
     {
@@ -78,8 +78,8 @@ export function buildColumnDefs(
           sx={{ cursor: 'pointer' }}
         >
           <IconButton
-            onClick={onRowClick ? () => onRowClick(p.row.psp_code) : undefined}
-            data-testid={`dissociate-${p.row.psp_code}`}
+            onClick={onRowClick ? () => onRowClick(p.row.tax_code) : undefined}
+            data-testid={`dissociate-${p.row.tax_code}`}
             sx={{
               width: '100%',
               '&:hover': { backgroundColor: 'transparent !important' },

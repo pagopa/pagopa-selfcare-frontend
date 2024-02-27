@@ -284,30 +284,36 @@ export const mockedChannelPSPs: ChannelPspListResource = {
       business_name: 'PSP S.p.A.',
       enabled: true,
       payment_types: ['MYBK'],
+      tax_code: 'AAAAAAAA78AAAAA3'
     },
     {
       psp_code: '14847241002',
       business_name: 'PSP2 S.p.A.',
       enabled: true,
       payment_types: ['PPAY'],
+      
+      tax_code: 'AAAAAAAA78AAAAA4'
     },
     {
       psp_code: '14847241003',
       business_name: 'PSP3 S.p.A.',
       enabled: false,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA5'
     },
     {
       psp_code: '14847241004',
       business_name: 'PSP4 S.p.A.',
       enabled: false,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA6'
     },
     {
       psp_code: '14847241005',
       business_name: 'PSP5 S.p.A.',
       enabled: true,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA7'
     },
   ],
   page_info: {
@@ -324,18 +330,21 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
       business_name: 'PSP6 S.p.A.',
       enabled: true,
       payment_types: ['MYBK'],
+      tax_code: 'AAAAAAAA78AAAAA8'
     },
     {
       psp_code: '14847241007',
       business_name: 'PSP7 S.p.A.',
       enabled: true,
       payment_types: ['PPAY'],
+      tax_code: 'AAAAAAAA78AAAAA9'
     },
     {
       psp_code: '14847241008',
       business_name: 'PSP8 S.p.A.',
       enabled: true,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA2'
     },
   ],
   page_info: {
@@ -435,7 +444,7 @@ export const associatePSPtoChannel = (
 ): Promise<PspChannelPaymentTypesResource> =>
   new Promise((resolve) => resolve({ payment_types: ['ptype_test'] }));
 
-export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string): Promise<void> =>
+export const dissociatePSPfromChannel = (_channelcode: string, _pspTaxCode: string): Promise<void> =>
   new Promise((resolve) => resolve());
 
 export const createWrapperChannel = (

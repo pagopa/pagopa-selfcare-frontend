@@ -37,31 +37,31 @@ describe('<ChannelPSPTable />', () => {
     });
   });
 
-  // test('Break up PSP Channel relationship', async () => {
-  //   render(
-  //     <Provider store={store}>
-  //       <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-  //         <Route path="/channels/:channelId">
-  //           <ThemeProvider theme={theme}>
-  //             <ChannelPSPTable setAlertMessage={() => ''} pspNameFilter={''} />
-  //           </ThemeProvider>
-  //         </Route>
-  //       </MemoryRouter>
-  //     </Provider>
-  //   );
+  test('Break up PSP Channel relationship', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
+          <Route path="/channels/:channelId">
+            <ThemeProvider theme={theme}>
+              <ChannelPSPTable setAlertMessage={() => ''} pspNameFilter={''} />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
 
-    // const dissociatePspBtn = screen.getByTestId('dissociate-14847241001');
-    // await waitFor(() => {
-    //   fireEvent.click(dissociatePspBtn);
-    // });
+    await waitFor(() => {
+      const dissociatePspBtn = screen.getByTestId('dissociate-AAAAAAAA78AAAAA3');
+      fireEvent.click(dissociatePspBtn);
+    });
 
-    // const confirmBtn = screen.getByRole('button', {
-    //   name: /channelPSPList.dissociateModal.confirmButton/i,
-    // });
-    // fireEvent.click(confirmBtn);
+    const confirmBtn = screen.getByRole('button', {
+      name: /channelPSPList.dissociateModal.confirmButton/i,
+    });
+    fireEvent.click(confirmBtn);
 
-    // await waitFor(() => {
-    //   expect(spyApi).toBeCalledTimes(1);
-    // });
-  // });
+    await waitFor(() => {
+      expect(spyApi).toBeCalledTimes(1);
+    });
+  });
 });

@@ -72,67 +72,63 @@ async function waitForSelector(selector, frame, options) {
 }
 
 async function waitForElement(step, frame, timeout) {
-    return repeatUntilSuccess(async () => {
-        const {count = 1, operator = '>=', visible = true, properties, attributes} = step;
-        const compFn = {
-            '==': (a, b) => a === b,
-            '>=': (a, b) => a >= b,
-            '<=': (a, b) => a <= b,
-        }[operator];
-        await waitForFunction(async () => {
-            const elements = await querySelectorsAll(step.selectors, frame);
-            let result = compFn(elements.length, count);
-            const elementsHandle = await frame.evaluateHandle((...elements) => {
-                return elements;
-            }, ...elements);
-            await Promise.all(elements.map((element) => element.dispose()));
-            if (result && (properties || attributes)) {
-                result = await elementsHandle.evaluate(
-                    (elements, properties, attributes) => {
-                        for (const element of elements) {
-                            if (attributes) {
-                                for (const [name, value] of Object.entries(attributes)) {
-                                    if (element.getAttribute(name) !== value) {
-                                        return false;
-                                    }
-                                }
-                            }
-                            if (properties) {
-                                if (!isDeepMatch(properties, element)) {
+    const {count = 1, operator = '>=', visible = true, properties, attributes} = step;
+    const compFn = {
+        '==': (a, b) => a === b,
+        '>=': (a, b) => a >= b,
+        '<=': (a, b) => a <= b,
+    }[operator];
+    await waitForFunction(async () => {
+        const elements = await querySelectorsAll(step.selectors, frame);
+        let result = compFn(elements.length, count);
+        const elementsHandle = await frame.evaluateHandle((...elements) => {
+            return elements;
+        }, ...elements);
+        await Promise.all(elements.map((element) => element.dispose()));
+        if (result && (properties || attributes)) {
+            result = await elementsHandle.evaluate(
+                (elements, properties, attributes) => {
+                    for (const element of elements) {
+                        if (attributes) {
+                            for (const [name, value] of Object.entries(attributes)) {
+                                if (element.getAttribute(name) !== value) {
                                     return false;
                                 }
+                            }
+                        }
+                        if (properties) {
+                            if (!isDeepMatch(properties, element)) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+
+                    function isDeepMatch(a, b) {
+                        if (a === b) {
+                            return true;
+                        }
+                        if ((a && !b) || (!a && b)) {
+                            return false;
+                        }
+                        if (!(a instanceof Object) || !(b instanceof Object)) {
+                            return false;
+                        }
+                        for (const [key, value] of Object.entries(a)) {
+                            if (!isDeepMatch(value, b[key])) {
+                                return false;
                             }
                         }
                         return true;
-
-                        function isDeepMatch(a, b) {
-                            if (a === b) {
-                                return true;
-                            }
-                            if ((a && !b) || (!a && b)) {
-                                return false;
-                            }
-                            if (!(a instanceof Object) || !(b instanceof Object)) {
-                                return false;
-                            }
-                            for (const [key, value] of Object.entries(a)) {
-                                if (!isDeepMatch(value, b[key])) {
-                                    return false;
-                                }
-                            }
-                            return true;
-                        }
-                    },
-                    properties,
-                    attributes
-                );
-            }
-            await elementsHandle.dispose();
-            return result === visible;
-        }, timeout);
-
-    });
-
+                    }
+                },
+                properties,
+                attributes
+            );
+        }
+        await elementsHandle.dispose();
+        return result === visible;
+    }, timeout);
 }
 
 async function querySelectorsAll(selectors, frame) {
@@ -237,30 +233,6 @@ function delay(time) {
 }
 
 
-const repeatUntilSuccess = async (fun, delayBetweenRepetitions = 1000, maxRepetitions = 3) => {
-    let i = 0;
-    let result;
-    while (i < maxRepetitions) {
-        i = i + 1;
-        let isSuccess = true;
-        try {
-            result = await fun();
-        } catch (e) {
-            if (maxRepetitions === i) {
-                throw e;
-            }
-            isSuccess = false;
-        }
-        if (isSuccess) {
-            break;
-        }
-        console.log(`retry n° ${i}`);
-        await delay(delayBetweenRepetitions);
-    }
-    return result;
-};
-
-
 module.exports = {
     waitForSelectors,
     scrollIntoViewIfNeeded,
@@ -274,6 +246,5 @@ module.exports = {
     changeSelectElement,
     changeElementValue,
     typeIntoElement,
-    delay,
-    repeatUntilSuccess,
+    delay
 }

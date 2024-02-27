@@ -1,10 +1,10 @@
 const puppeteer = require('puppeteer'); // v20.7.4 or later
 const {waitForElement} = require('./commons.js');
 const {switchTo} = require("./switch_to");
-const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
+const {delay} = require("./commons");
 
 (async () => {
-    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 100});
     const page = await browser.newPage();
     const timeout = 30000;
     page.setDefaultTimeout(timeout);
@@ -28,62 +28,55 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     }
 
     await switchTo(page, timeout, "PSP DEMO DIRECT");
-    await delay(5000);
+    await delay(10000);
     let i = 0;
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await repeatUntilSuccess(async () => {
-            await waitForElement({
-                type: 'waitForElement',
-                target: 'main',
-                selectors: [
-                    "[data-testid='channels-test'] span",
-                    'xpath///*[@data-testid="channels-test"]/div[2]/span',
-                    "pierce/[data-testid='channels-test'] span",
-                    'text/Canali'
-                ]
-            }, targetPage, timeout);
-        });
+        await targetPage.waitForNetworkIdle();
+        await waitForElement({
+            type: 'waitForElement',
+            target: 'main',
+            selectors: [
+                "[data-testid='channels-test'] span",
+                'xpath///*[@data-testid="channels-test"]/div[2]/span',
+                "pierce/[data-testid='channels-test'] span",
+                'text/Canali'
+            ]
+        }, targetPage, timeout);
     }
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await repeatUntilSuccess(async () => {
-            await puppeteer.Locator.race([
-                targetPage.locator("[data-testid='channels-test'] span"),
-                targetPage.locator('::-p-xpath(//*[@data-testid=\\"channels-test\\"]/div[2]/span)'),
-                targetPage.locator(":scope >>> [data-testid='channels-test'] span"),
-                targetPage.locator('::-p-text(Canali)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                    offset: {
-                        x: 38.578125,
-                        y: 16.9453125,
-                    },
-                });
-        });
-
+        await puppeteer.Locator.race([
+            targetPage.locator("[data-testid='channels-test'] span"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"channels-test\\"]/div[2]/span)'),
+            targetPage.locator(":scope >>> [data-testid='channels-test'] span"),
+            targetPage.locator('::-p-text(Canali)')
+        ])
+            .setTimeout(timeout)
+            .click({
+                offset: {
+                    x: 38.578125,
+                    y: 16.9453125,
+                },
+            });
     }
     console.log(`associateChannel ${i++}`);
     {
         const targetPage = page;
-        await repeatUntilSuccess(async () => {
-            await puppeteer.Locator.race([
-                targetPage.locator("div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']"),
-                targetPage.locator('::-p-xpath(//*[@data-testid=\\"MoreVertIcon\\"])'),
-                targetPage.locator(":scope >>> div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']")
-            ])
-                .setTimeout(timeout)
-                .click({
-                    offset: {
-                        x: 15.265625,
-                        y: 10.4296875,
-                    },
-                });
-        }, 5000, 5);
-
+        await puppeteer.Locator.race([
+            targetPage.locator("div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"MoreVertIcon\\"])'),
+            targetPage.locator(":scope >>> div.MuiDataGrid-main > div:nth-of-type(2) > div > div > div > div:nth-of-type(1) [data-testid='MoreVertIcon']")
+        ])
+            .setTimeout(timeout)
+            .click({
+                offset: {
+                    x: 15.265625,
+                    y: 10.4296875,
+                },
+            });
     }
     console.log(`associateChannel ${i++}`);
     {
@@ -107,23 +100,20 @@ const {delay, waitForRender, repeatUntilSuccess} = require("./commons");
     {
         const targetPage = page;
         await targetPage.waitForNetworkIdle();
-        await repeatUntilSuccess(async () => {
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Associa PSP)'),
-                targetPage.locator('div.MuiGrid-root a'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div[4]/a)'),
-                targetPage.locator(':scope >>> div.MuiGrid-root a'),
-                targetPage.locator('::-p-text(Associa PSP)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                    offset: {
-                        x: 45.8984375,
-                        y: 8,
-                    },
-                });
-        })
-
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(Associa PSP)'),
+            targetPage.locator('div.MuiGrid-root a'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div[4]/a)'),
+            targetPage.locator(':scope >>> div.MuiGrid-root a'),
+            targetPage.locator('::-p-text(Associa PSP)')
+        ])
+            .setTimeout(timeout)
+            .click({
+                offset: {
+                    x: 45.8984375,
+                    y: 8,
+                },
+            });
     }
     console.log(`associateChannel ${i++}`);
     {

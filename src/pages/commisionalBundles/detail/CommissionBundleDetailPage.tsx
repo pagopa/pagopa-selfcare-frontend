@@ -107,7 +107,7 @@ const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) 
   const mapColumn = (col: Array<Array<string>>, isDrawer: boolean, isFirstColumn?: boolean) =>
     col.map((entry: Array<string>, index: number) => (
       <Box mt={1} key={`config-detail-${entry[0]}`}>
-        {(isDrawer && (!isFirstColumn || index !== 0)) && <Divider />}
+        {isDrawer && (!isFirstColumn || index !== 0) && <Divider />}
         <Typography variant="body1" color="text.disabled">
           {t(entry[1])}
         </Typography>
@@ -218,8 +218,8 @@ const BundleTaxonomiesDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => 
           </PaddedDrawer>
         </>
       ) : (
-        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{mt:2}}>
-          {t("commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert")}
+        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{ mt: 2 }}>
+          {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
         </Alert>
       )}
     </Paper>
@@ -276,7 +276,9 @@ const CommissionBundleDetailPage = () => {
           {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
           <Grid item xs={6}>
             <TitleBox title={commissionBundleDetail.name ?? ''} variantTitle="h4" />
-            <Typography color={'text.disabled'} variant="subtitle1" sx={{mb: 2}}>{commissionBundleDetail.description ?? ''}</Typography>
+            <Typography color={'text.disabled'} variant="subtitle1" sx={{ mb: 1 }}>
+              {commissionBundleDetail.description ?? ''}
+            </Typography>
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
@@ -300,10 +302,9 @@ const CommissionBundleDetailPage = () => {
             </Stack>
           </Grid>
           <Grid item xs={6}>
-            <TitleBox
-              title={t('commissionBundlesPage.commissionBundleDetail.title')}
-              variantTitle="h5"
-            />
+            <Typography variant="h5">
+              {t('commissionBundlesPage.commissionBundleDetail.title')}
+            </Typography>
           </Grid>
           <Grid item xs={6} display="flex" justifyContent={'flex-end'}>
             <Typography color="text.secondary">

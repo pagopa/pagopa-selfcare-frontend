@@ -211,7 +211,7 @@ export const BackofficeApi = {
     },
 
     getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code': code});
+        const result = await backofficeClient.getBrokerAndPspDetails({'tax-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -219,12 +219,7 @@ export const BackofficeApi = {
         const result = await backofficeClient.getBrokerPsp({'broker-code': brokerpspcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
-
-    getPSPDetails: async (pspcode: string): Promise<PaymentServiceProviderDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndPspDetails({'psp-code': pspcode});
-        return extractResponse(result, 200, onRedirectToLogin);
-    },
-
+    
     getPaymentServiceProviders: async (
         page: number,
         name?: string,
@@ -299,11 +294,11 @@ export const BackofficeApi = {
     },
 
     updatePaymentServiceProvider: async (
-        pspcode: string,
+        pspTaxCode: string,
         psp: NodeOnSignInPSP
     ): Promise<PaymentServiceProviderDetailsResource> => {
         const result = await backofficeClient.updatePSP({
-            'psp-code': pspcode,
+            'tax-code': pspTaxCode,
             body: {
                 business_name: psp.businessName,
                 enabled: true,
@@ -348,7 +343,7 @@ export const BackofficeApi = {
     },
 
     getPSPChannels: async (taxcode: string): Promise<PspChannelsResource> => {
-        const result = await backofficeClient.getPspChannels({'psp-tax-code': taxcode});
+        const result = await backofficeClient.getPspChannels({'tax-code': taxcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -467,8 +462,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': pspcode, 'v2': true});
+    getChannelCode: async (taxcode: string): Promise<ChannelCodeResource> => {
+        const result = await backofficeClient.getFirstValidChannelCode({'tax-code': taxcode, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -491,10 +486,10 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
-        const result = await backofficeClient.deletePSPChannels({
+    dissociatePSPfromChannel: async (channelcode: string, pspTaxCode: string): Promise<void> => {
+        const result = await backofficeClient.dissociatePSPFromChannel({
             'channel-code': channelcode,
-            'psp-code': pspcode,
+            'tax-code': pspTaxCode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },
@@ -830,7 +825,7 @@ export const BackofficeApi = {
     getStationAvailableEc: async (
         institutionId: string
     ): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': institutionId, 'v2': true});
+        const result = await backofficeClient.getFirstValidChannelCode({'tax-code': institutionId, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

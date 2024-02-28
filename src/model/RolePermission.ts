@@ -53,13 +53,15 @@ export const permissions = {
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_ADMIN,
     ],
-    'operation-table-read': [
+    'operation-table-read-write': [
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,
+        ROLE.PSP_DIRECT_ADMIN,
+        ROLE.PSP_DIRECT_OPERATOR,
         ROLE.PT_EC_OPERATOR,
+        ROLE.PT_PSP_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
     ],
-    'operation-table-write': [ROLE.EC_DIRECT_OPERATOR, ROLE.PT_EC_OPERATOR, ROLE.PT_PSPEC_OPERATOR],
     'operation-table-list': [ROLE.PAGOPA_OPERATOR],
     'download-iban': [
         ROLE.PT_EC_OPERATOR,

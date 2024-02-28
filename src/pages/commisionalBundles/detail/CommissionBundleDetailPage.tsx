@@ -29,9 +29,9 @@ import { FormAction } from '../../../model/CommissionBundle';
 import { Bundle, TypeEnum } from '../../../api/generated/portal/Bundle';
 
 function getDynamicSection(bundleDetail: Bundle, t: TFunction<'translation'>) {
-  const packageType: TypeEnum | undefined = bundleDetail.type;
-  if (packageType === TypeEnum.PRIVATE || packageType === TypeEnum.PUBLIC) {
-    const isPrivate = packageType === TypeEnum.PRIVATE;
+  const bundleType: TypeEnum | undefined = bundleDetail.type;
+  if (bundleType === TypeEnum.PRIVATE || bundleType === TypeEnum.PUBLIC) {
+    const isPrivate = bundleType === TypeEnum.PRIVATE;
     return (
       <>
         <Grid item xs={6} alignItems={'center'}>
@@ -192,7 +192,7 @@ const CommissionBundleDetailPage = () => {
             </Stack>
           </Grid>
         </Grid>
-        {/* TODO Add alert for packageType === Private if taxonomies not longer valid */}
+        {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
         <Paper
           elevation={8}
           sx={{
@@ -291,7 +291,7 @@ const CommissionBundleDetailPage = () => {
                   </Grid>
                   <Grid item xs={9}>
                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.idPsp}
+                      {commissionBundleDetail.idBrokerPsp}
                     </Typography>
                   </Grid>
                   <Grid item xs={3}>

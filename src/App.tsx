@@ -186,7 +186,7 @@ const SecuredRoutes = withLogin(
               </ProtectedRoute>
             </Route>
             <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>
-              <ProtectedRoute permission="operation-table-list">
+              <ProtectedRoute permission="operation-table-read-write">
                 <AddEditOperationTablePage />
               </ProtectedRoute>
             </Route>

@@ -3,7 +3,8 @@ import { BundleCreateResponse } from '../../api/generated/portal/BundleCreateRes
 import { BundleRequest, TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { Bundles } from '../../api/generated/portal/Bundles';
 import { Touchpoints } from '../../api/generated/portal/Touchpoints';
-import { mockedStationsMerged } from './channelService';
+import { mockedChannelsMerged } from './channelService';
+import { mockedPaymentTypes } from './configurationService';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -44,7 +45,27 @@ export const mockedCommissionBundlePspList: Bundles = {
   },
 };
 
-export const mockedChannelsIdList: Array<string> = mockedStationsMerged!.channels!.map((e) =>
+export const mockedCommissionBundleRequestPspDetail: BundleRequest = {
+  abi: '12345',
+  description: 'Pacchetti commissione',
+  digitalStamp: true,
+  digitalStampRestriction: false,
+  idBrokerPsp: '12345UK6789',
+  idCdi: '12345UK6789',
+  idChannel: '97735020584_01',
+  maxPaymentAmount: 1500,
+  minPaymentAmount: 150,
+  name: 'Pacchetto 1',
+  paymentAmount: 10,
+  paymentType: mockedPaymentTypes?.payment_types?.[0]?.payment_type,
+  touchpoint: mockedTouchpoints?.touchpoints?.[0]?.name,
+  transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.) '],
+  type: TypeEnum.GLOBAL,
+  validityDateFrom: new Date(),
+  validityDateTo: new Date(),
+};
+
+export const mockedChannelsIdList: Array<string> = mockedChannelsMerged!.channels!.map((e) =>
   typeof e.channel_code !== 'undefined' ? e.channel_code : ''
 );
 

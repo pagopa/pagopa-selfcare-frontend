@@ -89,10 +89,10 @@ describe('AddEditIbanForm', () => {
                 ibanBody={{
                   iban: 'IT99C0222211111000000000003',
                   description: 'Tassa di concorso - servizio tesoreria comunale',
-                  validityDate: new Date('2023-04-01T13:49:19.897Z'),
-                  dueDate: new Date('2033-04-01T13:49:19.897Z'),
-                  active: true,
-                  creditorInstitutionCode: '1234567890',
+                  validity_date: new Date('2023-04-01T13:49:19.897Z'),
+                  due_date: new Date('2033-04-01T13:49:19.897Z'),
+                  is_active: true,
+                  creditor_institution_code: '1234567890',
                   labels: [],
                 }}
                 formAction={IbanFormAction.Edit}

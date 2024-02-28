@@ -7,11 +7,9 @@ import {
   getBrokerAndEcDetails,
   getBrokerAndPspDetails,
   getPSPBrokerDetails,
-  getPSPDetails,
   getPaymentServiceProviders,
 } from '../services/nodeService';
 import { PaymentServiceProvidersResource } from '../api/generated/portal/PaymentServiceProvidersResource';
-import { BrokerOrPspDetailsResource } from '../api/generated/portal/BrokerOrPspDetailsResource';
 
 /* A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux. */
 export const useSigninData = () => {
@@ -40,13 +38,13 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
       }
 
       // eslint-disable-next-line functional/no-let
-      let ecAndBrokerDetails; 
+      let ecAndBrokerDetails;
       try {
         ecAndBrokerDetails = await getBrokerAndEcDetails(party.fiscalCode);
       } catch (e) {
         ecAndBrokerDetails = undefined;
       }
-      
+
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         brokerDetailsResource: { ...(ecAndBrokerDetails?.brokerDetailsResource || {}) },
@@ -56,39 +54,21 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
     if (party.institutionType === 'PSP') {
       // eslint-disable-next-line functional/no-let
       let pspBrokerDetails: any = {};
-      try{
-       pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
-      }
-      catch (e){
+      try {
+        pspBrokerDetails = await getPSPBrokerDetails(party.fiscalCode);
+      } catch (e) {
         // not found
       }
 
+      const pspDetails = party.fiscalCode ? await getBrokerAndPspDetails(party.fiscalCode) : {};
 
-      const pspList: PaymentServiceProvidersResource = await getPaymentServiceProviders(
-        0,
-        undefined,
-        undefined,
-        undefined,
-        party.fiscalCode
-      );
-
-      const pspDetails =
-        pspList &&
-        pspList.payment_service_providers &&
-        pspList.payment_service_providers[0] &&
-        pspList.payment_service_providers[0].psp_code
-          ? await getPSPDetails(pspList.payment_service_providers[0].psp_code)
-          : {};
-     
-     
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         paymentServiceProviderDetailsResource: {
           ...pspDetails,
-        }  as any,
+        } as any,
       };
-    }
-    else {
+    } else {
       return await getBrokerAndEcDetails(party.fiscalCode);
     }
   } catch (error) {

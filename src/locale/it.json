@@ -1045,6 +1045,8 @@
       "TO_FIX_UPDATE": "Da correggere",
       "TO_CHECK": "In revisione",
       "TO_CHECK_UPDATE": "In revisione"
-    }
+    },
+    "yes": "Si",
+    "no": "No"
   }
 }

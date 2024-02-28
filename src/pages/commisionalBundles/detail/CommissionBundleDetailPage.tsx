@@ -14,8 +14,8 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useTranslation, TFunction } from 'react-i18next';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { getCommissionBundleDetails } from '../../../services/__mocks__/bundleService';
 import { useAppSelector } from '../../../redux/hooks';
@@ -25,6 +25,27 @@ import { FormAction } from '../../../model/CommissionBundle';
 import { Bundle } from '../../../api/generated/portal/Bundle';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
+
+const PaddedDrawer = ({
+  openDrawer,
+  setOpenDrawer,
+  children,
+}: {
+  openDrawer: boolean;
+  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  children: React.ReactNode;
+}) => (
+  <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right">
+    <Box p={3} pt={1} sx={{ minWidth: '400px' }}>
+      <Box display="flex" justifyContent="flex-end" mb={1}>
+        <IconButton onClick={() => setOpenDrawer(false)}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      {children}
+    </Box>
+  </Drawer>
+);
 
 const bundleConfigurationFields = {
   col1: [
@@ -48,11 +69,31 @@ const bundleConfigurationFields = {
   col4: [
     ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
     ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
-    ['lastUpdateDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
+    ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
   ],
   // TODO updatedBy/"Modificato da" (API doesn't retrieve this info)
 };
+const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'boolean') {
+    return value ? t('general.yes') : t('general.no');
+  }
+  if (typeof value === 'number') {
+    return value.toLocaleString('it-IT', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 2,
+    });
+  }
+  if (typeof value === 'object') {
+    return value.toLocaleDateString('en-GB');
+  }
+  console.log(typeof value, value);
 
+  return '';
+};
 const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => {
   const { t } = useTranslation();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -70,7 +111,7 @@ const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) 
           {t(entry[1])}
         </Typography>
         <Typography variant="body1">
-          {'CIAO' /* bundleDetail?.[entry[0] as keyof Bundle] */}
+          {formatConfigValues(bundleDetail?.[entry[0] as keyof Bundle], t)}
         </Typography>
       </Box>
     ));
@@ -100,13 +141,8 @@ const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) 
           >
             + {t('general.showMore')}
           </ButtonNaked>
-          <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right">
-            <Box p={3} pt={1} sx={{ minWidth: '350px' }}>
-              <Box display="flex" justifyContent="flex-end" mb={1}>
-                <IconButton onClick={() => setOpenDrawer(false)}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
+          <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
+            <>
               <TitleBox
                 title={t('commissionBundlesPage.commissionBundleDetail.configuration')}
                 variantTitle="h4"
@@ -114,8 +150,8 @@ const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) 
               {Object.values(bundleConfigurationFields).map((col, i) =>
                 mapColumn(col, true, i === 0)
               )}
-            </Box>
-          </Drawer>
+            </>
+          </PaddedDrawer>
         </>
       )}
     </Paper>
@@ -162,28 +198,21 @@ const BundleTaxonomiesDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => 
       >
         + {t('general.showMore')}
       </ButtonNaked>
-      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right">
-        <Box p={3} pt={1} sx={{ minWidth: '350px' }}>
-          <Box display="flex" justifyContent="flex-end" mb={1}>
-            <IconButton onClick={() => setOpenDrawer(false)}>
-              <CloseIcon />
-            </IconButton>
+      <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
+        <TitleBox
+          title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
+          variantTitle="h5"
+        />
+        {bundleDetail?.transferCategoryList?.map((el) => (
+          <Box key={`taxonomies-list-${el}`} mt={1}>
+            {/* TODO RETRIEVE TAXONOMIES */}
+            <Typography variant="body1" color="text.disabled">
+              {el}
+            </Typography>
+            <Typography variant="body1">{el}</Typography>
           </Box>
-          <TitleBox
-            title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
-            variantTitle="h5"
-          />
-          {bundleDetail?.transferCategoryList?.map((el) => (
-            <Box key={`taxonomies-list-${el}`} mt={1}>
-              {/* TODO RETRIEVE TAXONOMIES */}
-              <Typography variant="body1" color="text.disabled">
-                {el}
-              </Typography>
-              <Typography variant="body1">{el}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Drawer>
+        ))}
+      </PaddedDrawer>
     </Paper>
   );
 };
@@ -199,7 +228,7 @@ const CommissionBundleDetailPage = () => {
   useEffect(() => {
     setLoading(true);
     // TODO verify if API for bundle detail is used
-    getCommissionBundleDetails()
+    getCommissionBundleDetails(TypeEnum.GLOBAL)
       .then((data) => {
         setCommissionBundleDetail(data);
       })

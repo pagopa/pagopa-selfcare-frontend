@@ -14,29 +14,43 @@ export const mockedTouchpoints: Touchpoints = {
   ],
 };
 
-export const mockedCommissionBundlePspDetail: Bundle =     {
-  "idBundle": "03ceed9d-f624-419e-be15-e6fc35becf42",
-  "name": "Commission Bundle Name",
-  "description": "Commission bundle description",
-  "paymentAmount": 55,
-  "minPaymentAmount": 55,
-  "maxPaymentAmount": 55,
-  "paymentType": "MYBK",
-  "touchpoint": "PSP",
-  "type": TypeEnum.GLOBAL,
-  "transferCategoryList": [
-    "01"
-  ],
-  "validityDateFrom": new Date("2024-02-17"),
-  "validityDateTo": new Date("2024-02-22"),
-  "insertedDate": new Date("2024-02-15T09:36:04.792731104"),
-  "lastUpdatedDate": new Date("2024-02-15T09:36:04.792731104")
+const baseCommissionBundlePspDetail: Bundle = {
+  idBundle: 'idBundle',
+  digitalStamp: false,
+  digitalStampRestriction: true,
+  idChannel: 'idChannel',
+  idBrokerPsp: 'idBrokerPsp',
+  name: 'Commission Bundle Name',
+  description: 'Commission bundle description',
+  paymentAmount: 55,
+  minPaymentAmount: 40,
+  maxPaymentAmount: 150,
+  paymentType: 'MYBK',
+  touchpoint: 'PSP',
+  transferCategoryList: ['01'],
+  validityDateFrom: new Date('2024-02-17'),
+  validityDateTo: new Date('2024-02-22'),
+  insertedDate: new Date('2024-02-15T09:36:04.792731104'),
+  lastUpdatedDate: new Date('2024-02-15T09:36:04.792731104'),
+};
+
+export const mockedCommissionBundlePspDetailGlobal: Bundle = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.GLOBAL,
+};
+
+export const mockedCommissionBundlePspDetailPrivate: Bundle = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.PRIVATE,
+};
+
+export const mockedCommissionBundlePspDetailPublic: Bundle = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.PUBLIC,
 };
 
 export const mockedCommissionBundlePspList: Bundles = {
-  bundles: [
-    mockedCommissionBundlePspDetail
-  ],
+  bundles: [mockedCommissionBundlePspDetailGlobal],
   pageInfo: {
     items_found: 1,
     limit: 10,
@@ -55,15 +69,21 @@ export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array
 export const getCommissionBundlePsp = (_brokerCode: string): Promise<Bundles> =>
   Promise.resolve(mockedCommissionBundlePspList);
 
-export const getCommissionBundleDetails = (): Promise<Bundle> =>
-  Promise.resolve(mockedCommissionBundlePspDetail);
+export const getCommissionBundleDetails = (type?: string): Promise<Bundle> =>
+  Promise.resolve(
+    !type || type === TypeEnum.GLOBAL
+      ? mockedCommissionBundlePspDetailGlobal
+      : type === TypeEnum.PRIVATE
+      ? mockedCommissionBundlePspDetailPrivate
+      : mockedCommissionBundlePspDetailPublic
+  );
 
 export const createCommissionBundle = (_body: BundleRequest): Promise<BundleCreateResponse> =>
-  Promise.resolve({idBundle:'mockedCommissionBundleId'});
+  Promise.resolve({ idBundle: 'mockedCommissionBundleId' });
 
 export const updateCommissionBundle = (
   _name: string,
   _commissionBundle: BundleRequest
-): Promise<Bundle> => Promise.resolve(mockedCommissionBundlePspDetail);
+): Promise<Bundle> => Promise.resolve(mockedCommissionBundlePspDetailGlobal);
 
 export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);

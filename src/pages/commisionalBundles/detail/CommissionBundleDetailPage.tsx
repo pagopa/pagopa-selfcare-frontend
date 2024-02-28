@@ -107,7 +107,7 @@ const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) 
   const mapColumn = (col: Array<Array<string>>, isDrawer: boolean, isFirstColumn?: boolean) =>
     col.map((entry: Array<string>, index: number) => (
       <Box mt={1} key={`config-detail-${entry[0]}`}>
-        {((isDrawer && !isFirstColumn) || index !== 0) && <Divider />}
+        {(isDrawer && (!isFirstColumn || index !== 0)) && <Divider />}
         <Typography variant="body1" color="text.disabled">
           {t(entry[1])}
         </Typography>
@@ -275,7 +275,8 @@ const CommissionBundleDetailPage = () => {
         <Grid container mt={1} spacing={1}>
           {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
           <Grid item xs={6}>
-            <TitleBox title={commissionBundleDetail.name ?? ''} mbTitle={2} variantTitle="h3" />
+            <TitleBox title={commissionBundleDetail.name ?? ''} variantTitle="h4" />
+            <Typography color={'text.disabled'} variant="subtitle1" sx={{mb: 2}}>{commissionBundleDetail.description ?? ''}</Typography>
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
@@ -301,7 +302,7 @@ const CommissionBundleDetailPage = () => {
           <Grid item xs={6}>
             <TitleBox
               title={t('commissionBundlesPage.commissionBundleDetail.title')}
-              variantTitle="h4"
+              variantTitle="h5"
             />
           </Grid>
           <Grid item xs={6} display="flex" justifyContent={'flex-end'}>

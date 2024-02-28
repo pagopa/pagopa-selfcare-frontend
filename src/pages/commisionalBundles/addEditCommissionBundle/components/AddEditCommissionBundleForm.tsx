@@ -686,7 +686,6 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   id="brokerCodes"
                   disablePortal
                   options={
-                    // eslint-disable-next-line functional/immutable-data
                     brokerDelegationList?.map((el) => el.institution_name)?.sort()
                   }
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}

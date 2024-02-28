@@ -104,44 +104,14 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-      getActions: (params: any) => {
-        const bundleType = params.row.type;
-
-        const manageBundleAction = (
-          <GridLinkAction
-            key="Gestisci pacchetto"
-            label="Gestisci pacchetto"
-            to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, {bundleId: params.row.idBundle})}
-            showInMenu={bundleType !== 'GLOBAL'}
-            icon={bundleType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
-          />
-        );
-
-        if (bundleType === 'PRIVATE') {
-          return [
-            manageBundleAction,
-            <GridLinkAction
-              key="Gestisci destinatari"
-              label="Gestisci destinatari"
-              to={generatePath('')}
-              showInMenu={true}
-            />,
-          ];
-        }
-        if (bundleType === 'PUBLIC') {
-          return [
-            manageBundleAction,
-            <GridLinkAction
-              key="Gestisci adesioni"
-              label="Gestisci adesioni"
-              to={generatePath('')}
-              showInMenu={true}
-            />,
-          ];
-        }
-
-        return [manageBundleAction];
-      },
+      getActions: (params: any) => [
+        <GridLinkAction
+          key="Gestisci pacchetto"
+          label="Gestisci pacchetto"
+          to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: params.row.idBundle })}
+          icon={<ChevronRightIcon />}
+        />,
+      ],
       sortable: false,
       flex: 1,
     },
@@ -205,23 +175,23 @@ export function showBundleName(params: GridRenderCellParams) {
       {renderCell(
         params,
         <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={9} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightBold',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.name}
-              </Typography>
-            </Grid>
+          <Grid item xs={9} sx={{ width: '100%' }}>
+            <Typography
+              variant="body2"
+              color="primary"
+              sx={{
+                fontWeight: 'fontWeightBold',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical' as const,
+              }}
+            >
+              {params.row.name}
+            </Typography>
           </Grid>
+        </Grid>
       )}
     </React.Fragment>
   );
@@ -233,12 +203,12 @@ export function showAmountRange(params: GridRenderCellParams) {
       {renderCell(
         params,
         <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={9} sx={{ width: '100%' }}>
-              <Typography variant="body2">
-                {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
-              </Typography>
-            </Grid>
+          <Grid item xs={9} sx={{ width: '100%' }}>
+            <Typography variant="body2">
+              {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
+            </Typography>
           </Grid>
+        </Grid>
       )}
     </React.Fragment>
   );

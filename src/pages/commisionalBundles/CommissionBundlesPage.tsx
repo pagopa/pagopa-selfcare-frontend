@@ -8,7 +8,6 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
 import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
 
-
 type Props = {
   children?: React.ReactNode;
   index: number;
@@ -48,8 +47,6 @@ const CommissionBundlesPage = () => {
     };
   }, []);
 
-
-
   const clearLocationState = () => {
     window.history.replaceState({}, document.title);
   };
@@ -65,72 +62,72 @@ const CommissionBundlesPage = () => {
 
   return (
     <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-        <Grid item xs={2}>
-          <Box>
-            <SideMenu />
-          </Box>
-        </Grid>
-        <Grid
-          item
-          xs={10}
-          sx={{ backgroundColor: '#F5F6F7' }}
-          display="flex"
-          justifyContent="center"
-          pb={8}
-        >
-          <Box width="100%" px={2}>
-            <TitleBox
-              title={t('commissionBundlesPage.title')}
-              subTitle={t('commissionBundlesPage.subtitle')}
-              mbTitle={2}
-              mtTitle={4}
-              mbSubTitle={3}
-              variantTitle="h4"
-              variantSubTitle="body1"
-            />
-            {history.location.state && (history.location.state as any).alertSuccessMessage && (
-              <Alert severity="success" variant="outlined" data-testid="alert-test">
-                {(history.location.state as any).alertSuccessMessage}
-              </Alert>
-            )}
-            <CommissionBundlesSearchBar
-              bundleNameInput={bundleNameInput}
-              setBundleNameInput={setBundleNameInput}
-            />
-            <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                sx={{ width: '100%' }}
-                centered
-                variant="fullWidth"
-              >
-                <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(0)}/>
-                <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} />
-                <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(2)} />
-              </Tabs>
-            </Box>
-            <CustomTabPanel valueTab={value} index={0}>
-              <CommissionBundlesTable
-                bundleType={'commissionBundlesPage.globalBundles'}
-                bundleNameFilter={bundleNameInput}
-              />
-            </CustomTabPanel>
-            <CustomTabPanel valueTab={value} index={1}>
-              <CommissionBundlesTable
-                bundleType={'commissionBundlesPage.publicBundles'}
-                bundleNameFilter={bundleNameInput}
-              />
-            </CustomTabPanel>
-            <CustomTabPanel valueTab={value} index={2}>
-              <CommissionBundlesTable
-                bundleType={'commissionBundlesPage.privateBundles'}
-                bundleNameFilter={bundleNameInput}
-              />
-            </CustomTabPanel>
-          </Box>
-        </Grid>
+      <Grid item xs={2}>
+        <Box>
+          <SideMenu />
+        </Box>
       </Grid>
+      <Grid
+        item
+        xs={10}
+        sx={{ backgroundColor: '#F5F6F7' }}
+        display="flex"
+        justifyContent="center"
+        pb={8}
+      >
+        <Box width="100%" px={2}>
+          <TitleBox
+            title={t('commissionBundlesPage.title')}
+            subTitle={t('commissionBundlesPage.subtitle')}
+            mbTitle={2}
+            mtTitle={4}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
+          {history.location.state && (history.location.state as any).alertSuccessMessage && (
+            <Alert severity="success" variant="outlined" data-testid="alert-test">
+              {(history.location.state as any).alertSuccessMessage}
+            </Alert>
+          )}
+          <CommissionBundlesSearchBar
+            bundleNameInput={bundleNameInput}
+            setBundleNameInput={setBundleNameInput}
+          />
+          <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              sx={{ width: '100%' }}
+              centered
+              variant="fullWidth"
+            >
+              <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(0)} />
+              <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} />
+              <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(2)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel valueTab={value} index={0}>
+            <CommissionBundlesTable
+              bundleType={'commissionBundlesPage.privateBundles'}
+              bundleNameFilter={bundleNameInput}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel valueTab={value} index={1}>
+            <CommissionBundlesTable
+              bundleType={'commissionBundlesPage.publicBundles'}
+              bundleNameFilter={bundleNameInput}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel valueTab={value} index={2}>
+            <CommissionBundlesTable
+              bundleType={'commissionBundlesPage.globalBundles'}
+              bundleNameFilter={bundleNameInput}
+            />
+          </CustomTabPanel>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

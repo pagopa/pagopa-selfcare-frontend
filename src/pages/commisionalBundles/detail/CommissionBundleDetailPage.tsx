@@ -25,6 +25,12 @@ import { FormAction } from '../../../model/CommissionBundle';
 import { Bundle } from '../../../api/generated/portal/Bundle';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
+import {
+  formatBooleanValueToYesOrNo,
+  formatCurrencyEur,
+  formatDateToDDMMYYYY,
+  formatDateToDDMMYYYYhhmm,
+} from '../../../utils/common-utils';
 
 const PaddedDrawer = ({
   openDrawer,
@@ -78,20 +84,14 @@ const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
     return value;
   }
   if (typeof value === 'boolean') {
-    return value ? t('general.yes') : t('general.no');
+    return formatBooleanValueToYesOrNo(value, t);
   }
   if (typeof value === 'number') {
-    return value.toLocaleString('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-    });
+    return formatCurrencyEur(value);
   }
   if (typeof value === 'object') {
-    return value.toLocaleDateString('en-GB');
+    return formatDateToDDMMYYYY(value);
   }
-  console.log(typeof value, value);
-
   return '';
 };
 const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => {
@@ -298,8 +298,8 @@ const CommissionBundleDetailPage = () => {
           <Grid item xs={6} display="flex" justifyContent={'flex-end'}>
             <Typography color="text.secondary">
               {t('commissionBundlesPage.commissionBundleDetail.updatedOn')}{' '}
-              <Typography component={'span'} color="text.primary">
-                {commissionBundleDetail?.lastUpdatedDate?.toLocaleDateString('en-GB')}
+              <Typography component={'span'} color="text.primary" fontWeight="medium">
+                {formatDateToDDMMYYYYhhmm(commissionBundleDetail?.lastUpdatedDate)}
               </Typography>
             </Typography>
           </Grid>

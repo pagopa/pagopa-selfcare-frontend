@@ -31,7 +31,7 @@ const baseCommissionBundlePspDetail: Bundle = {
   validityDateFrom: new Date('2024-02-17'),
   validityDateTo: new Date('2024-02-22'),
   insertedDate: new Date('2024-02-15T09:36:04.792731104'),
-  lastUpdatedDate: new Date('2024-02-15T09:36:04.792731104'),
+  lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
 };
 
 export const mockedCommissionBundlePspDetailGlobal: Bundle = {

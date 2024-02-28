@@ -125,12 +125,12 @@ export const updateChannel = (
   }
 };
 
-export const getChannelCode = (pspCode: string): Promise<ChannelCodeResource> => {
+export const getChannelCode = (taxCode: string): Promise<ChannelCodeResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getChannelCodeMocked(pspCode);
+    return getChannelCodeMocked(taxCode);
   } else {
-    return BackofficeApi.getChannelCode(pspCode).then((resources) => resources);
+    return BackofficeApi.getChannelCode(taxCode).then((resources) => resources);
   }
 };
 

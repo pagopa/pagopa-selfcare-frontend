@@ -370,7 +370,7 @@ export const getChannelsMerged = (
   _sorting?: string
 ): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedChannelsMerged));
 
-export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =>
+export const getChannelCode = (_taxCode: string): Promise<ChannelCodeResource> =>
   new Promise((resolve) => resolve(channelCode));
 
 export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> =>

@@ -8,6 +8,7 @@ import {
   Drawer,
   Divider,
   IconButton,
+  Alert,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ButtonNaked } from '@pagopa/mui-italia';
@@ -188,31 +189,39 @@ const BundleTaxonomiesDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => 
           </Box>
         ) : null
       )}
-      <ButtonNaked
-        size="large"
-        component="button"
-        onClick={() => setOpenDrawer(true)}
-        sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
-        weight="default"
-        data-testid="show-more-bundle-taxonomies-test"
-      >
-        + {t('general.showMore')}
-      </ButtonNaked>
-      <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
-        <TitleBox
-          title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
-          variantTitle="h5"
-        />
-        {bundleDetail?.transferCategoryList?.map((el) => (
-          <Box key={`taxonomies-list-${el}`} mt={1}>
-            {/* TODO RETRIEVE TAXONOMIES */}
-            <Typography variant="body1" color="text.disabled">
-              {el}
-            </Typography>
-            <Typography variant="body1">{el}</Typography>
-          </Box>
-        ))}
-      </PaddedDrawer>
+      {bundleDetail?.transferCategoryList && bundleDetail?.transferCategoryList?.length > 0 ? (
+        <>
+          <ButtonNaked
+            size="large"
+            component="button"
+            onClick={() => setOpenDrawer(true)}
+            sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
+            weight="default"
+            data-testid="show-more-bundle-taxonomies-test"
+          >
+            + {t('general.showMore')}
+          </ButtonNaked>
+          <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
+            <TitleBox
+              title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
+              variantTitle="h5"
+            />
+            {bundleDetail.transferCategoryList?.map((el) => (
+              <Box key={`taxonomies-list-${el}`} mt={1}>
+                {/* TODO RETRIEVE TAXONOMIES */}
+                <Typography variant="body1" color="text.disabled">
+                  {el}
+                </Typography>
+                <Typography variant="body1">{el}</Typography>
+              </Box>
+            ))}
+          </PaddedDrawer>
+        </>
+      ) : (
+        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{mt:2}}>
+          {t("commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert")}
+        </Alert>
+      )}
     </Paper>
   );
 };
@@ -228,7 +237,7 @@ const CommissionBundleDetailPage = () => {
   useEffect(() => {
     setLoading(true);
     // TODO verify if API for bundle detail is used
-    getCommissionBundleDetails(TypeEnum.GLOBAL)
+    getCommissionBundleDetails(TypeEnum.PRIVATE)
       .then((data) => {
         setCommissionBundleDetail(data);
       })
@@ -299,7 +308,8 @@ const CommissionBundleDetailPage = () => {
             <Typography color="text.secondary">
               {t('commissionBundlesPage.commissionBundleDetail.updatedOn')}{' '}
               <Typography component={'span'} color="text.primary" fontWeight="medium">
-                {formatDateToDDMMYYYYhhmm(commissionBundleDetail?.lastUpdatedDate)}
+                {commissionBundleDetail?.lastUpdatedDate &&
+                  formatDateToDDMMYYYYhhmm(commissionBundleDetail?.lastUpdatedDate)}
               </Typography>
             </Typography>
           </Grid>

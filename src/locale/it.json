@@ -852,7 +852,8 @@
       "menageSubscriptions": "Gestisci adesioni",
       "taxonomies": "Servizi di incasso",
       "configuration": "Configurazione",
-      "updatedOn": "Aggiornato il"
+      "updatedOn": "Aggiornato il",
+      "noTaxonomiesAlert": "Nessun servizio associato"
     },
     "addEditCommissionBundle": {
       "breadcrumb": {

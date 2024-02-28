@@ -75,7 +75,7 @@ export const mockedPSPChannels: PspChannelsResource = {
   ],
 };
 
-const channelEnabled = (channel: PspChannelsResource) => {
+export const channelEnabled = (channel: PspChannelsResource) => {
   const newList: PspChannelsResource = {
     channels: channel.channels.filter((e) => e.enabled === false),
   };
@@ -198,7 +198,7 @@ export const mockedWrapperChannel: WrapperChannelDetailsDto = {
   payment_types: mockedPaymentTypes?.payment_types?.map((e) => `${e.description ?? ""} - ${e.payment_type ?? ""}`) ?? [],
   status: StatusEnum.TO_CHECK,
 };
-export const mockedStationsMerged: WrapperChannelsResource = {
+export const mockedChannelsMerged: WrapperChannelsResource = {
   page_info: {
     page: 0,
     limit: 10,
@@ -355,46 +355,6 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
   },
 };
 
-export const mockedDelegatedPSP: Array<Delegation> = [
-  {
-    broker_id: '12345',
-    institution_id: '0000001',
-    broker_name: 'PSP1',
-  },
-  {
-    broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e',
-    broker_name: 'Regione Toscana',
-    id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db',
-    institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be064847',
-    institution_name:
-      "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
-    institution_type: 'PA',
-    product_id: 'prod-pagopa',
-    tax_code: '80001110487',
-    type: 'PT',
-  },
-  {
-    institution_id: '0000002',
-    broker_name: 'PSP2',
-  },
-  {
-    institution_id: '0000003',
-    broker_name: 'PSP3',
-  },
-  {
-    institution_id: '0000004',
-    broker_name: 'PSP4',
-  },
-  {
-    institution_id: '0000005',
-    broker_name: 'PSP5',
-  },
-  {
-    institution_id: '0000006',
-    broker_name: 'PSP6',
-  },
-];
-
 export const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
 };
@@ -408,7 +368,7 @@ export const getChannelsMerged = (
   _stationcode?: string,
   _limit?: number,
   _sorting?: string
-): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedStationsMerged));
+): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedChannelsMerged));
 
 export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =>
   new Promise((resolve) => resolve(channelCode));
@@ -437,12 +397,13 @@ export const updateChannel = (
 export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
+export const mockedPaymentTypesResource: PspChannelPaymentTypesResource = { payment_types: ['ptype_test'] };
 export const associatePSPtoChannel = (
   _channelcode: string,
   _pspcode: string,
   _payment_type: PspChannelPaymentTypes
 ): Promise<PspChannelPaymentTypesResource> =>
-  new Promise((resolve) => resolve({ payment_types: ['ptype_test'] }));
+  new Promise((resolve) => resolve(mockedPaymentTypesResource));
 
 export const dissociatePSPfromChannel = (_channelcode: string, _pspTaxCode: string): Promise<void> =>
   new Promise((resolve) => resolve());

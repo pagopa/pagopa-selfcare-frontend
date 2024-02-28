@@ -8,12 +8,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { createStore, store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
-import {
-  mockedDelegatedPSP,
-  mockedChannelDetail,
-} from '../../../../services/__mocks__/channelService';
 import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
-import ROUTES from '../../../../routes';
 
 const mockHistoryPush = jest.fn();
 

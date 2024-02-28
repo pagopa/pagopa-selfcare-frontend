@@ -6,7 +6,7 @@ import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import {Provider} from 'react-redux';
 import PSPSelectionSearch from '../PSPSelectionSearch';
-import {mockedDelegatedPSP} from '../../../../services/__mocks__/channelService';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {

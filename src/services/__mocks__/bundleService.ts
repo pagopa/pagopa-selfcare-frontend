@@ -2,7 +2,7 @@ import { BundleCreateResponse } from '../../api/generated/portal/BundleCreateRes
 import { BundleRequest, TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { Bundles } from '../../api/generated/portal/Bundles';
 import { Touchpoints } from '../../api/generated/portal/Touchpoints';
-import { mockedStationsMerged } from './channelService';
+import { mockedChannelsMerged } from './channelService';
 import { mockedPaymentTypes } from './configurationService';
 
 export const mockedTouchpoints: Touchpoints = {
@@ -53,7 +53,7 @@ export const mockedCommissionPackagePspDetail: BundleRequest = {
   validityDateTo: new Date(),
 };
 
-export const mockedChannelsIdList: Array<string> = mockedStationsMerged!.channels!.map((e) =>
+export const mockedChannelsIdList: Array<string> = mockedChannelsMerged!.channels!.map((e) =>
   typeof e.channel_code !== 'undefined' ? e.channel_code : ''
 );
 

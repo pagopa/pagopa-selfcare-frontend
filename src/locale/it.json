@@ -837,6 +837,7 @@
       }
     },
     "commissionBundleDetail": {
+      "title": "Dettaglio pacchetto",
       "createdOn": "Creato il",
       "appliedImport": "Importo applicato",
       "connectionData": "Dati di connessione",
@@ -849,7 +850,9 @@
       "subscriptions": "Adesioni",
       "manageRecipients": "Gestisci destinatari",
       "menageSubscriptions": "Gestisci adesioni",
-      "taxonomiesService": "Servizi di incasso"
+      "taxonomies": "Servizi di incasso",
+      "configuration": "Configurazione",
+      "updatedOn": "Aggiornato il"
     },
     "addEditCommissionBundle": {
       "breadcrumb": {
@@ -1020,6 +1023,7 @@
   "general": {
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
+    "showMore": "Mostra di più",
     "back": "Indietro",
     "modify": "Modifica",
     "delete": "Elimina",

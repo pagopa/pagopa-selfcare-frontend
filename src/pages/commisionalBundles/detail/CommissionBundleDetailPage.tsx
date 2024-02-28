@@ -1,23 +1,19 @@
 /* eslint-disable complexity */
-import { ArrowBack, ManageAccounts } from '@mui/icons-material';
 import {
   Grid,
   Typography,
   Paper,
-  Divider,
   Stack,
   Breadcrumbs,
   Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Drawer,
+  Divider,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
+import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
-import { useTranslation, TFunction } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
 import { isOperator } from '../../components/commonFunctions';
@@ -26,95 +22,137 @@ import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import { Bundle, TypeEnum } from '../../../api/generated/portal/Bundle';
+import { Bundle } from '../../../api/generated/portal/Bundle';
+import SideMenu from '../../../components/SideMenu/SideMenu';
 
-function getDynamicSection(bundleDetail: Bundle, t: TFunction<'translation'>) {
-  const bundleType: TypeEnum | undefined = bundleDetail.type;
-  if (bundleType === TypeEnum.PRIVATE || bundleType === TypeEnum.PUBLIC) {
-    const isPrivate = bundleType === TypeEnum.PRIVATE;
-    return (
-      <>
-        <Grid item xs={6} alignItems={'center'}>
-          <Typography variant="sidenav">
-            {' '}
-            {t(
-              `commissionBundlesPage.commissionBundleDetail.${
-                isPrivate ? 'recipients' : 'subscriptions'
-              }`
-            )}
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          textAlign={'right'}
-          display={'flex'}
-          alignItems={'center'}
-          justifyContent={'flex-end'}
-          xs={6}
-        >
-          <ButtonNaked
-            component={Link}
-            to={generatePath('')} // TODO Add dynamic path to manage reciptients/subscriptions
-            color="primary"
-            endIcon={<ManageAccounts />}
-            size="medium"
-          >
-            {t(
-              `commissionBundlesPage.commissionBundleDetail.${
-                isPrivate ? 'manageRecipients' : 'menageSubscriptions'
-              }`
-            )}
-          </ButtonNaked>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="body2">
-            {t('commissionBundlesPage.commissionBundleDetail.activeEntities')}
-          </Typography>
-        </Grid>
-        <Grid item xs={9}>
-          <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-            TODO {/* TODO retrieve number of active entities */}
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="body2">
-            {t('commissionBundlesPage.commissionBundleDetail.waitingEntities')}
-          </Typography>
-        </Grid>
-        <Grid item xs={9}>
-          <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-            TODO {/* TODO retrieve number of entities waiting */}
-          </Typography>
-        </Grid>
-      </>
-    );
-  }
+const bundleConfigurationFields = [
+  ['paymentType', 'commissionBundlesPage.addEditCommissionBundle.form.paymentType'],
+  ['touchpoint', 'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'],
+  ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
+  ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
+  ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
+  ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],
+  ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
+  ['digitalStamp', 'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'],
+  [
+    'digitalStampRestriction',
+    'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp',
+  ],
+  ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
+  ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
+  ['lastUpdateDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
+  // TODO updatedBy/"Modificato da" (API doesn't retrieve this info)
+];
+const BundleConfigurationDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => {
+  const { t } = useTranslation();
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  return <></>;
-}
+  return (
+    <Paper elevation={8} sx={{ borderRadius: 4 }}>
+      <Typography variant="overline">
+        {t('commissionBundlesPage.commissionBundleDetail.configuration')}
+      </Typography>
+      <Typography variant="body2" color="text.disabled">
+        {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
+      </Typography>
+      <Typography variant="body2">{bundleDetail.paymentType}</Typography>
+      <Typography variant="body2" color="text.disabled">
+        {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
+      </Typography>
+      <Typography variant="body2">{bundleDetail.touchpoint}</Typography>
+      <Typography variant="body2" color="text.disabled">
+        {t('commissionBundlesPage.addEditCommissionBundle.form.commission')}
+      </Typography>
+      <Typography variant="body2">{bundleDetail.paymentAmount}</Typography>
+      <ButtonNaked
+        size="medium"
+        component="button"
+        onClick={() => setOpenDrawer(true)}
+        sx={{ color: 'primary.main', mr: '20px' }}
+        weight="default"
+        data-testid="show-more-bundle-configuration-test"
+      >
+        + {t('general.showMore')}
+      </ButtonNaked>
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <TitleBox
+          title={t('commissionBundlesPage.commissionBundleDetail.configuration')}
+          variantTitle="h4"
+        />
+        {bundleConfigurationFields.map((entry: Array<string>, index) => (
+          <>
+            {index !== 0 ? <Divider /> : <></>}
+            <Typography variant="body2" color="text.disabled">
+              {t(entry[1])}
+            </Typography>
+            <Typography variant="body2">
+              {bundleDetail[entry[0] as keyof typeof bundleDetail]}
+            </Typography>
+          </>
+        ))}
+      </Drawer>
+    </Paper>
+  );
+};
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
+const BundleTaxonomiesDetails = ({ bundleDetail }: { bundleDetail: Bundle }) => {
+  const { t } = useTranslation();
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+
+  return (
+    <Paper elevation={8} sx={{ borderRadius: 4 }}>
+      <Typography variant="overline">
+        {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
+      </Typography>
+      {bundleDetail?.transferCategoryList?.map((el, i) =>
+        i < 4 ? (
+          <>
+            {/* TODO RETRIEVE TAXONOMIES */}
+            <Typography variant="body2" color="text.disabled">
+              {el}
+            </Typography>
+            <Typography variant="body1">{el}</Typography>
+          </>
+        ) : (
+          <></>
+        )
+      )}
+      <ButtonNaked
+        size="medium"
+        component="button"
+        onClick={() => setOpenDrawer(true)}
+        sx={{ color: 'primary.main', mr: '20px' }}
+        weight="default"
+        data-testid="show-more-bundle-taxonomies-test"
+      >
+        + {t('general.showMore')}
+      </ButtonNaked>
+      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <TitleBox
+          title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
+          variantTitle="h4"
+        />
+        {bundleDetail?.transferCategoryList?.map((el) => (
+          <>
+            {/* TODO RETRIEVE TAXONOMIES */}
+            <Typography variant="body2" color="text.disabled">
+              {el}
+            </Typography>
+            <Typography variant="body1">{el}</Typography>
+          </>
+        ))}
+      </Drawer>
+    </Paper>
+  );
+};
+
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
-  const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
-  const operator = isOperator();
-
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [commissionBundleDetail, setCommissionBundleDetail] = useState<Bundle>({} as any);
-
-  const hidePassword = 'XXXXXXXXXXXXXX';
-  const showOrHidePassword = (password?: string) => {
-    if (showPassword) {
-      return password;
-    }
-    return hidePassword;
-  };
-
-  const goBack = () => history.push(ROUTES.COMMISSION_BUNDLES);
 
   useEffect(() => {
     setLoading(true);
@@ -141,42 +179,38 @@ const CommissionBundleDetailPage = () => {
   }, [selectedParty]);
 
   return (
-    <Grid container justifyContent={'center'}>
-      <Grid item p={3} xs={8}>
-        <Stack direction="row">
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px' }}
-            weight="default"
-          >
-            {t('general.exit')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography>{t('general.Bundles')}</Typography>
-            <Typography color={'text.disaled'}>{commissionBundleDetail.name}</Typography>
-          </Breadcrumbs>
-        </Stack>
-        <Grid container mt={3}>
+    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
+      <Grid item xs={2}>
+        <Box>
+          <SideMenu />
+        </Box>
+      </Grid>
+      <Grid
+        item
+        xs={10}
+        sx={{ backgroundColor: '#F5F6F7' }}
+        display="flex"
+        justifyContent="center"
+        pb={8}
+      >
+        <Breadcrumbs>
+          <Typography>{t('general.Bundles')}</Typography>
+          <Typography color={'text.disaled'}>
+            {'commissionBundlesPage.commissionBundleDetail.title'}
+          </Typography>
+        </Breadcrumbs>
+        <Grid container mt={3} spacing={1}>
+          {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
           <Grid item xs={6}>
-            <TitleBox
-              title={commissionBundleDetail.name ?? ''}
-              mbTitle={2}
-              variantTitle="h4"
-              variantSubTitle="body1"
-            />
-            <Typography mb={5} color="text.secondary">
-              {t('commissionBundlesPage.commissionBundleDetail.createdOn')}{' '}
-              <Typography component={'span'} color="text.secondary">
-                {commissionBundleDetail?.insertedDate?.toLocaleDateString('en-GB')}
-              </Typography>
-            </Typography>
+            <TitleBox title={commissionBundleDetail.name ?? ''} mbTitle={2} variantTitle="h3" />
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              <Button color="error" variant="outlined" onClick={() => '' /* TODO DELETE BUTTON */}>
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={() => '' /* TODO DELETE BUTTON ACTION */}
+              >
                 {t('general.delete')}
               </Button>
               <Button
@@ -191,249 +225,27 @@ const CommissionBundleDetailPage = () => {
               </Button>
             </Stack>
           </Grid>
+          <Grid item xs={6}>
+            <TitleBox
+              title={t('commissionBundlesPage.commissionBundleDetail.title')}
+              variantTitle="h4"
+            />
+          </Grid>
+          <Grid item xs={6} alignContent={'flex-end'}>
+            <Typography color="text.secondary">
+              {t('commissionBundlesPage.commissionBundleDetail.updatedOn')}{' '}
+              <Typography component={'span'} color="text.secondary">
+                {commissionBundleDetail?.lastUpdatedDate?.toLocaleDateString('en-GB')}
+              </Typography>
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <BundleConfigurationDetails bundleDetail={commissionBundleDetail} />
+          </Grid>
+          <Grid item xs={6}>
+            <BundleTaxonomiesDetails bundleDetail={commissionBundleDetail} />
+          </Grid>
         </Grid>
-        {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
-        <Paper
-          elevation={8}
-          sx={{
-            borderRadius: 4,
-            p: 4,
-          }}
-        >
-          <Accordion defaultExpanded>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="bundle-config-content"
-              id="bundle-config-header"
-            >
-              <Typography variant="h6">
-                {t('commissionBundlesPage.addEditCommissionBundle.form.bundleConfiguration')}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Divider sx={{ mt: 1 }}></Divider>
-              <Box mt={5}>
-                <Grid container spacing={2} alignContent="center" pb={4}>
-                  <Grid item xs={12}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.bundleStructure')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.paymentType}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.touchpoint}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.amountRange')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.minPaymentAmount}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.maxPaymentAmount}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.commission')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.commissionBundleDetail.appliedImport')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.paymentAmount}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.commissionBundleDetail.connectionData')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.brokerCode')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.idBrokerPsp}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.channelCode')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      TODO {/* TODO Retrieve channelCode */}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.digitalStamp')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t(
-                        'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'
-                      )}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      TODO {/* TODO Retrieve digitalStamp */}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t(
-                        'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp'
-                      )}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      TODO {/* TODO Retrieve digitalStampRestriction */}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.validityPeriod')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.from')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.validityDateFrom?.toLocaleDateString('en-GB')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.to')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.validityDateTo?.toLocaleDateString('en-GB')}
-                    </Typography>
-                  </Grid>
-
-                  {getDynamicSection(commissionBundleDetail, t)}
-
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('commissionBundlesPage.commissionBundleDetail.changes')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.commissionBundleDetail.lastChange')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {commissionBundleDetail.lastUpdatedDate?.toLocaleDateString('en-GB')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('commissionBundlesPage.commissionBundleDetail.operatedBy')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      TODO {/* TODO retrieve change operator */}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Paper>
-        <Paper
-          elevation={8}
-          sx={{
-            mt: 2,
-            borderRadius: 4,
-            p: 4,
-          }}
-        >
-          <Accordion defaultExpanded>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="taxonomies-service-content"
-              id="taxonomies-service-header"
-            >
-              <Typography variant="h6">
-                {t('commissionBundlesPage.commissionBundleDetail.taxonomiesService')}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Divider sx={{ mt: 1 }}></Divider>
-              <Box mt={5}>
-                <Grid container spacing={2} alignContent="center" pb={4}>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      TODO GENERAL GROUP{' '}
-                      {/* TODO Retrieve Taxonomies and loop them grouped by general type */}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body2">TODO SINGLE ITEM TYPE</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      TODO SINGLE ITEM VALUE
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Paper>
       </Grid>
     </Grid>
   );

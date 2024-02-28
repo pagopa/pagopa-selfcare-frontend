@@ -486,10 +486,10 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
-        const result = await backofficeClient.deletePSPChannels({
+    dissociatePSPfromChannel: async (channelcode: string, pspTaxCode: string): Promise<void> => {
+        const result = await backofficeClient.dissociatePSPFromChannel({
             'channel-code': channelcode,
-            'psp-code': pspcode,
+            'tax-code': pspTaxCode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },

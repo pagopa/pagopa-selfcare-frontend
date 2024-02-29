@@ -21,35 +21,35 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
+const renderComponent = (initialEntries: string, path: string) => {
+  render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[initialEntries]}>
+        <Route path={path}>
+          <ThemeProvider theme={theme}>
+            <AddEditCommissionBundlePage />
+          </ThemeProvider>
+        </Route>
+      </MemoryRouter>
+    </Provider>
+  );
+};
+
 describe('<AddEditCommissionBundlePage />', () => {
-  const renderComponent = (initialEntries: string, path: string) => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[initialEntries]}>
-          <Route path={path}>
-            <ThemeProvider theme={theme}>
-              <AddEditCommissionBundlePage />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
-    );
-  };
-
-  test('render component AddEditCommissionBundlePage with view on create', () => {
-    const initialEntries = `/comm-bundles/add-bundle/`;
-
-    renderComponent(initialEntries, initialEntries);
-
-    const icon = screen.getByTestId('arrow-back-test');
-    fireEvent.click(icon);
-  });
-
   test('render component AddEditCommissionBundlePage with view on edit', () => {
     const name = 'someNameId';
     const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
     const path = '/comm-bundles/:bundleId/:actionId';
     renderComponent(initialEntries, path);
+
+    const icon = screen.getByTestId('arrow-back-test');
+    fireEvent.click(icon);
+  });
+
+  test('render component AddEditCommissionBundlePage with view on create', () => {
+    const initialEntries = `/comm-bundles/add-bundle/`;
+
+    renderComponent(initialEntries, initialEntries);
 
     const icon = screen.getByTestId('arrow-back-test');
     fireEvent.click(icon);

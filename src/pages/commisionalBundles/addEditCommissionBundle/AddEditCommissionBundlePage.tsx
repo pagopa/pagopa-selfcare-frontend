@@ -29,7 +29,6 @@ const AddEditCommissionBundlePage = () => {
     if (bundleId && actionId === FormAction.Edit) {
       setLoading(true);
       const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
-      // TODO verify if API for bundle detail is used
       getBundleDetailByPSP(pspTaxCode, bundleId)
         .then((data) => {
           setCommissionBundleDetails(data);

@@ -61,19 +61,25 @@ export default function CommissionBundleDetailTaxonomies({
         {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
       </Typography>
 
-      {bundleTaxonomies
-        ?.filter((_, i) => i < 3)
-        ?.map((el, i) =>
-          i < 4 ? (
-            <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1}>
-              <Typography variant="body1" color="text.disabled">
-                {el.service_type}
-              </Typography>
-              <Typography variant="body1">{el.specific_built_in_data}</Typography>
-            </Box>
-          ) : null
-        )}
-      {bundleTaxonomies?.length > 0 ? (
+      {bundleTaxonomies.length > 0 ? (
+        bundleTaxonomies
+          ?.filter((_, i) => i < 3)
+          ?.map((el, i) =>
+            i < 4 ? (
+              <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1}>
+                <Typography variant="body1" color="text.disabled">
+                  {el.service_type}
+                </Typography>
+                <Typography variant="body1">{el.specific_built_in_data}</Typography>
+              </Box>
+            ) : null
+          )
+      ) : (
+        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{ mt: 2 }}>
+          {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
+        </Alert>
+      )}
+      {bundleTaxonomies?.length > 3 && (
         <>
           <ButtonNaked
             size="large"
@@ -95,18 +101,14 @@ export default function CommissionBundleDetailTaxonomies({
                 {index !== 0 && <Divider />}
                 <Box key={`taxonomies-list-${el.specific_built_in_data}`} mb={1}>
                   <Typography variant="body1" color="text.disabled">
-                    {el.service_type}
+                    {el.macro_area_name}
                   </Typography>
-                  <Typography variant="body1">{el.specific_built_in_data}</Typography>
+                  <Typography variant="body1">{el.service_type}</Typography>
                 </Box>
               </>
             ))}
           </PaddedDrawer>
         </>
-      ) : (
-        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{ mt: 2 }}>
-          {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
-        </Alert>
       )}
     </Paper>
   );

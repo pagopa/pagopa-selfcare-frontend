@@ -111,6 +111,15 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
   };
 
   useEffect(() => {
+    if (commBundleDetails?.idBrokerPsp && brokerDelegationList.length > 0) {
+      getChannelsByBrokerCode(
+        brokerDelegationList?.find((el) => el.institution_name === commBundleDetails?.idBrokerPsp)
+          ?.broker_tax_code ?? ''
+      ).finally(() => {});
+    }
+  }, [commBundleDetails, brokerDelegationList]);
+
+  useEffect(() => {
     setLoading(true);
     Promise.all([
       getPaymentTypes(),
@@ -682,6 +691,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   disablePortal
                   options={brokerDelegationList?.map((el) => el.institution_name)?.sort()}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
+                  value={formik.values.idBrokerPsp}
                   onChange={async (_event, value) => {
                     if (value === null || value === undefined) {
                       // eslint-disable-next-line @typescript-eslint/no-floating-promises

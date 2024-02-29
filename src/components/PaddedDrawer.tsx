@@ -12,7 +12,7 @@ export const PaddedDrawer = ({
     children: React.ReactNode;
   }) => (
     <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right">
-      <Box p={3} pt={1} sx={{ minWidth: '400px' }}>
+      <Box p={3} pt={1} sx={{ maxWidth: '320px', minWidth: "320px" }}>
         <Box display="flex" justifyContent="flex-end" mb={1}>
           <IconButton onClick={() => setOpenDrawer(false)}>
             <CloseIcon />

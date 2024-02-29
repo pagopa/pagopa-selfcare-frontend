@@ -853,7 +853,14 @@
       "taxonomies": "Servizi di incasso",
       "configuration": "Configurazione",
       "updatedOn": "Aggiornato il",
-      "noTaxonomiesAlert": "Nessun servizio associato"
+      "noTaxonomiesAlert": "Nessun servizio associato",
+      "error": {
+        "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
+      },
+      "modal": {
+        "title": "Eliminazione pacchetto commissionale",
+        "message": "Attenzione confermando l’operazione il pacchetto verrà eliminato."
+      }
     },
     "addEditCommissionBundle": {
       "breadcrumb": {
@@ -889,12 +896,8 @@
         "noBrokersOption": "Nessun intermediario trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
-        "yes": "Si",
-        "no": "No",
         "from": "Da",
-        "to": "A",
-        "confirmButton": "Conferma",
-        "backButton": "Indietro"
+        "to": "A"
       },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",
@@ -903,10 +906,10 @@
         "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio"
       },
       "modal": {
-        "title": "Creazione nuovo pacchetto commissioni privato",
-        "message": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
-        "confirmButton": "Conferma",
-        "backButton": "Annulla"
+        "title": "Creazione nuovo pacchetto commissioni",
+        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
+        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale pubblico. Potrai gestire le adesioni in seguito.",
+        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale globale."
       },
       "error": {
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
@@ -1028,6 +1031,7 @@
     "modify": "Modifica",
     "delete": "Elimina",
     "confirm": "Conferma",
+    "cancel": "Annulla",
     "manage": "Gestisci",
     "channels": "canali",
     "Channels": "Canali",

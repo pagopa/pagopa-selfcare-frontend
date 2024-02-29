@@ -105,6 +105,7 @@ const CommissionBundleDetailPage = () => {
                 color="error"
                 variant="outlined"
                 onClick={() => setShowConfirmModal(true)}
+                data-testid="delete-button"
               >
                 {t('general.delete')}
               </Button>
@@ -134,11 +135,11 @@ const CommissionBundleDetailPage = () => {
               </Typography>
             </Typography>
           </Grid>
-          <Grid item xs={commissionBundleDetail?.type === TypeEnum.GLOBAL ? 12 : 6}>
+          <Grid item xs={commissionBundleDetail?.type === TypeEnum.GLOBAL ? 12 : 6} data-testid="config-detail">
             <CommissionBundleDetailConfiguration bundleDetail={commissionBundleDetail} />
           </Grid>
           {commissionBundleDetail?.type !== TypeEnum.GLOBAL && (
-            <Grid item xs={6}>
+            <Grid item xs={6} data-testid="taxonomies-detail">
               <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
             </Grid>
           )}
@@ -152,6 +153,7 @@ const CommissionBundleDetailPage = () => {
         onCloseLabel={t('general.cancel')}
         handleCloseModal={() => setShowConfirmModal(false)}
         handleConfirm={() => handleDeletePSP()}
+        data-testid="delete-modal"
       />
     </Grid>
   );

@@ -14,7 +14,7 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<CommissionBundleDetailConfiguration />', async () => {
+describe('<CommissionBundleDetailConfiguration />', () => {
   test('render component CommissionBundleDetailConfiguration bundle type GLOBAl', async () => {
     render(
       <CommissionBundleDetailConfiguration bundleDetail={mockedCommissionBundlePspDetailGlobal} />

@@ -4,13 +4,13 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
-import { Bundle, TypeEnum } from '../../../../api/generated/portal/Bundle';
-import { PaddedDrawer } from '../../../../components/PaddedDrawer';
+import { Bundle, TypeEnum } from '../../../api/generated/portal/Bundle';
+import { PaddedDrawer } from '../../../components/PaddedDrawer';
 import {
   formatBooleanValueToYesOrNo,
   formatCurrencyEur,
   formatDateToDDMMYYYY,
-} from '../../../../utils/common-utils';
+} from '../../../utils/common-utils';
 
 const bundleConfigurationFields = {
   col1: [
@@ -69,7 +69,7 @@ export default function CommissionBundleDetailConfiguration({
 
   const mapColumn = (col: Array<Array<string>>, isDrawer: boolean, isFirstColumn?: boolean) =>
     col.map((entry: Array<string>, index: number) => (
-      <Box mt={1} key={`config-detail-${entry[0]}`}>
+      <Box mt={1} key={`config-detail-${entry[0]}`} data-testid="detail-column">
         {isDrawer && (!isFirstColumn || index !== 0) && <Divider />}
         <Typography variant="body1" color="text.disabled">
           {t(entry[1])}

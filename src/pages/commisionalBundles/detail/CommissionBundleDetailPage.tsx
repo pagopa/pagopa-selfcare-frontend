@@ -15,8 +15,8 @@ import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { deletePSPBundle, getBundleDetailByPSP } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
-import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
-import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
+import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
+import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies';
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();

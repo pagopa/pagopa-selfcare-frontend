@@ -4,10 +4,10 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useErrorDispatcher, TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
-import { Bundle } from '../../../../api/generated/portal/Bundle';
-import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
-import { PaddedDrawer } from '../../../../components/PaddedDrawer';
-import { getTaxonomies } from '../../../../services/taxonomyService';
+import { Bundle } from '../../../api/generated/portal/Bundle';
+import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
+import { PaddedDrawer } from '../../../components/PaddedDrawer';
+import { getTaxonomies } from '../../../services/taxonomyService';
 
 export default function CommissionBundleDetailTaxonomies({
   bundleDetail,
@@ -66,7 +66,7 @@ export default function CommissionBundleDetailTaxonomies({
           ?.filter((_, i) => i < 3)
           ?.map((el, i) =>
             i < 4 ? (
-              <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1}>
+              <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1} data-testid="taxonomy-column">
                 <Typography variant="body1" color="text.disabled">
                   {el.service_type}
                 </Typography>
@@ -99,7 +99,7 @@ export default function CommissionBundleDetailTaxonomies({
             {bundleTaxonomies.map((el, index) => (
               <>
                 {index !== 0 && <Divider />}
-                <Box key={`taxonomies-list-${el.specific_built_in_data}`} mb={1}>
+                <Box key={`taxonomies-list-${el.specific_built_in_data}`} mb={1}  data-testid="taxonomy-drawer-column">
                   <Typography variant="body1" color="text.disabled">
                     {el.macro_area_name}
                   </Typography>

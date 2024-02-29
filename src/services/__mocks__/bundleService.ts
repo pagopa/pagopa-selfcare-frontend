@@ -27,7 +27,7 @@ const baseCommissionBundlePspDetail: Bundle = {
   maxPaymentAmount: 150.1,
   paymentType: 'MYBK',
   touchpoint: 'PSP',
-  transferCategoryList: ['01'],
+  transferCategoryList: ["9/0705103TS/","9/0705102TS/", "9/0712103SP/", "9/1001100TS/", "9/1201106IM/", "9/0702155TS/" ],
   validityDateFrom: new Date('2024-02-17'),
   validityDateTo: new Date('2024-02-22'),
   insertedDate: new Date('2024-02-15T09:36:04.792731104'),

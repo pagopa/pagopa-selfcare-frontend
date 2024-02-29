@@ -833,7 +833,8 @@
       },
       "error": {
         "errorTitle": "Errore",
-        "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
+        "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",
+        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso"
       }
     },
     "commissionBundleDetail": {
@@ -1047,7 +1048,7 @@
       "TO_CHECK": "In revisione",
       "TO_CHECK_UPDATE": "In revisione"
     },
-    "yes": "Si",
+    "yes": "Sì",
     "no": "No"
   }
 }

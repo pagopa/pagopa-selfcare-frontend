@@ -530,8 +530,8 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                       >
                         {taxonomyList?.taxonomies?.map((el) => (
                           <MenuItem
-                            key={`taxonomies${el.service_type_code}${el.service_type_description}`}
-                            value={el.service_type_code}
+                            key={`taxonomies${el.specific_built_in_data}`}
+                            value={el.specific_built_in_data}
                           >
                             {el.service_type_code} - {el.service_type_description}
                           </MenuItem>

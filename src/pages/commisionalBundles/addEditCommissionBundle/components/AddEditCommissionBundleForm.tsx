@@ -689,7 +689,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                 <Autocomplete
                   id="brokerCodes"
                   disablePortal
-                  options={brokerDelegationList?.map((el) => el.institution_name)?.sort()}
+                  options={brokerDelegationList?.map((el) => el?.institution_name ?? "")?.sort((a, b) => a.localeCompare(b))}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   value={formik.values.idBrokerPsp}
                   onChange={async (_event, value) => {
@@ -728,7 +728,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   id="idChannel"
                   options={
                     // eslint-disable-next-line functional/immutable-data
-                    channelsId.sort()
+                    channelsId.sort((a, b) => a.localeCompare(b))
                   }
                   disabled={!(channelsId && channelsId.length > 0)}
                   onChange={(_event, value) => {

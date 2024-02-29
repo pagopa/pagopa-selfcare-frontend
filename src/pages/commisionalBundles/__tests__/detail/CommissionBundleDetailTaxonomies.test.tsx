@@ -46,12 +46,20 @@ describe('<CommissionBundleDetailTaxonomies />', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('alert-test')).not.toBeInTheDocument();
       expect(screen.queryAllByTestId('taxonomy-column').length).toBe(3);
-
-      const drawerButton = screen.getByTestId('show-more-bundle-taxonomies-test');
-      fireEvent.click(drawerButton);
-
-      expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(taxonomyList.length);
     });
+
+    const drawerButton = screen.getByTestId('show-more-bundle-taxonomies-test');
+    fireEvent.click(drawerButton);
+
+    expect(screen.queryByTestId("padded-drawer")).toBeInTheDocument();
+    expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(taxonomyList.length);
+
+    const closeDrawerButton = screen.getByTestId("close-drawer-button");
+    fireEvent.click(closeDrawerButton)
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("padded-drawer")).not.toBeInTheDocument();
+    })
 
     mock.mockReset();
   });

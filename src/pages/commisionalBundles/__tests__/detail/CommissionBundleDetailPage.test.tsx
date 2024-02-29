@@ -38,16 +38,31 @@ describe('<CommissionBundleDetailPage />', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).not.toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-
-      const deleteButton = screen.getByTestId("delete-button");
-      fireEvent.click(deleteButton);
-
-      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
-      
-      const confirmDeleteButton = screen.getByTestId("confirm-button-test");
-      fireEvent.click(confirmDeleteButton);
-      expect(deleteMock).toBeCalledTimes(1);
     });
+
+    const deleteButton = screen.getByTestId("delete-button");
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    })
+
+    const cancelDeleteButton = screen.getByTestId("cancel-button-test");
+    fireEvent.click(cancelDeleteButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).not.toBeInTheDocument();
+    })
+
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    })
+    
+    const confirmDeleteButton = screen.getByTestId("confirm-button-test");
+    fireEvent.click(confirmDeleteButton);
+    expect(deleteMock).toBeCalledTimes(1);
   });
 
   test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {

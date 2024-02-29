@@ -15,14 +15,16 @@ import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { deletePSPBundle, getBundleDetailByPSP } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
+import { Party } from '../../../model/Party';
 import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies';
+
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
 

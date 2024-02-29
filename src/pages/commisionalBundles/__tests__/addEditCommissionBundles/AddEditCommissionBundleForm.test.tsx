@@ -40,20 +40,6 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('<AddEditCommissionBundleForm />', () => {
-  const commissionBundleDetailsMocked: Bundle = {
-    description: 'Pacchetti commissione',
-    maxPaymentAmount: 1500,
-    minPaymentAmount: 150,
-    name: 'Pacchetto 1',
-    paymentAmount: 10,
-    paymentType: undefined,
-    touchpoint: mockedTouchpoints.touchpoints![0].name,
-    transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.)'],
-    type: TypeEnum.GLOBAL,
-    validityDateFrom: new Date(2050, 9, 27),
-    validityDateTo: new Date(2050, 9, 27),
-  };
-
   const componentRender = (commBundleDetails?: Bundle) => {
     render(
       <Provider store={store}>

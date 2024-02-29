@@ -87,3 +87,6 @@ export const updateCommissionBundle = (
 ): Promise<Bundle> => Promise.resolve(mockedCommissionBundlePspDetailGlobal);
 
 export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);
+
+export const deletePSPBundle = (): Promise<void> =>
+  new Promise((resolve) => resolve());

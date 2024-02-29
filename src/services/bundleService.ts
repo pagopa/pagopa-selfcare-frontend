@@ -9,6 +9,7 @@ import {
   getCommissionBundleDetails,
   getCommissionBundlePsp,
   getTouchpoints as getTouchpointsMock,
+  deletePSPBundle as deletePSPBundleMock
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -51,5 +52,13 @@ export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Prom
     return getCommissionBundleDetails();
   } else {
     return BackofficeApi.getBundleDetailByPSP(pspTaxCode, bundleId);
+  }
+};
+
+export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return deletePSPBundleMock();
+  } else {
+    return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId);
   }
 };

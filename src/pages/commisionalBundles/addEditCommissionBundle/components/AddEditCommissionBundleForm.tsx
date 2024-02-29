@@ -786,14 +786,14 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
-                      label={t('commissionBundlesPage.addEditCommissionBundle.form.no')}
+                      label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       disabled={formik.values.digitalStampRestriction}
-                      label={t('commissionBundlesPage.addEditCommissionBundle.form.yes')}
+                      label={t('general.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -819,14 +819,14 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     <FormControlLabel
                       value={false}
                       control={<Radio />}
-                      label={t('commissionBundlesPage.addEditCommissionBundle.form.no')}
+                      label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
                       value={true}
                       control={<Radio />}
                       disabled={formik.values.digitalStamp}
-                      label={t('commissionBundlesPage.addEditCommissionBundle.form.yes')}
+                      label={t('general.yes')}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -911,7 +911,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
             onClick={() => history.goBack()}
             data-testid="cancel-button-test"
           >
-            {t('addEditStationPage.addForm.backButton')}
+            {t('general.back')}
           </Button>
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
@@ -926,22 +926,16 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
             type="submit"
             data-testid="confirm-button-test"
           >
-            {t('commissionBundlesPage.addEditCommissionBundle.form.confirmButton')}
+            {t('general.confirm')}
           </Button>
         </Stack>
       </Stack>
       <GenericModal
         title={t('commissionBundlesPage.addEditCommissionBundle.modal.title')}
-        message={
-          <Trans i18nKey="commissionBundlesPage.addEditCommissionBundle.modal.message">
-            Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i
-            destinatari in seguito.
-            <br />
-          </Trans>
-        }
+        message={t(`commissionBundlesPage.addEditCommissionBundle.modal.message${formik.values.type}`)}
         openModal={showConfirmModal}
-        onConfirmLabel={t('commissionBundlesPage.addEditCommissionBundle.modal.confirmButton')}
-        onCloseLabel={t('commissionBundlesPage.addEditCommissionBundle.modal.backButton')}
+        onConfirmLabel={t('general.confirm')}
+        onCloseLabel={t('general.cancel')}
         handleCloseModal={() => setShowConfirmModal(false)}
         handleConfirm={async () => {
           await submit(formik.values);

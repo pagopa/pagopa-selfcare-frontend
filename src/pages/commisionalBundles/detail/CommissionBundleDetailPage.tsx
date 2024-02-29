@@ -1,7 +1,7 @@
 import { Grid, Typography, Stack, Breadcrumbs, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Link, generatePath, useParams } from 'react-router-dom';
+import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
@@ -13,22 +13,25 @@ import { Bundle } from '../../../api/generated/portal/Bundle';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import { getBundleDetailByPSP } from '../../../services/bundleService';
+import { deletePSPBundle, getBundleDetailByPSP } from '../../../services/bundleService';
+import GenericModal from '../../../components/Form/GenericModal';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
+
   const [commissionBundleDetail, setCommissionBundleDetail] = useState<Bundle>({});
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
-    // TODO verify if API for bundle detail is used
     getBundleDetailByPSP(pspTaxCode, bundleId)
       .then((data) => {
         setCommissionBundleDetail(data);
@@ -49,6 +52,30 @@ const CommissionBundleDetailPage = () => {
       })
       .finally(() => setLoading(false));
   }, [selectedParty]);
+
+  function handleDeletePSP() {
+    setLoading(true);
+    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+    deletePSPBundle(pspTaxCode, bundleId)
+      .then((_) => {
+        history.push(ROUTES.COMMISSION_BUNDLES);
+      })
+      .catch((reason: Error) => {
+        addError({
+          id: 'DELETE_COMMISSION_BUNDLE',
+          blocking: false,
+          error: reason,
+          techDescription: `An error occurred while deleting a commission bundle`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t(
+            'commissionBundlesPage.commissionBundleDetail.error.deleteCommissionBundle'
+          ),
+          component: 'Toast',
+        });
+      })
+      .finally(() => setLoading(false));
+  }
 
   return (
     <Grid container sx={{ backgroundColor: 'background.paper' }}>
@@ -77,7 +104,7 @@ const CommissionBundleDetailPage = () => {
               <Button
                 color="error"
                 variant="outlined"
-                onClick={() => '' /* TODO DELETE BUTTON ACTION */}
+                onClick={() => setShowConfirmModal(true)}
               >
                 {t('general.delete')}
               </Button>
@@ -117,6 +144,15 @@ const CommissionBundleDetailPage = () => {
           )}
         </Grid>
       </Grid>
+      <GenericModal
+        title={t('commissionBundlesPage.commissionBundleDetail.modal.title')}
+        message={t('commissionBundlesPage.commissionBundleDetail.modal.message')}
+        openModal={showConfirmModal}
+        onConfirmLabel={t('general.confirm')}
+        onCloseLabel={t('general.cancel')}
+        handleCloseModal={() => setShowConfirmModal(false)}
+        handleConfirm={() => handleDeletePSP()}
+      />
     </Grid>
   );
 };

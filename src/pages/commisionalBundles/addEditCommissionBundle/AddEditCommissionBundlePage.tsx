@@ -21,7 +21,6 @@ const AddEditCommissionBundlePage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
-  const goBack = () => history.push(ROUTES.COMMISSION_BUNDLES);
   const [commissionBundleDetails, setCommissionBundleDetails] = useState<
     BundleRequest | undefined
   >();
@@ -60,7 +59,7 @@ const AddEditCommissionBundlePage = () => {
           <ButtonNaked
             size="small"
             component="button"
-            onClick={() => goBack()}
+            onClick={() => history.push(ROUTES.COMMISSION_BUNDLES)}
             startIcon={<ArrowBack data-testid="arrow-back-test" />}
             sx={{ color: 'primary.main', mr: '20px' }}
             weight="default"

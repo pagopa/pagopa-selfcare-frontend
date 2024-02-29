@@ -1,17 +1,10 @@
-import {
-  Grid,
-  Typography,
-  Stack,
-  Breadcrumbs,
-  Button,
-} from '@mui/material';
+import { Grid, Typography, Stack, Breadcrumbs, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath, useParams } from 'react-router-dom';
-import { useTranslation, TFunction } from 'react-i18next';
-import {  useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import ROUTES from '../../../routes';
-import { getCommissionBundleDetails } from '../../../services/__mocks__/bundleService';
 import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -19,12 +12,10 @@ import { FormAction } from '../../../model/CommissionBundle';
 import { Bundle } from '../../../api/generated/portal/Bundle';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
-import {
-  formatDateToDDMMYYYYhhmm,
-} from '../../../utils/common-utils';
+import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { getBundleDetailByPSP } from '../../../services/bundleService';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
-
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
@@ -36,8 +27,9 @@ const CommissionBundleDetailPage = () => {
 
   useEffect(() => {
     setLoading(true);
+    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
     // TODO verify if API for bundle detail is used
-    getCommissionBundleDetails(TypeEnum.PRIVATE)
+    getBundleDetailByPSP(pspTaxCode, bundleId)
       .then((data) => {
         setCommissionBundleDetail(data);
       })
@@ -48,7 +40,7 @@ const CommissionBundleDetailPage = () => {
           error: reason as Error,
           techDescription: `An error occurred while getting commission bundle details`,
           toNotify: true,
-          displayableTitle: t('commissionBundlesPage.list.error.errorTitle'),
+          displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
             'commissionBundlesPage.list.error.commissionBundleDetailsErrorMessageDesc'
           ),

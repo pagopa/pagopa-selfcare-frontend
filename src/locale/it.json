@@ -832,7 +832,6 @@
         "amountRange": "Fascia importo"
       },
       "error": {
-        "errorTitle": "Errore",
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",
         "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso"
       }
@@ -910,7 +909,6 @@
         "backButton": "Annulla"
       },
       "error": {
-        "errorTitle": "Errore",
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
         "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
         "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
@@ -1037,6 +1035,7 @@
     "Stations": "Stazioni",
     "Bundles": "Pacchetti commissioni",
     "Iban": "IBAN",
+    "errorTitle": "Errore",
     "operationTable": "Tavolo Operativo",
     "validation": {
       "requiredField": "Campo obbligatorio"

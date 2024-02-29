@@ -9,11 +9,10 @@ import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import { getCommissionBundleDetails } from '../../../services/__mocks__/bundleService';
+import { getBundleDetailByPSP } from '../../../services/bundleService';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
-
 
 const AddEditCommissionBundlePage = () => {
   const { t } = useTranslation();
@@ -27,34 +26,30 @@ const AddEditCommissionBundlePage = () => {
     BundleRequest | undefined
   >();
 
-  const getDetails = async () => {
-    setLoading(true);
-    try {
-      // TODO verify if API for bundle detail is used
-      const response = await getCommissionBundleDetails();
-      setCommissionBundleDetails(response);
-    } catch (reason) {
-      addError({
-        id: 'GET_COMMISSION_BUNDLE_DETAILS',
-        blocking: false,
-        error: reason as Error,
-        techDescription: `An error occurred while getting commission bundle details`,
-        toNotify: true,
-        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
-        displayableDescription: t(
-          'commissionBundlesPage.addEditCommissionBundle.error.commissionBundleDetailsErrorMessageDesc'
-        ),
-        component: 'Toast',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (bundleId && actionId === FormAction.Edit) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getDetails();
+      setLoading(true);
+      const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+      // TODO verify if API for bundle detail is used
+      getBundleDetailByPSP(pspTaxCode, bundleId)
+        .then((data) => {
+          setCommissionBundleDetails(data);
+        })
+        .catch((reason: Error) => {
+          addError({
+            id: 'GET_COMMISSION_BUNDLE_DETAILS',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while getting commission bundle details`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageAllDataDesc'
+            ),
+            component: 'Toast',
+          });
+        })
+        .finally(() => setLoading(false));
     }
   }, [selectedParty]);
 

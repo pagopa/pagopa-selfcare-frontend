@@ -26,7 +26,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RemoveCircleOutline , MenuBook } from '@mui/icons-material';
+import { RemoveCircleOutline, MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -54,6 +54,7 @@ import { getTaxonomies } from '../../../../services/taxonomyService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
 import ROUTES from '../../../../routes';
+import { TypeEnum } from '../../../../api/generated/portal/Bundle';
 
 type Prop = {
   commBundleDetails: BundleRequest | undefined;
@@ -86,26 +87,27 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
 
   const getChannelsByBrokerCode = async (selectedBrokerCode: string) => {
     setLoadingChannels(true);
-    await getChannelsIdAssociatedToPSP(0, selectedBrokerCode).then((data) => {
-      if (data) {
-        setChannelsId(data);
-      }
-    })
-    .catch(error => {
-      addError({
-        id: 'GET_CHANNEL_IDS_DATA',
-        blocking: false,
-        error: error as Error,
-        techDescription: `An error occurred while getting data`,
-        toNotify: true,
-        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
-        displayableDescription: t(
-          'commissionBundlesPage.addEditCommissionBundle.error.errorMessageChannelIdsDataDesc'
-        ),
-        component: 'Toast',
-      });
-    })
-    .finally(() => setLoadingChannels(false));
+    await getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
+      .then((data) => {
+        if (data) {
+          setChannelsId(data);
+        }
+      })
+      .catch((error) => {
+        addError({
+          id: 'GET_CHANNEL_IDS_DATA',
+          blocking: false,
+          error: error as Error,
+          techDescription: `An error occurred while getting data`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t(
+            'commissionBundlesPage.addEditCommissionBundle.error.errorMessageChannelIdsDataDesc'
+          ),
+          component: 'Toast',
+        });
+      })
+      .finally(() => setLoadingChannels(false));
   };
 
   useEffect(() => {
@@ -135,7 +137,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
             error: new Error(`An error occurred while getting data`),
             techDescription: `An error occurred while getting data`,
             toNotify: true,
-            displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
+            displayableTitle: t('general.errorTitle'),
             displayableDescription: t(
               'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
             ),
@@ -150,7 +152,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
           error: reason as Error,
           techDescription: `An error occurred while getting data`,
           toNotify: true,
-          displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
+          displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
             'commissionBundlesPage.addEditCommissionBundle.error.errorMessageAllDataDesc'
           ),
@@ -180,7 +182,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
     type: detail?.type ?? undefined,
     validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
     validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
-    pspBusinessName: selectedParty?.description ?? ""
+    pspBusinessName: selectedParty?.description ?? '',
   });
 
   const validate = (values: Partial<BundleRequest>) =>
@@ -251,26 +253,30 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
 
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
-    try {
-      const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
-      await createBundle(pspTaxCode, body);
-      history.push(ROUTES.COMMISSION_BUNDLES);
-    } catch (reason) {
-      addError({
-        id: 'CREATE_COMMISSION_BUNDLE',
-        blocking: false,
-        error: reason as Error,
-        techDescription: `An error occurred while creating commission bundle`,
-        toNotify: true,
-        displayableTitle: t('commissionBundlesPage.addEditCommissionBundle.error.errorTitle'),
-        displayableDescription: t(
-          'commissionBundlesPage.addEditCommissionBundle.error.errorMessageCreatingBundle'
-        ),
-        component: 'Toast',
+    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+
+    // TODO ADD UPDATE
+    createBundle(pspTaxCode, body)
+      .then((_) => {
+        history.push(ROUTES.COMMISSION_BUNDLES);
+      })
+      .catch((reason: Error) => {
+        addError({
+          id: 'CREATE_COMMISSION_BUNDLE',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while creating commission bundle`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t(
+            'commissionBundlesPage.addEditCommissionBundle.error.errorMessageCreatingBundle'
+          ),
+          component: 'Toast',
+        });
+      })
+      .finally(() => {
+        setLoadingCreating(false);
       });
-    } finally {
-      setLoadingCreating(false);
-    }
   };
 
   const formik = useFormik<Partial<BundleRequest>>({
@@ -329,25 +335,26 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
 
         <FormControl>
           <RadioGroup
-            name="type"
+            name="bundleType"
             row
             onChange={(e) => formik.setFieldValue('type', e.target.value)}
             data-testid="bundle-type-test"
+            value={`${formik.values.type}`}
           >
             <FormControlLabel
-              value="GLOBAL"
+              value={TypeEnum.GLOBAL}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
               sx={{ pr: 8 }}
             />
             <FormControlLabel
-              value="PUBLIC"
+              value={TypeEnum.PUBLIC}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
             />
             <FormControlLabel
-              value="PRIVATE"
+              value={TypeEnum.PRIVATE}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
             />
@@ -380,9 +387,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   id="name"
                   name="name"
                   label={t('commissionBundlesPage.addEditCommissionBundle.form.bundleName')}
-                  placeholder={t(
-                    'commissionBundlesPage.addEditCommissionBundle.form.bundleName'
-                  )}
+                  placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.bundleName')}
                   size="small"
                   value={formik.values.name}
                   onChange={(e) => formik.handleChange(e)}
@@ -454,9 +459,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     labelId={'touchpointLabel'}
                     name={'touchpoint'}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                    placeholder={t(
-                      'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'
-                    )}
+                    placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                     size="small"
                     value={formik.values.touchpoint ?? ''}
                     onChange={formik.handleChange}
@@ -493,9 +496,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   <Grid item xs={i > 0 ? 11 : 12} pr={2}>
                     <FormControl sx={{ width: '50%' }}>
                       <InputLabel size="small">
-                        {t(
-                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
-                        )}
+                        {t('commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService')}
                       </InputLabel>
                       <Select
                         id={`transferCategoryList${i}_select`}
@@ -571,9 +572,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     name="minPaymentAmount"
                     customInput={TextField}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
-                    placeholder={t(
-                      'commissionBundlesPage.addEditCommissionBundle.form.minImport'
-                    )}
+                    placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
                     size="small"
                     value={
                       formik.values.minPaymentAmount === 0 ? '' : formik.values.minPaymentAmount
@@ -606,9 +605,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     name="maxPaymentAmount"
                     customInput={TextField}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
-                    placeholder={t(
-                      'commissionBundlesPage.addEditCommissionBundle.form.maxImport'
-                    )}
+                    placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
                     size="small"
                     value={
                       formik.values.maxPaymentAmount === 0 ? '' : formik.values.maxPaymentAmount
@@ -649,9 +646,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     name="paymentAmount"
                     customInput={TextField}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.feeApplied')}
-                    placeholder={t(
-                      'commissionBundlesPage.addEditCommissionBundle.form.feeApplied'
-                    )}
+                    placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.feeApplied')}
                     size="small"
                     value={formik.values.paymentAmount === 0 ? '' : formik.values.paymentAmount}
                     onValueChange={({ value }) => {
@@ -685,9 +680,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                 <Autocomplete
                   id="brokerCodes"
                   disablePortal
-                  options={
-                    brokerDelegationList?.map((el) => el.institution_name)?.sort()
-                  }
+                  options={brokerDelegationList?.map((el) => el.institution_name)?.sort()}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   onChange={async (_event, value) => {
                     if (value === null || value === undefined) {

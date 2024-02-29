@@ -1,10 +1,15 @@
-
 import { BackofficeApi } from '../api/BackofficeClient';
+import { Bundle } from '../api/generated/portal/Bundle';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
 import { Bundles } from '../api/generated/portal/Bundles';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
-import { createCommissionBundle, getCommissionBundlePsp, getTouchpoints as getTouchpointsMock } from './__mocks__/bundleService';
+import {
+  createCommissionBundle,
+  getCommissionBundleDetails,
+  getCommissionBundlePsp,
+  getTouchpoints as getTouchpointsMock,
+} from './__mocks__/bundleService';
 
 // /bundles endpoint
 
@@ -38,5 +43,13 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
     return getTouchpointsMock();
   } else {
     return BackofficeApi.getTouchpoints(page, pageLimit);
+  }
+};
+
+export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCommissionBundleDetails();
+  } else {
+    return BackofficeApi.getBundleDetailByPSP(pspTaxCode, bundleId);
   }
 };

@@ -39,7 +39,7 @@ const bundleConfigurationFields = {
   // TODO updatedBy/"Modificato da" (API doesn't retrieve this info)
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
-  if (typeof value === 'string') {
+  if (typeof value === 'string' && value) {
     return value;
   }
   if (typeof value === 'boolean') {

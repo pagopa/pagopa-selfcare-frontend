@@ -36,7 +36,7 @@ export default function CommissionBundleDetailTaxonomies({
             error: err as Error,
             techDescription: `An error occurred while getting the taxonomies' list`,
             toNotify: true,
-            displayableTitle: t('commissionBundlesPage.list.error.errorTitle'),
+            displayableTitle: t('general.errorTitle'),
             displayableDescription: t(
               'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
             ),

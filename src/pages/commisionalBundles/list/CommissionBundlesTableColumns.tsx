@@ -109,7 +109,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
           key="Gestisci pacchetto"
           label="Gestisci pacchetto"
           to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: params.row.idBundle })}
-          icon={<ChevronRightIcon />}
+          icon={<ChevronRightIcon color="primary" />}
         />,
       ],
       sortable: false,

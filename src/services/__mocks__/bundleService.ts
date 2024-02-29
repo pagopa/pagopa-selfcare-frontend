@@ -34,6 +34,8 @@ const baseCommissionBundlePspDetail: Bundle = {
   lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
 };
 
+export const mockedBundleRequest: BundleRequest = {};
+
 export const mockedCommissionBundlePspDetailGlobal: Bundle = {
   ...baseCommissionBundlePspDetail,
   type: TypeEnum.GLOBAL,
@@ -78,8 +80,9 @@ export const getCommissionBundleDetails = (type?: string): Promise<Bundle> =>
       : mockedCommissionBundlePspDetailPublic
   );
 
+export const mockedBundleCreateResponse = { idBundle: 'mockedCommissionBundleId' };
 export const createCommissionBundle = (_body: BundleRequest): Promise<BundleCreateResponse> =>
-  Promise.resolve({ idBundle: 'mockedCommissionBundleId' });
+  Promise.resolve(mockedBundleCreateResponse);
 
 export const updateCommissionBundle = (
   _name: string,

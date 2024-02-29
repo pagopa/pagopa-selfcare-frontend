@@ -43,7 +43,6 @@ const mapBundle = (bundleType: string) => {
   }
 };
 
-
 const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
   const [error, setError] = useState(false);
@@ -53,7 +52,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const columns: Array<GridColDef> = buildColumnDefs(t);
   const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
-  const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const brokerCode = selectedParty?.fiscalCode ?? '';
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
@@ -67,6 +66,8 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
           setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+        } else {
+          setListFiltered([]);
         }
       })
       .catch((reason) => setError(reason))
@@ -74,32 +75,37 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   };
 
   useEffect(() => {
+    console.log('SAMU', brokerCode);
     if (brokerCode) {
-      const identifier = setTimeout(() => {
-        getBundleList();
-      }, 500);
-      return () => {
-        clearTimeout(identifier);
-      };
+      getBundleList();
     }
-    return () => null;
-  }, [page, brokerCode]);
+  }, [brokerCode]);
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      getBundleList();
+    }, 500);
+    return () => {
+      clearTimeout(identifier);
+    };
+  }, [page]);
 
   return (
     <Box
-        id="commissionBundlesTable"
-        sx={{
-          position: 'relative',
-          width: '100% !important',
-          border: 'none',
-        }}
-        justifyContent="start"
-      >
-        {error ? (
-          <>{error}</>
-        ) : listFiltered?.bundles?.length === 0 ? (
-          <CommissionBundlesEmpty bundleType={t(bundleType)} />
-        ) : (
+      id="commissionBundlesTable"
+      sx={{
+        position: 'relative',
+        width: '100% !important',
+        border: 'none',
+      }}
+      justifyContent="start"
+    >
+      {error ? (
+        <>{error}</>
+      ) : listFiltered?.bundles?.length === 0 ? (
+        <CommissionBundlesEmpty bundleType={t(bundleType)} />
+      ) : (
+        <div data-testid="data-grid">
           <CustomDataGrid
             disableColumnFilter
             disableColumnSelector
@@ -135,8 +141,9 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />
-        )}
-      </Box>
+        </div>
+      )}
+    </Box>
   );
 };
 

@@ -11,7 +11,7 @@ type Props = {
 const CommissionBundlesEmpty = ({ bundleType }: Props) => {
   const { t } = useTranslation();
   return (
-    <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }}>
+    <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }} data-testid="empty-bundles">
         <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
           <Typography variant="body2">
             <Trans i18nKey={t('commissionBundlesPage.list.noCommBundles', { bundleType })}>

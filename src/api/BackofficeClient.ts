@@ -63,6 +63,7 @@ import { Taxonomies } from './generated/portal/Taxonomies';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { BundleRequest } from './generated/portal/BundleRequest';
 import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
+import { Bundle } from './generated/portal/Bundle';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -881,6 +882,16 @@ export const BackofficeApi = {
 
     getTaxonomies: async (): Promise<Taxonomies> => {
         const result = await backofficeClient.getTaxonomies({});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+        const result = await backofficeClient.getBundleDetailByPSP({"psp-code": pspTaxCode, "id-bundle": bundleId});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deletePSPBundle:  async(pspTaxCode: string, bundleId: string): Promise<void> => {
+        const result = await backofficeClient.deletePSPBundle({"psp-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

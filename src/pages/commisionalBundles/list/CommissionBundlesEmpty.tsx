@@ -5,18 +5,17 @@ import { generatePath, Link as RouterLink } from 'react-router-dom';
 import ROUTES from '../../../routes';
 
 type Props = {
-  packageType: string;
+  bundleType: string;
 };
 
-const CommissionPackagesEmpty = ({ packageType }: Props) => {
+const CommissionBundlesEmpty = ({ bundleType }: Props) => {
   const { t } = useTranslation();
   return (
-    <>
-      <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }}>
+    <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }} data-testid="empty-bundles">
         <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
           <Typography variant="body2">
-            <Trans i18nKey={t('commissionPackagesPage.list.noCommPackages', { packageType })}>
-              Non sono ancora presenti pacchetti commissioni {packageType}.
+            <Trans i18nKey={t('commissionBundlesPage.list.noCommBundles', { bundleType })}>
+              Non sono ancora presenti pacchetti commissioni {bundleType}.
               <Link
                 component={RouterLink}
                 sx={{
@@ -25,7 +24,7 @@ const CommissionPackagesEmpty = ({ packageType }: Props) => {
                   textDecoration: 'none',
                   whiteSpace: 'pre',
                 }}
-                to={generatePath(ROUTES.COMMISSION_PACKAGES_ADD)}
+                to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}
               >
                 <strong> Crea Pacchetto</strong>
               </Link>
@@ -33,7 +32,6 @@ const CommissionPackagesEmpty = ({ packageType }: Props) => {
           </Typography>
         </Box>
       </Box>
-    </>
   );
 };
-export default CommissionPackagesEmpty;
+export default CommissionBundlesEmpty;

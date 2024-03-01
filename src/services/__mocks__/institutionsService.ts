@@ -6,10 +6,10 @@ import { mockedPaymentTypes } from './configurationService';
 
 export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
   brokerCode: 'string',
-  createdAt: new Date(),
+  createdAt: new Date("2024-02-29T17:05:35.740Z"),
   createdBy: 'PSP S.p.A',
   id: 'string',
-  modifiedAt: new Date(),
+  modifiedAt: new Date("2024-02-29T17:05:35.740Z"),
   modifiedBy: 'string',
   modifiedByOpt: 'string',
   note: 'string',
@@ -17,7 +17,7 @@ export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
   type: TypeEnum.CHANNEL,
   entities: [
     {
-      createdAt: new Date(),
+      createdAt: new Date("2024-02-29T17:05:35.740Z"),
       entity: {
         broker_psp_code: '97735020584',
         broker_description: 'AgID - Agenzia per l’Italia Digitale',
@@ -29,7 +29,7 @@ export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
         status: StatusEnum.TO_CHECK,
       },
       id: 'string',
-      modifiedAt: new Date(),
+      modifiedAt: new Date("2024-02-29T17:05:35.740Z"),
       modifiedBy: 'string',
       modifiedByOpt: 'Operatore PSP',
       note: 'string',

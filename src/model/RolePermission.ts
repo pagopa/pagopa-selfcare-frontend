@@ -49,7 +49,7 @@ export const permissions = {
         ROLE.PAGOPA_OPERATOR,
     ],
     iban: [ROLE.EC_DIRECT_ADMIN, ROLE.EC_ADMIN],
-    'commission-packages': [
+    'commission-bundles': [
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_ADMIN,
     ],

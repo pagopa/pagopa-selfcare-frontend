@@ -5,27 +5,28 @@ import { TFunction } from 'react-i18next';
 import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
+import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
       field: 'name',
       cellClassName: 'justifyContentBold',
-      headerName: t('commissionPackagesPage.list.headerFields.packageName'),
+      headerName: t('commissionBundlesPage.list.headerFields.bundleName'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 400,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showPackageName(params),
+      renderCell: (params: any) => showBundleName(params),
       sortable: true,
       flex: 4,
     },
     {
       field: 'validityDateFrom',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.startDate'),
+      headerName: t('commissionBundlesPage.list.headerFields.startDate'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 150,
@@ -40,7 +41,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'validityDateTo',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.endDate'),
+      headerName: t('commissionBundlesPage.list.headerFields.endDate'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 150,
@@ -55,7 +56,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'touchpoint',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.touchpoint'),
+      headerName: t('commissionBundlesPage.list.headerFields.touchpoint'),
       align: 'left',
       headerAlign: 'left',
       maxWidth: 220,
@@ -69,7 +70,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'paymentType',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.paymentType'),
+      headerName: t('commissionBundlesPage.list.headerFields.paymentType'),
       align: 'left',
       headerAlign: 'left',
       width: 145,
@@ -83,7 +84,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
     {
       field: 'amountRange',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionPackagesPage.list.headerFields.amountRange'),
+      headerName: t('commissionBundlesPage.list.headerFields.amountRange'),
       align: 'left',
       headerAlign: 'left',
       width: 200,
@@ -103,44 +104,14 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       hideSortIcons: true,
       disableColumnMenu: true,
       editable: false,
-      getActions: (params: any) => {
-        const packageType = params.row.type;
-
-        const managePackageAction = (
-          <GridLinkAction
-            key="Gestisci pacchetto"
-            label="Gestisci pacchetto"
-            to={generatePath('')}
-            showInMenu={packageType !== 'GLOBAL'}
-            icon={packageType === 'GLOBAL' ? <ChevronRightIcon /> : <></>}
-          />
-        );
-
-        if (packageType === 'PRIVATE') {
-          return [
-            managePackageAction,
-            <GridLinkAction
-              key="Gestisci destinatari"
-              label="Gestisci destinatari"
-              to={generatePath('')}
-              showInMenu={true}
-            />,
-          ];
-        }
-        if (packageType === 'PUBLIC') {
-          return [
-            managePackageAction,
-            <GridLinkAction
-              key="Gestisci adesioni"
-              label="Gestisci adesioni"
-              to={generatePath('')}
-              showInMenu={true}
-            />,
-          ];
-        }
-
-        return [managePackageAction];
-      },
+      getActions: (params: any) => [
+        <GridLinkAction
+          key="Gestisci pacchetto"
+          label="Gestisci pacchetto"
+          to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: params.row.idBundle })}
+          icon={<ChevronRightIcon color="primary" />}
+        />,
+      ],
       sortable: false,
       flex: 1,
     },
@@ -198,31 +169,29 @@ export function showCustomHeader(params: GridColumnHeaderParams) {
   );
 }
 
-export function showPackageName(params: GridRenderCellParams) {
+export function showBundleName(params: GridRenderCellParams) {
   return (
     <React.Fragment>
       {renderCell(
         params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={9} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightBold',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.name}
-              </Typography>
-            </Grid>
+        <Grid container sx={{ width: '100%' }}>
+          <Grid item xs={9} sx={{ width: '100%' }}>
+            <Typography
+              variant="body2"
+              color="primary"
+              sx={{
+                fontWeight: 'fontWeightBold',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical' as const,
+              }}
+            >
+              {params.row.name}
+            </Typography>
           </Grid>
-        </>
+        </Grid>
       )}
     </React.Fragment>
   );
@@ -233,15 +202,13 @@ export function showAmountRange(params: GridRenderCellParams) {
     <React.Fragment>
       {renderCell(
         params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={9} sx={{ width: '100%' }}>
-              <Typography variant="body2">
-                {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
-              </Typography>
-            </Grid>
+        <Grid container sx={{ width: '100%' }}>
+          <Grid item xs={9} sx={{ width: '100%' }}>
+            <Typography variant="body2">
+              {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
+            </Typography>
           </Grid>
-        </>
+        </Grid>
       )}
     </React.Fragment>
   );

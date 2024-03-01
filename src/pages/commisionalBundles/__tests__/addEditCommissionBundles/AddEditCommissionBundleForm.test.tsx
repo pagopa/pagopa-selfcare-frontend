@@ -5,17 +5,16 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import AddEditCommissionPackageForm from '../../addEditCommissionPackage/components/AddEditCommissionPackageForm';
 import { mockedTouchpoints } from '../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../services/__mocks__/partyService';
 import { Bundle, TypeEnum } from '../../../../api/generated/portal/Bundle';
-import renderer from 'react-test-renderer';
+import AddEditCommissionBundleForm from "../../addEditCommissionBundle/components/AddEditCommissionBundleForm";
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTaxonomyService: jest.SpyInstance<any, unknown[]>;
-let spyOnCreateCommissionPackage: jest.SpyInstance<any, unknown[]>;
+let spyOnCreateCommissionBundle: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
   spyOnGetPaymentTypes = jest.spyOn(
@@ -30,9 +29,9 @@ beforeEach(() => {
     require('../../../../services/__mocks__/taxonomyService'),
     'getTaxonomies'
   );
-  spyOnCreateCommissionPackage = jest.spyOn(
+  spyOnCreateCommissionBundle = jest.spyOn(
     require('../../../../services/__mocks__/bundleService'),
-    'createCommissionPackage'
+    'createCommissionBundle'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -40,28 +39,14 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<AddEditCommissionPackageForm />', () => {
-  const commissionPackageDetailsMocked: Bundle = {
-    description: 'Pacchetti commissione',
-    maxPaymentAmount: 1500,
-    minPaymentAmount: 150,
-    name: 'Pacchetto 1',
-    paymentAmount: 10,
-    paymentType: undefined,
-    touchpoint: mockedTouchpoints.touchpoints![0].name,
-    transferCategoryList: ['100 - Rendite catastali (ICI, IMU, TUC, ecc.)'],
-    type: TypeEnum.GLOBAL,
-    validityDateFrom: new Date(2050, 9, 27),
-    validityDateTo: new Date(2050, 9, 27),
-  };
-
-  const componentRender = (commPackageDetails?: Bundle) => {
+describe('<AddEditCommissionBundleForm />', () => {
+  const componentRender = (commBundleDetails?: Bundle) => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-packages/add-package/`]}>
-          <Route path="/comm-packages/add-package/">
+        <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
+          <Route path="/comm-bundles/add-bundle/">
             <ThemeProvider theme={theme}>
-              <AddEditCommissionPackageForm commPackageDetails={commPackageDetails} />
+              <AddEditCommissionBundleForm commBundleDetails={commBundleDetails} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -70,10 +55,10 @@ describe('<AddEditCommissionPackageForm />', () => {
 
     const input = {
       public: screen
-        .getByTestId('package-type-test')
+        .getByTestId('bundle-type-test')
         .querySelector('[value="PUBLIC"]') as HTMLInputElement,
       global: screen
-        .getByTestId('package-type-test')
+        .getByTestId('bundle-type-test')
         .querySelector('[value="GLOBAL"]') as HTMLInputElement,
       name: screen.getByTestId('name-test') as HTMLInputElement,
       description: screen.getByTestId('description-test') as HTMLInputElement,
@@ -111,7 +96,7 @@ describe('<AddEditCommissionPackageForm />', () => {
     return input;
   };
 
-  test('Test AddEditCommissionPackageForm with all input change', async () => {
+  test('Test AddEditCommissionBundleForm with all input change', async () => {
     const { ...input } = componentRender();
     await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
 

@@ -53,15 +53,25 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
   const brokerCode = selectedParty?.fiscalCode ?? '';
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
   };
 
   const pageLimit = 5;
-  const getBundleList = () => {
+  const getBundleList = (newPage?: number) => {
     setLoadingStatus(true);
-    getBundleListByPSP(mapBundle(bundleType), pageLimit, bundleNameFilter, page, `PSP${brokerCode}`)
+    if (isFirstRender) {
+      setIsFirstRender(false);
+    }
+    getBundleListByPSP(
+      mapBundle(bundleType),
+      pageLimit,
+      bundleNameFilter,
+      newPage ?? page,
+      `PSP${brokerCode}`
+    )
       .then((res) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
@@ -75,20 +85,22 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   };
 
   useEffect(() => {
-    console.log('SAMU', brokerCode);
-    if (brokerCode) {
-      getBundleList();
-    }
-  }, [brokerCode]);
-
-  useEffect(() => {
-    const identifier = setTimeout(() => {
-      getBundleList();
-    }, 500);
+    const identifier = setTimeout(
+      () => {
+        getBundleList();
+      },
+      isFirstRender ? 0 : 500
+    );
     return () => {
       clearTimeout(identifier);
     };
-  }, [page]);
+  }, [bundleNameFilter, brokerCode]);
+
+  function handleChangePage(value: number) {
+    const newPage = value - 1;
+    setPage(newPage);
+    getBundleList(newPage);
+  }
 
   return (
     <Box
@@ -122,7 +134,9 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
                     color="primary"
                     count={listFiltered?.pageInfo?.total_pages ?? 1}
                     page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                      handleChangePage(value)
+                    }
                   />
                 </>
               ),

@@ -97,7 +97,7 @@ const CommissionBundleDetailPage = () => {
           {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
           <Grid item xs={6}>
             <TitleBox title={commissionBundleDetail.name ?? ''} variantTitle="h4" />
-            <Typography color={'text.disabled'} variant="subtitle1" sx={{ mb: 1 }}>
+            <Typography color={'action.active'} variant="subtitle1" sx={{ mb: 1 }}>
               {commissionBundleDetail.description ?? ''}
             </Typography>
           </Grid>

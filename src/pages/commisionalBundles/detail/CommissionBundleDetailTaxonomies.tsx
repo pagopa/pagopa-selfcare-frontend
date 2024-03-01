@@ -67,7 +67,7 @@ export default function CommissionBundleDetailTaxonomies({
           ?.map((el, i) =>
             i < 4 ? (
               <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1} data-testid="taxonomy-column">
-                <Typography variant="body1" color="text.disabled">
+                <Typography variant="body1" color="action.active">
                   {el.service_type}
                 </Typography>
                 <Typography variant="body1">{el.specific_built_in_data}</Typography>
@@ -100,7 +100,7 @@ export default function CommissionBundleDetailTaxonomies({
               <>
                 {index !== 0 && <Divider />}
                 <Box key={`taxonomies-list-${el.specific_built_in_data}`} mb={1}  data-testid="taxonomy-drawer-column">
-                  <Typography variant="body1" color="text.disabled">
+                  <Typography variant="body1" color="action.active">
                     {el.macro_area_name}
                   </Typography>
                   <Typography variant="body1">{el.service_type}</Typography>

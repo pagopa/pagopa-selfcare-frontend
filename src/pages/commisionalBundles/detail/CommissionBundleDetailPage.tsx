@@ -89,7 +89,7 @@ const CommissionBundleDetailPage = () => {
       <Grid item xs={10} sx={{ backgroundColor: '#F5F6F7' }} pb={8} p={3}>
         <Breadcrumbs>
           <Typography>{t('general.Bundles')}</Typography>
-          <Typography color={'text.disabled'}>
+          <Typography color={'action.active'}>
             {t('commissionBundlesPage.commissionBundleDetail.title')}
           </Typography>
         </Breadcrumbs>

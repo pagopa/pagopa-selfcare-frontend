@@ -3,6 +3,7 @@ import { FormikProps } from 'formik';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
+import { SingleFileInput } from '@pagopa/mui-italia';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -19,6 +20,13 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
+  const handleSelect = (file: File) => {
+    setFile(file);
+  };
+  const handleRemove = () => {
+    setFile(null);
+  };
 
   const addTransferCategoryItem = async () => {
     if (formik.values.transferCategoryList) {
@@ -64,10 +72,23 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         variant="contained"
         onClick={() => setOpenDrawer(true)}
         data-testid="open-taxonomies-drawer"
+        sx={{mb:2}}
       >
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
       </Button>
+      <SingleFileInput
+        value={file}
+        // TODO ADD FILE TYPE RESTRICTION
+        onFileSelected={handleSelect}
+        onFileRemoved={handleRemove}
+        dropzoneLabel={t(
+          'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dropFileText'
+        )}
+        rejectedLabel={t(
+          'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.rejectedFile'
+        )}
+      />
       <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
         <TitleBox
           title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}

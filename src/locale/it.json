@@ -907,7 +907,8 @@
         "addedServices": "Servizi aggiunti",
         "catalogueTitle": "Catalogo servizi",
         "catalogueSubtitle": "Sfoglia il catalogo o cerca per codice di incasso",
-        "filterTitle": "Codice di incasso"
+        "filterTitle": "Codice di incasso",
+        "rejectedFile": "Tipo di file non supportato"
       },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",

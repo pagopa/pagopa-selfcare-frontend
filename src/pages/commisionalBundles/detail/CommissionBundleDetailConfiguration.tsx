@@ -71,7 +71,7 @@ export default function CommissionBundleDetailConfiguration({
     col.map((entry: Array<string>, index: number) => (
       <Box mt={1} key={`config-detail-${entry[0]}`} data-testid="detail-column">
         {isDrawer && (!isFirstColumn || index !== 0) && <Divider />}
-        <Typography variant="body1" color="text.disabled">
+        <Typography variant="body1" color="action.active">
           {t(entry[1])}
         </Typography>
         <Typography variant="body1">

@@ -13,6 +13,7 @@ import {
   getBundleDetailByPSP,
   getBundleListByPSP,
   getTouchpoints,
+  updatePSPBundle,
 } from '../bundleService';
 
 describe('BundleService test mocked', () => {
@@ -34,6 +35,9 @@ describe('BundleService test mocked', () => {
   });
   test('Test deletePSPBundle', async () => {
     expect(deletePSPBundle('pspTaxCode', 'bundleId')).resolves.not.toThrow();
+  });
+  test('Test updatePSPBundle', async () => {
+    expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
   });
 });
 
@@ -71,6 +75,11 @@ describe('BundleService test client', () => {
   test('Test deletePSPBundle', async () => {
     const spyOn = jest.spyOn(BackofficeApi, "deletePSPBundle").mockReturnValue(new Promise((resolve) => resolve()));
     expect(deletePSPBundle('pspTaxCode', 'bundleId')).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test updatePSPBundle', async () => {
+    const spyOn = jest.spyOn(BackofficeApi, "updatePSPBundle").mockReturnValue(new Promise((resolve) => resolve()));
+    expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
 });

@@ -9,7 +9,8 @@ import {
   getCommissionBundleDetails,
   getCommissionBundlePsp,
   getTouchpoints as getTouchpointsMock,
-  deletePSPBundle as deletePSPBundleMock
+  deletePSPBundle as deletePSPBundleMock,
+  updatePSPBundle as updatePSPBundleMock
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -60,5 +61,13 @@ export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<v
     return deletePSPBundleMock();
   } else {
     return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId);
+  }
+};
+
+export const updatePSPBundle = (pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updatePSPBundleMock();
+  } else {
+    return BackofficeApi.updatePSPBundle(pspTaxCode, bundleId, bundle);
   }
 };

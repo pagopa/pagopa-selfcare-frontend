@@ -893,5 +893,10 @@ export const BackofficeApi = {
     deletePSPBundle:  async(pspTaxCode: string, bundleId: string): Promise<void> => {
         const result = await backofficeClient.deletePSPBundle({"psp-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    updatePSPBundle: async(pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+        const result = await backofficeClient.updatePSPBundle({"psp-code": pspTaxCode, "id-bundle": bundleId, body: bundle});
+        return extractResponse(result, 200, onRedirectToLogin);
     }
 };

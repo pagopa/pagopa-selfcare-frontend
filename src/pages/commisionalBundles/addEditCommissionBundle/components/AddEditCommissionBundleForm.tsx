@@ -781,16 +781,16 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     }
                     row
                     data-testid="digital-stamp-test"
-                    value={formik.values.digitalStamp}
+                    value={`${formik.values.digitalStamp}`}
                   >
                     <FormControlLabel
-                      value={false}
+                      value={"false"}
                       control={<Radio />}
                       label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
-                      value={true}
+                      value={"true"}
                       control={<Radio />}
                       disabled={formik.values.digitalStampRestriction}
                       label={t('general.yes')}
@@ -814,16 +814,16 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     }
                     row
                     data-testid="digital-stamp-restriction-test"
-                    value={formik.values.digitalStampRestriction}
+                    value={`${formik.values.digitalStampRestriction}`}
                   >
                     <FormControlLabel
-                      value={false}
+                      value={"false"}
                       control={<Radio />}
                       label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
-                      value={true}
+                      value={"true"}
                       control={<Radio />}
                       disabled={formik.values.digitalStamp}
                       label={t('general.yes')}

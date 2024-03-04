@@ -48,6 +48,11 @@ const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
     const location = useLocation();
     const { isTOSAccepted, acceptTOS } = useTOSAgreementLocalStorage();
+    const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
+
+    if (maintenanceMode) {
+      return <>TODO ADD MAINTENANCE PAGE</>;
+    }
 
     if (!isTOSAccepted && location.pathname !== routes.TOS) {
       return (

@@ -1052,6 +1052,7 @@
       "TO_CHECK_UPDATE": "In revisione"
     },
     "yes": "Sì",
-    "no": "No"
+    "no": "No",
+    "maintenanceAlert": "Si avvisano gli operatori che per aggiornamenti di sistema il portale backoffice sarà indisponibile per le giornate XX dalle ore alle ore"
   }
 }

@@ -66,7 +66,11 @@ export default function CommissionBundleDetailTaxonomies({
           ?.filter((_, i) => i < 3)
           ?.map((el, i) =>
             i < 4 ? (
-              <Box key={`taxonomy-${el.specific_built_in_data}`} mt={1} data-testid="taxonomy-column">
+              <Box
+                key={`taxonomy-${el.specific_built_in_data}`}
+                mt={1}
+                data-testid="taxonomy-column"
+              >
                 <Typography variant="body1" color="action.active">
                   {el.service_type}
                 </Typography>
@@ -99,11 +103,15 @@ export default function CommissionBundleDetailTaxonomies({
             {bundleTaxonomies.map((el, index) => (
               <>
                 {index !== 0 && <Divider />}
-                <Box key={`taxonomies-list-${el.specific_built_in_data}`} mb={1}  data-testid="taxonomy-drawer-column">
+                <Box
+                  key={`taxonomies-list-${el.specific_built_in_data}`}
+                  mb={1}
+                  data-testid="taxonomy-drawer-column"
+                >
                   <Typography variant="body1" color="action.active">
-                    {el.macro_area_name}
+                    {el.service_type}
                   </Typography>
-                  <Typography variant="body1">{el.service_type}</Typography>
+                  <Typography variant="body1">{el.specific_built_in_data}</Typography>
                 </Box>
               </>
             ))}

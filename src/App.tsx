@@ -45,6 +45,7 @@ import AddEditOperationTablePage from './pages/operationTable/addEditOperationTa
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
+import MaintenancePage from './pages/maintenance/MaintenancePage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -55,7 +56,7 @@ const SecuredRoutes = withLogin(
     const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
 
     if (maintenanceMode) {
-      return <>TODO ADD MAINTENANCE PAGE</>;
+      return  <Layout><MaintenancePage /></Layout>;
     }
 
     if (!isTOSAccepted && location.pathname !== routes.TOS) {

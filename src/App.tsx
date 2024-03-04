@@ -8,7 +8,6 @@ import {
   UserNotifyHandle,
 } from '@pagopa/selfcare-common-frontend';
 import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-
 import withLogin from './decorators/withLogin';
 import Layout from './components/Layout/Layout';
 import routes from './routes';
@@ -16,7 +15,6 @@ import ApiKeysPage from './pages/apiKeys/ApiKeysPage';
 import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
 import Auth from './pages/auth/Auth';
 import { TOS } from './pages/tos/TOS';
-
 import TOSWall from './components/TOS/TOSWall';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apiKeys/AddApiKeyPage';
@@ -43,6 +41,7 @@ import AddEditOperationTablePage from './pages/operationTable/addEditOperationTa
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
+import MaintenancePage from './pages/maintenance/MaintenancePage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -51,7 +50,7 @@ const SecuredRoutes = withLogin(
     const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
 
     if (maintenanceMode) {
-      return <>TODO ADD MAINTENANCE PAGE</>;
+      return  <Layout><MaintenancePage /></Layout>;
     }
 
     if (!isTOSAccepted && location.pathname !== routes.TOS) {

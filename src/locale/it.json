@@ -1052,6 +1052,7 @@
       "TO_CHECK_UPDATE": "In revisione"
     },
     "yes": "Sì",
-    "no": "No"
+    "no": "No",
+    "maintenancePageText": "Spiacenti, il portale è in manutenzione dal giorno XX per ore YY"
   }
 }

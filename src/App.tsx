@@ -52,6 +52,11 @@ const SecuredRoutes = withLogin(
     const { t } = useTranslation();
     const { isTOSAccepted, acceptTOS } = useTOSAgreementLocalStorage();
     const [showMaintenanceAlert, setShowMaintenanceAlert] = useState<boolean>(env.get('REACT_APP_ENABLE_MAINTENANCE_ALERT').default('false').asBool());
+    const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
+
+    if (maintenanceMode) {
+      return <>TODO ADD MAINTENANCE PAGE</>;
+    }
 
     if (!isTOSAccepted && location.pathname !== routes.TOS) {
       return (

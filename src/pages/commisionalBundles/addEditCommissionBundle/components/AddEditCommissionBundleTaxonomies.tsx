@@ -15,9 +15,12 @@ import { PaddedDrawer } from '../../../../components/PaddedDrawer';
 
 const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
   const { t } = useTranslation();
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
+  // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [loading, setLoading] = useState(false);
+  const [selectedEC, setSelectedEC] = useState('');
+  const [selectedMacroArea, setSelectedMacroArea] = useState('');
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
@@ -72,7 +75,7 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         variant="contained"
         onClick={() => setOpenDrawer(true)}
         data-testid="open-taxonomies-drawer"
-        sx={{mb:2}}
+        sx={{ mb: 2 }}
       >
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
@@ -113,6 +116,15 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
           label={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.filterTitle')}
           inputProps={{ 'data-testid': 'catalogue-filter' }}
         />
+        {loading ? (
+          <div>loading</div>
+        ) : !selectedEC ? (
+          <div>EC list</div>
+        ) : !selectedMacroArea ? (
+          <div>MacroArea</div>
+        ) : (
+          <div>Taxonomy list</div>
+        )}
       </PaddedDrawer>
     </Paper>
   );

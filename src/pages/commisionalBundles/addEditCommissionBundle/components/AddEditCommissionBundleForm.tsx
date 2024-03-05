@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { FormikProps } from 'formik';
@@ -72,9 +73,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
     mb: 3,
   };
 
-  const getChannelsByBrokerCode = async (selectedBrokerCode: string) => {
+  const getChannelsByBrokerCode = (selectedBrokerCode: string) => {
     setLoadingChannels(true);
-    await getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
+    getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
       .then((data) => {
         if (data) {
           setChannelsId(data);
@@ -98,15 +99,6 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
   };
 
   useEffect(() => {
-    if (formik.values?.idBrokerPsp && brokerDelegationList.length > 0) {
-      getChannelsByBrokerCode(
-        brokerDelegationList?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
-          ?.broker_tax_code ?? ''
-      ).finally(() => {});
-    }
-  }, [brokerDelegationList]);
-
-  useEffect(() => {
     setLoading(true);
     Promise.all([
       getPaymentTypes(),
@@ -122,6 +114,12 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
         }
         if (brokerDelegation && brokerDelegation.length > 0) {
           setBrokerDelegationList(brokerDelegation);
+          if (actionId === FormAction.Edit && formik.values.idBrokerPsp) {
+            getChannelsByBrokerCode(
+              brokerDelegation?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
+                ?.broker_tax_code ?? ''
+            );
+          }
         } else {
           addError({
             id: 'GET_BROKER_DELEGATIONS_DATA',
@@ -157,6 +155,21 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
   }, [selectedParty]);
 
   const shouldDisableDate = (date: Date) => date < new Date();
+
+  function handleBrokerCodesSelection(
+    value: string | null | undefined,
+    formik: FormikProps<BundleRequest>
+  ) {
+    if (value === null || value === undefined) {
+      formik.setFieldValue('idBrokerPsp', '');
+      setChannelsId([]);
+    } else {
+      formik.handleChange('idBrokerPsp')(value);
+      getChannelsByBrokerCode(
+        brokerDelegationList?.find((el) => el.institution_name === value)?.broker_tax_code ?? ''
+      );
+    }
+  }
 
   return (
     <>
@@ -441,17 +454,8 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                     ?.sort((a, b) => a.localeCompare(b))}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   value={formik.values.idBrokerPsp}
-                  onChange={async (_event, value) => {
-                    if (value === null || value === undefined) {
-                      formik.setFieldValue('idBrokerPsp', '');
-                      setChannelsId([]);
-                    } else {
-                      formik.handleChange('idBrokerPsp')(value);
-                      await getChannelsByBrokerCode(
-                        brokerDelegationList?.find((el) => el.institution_name === value)
-                          ?.broker_tax_code ?? ''
-                      );
-                    }
+                  onChange={(_event, value) => {
+                    handleBrokerCodesSelection(value, formik);
                   }}
                   fullWidth
                   renderInput={(params) => (
@@ -528,7 +532,7 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                     }
                     row
                     data-testid="digital-stamp-test"
-                    value={`${formik.values.digitalStamp}`}
+                    value={formik.values.digitalStamp ? `${formik.values.digitalStamp}` : 'false'}
                   >
                     <FormControlLabel
                       value={'false'}
@@ -561,7 +565,11 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                     }
                     row
                     data-testid="digital-stamp-restriction-test"
-                    value={`${formik.values.digitalStampRestriction}`}
+                    value={
+                      formik.values.digitalStampRestriction
+                        ? `${formik.values.digitalStampRestriction}`
+                        : 'false'
+                    }
                   >
                     <FormControlLabel
                       value={'false'}

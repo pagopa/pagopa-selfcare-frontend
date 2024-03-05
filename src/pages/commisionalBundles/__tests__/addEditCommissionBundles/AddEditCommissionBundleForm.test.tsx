@@ -5,33 +5,43 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import { mockedTouchpoints } from '../../../../services/__mocks__/bundleService';
+import {
+  mockedBundleRequest,
+  mockedChannelsIdList,
+} from '../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../services/__mocks__/partyService';
 import { Bundle, TypeEnum } from '../../../../api/generated/portal/Bundle';
-import AddEditCommissionBundleForm from "../../addEditCommissionBundle/components/AddEditCommissionBundleForm";
+import AddEditCommissionBundleForm from '../../addEditCommissionBundle/components/AddEditCommissionBundleForm';
+import { useFormik } from 'formik';
+import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
+import { FormAction } from '../../../../model/CommissionBundle';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
+import { formatDateToDDMMYYYY } from '../../../../utils/common-utils';
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
-let spyOnGetTaxonomyService: jest.SpyInstance<any, unknown[]>;
+let spyOnGetInstitutionService: jest.SpyInstance<any, unknown[]>;
 let spyOnCreateCommissionBundle: jest.SpyInstance<any, unknown[]>;
+let spyOnGetChannelService: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
   spyOnGetPaymentTypes = jest.spyOn(
-    require('../../../../services/__mocks__/configurationService'),
+    require('../../../../services/configurationService'),
     'getPaymentTypes'
   );
-  spyOnGetTouchpoint = jest.spyOn(
-    require('../../../../services/__mocks__/bundleService'),
-    'getTouchpoints'
-  );
-  spyOnGetTaxonomyService = jest.spyOn(
-    require('../../../../services/__mocks__/taxonomyService'),
-    'getTaxonomies'
+  spyOnGetTouchpoint = jest.spyOn(require('../../../../services/bundleService'), 'getTouchpoints');
+  spyOnGetInstitutionService = jest.spyOn(
+    require('../../../../services/institutionService'),
+    'getBrokerDelegation'
   );
   spyOnCreateCommissionBundle = jest.spyOn(
-    require('../../../../services/__mocks__/bundleService'),
-    'createCommissionBundle'
+    require('../../../../services/bundleService'),
+    'createBundle'
+  );
+  spyOnGetChannelService = jest.spyOn(
+    require('../../../../services/channelService'),
+    'getChannelsIdAssociatedToPSP'
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -39,35 +49,62 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
+const TestAddEditCommissionBundleForm = ({
+  formAction,
+  initialValues,
+}: {
+  formAction: string;
+  initialValues?: BundleRequest;
+}) => {
+  const formik = useFormik<Partial<BundleRequest>>({
+    initialValues: initialValues ?? {},
+    onSubmit: async () => jest.fn(),
+    enableReinitialize: true,
+    validateOnBlur: true,
+    validateOnChange: true,
+  });
+  return (
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
+        <Route path="/comm-bundles/add-bundle/">
+          <ThemeProvider theme={theme}>
+            <AddEditCommissionBundleForm formik={formik} actionId={formAction} />
+          </ThemeProvider>
+        </Route>
+      </MemoryRouter>
+    </Provider>
+  );
+};
+
+const bundleName = 'bundleName';
+const bundleDescription = 'description';
+
 describe('<AddEditCommissionBundleForm />', () => {
-  const componentRender = (commBundleDetails?: Bundle) => {
+  const componentRender = (formAction: string, initialValues?: BundleRequest) => {
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
-          <Route path="/comm-bundles/add-bundle/">
-            <ThemeProvider theme={theme}>
-              <AddEditCommissionBundleForm commBundleDetails={commBundleDetails} />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
+      <TestAddEditCommissionBundleForm formAction={formAction} initialValues={initialValues} />
     );
 
     const input = {
       public: screen
         .getByTestId('bundle-type-test')
-        .querySelector('[value="PUBLIC"]') as HTMLInputElement,
+        .querySelector(`[value=${TypeEnum.PUBLIC}]`) as HTMLInputElement,
       global: screen
         .getByTestId('bundle-type-test')
-        .querySelector('[value="GLOBAL"]') as HTMLInputElement,
+        .querySelector(`[value=${TypeEnum.GLOBAL}]`) as HTMLInputElement,
+      private: screen
+        .getByTestId('bundle-type-test')
+        .querySelector(`[value=${TypeEnum.PRIVATE}]`) as HTMLInputElement,
       name: screen.getByTestId('name-test') as HTMLInputElement,
       description: screen.getByTestId('description-test') as HTMLInputElement,
       paymentType: screen.getByTestId('payment-type-test') as HTMLInputElement,
       touchpoint: screen.getByTestId('touchpoint-test') as HTMLInputElement,
-      addTaxonomy: screen.getByTestId('add-taxonomy-test') as HTMLInputElement,
       minImport: screen.getByTestId('min-import-test') as HTMLInputElement,
       maxImport: screen.getByTestId('max-import-test') as HTMLInputElement,
       feeApplied: screen.getByTestId('payment-amount-test') as HTMLInputElement,
+      brokerCodeList: screen
+        .getByTestId('broker-code-test')
+        .querySelector('input') as HTMLInputElement,
       channelList: screen
         .getByTestId('channels-id-test')
         .querySelector('input') as HTMLInputElement,
@@ -83,95 +120,71 @@ describe('<AddEditCommissionBundleForm />', () => {
       digitalStampResNo: screen
         .getByTestId('digital-stamp-restriction-test')
         .querySelector('[value="false"]') as HTMLInputElement,
-      digitalStampRes: screen.getByTestId('digital-stamp-restriction-test') as HTMLInputElement,
       fromDate: screen.getByTestId('from-date-test') as HTMLInputElement,
       ToDate: screen.getByTestId('to-date-test') as HTMLInputElement,
-      tranferCategoryList: screen.getAllByTestId(
-        'transfer-category-list-test'
-      ) as HTMLInputElement[],
-      confirmBtn: screen.getByTestId('confirm-button-test') as HTMLInputElement,
-      cancelBtn: screen.getByTestId('cancel-button-test') as HTMLInputElement,
     };
 
     return input;
   };
 
-  test('Test AddEditCommissionBundleForm with all input change', async () => {
-    const { ...input } = componentRender();
+  test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
+    const { ...input } = componentRender(FormAction.Create);
     await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
-
-    const changeChannelId = () => {
-      fireEvent.mouseDown(input.channelList);
-      fireEvent.select(input.channelList, { target: { value: '97735020584_01' } });
-      expect(input.channelList.value).toBe('97735020584_01');
-    };
-
-    expect(input.public.checked).toBe(false);
-    expect(input.global.checked).toBe(false);
-
-    fireEvent.click(input.global);
-
-    expect(input.public.checked).toBe(false);
-    expect(input.global.checked).toBe(true);
-
-    fireEvent.change(input.name, { target: { value: 'prova' } });
-    fireEvent.change(input.description, { target: { value: 'prova' } });
-
-    // Change paymentType
-
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
+      expect(spyOnGetTouchpoint).toHaveBeenCalled();
+      expect(spyOnGetInstitutionService).toHaveBeenCalled();
+      expect(spyOnGetChannelService).not.toHaveBeenCalled();
     });
 
-    // const selectPaymentTypeBtn = await within(input.paymentType).getByRole('button');
-    // await waitFor(() => fireEvent.mouseDown(selectPaymentTypeBtn));
-    // await waitFor(() => screen.getByText(new RegExp('.*Bonifico - SEPA.*', 'i')));
+    //Change radio group bundle type
+    expect(input.public.checked).toBe(false);
+    expect(input.global.checked).toBe(false);
+    expect(input.private.checked).toBe(false);
 
-    // waitFor(() => fireEvent.click(screen.getByText(new RegExp('.*Bonifico - SEPA.*', 'i'))));
+    fireEvent.click(input.global);
+    expect(input.public.checked).toBe(false);
+    expect(input.global.checked).toBe(true);
+    expect(input.private.checked).toBe(false);
 
-    // expect(selectPaymentTypeBtn.textContent).toBe('Bonifico - SEPA');
+    fireEvent.click(input.public);
+    expect(input.public.checked).toBe(true);
+    expect(input.global.checked).toBe(false);
+    expect(input.private.checked).toBe(false);
+
+    fireEvent.click(input.private);
+    expect(input.public.checked).toBe(false);
+    expect(input.global.checked).toBe(false);
+    expect(input.private.checked).toBe(true);
+
+    // Change input name & description
+    fireEvent.change(input.name, { target: { value: bundleName } });
+    expect(input.name.value).toBe(bundleName);
+    fireEvent.change(input.description, { target: { value: bundleDescription } });
+    expect(input.description.value).toBe(bundleDescription);
+
+    // Change paymentType
+    const selectPaymentTypeBtn = await within(input.paymentType).getByRole('button');
+    await waitFor(() => {
+      fireEvent.mouseDown(selectPaymentTypeBtn);
+      screen.getByText(new RegExp('.*Bonifico - SEPA.*', 'i'));
+      fireEvent.click(screen.getByText(new RegExp('.*Bonifico - SEPA.*', 'i')));
+    });
+    expect(selectPaymentTypeBtn.textContent).toBe('Bonifico - SEPA');
 
     // Change touchpoint
-
+    const selectTouchPointBtn = await within(input.touchpoint).getByRole('button');
     await waitFor(() => {
-      expect(spyOnGetTouchpoint).toHaveBeenCalled();
+      fireEvent.mouseDown(selectTouchPointBtn);
+      screen.getByText(new RegExp('Tutti', 'i'));
+      fireEvent.click(screen.getByText(new RegExp('Tutti', 'i')));
     });
-    // const selectTouchPointBtn = await within(input.touchpoint).getByRole('button');
-    // await waitFor(() => fireEvent.mouseDown(selectTouchPointBtn));
-    // await waitFor(() => screen.getByText(new RegExp('Tutti', 'i')));
+    expect(selectTouchPointBtn.textContent).toBe('Tutti');
 
-    // waitFor(() => fireEvent.click(screen.getByText(new RegExp('Tutti', 'i'))));
-
-    // expect(selectTouchPointBtn.textContent).toBe('Tutti');
-
-    // change taxonomy service
-
-    await waitFor(() => {
-      expect(spyOnGetTaxonomyService).toHaveBeenCalled();
-    });
-
-    // const selectTransCategoryListFirstBtn = await within(input.tranferCategoryList[0]).getByRole(
-    //   'button'
-    // );
-    // await waitFor(() => fireEvent.mouseDown(selectTransCategoryListFirstBtn));
-
-    // await waitFor(() => screen.getByText(new RegExp('.*Rendite catastali.*', 'i')));
-
-    // waitFor(() => fireEvent.click(screen.getByText(new RegExp('Rendite catastali', 'i'))));
-
-    // expect(selectTransCategoryListFirstBtn.textContent).toBe(
-    //   '100 - Rendite catastali (ICI, IMU, TUC, ecc.)'
-    // );
-
-    // fireEvent.click(input.addTaxonomy);
-
-    // const removePaymentMethod = screen.getByTestId('remove-payment-method1') as HTMLButtonElement;
-    // fireEvent.click(removePaymentMethod);
-
-    // change input number
-
+    // Change min import number
     fireEvent.change(input.minImport, { target: { value: 10 } });
     expect(parseFloat(input.minImport.value)).toBe(10);
+    // Change max import number
     fireEvent.change(input.maxImport, { target: { value: 10 } });
     expect(parseFloat(input.maxImport.value)).toBe(10);
 
@@ -181,37 +194,58 @@ describe('<AddEditCommissionBundleForm />', () => {
     fireEvent.change(input.feeApplied, { target: { value: 10.8 } });
     expect(input.feeApplied.value).toBe('10,8');
 
-    // change channel id
+    // Change broker code list
+    expect(input.channelList.disabled).toBe(true);
+    fireEvent.mouseDown(input.brokerCodeList);
+    fireEvent.select(input.brokerCodeList, {
+      target: { value: mockedDelegatedPSP[1].institution_name },
+    });
+    expect(input.brokerCodeList.value).toBe(mockedDelegatedPSP[1].institution_name);
+    // await waitFor(() => {
+    //   expect(spyOnGetChannelService).toBeCalled();
+    // });
 
-    // changeChannelId();
+    // Change channel id
+    fireEvent.mouseDown(input.channelList);
+    fireEvent.select(input.channelList, { target: { value: mockedChannelsIdList[0] } });
+    expect(input.channelList.value).toBe(mockedChannelsIdList[0]);
 
     // const closeIcon = screen.getByTestId('CloseIcon');
     // fireEvent.click(closeIcon);
 
     // expect(input.channelList.value).toBe('');
 
-    changeChannelId();
-
-    // change radio buttons
-
+    //Change radio buttons digitalStamp
     expect(input.digitalStampYes.checked).toBe(false);
     expect(input.digitalStampNo.checked).toBe(true);
+    expect(input.digitalStampResYes.disabled).toBe(false);
 
     fireEvent.click(input.digitalStampYes);
-
     expect(input.digitalStampYes.checked).toBe(true);
     expect(input.digitalStampNo.checked).toBe(false);
+    expect(input.digitalStampResYes.disabled).toBe(true);
 
+    fireEvent.click(input.digitalStampNo);
+    expect(input.digitalStampYes.checked).toBe(false);
+    expect(input.digitalStampNo.checked).toBe(true);
+    expect(input.digitalStampResYes.disabled).toBe(false);
+
+    //Change radio buttons digitalStampRes
     expect(input.digitalStampResYes.checked).toBe(false);
     expect(input.digitalStampResNo.checked).toBe(true);
+    expect(input.digitalStampYes.disabled).toBe(false);
 
     fireEvent.click(input.digitalStampResYes);
-
     expect(input.digitalStampResYes.checked).toBe(true);
     expect(input.digitalStampResNo.checked).toBe(false);
+    expect(input.digitalStampYes.disabled).toBe(true);
 
-    //change dates
+    fireEvent.click(input.digitalStampResNo);
+    expect(input.digitalStampResYes.checked).toBe(false);
+    expect(input.digitalStampResNo.checked).toBe(true);
+    expect(input.digitalStampYes.disabled).toBe(false);
 
+    // Change dates
     const formatDate = (date: Date) => {
       const day = date.getDate().toString().padStart(2, '0');
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -227,16 +261,83 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     fireEvent.change(input.ToDate, { target: { value: formatDate(toDate) } });
     expect(input.ToDate.value).toBe('28/10/2028');
+  });
 
-    fireEvent.submit(input.confirmBtn);
-    fireEvent.click(input.cancelBtn);
+  test('Test AddEditCommissionBundleForm with all input change in EDIT', async () => {
+    const { ...input } = componentRender(FormAction.Edit, mockedBundleRequest);
+    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    await waitFor(() => {
+      expect(spyOnGetPaymentTypes).toHaveBeenCalled();
+      expect(spyOnGetTouchpoint).toHaveBeenCalled();
+      expect(spyOnGetInstitutionService).toHaveBeenCalled();
+      expect(spyOnGetChannelService).toHaveBeenCalled();
+    });
+
+    //Check radio group bundle type
+    expect(input.public.disabled).toBe(true);
+    expect(input.global.disabled).toBe(true);
+    expect(input.private.disabled).toBe(true);
+
+    expect(input.public.checked).toBe(false);
+    expect(input.global.checked).toBe(true);
+    expect(input.private.checked).toBe(false);
+
+    // Check input name & description
+    expect(input.name.value).toBe(mockedBundleRequest.name);
+    expect(input.description.value).toBe(mockedBundleRequest.description);
+
+    // Check paymentType
+    //TODO FIX DEFAULT LIST
+    // const selectPaymentTypeBtn = await within(input.paymentType).getByRole('button');
+    // expect(selectPaymentTypeBtn.textContent).toBe(mockedBundleRequest.paymentType);
+
+    // Check touchpoint
+    //TODO FIX DEFAULT LIST
+    // const selectTouchPointBtn = await within(input.touchpoint).getByRole('button');
+    // expect(selectTouchPointBtn.textContent).toBe(mockedBundleRequest.paymentType);
+
+    // Check min import number
+    expect(input.minImport.value).toBe(mockedBundleRequest.minPaymentAmount?.toString().replace(".", ","));
+    // Check max import number
+    expect(input.maxImport.value).toBe(mockedBundleRequest.maxPaymentAmount?.toString().replace(".", ","));
+
+    expect(input.feeApplied.value).toBe(mockedBundleRequest.paymentAmount?.toString().replace(".", ","));
+
+    // Check broker code list
+    expect(input.brokerCodeList.value).toBe(mockedBundleRequest.idBrokerPsp);
+
+    // Check channel id
+    expect(input.channelList.value).toBe(mockedBundleRequest.idChannel);
+
+    //Check radio buttons digitalStamp
+    expect(input.digitalStampYes.checked).toBe(false);
+    expect(input.digitalStampNo.checked).toBe(true);
+
+    expect(input.digitalStampYes.disabled).toBe(true);
+
+    //Check radio buttons digitalStampRes
+    expect(input.digitalStampResYes.checked).toBe(true);
+    expect(input.digitalStampResNo.checked).toBe(false);
+
+    expect(input.digitalStampResYes.disabled).toBe(false);
+
+    fireEvent.click(input.digitalStampResYes);
+    expect(input.digitalStampResYes.checked).toBe(true);
+    expect(input.digitalStampResNo.checked).toBe(false);
+    expect(input.digitalStampYes.disabled).toBe(true);
+
+    // Check dates
+    expect(input.fromDate.disabled).toBe(true);
+    expect(input.fromDate.value).toBe(formatDateToDDMMYYYY(mockedBundleRequest.validityDateFrom));
+
+    expect(input.ToDate.value).toBe(formatDateToDDMMYYYY(mockedBundleRequest.validityDateTo));
   });
 
   test('Test fetch error getPaymentTypes', async () => {
     const mockError = new Error('API error message getPaymentTypes');
     spyOnGetPaymentTypes.mockRejectedValue(mockError);
 
-    componentRender();
+    componentRender(FormAction.Create);
 
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
@@ -247,21 +348,21 @@ describe('<AddEditCommissionBundleForm />', () => {
     const mockError = new Error('API error message GetTouchpoint');
     spyOnGetTouchpoint.mockRejectedValue(mockError);
 
-    componentRender();
+    componentRender(FormAction.Create);
 
     await waitFor(() => {
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
     });
   });
 
-  test('Test fetch error getTaxonomyService', async () => {
-    const mockError = new Error('API error message GetTaxonomyService');
-    spyOnGetTaxonomyService.mockRejectedValue(mockError);
+  test('Test fetch error getBrokerDelegation', async () => {
+    const mockError = new Error('API error message getBrokerDelegation');
+    spyOnGetInstitutionService.mockRejectedValue(mockError);
 
-    componentRender();
+    componentRender(FormAction.Create);
 
     await waitFor(() => {
-      expect(spyOnGetTaxonomyService).toHaveBeenCalled();
+      expect(spyOnGetInstitutionService).toHaveBeenCalled();
     });
   });
 });

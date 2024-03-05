@@ -275,10 +275,10 @@ const AddEditCommissionBundlePage = () => {
             </Stepper>
           </div>
         </Box>
-        <div style={{ display: activeStep !== 0 ? 'none' : undefined }}>
+        <div style={{ display: activeStep !== 0 ? 'none' : undefined }} data-testid="bundle-form-div">
           <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
         </div>
-        <div style={{ display: activeStep !== 1 ? 'none' : undefined }}>
+        <div style={{ display: activeStep !== 1 ? 'none' : undefined }} data-testid="bundle-taxonomies-div">
           <AddEditCommissionBundleTaxonomies {...formik} />
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>

@@ -742,7 +742,7 @@
     "validityDate": "Periodo di validità",
     "from": "Data inizio",
     "to": "Data fine",
-    "ecData": "Dati ente crerditore",
+    "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
     "buttons": {
       "edit": "Modifica",

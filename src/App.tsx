@@ -45,6 +45,7 @@ import AddEditOperationTablePage from './pages/operationTable/addEditOperationTa
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
+import MaintenancePage from './pages/maintenance/MaintenancePage';
 
 const SecuredRoutes = withLogin(
   withSelectedPartyProducts(() => {
@@ -52,6 +53,11 @@ const SecuredRoutes = withLogin(
     const { t } = useTranslation();
     const { isTOSAccepted, acceptTOS } = useTOSAgreementLocalStorage();
     const [showMaintenanceAlert, setShowMaintenanceAlert] = useState<boolean>(env.get('REACT_APP_ENABLE_MAINTENANCE_ALERT').default('false').asBool());
+    const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
+
+    if (maintenanceMode) {
+      return  <Layout><MaintenancePage /></Layout>;
+    }
 
     if (!isTOSAccepted && location.pathname !== routes.TOS) {
       return (

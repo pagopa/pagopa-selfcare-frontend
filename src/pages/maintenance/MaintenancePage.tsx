@@ -16,7 +16,9 @@ export default function MaintenancePage() {
       flexDirection="column"
     >
       <EngineeringOutlinedIcon sx={{ fill: 'rgb(0, 197, 202)', width: 140, height: 140 }} />
-      <Typography variant="body1">{t('general.maintenancePageText')}</Typography>
+      <Typography variant="body1">
+         <div dangerouslySetInnerHTML={{ __html: t(`general.maintenancePageText`) }} />
+      </Typography>
     </Box>
   );
 }

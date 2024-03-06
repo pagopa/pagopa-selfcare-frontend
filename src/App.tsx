@@ -76,7 +76,7 @@ const SecuredRoutes = withLogin(
               </IconButton>
             }
           >
-            {t(`general.maintenanceAlert`)}
+            <div dangerouslySetInnerHTML={{ __html: t(`general.maintenanceAlert`) }} />
           </Alert>
         )}
         <Layout>

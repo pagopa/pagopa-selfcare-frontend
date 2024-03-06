@@ -1052,6 +1052,8 @@
       "TO_CHECK_UPDATE": "In revisione"
     },
     "yes": "Sì",
-    "no": "No"
+    "no": "No",
+    "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
+    "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
   }
 }

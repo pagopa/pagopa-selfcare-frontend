@@ -23,7 +23,7 @@ import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
-import { TypeEnum } from '../../../api/generated/portal/Bundle';
+import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import {
@@ -36,6 +36,12 @@ import {
   LOADING_TASK_CREATING_COMMISSION_BUNDLE,
 } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
+import { TaxonomyGroup } from '../../../api/generated/portal/TaxonomyGroup';
+import { TaxonomyGroups } from '../../../api/generated/portal/TaxonomyGroups';
+import {
+  getTaxonomyGroups,
+} from '../../../services/taxonomyService';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
@@ -61,6 +67,26 @@ const initialFormData = (selectedParty: Party | undefined, detail?: BundleReques
   validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
   pspBusinessName: selectedParty?.description ?? '',
 });
+
+const toNewFormData = (data?: BundleResource) => ({
+  description: data?.description,
+  digitalStamp: data?.digitalStamp,
+  digitalStampRestriction: data?.digitalStampRestriction,
+  idBrokerPsp: data?.idBrokerPsp,
+  idChannel: data?.idChannel,
+  maxPaymentAmount: data?.maxPaymentAmount,
+  minPaymentAmount: data?.minPaymentAmount,
+  name: data?.name,
+  paymentAmount: data?.paymentAmount,
+  paymentType: data?.paymentType,
+  touchpoint: data?.touchpoint,
+  transferCategoryList: data?.transferCategoryList ?
+   data.transferCategoryList.map(item => item.specific_built_in_data) : [''],
+  type: data?.type,
+  validityDateFrom: data?.validityDateFrom,
+  validityDateTo: data?.validityDateTo,
+});
+
 
 const validate = (values: Partial<BundleRequest>, t: TFunction<'translation'>) =>
   Object.fromEntries(
@@ -141,6 +167,7 @@ const AddEditCommissionBundlePage = () => {
   >();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialFormData(selectedParty, commissionBundleDetails),
@@ -196,13 +223,42 @@ const AddEditCommissionBundlePage = () => {
   };
 
   useEffect(() => {
+      setLoading(true);
+      getTaxonomyGroups(undefined, selectedParty?.partyId, ["EC"])
+          .then((data) => {
+              if (data && data.taxonomyGroups) {
+                  setTaxonomyGroups([...data.taxonomyGroups]);
+              }
+          })
+          .catch((reason) =>
+              addError({
+                  id: 'GET_TAXONOMY_GROUP_LIST',
+                  blocking: false,
+                  error: reason,
+                  techDescription: `An error occurred while retrieving taxonomy groups list`,
+                  toNotify: true,
+                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+                  displayableDescription: t(
+                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+                  ),
+                  component: 'Toast',
+              })
+          )
+          .finally(() => setLoading(false));
+
+      setLoading(false);
+  }, []);
+
+
+  useEffect(() => {
     if (bundleId && actionId === FormAction.Edit) {
       setLoading(true);
       const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
       getBundleDetailByPSP(pspTaxCode, bundleId)
         .then(async (data) => {
-          setCommissionBundleDetails(data);
-          await formik.setValues(data);
+          const newFormData = toNewFormData(data);
+          setCommissionBundleDetails(newFormData);
+          await formik.setValues(newFormData);
         })
         .catch((reason: Error) => {
           addError({
@@ -279,7 +335,7 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
         </div>
         <div style={{ display: activeStep !== 1 ? 'none' : undefined }} data-testid="bundle-taxonomies-div">
-          <AddEditCommissionBundleTaxonomies {...formik} />
+          <AddEditCommissionBundleTaxonomies formik={formik} taxonomyGroups={taxonomyGroups} />
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>

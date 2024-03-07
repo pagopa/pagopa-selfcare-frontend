@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useErrorDispatcher, TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
-import { Bundle } from '../../../api/generated/portal/Bundle';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';
 import { getTaxonomies } from '../../../services/taxonomyService';
@@ -12,7 +12,7 @@ import { getTaxonomies } from '../../../services/taxonomyService';
 export default function CommissionBundleDetailTaxonomies({
   bundleDetail,
 }: {
-  bundleDetail: Bundle;
+  bundleDetail: BundleResource;
 }) {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
@@ -22,10 +22,11 @@ export default function CommissionBundleDetailTaxonomies({
 
   useEffect(() => {
     if (bundleDetail?.transferCategoryList && bundleDetail?.transferCategoryList?.length > 0) {
-      getTaxonomies()
+      getTaxonomies(undefined, undefined, undefined, false)
         .then((data) => {
           const filteredTaxonomies = data?.taxonomies?.filter((el) =>
-            bundleDetail.transferCategoryList?.includes(el.specific_built_in_data)
+            bundleDetail.transferCategoryList?.some(
+                transferCategory => transferCategory.specific_built_in_data === el.specific_built_in_data)
           );
           setBundleTaxonomies(filteredTaxonomies);
         })

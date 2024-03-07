@@ -12,8 +12,14 @@ import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { PaddedDrawer } from '../../../../components/PaddedDrawer';
+import { TaxonomyGroup } from '../../../../api/generated/portal/TaxonomyGroup';
 
-const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
+type Props = {
+  formik: FormikProps<BundleRequest>;
+  taxonomyGroups: Array<TaxonomyGroup>;
+};
+
+const AddEditCommissionBundleTaxonomies = ({ taxonomyGroups, formik }: Props) => {
   const { t } = useTranslation();
   // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const addError = useErrorDispatcher();

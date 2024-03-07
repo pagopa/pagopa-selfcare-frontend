@@ -45,7 +45,7 @@ import { getPaymentTypes } from '../../../../services/configurationService';
 import { getTouchpoints } from '../../../../services/bundleService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
-import { TypeEnum } from '../../../../api/generated/portal/Bundle';
+import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import { FormAction } from '../../../../model/CommissionBundle';
 
 type Props = {

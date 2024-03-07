@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { FormikProps } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
 import { SingleFileInput } from '@pagopa/mui-italia';
@@ -13,13 +13,12 @@ import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { PaddedDrawer } from '../../../../components/PaddedDrawer';
 import { TaxonomyGroup } from '../../../../api/generated/portal/TaxonomyGroup';
+import { TaxonomyGroups } from '../../../../api/generated/portal/TaxonomyGroups';
+import {
+  getTaxonomyGroups,
+} from '../../../../services/taxonomyService';
 
-type Props = {
-  formik: FormikProps<BundleRequest>;
-  taxonomyGroups: Array<TaxonomyGroup>;
-};
-
-const AddEditCommissionBundleTaxonomies = ({ taxonomyGroups, formik }: Props) => {
+const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
   const { t } = useTranslation();
   // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const addError = useErrorDispatcher();
@@ -27,6 +26,7 @@ const AddEditCommissionBundleTaxonomies = ({ taxonomyGroups, formik }: Props) =>
   const [loading, setLoading] = useState(false);
   const [selectedEC, setSelectedEC] = useState('');
   const [selectedMacroArea, setSelectedMacroArea] = useState('');
+  const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
@@ -43,6 +43,33 @@ const AddEditCommissionBundleTaxonomies = ({ taxonomyGroups, formik }: Props) =>
       formik.setFieldValue('transferCategoryList', newArr);
     }
   };
+
+  useEffect(() => {
+      setLoading(true);
+      getTaxonomyGroups()
+          .then((data) => {
+              if (data && data.taxonomyGroups) {
+                  setTaxonomyGroups([...data.taxonomyGroups]);
+              }
+          })
+          .catch((reason) =>
+              addError({
+                  id: 'GET_TAXONOMY_GROUP_LIST',
+                  blocking: false,
+                  error: reason,
+                  techDescription: `An error occurred while retrieving taxonomy groups list`,
+                  toNotify: true,
+                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+                  displayableDescription: t(
+                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+                  ),
+                  component: 'Toast',
+              })
+          )
+          .finally(() => setLoading(false));
+
+      setLoading(false);
+  }, []);
 
   const deleteTransferCategoryItem = async (index: number) => {
     if (formik.values.transferCategoryList) {

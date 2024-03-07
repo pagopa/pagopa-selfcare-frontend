@@ -37,11 +37,6 @@ import {
 } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
-import { TaxonomyGroup } from '../../../api/generated/portal/TaxonomyGroup';
-import { TaxonomyGroups } from '../../../api/generated/portal/TaxonomyGroups';
-import {
-  getTaxonomyGroups,
-} from '../../../services/taxonomyService';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
@@ -167,7 +162,6 @@ const AddEditCommissionBundlePage = () => {
   >();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialFormData(selectedParty, commissionBundleDetails),
@@ -221,34 +215,6 @@ const AddEditCommissionBundlePage = () => {
       setShowConfirmModal(false);
     }
   };
-
-  useEffect(() => {
-      setLoading(true);
-      getTaxonomyGroups(undefined, selectedParty?.partyId, ["EC"])
-          .then((data) => {
-              if (data && data.taxonomyGroups) {
-                  setTaxonomyGroups([...data.taxonomyGroups]);
-              }
-          })
-          .catch((reason) =>
-              addError({
-                  id: 'GET_TAXONOMY_GROUP_LIST',
-                  blocking: false,
-                  error: reason,
-                  techDescription: `An error occurred while retrieving taxonomy groups list`,
-                  toNotify: true,
-                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
-                  displayableDescription: t(
-                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-                  ),
-                  component: 'Toast',
-              })
-          )
-          .finally(() => setLoading(false));
-
-      setLoading(false);
-  }, []);
-
 
   useEffect(() => {
     if (bundleId && actionId === FormAction.Edit) {
@@ -335,7 +301,7 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
         </div>
         <div style={{ display: activeStep !== 1 ? 'none' : undefined }} data-testid="bundle-taxonomies-div">
-          <AddEditCommissionBundleTaxonomies formik={formik} taxonomyGroups={taxonomyGroups} />
+          <AddEditCommissionBundleTaxonomies {...formik} />
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>

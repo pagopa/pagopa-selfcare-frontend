@@ -1,8 +1,8 @@
 import { BackofficeApi } from '../api/BackofficeClient';
-import { Bundle } from '../api/generated/portal/Bundle';
+import { BundleResource } from '../api/generated/portal/BundleResource';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
-import { Bundles } from '../api/generated/portal/Bundles';
+import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   createCommissionBundle,
@@ -20,7 +20,7 @@ export const getBundleListByPSP = (
   bundleName: string,
   page: number,
   pspCode: string
-): Promise<Bundles> => {
+): Promise<BundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundlePsp(bundleName);
   } else {
@@ -47,7 +47,7 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
   }
 };
 
-export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleDetails();
   } else {

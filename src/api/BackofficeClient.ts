@@ -57,13 +57,14 @@ import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
-import { Bundles } from './generated/portal/Bundles';
+import { BundlesResource } from './generated/portal/BundlesResource';
 import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
+import { TaxonomyGroups } from './generated/portal/TaxonomyGroups';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { BundleRequest } from './generated/portal/BundleRequest';
 import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
-import { Bundle } from './generated/portal/Bundle';
+import { BundleResource } from './generated/portal/BundleResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -865,7 +866,7 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
+    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<BundlesResource> => {
         const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-tax-code": pspCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
@@ -880,12 +881,22 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getTaxonomies: async (): Promise<Taxonomies> => {
-        const result = await backofficeClient.getTaxonomies({});
+    getTaxonomyGroups: async (): Promise<TaxonomyGroups> => {
+        const result = await backofficeClient.getTaxonomyGroups({});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+    getTaxonomies: async (ec: string | undefined, area: string | undefined, code: string | undefined, onlyValid: boolean): Promise<Taxonomies> => {
+        const result = await backofficeClient.getTaxonomies({
+              "code": code,
+              "ec": ec,
+              "macro_area": area,
+              "only_valid": onlyValid
+        });
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
         const result = await backofficeClient.getBundleDetailByPSP({"psp-tax-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
     },

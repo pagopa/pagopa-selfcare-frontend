@@ -23,6 +23,9 @@ import {
 import {
   BundleTaxonomiesGroupButton,
 } from './BundleTaxonomiesGroupButton';
+import {
+  BundleTaxonomiesCheckboxButton,
+} from './BundleTaxonomiesCheckboxButton';
 
 const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
   const { t } = useTranslation();
@@ -30,10 +33,13 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState<string>();
   const [taxonomies, setTaxonomies] = useState<Array<Taxonomy>>([]);
   const [selectedEC, setSelectedEC] = useState<TaxonomyGroup>();
   const [selectedMacroArea, setSelectedMacroArea] = useState<TaxonomyGroupArea>();
   const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
+  const [checkedTaxonomies, setCheckedTaxonomies] = useState<Map<string,boolean>>();
+
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
@@ -51,6 +57,14 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
 
   const handleSelectArea = (item: TaxonomyGroupArea) => {
     setSelectedMacroArea(item);
+  };
+
+  const handleSearchText = (item: string) => {
+    setSearchText(item);
+  };
+
+  const handleTaxonomyCheck = (item: Taxonomy) => {
+    // TODO: Check
   };
 
   const addTransferCategoryItem = async () => {
@@ -88,31 +102,35 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   }, []);
 
   useEffect(() => {
-      setLoading(true);
-      getTaxonomies(selectedEC?.ecTypeCode, selectedMacroArea?.macroAreaEcProgressive, "", true)
-          .then((data) => {
-              if (data && data.taxonomies) {
-                  setTaxonomies([...data.taxonomies]);
-              }
-          })
-          .catch((reason) =>
-              addError({
-                  id: 'GET_TAXONOMIES_LIST',
-                  blocking: false,
-                  error: reason,
-                  techDescription: `An error occurred while retrieving taxonomy list`,
-                  toNotify: true,
-                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
-                  displayableDescription: t(
-                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-                  ),
-                  component: 'Toast',
+      if ((selectedEC && selectedMacroArea) || (searchText && searchText.length > 3)) {
+          setLoading(true);
+          getTaxonomies(selectedEC?.ecTypeCode, selectedMacroArea?.macroAreaEcProgressive, searchText, true)
+              .then((data) => {
+                  if (data && data.taxonomies) {
+                      setTaxonomies([...data.taxonomies]);
+                      const map = new Map<string, boolean>();
+                      data.taxonomies.forEach(item => map.set(item.specific_built_in_data, false));
+                      setCheckedTaxonomies(map);
+                  }
               })
-          )
-          .finally(() => setLoading(false));
-
-      setLoading(false);
-  }, [selectedMacroArea]);
+              .catch((reason) =>
+                  addError({
+                      id: 'GET_TAXONOMIES_LIST',
+                      blocking: false,
+                      error: reason,
+                      techDescription: `An error occurred while retrieving taxonomy list`,
+                      toNotify: true,
+                      displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+                      displayableDescription: t(
+                          'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+                      ),
+                      component: 'Toast',
+                  })
+              )
+              .finally(() => setLoading(false));
+            setLoading(false);
+     }
+  }, [selectedMacroArea, searchText]);
 
   const deleteTransferCategoryItem = async (index: number) => {
     if (formik.values.transferCategoryList) {
@@ -180,7 +198,7 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
           fullWidth
           id="catalogue-filter"
           name="catalogue-filter"
-          onChange={(e) => console.log('TODO HANDLE CHANGE', e)}
+          onChange={(e) => handleSearchText(e.target.value)}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -195,10 +213,10 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         {loading ? (
           <div>loading</div>
         ) :
-        !selectedEC ? (
+        (!selectedEC && taxonomies.length === 0) ? (
             <React.Fragment>
                 <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectCI')}
                 </Typography>
                 {taxonomyGroups.map((item) => (
                     <BundleTaxonomiesGroupButton
@@ -210,12 +228,12 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
                 ))}
             </React.Fragment>
         ) :
-        !selectedMacroArea ? (
+        (!selectedMacroArea && taxonomies.length === 0) ? (
             <React.Fragment>
                 <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectArea')}
                 </Typography>
-                {selectedEC.areas?.map((item) => (
+                {selectedEC?.areas?.map((item) => (
                     <BundleTaxonomiesGroupButton
                       key={item.macroAreaEcProgressive}
                       title={item.macroAreaName as string}
@@ -227,13 +245,14 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         ) : (
             <React.Fragment>
                 <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectServices')}
                 </Typography>
                 {taxonomies?.map((item) => (
-                    <BundleTaxonomiesGroupButton
+                    <BundleTaxonomiesCheckboxButton
                       key={item.specific_built_in_data}
                       title={item.specific_built_in_data as string}
-                      action={() => handleSelectArea(item)}
+                      checked={checkedTaxonomies?.get(item.specific_built_in_data)}
+                      action={() => handleTaxonomyCheck(item)}
                       maxCharactersNumberMultiLine={100}
                     />
                 ))}

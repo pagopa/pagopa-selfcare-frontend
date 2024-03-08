@@ -908,7 +908,10 @@
         "catalogueTitle": "Catalogo servizi",
         "catalogueSubtitle": "Sfoglia il catalogo o cerca per codice di incasso",
         "filterTitle": "Codice di incasso",
-        "rejectedFile": "Tipo di file non supportato"
+        "rejectedFile": "Tipo di file non supportato",
+        "selectCI": "Seleziona Ente Creditore",
+        "selectArea": "Seleziona Area",
+        "selectServices": "Seleziona Servizi Di Incasso"
       },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",

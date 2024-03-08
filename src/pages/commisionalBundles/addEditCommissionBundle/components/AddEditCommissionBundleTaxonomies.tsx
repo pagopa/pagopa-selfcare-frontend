@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { FormikProps } from 'formik';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
 import { SingleFileInput } from '@pagopa/mui-italia';
@@ -12,11 +12,17 @@ import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { PaddedDrawer } from '../../../../components/PaddedDrawer';
+import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 import { TaxonomyGroup } from '../../../../api/generated/portal/TaxonomyGroup';
+import { TaxonomyGroupArea } from '../../../../api/generated/portal/TaxonomyGroupArea';
 import { TaxonomyGroups } from '../../../../api/generated/portal/TaxonomyGroups';
 import {
+  getTaxonomies,
   getTaxonomyGroups,
 } from '../../../../services/taxonomyService';
+import {
+  BundleTaxonomiesGroupButton,
+} from './BundleTaxonomiesGroupButton';
 
 const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
   const { t } = useTranslation();
@@ -24,17 +30,27 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState(false);
-  const [selectedEC, setSelectedEC] = useState('');
-  const [selectedMacroArea, setSelectedMacroArea] = useState('');
+  const [taxonomies, setTaxonomies] = useState<Array<Taxonomy>>([]);
+  const [selectedEC, setSelectedEC] = useState<TaxonomyGroup>();
+  const [selectedMacroArea, setSelectedMacroArea] = useState<TaxonomyGroupArea>();
   const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
+
   const handleSelect = (file: File) => {
     setFile(file);
   };
   const handleRemove = () => {
     setFile(null);
+  };
+
+  const handleSelectEC = (item: TaxonomyGroup) => {
+    setSelectedEC(item);
+  };
+
+  const handleSelectArea = (item: TaxonomyGroupArea) => {
+    setSelectedMacroArea(item);
   };
 
   const addTransferCategoryItem = async () => {
@@ -70,6 +86,33 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
 
       setLoading(false);
   }, []);
+
+  useEffect(() => {
+      setLoading(true);
+      getTaxonomies(selectedEC?.ecTypeCode, selectedMacroArea?.macroAreaEcProgressive, "", true)
+          .then((data) => {
+              if (data && data.taxonomies) {
+                  setTaxonomies([...data.taxonomies]);
+              }
+          })
+          .catch((reason) =>
+              addError({
+                  id: 'GET_TAXONOMIES_LIST',
+                  blocking: false,
+                  error: reason,
+                  techDescription: `An error occurred while retrieving taxonomy list`,
+                  toNotify: true,
+                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+                  displayableDescription: t(
+                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+                  ),
+                  component: 'Toast',
+              })
+          )
+          .finally(() => setLoading(false));
+
+      setLoading(false);
+  }, [selectedMacroArea]);
 
   const deleteTransferCategoryItem = async (index: number) => {
     if (formik.values.transferCategoryList) {
@@ -151,12 +194,50 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         />
         {loading ? (
           <div>loading</div>
-        ) : !selectedEC ? (
-          <div>EC list</div>
-        ) : !selectedMacroArea ? (
-          <div>MacroArea</div>
+        ) :
+        !selectedEC ? (
+            <React.Fragment>
+                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                </Typography>
+                {taxonomyGroups.map((item) => (
+                    <BundleTaxonomiesGroupButton
+                      key={item.ecTypeCode}
+                      title={item.ecType as string}
+                      action={() => handleSelectEC(item)}
+                      maxCharactersNumberMultiLine={100}
+                    />
+                ))}
+            </React.Fragment>
+        ) :
+        !selectedMacroArea ? (
+            <React.Fragment>
+                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                </Typography>
+                {selectedEC.areas?.map((item) => (
+                    <BundleTaxonomiesGroupButton
+                      key={item.macroAreaEcProgressive}
+                      title={item.macroAreaName as string}
+                      action={() => handleSelectArea(item)}
+                      maxCharactersNumberMultiLine={100}
+                    />
+                ))}
+            </React.Fragment>
         ) : (
-          <div>Taxonomy list</div>
+            <React.Fragment>
+                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
+                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
+                </Typography>
+                {taxonomies?.map((item) => (
+                    <BundleTaxonomiesGroupButton
+                      key={item.specific_built_in_data}
+                      title={item.specific_built_in_data as string}
+                      action={() => handleSelectArea(item)}
+                      maxCharactersNumberMultiLine={100}
+                    />
+                ))}
+            </React.Fragment>
         )}
       </PaddedDrawer>
     </Paper>

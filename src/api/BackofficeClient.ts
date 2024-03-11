@@ -866,12 +866,12 @@ export const BackofficeApi = {
     },
 
     getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
-        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-tax-code": pspCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     createBundle: async (pspTaxCode: string, bundle: BundleRequest): Promise<BundleCreateResponse> => {
-        const result = await backofficeClient.createBundle({"psp-code": pspTaxCode, body: bundle});
+        const result = await backofficeClient.createBundle({"psp-tax-code": pspTaxCode, body: bundle});
         return extractResponse(result, 201, onRedirectToLogin);
     },
 
@@ -886,12 +886,12 @@ export const BackofficeApi = {
     },
 
     getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<Bundle> => {
-        const result = await backofficeClient.getBundleDetailByPSP({"psp-code": pspTaxCode, "id-bundle": bundleId});
+        const result = await backofficeClient.getBundleDetailByPSP({"psp-tax-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     deletePSPBundle:  async(pspTaxCode: string, bundleId: string): Promise<void> => {
-        const result = await backofficeClient.deletePSPBundle({"psp-code": pspTaxCode, "id-bundle": bundleId});
+        const result = await backofficeClient.deletePSPBundle({"psp-tax-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

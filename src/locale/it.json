@@ -911,7 +911,19 @@
         "rejectedFile": "Tipo di file non supportato",
         "selectCI": "Seleziona Ente Creditore",
         "selectArea": "Seleziona Area",
-        "selectServices": "Seleziona Servizi Di Incasso"
+        "selectServices": "Seleziona Servizi Di Incasso",
+        "selectAll": "Seleziona tutti",
+        "deselectAll": "Deseleziona tutti",
+        "dontKnowHow": "Non sai come preparare il file? ",
+        "downloadExample": "Scarica l'esempio",
+        "removeAreaModal": {
+          "title": "Rimuovi Categoria",
+          "message": "Sarà rimossa l'intera categoria e i relativi servizi di incasso associati"
+        },
+        "removeModal": {
+          "title": "Rimuovi Servizio di incasso",
+          "message": "Sarà rimosso il servizio di incasso"
+        }
       },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",

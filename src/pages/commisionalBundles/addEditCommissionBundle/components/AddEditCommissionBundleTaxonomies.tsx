@@ -4,7 +4,7 @@ import Papa from "papaparse";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
-import { SingleFileInput } from '@pagopa/mui-italia';
+import { SingleFileInput, ButtonNaked } from '@pagopa/mui-italia';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -14,6 +14,8 @@ import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 import GenericModal from '../../../../components/Form/GenericModal';
+import taxonomiesExample from '../../../../data/tos.json';
+
 import {
     BundleTaxonomiesTable
 } from './BundleTaxonomiesTable';
@@ -26,7 +28,21 @@ export interface TaxonomyToRemove {
     area: string;
 }
 
-const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
+type Props = {
+  formik: FormikProps<BundleRequest>;
+  bundleTaxonomies: Array<Taxonomy>;
+};
+
+const reduceTaxonomies = (taxonomies: Array<Taxonomy>) => taxonomies.reduce(
+        (result:any, taxonomy:any) => {
+          const macro_area_name = taxonomy.macro_area_name;
+          const newResult: any = {...result,
+           ...{[macro_area_name]:(result[macro_area_name] ? result[macro_area_name] : [])}};
+          newResult[macro_area_name].push(taxonomy);
+          return newResult;
+        }, {});
+
+const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) => {
   const { t } = useTranslation();
   // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const addError = useErrorDispatcher();
@@ -36,8 +52,18 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [areaToRemove, setAreaToRemove] = useState<string>();
   const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
-  const [taxonomies, setTaxonomies] = useState<Array<Taxonomy>>([]);
+  const [taxonomies, setTaxonomies] = useState<Array<any>>([]);
   const [taxonomyTableData, setTaxonomyTableData] = useState<any>();
+
+  if ((taxonomies === undefined || taxonomies.length === 0) &&
+    (bundleTaxonomies && bundleTaxonomies.length > 0)) {
+    setTaxonomies(bundleTaxonomies);
+  }
+
+  if (taxonomyTableData === undefined &&
+    (bundleTaxonomies && bundleTaxonomies.length > 0)) {
+    setTaxonomyTableData(reduceTaxonomies(bundleTaxonomies));
+  }
 
   const handleSelect = (file: File) => {
     setFile(file);
@@ -54,8 +80,14 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   };
   const handleRemove = () => {
     setFile(null);
-    const elementsToFilter : Array<string> = [];
-    deleteTransferCategoryItem(elementsToFilter);
+    const taxonomyToRemove = taxonomies.filter((item) => item.fromFile)
+        .map((item) => item.specific_built_in_data);
+    const filteredTaxonomies = taxonomies.filter((item) =>
+        item.fromFile === undefined
+    );
+    setTaxonomies(filteredTaxonomies);
+    updateTableData(filteredTaxonomies);
+    deleteTransferCategoryItem(taxonomyToRemove);
   };
 
   const handleAddFromDrawer = async (taxonomiesToAdd: Array<any>) => {
@@ -63,17 +95,12 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         (taxonomy) => !taxonomies.includes(taxonomy.specific_built_in_data));
     const newTaxonomyList = [...taxonomies.values(), ...filteredTaxonomies];
     setTaxonomies(newTaxonomyList);
-    setTaxonomyTableData(
-        newTaxonomyList.reduce(
-        (result:any, taxonomy:any) => {
-          const macro_area_name = taxonomy.macro_area_name;
-          const newResult: any = {...result,
-           ...{[macro_area_name]:(result[macro_area_name] ? result[macro_area_name] : [])}};
-          newResult[macro_area_name].push(taxonomy);
-          return newResult;
-        }, {}));
-
+    updateTableData(newTaxonomyList);
     addTransferCategoryItem(newTaxonomyList.map(taxonomy => taxonomy.specific_built_in_data));
+  };
+
+  const updateTableData = (taxonomies: Array<Taxonomy>) => {
+    setTaxonomyTableData(reduceTaxonomies(taxonomies));
   };
 
   const addTransferCategoryItem = (transferCategoryList: Array<string>) => {
@@ -112,14 +139,9 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
 
   const deleteTaxonomy = (data : TaxonomyToRemove | undefined) => {
      if (data !== undefined) {
-         const taxonomiesToFilter = taxonomyTableData[data.area].map((item: Taxonomy) => item.specific_built_in_data);
-         const {[data.area]: _, ...filtered } = taxonomyTableData;
-         setTaxonomyTableData(Object.assign(
-            {},
-            {...filtered},
-            {[data.area]: taxonomyTableData[data.area].filter((item: Taxonomy) => item.specific_built_in_data !== data.area)}
-         ));
-         setTaxonomies(taxonomies.filter(item => item.specific_built_in_data !== data?.taxonomy));
+         const filteredTaxonomies = taxonomies.filter(item => item.specific_built_in_data !== data?.taxonomy);
+         setTaxonomies(filteredTaxonomies);
+         setTaxonomyTableData(filteredTaxonomies);
          deleteTransferCategoryItem(data !== undefined ? [data.taxonomy] : []);
      }
   };
@@ -169,6 +191,16 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
         )}
       />
 
+      {(file === undefined || file === null) && (
+        <React.Fragment>
+              <Typography variant="body1" mb={1} mt={1}>
+                {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
+                <a href={process.env.PUBLIC_URL +"/file/taxonomiesExample.csv"} download="taxonomiesExample.csv">
+                     {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')} </a>
+              </Typography>
+        </React.Fragment>
+      )}
+
       {(taxonomyTableData && Object.keys(taxonomyTableData).length > 0) && (
         <BundleTaxonomiesTable
             tableData={taxonomyTableData}
@@ -186,7 +218,7 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
       <GenericModal
         title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title')}
         message={t(
-          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title`
+          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.message`
         )}
         openModal={areaToRemove !== undefined && areaToRemove !== null}
         onConfirmLabel={t('general.confirm')}
@@ -201,7 +233,7 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
       <GenericModal
         title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeModal.title')}
         message={t(
-          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeModal.title`
+          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeModal.message`
         )}
         openModal={taxonomyToRemove !== undefined && taxonomyToRemove !== null}
         onConfirmLabel={t('general.confirm')}

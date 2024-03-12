@@ -7,7 +7,7 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import {theme} from '@pagopa/mui-italia';
+import {theme, ButtonNaked} from '@pagopa/mui-italia';
 
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
 import { Taxonomy } from '../../../../../api/generated/portal/Taxonomy';
@@ -46,6 +46,7 @@ export const BundleTaxonomiesDrawer= ({
   const [selectedMacroArea, setSelectedMacroArea] = useState<TaxonomyGroupArea>();
   const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
   const [checkedTaxonomies, setCheckedTaxonomies] = useState<Map<string,boolean>>(new Map());
+  const [checkedTaxonomiesCount, setCheckedTaxonomiesCount] = useState<any>(0);
 
   const handleBackButton = () => {
      if (searchText !== undefined) {
@@ -88,6 +89,19 @@ export const BundleTaxonomiesDrawer= ({
     setCheckedTaxonomies(new Map(checkedTaxonomies.set(
         item.specific_built_in_data,
         !checkedTaxonomies.get(item.specific_built_in_data))));
+    setCheckedTaxonomiesCount(taxonomies.filter(taxonomy =>
+     checkedTaxonomies.get(taxonomy.specific_built_in_data)));
+  };
+
+  const deselectAll = () => {
+    setCheckedTaxonomies(new Map());
+    setCheckedTaxonomiesCount(0);
+  };
+
+  const selectAll = () => {
+    setCheckedTaxonomies(taxonomies.reduce((map, item) =>
+        new Map(map.set(item.specific_built_in_data,true)), new Map()));
+    setCheckedTaxonomiesCount(taxonomies.length);
   };
 
   useEffect(() => {
@@ -213,6 +227,28 @@ export const BundleTaxonomiesDrawer= ({
                 <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
                     {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectServices')}
                 </Typography>
+                {checkedTaxonomiesCount < 1 ?
+                (<ButtonNaked
+                  size="large"
+                  component="button"
+                  onClick={() => selectAll()}
+                  sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
+                  weight="default"
+                  data-testid="add-all-bundle-taxonomies-test"
+                >
+                  {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectAll')}
+                </ButtonNaked>) :
+                (<ButtonNaked
+                           size="large"
+                           component="button"
+                           onClick={() => deselectAll()}
+                           sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
+                           weight="default"
+                           data-testid="remove-all-bundle-taxonomies-test"
+                         >
+                           {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.deselectAll')}
+                         </ButtonNaked>)
+                }
                 {taxonomies?.map((item) => (
                     <BundleTaxonomiesCheckboxButton
                       key={item.specific_built_in_data}
@@ -223,6 +259,7 @@ export const BundleTaxonomiesDrawer= ({
                     />
                 ))}
                 <Button
+                  fullWidth
                   onClick={(e) => handleAdd()}
                   disabled={!(Array.from(checkedTaxonomies?.values())
                                 .some(itemCheck => itemCheck === true))}

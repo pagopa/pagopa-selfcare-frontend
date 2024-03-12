@@ -68,8 +68,7 @@ export const BundleTaxonomiesTable= ({
                                      justifyContent="flex-end"
                                      width="5%"
 
-                                 >
-
+                                >
                                    <IconButton
                                      sx={{
                                        width: '100%',

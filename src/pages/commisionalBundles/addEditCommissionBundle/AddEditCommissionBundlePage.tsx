@@ -25,6 +25,7 @@ import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
 import { FormAction } from '../../../model/CommissionBundle';
 import {
   createBundle,
@@ -39,6 +40,10 @@ import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
+
+export interface AddEditCommissionBundlePageProps {
+    edit?: boolean;
+}
 
 const minDateTomorrow = add(new Date(), { days: 1 });
 
@@ -83,7 +88,7 @@ const toNewFormData = (data?: BundleResource) => ({
 });
 
 
-const validate = (values: Partial<BundleRequest>, t: TFunction<'translation'>) =>
+const validate = (values: Partial<BundleRequest>, edit: boolean | undefined, t: TFunction<'translation'>) =>
   Object.fromEntries(
     Object.entries({
       ...{
@@ -110,7 +115,7 @@ const validate = (values: Partial<BundleRequest>, t: TFunction<'translation'>) =
           : undefined,
         validityDateFrom: !values.validityDateFrom
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : values.validityDateFrom.getTime() < minDateTomorrow.getTime()
+          : (edit === undefined || edit !== true) && (values.validityDateFrom.getTime() < minDateTomorrow.getTime())
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
           : values.validityDateTo &&
             values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -149,7 +154,7 @@ const enableSubmit = (values: BundleRequest) =>
   values.validityDateTo != null &&
   values.validityDateTo.getTime() > 0;
 
-const AddEditCommissionBundlePage = () => {
+const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -162,10 +167,11 @@ const AddEditCommissionBundlePage = () => {
   >();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [bundleTaxonomies, setBundleTaxonomies] = useState<Array<Taxonomy>>([]);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialFormData(selectedParty, commissionBundleDetails),
-    validate: (values) => validate(values, t),
+    validate: (values) => validate(values, edit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
     },
@@ -224,6 +230,10 @@ const AddEditCommissionBundlePage = () => {
         .then(async (data) => {
           const newFormData = toNewFormData(data);
           setCommissionBundleDetails(newFormData);
+          setBundleTaxonomies(data?.transferCategoryList ?
+                data.transferCategoryList.map(item => item) :
+                []
+          );
           await formik.setValues(newFormData);
         })
         .catch((reason: Error) => {
@@ -301,7 +311,7 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
         </div>
         <div style={{ display: activeStep !== 1 ? 'none' : undefined }} data-testid="bundle-taxonomies-div">
-          <AddEditCommissionBundleTaxonomies {...formik} />
+          <AddEditCommissionBundleTaxonomies formik={formik} bundleTaxonomies={bundleTaxonomies}/>
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>

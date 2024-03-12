@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { FormikProps } from 'formik';
+import Papa from "papaparse";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
@@ -11,21 +12,19 @@ import { LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS } from '../../../../utils/c
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
-import { PaddedDrawer } from '../../../../components/PaddedDrawer';
 import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
-import { TaxonomyGroup } from '../../../../api/generated/portal/TaxonomyGroup';
-import { TaxonomyGroupArea } from '../../../../api/generated/portal/TaxonomyGroupArea';
-import { TaxonomyGroups } from '../../../../api/generated/portal/TaxonomyGroups';
+import GenericModal from '../../../../components/Form/GenericModal';
 import {
-  getTaxonomies,
-  getTaxonomyGroups,
-} from '../../../../services/taxonomyService';
+    BundleTaxonomiesTable
+} from './BundleTaxonomiesTable';
 import {
-  BundleTaxonomiesGroupButton,
-} from './BundleTaxonomiesGroupButton';
-import {
-  BundleTaxonomiesCheckboxButton,
-} from './BundleTaxonomiesCheckboxButton';
+    BundleTaxonomiesDrawer
+} from './drawer/BundleTaxonomiesDrawer';
+
+export interface TaxonomyToRemove {
+    taxonomy: string;
+    area: string;
+}
 
 const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) => {
   const { t } = useTranslation();
@@ -33,115 +32,80 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState<string>();
-  const [taxonomies, setTaxonomies] = useState<Array<Taxonomy>>([]);
-  const [selectedEC, setSelectedEC] = useState<TaxonomyGroup>();
-  const [selectedMacroArea, setSelectedMacroArea] = useState<TaxonomyGroupArea>();
-  const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
-  const [checkedTaxonomies, setCheckedTaxonomies] = useState<Map<string,boolean>>();
-
-
-  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [areaToRemove, setAreaToRemove] = useState<string>();
+  const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
+  const [taxonomies, setTaxonomies] = useState<Array<Taxonomy>>([]);
+  const [taxonomyTableData, setTaxonomyTableData] = useState<any>();
 
   const handleSelect = (file: File) => {
     setFile(file);
+    const reader = new FileReader();
+     // eslint-disable-next-line
+    reader.onload = async ({ target } : any) => {
+        const csv = Papa.parse(target.result, {
+            header: true,
+        });
+        const parsedData = csv?.data.map((item) => Object.assign({},item,{"fromFile":true}));
+        await handleAddFromDrawer(parsedData);
+    };
+    reader.readAsText(file);
   };
   const handleRemove = () => {
     setFile(null);
+    const elementsToFilter : Array<string> = [];
+    deleteTransferCategoryItem(elementsToFilter);
   };
 
-  const handleSelectEC = (item: TaxonomyGroup) => {
-    setSelectedEC(item);
+  const handleAddFromDrawer = async (taxonomiesToAdd: Array<any>) => {
+    const newTaxonomyList = {...taxonomies.concat(taxonomiesToAdd)};
+    setTaxonomies(newTaxonomyList);
+    setTaxonomyTableData(
+        newTaxonomyList.reduce(
+        (result:any, taxonomy:any) => {
+          const macro_area_name = taxonomy.macro_area_name;
+          const newResult: any = {...result,
+           ...{[macro_area_name]:(result[macro_area_name] ? result[macro_area_name] : [])}};
+          newResult[macro_area_name].push(taxonomy);
+          return newResult;
+        }, {}));
+
+    addTransferCategoryItem(newTaxonomyList.map(taxonomy => taxonomy.specific_built_in_data));
   };
 
-  const handleSelectArea = (item: TaxonomyGroupArea) => {
-    setSelectedMacroArea(item);
-  };
-
-  const handleSearchText = (item: string) => {
-    setSearchText(item);
-  };
-
-  const handleTaxonomyCheck = (item: Taxonomy) => {
-    // TODO: Check
-  };
-
-  const addTransferCategoryItem = async () => {
-    if (formik.values.transferCategoryList) {
-      const newArr = [...formik.values.transferCategoryList, ''];
+  const addTransferCategoryItem = (transferCategoryList: Array<string>) => {
+    if (formik.values.transferCategoryList && transferCategoryList) {
+      console.log(formik.values.transferCategoryList);
+      const newArr = [...formik.values.transferCategoryList, ...transferCategoryList];
       formik.setFieldValue('transferCategoryList', newArr);
     }
   };
 
-  useEffect(() => {
-      setLoading(true);
-      getTaxonomyGroups()
-          .then((data) => {
-              if (data && data.taxonomyGroups) {
-                  setTaxonomyGroups([...data.taxonomyGroups]);
-              }
-          })
-          .catch((reason) =>
-              addError({
-                  id: 'GET_TAXONOMY_GROUP_LIST',
-                  blocking: false,
-                  error: reason,
-                  techDescription: `An error occurred while retrieving taxonomy groups list`,
-                  toNotify: true,
-                  displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
-                  displayableDescription: t(
-                      'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-                  ),
-                  component: 'Toast',
-              })
-          )
-          .finally(() => setLoading(false));
-
-      setLoading(false);
-  }, []);
-
-  useEffect(() => {
-      if ((selectedEC && selectedMacroArea) || (searchText && searchText.length > 3)) {
-          setLoading(true);
-          getTaxonomies(selectedEC?.ecTypeCode, selectedMacroArea?.macroAreaEcProgressive, searchText, true)
-              .then((data) => {
-                  if (data && data.taxonomies) {
-                      setTaxonomies([...data.taxonomies]);
-                      const map = new Map<string, boolean>();
-                      data.taxonomies.forEach(item => map.set(item.specific_built_in_data, false));
-                      setCheckedTaxonomies(map);
-                  }
-              })
-              .catch((reason) =>
-                  addError({
-                      id: 'GET_TAXONOMIES_LIST',
-                      blocking: false,
-                      error: reason,
-                      techDescription: `An error occurred while retrieving taxonomy list`,
-                      toNotify: true,
-                      displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
-                      displayableDescription: t(
-                          'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-                      ),
-                      component: 'Toast',
-                  })
-              )
-              .finally(() => setLoading(false));
-            setLoading(false);
-     }
-  }, [selectedMacroArea, searchText]);
-
-  const deleteTransferCategoryItem = async (index: number) => {
-    if (formik.values.transferCategoryList) {
-      const newArr = [...formik.values.transferCategoryList];
-      if (index > -1 && index < formik.values.transferCategoryList.length) {
-        // eslint-disable-next-line functional/immutable-data
-        newArr.splice(index, 1);
-      }
+  const deleteTransferCategoryItem = (elementsToFilter: Array<string>) => {
+    if (formik.values.transferCategoryList && elementsToFilter) {
+      const newArr = formik.values.transferCategoryList.filter(
+        item => !elementsToFilter.includes(item));
       formik.setFieldValue('transferCategoryList', newArr);
     }
   };
+
+  const openAreaModalAction = (area: string) => {
+    setAreaToRemove(area);
+  };
+
+  const openTaxonomyModalAction = (data : TaxonomyToRemove) => {
+    setTaxonomyToRemove(data);
+  };
+
+  const deleteArea = (area: string | undefined) => {
+
+  };
+
+  const deleteTaxonomy = (data : TaxonomyToRemove | undefined) => {
+
+  };
+
   return (
     <Paper
       elevation={0}
@@ -186,79 +150,51 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
           'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.rejectedFile'
         )}
       />
-      <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
-        <TitleBox
-          title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}
-          variantTitle="h5"
+
+      {(taxonomyTableData && Object.keys(taxonomyTableData).length > 0) && (
+        <BundleTaxonomiesTable
+            tableData={taxonomyTableData}
+            deleteAreaAction={openAreaModalAction}
+            deleteTaxonomyAction={openTaxonomyModalAction}
         />
-        <Typography variant="body1" mb={2}>
-          {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueSubtitle')}
-        </Typography>
-        <TextField
-          fullWidth
-          id="catalogue-filter"
-          name="catalogue-filter"
-          onChange={(e) => handleSearchText(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          size="small"
-          label={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.filterTitle')}
-          inputProps={{ 'data-testid': 'catalogue-filter' }}
-        />
-        {loading ? (
-          <div>loading</div>
-        ) :
-        (!selectedEC && taxonomies.length === 0) ? (
-            <React.Fragment>
-                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectCI')}
-                </Typography>
-                {taxonomyGroups.map((item) => (
-                    <BundleTaxonomiesGroupButton
-                      key={item.ecTypeCode}
-                      title={item.ecType as string}
-                      action={() => handleSelectEC(item)}
-                      maxCharactersNumberMultiLine={100}
-                    />
-                ))}
-            </React.Fragment>
-        ) :
-        (!selectedMacroArea && taxonomies.length === 0) ? (
-            <React.Fragment>
-                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectArea')}
-                </Typography>
-                {selectedEC?.areas?.map((item) => (
-                    <BundleTaxonomiesGroupButton
-                      key={item.macroAreaEcProgressive}
-                      title={item.macroAreaName as string}
-                      action={() => handleSelectArea(item)}
-                      maxCharactersNumberMultiLine={100}
-                    />
-                ))}
-            </React.Fragment>
-        ) : (
-            <React.Fragment>
-                <Typography pt={3} pb={3} ml={'10px'} lineHeight={1.3} fontWeight={'fontWeightMedium'}>
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectServices')}
-                </Typography>
-                {taxonomies?.map((item) => (
-                    <BundleTaxonomiesCheckboxButton
-                      key={item.specific_built_in_data}
-                      title={item.specific_built_in_data as string}
-                      checked={checkedTaxonomies?.get(item.specific_built_in_data)}
-                      action={() => handleTaxonomyCheck(item)}
-                      maxCharactersNumberMultiLine={100}
-                    />
-                ))}
-            </React.Fragment>
+      )}
+
+      <BundleTaxonomiesDrawer
+        openDrawer={openDrawer}
+        setOpenDrawer={setOpenDrawer}
+        addAction={handleAddFromDrawer}
+      />
+
+      <GenericModal
+        title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title')}
+        message={t(
+          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title`
         )}
-      </PaddedDrawer>
+        openModal={areaToRemove !== undefined && areaToRemove !== null}
+        onConfirmLabel={t('general.confirm')}
+        onCloseLabel={t('general.cancel')}
+        handleCloseModal={() => setAreaToRemove(undefined)}
+        handleConfirm={async () => {
+          deleteArea(areaToRemove);
+          setAreaToRemove(undefined);
+        }}
+      />
+
+      <GenericModal
+        title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeModal.title')}
+        message={t(
+          `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeModal.title`
+        )}
+        openModal={taxonomyToRemove !== undefined && taxonomyToRemove !== null}
+        onConfirmLabel={t('general.confirm')}
+        onCloseLabel={t('general.cancel')}
+        handleCloseModal={() => setTaxonomyToRemove(undefined)}
+        handleConfirm={async () => {
+          deleteTaxonomy(taxonomyToRemove);
+          setTaxonomyToRemove(undefined);
+        }}
+      />
+
     </Paper>
   );
 };

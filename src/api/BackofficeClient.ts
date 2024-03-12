@@ -888,8 +888,8 @@ export const BackofficeApi = {
 
     getTaxonomies: async (ec: string | undefined, area: string | undefined, code: string | undefined, onlyValid: boolean): Promise<Taxonomies> => {
         const result = await backofficeClient.getTaxonomies({
-              "code": code,
-              "ec": ec,
+              code,
+              ec,
               "macro_area": area,
               "only_valid": onlyValid
         });

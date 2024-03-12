@@ -48,7 +48,18 @@ export const BundleTaxonomiesDrawer= ({
   const [checkedTaxonomies, setCheckedTaxonomies] = useState<Map<string,boolean>>(new Map());
 
   const handleBackButton = () => {
-
+     if (searchText !== undefined) {
+        setSearchText(undefined);
+        setCheckedTaxonomies(new Map());
+        setTaxonomies([]);
+     }
+     else if (selectedMacroArea !== undefined) {
+        setSelectedMacroArea(undefined);
+        setCheckedTaxonomies(new Map());
+        setTaxonomies([]);
+     } else if (selectedEC !== undefined) {
+        setSelectedEC(undefined);
+     }
   };
 
   const handleAdd = () => {

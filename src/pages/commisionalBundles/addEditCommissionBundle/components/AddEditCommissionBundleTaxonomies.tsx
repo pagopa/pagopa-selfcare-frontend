@@ -59,7 +59,9 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   };
 
   const handleAddFromDrawer = async (taxonomiesToAdd: Array<any>) => {
-    const newTaxonomyList = {...taxonomies.concat(taxonomiesToAdd)};
+    const filteredTaxonomies = taxonomiesToAdd.filter(
+        (taxonomy) => !taxonomies.includes(taxonomy.specific_built_in_data));
+    const newTaxonomyList = [...taxonomies.values(), ...filteredTaxonomies];
     setTaxonomies(newTaxonomyList);
     setTaxonomyTableData(
         newTaxonomyList.reduce(
@@ -99,11 +101,27 @@ const AddEditCommissionBundleTaxonomies = (formik: FormikProps<BundleRequest>) =
   };
 
   const deleteArea = (area: string | undefined) => {
-
+     if (area !== undefined) {
+         const taxonomiesToFilter = taxonomyTableData[area].map((item: Taxonomy) => item.specific_built_in_data);
+         const { [area]: _ , ...filtered } = taxonomyTableData;
+         setTaxonomyTableData({...filtered});
+         setTaxonomies(taxonomies.filter(item => !taxonomiesToFilter.includes(item.specific_built_in_data)));
+         deleteTransferCategoryItem(taxonomiesToFilter);
+     }
   };
 
   const deleteTaxonomy = (data : TaxonomyToRemove | undefined) => {
-
+     if (data !== undefined) {
+         const taxonomiesToFilter = taxonomyTableData[data.area].map((item: Taxonomy) => item.specific_built_in_data);
+         const {[data.area]: _, ...filtered } = taxonomyTableData;
+         setTaxonomyTableData(Object.assign(
+            {},
+            {...filtered},
+            {[data.area]: taxonomyTableData[data.area].filter((item: Taxonomy) => item.specific_built_in_data !== data.area)}
+         ));
+         setTaxonomies(taxonomies.filter(item => item.specific_built_in_data !== data?.taxonomy));
+         deleteTransferCategoryItem(data !== undefined ? [data.taxonomy] : []);
+     }
   };
 
   return (

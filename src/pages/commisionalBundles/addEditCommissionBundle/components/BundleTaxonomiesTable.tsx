@@ -75,7 +75,7 @@ export const BundleTaxonomiesTable= ({
                                        width: '100%',
                                        '&:hover': { backgroundColor: 'transparent !important' },
                                      }}
-                                     onClick={(e) => deleteAreaAction(taxonomyArea)}
+                                     onClick={(e) => deleteAreaAction(item)}
                                    >
                                      <DeleteOutlined sx={{ color: 'red', fontSize: '24px' }} />
                                    </IconButton>
@@ -95,6 +95,9 @@ export const BundleTaxonomiesTable= ({
                                               width: '100%',
                                               '&:hover': { backgroundColor: 'transparent !important' },
                                             }}
+                                            onClick={(e) => deleteTaxonomyAction(
+                                                {"taxonomy":taxonomy.specific_built_in_data,"area":item})
+                                            }
                                           >
                                             <RemoveCircleOutlineOutlined sx={{ color: 'red', fontSize: '24px' }} />
                                           </IconButton>

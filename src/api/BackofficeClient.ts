@@ -56,19 +56,20 @@ import {PaymentType} from "./generated/portal/PaymentType";
 import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
-import { ProblemJson } from './generated/portal/ProblemJson';
-import { Bundles } from './generated/portal/Bundles';
-import { Touchpoints } from './generated/portal/Touchpoints';
-import { Taxonomies } from './generated/portal/Taxonomies';
-import { WithDefaultsT, createClient } from './generated/portal/client';
-import { BundleRequest } from './generated/portal/BundleRequest';
-import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
-import { Bundle } from './generated/portal/Bundle';
+import {ProblemJson} from './generated/portal/ProblemJson';
+import {Bundles} from './generated/portal/Bundles';
+import {Touchpoints} from './generated/portal/Touchpoints';
+import {Taxonomies} from './generated/portal/Taxonomies';
+import {createClient, WithDefaultsT} from './generated/portal/client';
+import {BundleRequest} from './generated/portal/BundleRequest';
+import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
+import {Bundle} from './generated/portal/Bundle';
+import {FeatureFlags} from './generated/portal/FeatureFlags';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
-const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation : any) => (params: any) => {
+const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any) => {
     const token = storageTokenOps.read();
     return wrappedOperation({
         ...params,
@@ -220,7 +221,7 @@ export const BackofficeApi = {
         const result = await backofficeClient.getBrokerPsp({'broker-code': brokerpspcode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
-    
+
     getPaymentServiceProviders: async (
         page: number,
         name?: string,
@@ -865,8 +866,14 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
-        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string): Promise<Bundles> => {
+        const result = await backofficeClient.getBundlesByPSP({
+            "bundle-type": [bundleType],
+            "limit": pageLimit,
+            "name": bundleName,
+            page,
+            "psp-code": pspCode
+        });
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -885,13 +892,18 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+    getBundleDetailByPSP: async (pspTaxCode: string, bundleId: string): Promise<Bundle> => {
         const result = await backofficeClient.getBundleDetailByPSP({"psp-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    deletePSPBundle:  async(pspTaxCode: string, bundleId: string): Promise<void> => {
+    deletePSPBundle: async (pspTaxCode: string, bundleId: string): Promise<void> => {
         const result = await backofficeClient.deletePSPBundle({"psp-code": pspTaxCode, "id-bundle": bundleId});
         return extractResponse(result, 200, onRedirectToLogin);
-    }
+    },
+
+    getFeatureFlags: async (): Promise<FeatureFlags> => {
+        const result = await backofficeClient.getFeatureFlags({});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
 };

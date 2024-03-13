@@ -224,7 +224,7 @@ const AddEditCommissionBundlePage = () => {
 
   useEffect(() => {
       setLoading(true);
-      getTaxonomyGroups(undefined, selectedParty?.partyId, ["EC"])
+      getTaxonomyGroups()
           .then((data) => {
               if (data && data.taxonomyGroups) {
                   setTaxonomyGroups([...data.taxonomyGroups]);

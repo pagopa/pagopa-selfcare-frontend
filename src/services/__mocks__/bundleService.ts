@@ -125,7 +125,30 @@ const baseCommissionBundlePspDetail: BundleResource = {
   lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
 };
 
-export const mockedBundleRequest: BundleRequest = {};
+export const mockedBundleRequest: BundleRequest = {
+  digitalStamp: false,
+  digitalStampRestriction: true,
+  idChannel: '97735020584_01',
+  idBrokerPsp: "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
+  name: 'Commission Bundle Name',
+  description: 'Commission bundle description',
+  paymentAmount: 55.56,
+  minPaymentAmount: 40,
+  maxPaymentAmount: 150.1,
+  paymentType: 'Bonifico - SEPA',
+  touchpoint: 'Tutti',
+  transferCategoryList: [
+    '9/0705103TS/',
+    '9/0705102TS/',
+    '9/0712103SP/',
+    '9/1001100TS/',
+    '9/1201106IM/',
+    '9/0702155TS/',
+  ],
+  type: TypeEnum.GLOBAL,
+  validityDateFrom: new Date('2024-02-17'),
+  validityDateTo: new Date('2024-02-22'),
+};
 
 export const mockedCommissionBundlePspDetailGlobal: BundleResource = {
   ...baseCommissionBundlePspDetail,
@@ -182,5 +205,6 @@ export const updateCommissionBundle = (
 
 export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);
 
-export const deletePSPBundle = (): Promise<void> =>
-  new Promise((resolve) => resolve());
+export const deletePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());
+
+export const updatePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());

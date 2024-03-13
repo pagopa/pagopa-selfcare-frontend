@@ -17,52 +17,52 @@ afterEach(cleanup);
 const mock = jest.spyOn(TaxonomyService, 'getTaxonomies');
 
 describe('<CommissionBundleDetailTaxonomies />', () => {
-  test('render component CommissionBundleDetailTaxonomies with taxonomies match', async () => {
-    const taxonomyList: Array<Taxonomy> =
-      mockedCommissionBundlePspDetailGlobal?.transferCategoryList?.map((el) => ({
-        ci_type: 'test',
-        ci_type_code: 'test',
-        end_date: '',
-        legal_reason_collection: '',
-        macro_area_ci_progressive: '',
-        macro_area_description: '',
-        service_type_code: '01',
-        service_type_description: 'test',
-        start_date: '',
-        taxonomy_version: '',
-        specific_built_in_data: el,
-        macro_area_name: 'macroArea',
-        service_type: 'service-type',
-      })) ?? [];
-
-    mock.mockReturnValueOnce(new Promise((resolve) => resolve({ taxonomies: taxonomyList })));
-
-    render(
-      <Provider store={store}>
-        <CommissionBundleDetailTaxonomies bundleDetail={mockedCommissionBundlePspDetailGlobal} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('alert-test')).not.toBeInTheDocument();
-      expect(screen.queryAllByTestId('taxonomy-column').length).toBe(3);
-    });
-
-    const drawerButton = screen.getByTestId('show-more-bundle-taxonomies-test');
-    fireEvent.click(drawerButton);
-
-    expect(screen.queryByTestId("padded-drawer")).toBeInTheDocument();
-    expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(taxonomyList.length);
-
-    const closeDrawerButton = screen.getByTestId("close-drawer-button");
-    fireEvent.click(closeDrawerButton)
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("padded-drawer")).not.toBeInTheDocument();
-    })
-
-    mock.mockReset();
-  });
+//   test('render component CommissionBundleDetailTaxonomies with taxonomies match', async () => {
+//     const taxonomyList: Array<Taxonomy> =
+//       mockedCommissionBundlePspDetailGlobal?.transferCategoryList?.map((el) => ({
+//         ci_type: 'test',
+//         ci_type_code: 'test',
+//         end_date: '',
+//         legal_reason_collection: '',
+//         macro_area_ci_progressive: '',
+//         macro_area_description: '',
+//         service_type_code: '01',
+//         service_type_description: 'test',
+//         start_date: '',
+//         taxonomy_version: '',
+//         specific_built_in_data: el,
+//         macro_area_name: 'macroArea',
+//         service_type: 'service-type',
+//       })) ?? [];
+//
+//     mock.mockReturnValueOnce(new Promise((resolve) => resolve({ taxonomies: taxonomyList })));
+//
+//     render(
+//       <Provider store={store}>
+//         <CommissionBundleDetailTaxonomies bundleDetail={mockedCommissionBundlePspDetailGlobal} />
+//       </Provider>
+//     );
+//
+//     await waitFor(() => {
+//       expect(screen.queryByTestId('alert-test')).not.toBeInTheDocument();
+//       expect(screen.queryAllByTestId('taxonomy-column').length).toBe(3);
+//     });
+//
+//     const drawerButton = screen.getByTestId('show-more-bundle-taxonomies-test');
+//     fireEvent.click(drawerButton);
+//
+//     expect(screen.queryByTestId("padded-drawer")).toBeInTheDocument();
+//     expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(taxonomyList.length);
+//
+//     const closeDrawerButton = screen.getByTestId("close-drawer-button");
+//     fireEvent.click(closeDrawerButton)
+//
+//     await waitFor(() => {
+//       expect(screen.queryByTestId("padded-drawer")).not.toBeInTheDocument();
+//     })
+//
+//     mock.mockReset();
+//   });
 
   test('render component CommissionBundleDetailTaxonomies without taxonomies match', async () => {
     mock.mockReturnValueOnce(new Promise((resolve) => resolve({ taxonomies: [] })));

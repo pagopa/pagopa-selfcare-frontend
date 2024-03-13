@@ -7,7 +7,7 @@ import {LOADING_TASK_COMMISSION_BUNDLE_LIST} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {CustomDataGrid} from '../../../components/Table/CustomDataGrid';
-import {Bundles} from '../../../api/generated/portal/Bundles';
+import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
 import {getBundleListByPSP} from '../../../services/bundleService';
 import {buildColumnDefs} from './CommissionBundlesTableColumns';
 import CommissionBundlesEmpty from './CommissionBundlesEmpty';
@@ -20,7 +20,7 @@ type Props = {
 const rowHeight = 64;
 const headerHeight = 56;
 
-const emptyCommissionBundleList: Bundles = {
+const emptyCommissionBundleList: BundlesResource = {
     bundles: [],
     pageInfo: {
         items_found: 0,
@@ -50,7 +50,7 @@ const CommissionBundlesTable = ({bundleNameFilter, bundleType}: Props) => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
     const columns: Array<GridColDef> = buildColumnDefs(t);
-    const [listFiltered, setListFiltered] = useState<Bundles>(emptyCommissionBundleList);
+  const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
     const [page, setPage] = useState(0);
     const brokerCode = selectedParty?.fiscalCode ?? '';
 

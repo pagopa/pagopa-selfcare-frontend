@@ -11,6 +11,7 @@ export interface BundleTaxonomiesCheckboxButtonProps {
   selectedItem?: boolean;
   /* The name to show  */
   title: string;
+  subtitle?: string;
   action?: React.Dispatch<React.ChangeEvent<HTMLInputElement>>;
   disabled?: boolean;
   checked?: boolean;
@@ -22,6 +23,7 @@ export interface BundleTaxonomiesCheckboxButtonProps {
 
 export const BundleTaxonomiesCheckboxButton = ({
   title,
+  subtitle,
   selectedItem,
   action,
   checked,
@@ -95,21 +97,26 @@ export const BundleTaxonomiesCheckboxButton = ({
           }}
         >
             <Tooltip arrow title={maxCharacter ? title : ""}>
-              <Typography
-                variant="body1"
-                component="h6"
-                color="inherit"
-                sx={{
-                  fontWeight: theme.typography.fontWeightBold,
-                  lineHeight: 1.25,
-                  ...(maxCharacter && {
-                    ...truncatedText,
-                    WebkitLineClamp: 2,
-                  }),
-                }}
-              >
-                {title}
-              </Typography>
+              <Box>
+                  <Typography
+                    variant="body1"
+                    component="h6"
+                    color="inherit"
+                    sx={{
+                      fontWeight: theme.typography.fontWeightBold,
+                      lineHeight: 1.25,
+                      ...(maxCharacter && {
+                        ...truncatedText,
+                        WebkitLineClamp: 2,
+                      }),
+                    }}
+                  >
+                    {title}
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                      {subtitle ?? ''}
+                  </Typography>
+              </Box>
             </Tooltip>
 
         </Box>
@@ -124,3 +131,5 @@ export const BundleTaxonomiesCheckboxButton = ({
     </Box>
   );
 };
+
+export default BundleTaxonomiesCheckboxButton;

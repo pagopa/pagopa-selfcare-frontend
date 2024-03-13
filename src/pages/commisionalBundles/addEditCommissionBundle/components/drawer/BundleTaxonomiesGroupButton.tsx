@@ -125,3 +125,5 @@ export const BundleTaxonomiesGroupButton = ({
     </Box>
   );
 };
+
+export default BundleTaxonomiesGroupButton;

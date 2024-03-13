@@ -155,7 +155,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
      if (data !== undefined) {
          const filteredTaxonomies = taxonomies.filter(item => item.specific_built_in_data !== data?.taxonomy);
          setTaxonomies(filteredTaxonomies);
-         setTaxonomyTableData(filteredTaxonomies);
+         updateTableData(filteredTaxonomies);
          deleteTransferCategoryItem(data !== undefined ? [data.taxonomy] : []);
      }
   };

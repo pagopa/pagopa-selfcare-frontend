@@ -33,7 +33,7 @@ export interface BundleTaxonomiesDrawerProps {
     addAction: (taxonomies: Array<Taxonomy>) => void;
 }
 
-export const BundleTaxonomiesDrawer= ({
+export const BundleTaxonomiesDrawer = ({
     openDrawer, setOpenDrawer, addAction
 }: BundleTaxonomiesDrawerProps) => {
   const { t } = useTranslation();
@@ -257,6 +257,7 @@ export const BundleTaxonomiesDrawer= ({
                     <BundleTaxonomiesCheckboxButton
                       key={item.specific_built_in_data}
                       title={item.specific_built_in_data as string}
+                      subtitle={item.service_type as string}
                       checked={checkedTaxonomies?.get(item.specific_built_in_data)}
                       action={() => handleTaxonomyCheck(item)}
                       maxCharactersNumberMultiLine={100}
@@ -278,3 +279,5 @@ export const BundleTaxonomiesDrawer= ({
       </PaddedDrawer>
   );
 };
+
+export default BundleTaxonomiesDrawer;

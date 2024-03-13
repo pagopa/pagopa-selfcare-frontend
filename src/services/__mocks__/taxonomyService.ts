@@ -24,7 +24,15 @@ export const mockedTaxonomy: Taxonomies = {
 
 export const mockedTaxonomyGroups: TaxonomyGroups = {
     taxonomyGroups: [
-
+        {
+            "ecTypeCode": "testEcCode",
+            "ecType": "testEc",
+            "areas": [{
+                "macroAreaEcProgressive": "areaProgressive",
+                 "macroAreaName": "macroArea",
+                 "macroAreaDescription": "macroAreaDescription"
+            }]
+        }
     ],
   };
 

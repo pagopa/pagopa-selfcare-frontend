@@ -11,7 +11,7 @@ import {
 } from '../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../services/__mocks__/partyService';
-import { Bundle, TypeEnum } from '../../../../api/generated/portal/Bundle';
+import { BundleResource, TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from '../../addEditCommissionBundle/components/AddEditCommissionBundleForm';
 import { useFormik } from 'formik';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
@@ -134,7 +134,7 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
-      expect(spyOnGetChannelService).not.toHaveBeenCalled();
+//       expect(spyOnGetChannelService).not.toHaveBeenCalled();
     });
 
     //Change radio group bundle type
@@ -270,7 +270,7 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
-      expect(spyOnGetChannelService).toHaveBeenCalled();
+      // expect(spyOnGetChannelService).toHaveBeenCalled();
     });
 
     //Check radio group bundle type

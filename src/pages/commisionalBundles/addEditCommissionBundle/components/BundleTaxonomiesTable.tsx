@@ -102,7 +102,7 @@ export const BundleTaxonomiesTable= ({
                                           </IconButton>
                                         </Box>
                                         <Box sx={inputGroupStyle} width="95%">
-                                            {taxonomy.specific_built_in_data}
+                                            {taxonomy.specific_built_in_data} - {taxonomy.service_type}
                                         </Box>
                                     </Stack>
                                 </React.Fragment>
@@ -116,3 +116,5 @@ export const BundleTaxonomiesTable= ({
     </React.Fragment>
   );
 };
+
+export default BundleTaxonomiesTable;

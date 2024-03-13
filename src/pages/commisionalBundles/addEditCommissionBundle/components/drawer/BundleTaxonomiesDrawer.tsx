@@ -47,6 +47,7 @@ export const BundleTaxonomiesDrawer= ({
   const [taxonomyGroups, setTaxonomyGroups] = useState<Array<TaxonomyGroup>>([]);
   const [checkedTaxonomies, setCheckedTaxonomies] = useState<Map<string,boolean>>(new Map());
   const [checkedTaxonomiesCount, setCheckedTaxonomiesCount] = useState<any>(0);
+  const [showSearchError, setShowSearchError] = useState<boolean>(false);
 
   const handleBackButton = () => {
      if (searchText !== undefined) {
@@ -140,6 +141,7 @@ export const BundleTaxonomiesDrawer= ({
                         const map = new Map<string, boolean>();
                         data.taxonomies.forEach(item => map.set(item.specific_built_in_data, false));
                         setCheckedTaxonomies(map);
+                        setShowSearchError(data.taxonomies.length === 0);
                     }
                 })
                 .catch((reason) =>
@@ -188,6 +190,8 @@ export const BundleTaxonomiesDrawer= ({
           }}
           size="small"
           label={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.filterTitle')}
+          error={showSearchError}
+          helperText={showSearchError && t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.missingSearchData')}
           inputProps={{ 'data-testid': 'catalogue-filter' }}
         />
         {loading ? (

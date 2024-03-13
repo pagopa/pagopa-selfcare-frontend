@@ -916,6 +916,7 @@
         "deselectAll": "Deseleziona tutti",
         "dontKnowHow": "Non sai come preparare il file? ",
         "downloadExample": "Scarica l'esempio",
+        "missingSearchData": "Codice Inesistente",
         "removeAreaModal": {
           "title": "Rimuovi Categoria",
           "message": "Sarà rimossa l'intera categoria e i relativi servizi di incasso associati"
@@ -923,6 +924,13 @@
         "removeModal": {
           "title": "Rimuovi Servizio di incasso",
           "message": "Sarà rimosso il servizio di incasso"
+        },
+        "alert": {
+          "successTitle": "il file è valido",
+          "warnTitle": "il file ha riscontrato degli errori",
+          "errorTitle": "il file non è valido",
+          "successMessage": "Sono stati caricati {{count}} Servizi di incasso",
+          "warningMessage": "Non è stato possibile caricare {{count}} Servizi di incasso di {{total}}"
         }
       },
       "validationMessage": {

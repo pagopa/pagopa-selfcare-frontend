@@ -3,7 +3,7 @@ import { FormikProps } from 'formik';
 import Papa from "papaparse";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, InputAdornment, Link, Paper, TextField, Typography } from '@mui/material';
+import { Button, InputAdornment, Link, Paper, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import { SingleFileInput, ButtonNaked } from '@pagopa/mui-italia';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -54,6 +54,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
   const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
   const [taxonomies, setTaxonomies] = useState<Array<any>>([]);
   const [taxonomyTableData, setTaxonomyTableData] = useState<any>();
+  const [alertData, setAlertData] = useState<any>();
 
   if ((taxonomies === undefined || taxonomies.length === 0) &&
     (bundleTaxonomies && bundleTaxonomies.length > 0)) {
@@ -75,6 +76,19 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         });
         const parsedData = csv?.data.map((item) => Object.assign({},item,{"fromFile":true}));
         await handleAddFromDrawer(parsedData);
+        if (csv?.errors.length > 0) {
+            setAlertData({
+                "type":"warning",
+                "message": t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warningMessage',
+                 { count: csv?.errors.length, total: csv?.data.length })
+            });
+        } else {
+            setAlertData({
+                "type":"success",
+                "message": t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successMessage',
+                 { count: csv?.data.length })
+            });
+        }
     };
     reader.readAsText(file);
   };
@@ -178,6 +192,16 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
       </Button>
+      {(alertData) && (
+      <Alert severity={alertData.type} data-testid="alert-success-test" onClose={() => {setAlertData(null);}}>
+        <AlertTitle> {alertData.type === "success" ?
+            t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle') :
+            alertData.type === "warning" ?
+            t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle') :
+            alertData.type === "error" ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle') : ""}
+       </AlertTitle>
+        {alertData.message}
+      </Alert>)}
       <SingleFileInput
         value={file}
         // TODO ADD FILE TYPE RESTRICTION

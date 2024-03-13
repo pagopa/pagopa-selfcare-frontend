@@ -28,7 +28,10 @@ export const FDR_PSP = 'FdR - Flussi di Rendicontazione (PSP)';
 export const BO_EXT = 'Backoffice External';
 
 export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
-    const list = [{id: 'NODOAUTH', key: NODOAUTH}];
+    const list = [
+        {id: 'NODOAUTH', key: NODOAUTH},
+        {id: 'BO_EXT', key: BO_EXT}
+    ];
 
     if (ENV.FEATURES.FDR.ENABLED) {
         return [...list, {id: 'FDR_PSP', key: FDR_PSP}];
@@ -44,7 +47,7 @@ export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
         {id: 'GPD_PAY', key: GPD_PAY},
         {id: 'GPD_REP', key: GPD_REP},
         {id: 'BIZ', key: BIZ},
-        {id: 'BO_EXT', key: BO_EXT},
+        {id: 'BO_EXT', key: BO_EXT}
     ];
 
     if (ENV.FEATURES.FDR.ENABLED) {

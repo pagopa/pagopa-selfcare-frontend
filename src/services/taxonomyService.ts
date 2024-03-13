@@ -1,6 +1,6 @@
-import { BackofficeApi } from '../api/BackofficeClient';
 import { toError } from 'fp-ts/lib/Either';
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { ENV } from '../utils/env';
 import { Taxonomies } from '../api/generated/portal/Taxonomies';
 import { TaxonomyGroups } from '../api/generated/portal/TaxonomyGroups';

@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
-import { Bundle, TypeEnum } from '../../../api/generated/portal/Bundle';
+import { BundleResource, TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';
 import {
   formatBooleanValueToYesOrNo,
@@ -57,7 +57,7 @@ const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
 export default function CommissionBundleDetailConfiguration({
   bundleDetail,
 }: {
-  bundleDetail: Bundle;
+  bundleDetail: BundleResource;
 }) {
   const { t } = useTranslation();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -75,7 +75,7 @@ export default function CommissionBundleDetailConfiguration({
           {t(entry[1])}
         </Typography>
         <Typography variant="body1">
-          {formatConfigValues(bundleDetail?.[entry[0] as keyof Bundle], t)}
+          {formatConfigValues(bundleDetail?.[entry[0] as keyof BundleResource], t)}
         </Typography>
       </Box>
     ));

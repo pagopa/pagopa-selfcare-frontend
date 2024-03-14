@@ -6,6 +6,22 @@ import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
+import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
+import { useAppDispatch } from '../../../redux/hooks';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
+
+const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource }) => {
+  const dispatcher = useAppDispatch();
+
+  return (
+    <GridLinkAction
+      label="Gestisci pacchetto"
+      action={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
+      to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
+      icon={<ChevronRightIcon color="primary" />}
+    />
+  );
+};
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -105,11 +121,9 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       editable: false,
       getActions: (params: any) => [
-        <GridLinkAction
-          key="Gestisci pacchetto"
-          label="Gestisci pacchetto"
-          to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: params.row.idBundle })}
-          icon={<ChevronRightIcon color="primary" />}
+        <GridLinkActionBundleDetails
+          key={`Gestisci pacchetto-${params.row.idBundle}`}
+          bundle={params.row}
         />,
       ],
       sortable: false,

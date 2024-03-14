@@ -3,18 +3,18 @@ import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
-import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
+import { useState } from 'react';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
+import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import { deletePSPBundle, getBundleDetailByPSP } from '../../../services/bundleService';
+import { deletePSPBundle } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
@@ -23,39 +23,13 @@ import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const dispatch = useAppDispatch();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
 
-  const [commissionBundleDetail, setCommissionBundleDetail] = useState<BundleResource>({});
+  const commissionBundleDetail: BundleResource = useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const pspTaxCode = selectedParty?.fiscalCode ?? '';
-    getBundleDetailByPSP(pspTaxCode, bundleId)
-      .then((data) => {
-        dispatch(bundleDetailsActions.setBundleDetailsState(data));
-        setCommissionBundleDetail(data);
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_COMMISSION_BUNDLE_DETAILS',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting commission bundle details`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.list.error.commissionBundleDetailsErrorMessageDesc'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoading(false));
-  }, [selectedParty]);
 
   function handleDeletePSP() {
     setLoading(true);

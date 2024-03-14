@@ -4,8 +4,9 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
@@ -19,10 +20,10 @@ import { Party } from '../../../model/Party';
 import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies';
 
-
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const dispatch = useAppDispatch();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
@@ -36,6 +37,7 @@ const CommissionBundleDetailPage = () => {
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
     getBundleDetailByPSP(pspTaxCode, bundleId)
       .then((data) => {
+        dispatch(bundleDetailsActions.setBundleDetailsState(data));
         setCommissionBundleDetail(data);
       })
       .catch((reason) => {

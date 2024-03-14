@@ -12,7 +12,6 @@ import {
   StepLabel,
   Stepper,
   Button,
-  StepContent,
 } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useTranslation, TFunction } from 'react-i18next';
@@ -27,9 +26,9 @@ import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
 import { FormAction } from '../../../model/CommissionBundle';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import {
   createBundle,
-  getBundleDetailByPSP,
   updatePSPBundle,
 } from '../../../services/bundleService';
 import {
@@ -42,53 +41,39 @@ import AddEditCommissionBundleForm from './components/AddEditCommissionBundleFor
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
 export interface AddEditCommissionBundlePageProps {
-    edit?: boolean;
+  edit?: boolean;
 }
 
 const minDateTomorrow = add(new Date(), { days: 1 });
 
-const initialFormData = (selectedParty: Party | undefined, detail?: BundleRequest) => ({
-  abi: detail?.abi ?? '', // TODO insert ABI code value
-  description: detail?.description ?? '',
-  digitalStamp: detail?.digitalStamp ?? false,
-  digitalStampRestriction: detail?.digitalStampRestriction ?? false,
-  idBrokerPsp: detail?.idBrokerPsp ?? '',
-  idCdi: detail?.idCdi ?? '',
-  idChannel: detail?.idChannel ?? '',
-  maxPaymentAmount: detail?.maxPaymentAmount ?? 0,
-  minPaymentAmount: detail?.minPaymentAmount ?? 0,
-  name: detail?.name ?? '',
-  paymentAmount: detail?.paymentAmount ?? 0,
-  paymentType: detail?.paymentType ?? undefined,
-  touchpoint: detail?.touchpoint ?? undefined,
-  transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
-  type: detail?.type ?? undefined,
-  validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
-  validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
+const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource): BundleRequest => ({
+  abi: '', // TODO insert ABI code value
+  description: data?.description ?? '',
+  digitalStamp: data?.digitalStamp ?? false,
+  digitalStampRestriction: data?.digitalStampRestriction ?? false,
+  idBrokerPsp: data?.idBrokerPsp ?? '',
+  idCdi: '', // TODO insert idCdi
+  idChannel: data?.idChannel ?? '',
+  maxPaymentAmount: data?.maxPaymentAmount ?? 0,
+  minPaymentAmount: data?.minPaymentAmount ?? 0,
+  name: data?.name ?? '',
+  paymentAmount: data?.paymentAmount ?? 0,
+  paymentType: data?.paymentType ?? undefined,
+  touchpoint: data?.touchpoint ?? undefined,
+  transferCategoryList: data?.transferCategoryList
+    ? data.transferCategoryList.map((item) => item.specific_built_in_data)
+    : [''],
+  type: data?.type ?? undefined,
+  validityDateFrom: data?.validityDateFrom ?? minDateTomorrow,
+  validityDateTo: data?.validityDateTo ?? minDateTomorrow,
   pspBusinessName: selectedParty?.description ?? '',
 });
 
-const toNewFormData = (data?: BundleResource) => ({
-  description: data?.description,
-  digitalStamp: data?.digitalStamp,
-  digitalStampRestriction: data?.digitalStampRestriction,
-  idBrokerPsp: data?.idBrokerPsp,
-  idChannel: data?.idChannel,
-  maxPaymentAmount: data?.maxPaymentAmount,
-  minPaymentAmount: data?.minPaymentAmount,
-  name: data?.name,
-  paymentAmount: data?.paymentAmount,
-  paymentType: data?.paymentType,
-  touchpoint: data?.touchpoint,
-  transferCategoryList: data?.transferCategoryList ?
-   data.transferCategoryList.map(item => item.specific_built_in_data) : [''],
-  type: data?.type,
-  validityDateFrom: data?.validityDateFrom,
-  validityDateTo: data?.validityDateTo,
-});
-
-
-const validate = (values: Partial<BundleRequest>, edit: boolean | undefined, t: TFunction<'translation'>) =>
+const validate = (
+  values: Partial<BundleRequest>,
+  edit: boolean | undefined,
+  t: TFunction<'translation'>
+) =>
   Object.fromEntries(
     Object.entries({
       ...{
@@ -115,7 +100,8 @@ const validate = (values: Partial<BundleRequest>, edit: boolean | undefined, t: 
           : undefined,
         validityDateFrom: !values.validityDateFrom
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : (edit === undefined || edit !== true) && (values.validityDateFrom.getTime() < minDateTomorrow.getTime())
+          : (edit === undefined || edit !== true) &&
+            values.validityDateFrom.getTime() < minDateTomorrow.getTime()
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
           : values.validityDateTo &&
             values.validityDateFrom.getTime() > values.validityDateTo.getTime()
@@ -158,19 +144,17 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
+  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
-  const [commissionBundleDetails, setCommissionBundleDetails] = useState<
-    BundleRequest | undefined
-  >();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [bundleTaxonomies, setBundleTaxonomies] = useState<Array<Taxonomy>>([]);
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: initialFormData(selectedParty, commissionBundleDetails),
+    initialValues: toNewFormData(selectedParty, {}),
     validate: (values) => validate(values, edit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
@@ -197,7 +181,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
         addError({
           id: `${isEdit ? 'UPDATE' : 'CREATE'}_COMMISSION_BUNDLE`,
           blocking: false,
-          error: reason as Error,
+          error: reason,
           techDescription: `An error occurred while updating the commission bundle`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
@@ -225,32 +209,15 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   useEffect(() => {
     if (bundleId && actionId === FormAction.Edit) {
       setLoading(true);
-      const pspTaxCode = selectedParty?.fiscalCode ?? '';
-      getBundleDetailByPSP(pspTaxCode, bundleId)
-        .then(async (data) => {
-          const newFormData = toNewFormData(data);
-          setCommissionBundleDetails(newFormData);
-          setBundleTaxonomies(data?.transferCategoryList ?
-                data.transferCategoryList.map(item => item) :
-                []
-          );
-          await formik.setValues(newFormData);
-        })
-        .catch((reason: Error) => {
-          addError({
-            id: 'GET_COMMISSION_BUNDLE_DETAILS',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while getting commission bundle details`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageAllDataDesc'
-            ),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoading(false));
+      const setForm = async () => {
+        setBundleTaxonomies(
+          bundleDetails?.transferCategoryList
+            ? bundleDetails.transferCategoryList.map((item) => item)
+            : []
+        );
+        await formik.setValues(toNewFormData(selectedParty, bundleDetails));
+      };
+      setForm().finally(() => setLoading(false));
     }
   }, [selectedParty]);
 
@@ -307,11 +274,17 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
             </Stepper>
           </div>
         </Box>
-        <div style={{ display: activeStep !== 0 ? 'none' : undefined }} data-testid="bundle-form-div">
+        <div
+          style={{ display: activeStep !== 0 ? 'none' : undefined }}
+          data-testid="bundle-form-div"
+        >
           <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
         </div>
-        <div style={{ display: activeStep !== 1 ? 'none' : undefined }} data-testid="bundle-taxonomies-div">
-          <AddEditCommissionBundleTaxonomies formik={formik} bundleTaxonomies={bundleTaxonomies}/>
+        <div
+          style={{ display: activeStep !== 1 ? 'none' : undefined }}
+          data-testid="bundle-taxonomies-div"
+        >
+          <AddEditCommissionBundleTaxonomies formik={formik} bundleTaxonomies={bundleTaxonomies} />
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>

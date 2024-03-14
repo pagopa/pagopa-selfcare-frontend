@@ -1,15 +1,12 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
+/* eslint-disable sonarjs/cognitive-complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
-import { add } from 'date-fns';
-import { useFormik } from 'formik';
+import { FormikProps } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Autocomplete,
   Box,
-  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -20,13 +17,12 @@ import {
   Radio,
   RadioGroup,
   Select,
-  Stack,
   TextField,
   TextFieldProps,
   Typography,
 } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { RemoveCircleOutline, MenuBook } from '@mui/icons-material';
+import { MenuBook } from '@mui/icons-material';
 import EuroIcon from '@mui/icons-material/Euro';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -34,7 +30,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { NumericFormat } from 'react-number-format';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
-  LOADING_TASK_CREATING_COMMISSION_BUNDLE,
   LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
@@ -42,38 +37,31 @@ import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import GenericModal from '../../../../components/Form/GenericModal';
 import { PaymentTypes } from '../../../../api/generated/portal/PaymentTypes';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
-import { Taxonomies } from '../../../../api/generated/portal/Taxonomies';
 import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
 import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
-import { createBundle, getTouchpoints } from '../../../../services/bundleService';
-import { getTaxonomies } from '../../../../services/taxonomyService';
+import { getTouchpoints } from '../../../../services/bundleService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
-import ROUTES from '../../../../routes';
-import { TypeEnum } from '../../../../api/generated/portal/Bundle';
+import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
+import { FormAction } from '../../../../model/CommissionBundle';
 
-type Prop = {
-  commBundleDetails: BundleRequest | undefined;
+type Props = {
+  formik: FormikProps<BundleRequest>;
+  actionId: string;
 };
-const minDateTomorrow = add(new Date(), { days: 1 });
 
-const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
+const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
   const { t } = useTranslation();
-  const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
-  const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
   const [touchpointList, setTouchpointList] = useState<Touchpoints>();
-  const [taxonomyList, setTaxonomyList] = useState<Taxonomies>();
   const [brokerDelegationList, setBrokerDelegationList] = useState<Array<Delegation>>([]);
   const [channelsId, setChannelsId] = useState<Array<string>>([]);
 
@@ -85,9 +73,9 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
     mb: 3,
   };
 
-  const getChannelsByBrokerCode = async (selectedBrokerCode: string) => {
+  const getChannelsByBrokerCode = (selectedBrokerCode: string) => {
     setLoadingChannels(true);
-    await getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
+    getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
       .then((data) => {
         if (data) {
           setChannelsId(data);
@@ -111,34 +99,27 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
   };
 
   useEffect(() => {
-    if (commBundleDetails?.idBrokerPsp && brokerDelegationList.length > 0) {
-      getChannelsByBrokerCode(
-        brokerDelegationList?.find((el) => el.institution_name === commBundleDetails?.idBrokerPsp)
-          ?.broker_tax_code ?? ''
-      ).finally(() => {});
-    }
-  }, [commBundleDetails, brokerDelegationList]);
-
-  useEffect(() => {
     setLoading(true);
     Promise.all([
       getPaymentTypes(),
       getTouchpoints(0, 50),
-      getTaxonomies(),
       getBrokerDelegation(undefined, selectedParty?.partyId ?? ''),
     ])
-      .then(([paymentTypes, touchpoints, taxonomyService, brokerDelegation]) => {
+      .then(([paymentTypes, touchpoints, brokerDelegation]) => {
         if (paymentTypes) {
           setPaymentOptions(paymentTypes);
         }
         if (touchpoints) {
           setTouchpointList(touchpoints);
         }
-        if (taxonomyService) {
-          setTaxonomyList(taxonomyService);
-        }
         if (brokerDelegation && brokerDelegation.length > 0) {
           setBrokerDelegationList(brokerDelegation);
+          if (actionId === FormAction.Edit && formik.values.idBrokerPsp) {
+            getChannelsByBrokerCode(
+              brokerDelegation?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
+                ?.broker_tax_code ?? ''
+            );
+          }
         } else {
           addError({
             id: 'GET_BROKER_DELEGATIONS_DATA',
@@ -173,159 +154,22 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
       });
   }, [selectedParty]);
 
-  const initialFormData = (detail?: BundleRequest) => ({
-    abi: detail?.abi ?? '', // TODO insert ABI code value
-    description: detail?.description ?? '',
-    digitalStamp: detail?.digitalStamp ?? false,
-    digitalStampRestriction: detail?.digitalStampRestriction ?? false,
-    idBrokerPsp: detail?.idBrokerPsp ?? '',
-    idCdi: detail?.idCdi ?? '',
-    idChannel: detail?.idChannel ?? '',
-    maxPaymentAmount: detail?.maxPaymentAmount ?? 0,
-    minPaymentAmount: detail?.minPaymentAmount ?? 0,
-    name: detail?.name ?? '',
-    paymentAmount: detail?.paymentAmount ?? 0,
-    paymentType: detail?.paymentType ?? undefined,
-    touchpoint: detail?.touchpoint ?? undefined,
-    transferCategoryList: detail?.transferCategoryList ? [...detail.transferCategoryList] : [''],
-    type: detail?.type ?? undefined,
-    validityDateFrom: detail?.validityDateFrom ?? minDateTomorrow,
-    validityDateTo: detail?.validityDateTo ?? minDateTomorrow,
-    pspBusinessName: selectedParty?.description ?? '',
-  });
-
-  const validate = (values: Partial<BundleRequest>) =>
-    Object.fromEntries(
-      Object.entries({
-        ...{
-          description: !values.description
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          idChannel: !values.idChannel
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          maxPaymentAmount: !values.maxPaymentAmount
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          minPaymentAmount: !values.minPaymentAmount
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          name: !values.name
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          paymentAmount: !values.paymentAmount
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          type: !values.type
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : undefined,
-          validityDateFrom: !values.validityDateFrom
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : values.validityDateFrom.getTime() < minDateTomorrow.getTime()
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
-            : values.validityDateTo &&
-              values.validityDateFrom.getTime() > values.validityDateTo.getTime()
-            ? t(
-                'commissionBundlesPage.addEditCommissionBundle.validationMessage.startDateOverEndDate'
-              )
-            : undefined,
-          validityDateTo: !values.validityDateTo
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-            : values.validityDateTo.getTime() < minDateTomorrow.getTime()
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
-            : values.validityDateFrom &&
-              values.validityDateTo.getTime() < values.validityDateFrom.getTime()
-            ? t(
-                'commissionBundlesPage.addEditCommissionBundle.validationMessage.endDateUnderStartDate'
-              )
-            : undefined,
-        },
-      }).filter(([_key, value]) => value)
-    );
-
-  const enableSubmit = (values: BundleRequest) =>
-    values.type !== undefined &&
-    values.name !== '' &&
-    values.minPaymentAmount !== 0 &&
-    !Number.isNaN(values.minPaymentAmount) &&
-    values.maxPaymentAmount !== 0 &&
-    !Number.isNaN(values.maxPaymentAmount) &&
-    values.paymentAmount !== 0 &&
-    !Number.isNaN(values.paymentAmount) &&
-    values.idChannel !== '' &&
-    values.idChannel !== undefined &&
-    values.description !== '' &&
-    values.validityDateFrom != null &&
-    values.validityDateFrom.getTime() > 0 &&
-    values.validityDateTo != null &&
-    values.validityDateTo.getTime() > 0;
-
-  const submit = async (body: BundleRequest) => {
-    setLoadingCreating(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
-
-    // TODO ADD UPDATE
-    createBundle(pspTaxCode, body)
-      .then((_) => {
-        history.push(ROUTES.COMMISSION_BUNDLES);
-      })
-      .catch((reason: Error) => {
-        addError({
-          id: 'CREATE_COMMISSION_BUNDLE',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while creating commission bundle`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.addEditCommissionBundle.error.errorMessageCreatingBundle'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => {
-        setLoadingCreating(false);
-      });
-  };
-
-  const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: initialFormData(commBundleDetails),
-    validate,
-    onSubmit: async () => {
-      setShowConfirmModal(true);
-    },
-    enableReinitialize: true,
-    validateOnBlur: true,
-    validateOnChange: true,
-  });
-
-  const addTransferCategoryItem = async () => {
-    if (formik.values.transferCategoryList) {
-      const newArr = [...formik.values.transferCategoryList, ''];
-      await formik.setFieldValue('transferCategoryList', newArr);
-    }
-  };
-
-  const deleteTransferCategoryItem = async (index: number) => {
-    if (formik.values.transferCategoryList) {
-      const newArr = [...formik.values.transferCategoryList];
-      if (index > -1 && index < formik.values.transferCategoryList.length) {
-        // eslint-disable-next-line functional/immutable-data
-        newArr.splice(index, 1);
-      }
-      await formik.setFieldValue('transferCategoryList', newArr);
-    }
-  };
-
   const shouldDisableDate = (date: Date) => date < new Date();
 
-  const openConfirmModal = () => {
-    if (formik.isValid) {
-      setShowConfirmModal(true);
+  function handleBrokerCodesSelection(
+    value: string | null | undefined,
+    formik: FormikProps<BundleRequest>
+  ) {
+    if (value === null || value === undefined) {
+      formik.setFieldValue('idBrokerPsp', '');
+      setChannelsId([]);
     } else {
-      setShowConfirmModal(false);
+      formik.handleChange('idBrokerPsp')(value);
+      getChannelsByBrokerCode(
+        brokerDelegationList?.find((el) => el.institution_name === value)?.broker_tax_code ?? ''
+      );
     }
-  };
+  }
 
   return (
     <>
@@ -355,17 +199,20 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
               sx={{ pr: 8 }}
+              disabled={actionId === FormAction.Edit}
             />
             <FormControlLabel
               value={TypeEnum.PUBLIC}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
+              disabled={actionId === FormAction.Edit}
             />
             <FormControlLabel
               value={TypeEnum.PRIVATE}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
+              disabled={actionId === FormAction.Edit}
             />
           </RadioGroup>
         </FormControl>
@@ -486,86 +333,6 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   </Select>
                 </FormControl>
               </Grid>
-
-              {formik.values.transferCategoryList?.map((_pT, i) => (
-                <React.Fragment key={`transferCategory${i}`}>
-                  {i > 0 && (
-                    <Grid item xs={1} mt={1}>
-                      <RemoveCircleOutline
-                        color="error"
-                        sx={{
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => deleteTransferCategoryItem(i)}
-                        id={`remove_PaymentMethod${i}`}
-                        data-testid={`remove-payment-method${i}`}
-                      />
-                    </Grid>
-                  )}
-                  <Grid item xs={i > 0 ? 11 : 12} pr={2}>
-                    <FormControl sx={{ width: '50%' }}>
-                      <InputLabel size="small">
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService')}
-                      </InputLabel>
-                      <Select
-                        id={`transferCategoryList${i}_select`}
-                        labelId={`transferCategoryList${i}_label`}
-                        name={`transferCategoryList${i}_name`}
-                        label={t(
-                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
-                        )}
-                        placeholder={t(
-                          'commissionBundlesPage.addEditCommissionBundle.form.taxonomyOfService'
-                        )}
-                        size="small"
-                        value={
-                          formik.values.transferCategoryList
-                            ? formik.values.transferCategoryList[i]
-                            : ''
-                        }
-                        onChange={(event) =>
-                          formik.setFieldValue(
-                            'transferCategoryList',
-                            formik.values.transferCategoryList?.map((pType, j) =>
-                              j === i ? event.target.value : pType
-                            )
-                          )
-                        }
-                        error={
-                          formik.touched.transferCategoryList &&
-                          Boolean(formik.errors.transferCategoryList)
-                        }
-                        data-testid="transfer-category-list-test"
-                        disabled={!(taxonomyList?.taxonomies && taxonomyList.taxonomies.length > 0)}
-                      >
-                        {taxonomyList?.taxonomies?.map((el) => (
-                          <MenuItem
-                            key={`taxonomies${el.specific_built_in_data}`}
-                            value={el.specific_built_in_data}
-                          >
-                            {el.service_type_code} - {el.service_type_description}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </React.Fragment>
-              ))}
-            </Grid>
-
-            <Grid container spacing={2} mt={1}>
-              <Grid item xs={6}>
-                <ButtonNaked
-                  size="medium"
-                  component="button"
-                  onClick={() => addTransferCategoryItem()}
-                  sx={{ color: 'primary.main', mr: '20px' }}
-                  weight="default"
-                  data-testid="add-taxonomy-test"
-                >
-                  {t('commissionBundlesPage.addEditCommissionBundle.form.addTaxonomy')}
-                </ButtonNaked>
-              </Grid>
             </Grid>
 
             <Grid container spacing={2} sx={{ pl: 1, mt: 3 }}>
@@ -573,7 +340,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                 title={t('commissionBundlesPage.addEditCommissionBundle.form.amountRange')}
                 icon={<></>}
               />
-              <Grid container spacing={2} mt={1} sx={{ pl: 1 }}>
+              <Grid container spacing={2} mt={1} pl={1}>
                 <Grid item xs={6}>
                   <NumericFormat
                     fullWidth
@@ -583,12 +350,9 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.minImport')}
                     size="small"
-                    value={
-                      formik.values.minPaymentAmount === 0 ? '' : formik.values.minPaymentAmount
-                    }
+                    value={formik.values.minPaymentAmount}
                     onValueChange={({ value }) => {
                       const numericValue = parseFloat(value.replace(',', '.'));
-                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       formik.setFieldValue('minPaymentAmount', numericValue);
                     }}
                     thousandSeparator=""
@@ -616,12 +380,9 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.maxImport')}
                     size="small"
-                    value={
-                      formik.values.maxPaymentAmount === 0 ? '' : formik.values.maxPaymentAmount
-                    }
+                    value={formik.values.maxPaymentAmount}
                     onValueChange={({ value }) => {
                       const numericValue = parseFloat(value.replace(',', '.'));
-                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       formik.setFieldValue('maxPaymentAmount', numericValue);
                     }}
                     thousandSeparator=""
@@ -657,10 +418,9 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.feeApplied')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.feeApplied')}
                     size="small"
-                    value={formik.values.paymentAmount === 0 ? '' : formik.values.paymentAmount}
+                    value={formik.values.paymentAmount}
                     onValueChange={({ value }) => {
                       const numericValue = parseFloat(value.replace(',', '.'));
-                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       formik.setFieldValue('paymentAmount', numericValue);
                     }}
                     thousandSeparator=""
@@ -689,21 +449,13 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                 <Autocomplete
                   id="brokerCodes"
                   disablePortal
-                  options={brokerDelegationList?.map((el) => el?.institution_name ?? "")?.sort((a, b) => a.localeCompare(b))}
+                  options={brokerDelegationList
+                    ?.map((el) => el?.institution_name ?? '')
+                    ?.sort((a, b) => a.localeCompare(b))}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   value={formik.values.idBrokerPsp}
-                  onChange={async (_event, value) => {
-                    if (value === null || value === undefined) {
-                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                      formik.setFieldValue('idBrokerPsp', '');
-                      setChannelsId([]);
-                    } else {
-                      formik.handleChange('idBrokerPsp')(value);
-                      await getChannelsByBrokerCode(
-                        brokerDelegationList?.find((el) => el.institution_name === value)
-                          ?.broker_tax_code ?? ''
-                      );
-                    }
+                  onChange={(_event, value) => {
+                    handleBrokerCodesSelection(value, formik);
                   }}
                   fullWidth
                   renderInput={(params) => (
@@ -733,7 +485,6 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                   disabled={!(channelsId && channelsId.length > 0)}
                   onChange={(_event, value) => {
                     if (value === null) {
-                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       formik.setFieldValue('idChannel', '');
                     } else {
                       formik.handleChange('idChannel')(value);
@@ -781,16 +532,16 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     }
                     row
                     data-testid="digital-stamp-test"
-                    value={`${formik.values.digitalStamp}`}
+                    value={formik.values.digitalStamp ? `${formik.values.digitalStamp}` : 'false'}
                   >
                     <FormControlLabel
-                      value={"false"}
+                      value={'false'}
                       control={<Radio />}
                       label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
-                      value={"true"}
+                      value={'true'}
                       control={<Radio />}
                       disabled={formik.values.digitalStampRestriction}
                       label={t('general.yes')}
@@ -814,16 +565,20 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                     }
                     row
                     data-testid="digital-stamp-restriction-test"
-                    value={`${formik.values.digitalStampRestriction}`}
+                    value={
+                      formik.values.digitalStampRestriction
+                        ? `${formik.values.digitalStampRestriction}`
+                        : 'false'
+                    }
                   >
                     <FormControlLabel
-                      value={"false"}
+                      value={'false'}
                       control={<Radio />}
                       label={t('general.no')}
                       sx={{ pr: 3 }}
                     />
                     <FormControlLabel
-                      value={"true"}
+                      value={'true'}
                       control={<Radio />}
                       disabled={formik.values.digitalStamp}
                       label={t('general.yes')}
@@ -867,6 +622,7 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
                       />
                     )}
                     shouldDisableDate={shouldDisableDate}
+                    disabled={actionId === FormAction.Edit}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -903,45 +659,6 @@ const AddEditCommissionBundleForm = ({ commBundleDetails }: Prop) => {
           </Box>
         </Box>
       </Paper>
-      <Stack direction="row" justifyContent="space-between" mt={5}>
-        <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() => history.goBack()}
-            data-testid="cancel-button-test"
-          >
-            {t('general.back')}
-          </Button>
-        </Stack>
-        <Stack display="flex" justifyContent="flex-end">
-          <Button
-            onClick={() => {
-              formik.handleSubmit();
-              openConfirmModal();
-            }}
-            disabled={!enableSubmit(formik.values)}
-            color="primary"
-            variant="contained"
-            type="submit"
-            data-testid="confirm-button-test"
-          >
-            {t('general.confirm')}
-          </Button>
-        </Stack>
-      </Stack>
-      <GenericModal
-        title={t('commissionBundlesPage.addEditCommissionBundle.modal.title')}
-        message={t(`commissionBundlesPage.addEditCommissionBundle.modal.message${formik.values.type}`)}
-        openModal={showConfirmModal}
-        onConfirmLabel={t('general.confirm')}
-        onCloseLabel={t('general.cancel')}
-        handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfirm={async () => {
-          await submit(formik.values);
-          setShowConfirmModal(false);
-        }}
-      />
     </>
   );
 };

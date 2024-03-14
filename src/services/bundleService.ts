@@ -1,15 +1,16 @@
 import { BackofficeApi } from '../api/BackofficeClient';
-import { Bundle } from '../api/generated/portal/Bundle';
+import { BundleResource } from '../api/generated/portal/BundleResource';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
-import { Bundles } from '../api/generated/portal/Bundles';
+import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   createCommissionBundle,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
   getTouchpoints as getTouchpointsMock,
-  deletePSPBundle as deletePSPBundleMock
+  deletePSPBundle as deletePSPBundleMock,
+  updatePSPBundle as updatePSPBundleMock
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -20,7 +21,7 @@ export const getBundleListByPSP = (
   bundleName: string,
   page: number,
   pspCode: string
-): Promise<Bundles> => {
+): Promise<BundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundlePsp(bundleName);
   } else {
@@ -47,7 +48,7 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
   }
 };
 
-export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<Bundle> => {
+export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleDetails();
   } else {
@@ -60,5 +61,13 @@ export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<v
     return deletePSPBundleMock();
   } else {
     return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId);
+  }
+};
+
+export const updatePSPBundle = (pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updatePSPBundleMock();
+  } else {
+    return BackofficeApi.updatePSPBundle(pspTaxCode, bundleId, bundle);
   }
 };

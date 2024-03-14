@@ -9,7 +9,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import { Bundle } from '../../../api/generated/portal/Bundle';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
@@ -28,7 +28,7 @@ const CommissionBundleDetailPage = () => {
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
 
-  const [commissionBundleDetail, setCommissionBundleDetail] = useState<Bundle>({});
+  const [commissionBundleDetail, setCommissionBundleDetail] = useState<BundleResource>({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {

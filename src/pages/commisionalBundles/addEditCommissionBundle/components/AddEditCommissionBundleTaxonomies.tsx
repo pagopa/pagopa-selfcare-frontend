@@ -1,31 +1,20 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { FormikProps } from 'formik';
-import Papa from "papaparse";
-import React, { useEffect, useState } from 'react';
+import Papa from 'papaparse';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, InputAdornment, Link, Paper, TextField, Typography, Alert, AlertTitle } from '@mui/material';
-import { SingleFileInput, ButtonNaked } from '@pagopa/mui-italia';
+import { Button, Link, Paper, Typography, Alert, AlertTitle } from '@mui/material';
+import { SingleFileInput } from '@pagopa/mui-italia';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import SearchIcon from '@mui/icons-material/Search';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS } from '../../../../utils/constants';
-import { useAppSelector } from '../../../../redux/hooks';
-import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 import GenericModal from '../../../../components/Form/GenericModal';
-import taxonomiesExample from '../../../../data/tos.json';
-
-import {
-    BundleTaxonomiesTable
-} from './BundleTaxonomiesTable';
-import {
-    BundleTaxonomiesDrawer
-} from './drawer/BundleTaxonomiesDrawer';
+import { BundleTaxonomiesTable } from './BundleTaxonomiesTable';
+import { BundleTaxonomiesDrawer } from './drawer/BundleTaxonomiesDrawer';
 
 export interface TaxonomyToRemove {
-    taxonomy: string;
-    area: string;
+  taxonomy: string;
+  area: string;
 }
 
 type Props = {
@@ -33,72 +22,89 @@ type Props = {
   bundleTaxonomies: Array<Taxonomy>;
 };
 
-const reduceTaxonomies = (taxonomies: Array<Taxonomy>) => taxonomies.reduce(
-        (result:any, taxonomy:any) => {
-          const macro_area_name = taxonomy.macro_area_name;
-          const newResult: any = {...result,
-           ...{[macro_area_name]:(result[macro_area_name] ? result[macro_area_name] : [])}};
-          newResult[macro_area_name].push(taxonomy);
-          return newResult;
-        }, {});
+const reduceTaxonomies = (taxonomies: Array<Taxonomy>) =>
+  taxonomies.reduce((result: any, taxonomy: any) => {
+    const macro_area_name = taxonomy.macro_area_name;
+    const newResult: any = {
+      ...result,
+      ...{ [macro_area_name]: result[macro_area_name] ? result[macro_area_name] : [] },
+    };
+    newResult[macro_area_name].push(taxonomy);
+    return newResult;
+  }, {});
 
 const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) => {
   const { t } = useTranslation();
-  // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
-  const addError = useErrorDispatcher();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [areaToRemove, setAreaToRemove] = useState<string>();
   const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
-  const [taxonomies, setTaxonomies] = useState<Array<any>>([]);
-  const [taxonomyTableData, setTaxonomyTableData] = useState<any>();
+  const [taxonomies, setTaxonomies] = useState<Array<any>>(
+    bundleTaxonomies && bundleTaxonomies.length > 0 ? bundleTaxonomies : []
+  );
+  const [taxonomyTableData, setTaxonomyTableData] = useState<any>(
+    bundleTaxonomies && bundleTaxonomies.length > 0 ? reduceTaxonomies(bundleTaxonomies) : undefined
+  );
   const [alertData, setAlertData] = useState<any>();
-
-  if ((taxonomies === undefined || taxonomies.length === 0) &&
-    (bundleTaxonomies && bundleTaxonomies.length > 0)) {
-    setTaxonomies(bundleTaxonomies);
-  }
-
-  if (taxonomyTableData === undefined &&
-    (bundleTaxonomies && bundleTaxonomies.length > 0)) {
-    setTaxonomyTableData(reduceTaxonomies(bundleTaxonomies));
-  }
 
   const handleSelect = (file: File) => {
     setFile(file);
     const reader = new FileReader();
-     // eslint-disable-next-line
-    reader.onload = async ({ target } : any) => {
-        const csv = Papa.parse(target.result, {
-            header: true,
+    // eslint-disable-next-line
+    reader.onload = async ({ target }: any) => {
+      const csv = Papa.parse(target.result, {
+        header: true,
+        skipEmptyLines: true,
+      });
+      // eslint-disable-next-line functional/no-let
+      let errorParsing = 0;
+      const parsedData = csv?.data
+        ?.filter((el: any) => {
+          if (el.specific_built_in_data) {
+            return true;
+          } else {
+            errorParsing += 1;
+            return false;
+          }
+        })
+        ?.map((item: any) => ({ ...item, fromFile: true }));
+      await handleAddFromDrawer(parsedData);
+      if (csv?.errors?.length === csv?.data?.length || errorParsing === csv?.data?.length) {
+        setAlertData({
+          type: 'error',
+          message: t(
+            'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorMessage'
+          ),
         });
-        const parsedData = csv?.data.map((item) => Object.assign({},item,{"fromFile":true}));
-        await handleAddFromDrawer(parsedData);
-        if (csv?.errors.length > 0) {
-            setAlertData({
-                "type":"warning",
-                "message": t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warningMessage',
-                 { count: csv?.errors.length, total: csv?.data.length })
-            });
-        } else {
-            setAlertData({
-                "type":"success",
-                "message": t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successMessage',
-                 { count: csv?.data.length })
-            });
-        }
+      } else if (csv?.errors.length > 0 || errorParsing) {
+        setAlertData({
+          type: 'warning',
+          message: t(
+            'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warningMessage',
+            {
+              count: csv?.errors.length + errorParsing,
+              total: csv?.errors.length + csv?.data.length,
+            }
+          ),
+        });
+      } else {
+        setAlertData({
+          type: 'success',
+          message: t(
+            'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successMessage',
+            { count: csv?.data.length }
+          ),
+        });
+      }
     };
     reader.readAsText(file);
   };
   const handleRemove = () => {
     setFile(null);
-    const taxonomyToRemove = taxonomies.filter((item) => item.fromFile)
-        .map((item) => item.specific_built_in_data);
-    const filteredTaxonomies = taxonomies.filter((item) =>
-        item.fromFile === undefined
-    );
+    const taxonomyToRemove = taxonomies
+      .filter((item) => item.fromFile)
+      .map((item) => item.specific_built_in_data);
+    const filteredTaxonomies = taxonomies.filter((item) => item.fromFile === undefined);
     setTaxonomies(filteredTaxonomies);
     updateTableData(filteredTaxonomies);
     deleteTransferCategoryItem(taxonomyToRemove);
@@ -106,11 +112,12 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
 
   const handleAddFromDrawer = async (taxonomiesToAdd: Array<any>) => {
     const filteredTaxonomies = taxonomiesToAdd.filter(
-        (taxonomy) => !taxonomies.includes(taxonomy.specific_built_in_data));
+      (taxonomy) => !taxonomies.includes(taxonomy.specific_built_in_data)
+    );
     const newTaxonomyList = [...taxonomies.values(), ...filteredTaxonomies];
     setTaxonomies(newTaxonomyList);
     updateTableData(newTaxonomyList);
-    addTransferCategoryItem(newTaxonomyList.map(taxonomy => taxonomy.specific_built_in_data));
+    addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specific_built_in_data));
   };
 
   const updateTableData = (taxonomies: Array<Taxonomy>) => {
@@ -127,7 +134,8 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
   const deleteTransferCategoryItem = (elementsToFilter: Array<string>) => {
     if (formik.values.transferCategoryList && elementsToFilter) {
       const newArr = formik.values.transferCategoryList.filter(
-        item => !elementsToFilter.includes(item));
+        (item) => !elementsToFilter.includes(item)
+      );
       formik.setFieldValue('transferCategoryList', newArr);
     }
   };
@@ -136,27 +144,33 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
     setAreaToRemove(area);
   };
 
-  const openTaxonomyModalAction = (data : TaxonomyToRemove) => {
+  const openTaxonomyModalAction = (data: TaxonomyToRemove) => {
     setTaxonomyToRemove(data);
   };
 
   const deleteArea = (area: string | undefined) => {
-     if (area !== undefined) {
-         const taxonomiesToFilter = taxonomyTableData[area].map((item: Taxonomy) => item.specific_built_in_data);
-         const { [area]: _ , ...filtered } = taxonomyTableData;
-         setTaxonomyTableData({...filtered});
-         setTaxonomies(taxonomies.filter(item => !taxonomiesToFilter.includes(item.specific_built_in_data)));
-         deleteTransferCategoryItem(taxonomiesToFilter);
-     }
+    if (area !== undefined) {
+      const taxonomiesToFilter = taxonomyTableData[area].map(
+        (item: Taxonomy) => item.specific_built_in_data
+      );
+      const { [area]: _, ...filtered } = taxonomyTableData;
+      setTaxonomyTableData({ ...filtered });
+      setTaxonomies(
+        taxonomies.filter((item) => !taxonomiesToFilter.includes(item.specific_built_in_data))
+      );
+      deleteTransferCategoryItem(taxonomiesToFilter);
+    }
   };
 
-  const deleteTaxonomy = (data : TaxonomyToRemove | undefined) => {
-     if (data !== undefined) {
-         const filteredTaxonomies = taxonomies.filter(item => item.specific_built_in_data !== data?.taxonomy);
-         setTaxonomies(filteredTaxonomies);
-         updateTableData(filteredTaxonomies);
-         deleteTransferCategoryItem(data !== undefined ? [data.taxonomy] : []);
-     }
+  const deleteTaxonomy = (data: TaxonomyToRemove | undefined) => {
+    if (data !== undefined) {
+      const filteredTaxonomies = taxonomies.filter(
+        (item) => item.specific_built_in_data !== data?.taxonomy
+      );
+      setTaxonomies(filteredTaxonomies);
+      updateTableData(filteredTaxonomies);
+      deleteTransferCategoryItem(data !== undefined ? [data.taxonomy] : []);
+    }
   };
 
   return (
@@ -191,19 +205,30 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
       </Button>
-      {(alertData) && (
-      <Alert severity={alertData.type} data-testid="alert-success-test" onClose={() => {setAlertData(null);}}>
-        <AlertTitle> {alertData.type === "success" ?
-            t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle') :
-            alertData.type === "warning" ?
-            t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle') :
-            alertData.type === "error" ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle') : ""}
-       </AlertTitle>
-        {alertData.message}
-      </Alert>)}
+      {alertData && (
+        <Alert
+          severity={alertData.type}
+          data-testid="alert-success-test"
+          onClose={() => {
+            setAlertData(null);
+          }}
+        >
+          <AlertTitle>
+            {' '}
+            {alertData.type === 'success'
+              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle')
+              : alertData.type === 'warning'
+              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle')
+              : alertData.type === 'error'
+              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle')
+              : ''}
+          </AlertTitle>
+          {alertData.message}
+        </Alert>
+      )}
       <SingleFileInput
         value={file}
-        accept={[".csv"]}
+        accept={['.csv']}
         onFileSelected={handleSelect}
         onFileRemoved={handleRemove}
         dropzoneLabel={t(
@@ -216,19 +241,23 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
 
       {(file === undefined || file === null) && (
         <React.Fragment>
-              <Typography variant="body1" mb={1} mt={1}>
-                {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
-                <a href={process.env.PUBLIC_URL +"/file/taxonomiesExample.csv"} download="taxonomiesExample.csv">
-                     {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')} </a>
-              </Typography>
+          <Typography variant="body1" mb={1} mt={1}>
+            {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
+            <a
+              href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
+              download="taxonomiesExample.csv"
+            >
+              {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}
+            </a>
+          </Typography>
         </React.Fragment>
       )}
 
-      {(taxonomyTableData && Object.keys(taxonomyTableData).length > 0) && (
+      {taxonomyTableData && Object.keys(taxonomyTableData).length > 0 && (
         <BundleTaxonomiesTable
-            tableData={taxonomyTableData}
-            deleteAreaAction={openAreaModalAction}
-            deleteTaxonomyAction={openTaxonomyModalAction}
+          tableData={taxonomyTableData}
+          deleteAreaAction={openAreaModalAction}
+          deleteTaxonomyAction={openTaxonomyModalAction}
         />
       )}
 
@@ -239,7 +268,9 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
       />
 
       <GenericModal
-        title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title')}
+        title={t(
+          'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.title'
+        )}
         message={t(
           `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.removeAreaModal.message`
         )}
@@ -267,7 +298,6 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
           setTaxonomyToRemove(undefined);
         }}
       />
-
     </Paper>
   );
 };

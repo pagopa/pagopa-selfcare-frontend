@@ -926,11 +926,12 @@
           "message": "Sarà rimosso il servizio di incasso"
         },
         "alert": {
-          "successTitle": "il file è valido",
-          "warnTitle": "il file ha riscontrato degli errori",
+          "successTitle": "Il file è valido",
+          "warnTitle": "Il file ha riscontrato degli errori",
           "errorTitle": "il file non è valido",
-          "successMessage": "Sono stati caricati {{count}} Servizi di incasso",
-          "warningMessage": "Non è stato possibile caricare {{count}} Servizi di incasso di {{total}}"
+          "successMessage": "Sono stati caricati {{count}} servizi di incasso",
+          "warningMessage": "Non è stato possibile caricare {{count}} servizi di incasso di {{total}}",
+          "errorMessage": "Non è stato possibile caricare i servizi di incasso"
         }
       },
       "validationMessage": {

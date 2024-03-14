@@ -24,13 +24,9 @@ import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
 import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
-import {
-  createBundle,
-  updatePSPBundle,
-} from '../../../services/bundleService';
+import { createBundle, updatePSPBundle } from '../../../services/bundleService';
 import {
   LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
   LOADING_TASK_CREATING_COMMISSION_BUNDLE,
@@ -47,7 +43,7 @@ export interface AddEditCommissionBundlePageProps {
 const minDateTomorrow = add(new Date(), { days: 1 });
 
 const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource): BundleRequest => ({
-  abi: selectedParty?.pspData?.abi_code ?? "",
+  abi: selectedParty?.pspData?.abi_code ?? '',
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
   digitalStampRestriction: data?.digitalStampRestriction ?? false,
@@ -150,7 +146,6 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [bundleTaxonomies, setBundleTaxonomies] = useState<Array<Taxonomy>>([]);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),
@@ -209,11 +204,6 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
     if (bundleId && actionId === FormAction.Edit) {
       setLoading(true);
       const setForm = async () => {
-        setBundleTaxonomies(
-          bundleDetails?.transferCategoryList
-            ? bundleDetails.transferCategoryList.map((item) => item)
-            : []
-        );
         await formik.setValues(toNewFormData(selectedParty, bundleDetails));
       };
       setForm().finally(() => setLoading(false));
@@ -283,7 +273,14 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
           style={{ display: activeStep !== 1 ? 'none' : undefined }}
           data-testid="bundle-taxonomies-div"
         >
-          <AddEditCommissionBundleTaxonomies formik={formik} bundleTaxonomies={bundleTaxonomies} />
+          <AddEditCommissionBundleTaxonomies
+            formik={formik}
+            bundleTaxonomies={
+              bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
+                ? [...bundleDetails.transferCategoryList]
+                : []
+            }
+          />
         </div>
         <Stack direction="row" justifyContent="space-between" mt={5}>
           <Stack display="flex" justifyContent="flex-start" mr={2}>

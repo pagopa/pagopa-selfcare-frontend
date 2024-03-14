@@ -2,10 +2,17 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import React from 'react';
 import CommissionBundleDetailPage from '../../detail/CommissionBundleDetailPage';
 import * as BundleService from '../../../../services/bundleService';
-import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate, mockedCommissionBundlePspDetailPublic } from '../../../../services/__mocks__/bundleService';
+import {
+  mockedCommissionBundlePspDetailGlobal,
+  mockedCommissionBundlePspDetailPrivate,
+  mockedCommissionBundlePspDetailPublic,
+} from '../../../../services/__mocks__/bundleService';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
+import { useAppDispatch } from '../../../../redux/hooks';
+import { BundleResource } from '../../../../api/generated/portal/BundleResource';
+import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -14,24 +21,29 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const mock = jest.spyOn(BundleService, 'getBundleDetailByPSP');
-const deleteMock = jest.spyOn(BundleService, "deletePSPBundle");
-const idBundle = "idBundle";
+const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
+const idBundle = 'idBundle';
+
+const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
+  const dispatcher = useAppDispatch();
+  dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+
+  return (
+    <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
+      <Route path="/comm-bundles/:bundleId/">
+        <CommissionBundleDetailPage />
+      </Route>
+    </MemoryRouter>
+  );
+};
 
 describe('<CommissionBundleDetailPage />', () => {
   test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
-    mock.mockReturnValueOnce(
-      new Promise((resolve) => resolve(mockedCommissionBundlePspDetailGlobal))
-    );
-    deleteMock.mockReturnValueOnce(new Promise(resolve => resolve()));
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
-          <Route path="/comm-bundles/:bundleId/">
-            <CommissionBundleDetailPage />
-          </Route>
-        </MemoryRouter>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal} />
       </Provider>
     );
 
@@ -40,44 +52,37 @@ describe('<CommissionBundleDetailPage />', () => {
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
     });
 
-    const deleteButton = screen.getByTestId("delete-button");
+    const deleteButton = screen.getByTestId('delete-button');
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
-    })
+    });
 
-    const cancelDeleteButton = screen.getByTestId("cancel-button-test");
+    const cancelDeleteButton = screen.getByTestId('cancel-button-test');
     fireEvent.click(cancelDeleteButton);
 
     await waitFor(() => {
       expect(screen.queryByTestId('fade-test')).not.toBeInTheDocument();
-    })
+    });
 
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
-    })
-    
-    const confirmDeleteButton = screen.getByTestId("confirm-button-test");
+    });
+
+    const confirmDeleteButton = screen.getByTestId('confirm-button-test');
     fireEvent.click(confirmDeleteButton);
     expect(deleteMock).toBeCalledTimes(1);
   });
 
   test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
-    mock.mockReturnValueOnce(
-      new Promise((resolve) => resolve(mockedCommissionBundlePspDetailPrivate))
-    );
-    deleteMock.mockReturnValueOnce(new Promise(resolve => resolve()));
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
-          <Route path="/comm-bundles/:bundleId/">
-            <CommissionBundleDetailPage />
-          </Route>
-        </MemoryRouter>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate} />
       </Provider>
     );
 
@@ -88,18 +93,11 @@ describe('<CommissionBundleDetailPage />', () => {
   });
 
   test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
-    mock.mockReturnValueOnce(
-      new Promise((resolve) => resolve(mockedCommissionBundlePspDetailPublic))
-    );
-    deleteMock.mockReturnValueOnce(new Promise(resolve => resolve()));
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
-          <Route path="/comm-bundles/:bundleId/">
-            <CommissionBundleDetailPage />
-          </Route>
-        </MemoryRouter>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic} />
       </Provider>
     );
 

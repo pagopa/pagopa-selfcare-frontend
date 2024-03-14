@@ -176,7 +176,7 @@ export const BundleTaxonomiesDrawer = ({
           const map = new Map<string, boolean>();
           data.taxonomies.forEach((item) => map.set(item.specific_built_in_data, false));
           setCheckedTaxonomies(map);
-          setShowSearchError(data.taxonomies.length === 0);
+          setShowSearchError(searchText && data.taxonomies.length === 0 ? true : false);
         }
       })
       .catch((reason) =>
@@ -281,16 +281,18 @@ export const BundleTaxonomiesDrawer = ({
               justifyContent={'space-between'}
               minHeight="60vh"
             >
-              {taxonomies?.map((item) => (
-                <BundleTaxonomiesCheckboxButton
-                  key={item.specific_built_in_data}
-                  title={item.specific_built_in_data}
-                  subtitle={item.service_type}
-                  checked={checkedTaxonomies?.get(item.specific_built_in_data)}
-                  action={() => handleTaxonomyCheck(item)}
-                  maxCharactersNumberMultiLine={100}
-                />
-              ))}
+              <Box>
+                {taxonomies?.map((item) => (
+                  <BundleTaxonomiesCheckboxButton
+                    key={item.specific_built_in_data}
+                    title={item.specific_built_in_data}
+                    subtitle={item.service_type}
+                    checked={checkedTaxonomies?.get(item.specific_built_in_data)}
+                    action={() => handleTaxonomyCheck(item)}
+                    maxCharactersNumberMultiLine={100}
+                  />
+                ))}
+              </Box>
               <Button
                 fullWidth
                 onClick={(_) => handleAdd()}

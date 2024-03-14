@@ -203,7 +203,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
       </Alert>)}
       <SingleFileInput
         value={file}
-        // TODO ADD FILE TYPE RESTRICTION
+        accept={[".csv"]}
         onFileSelected={handleSelect}
         onFileRemoved={handleRemove}
         dropzoneLabel={t(

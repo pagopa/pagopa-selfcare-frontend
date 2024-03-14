@@ -854,6 +854,7 @@
       "configuration": "Configurazione",
       "updatedOn": "Aggiornato il",
       "noTaxonomiesAlert": "Nessun servizio associato",
+      "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
       "error": {
         "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
       },

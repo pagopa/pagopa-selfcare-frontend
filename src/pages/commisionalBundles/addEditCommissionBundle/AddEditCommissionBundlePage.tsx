@@ -47,12 +47,11 @@ export interface AddEditCommissionBundlePageProps {
 const minDateTomorrow = add(new Date(), { days: 1 });
 
 const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource): BundleRequest => ({
-  abi: '', // TODO insert ABI code value
+  abi: selectedParty?.pspData?.abi_code ?? "",
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
   digitalStampRestriction: data?.digitalStampRestriction ?? false,
   idBrokerPsp: data?.idBrokerPsp ?? '',
-  idCdi: '', // TODO insert idCdi
   idChannel: data?.idChannel ?? '',
   maxPaymentAmount: data?.maxPaymentAmount ?? 0,
   minPaymentAmount: data?.minPaymentAmount ?? 0,

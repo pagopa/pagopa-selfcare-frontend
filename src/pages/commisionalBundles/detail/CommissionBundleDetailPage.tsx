@@ -33,7 +33,7 @@ const CommissionBundleDetailPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+    const pspTaxCode = selectedParty?.fiscalCode ?? '';
     getBundleDetailByPSP(pspTaxCode, bundleId)
       .then((data) => {
         setCommissionBundleDetail(data);
@@ -57,7 +57,7 @@ const CommissionBundleDetailPage = () => {
 
   function handleDeletePSP() {
     setLoading(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+    const pspTaxCode = selectedParty?.fiscalCode ?? '';
     deletePSPBundle(pspTaxCode, bundleId)
       .then((_) => {
         history.push(ROUTES.COMMISSION_BUNDLES);

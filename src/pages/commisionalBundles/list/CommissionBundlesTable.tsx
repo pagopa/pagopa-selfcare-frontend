@@ -70,7 +70,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
       pageLimit,
       bundleNameFilter,
       newPage ?? page,
-      `PSP${brokerCode}`
+      brokerCode
     )
       .then((res) => {
         if (res?.bundles) {

@@ -182,7 +182,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
 
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+    const pspTaxCode = selectedParty?.fiscalCode ?? '';
     const isEdit = actionId === FormAction.Edit;
 
     const promise = isEdit
@@ -225,7 +225,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   useEffect(() => {
     if (bundleId && actionId === FormAction.Edit) {
       setLoading(true);
-      const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+      const pspTaxCode = selectedParty?.fiscalCode ?? '';
       getBundleDetailByPSP(pspTaxCode, bundleId)
         .then(async (data) => {
           const newFormData = toNewFormData(data);

@@ -119,7 +119,6 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
 
   const addTransferCategoryItem = (transferCategoryList: Array<string>) => {
     if (formik.values.transferCategoryList && transferCategoryList) {
-      console.log(formik.values.transferCategoryList);
       const newArr = [...formik.values.transferCategoryList, ...transferCategoryList];
       formik.setFieldValue('transferCategoryList', newArr);
     }

@@ -56,8 +56,8 @@ export const ENV = {
         IBAN: {
             ENABLED: getConfig('REACT_APP_FEATURES_IBAN_ENABLED', {default: false, type: Type.boolean}),
         },
-        COMMISSION_PACKAGES: {
-            ENABLED: getConfig('REACT_APP_FEATURES_COMMISSION_PACKAGES_ENABLED', {default: false, type: Type.boolean}),
+        COMMISSION_BUNDLES: {
+            ENABLED: getConfig('REACT_APP_FEATURES_COMMISSION_BUNDLES_ENABLED', {default: false, type: Type.boolean}),
         },
         OPERATIONTABLE: {
             ENABLED: getConfig('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED', {default: false, type: Type.boolean}),

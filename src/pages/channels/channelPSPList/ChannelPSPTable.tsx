@@ -51,7 +51,7 @@ export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: Chan
       : 0
   );
 
-  const [selectedPSPCode, setSelectedPSPCode] = useState<string>('');
+  const [selectedPSTaxPCode, setSelectedPSPTaxCode] = useState<string>('');
 
   const { channelId } = useParams<{ channelId: string }>();
 
@@ -65,7 +65,7 @@ export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: Chan
   }, [pspNameFilter]);
 
   const onRowClick = (pspIdRow: string) => {
-    setSelectedPSPCode(pspIdRow);
+    setSelectedPSPTaxCode(pspIdRow);
     setShowConfirmModal(true);
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
@@ -83,7 +83,7 @@ export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: Chan
     setLoading(true);
 
     try {
-      await dissociatePSPfromChannel(channelId, selectedPSPCode);
+      await dissociatePSPfromChannel(channelId, selectedPSTaxPCode);
       setAlertMessage(t('channelPSPList.dissociatePSPsuccessMessage'));
       fetchChannelPSPs(page);
     } catch (reason) {
@@ -99,7 +99,7 @@ export default function ChannelPSPTable({ setAlertMessage, pspNameFilter }: Chan
       ]);
       setError(true);
     } finally {
-      setSelectedPSPCode('');
+      setSelectedPSPTaxCode('');
       setLoading(false);
     }
   };

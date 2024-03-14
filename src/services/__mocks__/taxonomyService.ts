@@ -1,4 +1,6 @@
 import { Taxonomies } from '../../api/generated/portal/Taxonomies';
+import { TaxonomyGroups } from '../../api/generated/portal/TaxonomyGroups';
+
 
 export const mockedTaxonomy: Taxonomies = {
     taxonomies: [
@@ -20,5 +22,14 @@ export const mockedTaxonomy: Taxonomies = {
     ],
   };
 
+export const mockedTaxonomyGroups: TaxonomyGroups = {
+    taxonomyGroups: [
+
+    ],
+  };
+
 export const getTaxonomies = (): Promise<Taxonomies> =>
   new Promise((resolve) => resolve(mockedTaxonomy));
+
+export const getTaxonomyGroups = (): Promise<TaxonomyGroups> =>
+  new Promise((resolve) => resolve(mockedTaxonomyGroups));

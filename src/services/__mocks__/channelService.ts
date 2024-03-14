@@ -75,7 +75,7 @@ export const mockedPSPChannels: PspChannelsResource = {
   ],
 };
 
-const channelEnabled = (channel: PspChannelsResource) => {
+export const channelEnabled = (channel: PspChannelsResource) => {
   const newList: PspChannelsResource = {
     channels: channel.channels.filter((e) => e.enabled === false),
   };
@@ -198,7 +198,7 @@ export const mockedWrapperChannel: WrapperChannelDetailsDto = {
   payment_types: mockedPaymentTypes?.payment_types?.map((e) => `${e.description ?? ""} - ${e.payment_type ?? ""}`) ?? [],
   status: StatusEnum.TO_CHECK,
 };
-export const mockedStationsMerged: WrapperChannelsResource = {
+export const mockedChannelsMerged: WrapperChannelsResource = {
   page_info: {
     page: 0,
     limit: 10,
@@ -284,30 +284,36 @@ export const mockedChannelPSPs: ChannelPspListResource = {
       business_name: 'PSP S.p.A.',
       enabled: true,
       payment_types: ['MYBK'],
+      tax_code: 'AAAAAAAA78AAAAA3'
     },
     {
       psp_code: '14847241002',
       business_name: 'PSP2 S.p.A.',
       enabled: true,
       payment_types: ['PPAY'],
+      
+      tax_code: 'AAAAAAAA78AAAAA4'
     },
     {
       psp_code: '14847241003',
       business_name: 'PSP3 S.p.A.',
       enabled: false,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA5'
     },
     {
       psp_code: '14847241004',
       business_name: 'PSP4 S.p.A.',
       enabled: false,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA6'
     },
     {
       psp_code: '14847241005',
       business_name: 'PSP5 S.p.A.',
       enabled: true,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA7'
     },
   ],
   page_info: {
@@ -324,18 +330,21 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
       business_name: 'PSP6 S.p.A.',
       enabled: true,
       payment_types: ['MYBK'],
+      tax_code: 'AAAAAAAA78AAAAA8'
     },
     {
       psp_code: '14847241007',
       business_name: 'PSP7 S.p.A.',
       enabled: true,
       payment_types: ['PPAY'],
+      tax_code: 'AAAAAAAA78AAAAA9'
     },
     {
       psp_code: '14847241008',
       business_name: 'PSP8 S.p.A.',
       enabled: true,
       payment_types: ['STP'],
+      tax_code: 'AAAAAAAA78AAAAA2'
     },
   ],
   page_info: {
@@ -345,46 +354,6 @@ export const mockedChannelPSPsPage2: ChannelPspListResource = {
     total_pages: 2,
   },
 };
-
-export const mockedDelegatedPSP: Array<Delegation> = [
-  {
-    broker_id: '12345',
-    institution_id: '0000001',
-    broker_name: 'PSP1',
-  },
-  {
-    broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e',
-    broker_name: 'Regione Toscana',
-    id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db',
-    institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be064847',
-    institution_name:
-      "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
-    institution_type: 'PA',
-    product_id: 'prod-pagopa',
-    tax_code: '80001110487',
-    type: 'PT',
-  },
-  {
-    institution_id: '0000002',
-    broker_name: 'PSP2',
-  },
-  {
-    institution_id: '0000003',
-    broker_name: 'PSP3',
-  },
-  {
-    institution_id: '0000004',
-    broker_name: 'PSP4',
-  },
-  {
-    institution_id: '0000005',
-    broker_name: 'PSP5',
-  },
-  {
-    institution_id: '0000006',
-    broker_name: 'PSP6',
-  },
-];
 
 export const channelCode: ChannelCodeResource = {
   channel_code: '1231231231',
@@ -399,9 +368,9 @@ export const getChannelsMerged = (
   _stationcode?: string,
   _limit?: number,
   _sorting?: string
-): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedStationsMerged));
+): Promise<WrapperChannelsResource> => new Promise((resolve) => resolve(mockedChannelsMerged));
 
-export const getChannelCode = (_pspCode: string): Promise<ChannelCodeResource> =>
+export const getChannelCode = (_taxCode: string): Promise<ChannelCodeResource> =>
   new Promise((resolve) => resolve(channelCode));
 
 export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> =>
@@ -428,14 +397,15 @@ export const updateChannel = (
 export const getChannelPSPs = (page: number): Promise<ChannelPspListResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedChannelPSPs : mockedChannelPSPsPage2));
 
+export const mockedPaymentTypesResource: PspChannelPaymentTypesResource = { payment_types: ['ptype_test'] };
 export const associatePSPtoChannel = (
   _channelcode: string,
   _pspcode: string,
   _payment_type: PspChannelPaymentTypes
 ): Promise<PspChannelPaymentTypesResource> =>
-  new Promise((resolve) => resolve({ payment_types: ['ptype_test'] }));
+  new Promise((resolve) => resolve(mockedPaymentTypesResource));
 
-export const dissociatePSPfromChannel = (_channelcode: string, _pspcode: string): Promise<void> =>
+export const dissociatePSPfromChannel = (_channelcode: string, _pspTaxCode: string): Promise<void> =>
   new Promise((resolve) => resolve());
 
 export const createWrapperChannel = (

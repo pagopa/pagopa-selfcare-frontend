@@ -1,10 +1,17 @@
-
 import { BackofficeApi } from '../api/BackofficeClient';
+import { BundleResource } from '../api/generated/portal/BundleResource';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
-import { Bundles } from '../api/generated/portal/Bundles';
+import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
-import { createCommissionPackage, getCommissionPackagePsp, getTouchpoints as getTouchpointsMock } from './__mocks__/bundleService';
+import {
+  createCommissionBundle,
+  getCommissionBundleDetails,
+  getCommissionBundlePsp,
+  getTouchpoints as getTouchpointsMock,
+  deletePSPBundle as deletePSPBundleMock,
+  updatePSPBundle as updatePSPBundleMock
+} from './__mocks__/bundleService';
 
 // /bundles endpoint
 
@@ -14,9 +21,9 @@ export const getBundleListByPSP = (
   bundleName: string,
   page: number,
   pspCode: string
-): Promise<Bundles> => {
+): Promise<BundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCommissionPackagePsp(bundleName);
+    return getCommissionBundlePsp(bundleName);
   } else {
     return BackofficeApi.getBundlesByPsp(bundleType, pageLimit, bundleName, page, pspCode);
   }
@@ -27,7 +34,7 @@ export const createBundle = (
   bundle: BundleRequest
 ): Promise<BundleCreateResponse> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return createCommissionPackage(bundle);
+    return createCommissionBundle(bundle);
   } else {
     return BackofficeApi.createBundle(pspTaxCode, bundle);
   }
@@ -38,5 +45,29 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
     return getTouchpointsMock();
   } else {
     return BackofficeApi.getTouchpoints(page, pageLimit);
+  }
+};
+
+export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCommissionBundleDetails();
+  } else {
+    return BackofficeApi.getBundleDetailByPSP(pspTaxCode, bundleId);
+  }
+};
+
+export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return deletePSPBundleMock();
+  } else {
+    return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId);
+  }
+};
+
+export const updatePSPBundle = (pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updatePSPBundleMock();
+  } else {
+    return BackofficeApi.updatePSPBundle(pspTaxCode, bundleId, bundle);
   }
 };

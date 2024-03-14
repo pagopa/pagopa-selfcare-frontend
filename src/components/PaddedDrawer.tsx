@@ -8,15 +8,17 @@ export const PaddedDrawer = ({
     setOpenDrawer,
     children,
     hasBackButton,
-    backButtonAction
+    backButtonAction,
+    onClose = () => setOpenDrawer(false)
   }: {
     openDrawer: boolean;
     setOpenDrawer: Dispatch<SetStateAction<boolean>>;
     children: React.ReactNode;
     hasBackButton?: boolean;
     backButtonAction?: React.Dispatch<React.MouseEvent<HTMLButtonElement, MouseEvent>>;
+    onClose?: () => void;
   }) => (
-    <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} anchor="right" data-testid="padded-drawer">
+    <Drawer open={openDrawer} onClose={() => onClose() } anchor="right" data-testid="padded-drawer">
       <Box p={3} sx={{ maxWidth: '320px', minWidth: "320px" }}>
         <Stack direction="row" justifyContent="space-between">
             <Box display="flex" justifyContent="flex-start" mb={1}>
@@ -26,7 +28,7 @@ export const PaddedDrawer = ({
               </IconButton>)}
             </Box>
             <Box display="flex" justifyContent="flex-end" mb={1}>
-              <IconButton onClick={() => setOpenDrawer(false)} data-testid="close-drawer-button">
+              <IconButton onClick={() => onClose()} data-testid="close-drawer-button">
                 <CloseIcon />
               </IconButton>
             </Box>

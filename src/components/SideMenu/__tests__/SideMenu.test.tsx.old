@@ -104,12 +104,12 @@
 //       })
 //     );
 //
-//     const commPackagesItem = screen.getByTestId('commission-packages-test');
+//     const commBundlesItem = screen.getByTestId('commission-bundles-test');
 //
-//     expect(commPackagesItem).toBeInTheDocument();
-//     fireEvent.click(commPackagesItem);
+//     expect(commBundlesItem).toBeInTheDocument();
+//     fireEvent.click(commBundlesItem);
 //
-//     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.COMMISSION_PACKAGES));
+//     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.COMMISSION_BUNDLES));
 //   });
 //
 //   test('should render SideMenu', async () => {
@@ -126,7 +126,7 @@
 //       })
 //     );
 //
-//     const commPackagesItem = screen.getByTestId('commission-packages-test') as HTMLElement;
+//     const commBundlesItem = screen.getByTestId('commission-bundles-test') as HTMLElement;
 //
 //     await waitFor(() =>
 //       store.dispatch({
@@ -135,7 +135,7 @@
 //       })
 //     );
 //
-//     expect(commPackagesItem).toHaveAttribute('aria-disabled');
+//     expect(commBundlesItem).toHaveAttribute('aria-disabled');
 //   });
 //
 //   test('should render SideMenu', async () => {

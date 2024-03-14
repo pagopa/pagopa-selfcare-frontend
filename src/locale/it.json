@@ -742,7 +742,7 @@
     "validityDate": "Periodo di validità",
     "from": "Data inizio",
     "to": "Data fine",
-    "ecData": "Dati ente crerditore",
+    "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
     "buttons": {
       "edit": "Modifica",
@@ -813,18 +813,18 @@
       "bankIbanConflict": "IBAN già censito"
     }
   },
-  "commissionPackagesPage": {
+  "commissionBundlesPage": {
     "title": "Pacchetti commissioni",
     "subtitle": "Gestisci i pacchetti commissionali.",
-    "privatePackages": "Privati",
-    "publicPackages": "Pubblici",
-    "globalPackages": "Globali",
+    "privateBundles": "Privati",
+    "publicBundles": "Pubblici",
+    "globalBundles": "Globali",
     "list": {
       "searchByName": "Cerca per Nome",
-      "createPackage": "Crea pacchetto",
-      "noCommPackages": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
+      "createBundle": "Crea pacchetto",
+      "noCommBundles": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
       "headerFields": {
-        "packageName": "Nome pacchetto",
+        "bundleName": "Nome pacchetto",
         "startDate": "Inizio validità",
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
@@ -832,11 +832,37 @@
         "amountRange": "Fascia importo"
       },
       "error": {
-        "errorTitle": "Errore",
-        "commissionPackageDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni"
+        "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",
+        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso"
       }
     },
-    "addEditCommissionPackage": {
+    "commissionBundleDetail": {
+      "title": "Dettaglio pacchetto",
+      "createdOn": "Creato il",
+      "appliedImport": "Importo applicato",
+      "connectionData": "Dati di connessione",
+      "changes": "Modifiche",
+      "lastChange": "Ultima modifica",
+      "operatedBy": "Operata da",
+      "recipients": "Destinatari",
+      "activeEntities": "Enti attivi",
+      "waitingEntities": "Enti in attesa",
+      "subscriptions": "Adesioni",
+      "manageRecipients": "Gestisci destinatari",
+      "menageSubscriptions": "Gestisci adesioni",
+      "taxonomies": "Servizi di incasso",
+      "configuration": "Configurazione",
+      "updatedOn": "Aggiornato il",
+      "noTaxonomiesAlert": "Nessun servizio associato",
+      "error": {
+        "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
+      },
+      "modal": {
+        "title": "Eliminazione pacchetto commissionale",
+        "message": "Attenzione confermando l’operazione il pacchetto verrà eliminato."
+      }
+    },
+    "addEditCommissionBundle": {
       "breadcrumb": {
         "first": "Pacchetti commissioni",
         "second": "Crea pacchetto"
@@ -844,14 +870,14 @@
       "title": "Crea un nuovo pacchetto commissioni",
       "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
       "form": {
-        "packageType": "Tipologia pacchetto",
-        "privatePackage": "Privato",
-        "publicPackage": "Pubblico",
-        "globalPackage": "Globale",
-        "packageConfiguration": "Configurazione pacchetto",
-        "packageStructure": "Struttura del pacchetto",
-        "packageName": "Nome pacchetto",
-        "packageDescription": "Descrizione pacchetto",
+        "bundleType": "Tipologia pacchetto",
+        "privateBundle": "Privato",
+        "publicBundle": "Pubblico",
+        "globalBundle": "Globale",
+        "bundleConfiguration": "Configurazione pacchetto",
+        "bundleStructure": "Struttura del pacchetto",
+        "bundleName": "Nome pacchetto",
+        "bundleDescription": "Descrizione pacchetto",
         "paymentType": "Tipo di pagamento",
         "touchpoint": "Touchpoint",
         "taxonomyOfService": "Tassonomia di servizio",
@@ -870,12 +896,8 @@
         "noBrokersOption": "Nessun intermediario trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
-        "yes": "Si",
-        "no": "No",
         "from": "Da",
-        "to": "A",
-        "confirmButton": "Conferma",
-        "backButton": "Indietro"
+        "to": "A"
       },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",
@@ -884,16 +906,15 @@
         "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio"
       },
       "modal": {
-        "title": "Creazione nuovo pacchetto commissioni privato",
-        "message": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
-        "confirmButton": "Conferma",
-        "backButton": "Annulla"
+        "title": "Creazione nuovo pacchetto commissioni",
+        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
+        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale pubblico. Potrai gestire le adesioni in seguito.",
+        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale globale."
       },
       "error": {
-        "errorTitle": "Errore",
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
         "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
-        "errorMessageCreatingPackage": "Errore durante la creazione del pacchetto commissioni",
+        "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
       }
     }
@@ -975,7 +996,7 @@
     "iban": {
       "title": "IBAN"
     },
-    "commPackages": {
+    "commBundles": {
       "title": "Pacchetti commissioni"
     },
     "operationTable": {
@@ -1005,14 +1026,20 @@
   "general": {
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
+    "showMore": "Mostra di più",
     "back": "Indietro",
+    "modify": "Modifica",
+    "delete": "Elimina",
     "confirm": "Conferma",
+    "cancel": "Annulla",
     "manage": "Gestisci",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
+    "Bundles": "Pacchetti commissioni",
     "Iban": "IBAN",
+    "errorTitle": "Errore",
     "operationTable": "Tavolo Operativo",
     "validation": {
       "requiredField": "Campo obbligatorio"
@@ -1023,6 +1050,10 @@
       "TO_FIX_UPDATE": "Da correggere",
       "TO_CHECK": "In revisione",
       "TO_CHECK_UPDATE": "In revisione"
-    }
+    },
+    "yes": "Sì",
+    "no": "No",
+    "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
+    "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
   }
 }

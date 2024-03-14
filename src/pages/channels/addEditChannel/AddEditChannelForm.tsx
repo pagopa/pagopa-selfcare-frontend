@@ -104,7 +104,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         port: channelDetail.port ?? 0,
         primitive_version: channelDetail.primitive_version ?? undefined,
         protocol: channelDetail.protocol ?? undefined,
-        proxyUnion: `${channelDetail.proxy_host}:${channelDetail.proxy_port}`,
+        proxyUnion: channelDetail.proxy_host !== '' ?
+            `${channelDetail.proxy_host}:${channelDetail.proxy_port}` :
+            '',
         proxy_host: channelDetail.proxy_host ?? '',
         proxy_port: channelDetail.proxy_port ?? undefined,
         proxy_enabled: channelDetail.proxy_enabled ?? false,
@@ -204,7 +206,9 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     validateOnMount: true,
   });
 
+
   const [isNewConnectivity, setIsNewConnectivity] = useState(!!formik.values.newConnection);
+
 
   useEffect(() => {
     splitTarget(formik.values);
@@ -219,26 +223,28 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   }, [formik.values.proxyUnion]);
 
   useEffect(() => {
+    if (paymentOptions?.payment_types?.length === 0) {
     setLoadingPayment(true);
-    getPaymentTypes()
-      .then((results) => {
-        if (results) {
-          setPaymentOptions(results);
-        }
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_PAYMENT_TYPES',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting payment types`,
-          toNotify: true,
-          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
-          displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoadingPayment(false));
+        getPaymentTypes()
+          .then((results) => {
+            if (results) {
+              setPaymentOptions(results);
+            }
+          })
+          .catch((reason) => {
+            addError({
+              id: 'GET_PAYMENT_TYPES',
+              blocking: false,
+              error: reason as Error,
+              techDescription: `An error occurred while getting payment types`,
+              toNotify: true,
+              displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+              displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
+              component: 'Toast',
+            });
+          })
+          .finally(() => setLoadingPayment(false));
+      }
   }, []);
 
   const splitURL = (targetURL: string) => {

@@ -94,7 +94,7 @@ const CommonHeader = ({
           rootLink={rootLink}
           loggedUser={loggedUser}
           onAssistanceClick={() =>
-            onExit(() => window.location.assign(buildAssistanceURI(assistanceEmail)))
+            onExit(() => window.location.assign(buildAssistanceURI(assistanceEmail) + `?productId=${selectedProductId}`))
           }
           onLogin={() => onExit(() => window.location.assign(ENV.URL_FE.LOGIN))}
           onLogout={() =>

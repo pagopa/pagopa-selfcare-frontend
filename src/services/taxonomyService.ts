@@ -1,19 +1,25 @@
-// import { BackofficeApi } from '../api/BackofficeClient';
 import { toError } from 'fp-ts/lib/Either';
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
+import { BackofficeApi } from '../api/BackofficeClient';
 import { ENV } from '../utils/env';
 import { Taxonomies } from '../api/generated/portal/Taxonomies';
-import { getTaxonomies as getTaxonomiesMock } from './__mocks__/taxonomyService';
+import { TaxonomyGroups } from '../api/generated/portal/TaxonomyGroups';
+import { getTaxonomies as getTaxonomiesMock, getTaxonomyGroups as getTaxonomyGroupsMock } from './__mocks__/taxonomyService';
 
 
-
-// TODO FIX GENERATED CLIENT AND RE-INTRODUCE BACKOFFICE METHOD
-export const getTaxonomies = (): Promise<Taxonomies> => {
+export const getTaxonomies = (ec: string | undefined, area: string | undefined, code: string | undefined, onlyValid: boolean): Promise<Taxonomies> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getTaxonomiesMock();
   } else {
-    //       return BackofficeApi.getTaxonomies();
-    return fetchData();
+    return BackofficeApi.getTaxonomies(ec, area, code, onlyValid);
+  }
+};
+
+export const getTaxonomyGroups = (): Promise<TaxonomyGroups> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getTaxonomyGroupsMock();
+  } else {
+    return BackofficeApi.getTaxonomyGroups();
   }
 };
 

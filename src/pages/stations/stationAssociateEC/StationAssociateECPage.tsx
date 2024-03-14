@@ -14,7 +14,11 @@ import {generatePath, useHistory, useParams} from 'react-router-dom';
 import {theme} from '@pagopa/mui-italia';
 import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import ROUTES from '../../../routes';
-import {INSTITUTIONS_EC_STATION_TYPES, LOADING_TASK_EC_AVAILABLE, LOADING_TASK_SEGREGATION_CODES_AVAILABLE,} from '../../../utils/constants';
+import {
+    INSTITUTIONS_EC_STATION_TYPES,
+    LOADING_TASK_EC_AVAILABLE,
+    LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
+} from '../../../utils/constants';
 import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
 import {associateEcToStation, getCreditorInstitutionSegregationcodes} from '../../../services/stationService';
 import {useAppSelector} from '../../../redux/hooks';
@@ -24,7 +28,7 @@ import {
     CreditorInstitutionAssociatedCodeList
 } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import {Delegation} from '../../../api/generated/portal/Delegation';
-import { getBrokerDelegation } from '../../../services/institutionService';
+import {getBrokerDelegation} from '../../../services/institutionService';
 import {ProblemJson} from '../../../api/generated/portal/ProblemJson';
 import {isErrorResponse} from '../../../utils/client-utils';
 import ECSelectionSearch from './ECSelectionSearch';
@@ -52,7 +56,7 @@ function StationAssociateECPage() {
     useEffect(() => {
         setLoading(true);
         if (selectedParty) {
-            getBrokerDelegation(selectedParty?.partyId,undefined, ["EC"])
+            getBrokerDelegation(undefined, selectedParty?.partyId, ["EC"])
                 .then((data) => {
                     if (data) {
                         addItselfAsAvaliableEC(data);
@@ -103,7 +107,7 @@ function StationAssociateECPage() {
                             setSegregationCodeList(data);
                             setIsECUsable(true);
                         }
-                    }                    
+                    }
                 })
                 .catch((reason) =>
                     addError({
@@ -151,7 +155,7 @@ function StationAssociateECPage() {
         );
     };
 
-    const addItselfAsAvaliableEC = (delegations : Array<Delegation>) => {
+    const addItselfAsAvaliableEC = (delegations: Array<Delegation>) => {
         if (selectedParty &&
             checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_STATION_TYPES)) {
             // eslint-disable-next-line functional/immutable-data
@@ -170,7 +174,7 @@ function StationAssociateECPage() {
 
     const submit = (values: CreditorInstitutionStationDto) => {
         if (selectedEC && selectedEC.broker_id) {
-            setLoading(true);            
+            setLoading(true);
             associateEcToStation(selectedEC.tax_code!, {...values, stationCode: stationId})
                 .then((data) => {
                     if (isErrorResponse(data)) {

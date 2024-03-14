@@ -26,7 +26,7 @@ const AddEditChannelPage = () => {
   const operator = isOperator();
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
   const [channelCode, setChannelCode] = useState<string>('');
-  const pspCode = selectedParty?.fiscalCode ? selectedParty.fiscalCode : '';
+  const pspTaxCode = selectedParty?.fiscalCode ? selectedParty.fiscalCode : '';
 
   const goBack = () => history.push(ROUTES.CHANNELS);
 
@@ -55,7 +55,7 @@ const AddEditChannelPage = () => {
         });
     } else {
       setLoading(true);
-      getChannelCode(pspCode)
+      getChannelCode(pspTaxCode)
         .then((result) => {
           setChannelCode(result.channel_code ?? '');
         })

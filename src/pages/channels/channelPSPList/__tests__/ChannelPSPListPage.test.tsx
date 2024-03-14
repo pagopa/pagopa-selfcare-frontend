@@ -1,12 +1,12 @@
 import React from 'react';
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render, screen, waitFor} from '@testing-library/react';
-import {MemoryRouter, Route, Router} from 'react-router-dom';
-import {Provider} from 'react-redux';
-import {store} from '../../../../redux/store';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '../../../../redux/store';
 import ChannelPSPListPage from '../ChannelPSPListPage';
-import {createMemoryHistory} from 'history';
+import { createMemoryHistory } from 'history';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -15,8 +15,9 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+const channelId = 'XPAY_03_ONUS';
+
 describe('<ChannelPSPTable />', () => {
-  const channelId = 'XPAY_03_ONUS';
   test('render component ChannelPSPTable', async () => {
     await waitFor(() => {
       render(

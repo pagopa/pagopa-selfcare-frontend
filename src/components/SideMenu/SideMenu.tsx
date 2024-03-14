@@ -100,17 +100,17 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {ENV.FEATURES.COMMISSION_PACKAGES.ENABLED && hasPermission("commission-packages") && (
+                    {ENV.FEATURES.COMMISSION_BUNDLES.ENABLED && hasPermission("commission-bundles") && (
                         <SidenavItem
-                            title={t('sideMenu.commPackages.title')}
-                            handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_PACKAGES))}
+                            title={t('sideMenu.commBundles.title')}
+                            handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}
                             isSelected={
-                                pathname === ROUTES.COMMISSION_PACKAGES ||
-                                pathname.startsWith(ROUTES.COMMISSION_PACKAGES)
+                                pathname === ROUTES.COMMISSION_BUNDLES ||
+                                pathname.startsWith(ROUTES.COMMISSION_BUNDLES)
                             }
                             icon={EuroIcon}
                             disabled={isDisabled}
-                            dataTestId="commission-packages-test"
+                            dataTestId="commission-bundles-test"
                         />
                     )}
                     {ENV.FEATURES.OPERATIONTABLE.ENABLED && hasPermission('operation-table-list') && (

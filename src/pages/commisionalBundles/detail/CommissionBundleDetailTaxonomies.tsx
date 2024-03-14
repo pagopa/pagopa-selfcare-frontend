@@ -2,12 +2,10 @@ import { Paper, Typography, Divider, Alert } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { useErrorDispatcher, TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useState, useEffect } from 'react';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useState } from 'react';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
-import { Taxonomy } from '../../../api/generated/portal/Taxonomy';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';
-import { getTaxonomies } from '../../../services/taxonomyService';
 
 export default function CommissionBundleDetailTaxonomies({
   bundleDetail,
@@ -15,37 +13,9 @@ export default function CommissionBundleDetailTaxonomies({
   bundleDetail: BundleResource;
 }) {
   const { t } = useTranslation();
-  const addError = useErrorDispatcher();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  const [bundleTaxonomies, setBundleTaxonomies] = useState<Array<Taxonomy>>([]);
-
-  useEffect(() => {
-    if (bundleDetail?.transferCategoryList && bundleDetail?.transferCategoryList?.length > 0) {
-      getTaxonomies(undefined, undefined, undefined, false)
-        .then((data) => {
-          const filteredTaxonomies = data?.taxonomies?.filter((el) =>
-            bundleDetail.transferCategoryList?.some(
-                transferCategory => transferCategory.specific_built_in_data === el.specific_built_in_data)
-          );
-          setBundleTaxonomies(filteredTaxonomies);
-        })
-        .catch((err) =>
-          addError({
-            id: 'GET_COMMISSION_BUNDLE_DETAILS_TAXONOMIES',
-            blocking: false,
-            error: err as Error,
-            techDescription: `An error occurred while getting the taxonomies' list`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
-            ),
-            component: 'Toast',
-          })
-        );
-    }
-  }, [bundleDetail]);
+  const bundleTaxonomies = bundleDetail?.transferCategoryList ?? [];
 
   return (
     <Paper
@@ -84,7 +54,7 @@ export default function CommissionBundleDetailTaxonomies({
           {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
         </Alert>
       )}
-      {bundleTaxonomies?.length > 3 && (
+      {bundleTaxonomies.length > 3 && (
         <>
           <ButtonNaked
             size="large"

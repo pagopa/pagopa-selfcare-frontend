@@ -57,12 +57,14 @@ import {Delegation} from './generated/portal/Delegation';
 import {WrapperEntities} from "./generated/portal/WrapperEntities";
 import {BrokerECExportStatus} from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
-import { Bundles } from './generated/portal/Bundles';
+import { BundlesResource } from './generated/portal/BundlesResource';
 import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
+import { TaxonomyGroups } from './generated/portal/TaxonomyGroups';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { BundleRequest } from './generated/portal/BundleRequest';
 import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
+import { BundleResource } from './generated/portal/BundleResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -462,8 +464,8 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getChannelCode: async (pspcode: string): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': pspcode, 'v2': true});
+    getChannelCode: async (taxcode: string): Promise<ChannelCodeResource> => {
+        const result = await backofficeClient.getFirstValidChannelCode({'tax-code': taxcode, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -486,10 +488,10 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    dissociatePSPfromChannel: async (channelcode: string, pspcode: string): Promise<void> => {
-        const result = await backofficeClient.deletePSPChannels({
+    dissociatePSPfromChannel: async (channelcode: string, pspTaxCode: string): Promise<void> => {
+        const result = await backofficeClient.dissociatePSPFromChannel({
             'channel-code': channelcode,
-            'psp-code': pspcode,
+            'tax-code': pspTaxCode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },
@@ -825,7 +827,7 @@ export const BackofficeApi = {
     getStationAvailableEc: async (
         institutionId: string
     ): Promise<ChannelCodeResource> => {
-        const result = await backofficeClient.getFirstValidChannelCode({'psp-code': institutionId, 'v2': true});
+        const result = await backofficeClient.getFirstValidChannelCode({'tax-code': institutionId, 'v2': true});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -864,13 +866,13 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<Bundles> => {
-        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-code": pspCode});
+    getBundlesByPsp: async (bundleType: string, pageLimit: number, bundleName: string, page: number, pspCode: string ): Promise<BundlesResource> => {
+        const result = await backofficeClient.getBundlesByPSP({"bundle-type": [bundleType], "limit": pageLimit, "name": bundleName, page, "psp-tax-code": pspCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     createBundle: async (pspTaxCode: string, bundle: BundleRequest): Promise<BundleCreateResponse> => {
-        const result = await backofficeClient.createBundle({"psp-code": pspTaxCode, body: bundle});
+        const result = await backofficeClient.createBundle({"psp-tax-code": pspTaxCode, body: bundle});
         return extractResponse(result, 201, onRedirectToLogin);
     },
 
@@ -879,8 +881,34 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-    getTaxonomies: async (): Promise<Taxonomies> => {
-        const result = await backofficeClient.getTaxonomies({});
+    getTaxonomyGroups: async (): Promise<TaxonomyGroups> => {
+        const result = await backofficeClient.getTaxonomyGroups({});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getTaxonomies: async (ec: string | undefined, area: string | undefined, code: string | undefined, onlyValid: boolean): Promise<Taxonomies> => {
+        const result = await backofficeClient.getTaxonomies({
+              code,
+              ec,
+              "macro_area": area,
+              "only_valid": onlyValid
+        });
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBundleDetailByPSP: async(pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
+        const result = await backofficeClient.getBundleDetailByPSP({"psp-tax-code": pspTaxCode, "id-bundle": bundleId});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deletePSPBundle:  async(pspTaxCode: string, bundleId: string): Promise<void> => {
+        const result = await backofficeClient.deletePSPBundle({"psp-tax-code": pspTaxCode, "id-bundle": bundleId});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    updatePSPBundle: async(pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+        const result = await backofficeClient.updatePSPBundle({"psp-tax-code": pspTaxCode, "id-bundle": bundleId, body: bundle});
         return extractResponse(result, 200, onRedirectToLogin);
     }
+
 };

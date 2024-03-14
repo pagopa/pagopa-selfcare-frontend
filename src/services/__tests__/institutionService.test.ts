@@ -1,10 +1,10 @@
 
-import { mockedDelegatedPSP } from '../__mocks__/channelService';
-import { getBrokerDelegation } from '../__mocks__/institutionsService';
+
+import { getBrokerDelegation, mockedDelegatedPSP } from '../__mocks__/institutionsService';
 
 // jest.mock('../../api/BackofficeClient');
 
-describe('ChannelService test', () => {
+describe('InstitutionService test', () => {
   test('Test getBrokerDelegation', async () => {
     const delegates = await getBrokerDelegation();
     expect(delegates).toMatchObject(mockedDelegatedPSP);

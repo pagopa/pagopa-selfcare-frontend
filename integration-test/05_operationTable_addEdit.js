@@ -1,215 +1,129 @@
-const puppeteer = require('puppeteer'); // v20.7.4 or later
+const puppeteer = require('puppeteer');
+const {waitForElement, delay} = require("./commons");
+const {switchTo} = require("./switch_to"); // v20.7.4 or later
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: false, userDataDir: './user-data' });
-  const page = await browser.newPage();
-  const timeout = 30000;
-  page.setDefaultTimeout(timeout);
+    const browser = await puppeteer.launch({headless: 'new', userDataDir: './user-data', slowMo: 10});
+    const page = await browser.newPage();
+    const timeout = 30000;
+    page.setDefaultTimeout(timeout);
 
-  {
-    const targetPage = page;
-    await targetPage.setViewport({
-      width: 1920,
-      height: 1080,
-    });
-  }
-  {
-    const targetPage = page;
-    const promises = [];
-    promises.push(targetPage.waitForNavigation());
-    await targetPage.goto('https://selfcare.dev.platform.pagopa.it/ui');
-    await Promise.all(promises);
-  }
+    {
+        const targetPage = page;
+        await targetPage.setViewport({
+            width: 1920,
+            height: 1080,
+        });
+    }
+    {
+        const targetPage = page;
+        const promises = [];
+        promises.push(targetPage.waitForNavigation());
+        await targetPage.goto('https://selfcare.dev.platform.pagopa.it/ui');
+        await Promise.all(promises);
+    }
 
-  // Start test Ec Signed direct
-  {
-    const targetPage = page;
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(EC Signed Direct)'),
-      targetPage.locator('div.css-1ye32zt h6'),
-      targetPage.locator(
-        '::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[1]/nav/div/div/div/div[2]/div/div/div/div[2]/h6)'
-      ),
-      targetPage.locator(':scope >>> div.css-1ye32zt h6'),
-    ])
-      .setTimeout(timeout)
-      .click({
-        offset: {
-          x: 45.203125,
-          y: 3.046875,
-        },
-      });
-  }
-  {
-    const targetPage = page;
-    const promises = [];
-    const startWaitingForEvents = () => {
-      promises.push(targetPage.waitForNavigation());
-    };
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(EC Signed Direct)'),
-      targetPage.locator('div:nth-of-type(12) h6'),
-      targetPage.locator('::-p-xpath(/html/body/div[2]/div[3]/div[12]/div/div[2]/h6)'),
-      targetPage.locator(':scope >>> div:nth-of-type(12) h6'),
-      targetPage.locator('::-p-text(EC Signed Direct)'),
-    ])
-      .setTimeout(timeout)
-      .on('action', () => startWaitingForEvents())
-      .click({
-        offset: {
-          x: 17,
-          y: 12.171875,
-        },
-      });
-    await Promise.all(promises);
-  }
+    await switchTo(page, timeout, "EC Signed Direct");
+    await createOperationTableTest(page, timeout);
 
-  await createOperationTableTest(page, timeout);
-
-  // End test Ec Signed direct
-  // Start test PSP Signed direct
-  {
-    const targetPage = page;
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(EC Signed Direct)'),
-      targetPage.locator('div.css-1ye32zt h6'),
-      targetPage.locator(
-        '::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[1]/nav/div/div/div/div[2]/div/div/div/div[2]/h6)'
-      ),
-      targetPage.locator(':scope >>> div.css-1ye32zt h6'),
-    ])
-      .setTimeout(timeout)
-      .click({
-        offset: {
-          x: 66.203125,
-          y: 20.046875,
-        },
-      });
-  }
-  {
-    const targetPage = page;
-    const promises = [];
-    const startWaitingForEvents = () => {
-      promises.push(targetPage.waitForNavigation());
-    };
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(PSP Signed Direct)'),
-      targetPage.locator('div.MuiPaper-root > div:nth-of-type(3) h6'),
-      targetPage.locator('::-p-xpath(/html/body/div[2]/div[3]/div[3]/div/div[2]/h6)'),
-      targetPage.locator(':scope >>> div.MuiPaper-root > div:nth-of-type(3) h6'),
-      targetPage.locator('::-p-text(PSP Signed Direct)'),
-    ])
-      .setTimeout(timeout)
-      .on('action', () => startWaitingForEvents())
-      .click({
-        offset: {
-          x: 90,
-          y: 17.171875,
-        },
-      });
-    await Promise.all(promises);
-  }
-
-  await createOperationTableTest(page, timeout);
-
-  // End test PSP Signed direct
-  // Start test PT EC
-
-  {
-    const targetPage = page;
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(PSP Signed Direct)'),
-      targetPage.locator('div.css-1ye32zt h6'),
-      targetPage.locator(
-        '::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[1]/nav/div/div/div/div[2]/div/div/div/div[2]/h6)'
-      ),
-      targetPage.locator(':scope >>> div.css-1ye32zt h6'),
-    ])
-      .setTimeout(timeout)
-      .click({
-        offset: {
-          x: 42.796875,
-          y: 6.046875,
-        },
-      });
-  }
-  {
-    const targetPage = page;
-    const promises = [];
-    const startWaitingForEvents = () => {
-      promises.push(targetPage.waitForNavigation());
-    };
-    await targetPage.waitForNetworkIdle();
-    await puppeteer.Locator.race([
-      targetPage.locator('::-p-aria(PT Ente Test)'),
-      targetPage.locator('div:nth-of-type(7) h6'),
-      targetPage.locator('::-p-xpath(/html/body/div[2]/div[3]/div[7]/div/div[2]/h6)'),
-      targetPage.locator(':scope >>> div:nth-of-type(7) h6'),
-      targetPage.locator('::-p-text(PT Ente Test)'),
-    ])
-      .setTimeout(timeout)
-      .on('action', () => startWaitingForEvents())
-      .click({
-        offset: {
-          x: 63,
-          y: 11.171875,
-        },
-      });
-    await Promise.all(promises);
-  }
-
-  await createOperationTableTest(page, timeout);
-
-  await browser.close();
-  console.log('Operation table created/updated');
+    await browser.close();
+    console.log('Operation table created/updated');
 })().catch((err) => {
-  console.error(err);
-  process.exit(1);
+    console.error(err);
+    process.exit(1);
 });
 
 const createOperationTableTest = async (page, timeout) => {
-  const targetPage = page;
-  await targetPage.waitForNetworkIdle();
-  await puppeteer.Locator.race([
-    targetPage.locator('div.MuiGrid-root div:nth-of-type(3) button'),
-    targetPage.locator(
-      '::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/div[5]/button)'
-    ),
-    targetPage.locator(':scope >>> div.MuiGrid-root div:nth-of-type(3) button'),
-  ])
-    .setTimeout(timeout)
-    .click({
-      offset: {
-        x: 45.171875,
-        y: 14.75,
-      },
-    });
-
-  await targetPage.waitForNetworkIdle();
-  const inputMail = await targetPage.$('#email');
-  await inputMail.click({ clickCount: 3 });
-  await inputMail.type('mail@test.com');
-
-  const inputPhone = await targetPage.$('#phone');
-  await inputPhone.click({ clickCount: 3 });
-  await inputPhone.type('1234324234');
-
-  await puppeteer.Locator.race([
-    targetPage.locator('::-p-aria(Conferma)'),
-    targetPage.locator("[data-testid='submit-button-test']"),
-    targetPage.locator('::-p-xpath(//*[@data-testid=\\"submit-button-test\\"])'),
-    targetPage.locator(":scope >>> [data-testid='submit-button-test']"),
-  ])
-    .setTimeout(timeout)
-    .click({
-      offset: {
-        x: 56.484375,
-        y: 18.703125,
-      },
-    });
+    let i = 0;
+    console.log(`createOperationTableTest ${i++}`);
+    const targetPage = page;
+    {
+        await targetPage.waitForNetworkIdle();
+        await delay(5000);
+        await puppeteer.Locator.race([
+            targetPage.locator('div.MuiGrid-root div:nth-of-type(3) button'),
+            targetPage.locator('::-p-xpath(//*[@id=\\"root\\"]/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/div/div[2]/div[5]/button)'),
+            targetPage.locator(':scope >>> div.MuiGrid-root div:nth-of-type(3) button')
+        ])
+            .setTimeout(timeout)
+            .click({
+                offset: {
+                    x: 50.5,
+                    y: 20.203125,
+                },
+            });
+    }
+    console.log(`createOperationTableTest ${i++}`);
+    {
+        await targetPage.waitForNetworkIdle();
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(E-mail)'),
+            targetPage.locator("[data-testid='email-test']"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"email-test\\"])'),
+            targetPage.locator(":scope >>> [data-testid='email-test']")
+        ])
+            .setTimeout(timeout)
+            .click({
+                count: 3,
+                offset: {
+                    x: 94,
+                    y: 18.578125,
+                },
+            });
+    }
+    console.log(`createOperationTableTest ${i++}`);
+    {
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(E-mail)'),
+            targetPage.locator("[data-testid='email-test']"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"email-test\\"])'),
+            targetPage.locator(":scope >>> [data-testid='email-test']")
+        ])
+            .setTimeout(timeout)
+            .fill('mail@test.com');
+    }
+    console.log(`createOperationTableTest ${i++}`);
+    {
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(Telefono)'),
+            targetPage.locator("[data-testid='phone-test']"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"phone-test\\"])'),
+            targetPage.locator(":scope >>> [data-testid='phone-test']")
+        ])
+            .setTimeout(timeout)
+            .click({
+                count: 3,
+                offset: {
+                    x: 33.015625,
+                    y: 21.578125,
+                },
+            });
+    }
+    console.log(`createOperationTableTest ${i++}`);
+    {
+        await puppeteer.Locator.race([
+            targetPage.locator('::-p-aria(Telefono)'),
+            targetPage.locator("[data-testid='phone-test']"),
+            targetPage.locator('::-p-xpath(//*[@data-testid=\\"phone-test\\"])'),
+            targetPage.locator(":scope >>> [data-testid='phone-test']"),
+            targetPage.locator('::-p-text(1234324234)')
+        ])
+            .setTimeout(timeout)
+            .fill('1234567');
+    }
+    console.log(`createOperationTableTest ${i++}`);
+    await puppeteer.Locator.race([
+        targetPage.locator('::-p-aria(Conferma)'),
+        targetPage.locator("[data-testid='submit-button-test']"),
+        targetPage.locator('::-p-xpath(//*[@data-testid=\\"submit-button-test\\"])'),
+        targetPage.locator(":scope >>> [data-testid='submit-button-test']"),
+    ])
+        .setTimeout(timeout)
+        .click({
+            offset: {
+                x: 56.484375,
+                y: 18.703125,
+            },
+        });
+    console.log(`createOperationTableTest ${i++}`);
 };

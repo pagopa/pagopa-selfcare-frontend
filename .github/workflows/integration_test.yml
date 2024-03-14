@@ -20,16 +20,16 @@ jobs:
         id: checkout
         uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
 
-      - name: Set Node.js 16
+      - name: Set Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16.10.0
+          node-version: 18.15.0
 
       - name: Run Integration Tests
         shell: bash
         run: |
-          yarn install
           cd ./integration-test
+          yarn install
 
           chmod +x ./run_integration.sh
           ./run_integration.sh
@@ -38,15 +38,14 @@ jobs:
     needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
-    #if: ${{ always() }}
-    if: false
+    if: ${{ always() }}
     steps:
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ needs.integration_test.result }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          notify_when: 'failure,skipped'
+          notify_when: 'success,failure,skipped'
           notification_title: '<{run_url}|Scheduled Integration Test> has {status_message}'
           message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
           footer: 'Linked to <{workflow_url}| workflow file>'

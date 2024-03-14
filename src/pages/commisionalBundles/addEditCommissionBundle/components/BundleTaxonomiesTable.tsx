@@ -1,118 +1,96 @@
-"use client";
-
-import React from "react";
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { Typography, Box, Tooltip, IconButton, Grid, Paper, Stack } from "@mui/material";
-import { RemoveCircleOutlineOutlined, DeleteOutlined } from '@mui/icons-material';
-
-import {theme} from '@pagopa/mui-italia';
-import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
+import { Typography, Box, IconButton, Grid, Stack } from '@mui/material';
+import { RemoveCircleOutlineOutlined } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { ButtonNaked, theme } from '@pagopa/mui-italia';
 
 export interface BundleTaxonomiesTableProps {
-    tableData?: any;
-    deleteTaxonomyAction?: any;
-    deleteAreaAction?: any;
+  tableData?: any;
+  deleteTaxonomyAction?: any;
+  deleteAreaAction?: any;
 }
 
-export const BundleTaxonomiesTable= ({
-    tableData,
-    deleteTaxonomyAction,
-    deleteAreaAction
+export const BundleTaxonomiesTable = ({
+  tableData,
+  deleteTaxonomyAction,
+  deleteAreaAction,
 }: BundleTaxonomiesTableProps) => {
-
-  const inputGroupStyle = {
-    borderRadius: 1,
-    border: 1,
-    borderColor: theme.palette.divider,
-    p: 3,
-    mb: 3,
-  };
-
   const { t } = useTranslation();
-  // const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
-  const addError = useErrorDispatcher();
 
   return (
     <React.Fragment>
-        <Typography variant="h6" mt={3}>
-            {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
-        </Typography>
-       {Object.keys(tableData).map((item) => {
-           const taxonomyArea = tableData[item];
-           return (
-               <Paper
-                key={item}
-                elevation={0}
-                sx={{
-                  borderRadius: 1,
-                  p: 3,
-                  minWidth: '80%',
-                  mb: 4,
-                }}
-              >
-                <Box>
-                    <Box sx={inputGroupStyle}>
-                        <Stack direction="row" justifyContent="space-between">
-                            <Box>
-                            <Typography variant="body1" mb={1}>
-                                {item}
-                            </Typography>
-                            <Typography variant="body1" mb={1}>
-                                {taxonomyArea[0].ci_type}
-                            </Typography>
-                            </Box>
-                                <Box
-                                     display="flex"
-                                     justifyContent="flex-end"
-                                     width="5%"
-
-                                >
-                                   <IconButton
-                                     sx={{
-                                       width: '100%',
-                                       '&:hover': { backgroundColor: 'transparent !important' },
-                                     }}
-                                     onClick={(e) => deleteAreaAction(item)}
-                                   >
-                                     <DeleteOutlined sx={{ color: 'red', fontSize: '24px' }} />
-                                   </IconButton>
-                                </Box>
-                        </Stack>
-                        {
-                            taxonomyArea.map((taxonomy: any) => (
-                                <React.Fragment key={taxonomy.specific_built_in_data}>
-                                    <Stack direction="row" justifyContent="space-between">
-                                        <Box
-                                            display="flex"
-                                            justifyContent="flex-start"
-                                            width="5%"
-                                        >
-                                          <IconButton
-                                            sx={{
-                                              width: '100%',
-                                              '&:hover': { backgroundColor: 'transparent !important' },
-                                            }}
-                                            onClick={(e) => deleteTaxonomyAction(
-                                                {"taxonomy":taxonomy.specific_built_in_data,"area":item})
-                                            }
-                                          >
-                                            <RemoveCircleOutlineOutlined sx={{ color: 'red', fontSize: '24px' }} />
-                                          </IconButton>
-                                        </Box>
-                                        <Box sx={inputGroupStyle} width="95%">
-                                            {taxonomy.specific_built_in_data} - {taxonomy.service_type}
-                                        </Box>
-                                    </Stack>
-                                </React.Fragment>
-                            ))
-                        }
-                    </Box>
-                </Box>
-              </Paper>);}
-           )
-       }
+      <Typography variant="overline">
+        {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.addedServices')}
+      </Typography>
+      {Object.keys(tableData).map((item, index) => {
+        const taxonomyArea = tableData[item];
+        return (
+          <Box
+            sx={{
+              borderRadius: 1,
+              border: 1,
+              borderColor: theme.palette.divider,
+              p: 3,
+              mt: 3,
+              mb: 1,
+            }}
+            key={`${item}-${index}`}
+          >
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="subtitle1">{item}</Typography>
+              <Box display="flex" justifyContent="flex-end" alignItems="center">
+                <ButtonNaked
+                  size="small"
+                  component="button"
+                  onClick={() => deleteAreaAction(item)}
+                  sx={{ color: 'red' }}
+                  weight="default"
+                  data-testid="delete-all-taxonomies-by-group"
+                >
+                  <DeleteIcon fontSize="small"/>
+                  {t('general.remove')}
+                </ButtonNaked>
+              </Box>
+            </Stack>
+            <Typography variant="body2" mb={1}>
+              {taxonomyArea[0].ci_type}
+            </Typography>
+            {taxonomyArea.map((taxonomy: any) => (
+              <Grid container key={taxonomy.specific_built_in_data} my={1}>
+                <Grid item xs={1} display="flex" alignItems={'center'}>
+                  <IconButton
+                    sx={{
+                      width: '100%',
+                      '&:hover': { backgroundColor: 'transparent !important' },
+                      p: 0
+                    }}
+                    onClick={(e) =>
+                      deleteTaxonomyAction({
+                        taxonomy: taxonomy.specific_built_in_data,
+                        area: item,
+                      })
+                    }
+                  >
+                    <RemoveCircleOutlineOutlined sx={{ color: 'red', fontSize: '24px' }} />
+                  </IconButton>
+                </Grid>
+                <Grid
+                  item
+                  xs={11}
+                  display="flex"
+                  alignItems={'center'}
+                  sx={{ borderRadius: 1, border: 1, borderColor: theme.palette.divider, p: 1 }}
+                >
+                  <Typography variant="body1">
+                    {taxonomy.specific_built_in_data} - {taxonomy.service_type}
+                  </Typography>
+                </Grid>
+              </Grid>
+            ))}
+          </Box>
+        );
+      })}
     </React.Fragment>
   );
 };

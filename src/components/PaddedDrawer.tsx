@@ -19,7 +19,7 @@ export const PaddedDrawer = ({
     onClose?: () => void;
   }) => (
     <Drawer open={openDrawer} onClose={() => onClose() } anchor="right" data-testid="padded-drawer">
-      <Box p={3} sx={{ maxWidth: '320px', minWidth: "320px" }}>
+      <Box p={3} sx={{ maxWidth: '420px', minWidth: "420px" }}>
         <Stack direction="row" justifyContent="space-between">
             <Box display="flex" justifyContent="flex-start" mb={1}>
               {hasBackButton &&

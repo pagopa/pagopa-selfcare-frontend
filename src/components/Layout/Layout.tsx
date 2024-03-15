@@ -5,7 +5,6 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {userSelectors} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
 import Header from '../Header';
-import withFeatureFlags from "../../decorators/withFeatureFlags";
 // import withParties, { WithPartiesProps } from '../../decorators/withParties';
 // import SideMenu from '../SideMenu/SideMenu';
 
@@ -43,4 +42,4 @@ const Layout = ({children}: Props) => {
         </Box>
     );
 };
-export default withFeatureFlags(Layout);
+export default Layout;

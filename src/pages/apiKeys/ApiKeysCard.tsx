@@ -81,7 +81,7 @@ export default function ApiKeysCard({selectedParty, apiKey}: Props) {
         setShowPrimaryRegenModal(false);
         if (selectedParty) {
             setLoading(true);
-            regeneratePrimaryKey(apiKey.id)
+            regeneratePrimaryKey(selectedParty.partyId, apiKey.id)
                 .then(
                     () => {
                         void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
@@ -114,7 +114,7 @@ export default function ApiKeysCard({selectedParty, apiKey}: Props) {
         setShowSecondaryRegenModal(false);
         if (selectedParty) {
             setLoading(true);
-            regenerateSecondaryKey(apiKey.id)
+            regenerateSecondaryKey(selectedParty.partyId, apiKey.id)
                 .then(
                     () => {
                         void getInstitutionApiKeys(selectedParty.partyId).then((data) =>

@@ -31,20 +31,20 @@ export const createInstitutionApiKeys = (
     }
 };
 
-export const regeneratePrimaryKey = (institutionId: string): Promise<string> => {
+export const regeneratePrimaryKey = (institutionId: string, subscriptionId: string): Promise<string> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return regeneratePrimaryKeyMocked(institutionId);
+        return regeneratePrimaryKeyMocked(institutionId, subscriptionId);
     } else {
-        return BackofficeApi.regeneratePrimaryKey(institutionId).then((resource) => resource);
+        return BackofficeApi.regeneratePrimaryKey(institutionId, subscriptionId).then((resource) => resource);
     }
 };
 
-export const regenerateSecondaryKey = (institutionId: string): Promise<string> => {
+export const regenerateSecondaryKey = (institutionId: string, subscriptionId: string): Promise<string> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return regenerateSecondaryKeyMocked(institutionId);
+        return regenerateSecondaryKeyMocked(institutionId, subscriptionId);
     } else {
-        return BackofficeApi.regenerateSecondaryKey(institutionId).then((resources) => resources);
+        return BackofficeApi.regenerateSecondaryKey(institutionId, subscriptionId).then((resources) => resources);
     }
 };

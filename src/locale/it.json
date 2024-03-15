@@ -191,7 +191,9 @@
       "GPD_PAY": "GPD - Recupero ricevute",
       "BIZ": "BIZ - Recupero ricevute Ente Creditore",
       "FDR_ORG": "FdR - Flussi di Rendicontazione (EC)",
-      "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)"
+      "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)",
+      "BO_EXT_EC": "Backoffice External (EC)",
+      "BO_EXT_PSP": "Backoffice External (PSP)"
     }
   },
   "channelsPage": {

@@ -203,13 +203,13 @@ export const BackofficeApi = {
         return extractResponse(result, 201, onRedirectToLogin);
     },
 
-    regeneratePrimaryKey: async (subscriptionid: string): Promise<string> => {
-        const result = await backofficeClient.regeneratePrimaryKey({'subscription-id': subscriptionid});
+    regeneratePrimaryKey: async (institutionId: string, subscriptionid: string): Promise<string> => {
+        const result = await backofficeClient.regeneratePrimaryKey({'institution-id': institutionId, 'subscription-id': subscriptionid});
         return extractResponse(result, 204, onRedirectToLogin);
     },
 
-    regenerateSecondaryKey: async (subscriptionid: string): Promise<string> => {
-        const result = await backofficeClient.regenerateSecondaryKey({'subscription-id': subscriptionid});
+    regenerateSecondaryKey: async (institutionId: string, subscriptionid: string): Promise<string> => {
+        const result = await backofficeClient.regenerateSecondaryKey({'institution-id': institutionId, 'subscription-id': subscriptionid});
         return extractResponse(result, 204, onRedirectToLogin);
     },
 

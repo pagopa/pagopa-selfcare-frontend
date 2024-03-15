@@ -47,8 +47,8 @@ export const createInstitutionApiKeys = (
   _subscriptionCode: string
 ): Promise<Array<ProductKeys>> => new Promise((resolve) => resolve(createMockedKeys));
 
-export const regeneratePrimaryKey = (_institutionId: string): Promise<string> =>
+export const regeneratePrimaryKey = (_institutionId: string,  _subscriptionId: string): Promise<string> =>
   new Promise((resolve) => resolve(mockedPrimaryKey));
 
-export const regenerateSecondaryKey = (_institutionId: string): Promise<string> =>
+export const regenerateSecondaryKey = (_institutionId: string,  _subscriptionId: string): Promise<string> =>
   new Promise((resolve) => resolve(mockedSecondaryKey));

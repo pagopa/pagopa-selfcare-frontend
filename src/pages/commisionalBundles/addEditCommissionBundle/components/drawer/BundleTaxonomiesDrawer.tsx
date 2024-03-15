@@ -226,7 +226,7 @@ export const BundleTaxonomiesDrawer = ({
       if (step === 0) {
         return (
           <>
-            <Typography pb={2} variant="overline" color="action.active">
+            <Typography pb={2} variant="overline" color="action.active" data-testid="title-step0">
               {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectCI')}
             </Typography>
             {taxonomyGroups.map((item) => (
@@ -242,7 +242,7 @@ export const BundleTaxonomiesDrawer = ({
       } else if (step === 1) {
         return (
           <>
-            <Typography pb={2} variant="overline" color="action.active">
+            <Typography pb={2} variant="overline" color="action.active" data-testid="title-step1">
               {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectArea')}
             </Typography>
             {selectedEC?.areas?.map((item) => (
@@ -258,7 +258,7 @@ export const BundleTaxonomiesDrawer = ({
       } else if (step === 2 && taxonomies.length > 0) {
         return (
           <>
-            <Typography pb={2} variant="overline" color="action.active">
+            <Typography pb={2} variant="overline" color="action.active" data-testid="title-step2">
               {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectServices')}
             </Typography>
             <ButtonNaked
@@ -344,7 +344,7 @@ export const BundleTaxonomiesDrawer = ({
             <InputAdornment position="start">
               <SearchIcon />
             </InputAdornment>
-          ),
+          )
         }}
         size="small"
         label={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.filterTitle')}

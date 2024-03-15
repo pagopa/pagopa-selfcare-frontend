@@ -50,7 +50,7 @@ export default function CommissionBundleDetailTaxonomies({
             ) : null
           )
       ) : (
-        <Alert severity="info" variant="outlined" data-testid="alert-test" sx={{ mt: 2 }}>
+        <Alert severity="info"  data-testid="alert-test" sx={{ mt: 2 }}>
           {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
         </Alert>
       )}

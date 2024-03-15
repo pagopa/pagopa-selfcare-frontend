@@ -36,6 +36,7 @@ export const BundleTaxonomiesTable = ({
               mb: 1,
             }}
             key={`${item}-${index}`}
+            data-testid="box-macroarea"
           >
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="subtitle1">{item}</Typography>
@@ -57,7 +58,7 @@ export const BundleTaxonomiesTable = ({
               {taxonomyArea[0].ci_type}
             </Typography>
             {taxonomyArea.map((taxonomy: any) => (
-              <Grid container key={taxonomy.specific_built_in_data} my={1}>
+              <Grid container key={taxonomy.specific_built_in_data} my={1} data-testid="grid-taxonomy">
                 <Grid item xs={1} display="flex" alignItems={'center'}>
                   <IconButton
                     sx={{
@@ -71,6 +72,7 @@ export const BundleTaxonomiesTable = ({
                         area: item,
                       })
                     }
+                    data-testid="delete-taxonomy-button"
                   >
                     <RemoveCircleOutlineOutlined sx={{ color: 'red', fontSize: '24px' }} />
                   </IconButton>

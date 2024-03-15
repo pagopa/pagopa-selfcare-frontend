@@ -191,7 +191,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
       </Typography>
       <Typography variant="body1" mb={2} sx={{ textDecoration: 'underline', fontWeight: 'medium' }}>
         {/* TODO ADD LINK TO MANUAL */}
-        <Link href="https://www.pagopa.gov.it/" target="_blank">
+        <Link href="https://docs.pagopa.it/manuale-back-office-pagopa/v/manuale-bo-pagopa-psp" target="_blank">
           {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.manualHelp')}
         </Link>
       </Typography>

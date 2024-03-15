@@ -47,7 +47,7 @@ export const BundleTaxonomiesCheckboxButton = ({
       alignItems={'center'}
     >
       <Box>
-        <FormControlLabel control={<Checkbox checked={checked} onChange={action} />} label={''} />
+        <FormControlLabel control={<Checkbox checked={checked} onChange={action} />} label={''} data-testid="checkbox-taxonomy" />
       </Box>
       <Tooltip arrow title={maxCharacter ? title : ''}>
         <Box>

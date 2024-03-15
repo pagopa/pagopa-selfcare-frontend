@@ -133,18 +133,13 @@ const CommissionBundleDetailPage = () => {
               </Typography>
             </Typography>
           </Grid>
-          <Grid
-            item
-            xs={commissionBundleDetail?.type === TypeEnum.GLOBAL ? 12 : 6}
-            data-testid="config-detail"
-          >
+          <Grid item xs={6} data-testid="config-detail">
             <CommissionBundleDetailConfiguration bundleDetail={commissionBundleDetail} />
           </Grid>
-          {commissionBundleDetail?.type !== TypeEnum.GLOBAL && (
-            <Grid item xs={6} data-testid="taxonomies-detail">
-              <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
-            </Grid>
-          )}
+
+          <Grid item xs={6} data-testid="taxonomies-detail">
+            <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
+          </Grid>
         </Grid>
       </Grid>
       <GenericModal

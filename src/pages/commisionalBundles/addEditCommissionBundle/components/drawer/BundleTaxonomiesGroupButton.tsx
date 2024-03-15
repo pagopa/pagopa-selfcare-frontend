@@ -64,6 +64,7 @@ export const BundleTaxonomiesGroupButton = ({
             width: '100%',
             '&:hover': { backgroundColor: 'transparent !important' },
           }}
+          data-testid="taxonomy-group-button"
         >
           <ArrowForwardIos sx={{ color: 'primary.main', fontSize: '24px' }} />
         </IconButton>

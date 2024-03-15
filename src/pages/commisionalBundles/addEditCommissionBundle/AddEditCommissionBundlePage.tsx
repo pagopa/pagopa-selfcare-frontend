@@ -210,9 +210,6 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
     }
   }, [selectedParty]);
 
-  const isTaxonomiesStepEnabled = () =>
-    formik.values.type === TypeEnum.PRIVATE || formik.values.type === TypeEnum.PUBLIC;
-
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -248,18 +245,16 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
         <Box my={3} display="flex" justifyContent="center">
           <div style={{ width: '40%' }}>
             <Stepper activeStep={activeStep} alternativeLabel>
-              <Step key={'step-config'} completed={activeStep === 1}>
+              <Step key={'step-config'} completed={activeStep === 1} data-testid="step-config">
                 <StepLabel>
                   {t('commissionBundlesPage.addEditCommissionBundle.form.bundleConfiguration')}
                 </StepLabel>
               </Step>
-              {isTaxonomiesStepEnabled() && (
-                <Step key={'step-taxonomies'}>
-                  <StepLabel>
-                    {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
-                  </StepLabel>
-                </Step>
-              )}
+              <Step key={'step-taxonomies'} data-testid="step-taxonomies">
+                <StepLabel>
+                  {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
+                </StepLabel>
+              </Step>
             </Stepper>
           </div>
         </Box>
@@ -290,7 +285,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
               onClick={() =>
                 activeStep === 0 ? history.goBack() : setActiveStep((prev) => prev - 1)
               }
-              data-testid="cancel-button-test"
+              data-testid="back-step-button-test"
             >
               {t('general.back')}
             </Button>
@@ -298,7 +293,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
           <Stack display="flex" justifyContent="flex-end">
             <Button
               onClick={() => {
-                if (isTaxonomiesStepEnabled() && activeStep === 0) {
+                if (activeStep === 0) {
                   setActiveStep((prev) => prev + 1);
                 } else {
                   formik.handleSubmit();
@@ -309,7 +304,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
               color="primary"
               variant="contained"
               type="submit"
-              data-testid="confirm-button-test"
+              data-testid="open-modal-button-test"
             >
               {t('general.confirm')}
             </Button>

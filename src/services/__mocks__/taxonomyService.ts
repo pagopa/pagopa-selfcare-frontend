@@ -32,7 +32,25 @@ export const mockedTaxonomyGroups: TaxonomyGroups = {
                  "macroAreaName": "macroArea",
                  "macroAreaDescription": "macroAreaDescription"
             }]
-        }
+        },
+        {
+          "ecTypeCode": "testEcCode2",
+          "ecType": "testEc2",
+          "areas": [{
+              "macroAreaEcProgressive": "areaProgressive2",
+               "macroAreaName": "macroArea2",
+               "macroAreaDescription": "macroAreaDescription2"
+          }]
+      },
+      {
+        "ecTypeCode": "testEcCode3",
+        "ecType": "testEc3",
+        "areas": [{
+            "macroAreaEcProgressive": "areaProgressive3",
+             "macroAreaName": "macroArea3",
+             "macroAreaDescription": "macroAreaDescription3"
+        }]
+    }
     ],
   };
 

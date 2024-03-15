@@ -11,6 +11,8 @@ import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
 import { getBundleListByPSP } from '../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 import CommissionBundlesEmpty from './CommissionBundlesEmpty';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { isEcSigned, isPspSigned } from '../../../utils/rbac-utils';
 
 type Props = {
   bundleNameFilter: string;
@@ -55,6 +57,12 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const brokerCode = selectedParty?.fiscalCode ?? '';
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const { hasPermission } = usePermissions();
+  const isPspSigned = signinData && isPspSigned(signinData);
+  const isEcSigned = signinData && isEcSigned(signinData);
+
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
   };
@@ -65,23 +73,44 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     if (isFirstRender) {
       setIsFirstRender(false);
     }
-    getBundleListByPSP(
-      mapBundle(bundleType),
-      pageLimit,
-      bundleNameFilter,
-      newPage ?? page,
-      brokerCode
-    )
-      .then((res) => {
-        if (res?.bundles) {
-          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
-          setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
-        } else {
-          setListFiltered([]);
-        }
-      })
-      .catch((reason) => setError(reason))
-      .finally(() => setLoadingStatus(false));
+
+    if (isPspSigned) {
+        getBundleListByPSP(
+          mapBundle(bundleType),
+          pageLimit,
+          bundleNameFilter,
+          newPage ?? page,
+          brokerCode
+        )
+          .then((res) => {
+            if (res?.bundles) {
+              const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+              setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+            } else {
+              setListFiltered([]);
+            }
+          })
+          .catch((reason) => setError(reason))
+          .finally(() => setLoadingStatus(false));
+    } else if (isEcSigned) {
+        getBundleListByEC(
+          mapBundle(bundleType),
+          pageLimit,
+          bundleNameFilter,
+          newPage ?? page,
+          brokerCode
+        )
+          .then((res) => {
+            if (res?.bundles) {
+              const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+              setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+            } else {
+              setListFiltered([]);
+            }
+          })
+          .catch((reason) => setError(reason))
+          .finally(() => setLoadingStatus(false));
+    }
   };
 
   useEffect(() => {

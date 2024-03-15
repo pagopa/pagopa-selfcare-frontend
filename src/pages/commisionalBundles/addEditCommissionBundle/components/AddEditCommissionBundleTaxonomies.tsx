@@ -208,7 +208,13 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
       {alertData && (
         <Alert
           severity={alertData.type}
-          data-testid="alert-success-test"
+          data-testid=            {alertData.type === 'success'
+          ? "alert-success"
+          : alertData.type === 'warning'
+          ? "alert-warning"
+          : alertData.type === 'error'
+          ? "alert-error"
+          : ''}
           onClose={() => {
             setAlertData(null);
           }}

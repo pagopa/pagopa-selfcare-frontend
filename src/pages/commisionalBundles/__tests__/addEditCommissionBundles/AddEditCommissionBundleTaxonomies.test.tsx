@@ -9,6 +9,7 @@ import {
   mockedTaxonomyList,
 } from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
+import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 
 Object.defineProperty(global.self, 'crypto', {
   value: {
@@ -26,21 +27,31 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const Component = () => {
+const Component = ({taxonomyList}: {taxonomyList: Array<Taxonomy>}) => {
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: mockedBundleRequest,
     onSubmit: async () => jest.fn(),
   });
   return (
-    <AddEditCommissionBundleTaxonomies bundleTaxonomies={mockedTaxonomyList} formik={formik} />
+    <AddEditCommissionBundleTaxonomies bundleTaxonomies={taxonomyList} formik={formik} />
   );
 };
+
+const validFile = new File([[["specific_built_in_data", "macro_area_name"], ["id", "area"], ["id2", "area2"]].map(e => e.join(",")).join("\n")], 'chucknorris.csv', {
+  type: 'text/csv',
+});
+const partiallyInvalidFile = new File([[["specific_built_in_data", "macro_area_name"], ["id", "area"], ["", "area"]].map(e => e.join(",")).join("\n")], 'chucknorris.csv', {
+  type: 'text/csv',
+});
+const invalidFile = new File([[["specific_built_in_data", "macro_area_name"], ["", ""]].map(e => e.join(",")).join("\n")], 'chucknorris.csv', {
+  type: 'text/csv',
+});
 
 describe('<AddEditCommissionBundleTaxonomies />', () => {
   test('render component AddEditCommissionBundleTaxonomies and delete all taxonomies by group', async () => {
     render(
       <Provider store={store}>
-        <Component />
+        <Component taxonomyList={mockedTaxonomyList}/>
       </Provider>
     );
 
@@ -61,5 +72,92 @@ describe('<AddEditCommissionBundleTaxonomies />', () => {
         arrayDeleteTaxonomiesByGroupButtons.length - 1
       );
     });
+  });
+
+  test('render component AddEditCommissionBundleTaxonomies test upload valid csv', async () => {
+    render(
+      <Provider store={store}>
+        <Component taxonomyList={[]}/>
+      </Provider>
+    );
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+
+    const fileInput = screen.getByTestId('fileInput');
+    expect(fileInput).toBeInTheDocument();
+    fireEvent.change(fileInput.children!.item(0) as Element, {
+      target: {
+        files: {
+          0: validFile,
+          length: 1,
+          item: () => validFile,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      const alert = screen.queryByTestId('alert-success');
+      expect(alert).toBeInTheDocument();
+    });
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(2);
+  });
+
+  test('render component AddEditCommissionBundleTaxonomies test upload partially invalid csv', async () => {
+    render(
+      <Provider store={store}>
+        <Component taxonomyList={[]}/>
+      </Provider>
+    );
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+
+    const fileInput = screen.getByTestId('fileInput');
+    expect(fileInput).toBeInTheDocument();
+    fireEvent.change(fileInput.children!.item(0) as Element, {
+      target: {
+        files: {
+          0: partiallyInvalidFile,
+          length: 1,
+          item: () => partiallyInvalidFile,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      const alert = screen.queryByTestId('alert-warning');
+      expect(alert).toBeInTheDocument();
+    });
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(1);
+  });
+
+  test('render component AddEditCommissionBundleTaxonomies test upload invalid csv', async () => {
+    render(
+      <Provider store={store}>
+        <Component taxonomyList={[]}/>
+      </Provider>
+    );
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+
+    const fileInput = screen.getByTestId('fileInput');
+    expect(fileInput).toBeInTheDocument();
+    fireEvent.change(fileInput.children!.item(0) as Element, {
+      target: {
+        files: {
+          0: invalidFile,
+          length: 1,
+          item: () => invalidFile,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      const alert = screen.queryByTestId('alert-error');
+      expect(alert).toBeInTheDocument();
+    });
+
+    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
   });
 });

@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import React, {useState} from 'react';
-import * as env from 'env-var';
 import {ErrorBoundary, LoadingOverlay, UnloadEventHandler, UserNotifyHandle,} from '@pagopa/selfcare-common-frontend';
 import {BrowserRouter, Redirect, Route, Switch, useLocation} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
@@ -42,14 +41,16 @@ import OperationTableDetailPage from './pages/operationTable/detail/OperationTab
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import MaintenancePage from './pages/maintenance/MaintenancePage';
+import {useFlagValue} from "./hooks/useFeatureFlags";
+import withFeatureFlags from "./decorators/withFeatureFlags";
 
 const SecuredRoutes = withLogin(
-    withSelectedPartyProducts(() => {
+    withFeatureFlags(withSelectedPartyProducts(() => {
         const location = useLocation();
         const {t} = useTranslation();
         const {isTOSAccepted, acceptTOS} = useTOSAgreementLocalStorage();
-        const [showMaintenanceAlert, setShowMaintenanceAlert] = useState<boolean>(env.get('REACT_APP_ENABLE_MAINTENANCE_ALERT').default('false').asBool());
-        const maintenanceMode = process.env.REACT_APP_MAINTENANCE_MODE;
+        const [showMaintenanceAlert, setShowMaintenanceAlert] = useState<boolean>(useFlagValue('maintenance-banner'));
+        const maintenanceMode = useFlagValue('maintenance');
 
         if (maintenanceMode) {
             return <Layout><MaintenancePage/></Layout>;
@@ -237,7 +238,7 @@ const SecuredRoutes = withLogin(
                 </Layout>
             </>
         );
-    })
+    }))
 );
 
 const App = () => (

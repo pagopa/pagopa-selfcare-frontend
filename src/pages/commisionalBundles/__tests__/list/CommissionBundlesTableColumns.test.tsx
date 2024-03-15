@@ -7,12 +7,19 @@ import {
 } from '@mui/x-data-grid';
 import { cleanup, render } from '@testing-library/react';
 import {
+  GridLinkActionBundleDetails,
   buildColumnDefs,
   renderCell,
   showAmountRange,
   showBundleName,
   showCustomHeader,
 } from '../../list/CommissionBundlesTableColumns';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { mockedCommissionBundlePspDetailGlobal } from '../../../../services/__mocks__/bundleService';
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -21,10 +28,50 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe('<CommissionBundlesTableColumns />', () => {
-  test('Test of all the functions inside the component', () => {
-    render(
-      showBundleName({
+const colDefMocked: GridStateColDef<any, any, any> = {
+  computedWidth: 0,
+  field: 'name',
+  type: '',
+  hasBeenResized: undefined,
+  groupPath: undefined,
+  headerName: 'name',
+};
+const rowNode = [
+  {
+    id: '',
+    parent: '',
+    depth: 0,
+    groupingKey: '',
+    groupingField: '',
+  },
+];
+
+const params: GridRenderCellParams<any, any, any> = {
+  value: 'some value',
+  row: {
+    stationCode: 'Lorem ipsum',
+  },
+  api: undefined,
+  id: '',
+  field: '',
+  rowNode: rowNode[0],
+  // @ts-ignore
+  colDef: colDefMocked[0],
+  cellMode: 'edit',
+  hasFocus: false,
+  tabIndex: 0,
+  getValue: () => jest.fn(),
+};
+
+const AllCells = () => {
+  const customHeader: GridColumnHeaderParams = {
+    field: 'name',
+    colDef: colDefMocked,
+  };
+
+  return (
+    <>
+      {showBundleName({
         row: { name: 'name' },
         api: undefined,
         id: '',
@@ -37,43 +84,25 @@ describe('<CommissionBundlesTableColumns />', () => {
         getValue: function (id: GridRowId, field: string) {
           throw new Error('Function not implemented.');
         },
-      })
+      })}
+      <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />
+      {showCustomHeader(customHeader)}
+      {showAmountRange(params)}
+      {renderCell(params, params.value)}
+    </>
+  );
+};
+
+describe('<CommissionBundlesTableColumns />', () => {
+  test('Test of all the functions inside the component', () => {
+    const history = createMemoryHistory();
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <AllCells />
+        </Router>
+      </Provider>
     );
-    const rowNode = [
-      {
-        id: '',
-        parent: '',
-        depth: 0,
-        groupingKey: '',
-        groupingField: '',
-      },
-    ];
-
-    const colDefMocked: GridStateColDef<any, any, any> = {
-      computedWidth: 0,
-      field: 'name',
-      type: '',
-      hasBeenResized: undefined,
-      groupPath: undefined,
-      headerName: 'name',
-    };
-
-    const params: GridRenderCellParams<any, any, any> = {
-      value: 'some value',
-      row: {
-        stationCode: 'Lorem ipsum',
-      },
-      api: undefined,
-      id: '',
-      field: '',
-      rowNode: rowNode[0],
-      // @ts-ignore
-      colDef: colDefMocked[0],
-      cellMode: 'edit',
-      hasFocus: false,
-      tabIndex: 0,
-      getValue: () => jest.fn(),
-    };
 
     const ArrayBuildColumnDefs = [
       {
@@ -194,14 +223,7 @@ describe('<CommissionBundlesTableColumns />', () => {
       }
     };
 
-    const customHeader: GridColumnHeaderParams = {
-      field: 'name',
-      colDef: colDefMocked,
-    };
-
-    renderCell(params, params.value);
-    showAmountRange(params);
-    expect(buildColumnDefs(mockTFunction)).toEqual(ArrayBuildColumnDefs);
-    showCustomHeader(customHeader);
+    const realColumns = buildColumnDefs(mockTFunction) as Array<any>;
+    expect(realColumns).toEqual(ArrayBuildColumnDefs);
   });
 });

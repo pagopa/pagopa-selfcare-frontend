@@ -856,6 +856,7 @@
       "configuration": "Configurazione",
       "updatedOn": "Aggiornato il",
       "noTaxonomiesAlert": "Nessun servizio associato",
+      "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
       "error": {
         "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
       },
@@ -901,6 +902,41 @@
         "from": "Da",
         "to": "A"
       },
+      "addTaxonomies":{
+        "subTitle": "Cerca i servici di incasso sfogliando il catalogo oppure carica una lista di codici.",
+        "manualHelp": "Dubbi? Vai al manuale",
+        "catalogueButton": "Sfoglia il catalogo",
+        "dropFileText": "oppure lascia qui una lista di codici di incasso",
+        "addedServices": "Servizi aggiunti",
+        "catalogueTitle": "Catalogo servizi",
+        "catalogueSubtitle": "Sfoglia il catalogo o cerca per codice di incasso",
+        "filterTitle": "Codice di incasso",
+        "rejectedFile": "Tipo di file non supportato",
+        "selectCI": "Seleziona Ente Creditore",
+        "selectArea": "Seleziona Area",
+        "selectServices": "Seleziona Servizi Di Incasso",
+        "selectAll": "Seleziona tutti",
+        "deselectAll": "Deseleziona tutti",
+        "dontKnowHow": "Non sai come preparare il file? ",
+        "downloadExample": "Scarica l'esempio",
+        "missingSearchData": "Codice Inesistente",
+        "removeAreaModal": {
+          "title": "Rimuovi Categoria",
+          "message": "Sarà rimossa l'intera categoria e i relativi servizi di incasso associati"
+        },
+        "removeModal": {
+          "title": "Rimuovi Servizio di incasso",
+          "message": "Sarà rimosso il servizio di incasso"
+        },
+        "alert": {
+          "successTitle": "Il file è valido",
+          "warnTitle": "Il file ha riscontrato degli errori",
+          "errorTitle": "il file non è valido",
+          "successMessage": "Sono stati caricati {{count}} servizi di incasso",
+          "warningMessage": "Non è stato possibile caricare {{count}} servizi di incasso di {{total}}",
+          "errorMessage": "Non è stato possibile caricare i servizi di incasso"
+        }
+      },
       "validationMessage": {
         "requiredField": "Campo obbligatorio",
         "dateNotValid": "La data inserita non è valida",
@@ -917,6 +953,7 @@
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
         "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
         "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
+        "errorMessageUpdatingBundle": "Errore durante l'aggiornamento del pacchetto commissioni",
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
       }
     }
@@ -1029,9 +1066,11 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "showMore": "Mostra di più",
+    "add": "Aggiungi",
     "back": "Indietro",
     "modify": "Modifica",
     "delete": "Elimina",
+    "remove": "Rimuovi",
     "confirm": "Conferma",
     "cancel": "Annulla",
     "manage": "Gestisci",

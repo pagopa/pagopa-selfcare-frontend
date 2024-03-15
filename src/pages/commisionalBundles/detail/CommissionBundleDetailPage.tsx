@@ -1,24 +1,41 @@
-import { Grid, Typography, Stack, Breadcrumbs, Button } from '@mui/material';
+import { Grid, Typography, Stack, Breadcrumbs, Button, Alert, AlertTitle } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
+import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import SideMenu from '../../../components/SideMenu/SideMenu';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import { deletePSPBundle, getBundleDetailByPSP } from '../../../services/bundleService';
+import { deletePSPBundle } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies';
 
+function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
+  const { t } = useTranslation();
+  // eslint-disable-next-line functional/no-let
+  let expiredFound = false;
+  bundleDetail?.transferCategoryList?.forEach((el) => {
+    const endDate = new Date(el.end_date);
+    if (endDate <= new Date()) {
+      expiredFound = true;
+    }
+  });
+  return expiredFound ? (
+    <Alert severity={'warning'} data-testid="alert-warning-test">
+      {t('commissionBundlesPage.commissionBundleDetail.expiredTaxonomies')}
+    </Alert>
+  ) : null;
+}
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
@@ -28,36 +45,13 @@ const CommissionBundleDetailPage = () => {
   const addError = useErrorDispatcher();
   const { bundleId } = useParams<{ bundleId: string }>();
 
-  const [commissionBundleDetail, setCommissionBundleDetail] = useState<BundleResource>({});
+  const commissionBundleDetail: BundleResource =
+    useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
-    getBundleDetailByPSP(pspTaxCode, bundleId)
-      .then((data) => {
-        setCommissionBundleDetail(data);
-      })
-      .catch((reason) => {
-        addError({
-          id: 'GET_COMMISSION_BUNDLE_DETAILS',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while getting commission bundle details`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.list.error.commissionBundleDetailsErrorMessageDesc'
-          ),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoading(false));
-  }, [selectedParty]);
 
   function handleDeletePSP() {
     setLoading(true);
-    const pspTaxCode = selectedParty?.fiscalCode ? `PSP${selectedParty.fiscalCode}` : '';
+    const pspTaxCode = selectedParty?.fiscalCode ?? '';
     deletePSPBundle(pspTaxCode, bundleId)
       .then((_) => {
         history.push(ROUTES.COMMISSION_BUNDLES);
@@ -94,7 +88,6 @@ const CommissionBundleDetailPage = () => {
           </Typography>
         </Breadcrumbs>
         <Grid container mt={1} spacing={1}>
-          {/* TODO Add alert for bundleType === Private if taxonomies not longer valid */}
           <Grid item xs={6}>
             <TitleBox title={commissionBundleDetail.name ?? ''} variantTitle="h4" />
             <Typography color={'action.active'} variant="subtitle1" sx={{ mb: 1 }}>
@@ -123,6 +116,9 @@ const CommissionBundleDetailPage = () => {
               </Button>
             </Stack>
           </Grid>
+          <Grid item xs={12}>
+            <TaxonomiesExpiredAlert bundleDetail={commissionBundleDetail} />
+          </Grid>
           <Grid item xs={6}>
             <Typography variant="h5">
               {t('commissionBundlesPage.commissionBundleDetail.title')}
@@ -137,14 +133,13 @@ const CommissionBundleDetailPage = () => {
               </Typography>
             </Typography>
           </Grid>
-          <Grid item xs={commissionBundleDetail?.type === TypeEnum.GLOBAL ? 12 : 6} data-testid="config-detail">
+          <Grid item xs={6} data-testid="config-detail">
             <CommissionBundleDetailConfiguration bundleDetail={commissionBundleDetail} />
           </Grid>
-          {commissionBundleDetail?.type !== TypeEnum.GLOBAL && (
-            <Grid item xs={6} data-testid="taxonomies-detail">
-              <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
-            </Grid>
-          )}
+
+          <Grid item xs={6} data-testid="taxonomies-detail">
+            <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
+          </Grid>
         </Grid>
       </Grid>
       <GenericModal

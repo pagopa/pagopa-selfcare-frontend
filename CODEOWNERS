@@ -1,3 +1,4 @@
 # see https://help.github.com/en/articles/about-code-owners#example-of-a-codeowners-file
 
-- @pagopa/pagopa-team-backoffice
+* @pagopa/pagopa-team-backoffice
+/src/ @pagopa/pagopa-team-backoffice @alessio-cialini @svariant @gioelemella

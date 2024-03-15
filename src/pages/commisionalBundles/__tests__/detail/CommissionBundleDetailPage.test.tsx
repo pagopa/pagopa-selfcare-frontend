@@ -48,7 +48,7 @@ describe('<CommissionBundleDetailPage />', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
     });
 

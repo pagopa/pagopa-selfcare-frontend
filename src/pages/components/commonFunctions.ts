@@ -1,14 +1,8 @@
-import {store} from '../../redux/store';
-import {getConfig} from '../../utils/config';
+import {useFlagValue} from "../../hooks/useFeatureFlags";
 
-export const isOperator = (): boolean => {
-    const user = store.getState().user.logged;
-    const email = typeof user !== 'undefined' ? user.email : '';
-    if (email && email.length > 0) {
-        return getConfig('REACT_APP_OPERATOR_EMAIL_ADDRESSES', {required: true}).split(';').includes(email);
-    }
-    return false;
-};
+export const isOperator = (): boolean =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useFlagValue('isOperator');
 
 export const splitURL = (targetURL: string) => {
     try {

@@ -17,6 +17,7 @@ import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
 import {usePermissions} from '../../hooks/usePermissions';
 import {isSigned} from '../../utils/rbac-utils';
+import {useFlagValue} from '../../hooks/useFeatureFlags';
 import SidenavItem from './SidenavItem';
 
 /** The side menu of the application */
@@ -39,7 +40,6 @@ export default function SideMenu() {
     });
 
     useEffect(() => {
-       
         const isSignedOnNode = signinData ? isSigned(signinData) : true;
         setIsDisabled(!isSignedOnNode ?? true);
     }, [signinData]);
@@ -58,7 +58,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    { hasPermission('apikey') && (
+                    {hasPermission('apikey') && (
                         <SidenavItem
                             title={t('sideMenu.apikeys.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}
@@ -100,19 +100,20 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {ENV.FEATURES.COMMISSION_BUNDLES.ENABLED && hasPermission("commission-bundles") && (
-                        <SidenavItem
-                            title={t('sideMenu.commBundles.title')}
-                            handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}
-                            isSelected={
-                                pathname === ROUTES.COMMISSION_BUNDLES ||
-                                pathname.startsWith(ROUTES.COMMISSION_BUNDLES)
-                            }
-                            icon={EuroIcon}
-                            disabled={isDisabled}
-                            dataTestId="commission-bundles-test"
-                        />
-                    )}
+                    {useFlagValue('commission-bundles')
+                        && hasPermission("commission-bundles") && (
+                            <SidenavItem
+                                title={t('sideMenu.commBundles.title')}
+                                handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}
+                                isSelected={
+                                    pathname === ROUTES.COMMISSION_BUNDLES ||
+                                    pathname.startsWith(ROUTES.COMMISSION_BUNDLES)
+                                }
+                                icon={EuroIcon}
+                                disabled={isDisabled}
+                                dataTestId="commission-bundles-test"
+                            />
+                        )}
                     {ENV.FEATURES.OPERATIONTABLE.ENABLED && hasPermission('operation-table-list') && (
                         <SidenavItem
                             title={t('sideMenu.operationTable.title')}

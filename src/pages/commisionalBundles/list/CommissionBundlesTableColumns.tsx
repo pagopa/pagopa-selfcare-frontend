@@ -10,19 +10,6 @@ import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
 
-const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource }) => {
-  const dispatcher = useAppDispatch();
-
-  return (
-    <GridLinkAction
-      label="Gestisci pacchetto"
-      action={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
-      to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
-      icon={<ChevronRightIcon color="primary" />}
-    />
-  );
-};
-
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
@@ -169,6 +156,19 @@ export function renderCell(
     </Box>
   );
 }
+
+export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource }) => {
+  const dispatcher = useAppDispatch();
+
+  return (
+    <GridLinkAction
+      label="Gestisci pacchetto"
+      action={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
+      to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
+      icon={<ChevronRightIcon color="primary" />}
+    />
+  );
+};
 
 export function showCustomHeader(params: GridColumnHeaderParams) {
   return (

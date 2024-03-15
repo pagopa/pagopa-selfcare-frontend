@@ -80,7 +80,7 @@ export const BundleTaxonomiesTable = ({
                   xs={11}
                   display="flex"
                   alignItems={'center'}
-                  sx={{ borderRadius: 1, border: 1, borderColor: theme.palette.divider, p: 1 }}
+                  sx={{ borderRadius: 1, border: 1, borderColor: theme.palette.divider, p: 1, px: 2 }}
                 >
                   <Typography variant="body1">
                     {taxonomy.specific_built_in_data} - {taxonomy.service_type}

@@ -173,7 +173,7 @@ export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource
   return (
     <GridLinkAction
       label="Gestisci pacchetto"
-      action={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
+      onClick={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
       to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
       icon={<ChevronRightIcon color="primary" />}
     />
@@ -229,14 +229,7 @@ export function showBundleState(
 ) {
   return (
     <React.Fragment>
-      {renderCell(
-        params,
-        <Grid container sx={{ width: '100%' }}>
-          <Grid item xs={9} sx={{ width: '100%' }}>
-            {getStateChip(params, t, isPsp, isEc)}
-          </Grid>
-        </Grid>
-      )}
+      {renderCell(params, <>{getStateChip(params, t, isPsp, isEc)}</>)}
     </React.Fragment>
   );
 }
@@ -251,47 +244,46 @@ const getStateChip = (
   const validityDateTo = params.row.validityDateTo;
   const todayDate = new Date();
 
-  if(isPsp && validityDateFrom && validityDateTo){
-      if (datesAreOnSameDay(todayDate, validityDateTo)) {
-        return (
-          <Chip
-            color={'error'}
-            label={t('commissionBundlesPage.list.states.eliminating')}
-            data-testid="error-state-chip"
-          />
-        );
-      }
-      if (todayDate.getTime() < validityDateFrom.getTime()) {
-        return (
-          <Chip
-            color={'default'}
-            label={t('commissionBundlesPage.list.states.inActivation')}
-            data-testid="default-state-chip"
-          />
-        );
-      }
-      if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-        return (
-          <Chip
-            color={'warning'}
-            label={t('commissionBundlesPage.list.states.expiring')}
-            data-testid="warning-state-chip"
-          />
-        );
-      }
-  
+  if (isPsp && validityDateFrom && validityDateTo) {
+    if (datesAreOnSameDay(todayDate, validityDateTo)) {
       return (
         <Chip
-          color={'success'}
-          label={t('commissionBundlesPage.list.states.active')}
-          data-testid="success-state-chip"
+          color={'error'}
+          label={t('commissionBundlesPage.list.states.eliminating')}
+          data-testid="error-state-chip"
         />
       );
-  }
-  if(isEc){
-    if(params.row.type === TypeEnum.PUBLIC){
+    }
+    if (todayDate.getTime() < validityDateFrom.getTime()) {
+      return (
+        <Chip
+          color={'default'}
+          label={t('commissionBundlesPage.list.states.inActivation')}
+          data-testid="default-state-chip"
+        />
+      );
+    }
+    if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+      return (
+        <Chip
+          color={'warning'}
+          label={t('commissionBundlesPage.list.states.expiring')}
+          data-testid="warning-state-chip"
+        />
+      );
+    }
 
-                /* TODO
+    return (
+      <Chip
+        color={'success'}
+        label={t('commissionBundlesPage.list.states.active')}
+        data-testid="success-state-chip"
+      />
+    );
+  }
+  if (isEc) {
+    if (params.row.type === TypeEnum.PUBLIC) {
+      /* TODO
     if(isEc  && bundle not activated by EC ){
             return (
         <Chip
@@ -301,7 +293,7 @@ const getStateChip = (
         />);
     }
 */
-                /* TODO
+      /* TODO
     if(isEc  && bundle deactivated by EC ){
             return (
         <Chip
@@ -311,7 +303,7 @@ const getStateChip = (
         />);
     }
 */
-       /* TODO
+      /* TODO
     if(isEc  && bundle activated by EC less than 24 hours ago ){
             return (
         <Chip
@@ -321,7 +313,7 @@ const getStateChip = (
         />);
     }
 */
-          /* TODO
+      /* TODO
     if(isEc  && bundle activated by EC ){
             return (
        <Chip
@@ -333,7 +325,7 @@ const getStateChip = (
 */
     }
 
-    if(params.row.type === TypeEnum.PRIVATE){
+    if (params.row.type === TypeEnum.PRIVATE) {
       if (datesAreOnSameDay(todayDate, validityDateTo)) {
         return (
           <Chip
@@ -352,7 +344,7 @@ const getStateChip = (
           />
         );
       }
-                /* TODO
+      /* TODO
     if(isEc  && bundle not activated by EC ){
             return (
         <Chip
@@ -362,7 +354,7 @@ const getStateChip = (
         />);
     }
 */
-                /* TODO
+      /* TODO
     if(isEc  && bundle activated by EC ){
             return (
        <Chip
@@ -374,13 +366,14 @@ const getStateChip = (
 */
     }
 
-    if(params.row.type === TypeEnum.GLOBAL){
+    if (params.row.type === TypeEnum.GLOBAL) {
       return (
         <Chip
-           color={'success'}
-           label={t('commissionBundlesPage.list.states.active')}
-           data-testid="success-state-chip"
-         />);
+          color={'success'}
+          label={t('commissionBundlesPage.list.states.active')}
+          data-testid="success-state-chip"
+        />
+      );
     }
   }
 

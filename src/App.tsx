@@ -206,7 +206,7 @@ const SecuredRoutes = withLogin(
                             </Route>
                             <Route path={routes.COMMISSION_BUNDLES_EDIT} exact={true}>
                                 <ProtectedRoute permission="commission-bundles">
-                                    <AddEditCommissionBundlePage/>
+                                    <AddEditCommissionBundlePage edit={true}/>
                                 </ProtectedRoute>
                             </Route>
                             <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>

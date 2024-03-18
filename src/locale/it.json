@@ -726,6 +726,7 @@
         "ibanCode": "Codice IBAN",
         "description": "Descrizione",
         "activeDate": "Data Inizio Validità",
+        "dueDate": "Data Scadenza",
         "status": "Stato"
       },
       "loading": "Caricamento...",

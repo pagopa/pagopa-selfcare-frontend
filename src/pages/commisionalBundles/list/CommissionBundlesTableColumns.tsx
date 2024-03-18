@@ -11,7 +11,11 @@ import { useAppDispatch } from '../../../redux/hooks';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
 
-export function buildColumnDefs(t: TFunction<'translation', undefined>) {
+export function buildColumnDefs(
+  t: TFunction<'translation', undefined>,
+  isPsp: boolean,
+  isEc: boolean
+) {
   return [
     {
       field: 'name',
@@ -27,36 +31,40 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       sortable: true,
       flex: 4,
     },
-    {
-      field: 'validityDateFrom',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.list.headerFields.startDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 150,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell(params.row.validityDateFrom?.toLocaleDateString('en-GB'), undefined),
-      sortable: false,
-      flex: 4,
-    },
-    {
-      field: 'validityDateTo',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.list.headerFields.endDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 150,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell(params.row.validityDateTo?.toLocaleDateString('en-GB'), undefined),
-      sortable: false,
-      flex: 4,
-    },
+    ...(isPsp
+      ? [
+          {
+            field: 'validityDateFrom',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('commissionBundlesPage.list.headerFields.startDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 150,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell(params.row.validityDateFrom?.toLocaleDateString('en-GB'), undefined),
+            sortable: false,
+            flex: 4,
+          },
+          {
+            field: 'validityDateTo',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('commissionBundlesPage.list.headerFields.endDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 150,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell(params.row.validityDateTo?.toLocaleDateString('en-GB'), undefined),
+            sortable: false,
+            flex: 4,
+          },
+        ]
+      : []),
     {
       field: 'touchpoint',
       cellClassName: 'justifyContentNormal',
@@ -95,7 +103,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showBundleState(params, t),
+      renderCell: (params) => showBundleState(params, t, isPsp, isEc),
       sortable: false,
       flex: 4,
     },
@@ -212,39 +220,82 @@ export function showBundleName(params: GridRenderCellParams) {
   );
 }
 
-export function showBundleState(params: GridRenderCellParams, t: TFunction<'translation'>) {
-  const getStateChip = () => {
-    const validityDateFrom = params.row.validityDateFrom;
-    const validityDateTo = params.row.validityDateTo;
-    const todayDate = new Date();
-
-    if(validityDateFrom && validityDateTo){
-      if (datesAreOnSameDay(todayDate, validityDateTo)) {
-        return <Chip color={'error'} label={t('commissionBundlesPage.list.states.eliminating')} data-testid="error-state-chip"/>;
-      }
-      if (todayDate.getTime() < validityDateFrom.getTime()) {
-        return <Chip color={'default'} label={t('commissionBundlesPage.list.states.inActivation')} data-testid="default-state-chip"/>;
-      }
-      if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-        return <Chip color={'warning'} label={t('commissionBundlesPage.list.states.expiring')} data-testid="warning-state-chip"/>;
-      }
-
-      return <Chip color={'success'} label={t('commissionBundlesPage.list.states.active')} data-testid="success-state-chip"/>;
-    }
-
-    return "-";
-  };
-
+export function showBundleState(
+  params: GridRenderCellParams,
+  t: TFunction<'translation'>,
+  isPsp: boolean,
+  isEc: boolean
+) {
   return (
     <React.Fragment>
       {renderCell(
         params,
         <Grid container sx={{ width: '100%' }}>
           <Grid item xs={9} sx={{ width: '100%' }}>
-            {getStateChip()}
+            {getStateChip(params, t, isPsp, isEc)}
           </Grid>
         </Grid>
       )}
     </React.Fragment>
   );
 }
+
+const getStateChip = (
+  params: GridRenderCellParams,
+  t: TFunction<'translation'>,
+  isPsp: boolean,
+  isEc: boolean
+) => {
+  const validityDateFrom = params.row.validityDateFrom;
+  const validityDateTo = params.row.validityDateTo;
+  const todayDate = new Date();
+
+  if (validityDateFrom && validityDateTo) {
+    if (datesAreOnSameDay(todayDate, validityDateTo)) {
+      return (
+        <Chip
+          color={'error'}
+          label={t('commissionBundlesPage.list.states.eliminating')}
+          data-testid="error-state-chip"
+        />
+      );
+    }
+    if (isPsp && todayDate.getTime() < validityDateFrom.getTime()) {
+      return (
+        <Chip
+          color={'default'}
+          label={t('commissionBundlesPage.list.states.inActivation')}
+          data-testid="default-state-chip"
+        />
+      );
+    }
+    if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+      return (
+        <Chip
+          color={'warning'}
+          label={t('commissionBundlesPage.list.states.expiring')}
+          data-testid="warning-state-chip"
+        />
+      );
+    }
+    /* TODO
+    if(isEc  && bundle not activated by EC ){
+            return (
+        <Chip
+          color={'default'}
+          label={t('commissionBundlesPage.list.states.toBeActivated')}
+          data-testid="default-state-chip"
+        />
+    }
+*/
+    return (
+      <Chip
+        color={'success'}
+        label={t('commissionBundlesPage.list.states.active')}
+        data-testid="success-state-chip"
+      />
+    );
+  }
+
+  return '-';
+};

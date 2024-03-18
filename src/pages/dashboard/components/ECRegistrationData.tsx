@@ -40,14 +40,6 @@ const ECRegistrationData = () => {
         </Typography>
       </Grid>
       <Grid item xs={4}>
-        <Typography variant="body2">{t('dashboardPage.registrationData.accessionDate')}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-          {'-'}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
         <Typography variant="body2">{t('dashboardPage.registrationData.address')}</Typography>
       </Grid>
       <Grid item xs={8}>

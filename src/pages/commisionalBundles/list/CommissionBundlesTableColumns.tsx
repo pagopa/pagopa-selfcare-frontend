@@ -228,9 +228,11 @@ export function showBundleState(params: GridRenderCellParams, t: TFunction<'tran
       if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
         return <Chip color={'warning'} label={t('commissionBundlesPage.list.states.expiring')} data-testid="warning-state-chip"/>;
       }
+
+      return <Chip color={'success'} label={t('commissionBundlesPage.list.states.active')} data-testid="success-state-chip"/>;
     }
 
-    return <Chip color={'success'} label={t('commissionBundlesPage.list.states.active')} data-testid="success-state-chip"/>;
+    return "-";
   };
 
   return (

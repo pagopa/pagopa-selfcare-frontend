@@ -240,7 +240,7 @@ describe('<CommissionBundlesTableColumns />', () => {
   test('Test state chip cell with active bundle', () => {
     let bundle = {...mockedCommissionBundlePspDetailGlobal};
     bundle.validityDateFrom = new Date('01/01/2020');
-    bundle.validityDateTo = add(new Date(), { days: 15 });
+    bundle.validityDateTo = add(new Date(), { days: 8 });
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -276,7 +276,7 @@ describe('<CommissionBundlesTableColumns />', () => {
   test('Test state chip cell with expiring bundle', () => {
     let bundle = {...mockedCommissionBundlePspDetailGlobal};
     bundle.validityDateFrom = new Date("01/01/2020");
-    bundle.validityDateTo = add(new Date(), { days: 5 });
+    bundle.validityDateTo = add(new Date(), { days: 7 });
     render(
       <Provider store={store}>
         <Router history={history}>

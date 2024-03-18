@@ -68,11 +68,12 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     if (isFirstRender) {
       setIsFirstRender(false);
     }
+    const mappedBundleType = mapBundle(bundleType);
     // eslint-disable-next-line functional/no-let
     let promise;
     if (isPsp()) {
       promise = getBundleListByPSP(
-        mapBundle(bundleType),
+        mappedBundleType,
         pageLimit,
         bundleNameFilter,
         newPage ?? page,
@@ -80,11 +81,11 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
       );
     } else if (isEc()) {
       promise = getCisBundles(
-        mapBundle(bundleType),
+        mappedBundleType,
         pageLimit,
         bundleNameFilter,
         newPage ?? page,
-        bundleType === TypeEnum.GLOBAL ? undefined : brokerCode
+        mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
       );
     } else {
       promise = new Promise<BundlesResource>((resolve) => resolve({}));

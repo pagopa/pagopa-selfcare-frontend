@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Chip, Grid, Typography } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
@@ -9,6 +9,7 @@ import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
+import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -85,16 +86,16 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 4,
     },
     {
-      field: 'amountRange',
+      field: 'state',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.list.headerFields.amountRange'),
+      headerName: t('commissionBundlesPage.list.headerFields.state'),
       align: 'left',
       headerAlign: 'left',
       width: 200,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showAmountRange(params),
+      renderCell: (params) => showBundleState(params, t),
       sortable: false,
       flex: 4,
     },
@@ -211,16 +212,34 @@ export function showBundleName(params: GridRenderCellParams) {
   );
 }
 
-export function showAmountRange(params: GridRenderCellParams) {
+export function showBundleState(params: GridRenderCellParams, t: TFunction<'translation'>) {
+  const getStateChip = () => {
+    const validityDateFrom = params.row.validityDateFrom;
+    const validityDateTo = params.row.validityDateTo;
+    const todayDate = new Date();
+
+    if(validityDateFrom && validityDateTo){
+      if (datesAreOnSameDay(todayDate, validityDateTo)) {
+        return <Chip color={'error'} label={t('commissionBundlesPage.list.states.eliminating')} data-testid="error-state-chip"/>;
+      }
+      if (todayDate.getTime() < validityDateFrom.getTime()) {
+        return <Chip color={'default'} label={t('commissionBundlesPage.list.states.inActivation')} data-testid="default-state-chip"/>;
+      }
+      if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+        return <Chip color={'warning'} label={t('commissionBundlesPage.list.states.expiring')} data-testid="warning-state-chip"/>;
+      }
+    }
+
+    return <Chip color={'success'} label={t('commissionBundlesPage.list.states.active')} data-testid="success-state-chip"/>;
+  };
+
   return (
     <React.Fragment>
       {renderCell(
         params,
         <Grid container sx={{ width: '100%' }}>
           <Grid item xs={9} sx={{ width: '100%' }}>
-            <Typography variant="body2">
-              {`${params.row.minPaymentAmount} € - ${params.row.maxPaymentAmount} €`}
-            </Typography>
+            {getStateChip()}
           </Grid>
         </Grid>
       )}

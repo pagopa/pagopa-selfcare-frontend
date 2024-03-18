@@ -22,7 +22,6 @@ import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
-import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
@@ -35,10 +34,6 @@ import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
-
-export interface AddEditCommissionBundlePageProps {
-  edit?: boolean;
-}
 
 const minDateTomorrow = add(new Date(), { days: 1 });
 
@@ -135,7 +130,7 @@ const enableSubmit = (values: BundleRequest) =>
   values.validityDateTo != null &&
   values.validityDateTo.getTime() > 0;
 
-const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps) => {
+const AddEditCommissionBundlePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -146,10 +141,11 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const isEdit = actionId === FormAction.Edit;
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),
-    validate: (values) => validate(values, edit, t),
+    validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
     },
@@ -161,7 +157,6 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
-    const isEdit = actionId === FormAction.Edit;
 
     const promise = isEdit
       ? updatePSPBundle(pspTaxCode, bundleId, body)

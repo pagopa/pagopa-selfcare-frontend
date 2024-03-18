@@ -831,7 +831,13 @@
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
         "paymentType": "Tipo di pagamento",
-        "amountRange": "Fascia importo"
+        "state": "Stato"
+      },
+      "states":{
+        "inActivation": "In attivazione",
+        "active": "Attivo",
+        "expiring": "In scadenza",
+        "eliminating": "In eliminazione"
       },
       "error": {
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",

@@ -49,8 +49,24 @@ export const formatCurrencyEur = (value: number): string =>
     minimumFractionDigits: 2,
   });
 
-export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'translation'>): string => value ? t('general.yes') : t('general.no');
+export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'translation'>): string =>
+  value ? t('general.yes') : t('general.no');
 
 export const formatDateToDDMMYYYY = (value: any): string => value.toLocaleDateString('en-GB');
 
-export const formatDateToDDMMYYYYhhmm = (value: any): string => value.toLocaleString('en-GB', {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+export const formatDateToDDMMYYYYhhmm = (value: any): string =>
+  value.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+export const datesAreOnSameDay = (first: Date, second: Date) =>
+  first.getFullYear() === second.getFullYear() &&
+  first.getMonth() === second.getMonth() &&
+  first.getDate() === second.getDate();
+
+export const dateDifferenceInDays = (dateInitial: Date, dateFinal: Date) =>
+  (dateFinal.getTime() - dateInitial.getTime()) / (1000 * 60 * 60 * 24);

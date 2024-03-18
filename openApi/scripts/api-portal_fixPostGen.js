@@ -14,6 +14,12 @@ regexReplace(
   { fileContentsOnly: true }
 );
 
+regexReplace(
+  'readonly types\\?: array;',
+  'readonly types?: Array<string>;',
+  'src/api/generated/portal/requestTypes.ts',
+  { fileContentsOnly: true }
+);
 
 regexReplace(
   '"io-ts";',

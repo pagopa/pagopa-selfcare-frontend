@@ -112,6 +112,18 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     enableReinitialize: true,
   });
 
+  useEffect(() => {
+    if ((signInData?.paymentServiceProviderDetailsResource?.psp_code === undefined ||
+        signInData?.paymentServiceProviderDetailsResource?.psp_code === null ||
+        signInData?.paymentServiceProviderDetailsResource?.psp_code === '') &&
+        (selectedParty?.pspData?.abi_code === undefined ||
+         selectedParty?.pspData?.abi_code === null ||
+         selectedParty?.pspData?.abi_code === '')) {
+         // eslint-disable-next-line @typescript-eslint/no-floating-promises
+         formik.setFieldValue('pspCode', formik.values.bicCode);
+    }
+  }, [formik.values.bicCode]);
+
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async () => {
     setLoading(true);

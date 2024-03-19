@@ -303,6 +303,9 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                     fullWidth
                     id="bicCode"
                     name="bicCode"
+                    disabled={signInData?.paymentServiceProviderDetailsResource?.bic !== undefined &&
+                              signInData?.paymentServiceProviderDetailsResource?.bic !== null &&
+                              signInData?.paymentServiceProviderDetailsResource?.bic !== ''}
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
                     inputProps={{

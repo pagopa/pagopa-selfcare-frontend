@@ -326,7 +326,7 @@ const getStateChip = (
     }
 
     if (params.row.type === TypeEnum.PRIVATE) {
-      if (datesAreOnSameDay(todayDate, validityDateTo)) {
+      if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
         return (
           <Chip
             color={'error'}
@@ -335,7 +335,7 @@ const getStateChip = (
           />
         );
       }
-      if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+      if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
         return (
           <Chip
             color={'warning'}

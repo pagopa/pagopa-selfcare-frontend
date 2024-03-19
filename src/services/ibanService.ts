@@ -47,24 +47,6 @@ export const updateIban = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
     }
 };
 
-export const updateIbanStandIn = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
-    /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updateIbanStandInMocked(iban);
-    } else {
-        return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
-    }
-};
-
-export const updateIbanCup = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
-    /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updateIbanCupMocked(iban);
-    } else {
-        return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
-    }
-};
-
 export const deleteIban = (ecCode: string, ibanValue: string): Promise<void> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {

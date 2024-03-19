@@ -49,6 +49,20 @@ export function buildColumnDefs(
       sortable: false,
       flex: 3,
     },
+    {
+      field: 'dueDate',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('ibanPage.list.column.dueDate'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell(params, params.row.due_date!.substring(0, 10)),
+      sortable: false,
+      flex: 3,
+    },
     /* 
     {
       field: 'enabled',

@@ -66,9 +66,11 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abi_code ?? '',
     pspCode:
-      signInData.paymentServiceProviderDetailsResource?.psp_code ?? selectedParty?.fiscalCode ?? '',
-    bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
-    digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
+      signInData?.paymentServiceProviderDetailsResource?.psp_code ??
+       selectedParty?.pspData?.abi_code ? 'ABI'.concat(selectedParty?.pspData?.abi_code as string) :
+        signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
+    bicCode: signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
+    digitalStamp: signInData?.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
 
   const inputGroupStyle = {

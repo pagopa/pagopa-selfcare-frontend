@@ -49,6 +49,7 @@ __pycache__/
 coverage
 
 yarn-error.log
+yarn.lock
 
 *.zip
 

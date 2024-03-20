@@ -118,6 +118,8 @@ const baseCommissionBundlePspDetail: BundleResource = {
   paymentAmount: 55.56,
   minPaymentAmount: 40,
   maxPaymentAmount: 150.1,
+  paymentType: 'MYBK',
+  touchpoint: 'PSP',
   transferCategoryList: mockedTaxonomyList,
   validityDateFrom: new Date('2025-02-17'),
   validityDateTo: new Date('2028-02-22'),

@@ -812,8 +812,7 @@
       "startDateOverEndDate": "La data di inizio non può essere maggiore di quella di scadenza",
       "endDateUnderStartDate": "La data di scadenza non può essere minore di quella d'inizio",
       "ecOwnerNotValid": "Codice fiscale non valido",
-      "postalIbanConflict": "IBAN postale già censito",
-      "bankIbanConflict": "IBAN già censito"
+      "bankIbanConflict": "Impossibile creare l’IBAN in quanto risulta essere già censito sul sistema"
     }
   },
   "commissionBundlesPage": {

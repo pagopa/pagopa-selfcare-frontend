@@ -5,13 +5,13 @@ import { BrokerECExportStatus } from "../../api/generated/portal/BrokerECExportS
 
 export const ibanList: Ibans = {
 // @ts-ignore
-  ibanList: [
+  ibans_enhanced: [
     {
       iban: 'IT99C0222211111000000000001',
-      publication_date: new Date('2023-06-01T23:59:59.999Z'),
-      validity_date: new Date('2023-04-01T13:49:19.897Z'),
-      due_date: new Date('2024-04-01T13:49:19.897Z'),
-      ecOwner: 'RSSMRA98H27F205Q',
+      publication_date: '2023-06-01T23:59:59.999Z',
+      validity_date: '2023-04-01T13:49:19.897Z',
+      due_date: '2024-04-01T13:49:19.897Z',
+      ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       labels: [
         {
@@ -19,14 +19,14 @@ export const ibanList: Ibans = {
           name: 'CUP',
         },
       ],
-      active: true,
+      is_active: true,
     },
     {
       iban: 'IT99C0222211111000000000002',
-      publicationDate: new Date('2024-06-01T23:59:59.999Z'),
-      validityDate: new Date('2024-04-01T13:49:19.897Z'),
-      dueDate: new Date('2024-04-01T13:49:19.897Z'),
-      ecOwner: 'RSSMRA98H27F205Q',
+      publication_date: '2024-06-01T23:59:59.999Z',
+      validity_date: '2024-04-01T13:49:19.897Z',
+      due_date: '2024-04-01T13:49:19.897Z',
+      ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       labels: [
         {
@@ -34,34 +34,34 @@ export const ibanList: Ibans = {
           name: 'STANDIN',
         },
       ],
-      active: true,
+      is_active: true,
     },
     {
       iban: 'IT99C0222211111000000000003',
-      publicationDate: new Date('2024-06-01T23:59:59.999Z'),
-      validityDate: new Date('2024-04-01T13:49:19.897Z'),
-      dueDate: new Date('2024-04-01T13:49:19.897Z'),
-      ecOwner: 'RSSMRA98H27F205Q',
+      publication_date: '2024-06-01T23:59:59.999Z',
+      validity_date: '2024-04-01T13:49:19.897Z',
+      due_date: '2024-04-01T13:49:19.897Z',
+      ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
-      active: true,
+      is_active: true,
     },
     {
       iban: 'IT99C0222211111000000000004',
-      publicationDate: new Date('2024-06-01T23:59:59.999Z'),
-      validityDate: new Date('2024-04-01T13:49:19.897Z'),
-      dueDate: new Date('2024-04-01T13:49:19.897Z'),
-      ecOwner: 'RSSMRA98H27F205Q',
+      publication_date: '2024-06-01T23:59:59.999Z',
+      validity_date: '2024-04-01T13:49:19.897Z',
+      due_date: '2024-04-01T13:49:19.897Z',
+      ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
-      active: true,
+      is_active: true,
     },
     {
       iban: 'IT99C0222211111000000000005',
-      publicationDate: new Date('2023-06-01T23:59:59.999Z'),
-      validityDate: new Date('2023-04-01T13:49:19.897Z'),
-      dueDate: new Date('2024-04-01T13:49:19.897Z'),
-      ecOwner: 'RSSMRA98H27F205Q',
+      publication_date: '2023-06-01T23:59:59.999Z',
+      validity_date: '2023-04-01T13:49:19.897Z',
+      due_date: '2024-04-01T13:49:19.897Z',
+      ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
-      active: false,
+      is_active: false,
     },
   ],
 };

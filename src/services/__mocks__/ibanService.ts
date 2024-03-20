@@ -16,7 +16,7 @@ export const ibanList: Ibans = {
       labels: [
         {
           description: 'The IBAN to use for CUP payments',
-          name: 'CUP',
+          name: '0201138TS',
         },
       ],
       is_active: true,
@@ -31,7 +31,7 @@ export const ibanList: Ibans = {
       labels: [
         {
           description: 'The IBAN to use for STANDIN payments',
-          name: 'STANDIN',
+          name: 'ACA',
         },
       ],
       is_active: true,

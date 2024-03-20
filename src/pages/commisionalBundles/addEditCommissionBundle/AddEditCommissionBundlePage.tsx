@@ -101,7 +101,7 @@ const validate = (
           : undefined,
         validityDateTo: !values.validityDateTo
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : values.validityDateTo.getTime() < minDateTomorrow.getTime()
+          : values.validityDateTo.getTime() <= new Date().getTime()
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
           : values.validityDateFrom &&
             values.validityDateTo.getTime() < values.validityDateFrom.getTime()
@@ -134,7 +134,6 @@ const AddEditCommissionBundlePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
-  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
@@ -142,6 +141,7 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit = actionId === FormAction.Edit;
+  const bundleDetails = isEdit ? useAppSelector(bundleDetailsSelectors.selectBundleDetails) : {};
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),
@@ -191,7 +191,7 @@ const AddEditCommissionBundlePage = () => {
     if (formik.isValid) {
       setShowConfirmModal(true);
     } else {
-      setShowConfirmModal(false);
+      setActiveStep(0);
     }
   };
 
@@ -257,7 +257,7 @@ const AddEditCommissionBundlePage = () => {
           style={{ display: activeStep !== 0 ? 'none' : undefined }}
           data-testid="bundle-form-div"
         >
-          <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
+          <AddEditCommissionBundleForm formik={formik} isEdit={isEdit} idBrokerPsp={bundleDetails?.idBrokerPsp}/>
         </div>
         <div
           style={{ display: activeStep !== 1 ? 'none' : undefined }}

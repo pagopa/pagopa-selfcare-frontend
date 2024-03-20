@@ -174,16 +174,7 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                 history.push(ROUTES.IBAN);
             } catch (reason: any) {
                 if (reason.httpStatus === 409) {
-                    // eslint-disable-next-line functional/no-let
-                    let errorKey = '';
-
-                    if (formik.values.iban.includes('07601')) {
-                        errorKey = 'postalIbanConflict';
-                    } else {
-                        errorKey = 'bankIbanConflict';
-                    }
-
-                    formik.setFieldError('iban', t(`addEditIbanPage.validationMessage.${errorKey}`));
+                    formik.setFieldError('iban', t('addEditIbanPage.validationMessage.bankIbanConflict'));
                 }
 
                 addError({

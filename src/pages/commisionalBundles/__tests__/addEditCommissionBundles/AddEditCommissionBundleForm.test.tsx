@@ -68,7 +68,7 @@ const TestAddEditCommissionBundleForm = ({
       <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
         <Route path="/comm-bundles/add-bundle/">
           <ThemeProvider theme={theme}>
-            <AddEditCommissionBundleForm formik={formik} actionId={formAction} />
+            <AddEditCommissionBundleForm formik={formik} isEdit={formAction === FormAction.Edit} idBrokerPsp={"idBrokerPsp"} />
           </ThemeProvider>
         </Route>
       </MemoryRouter>

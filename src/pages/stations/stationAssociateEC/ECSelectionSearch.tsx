@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { EC } from '../../../model/EC';
@@ -46,14 +46,21 @@ export default function ECSelectionSearch({
   const [input, setInput] = useState<string>('');
   const [filteredParties, setFilteredParties] = useState<Array<Delegation>>([]);
 
+  useEffect(() => {
+    setFilteredParties(availableEC);
+  }, [availableEC]);
+
   const onFilterChange = (value: string) => {
     setInput(value);
-    if (!value || value.length < 3) {
-      setFilteredParties([]);
+    if (!value) {
+      setFilteredParties(availableEC);
     } else {
       setFilteredParties(
         availableEC.filter(
-          (e) => (e.institution_name && e.institution_name.toUpperCase().includes(value.toUpperCase()) || e.tax_code && e.tax_code.includes(value) )
+          (e) =>
+            (e.institution_name &&
+              e.institution_name.toUpperCase().includes(value.toUpperCase())) ||
+            (e.tax_code && e.tax_code.includes(value))
         )
       );
     }

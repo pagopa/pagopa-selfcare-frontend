@@ -66,9 +66,11 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     fiscalCode: selectedParty?.fiscalCode ?? '',
     abiCode: selectedParty?.pspData?.abi_code ?? '',
     pspCode:
-      signInData.paymentServiceProviderDetailsResource?.psp_code ?? selectedParty?.fiscalCode ?? '',
-    bicCode: signInData.paymentServiceProviderDetailsResource?.bic ?? '',
-    digitalStamp: signInData.paymentServiceProviderDetailsResource?.stamp ? true : false,
+      signInData?.paymentServiceProviderDetailsResource?.psp_code ??
+       selectedParty?.pspData?.abi_code ? 'ABI'.concat(selectedParty?.pspData?.abi_code as string) :
+        signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
+    bicCode: signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
+    digitalStamp: signInData?.paymentServiceProviderDetailsResource?.stamp ? true : false,
   });
 
   const inputGroupStyle = {
@@ -109,6 +111,18 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     },
     enableReinitialize: true,
   });
+
+  useEffect(() => {
+    if ((signInData?.paymentServiceProviderDetailsResource?.psp_code === undefined ||
+        signInData?.paymentServiceProviderDetailsResource?.psp_code === null ||
+        signInData?.paymentServiceProviderDetailsResource?.psp_code === '') &&
+        (selectedParty?.pspData?.abi_code === undefined ||
+         selectedParty?.pspData?.abi_code === null ||
+         selectedParty?.pspData?.abi_code === '')) {
+         // eslint-disable-next-line @typescript-eslint/no-floating-promises
+         formik.setFieldValue('pspCode', formik.values.bicCode);
+    }
+  }, [formik.values.bicCode]);
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const submit = async () => {
@@ -289,6 +303,9 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
                     fullWidth
                     id="bicCode"
                     name="bicCode"
+                    disabled={signInData?.paymentServiceProviderDetailsResource?.bic !== undefined &&
+                              signInData?.paymentServiceProviderDetailsResource?.bic !== null &&
+                              signInData?.paymentServiceProviderDetailsResource?.bic !== ''}
                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                     size="small"
                     inputProps={{

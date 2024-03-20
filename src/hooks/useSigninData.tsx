@@ -65,7 +65,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
       return {
         brokerPspDetailsResource: { ...pspBrokerDetails },
         paymentServiceProviderDetailsResource: {
-          ...pspDetails,
+          ...pspDetails.paymentServiceProviderDetailsResource
         } as any,
       };
     } else {

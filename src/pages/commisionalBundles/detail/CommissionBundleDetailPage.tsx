@@ -12,7 +12,7 @@ import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants'
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import SideMenu from '../../../components/SideMenu/SideMenu';
-import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
+import { usePermissions } from '../../../hooks/usePermissions';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { deletePSPBundle } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
@@ -39,6 +39,7 @@ function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
+  const { isPsp, isEc } = usePermissions();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
@@ -94,26 +95,31 @@ const CommissionBundleDetailPage = () => {
               {commissionBundleDetail.description ?? ''}
             </Typography>
           </Grid>
+
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              <Button
-                color="error"
-                variant="outlined"
-                onClick={() => setShowConfirmModal(true)}
-                data-testid="delete-button"
-              >
-                {t('general.delete')}
-              </Button>
-              <Button
-                component={Link}
-                to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
-                  bundleId,
-                  actionId: FormAction.Edit,
-                })}
-                variant="contained"
-              >
-                {t('general.modify')}
-              </Button>
+              {isPsp() && (
+                <>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => setShowConfirmModal(true)}
+                    data-testid="delete-button"
+                  >
+                    {t('general.delete')}
+                  </Button>
+                  <Button
+                    component={Link}
+                    to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
+                      bundleId,
+                      actionId: FormAction.Edit,
+                    })}
+                    variant="contained"
+                  >
+                    {t('general.modify')}
+                  </Button>
+                </>
+              )}
             </Stack>
           </Grid>
           <Grid item xs={12}>

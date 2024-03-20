@@ -16,7 +16,7 @@ import {
 } from '../../list/CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { mockedCommissionBundlePspDetailGlobal } from '../../../../services/__mocks__/bundleService';
+import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate } from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -66,7 +66,7 @@ const params: GridRenderCellParams<any, any, any> = {
   getValue: () => jest.fn(),
 };
 
-const AllCells = () => {
+const AllCells = ({ isPsp, isEc }: { isPsp: boolean; isEc: boolean }) => {
   const customHeader: GridColumnHeaderParams = {
     field: 'name',
     colDef: colDefMocked,
@@ -91,25 +91,52 @@ const AllCells = () => {
       })}
       <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />
       {showCustomHeader(customHeader)}
-      {showBundleState(params, t)}
+      {showBundleState(params, t, isPsp, isEc)}
       {renderCell(params, params.value)}
     </>
   );
 };
 
-const BundleStateChip = ({ bundle }: { bundle: BundleResource }) => {
+const BundleStateChip = ({
+  bundle,
+  isPsp,
+  isEc,
+}: {
+  bundle: BundleResource;
+  isPsp: boolean;
+  isEc: boolean;
+}) => {
   const { t } = useTranslation('translation');
 
-  return <>{showBundleState({ ...params, row: bundle }, t)}</>;
+  return <>{showBundleState({ ...params, row: bundle }, t, isPsp, isEc)}</>;
 };
 
-describe('<CommissionBundlesTableColumns />', () => {
+const mockTFunction = (key: string) => {
+  switch (key) {
+    case 'commissionBundlesPage.list.headerFields.bundleName':
+      return 'Bundle Name';
+    case 'commissionBundlesPage.list.headerFields.startDate':
+      return 'Activation Date';
+    case 'commissionBundlesPage.list.headerFields.endDate':
+      return 'Due Date';
+    case 'commissionBundlesPage.list.headerFields.touchpoint':
+      return 'Touch Point';
+    case 'commissionBundlesPage.list.headerFields.paymentType':
+      return 'Payment Type';
+    case 'commissionBundlesPage.list.headerFields.amountRange':
+      return 'Amount Range';
+    default:
+      return '';
+  }
+};
+
+describe('<CommissionBundlesTableColumns /> for PSPs', () => {
   const history = createMemoryHistory();
   test('Test of all the functions inside the component', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <AllCells />
+          <AllCells isPsp={true} isEc={false} />
         </Router>
       </Provider>
     );
@@ -214,26 +241,7 @@ describe('<CommissionBundlesTableColumns />', () => {
       },
     ] as Array<GridColDef>;
 
-    const mockTFunction = (key: string) => {
-      switch (key) {
-        case 'commissionBundlesPage.list.headerFields.bundleName':
-          return 'Bundle Name';
-        case 'commissionBundlesPage.list.headerFields.startDate':
-          return 'Activation Date';
-        case 'commissionBundlesPage.list.headerFields.endDate':
-          return 'Due Date';
-        case 'commissionBundlesPage.list.headerFields.touchpoint':
-          return 'Touch Point';
-        case 'commissionBundlesPage.list.headerFields.paymentType':
-          return 'Payment Type';
-        case 'commissionBundlesPage.list.headerFields.amountRange':
-          return 'Amount Range';
-        default:
-          return '';
-      }
-    };
-
-    const realColumns = buildColumnDefs(mockTFunction) as Array<any>;
+    const realColumns = buildColumnDefs(mockTFunction, true, false) as Array<any>;
     expect(realColumns).toEqual(ArrayBuildColumnDefs);
   });
 
@@ -244,7 +252,7 @@ describe('<CommissionBundlesTableColumns />', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <BundleStateChip bundle={bundle} />
+          <BundleStateChip bundle={bundle} isPsp={true} isEc={false} />
         </Router>
       </Provider>
     );
@@ -262,7 +270,7 @@ describe('<CommissionBundlesTableColumns />', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <BundleStateChip bundle={bundle} />
+          <BundleStateChip bundle={bundle} isPsp={true} isEc={false} />
         </Router>
       </Provider>
     );
@@ -280,7 +288,7 @@ describe('<CommissionBundlesTableColumns />', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <BundleStateChip bundle={bundle} />
+          <BundleStateChip bundle={bundle} isPsp={true} isEc={false} />
         </Router>
       </Provider>
     );
@@ -298,7 +306,7 @@ describe('<CommissionBundlesTableColumns />', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <BundleStateChip bundle={bundle} />
+          <BundleStateChip bundle={bundle} isPsp={true} isEc={false} />
         </Router>
       </Provider>
     );
@@ -316,7 +324,168 @@ describe('<CommissionBundlesTableColumns />', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <BundleStateChip bundle={bundle} />
+          <BundleStateChip bundle={bundle} isPsp={true} isEc={false} />
+        </Router>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+  });
+});
+
+describe('<CommissionBundlesTableColumns /> for ECs', () => {
+  const history = createMemoryHistory();
+  test('Test of all the functions inside the component', () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <AllCells isPsp={false} isEc={true} />
+        </Router>
+      </Provider>
+    );
+
+    const ArrayBuildColumnDefs = [
+      {
+        field: 'name',
+        cellClassName: 'justifyContentBold',
+        headerName: 'Bundle Name',
+        align: 'left',
+        headerAlign: 'left',
+        minWidth: 400,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: true,
+        flex: 4,
+      },
+      {
+        field: 'touchpoint',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Touch Point',
+        align: 'left',
+        headerAlign: 'left',
+        maxWidth: 220,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'paymentType',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Payment Type',
+        align: 'left',
+        headerAlign: 'left',
+        width: 145,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'state',
+        cellClassName: 'justifyContentNormal',
+        headerName: '',
+        align: 'left',
+        headerAlign: 'left',
+        width: 200,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: showCustomHeader,
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'actions',
+        cellClassName: 'justifyContentNormalRight',
+        headerName: '',
+        align: 'center',
+        disableColumnMenu: true,
+        editable: false,
+        flex: 1,
+        getActions: expect.any(Function),
+        hideSortIcons: true,
+        sortable: false,
+        type: 'actions',
+      },
+    ] as Array<GridColDef>;
+
+    const realColumns = buildColumnDefs(mockTFunction, false, true) as Array<any>;
+    expect(realColumns).toEqual(ArrayBuildColumnDefs);
+  });
+
+  test('Test state chip cell with active bundle for GLOBAL', () => {
+    let bundle = { ...mockedCommissionBundlePspDetailGlobal };
+    bundle.validityDateFrom = new Date('01/01/2020');
+    bundle.validityDateTo = add(new Date(), { days: 8 });
+    // TODO EC activated bundle info check
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+        </Router>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+  });
+
+  test('Test state chip cell with expiring bundle for PRIVATE', () => {
+    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+    bundle.validityDateFrom = new Date('01/01/2020');
+    bundle.validityDateTo = add(new Date(), { days: 7 });
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+        </Router>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+  });
+
+  test('Test state chip cell with expired bundle for PRIVATE', () => {
+    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+    bundle.validityDateFrom = new Date('01/01/2020');
+    bundle.validityDateTo = new Date();
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+        </Router>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+  });
+
+  test('Test state chip cell bundle with no dates', () => {
+    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+    bundle.validityDateFrom = undefined;
+    bundle.validityDateTo = undefined;
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
         </Router>
       </Provider>
     );

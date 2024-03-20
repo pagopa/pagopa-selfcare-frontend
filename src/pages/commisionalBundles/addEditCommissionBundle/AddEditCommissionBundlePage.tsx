@@ -22,7 +22,6 @@ import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
-import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
@@ -35,10 +34,6 @@ import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
-
-export interface AddEditCommissionBundlePageProps {
-  edit?: boolean;
-}
 
 const minDateTomorrow = add(new Date(), { days: 1 });
 
@@ -106,7 +101,7 @@ const validate = (
           : undefined,
         validityDateTo: !values.validityDateTo
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : values.validityDateTo.getTime() < minDateTomorrow.getTime()
+          : values.validityDateTo.getTime() <= new Date().getTime()
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
           : values.validityDateFrom &&
             values.validityDateTo.getTime() < values.validityDateFrom.getTime()
@@ -135,21 +130,22 @@ const enableSubmit = (values: BundleRequest) =>
   values.validityDateTo != null &&
   values.validityDateTo.getTime() > 0;
 
-const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps) => {
+const AddEditCommissionBundlePage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
-  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const isEdit = actionId === FormAction.Edit;
+  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),
-    validate: (values) => validate(values, edit, t),
+    validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
     },
@@ -161,7 +157,6 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
-    const isEdit = actionId === FormAction.Edit;
 
     const promise = isEdit
       ? updatePSPBundle(pspTaxCode, bundleId, body)
@@ -196,12 +191,12 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
     if (formik.isValid) {
       setShowConfirmModal(true);
     } else {
-      setShowConfirmModal(false);
+      setActiveStep(0);
     }
   };
 
   useEffect(() => {
-    if (bundleId && actionId === FormAction.Edit) {
+    if (bundleId && isEdit) {
       setLoading(true);
       const setForm = async () => {
         await formik.setValues(toNewFormData(selectedParty, bundleDetails));
@@ -262,7 +257,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
           style={{ display: activeStep !== 0 ? 'none' : undefined }}
           data-testid="bundle-form-div"
         >
-          <AddEditCommissionBundleForm formik={formik} actionId={actionId} />
+          <AddEditCommissionBundleForm formik={formik} isEdit={isEdit} idBrokerPsp={isEdit ? bundleDetails?.idBrokerPsp : undefined}/>
         </div>
         <div
           style={{ display: activeStep !== 1 ? 'none' : undefined }}
@@ -271,7 +266,7 @@ const AddEditCommissionBundlePage = ({ edit }: AddEditCommissionBundlePageProps)
           <AddEditCommissionBundleTaxonomies
             formik={formik}
             bundleTaxonomies={
-              bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
+              isEdit && bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
                 ? [...bundleDetails.transferCategoryList]
                 : []
             }

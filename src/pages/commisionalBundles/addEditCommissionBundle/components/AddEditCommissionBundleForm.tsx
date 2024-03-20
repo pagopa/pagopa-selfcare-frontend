@@ -50,10 +50,11 @@ import { FormAction } from '../../../../model/CommissionBundle';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
-  actionId: string;
+  isEdit: boolean;
+  idBrokerPsp: string | undefined;
 };
 
-const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
+const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => {
   const { t } = useTranslation();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
@@ -114,9 +115,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
         }
         if (brokerDelegation && brokerDelegation.length > 0) {
           setBrokerDelegationList(brokerDelegation);
-          if (actionId === FormAction.Edit && formik.values.idBrokerPsp) {
+          if (isEdit && idBrokerPsp) {
             getChannelsByBrokerCode(
-              brokerDelegation?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
+              brokerDelegation?.find((el) => el.institution_name === idBrokerPsp)
                 ?.broker_tax_code ?? ''
             );
           }
@@ -199,20 +200,20 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
               sx={{ pr: 8 }}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
             <FormControlLabel
               value={TypeEnum.PUBLIC}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
             <FormControlLabel
               value={TypeEnum.PRIVATE}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
           </RadioGroup>
         </FormControl>
@@ -622,7 +623,7 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       />
                     )}
                     shouldDisableDate={shouldDisableDate}
-                    disabled={actionId === FormAction.Edit}
+                    disabled={isEdit}
                   />
                 </LocalizationProvider>
               </Grid>

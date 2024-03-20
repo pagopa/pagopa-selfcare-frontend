@@ -12,6 +12,7 @@ import {
   deletePSPBundle,
   getBundleDetailByPSP,
   getBundleListByPSP,
+  getCisBundles,
   getTouchpoints,
   updatePSPBundle,
 } from '../bundleService';
@@ -38,6 +39,10 @@ describe('BundleService test mocked', () => {
   });
   test('Test updatePSPBundle', async () => {
     expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
+  });
+  test('Test getCisBundles', async () => {
+    const response = await getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode');
+    expect(response).toMatchObject(mockedCommissionBundlePspList);
   });
 });
 
@@ -80,6 +85,11 @@ describe('BundleService test client', () => {
   test('Test updatePSPBundle', async () => {
     const spyOn = jest.spyOn(BackofficeApi, "updatePSPBundle").mockReturnValue(new Promise((resolve) => resolve()));
     expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test getCisBundles', async () => {
+    const spyOn = jest.spyOn(BackofficeApi, "getCisBundles").mockReturnValue(new Promise((resolve) => resolve({})));
+    expect(getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
 });

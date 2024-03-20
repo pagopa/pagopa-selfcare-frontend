@@ -71,3 +71,17 @@ export const updatePSPBundle = (pspTaxCode: string, bundleId: string, bundle: Bu
     return BackofficeApi.updatePSPBundle(pspTaxCode, bundleId, bundle);
   }
 };
+
+export const getCisBundles = (
+  bundleType: string,
+  pageLimit: number,
+  bundleName: string,
+  page: number,
+  cisTaxCode: string | undefined
+): Promise<BundlesResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCommissionBundlePsp(bundleName);
+  } else {
+    return BackofficeApi.getCisBundles(bundleType, pageLimit, bundleName, page, cisTaxCode);
+  }
+};

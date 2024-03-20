@@ -916,4 +916,9 @@ export const BackofficeApi = {
         const result = await backofficeClient.getFeatureFlags({});
         return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    getCisBundles: async (bundleType: string, pageLimit: number, bundleName: string, page: number, cisTaxCode: string | undefined ): Promise<BundlesResource> => {
+        const result = await backofficeClient.getCisBundles({"types": [bundleType], "limit": pageLimit, "name": bundleName, page, cisTaxCode});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
 };

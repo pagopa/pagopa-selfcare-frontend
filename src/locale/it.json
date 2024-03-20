@@ -838,7 +838,10 @@
         "inActivation": "In attivazione",
         "active": "Attivo",
         "expiring": "In scadenza",
-        "eliminating": "In eliminazione"
+        "eliminating": "In eliminazione",
+        "toBeActivated": "Da attivare",
+        "deactivated": "Disattivato",
+        "requestInProgress": "Richiesta in corso"
       },
       "error": {
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",

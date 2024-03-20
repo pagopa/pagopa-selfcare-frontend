@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import { useAppDispatch } from '../../../../redux/hooks';
 import { BundleResource } from '../../../../api/generated/portal/BundleResource';
 import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
+import * as usePermissions from '../../../../hooks/usePermissions';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -20,8 +21,10 @@ beforeEach(() => {
 });
 
 afterEach(cleanup);
+jest.mock('../../../../hooks/usePermissions');
 
 const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
+
 const idBundle = 'idBundle';
 
 const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
@@ -37,7 +40,15 @@ const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
   );
 };
 
-describe('<CommissionBundleDetailPage />', () => {
+jest.mock('../../../../hooks/usePermissions');
+
+describe('<CommissionBundleDetailPage /> for PSP', () => {
+  beforeEach(() => {
+    jest
+    .spyOn(usePermissions, 'usePermissions')
+    .mockReturnValue({ isPsp: () => true, hasPermission: jest.fn(), isEc: () => false });
+  });
+
   test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
     deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
@@ -75,6 +86,59 @@ describe('<CommissionBundleDetailPage />', () => {
     const confirmDeleteButton = screen.getByTestId('confirm-button-test');
     fireEvent.click(confirmDeleteButton);
     expect(deleteMock).toBeCalledTimes(1);
+  });
+
+  test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+
+    render(
+      <Provider store={store}>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate} />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+    });
+  });
+
+  test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+
+    render(
+      <Provider store={store}>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic} />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+    });
+  });
+});
+
+describe('<CommissionBundleDetailPage /> for EC', () => {
+  beforeEach(() => {
+    jest
+    .spyOn(usePermissions, 'usePermissions')
+    .mockReturnValue({ isPsp: () => false, hasPermission: jest.fn(), isEc: () => true });
+  });
+
+  test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
+    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+
+    render(
+      <Provider store={store}>
+        <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal} />
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+    });
   });
 
   test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {

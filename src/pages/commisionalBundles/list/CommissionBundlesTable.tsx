@@ -3,12 +3,14 @@ import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { usePermissions } from '../../../hooks/usePermissions';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
-import { getBundleListByPSP } from '../../../services/bundleService';
+import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 import CommissionBundlesEmpty from './CommissionBundlesEmpty';
 
@@ -45,11 +47,12 @@ const mapBundle = (bundleType: string) => {
 
 const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
+  const { isPsp, isEc } = usePermissions();
   const [error, setError] = useState(false);
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
-  const columns: Array<GridColDef> = buildColumnDefs(t);
+  const columns: Array<GridColDef> = buildColumnDefs(t, isPsp(), isEc());
   const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
   const brokerCode = selectedParty?.fiscalCode ?? '';
@@ -65,13 +68,29 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     if (isFirstRender) {
       setIsFirstRender(false);
     }
-    getBundleListByPSP(
-      mapBundle(bundleType),
-      pageLimit,
-      bundleNameFilter,
-      newPage ?? page,
-      brokerCode
-    )
+    const mappedBundleType = mapBundle(bundleType);
+    // eslint-disable-next-line functional/no-let
+    let promise;
+    if (isPsp()) {
+      promise = getBundleListByPSP(
+        mappedBundleType,
+        pageLimit,
+        bundleNameFilter,
+        newPage ?? page,
+        brokerCode
+      );
+    } else if (isEc()) {
+      promise = getCisBundles(
+        mappedBundleType,
+        pageLimit,
+        bundleNameFilter,
+        newPage ?? page,
+        mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
+      );
+    } else {
+      promise = new Promise<BundlesResource>((resolve) => resolve({}));
+    }
+    promise
       .then((res) => {
         if (res?.bundles) {
           const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}`,

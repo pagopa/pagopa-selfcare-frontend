@@ -1,6 +1,6 @@
 import { BackofficeApi } from "../api/BackofficeClient";
 import { PaymentTypes } from "../api/generated/portal/PaymentTypes";
-import { ALLOWED_PAYMENT_TYPES } from '../utils/constants';
+import { DISALLOWED_PAYMENT_TYPES } from '../utils/constants';
 import { getPaymentTypes as getPaymentTypesMocked } from './__mocks__/configurationService';
 
 // /configuration endpoint
@@ -12,8 +12,7 @@ export const getPaymentTypes = (): Promise<PaymentTypes> => {
       return BackofficeApi.getPaymentTypes().then((results: PaymentTypes) => {
         if (results) {
             return { "payment_types": results.payment_types?.filter(
-                (item) => ALLOWED_PAYMENT_TYPES.includes("*") ||
-                    ALLOWED_PAYMENT_TYPES.includes(item.payment_type as string))};
+                (item) => !DISALLOWED_PAYMENT_TYPES.includes(item.payment_type as string))};
         }
         return results;
       });

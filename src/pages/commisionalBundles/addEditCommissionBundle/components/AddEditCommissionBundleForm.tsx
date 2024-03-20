@@ -33,6 +33,7 @@ import {
   LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
+import { Party } from '../../../../model/Party';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { useAppSelector } from '../../../../redux/hooks';
@@ -47,6 +48,7 @@ import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
 import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import { FormAction } from '../../../../model/CommissionBundle';
+import { addCurrentPSP } from '../../../../utils/channel-utils';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -113,7 +115,8 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
           setTouchpointList(touchpoints);
         }
         if (brokerDelegation && brokerDelegation.length > 0) {
-          setBrokerDelegationList(brokerDelegation);
+
+          setBrokerDelegationList(addCurrentPSP(brokerDelegation, selectedParty as Party));
           if (actionId === FormAction.Edit && formik.values.idBrokerPsp) {
             getChannelsByBrokerCode(
               brokerDelegation?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
@@ -296,6 +299,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
+                      <MenuItem key={`payment_types$all`} value={'ANY'}>
+                        {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                      </MenuItem>
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
@@ -325,6 +331,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
+                      <MenuItem key={`touchpoint$all`} value={'ANY'}>
+                        {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                      </MenuItem>
                     {touchpointList?.touchpoints?.map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}

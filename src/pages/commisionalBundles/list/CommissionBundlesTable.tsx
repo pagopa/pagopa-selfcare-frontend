@@ -74,7 +74,8 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     )
       .then((res) => {
         if (res?.bundles) {
-          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}`,
+            touchpoint: el.touchpoint ?? 'ANY', paymentType: el.paymentType ?? 'ANY'}));
           setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
         } else {
           setListFiltered([]);

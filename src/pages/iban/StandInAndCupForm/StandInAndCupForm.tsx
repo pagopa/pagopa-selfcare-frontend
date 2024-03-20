@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 import {
   Grid,
   Card,
@@ -12,14 +13,13 @@ import {
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useFormik } from 'formik';
 import { useTranslation, Trans } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import { IbanLabel } from '../../../api/generated/portal/IbanLabel';
 import { Ibans } from '../../../api/generated/portal/Ibans';
 import { IbanOnCreation } from '../../../model/Iban';
-import { updateIbanStandIn, updateIbanCup } from '../../../services/ibanService';
+import { updateIban } from '../../../services/ibanService';
 import { LOADING_TASK_IBAN_STAND_IN_AND_CUP } from '../../../utils/constants';
 import { emptyIban } from '../IbanPage';
 import { useAppSelector } from '../../../redux/hooks';
@@ -34,14 +34,31 @@ type Props = {
   loading: boolean;
 };
 
+type IbanValues = {
+  cup: IbanOnCreation;
+  standIn: IbanOnCreation;
+};
+
+const cupLabel: IbanLabel = {
+  description: '',
+  name: '0201138TS',
+};
+const standInLabel: IbanLabel = {
+  description: 'The IBAN to use for STANDIN process',
+  name: 'ACA',
+};
+
 const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [selectedIbanCup, setSelectedIbanCup] = useState<IbanOnCreation>(emptyIban);
-  const [selectedIbanStandIn, setSelectedIbanStandIn] = useState<IbanOnCreation>(emptyIban);
-  const [ibanStandInTriggered, setIbanStandInTriggered] = useState(false);
-  const [ibanCupTriggered, setIbanCupTriggered] = useState(false);
-  const [showMaganeButton, setShowMaganeButton] = useState(true);
+
+  const emptyIbanValues: IbanValues = {
+    cup: emptyIban,
+    standIn: emptyIban,
+  };
+  const [originalSelectedIban, setOriginalSelectedIban] = useState<IbanValues>(emptyIbanValues);
+  const [newSelectedIban, setNewSelectedIban] = useState<IbanValues>(emptyIbanValues);
+  const [showManageButton, setShowManageButton] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [ibanActiveList, setIbanActiveList] = useState<Ibans>({ ibans_enhanced: [] });
   const setLoadingIban = useLoading(LOADING_TASK_IBAN_STAND_IN_AND_CUP);
@@ -64,8 +81,9 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       (e) => e.labels && e.labels.find((label) => label.name === '0201138TS')
     );
 
+    let ibanStandIn = emptyIban;
     if (ibanStandInFiltered) {
-      setSelectedIbanStandIn({
+      ibanStandIn = {
         iban: ibanStandInFiltered.iban!,
         description: ibanStandInFiltered.description,
         validity_date: new Date(ibanStandInFiltered.validity_date!),
@@ -73,13 +91,12 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         creditor_institution_code: ibanStandInFiltered.ci_owner ?? creditorInstitutionCode,
         labels: ibanStandInFiltered.labels,
         is_active: ibanStandInFiltered.is_active!,
-      });
-    } else {
-      setSelectedIbanStandIn(emptyIban);
+      };
     }
 
+    let ibanCup = emptyIban;
     if (ibanCupFiltered) {
-      setSelectedIbanCup({
+      ibanCup = {
         iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
         validity_date: new Date(ibanCupFiltered!.validity_date!),
@@ -87,128 +104,62 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         creditor_institution_code: ibanCupFiltered?.ci_owner ?? creditorInstitutionCode,
         labels: ibanCupFiltered.labels,
         is_active: ibanCupFiltered!.is_active!,
-      });
-    } else {
-      setSelectedIbanCup(emptyIban);
+      };
     }
+    setOriginalSelectedIban({ standIn: ibanStandIn, cup: ibanCup });
+    setNewSelectedIban({ standIn: ibanStandIn, cup: ibanCup });
   };
 
-  const initialFormDataStandIn = (ibanSelected: IbanOnCreation) =>
-    ibanSelected.labels && ibanSelected.labels.length > 0
-      ? {
-          iban: ibanSelected.iban,
-          description: ibanSelected.description,
-          validity_date: ibanSelected.validity_date,
-          due_date: ibanSelected.due_date,
-          creditor_institution_code: ibanSelected.creditor_institution_code,
-          publication_date: ibanSelected.publication_date,
-          labels: ibanSelected.labels,
-          is_active: ibanSelected.is_active,
-        }
-      : {
-          iban: ibanSelected.iban,
-          description: ibanSelected.description,
-          validity_date: ibanSelected.validity_date,
-          due_date: ibanSelected.due_date,
-          creditor_institution_code: ibanSelected.creditor_institution_code,
-          is_active: false,
-        };
+  const handleIbanSelected = (event: any, type: string) => {
+    const selectedIban = ibanList.ibans_enhanced.find((e) => e.iban === event.target.value);
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
-  const initialFormDataCup = (ibanSelected: IbanOnCreation) =>
-    ibanSelected.labels && ibanSelected.labels.length > 0
-      ? {
-          iban: ibanSelected.iban,
-          description: ibanSelected.description,
-          validity_date: ibanSelected.validity_date,
-          due_date: ibanSelected.due_date,
-          creditor_institution_code: ibanSelected.creditor_institution_code,
-          labels: ibanSelected.labels,
-          publication_date: ibanSelected.publication_date,
-          is_active: ibanSelected.is_active,
-        }
-      : {
-          iban: ibanSelected.iban,
-          description: ibanSelected.description,
-          validity_date: ibanSelected.validity_date,
-          due_date: ibanSelected.due_date,
-          creditor_institution_code: ibanSelected.creditor_institution_code,
-          is_active: false,
-        };
-
-  const handleIbanStandInSelected = (event: any) => {
-    setIbanStandInTriggered(true);
-    const newLabel: IbanLabel = {
-      description: 'The IBAN to use for STANDIN process',
-      name: 'ACA',
-    };
-
-    const selectedIndex = ibanList.ibans_enhanced.findIndex((e: any) => e.iban === event.target.value);
-    const selectedIban = ibanList.ibans_enhanced[selectedIndex];
-    const updatedLabels = [newLabel];
-
-    setSelectedIbanStandIn({
-      iban: selectedIban.iban!,
-      description: selectedIban.description,
-      validity_date: new Date(selectedIban.validity_date!),
-      due_date: new Date(selectedIban.due_date!),
-      creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
-      labels: updatedLabels,
-      is_active: selectedIban.is_active!,
-    });
+    setNewSelectedIban((prev) => ({ ...prev, [type]: selectedIban }));
   };
 
-  const handleIbanCupSelected = (event: any) => {
-    setIbanCupTriggered(true);
-    const newLabel: IbanLabel = {
-      description: '',
-      name: '0201138TS',
-    };
-
-    const selectedIndex = ibanList.ibans_enhanced.findIndex((e) => e.iban === event.target.value);
-    const selectedIban = ibanList.ibans_enhanced[selectedIndex];
-    const updatedLabels = [newLabel];
-
-    setSelectedIbanCup({
-      iban: selectedIban.iban!,
-      description: selectedIban.description,
-      validity_date: new Date(selectedIban.validity_date!),
-      due_date: new Date(selectedIban.due_date!),
-      creditor_institution_code: selectedIban.ci_owner ?? creditorInstitutionCode,
-      labels: updatedLabels,
-      is_active: selectedIban.is_active!,
-    });
+  const updateIbanLabels = (ibanLabels: any, newLabel: IbanLabel) => {
+    if (!ibanLabels || ibanLabels?.length === 0) {
+      return [newLabel];
+    } else if (ibanLabels.findIndex((e: any) => e.name === newLabel.name) === -1) {
+      return [...ibanLabels, newLabel];
+    }
+    return ibanLabels;
   };
 
-  const formikStandIn = useFormik<IbanOnCreation>({
-    initialValues: initialFormDataStandIn(selectedIbanStandIn),
-    onSubmit: async () => setShowConfirmModal(true),
-    enableReinitialize: true,
-    validateOnMount: true,
-  });
-
-  const formikCup = useFormik<IbanOnCreation>({
-    initialValues: initialFormDataCup(selectedIbanCup),
-    onSubmit: async () => setShowConfirmModal(false),
-    enableReinitialize: true,
-    validateOnMount: true,
-  });
-
-  const submit = async (iban1?: IbanOnCreation, iban2?: IbanOnCreation) => {
+  const submit = async () => {
     setLoadingIban(true);
     try {
-      if (ibanStandInTriggered && ibanCupTriggered && iban1 && iban2) {
-        await updateIbanStandIn(iban1.creditor_institution_code!, iban1);
-        await updateIbanCup(iban2.creditor_institution_code!, iban2);
-      }
+      const standInInitialized = originalSelectedIban.standIn.iban.length > 0;
+      const cupInitialized = originalSelectedIban.cup.iban.length > 0;
+      const standInTouched = newSelectedIban.standIn.iban !== originalSelectedIban.standIn.iban;
+      const cupTouched = newSelectedIban.cup.iban !== originalSelectedIban.cup.iban;
 
-      if (ibanStandInTriggered && !ibanCupTriggered && iban1) {
-        await updateIbanStandIn(iban1.creditor_institution_code!, iban1);
+      if (
+        newSelectedIban.cup.iban === newSelectedIban.standIn.iban &&
+        (standInTouched || cupTouched)
+      ) {
+        await resetStandIn(standInInitialized);
+        await resetCup(cupInitialized);
+        await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+          ...newSelectedIban.cup,
+          labels: [standInLabel, cupLabel],
+        });
+      } else {
+        if (standInTouched) {
+          await resetStandIn(standInInitialized);
+          await updateIban(newSelectedIban.standIn.creditor_institution_code!, {
+            ...newSelectedIban.standIn,
+            labels: [standInLabel],
+          });
+        }
+        if (cupTouched) {
+          await resetCup(cupInitialized);
+          await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+            ...newSelectedIban.cup,
+            labels: [cupLabel],
+          });
+        }
       }
-
-      if (!ibanStandInTriggered && ibanCupTriggered && iban2) {
-        await updateIbanCup(iban2.creditor_institution_code!, iban2);
-      }
+      setOriginalSelectedIban(newSelectedIban);
     } catch (reason) {
       addError({
         id: 'UPDATE IBAN STAND IN AND IBAN CUP',
@@ -222,32 +173,37 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       });
     } finally {
       setLoadingIban(false);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (ibanStandInTriggered && ibanCupTriggered) {
-      formikStandIn.handleSubmit();
-      formikCup.handleSubmit();
+      setShowManageButton(true);
+      setShowConfirmModal(false);
     }
 
-    if (ibanStandInTriggered && !ibanCupTriggered) {
-      formikStandIn.handleSubmit();
+    async function resetCup(cupInitialized: boolean) {
+      if (cupInitialized) {
+        await updateIban(originalSelectedIban.cup.creditor_institution_code!, {
+          ...originalSelectedIban.cup,
+          labels: [],
+        });
+      }
     }
 
-    if (!ibanStandInTriggered && ibanCupTriggered) {
-      formikCup.handleSubmit();
+    async function resetStandIn(standInInitialized: boolean) {
+      if (standInInitialized) {
+        await updateIban(originalSelectedIban.standIn.creditor_institution_code!, {
+          ...originalSelectedIban.standIn,
+          labels: [],
+        });
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <Grid container spacing={2} mb={4}>
         <Grid item xs={12}>
           <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} textAlign={'end'}>
-                {!showMaganeButton ? (
+                {!showManageButton ? (
                   <Chip
                     label={t('ibanPage.updateInProgress')}
                     aria-label="update-in-progress"
@@ -280,7 +236,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     IBAN
                   </Typography>
 
-                  {showMaganeButton ? (
+                  {showManageButton ? (
                     <>
                       <Typography
                         variant="body2"
@@ -290,8 +246,9 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         mr={4}
                         data-testid="iban-standin-with-manage-btn-false"
                       >
-                        {selectedIbanStandIn.iban && selectedIbanStandIn.iban.length > 0
-                          ? selectedIbanStandIn.iban
+                        {originalSelectedIban.standIn?.iban &&
+                        originalSelectedIban.standIn.iban?.length > 0
+                          ? originalSelectedIban.standIn.iban
                           : '-'}
                       </Typography>
                     </>
@@ -309,12 +266,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           name="ibanStandIn"
                           label={t('ibanPage.selectIban')}
                           size="small"
-                          value={formikStandIn.values.iban}
-                          onChange={(e) => {
-                            formikStandIn.handleChange(e);
-                            handleIbanStandInSelected(e);
-                          }}
-                          error={formikStandIn.touched.iban && Boolean(formikStandIn.errors.iban)}
+                          value={newSelectedIban.standIn.iban}
+                          onChange={(e) => handleIbanSelected(e, 'standIn')}
                           inputProps={{
                             'data-testid': 'stand-in-test',
                           }}
@@ -346,7 +299,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                   >
                     IBAN
                   </Typography>
-                  {showMaganeButton ? (
+                  {showManageButton ? (
                     <>
                       <Typography
                         variant="body2"
@@ -355,8 +308,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                         fontSize="inherit"
                         mr={4}
                       >
-                        {selectedIbanCup.iban && selectedIbanCup.iban.length > 0
-                          ? selectedIbanCup.iban
+                        {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
+                          ? originalSelectedIban.cup.iban
                           : '-'}
                       </Typography>
                     </>
@@ -374,12 +327,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                           name="ibanCup"
                           label={t('ibanPage.selectIban')}
                           size="small"
-                          value={formikCup.values.iban}
-                          onChange={(e) => {
-                            formikCup.handleChange(e);
-                            handleIbanCupSelected(e);
-                          }}
-                          error={formikCup.touched.iban && Boolean(formikCup.errors.iban)}
+                          value={newSelectedIban.cup.iban}
+                          onChange={(e) => handleIbanSelected(e, 'cup')}
                           inputProps={{
                             'data-testid': 'cup-test',
                           }}
@@ -400,12 +349,12 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
               </Grid>
               <Grid container direction="row" justifyContent="space-between" mt={3}>
                 <Grid item md={1} display="flex" justifyContent="flex-start" ml={3}>
-                  {showMaganeButton ? (
+                  {showManageButton ? (
                     <ButtonNaked
                       size="small"
                       component="button"
                       disabled={ibanList.ibans_enhanced.length <= 0}
-                      onClick={() => setShowMaganeButton(false)}
+                      onClick={() => setShowManageButton(false)}
                       endIcon={<EditIcon />}
                       sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}
                       data-testid="iban-manage-btn"
@@ -417,13 +366,16 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                   )}
                 </Grid>
                 <Grid item md={1} display="flex" justifyContent="flex-end">
-                  {showMaganeButton ? (
+                  {showManageButton ? (
                     <></>
                   ) : (
                     <>
                       <Button
                         size="medium"
-                        onClick={() => setShowMaganeButton(true)}
+                        onClick={() => {
+                          setNewSelectedIban(originalSelectedIban);
+                          setShowManageButton(true);
+                        }}
                         color="primary"
                         variant="outlined"
                         sx={{ mr: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}
@@ -464,13 +416,9 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         onConfirmLabel={t('addEditIbanPage.modal.confirmButton')}
         onCloseLabel={t('addEditIbanPage.modal.backButton')}
         handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfirm={async () => {
-          await submit(formikStandIn.values, formikCup.values);
-          setShowMaganeButton(true);
-          setShowConfirmModal(false);
-        }}
+        handleConfirm={() => submit()}
       />
-    </form>
+    </>
   );
 };
 

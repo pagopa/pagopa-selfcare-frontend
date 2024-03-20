@@ -141,7 +141,7 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit = actionId === FormAction.Edit;
-  const bundleDetails = isEdit ? useAppSelector(bundleDetailsSelectors.selectBundleDetails) : {};
+  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),
@@ -196,7 +196,7 @@ const AddEditCommissionBundlePage = () => {
   };
 
   useEffect(() => {
-    if (bundleId && actionId === FormAction.Edit) {
+    if (bundleId && isEdit) {
       setLoading(true);
       const setForm = async () => {
         await formik.setValues(toNewFormData(selectedParty, bundleDetails));
@@ -257,7 +257,7 @@ const AddEditCommissionBundlePage = () => {
           style={{ display: activeStep !== 0 ? 'none' : undefined }}
           data-testid="bundle-form-div"
         >
-          <AddEditCommissionBundleForm formik={formik} isEdit={isEdit} idBrokerPsp={bundleDetails?.idBrokerPsp}/>
+          <AddEditCommissionBundleForm formik={formik} isEdit={isEdit} idBrokerPsp={isEdit ? bundleDetails?.idBrokerPsp : undefined}/>
         </div>
         <div
           style={{ display: activeStep !== 1 ? 'none' : undefined }}
@@ -266,7 +266,7 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleTaxonomies
             formik={formik}
             bundleTaxonomies={
-              bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
+              isEdit && bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
                 ? [...bundleDetails.transferCategoryList]
                 : []
             }

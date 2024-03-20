@@ -37,7 +37,7 @@ describe('StandInAndCupForm', () => {
     render(<TestStandInAndCupForm ibanList={ibanList} />);
   });
 
-  it('Input test with manageButton false and no cup and standIn selected', async () => {
+  it('Input test with manageButton false and no cup and standIn selected, update with different iban', async () => {
     const ibanListMocked: Ibans = {
       ibans_enhanced: [
         {
@@ -91,7 +91,7 @@ describe('StandInAndCupForm', () => {
     fireEvent.click(backBtn);
   });
 
-  it('Input test with manageButton false and with cup and standIn selected', async () => {
+  it('Input test with manageButton false and with cup and standIn selected, update with different iban', async () => {
     render(<TestStandInAndCupForm ibanList={ibanList} />);
 
     const manageButton = screen.getByTestId('iban-manage-btn');
@@ -107,6 +107,35 @@ describe('StandInAndCupForm', () => {
 
     fireEvent.change(standInIbanSelect, { target: { value: 'IT99C0222211111000000000003' } });
     fireEvent.change(cupIbanSelect, { target: { value: 'IT99C0222211111000000000004' } });
+
+    const uploadIbans = screen.getByTestId('upload-iban-test');
+    fireEvent.click(uploadIbans);
+
+    const confirmBtn = await screen.findByTestId('confirm-button-test');
+    fireEvent.click(confirmBtn);
+
+    fireEvent.submit(confirmBtn);
+
+    const backBtn = screen.getByTestId('back-button-test');
+    fireEvent.click(backBtn);
+  });
+  
+  it('Input test with manageButton false and with cup and standIn selected, update with same iban', async () => {
+    render(<TestStandInAndCupForm ibanList={ibanList} />);
+
+    const manageButton = screen.getByTestId('iban-manage-btn');
+    fireEvent.click(manageButton);
+
+    const manageChip = screen.getByText('ibanPage.updateInProgress');
+    expect(manageChip).toBeInTheDocument();
+
+    const standInIbanSelect = screen.getByTestId('stand-in-test');
+    fireEvent.click(standInIbanSelect);
+
+    const cupIbanSelect = screen.getByTestId('cup-test');
+
+    fireEvent.change(standInIbanSelect, { target: { value: 'IT99C0222211111000000000003' } });
+    fireEvent.change(cupIbanSelect, { target: { value: 'IT99C0222211111000000000003' } });
 
     const uploadIbans = screen.getByTestId('upload-iban-test');
     fireEvent.click(uploadIbans);

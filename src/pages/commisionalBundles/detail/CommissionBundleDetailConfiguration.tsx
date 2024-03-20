@@ -40,7 +40,7 @@ const bundleConfigurationFields = {
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
   if (typeof value === 'string' && value) {
-    return value;
+    return t(value);
   }
   if (typeof value === 'boolean') {
     return formatBooleanValueToYesOrNo(value, t);

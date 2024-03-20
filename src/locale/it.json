@@ -909,7 +909,8 @@
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
         "from": "Da",
-        "to": "A"
+        "to": "A",
+        "all": "Tutti"
       },
       "addTaxonomies":{
         "subTitle": "Cerca i servici di incasso sfogliando il catalogo oppure carica una lista di codici.",
@@ -1105,5 +1106,6 @@
     "no": "No",
     "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
     "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
-  }
+  },
+  "ANY": "Tutti"
 }

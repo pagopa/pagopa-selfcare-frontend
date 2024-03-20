@@ -48,8 +48,8 @@ const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource):
   minPaymentAmount: data?.minPaymentAmount ?? 0,
   name: data?.name ?? '',
   paymentAmount: data?.paymentAmount ?? 0,
-  paymentType: data?.paymentType ?? undefined,
-  touchpoint: data?.touchpoint ?? undefined,
+  paymentType: data?.paymentType ?? 'ANY',
+  touchpoint: data?.touchpoint ?? 'ANY',
   transferCategoryList: data?.transferCategoryList
     ? data.transferCategoryList.map((item) => item.specific_built_in_data)
     : [''],
@@ -159,7 +159,10 @@ const AddEditCommissionBundlePage = () => {
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
 
     const promise = isEdit
-      ? updatePSPBundle(pspTaxCode, bundleId, body)
+      ? updatePSPBundle(pspTaxCode, bundleId, {...body,
+            touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
+            paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+      })
       : createBundle(pspTaxCode, body);
 
     promise

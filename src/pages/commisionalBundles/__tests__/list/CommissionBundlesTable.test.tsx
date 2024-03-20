@@ -12,6 +12,8 @@ import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bu
 let getCommissionBundlePspSpy: jest.SpyInstance;
 
 beforeEach(() => {
+  jest.spyOn(require('../../../../hooks/usePermissions'), "usePermissions")
+    .mockReturnValue({ isPsp: () => true, isEc: () => true});
   getCommissionBundlePspSpy = jest.spyOn(
     require('../../../../services/__mocks__/bundleService'),
     'getCommissionBundlePsp'

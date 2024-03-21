@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { emptyIban } from '../../IbanPage';
+import { add } from 'date-fns';
 
 let createIbanSpy: jest.SpyInstance;
 let updateIbanSpy: jest.SpyInstance;
@@ -20,6 +21,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
+const validIban = 'IT60X0542811101000000123456';
 describe('AddEditIbanForm', () => {
   it('should call goBack when the "Back" button is clicked', () => {
     render(
@@ -42,7 +44,7 @@ describe('AddEditIbanForm', () => {
     fireEvent.click(backButton);
   });
 
-  it('should submit the form when the "Confirm" button is clicked', () => {
+  it('should submit the form when the "Confirm" button is clicked', async () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/create`]}>
@@ -60,25 +62,30 @@ describe('AddEditIbanForm', () => {
     );
 
     const iban = screen.getByTestId('iban-test');
-    fireEvent.change(iban, { target: { value: 'IT60X0542811101000000123456' } });
+    fireEvent.change(iban, { target: { value: validIban } });
 
     const description = screen.getByTestId('description-test');
     fireEvent.change(description, { target: { value: 'Descrizione iban' } });
 
     const startDateInput = screen.getByTestId('start-date-test');
-    fireEvent.change(startDateInput, { target: { value: '2023-07-28' } });
+    fireEvent.change(startDateInput, { target: { value: new Date() } });
 
     const endDateInput = screen.getByTestId('end-date-test');
-    fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
+    fireEvent.change(endDateInput, { target: { value: add(new Date(),{days:1}) } });
 
     // const holderMe = screen.getByTestId('holder-me-test');
     // fireEvent.click(holderMe);
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
+    fireEvent.submit(submitBtn);
+    await waitFor(() => {
+      expect(createIbanSpy).toBeCalled();
+      expect(updateIbanSpy).not.toBeCalled();
+    })
   });
 
-  it('update input in formAction edit', () => {
+  it('update input in formAction edit', async () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/edit`]}>
@@ -102,13 +109,24 @@ describe('AddEditIbanForm', () => {
         </MemoryRouter>
       </Provider>
     );
-
+    const iban = screen.getByTestId('iban-test');
+    fireEvent.change(iban, { target: { value: validIban } });
     const description = screen.getByTestId('description-test');
     fireEvent.change(description, { target: { value: 'Descrizione iban' } });
+
+    const startDateInput = screen.getByTestId('start-date-test');
+    fireEvent.change(startDateInput, { target: { value: new Date() } });
+
+    const endDateInput = screen.getByTestId('end-date-test');
+    fireEvent.change(endDateInput, { target: { value: add(new Date(),{days:1}) } });
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
     fireEvent.submit(submitBtn);
+    await waitFor(() => {
+      expect(updateIbanSpy).toBeCalled();
+      expect(createIbanSpy).not.toBeCalled();
+    })
   });
 
   it('test iban validator function', async () => {
@@ -129,20 +147,7 @@ describe('AddEditIbanForm', () => {
     );
 
     const iban = screen.getByTestId('iban-test');
-    fireEvent.change(iban, { target: { value: 'IT60X054281110100000012345' } });
-    fireEvent.change(iban, { target: { value: 'EG60X0542811101000000123456' } });
-    fireEvent.change(iban, { target: { value: 'ITA0X0542811101000000123456' } });
-    fireEvent.change(iban, { target: { value: 'IT6BX0542811101000000123456' } });
-    fireEvent.change(iban, { target: { value: 'IT6010542811101000000123456' } });
-    fireEvent.change(iban, { target: { value: 'IT60X0542811101AAAAAA123456' } });
-
-    // const holderFiscalCodeInput = screen.getByTestId('holder-fiscal-code-test') as HTMLInputElement;
-    // fireEvent.change(holderFiscalCodeInput, { target: { value: 'AAAAAA' } });
-    // expect(typeof holderFiscalCodeInput.value).toBe('string');
-    // fireEvent.change(holderFiscalCodeInput, { target: { value: 123456 } });
-    // expect(typeof Number(holderFiscalCodeInput.value)).toBe('number');
-
-    fireEvent.change(iban, { target: { value: 'IT60X0542811101000000123456' } });
+    fireEvent.change(iban, { target: { value: 'invalidIban' } });
 
     const description = screen.getByTestId('description-test');
     fireEvent.change(description, { target: { value: 'Descrizione iban' } });
@@ -151,17 +156,12 @@ describe('AddEditIbanForm', () => {
     fireEvent.change(startDateInput, { target: { value: new Date() } });
 
     const endDateInput = screen.getByTestId('end-date-test');
-    fireEvent.change(endDateInput, { target: { value: '2023-07-29' } });
-    fireEvent.change(endDateInput, { target: { value: new Date() } });
-
-    // const holderMe = screen.getByTestId('holder-me-test');
-    // fireEvent.click(holderMe);
-
-    const uploadTypeSingle = screen.getByTestId('upload-single-test');
-    fireEvent.click(uploadTypeSingle);
+    fireEvent.change(endDateInput, { target: { value: add(new Date(),{days:1}) } });
 
     const submitBtn = screen.getByTestId('submit-button-test');
     fireEvent.click(submitBtn);
     fireEvent.submit(submitBtn);
+    expect(createIbanSpy).not.toBeCalled();
+    expect(updateIbanSpy).not.toBeCalled();
   });
 });

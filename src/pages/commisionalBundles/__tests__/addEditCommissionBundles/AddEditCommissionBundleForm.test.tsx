@@ -424,7 +424,7 @@ describe('<AddEditCommissionBundleForm />', () => {
   });
 
   test('Test fetch getBrokerDelegation empty list', async () => {
-    spyOnGetInstitutionService.mockReturnValue([]);
+    spyOnGetInstitutionService.mockReturnValue(new Promise(resolve => resolve([])));
 
     componentRender(FormAction.Create);
 
@@ -436,8 +436,8 @@ describe('<AddEditCommissionBundleForm />', () => {
   });
 
   test('Test fetch getChannels empty list', async () => {
-    spyOnGetChannelService.mockReturnValue([]);
-    const injectStore = createStore();
+    spyOnGetChannelService.mockReturnValue(new Promise(resolve => resolve([])));
+    const injectStore = createStore(); 
     await waitFor(() =>
       injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
     );

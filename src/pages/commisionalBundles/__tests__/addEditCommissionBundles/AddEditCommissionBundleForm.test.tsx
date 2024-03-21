@@ -2,7 +2,7 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
+import { createStore, store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import {
@@ -11,7 +11,7 @@ import {
 } from '../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../services/__mocks__/partyService';
-import { BundleResource, TypeEnum } from '../../../../api/generated/portal/BundleResource';
+import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from '../../addEditCommissionBundle/components/AddEditCommissionBundleForm';
 import { useFormik } from 'formik';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
@@ -52,9 +52,11 @@ afterEach(cleanup);
 const TestAddEditCommissionBundleForm = ({
   formAction,
   initialValues,
+  injectedStore
 }: {
   formAction: string;
   initialValues?: BundleRequest;
+  injectedStore?: ReturnType<typeof createStore>;
 }) => {
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialValues ?? {},
@@ -64,7 +66,7 @@ const TestAddEditCommissionBundleForm = ({
     validateOnChange: true,
   });
   return (
-    <Provider store={store}>
+    <Provider store={injectedStore ?? store}>
       <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
         <Route path="/comm-bundles/add-bundle/">
           <ThemeProvider theme={theme}>
@@ -80,9 +82,9 @@ const bundleName = 'bundleName';
 const bundleDescription = 'description';
 
 describe('<AddEditCommissionBundleForm />', () => {
-  const componentRender = (formAction: string, initialValues?: BundleRequest) => {
+  const componentRender = (formAction: string, initialValues?: BundleRequest,   injectedStore?: ReturnType<typeof createStore>) => {
     render(
-      <TestAddEditCommissionBundleForm formAction={formAction} initialValues={initialValues} />
+      <TestAddEditCommissionBundleForm formAction={formAction} initialValues={initialValues} injectedStore={injectedStore} />
     );
 
     const input = {
@@ -128,8 +130,9 @@ describe('<AddEditCommissionBundleForm />', () => {
   };
 
   test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
-    const { ...input } = componentRender(FormAction.Create);
-    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const injectStore = createStore();
+    await waitFor(() => injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const { ...input } = componentRender(FormAction.Create, injectStore);
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();

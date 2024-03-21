@@ -132,7 +132,7 @@ describe('<AddEditCommissionBundleForm />', () => {
   test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
     const injectStore = createStore();
     await waitFor(() => injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
-    const { ...input } = componentRender(FormAction.Create, injectStore);
+    const { ...input } = componentRender(FormAction.Create, undefined, injectStore);
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
@@ -267,8 +267,9 @@ describe('<AddEditCommissionBundleForm />', () => {
   });
 
   test('Test AddEditCommissionBundleForm with all input change in EDIT', async () => {
-    const { ...input } = componentRender(FormAction.Edit, mockedBundleRequest);
-    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const injectStore = createStore();
+    await waitFor(() => injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const { ...input } = componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();

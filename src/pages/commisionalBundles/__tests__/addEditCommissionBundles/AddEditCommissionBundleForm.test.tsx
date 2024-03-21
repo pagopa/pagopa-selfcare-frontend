@@ -245,6 +245,15 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(input.channelList.disabled).toBe(false);
     });
 
+    fireEvent.change(document.activeElement as Element, {
+      target: { value: '' },
+    });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    await waitFor(() => {
+      expect(input.channelList.disabled).toBe(true);
+    });
+
     // Change channel id
     fireEvent.mouseDown(input.channelList);
     fireEvent.select(input.channelList, { target: { value: mockedChannelsIdList[0] } });
@@ -423,6 +432,35 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
       expect(spyOnErrorHook).toHaveBeenCalled();
       expect(spyOnGetChannelService).not.toHaveBeenCalled();
+    });
+  });
+
+  test('Test fetch getChannels empty list', async () => {
+    spyOnGetChannelService.mockReturnValue([]);
+    const injectStore = createStore();
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
+
+    await waitFor(() => {
+      expect(spyOnGetChannelService).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
+    });
+  });
+
+  test('Test fetch getChannels throw error', async () => {
+    const mockError = new Error('API error message getChannels');
+    spyOnGetChannelService.mockRejectedValue(mockError);
+    const injectStore = createStore();
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
+
+    await waitFor(() => {
+      expect(spyOnErrorHook).toHaveBeenCalled();
+      expect(spyOnGetChannelService).toHaveBeenCalled();
     });
   });
 });

@@ -13,6 +13,7 @@ export const usePermissions = () => {
   const hasPermission = (permissionName: PermissionName) =>
     userRole ? permissions[permissionName].includes(userRole) : false;
   const isPsp = () => userRole === ROLE.PSP_ADMIN || userRole === ROLE.PSP_DIRECT_ADMIN;
+  const isPspDirect = () => userRole === ROLE.PSP_DIRECT_ADMIN;
   const isEc = () => userRole === ROLE.EC_ADMIN || userRole === ROLE.EC_DIRECT_ADMIN;
-  return { hasPermission, isPsp, isEc };
+  return { hasPermission, isPsp, isEc, isPspDirect };
 };

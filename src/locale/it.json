@@ -964,7 +964,8 @@
         "errorMessageChannelIdsDataDesc": "Errore durante la ricezione dei canali",
         "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
         "errorMessageUpdatingBundle": "Errore durante l'aggiornamento del pacchetto commissioni",
-        "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti"
+        "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti",
+        "errorMessageNoBroker": "Non sono presenti intermediari"
       }
     }
   },

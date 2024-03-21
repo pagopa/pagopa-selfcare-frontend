@@ -2,7 +2,7 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
+import { createStore, store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import {
@@ -11,50 +11,30 @@ import {
 } from '../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../services/__mocks__/partyService';
-import { BundleResource, TypeEnum } from '../../../../api/generated/portal/BundleResource';
+import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from '../../addEditCommissionBundle/components/AddEditCommissionBundleForm';
 import { useFormik } from 'formik';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { FormAction } from '../../../../model/CommissionBundle';
 import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 import { formatDateToDDMMYYYY } from '../../../../utils/common-utils';
+import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
 let spyOnGetInstitutionService: jest.SpyInstance<any, unknown[]>;
 let spyOnCreateCommissionBundle: jest.SpyInstance<any, unknown[]>;
 let spyOnGetChannelService: jest.SpyInstance<any, unknown[]>;
-
-beforeEach(() => {
-  spyOnGetPaymentTypes = jest.spyOn(
-    require('../../../../services/configurationService'),
-    'getPaymentTypes'
-  );
-  spyOnGetTouchpoint = jest.spyOn(require('../../../../services/bundleService'), 'getTouchpoints');
-  spyOnGetInstitutionService = jest.spyOn(
-    require('../../../../services/institutionService'),
-    'getBrokerDelegation'
-  );
-  spyOnCreateCommissionBundle = jest.spyOn(
-    require('../../../../services/bundleService'),
-    'createBundle'
-  );
-  spyOnGetChannelService = jest.spyOn(
-    require('../../../../services/channelService'),
-    'getChannelsIdAssociatedToPSP'
-  );
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
-});
-
-afterEach(cleanup);
+let spyOnErrorHook: jest.SpyInstance<any, unknown[]>;
 
 const TestAddEditCommissionBundleForm = ({
   formAction,
   initialValues,
+  injectedStore,
 }: {
   formAction: string;
   initialValues?: BundleRequest;
+  injectedStore?: ReturnType<typeof createStore>;
 }) => {
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: initialValues ?? {},
@@ -64,11 +44,15 @@ const TestAddEditCommissionBundleForm = ({
     validateOnChange: true,
   });
   return (
-    <Provider store={store}>
+    <Provider store={injectedStore ?? store}>
       <MemoryRouter initialEntries={[`/comm-bundles/add-bundle/`]}>
         <Route path="/comm-bundles/add-bundle/">
           <ThemeProvider theme={theme}>
-            <AddEditCommissionBundleForm formik={formik} isEdit={formAction === FormAction.Edit} idBrokerPsp={"idBrokerPsp"} />
+            <AddEditCommissionBundleForm
+              formik={formik}
+              isEdit={formAction === FormAction.Edit}
+              idBrokerPsp={'idBrokerPsp'}
+            />
           </ThemeProvider>
         </Route>
       </MemoryRouter>
@@ -80,9 +64,55 @@ const bundleName = 'bundleName';
 const bundleDescription = 'description';
 
 describe('<AddEditCommissionBundleForm />', () => {
-  const componentRender = (formAction: string, initialValues?: BundleRequest) => {
+  beforeEach(() => {
+    spyOnGetPaymentTypes = jest.spyOn(
+      require('../../../../services/configurationService'),
+      'getPaymentTypes'
+    );
+    spyOnGetTouchpoint = jest.spyOn(
+      require('../../../../services/bundleService'),
+      'getTouchpoints'
+    );
+    spyOnGetInstitutionService = jest.spyOn(
+      require('../../../../services/institutionService'),
+      'getBrokerDelegation'
+    );
+    spyOnCreateCommissionBundle = jest.spyOn(
+      require('../../../../services/bundleService'),
+      'createBundle'
+    );
+    spyOnGetChannelService = jest.spyOn(
+      require('../../../../services/channelService'),
+      'getChannelsIdAssociatedToPSP'
+    );
+    spyOnErrorHook = jest
+      .spyOn(useErrorDispatcher, 'useErrorDispatcher')
+      .mockReturnValue(jest.fn());
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    cleanup();
+    spyOnGetPaymentTypes.mockRestore();
+    spyOnGetTouchpoint.mockRestore();
+    spyOnGetInstitutionService.mockRestore();
+    spyOnCreateCommissionBundle.mockRestore();
+    spyOnGetChannelService.mockRestore();
+    spyOnErrorHook.mockRestore();
+  });
+
+  const componentRender = (
+    formAction: string,
+    initialValues?: BundleRequest,
+    injectedStore?: ReturnType<typeof createStore>
+  ) => {
     render(
-      <TestAddEditCommissionBundleForm formAction={formAction} initialValues={initialValues} />
+      <TestAddEditCommissionBundleForm
+        formAction={formAction}
+        initialValues={initialValues}
+        injectedStore={injectedStore}
+      />
     );
 
     const input = {
@@ -128,13 +158,16 @@ describe('<AddEditCommissionBundleForm />', () => {
   };
 
   test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
-    const { ...input } = componentRender(FormAction.Create);
-    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const injectStore = createStore();
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    const { ...input } = componentRender(FormAction.Create, undefined, injectStore);
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
-//       expect(spyOnGetChannelService).not.toHaveBeenCalled();
+      expect(spyOnGetChannelService).not.toHaveBeenCalled();
     });
 
     //Change radio group bundle type
@@ -196,24 +229,35 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     // Change broker code list
     expect(input.channelList.disabled).toBe(true);
-    fireEvent.mouseDown(input.brokerCodeList);
-    fireEvent.select(input.brokerCodeList, {
+    fireEvent.change(input.brokerCodeList, {
       target: { value: mockedDelegatedPSP[1].institution_name },
     });
-    expect(input.brokerCodeList.value).toBe(mockedDelegatedPSP[1].institution_name);
-    // await waitFor(() => {
-    //   expect(spyOnGetChannelService).toBeCalled();
-    // });
+    input.brokerCodeList.focus();
+
+    fireEvent.change(document.activeElement as Element, {
+      target: { value: mockedDelegatedPSP[1].institution_name },
+    });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP[1].institution_name);
+    await waitFor(() => {
+      expect(spyOnGetChannelService).toBeCalledTimes(1);
+      expect(input.channelList.disabled).toBe(false);
+    });
+
+    fireEvent.change(document.activeElement as Element, {
+      target: { value: '' },
+    });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    await waitFor(() => {
+      expect(input.channelList.disabled).toBe(true);
+    });
 
     // Change channel id
     fireEvent.mouseDown(input.channelList);
     fireEvent.select(input.channelList, { target: { value: mockedChannelsIdList[0] } });
     expect(input.channelList.value).toBe(mockedChannelsIdList[0]);
-
-    // const closeIcon = screen.getByTestId('CloseIcon');
-    // fireEvent.click(closeIcon);
-
-    // expect(input.channelList.value).toBe('');
 
     //Change radio buttons digitalStamp
     expect(input.digitalStampYes.checked).toBe(false);
@@ -264,13 +308,16 @@ describe('<AddEditCommissionBundleForm />', () => {
   });
 
   test('Test AddEditCommissionBundleForm with all input change in EDIT', async () => {
-    const { ...input } = componentRender(FormAction.Edit, mockedBundleRequest);
-    await waitFor(() => store.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect)));
+    const injectStore = createStore();
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    const { ...input } = componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
-      // expect(spyOnGetChannelService).toHaveBeenCalled();
+      expect(spyOnGetChannelService).toHaveBeenCalled();
     });
 
     //Check radio group bundle type
@@ -297,11 +344,17 @@ describe('<AddEditCommissionBundleForm />', () => {
     // expect(selectTouchPointBtn.textContent).toBe(mockedBundleRequest.paymentType);
 
     // Check min import number
-    expect(input.minImport.value).toBe(mockedBundleRequest.minPaymentAmount?.toString().replace(".", ","));
+    expect(input.minImport.value).toBe(
+      mockedBundleRequest.minPaymentAmount?.toString().replace('.', ',')
+    );
     // Check max import number
-    expect(input.maxImport.value).toBe(mockedBundleRequest.maxPaymentAmount?.toString().replace(".", ","));
+    expect(input.maxImport.value).toBe(
+      mockedBundleRequest.maxPaymentAmount?.toString().replace('.', ',')
+    );
 
-    expect(input.feeApplied.value).toBe(mockedBundleRequest.paymentAmount?.toString().replace(".", ","));
+    expect(input.feeApplied.value).toBe(
+      mockedBundleRequest.paymentAmount?.toString().replace('.', ',')
+    );
 
     // Check broker code list
     expect(input.brokerCodeList.value).toBe(mockedBundleRequest.idBrokerPsp);
@@ -341,6 +394,7 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
     });
   });
 
@@ -352,6 +406,7 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     await waitFor(() => {
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
     });
   });
 
@@ -363,6 +418,49 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     await waitFor(() => {
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
+      expect(spyOnGetChannelService).not.toHaveBeenCalled();
+    });
+  });
+
+  test('Test fetch getBrokerDelegation empty list', async () => {
+    spyOnGetInstitutionService.mockReturnValue(new Promise(resolve => resolve([])));
+
+    componentRender(FormAction.Create);
+
+    await waitFor(() => {
+      expect(spyOnGetInstitutionService).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
+      expect(spyOnGetChannelService).not.toHaveBeenCalled();
+    });
+  });
+
+  test('Test fetch getChannels empty list', async () => {
+    spyOnGetChannelService.mockReturnValue(new Promise(resolve => resolve([])));
+    const injectStore = createStore(); 
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
+
+    await waitFor(() => {
+      expect(spyOnGetChannelService).toHaveBeenCalled();
+      expect(spyOnErrorHook).toHaveBeenCalled();
+    });
+  });
+
+  test('Test fetch getChannels throw error', async () => {
+    const mockError = new Error('API error message getChannels');
+    spyOnGetChannelService.mockRejectedValue(mockError);
+    const injectStore = createStore();
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+    componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
+
+    await waitFor(() => {
+      expect(spyOnErrorHook).toHaveBeenCalled();
+      expect(spyOnGetChannelService).toHaveBeenCalled();
     });
   });
 });

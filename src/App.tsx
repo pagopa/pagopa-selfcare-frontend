@@ -201,22 +201,22 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES} exact={true}>
-                  <ProtectedRoute permission="commission-bundles">
+                  <ProtectedRoute permission="commission-bundles-list">
                     <CommissionBundlesPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_DETAIL} exact={true}>
-                  <ProtectedRoute permission="commission-bundles">
+                  <ProtectedRoute permission="commission-bundles-list">
                     <CommissionBundleDetailPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
-                  <ProtectedRoute permission="commission-bundles">
+                  <ProtectedRoute permission="commission-bundles-addedit">
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_EDIT} exact={true}>
-                  <ProtectedRoute permission="commission-bundles">
+                  <ProtectedRoute permission="commission-bundles-addedit">
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>

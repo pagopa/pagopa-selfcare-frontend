@@ -134,7 +134,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
         }
         let listBroker = brokerDelegation ?? [];
         if (isPspDirect()) {
-          listBroker = addCurrentPSP(brokerDelegation, selectedParty as Party);
+          listBroker = addCurrentPSP(listBroker, selectedParty as Party);
         }
         if (listBroker.length > 0) {
           setBrokerDelegationList(listBroker);

@@ -113,16 +113,18 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   const handleIbanSelected = (event: any, type: string) => {
     const selectedIban = ibanList.ibans_enhanced.find((e) => e.iban === event.target.value);
 
-    setNewSelectedIban((prev) => ({ ...prev, [type]: selectedIban }));
-  };
-
-  const updateIbanLabels = (ibanLabels: any, newLabel: IbanLabel) => {
-    if (!ibanLabels || ibanLabels?.length === 0) {
-      return [newLabel];
-    } else if (ibanLabels.findIndex((e: any) => e.name === newLabel.name) === -1) {
-      return [...ibanLabels, newLabel];
-    }
-    return ibanLabels;
+    setNewSelectedIban((prev) => ({
+      ...prev,
+      [type]: {
+        iban: selectedIban!.iban!,
+        description: selectedIban!.description,
+        validity_date: new Date(selectedIban!.validity_date!),
+        due_date: new Date(selectedIban!.due_date!),
+        creditor_institution_code: selectedIban?.ci_owner ?? creditorInstitutionCode,
+        labels: selectedIban?.labels,
+        is_active: selectedIban!.is_active!,
+      },
+    }));
   };
 
   const submit = async () => {
@@ -133,32 +135,13 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       const standInTouched = newSelectedIban.standIn.iban !== originalSelectedIban.standIn.iban;
       const cupTouched = newSelectedIban.cup.iban !== originalSelectedIban.cup.iban;
 
-      if (
-        newSelectedIban.cup.iban === newSelectedIban.standIn.iban &&
-        (standInTouched || cupTouched)
-      ) {
-        await resetStandIn(standInInitialized);
-        await resetCup(cupInitialized);
-        await updateIban(newSelectedIban.cup.creditor_institution_code!, {
-          ...newSelectedIban.cup,
-          labels: [standInLabel, cupLabel],
-        });
-      } else {
-        if (standInTouched) {
-          await resetStandIn(standInInitialized);
-          await updateIban(newSelectedIban.standIn.creditor_institution_code!, {
-            ...newSelectedIban.standIn,
-            labels: [standInLabel],
-          });
-        }
-        if (cupTouched) {
-          await resetCup(cupInitialized);
-          await updateIban(newSelectedIban.cup.creditor_institution_code!, {
-            ...newSelectedIban.cup,
-            labels: [cupLabel],
-          });
-        }
+      if (!standInTouched && !cupTouched) {
+        return;
       }
+
+      await resetOriginalIbans(standInInitialized, standInTouched, cupTouched, cupInitialized);
+      await updateNewIbans(standInTouched, cupTouched);
+
       setOriginalSelectedIban(newSelectedIban);
     } catch (reason) {
       addError({
@@ -177,24 +160,62 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       setShowConfirmModal(false);
     }
 
-    async function resetCup(cupInitialized: boolean) {
-      if (cupInitialized) {
-        await updateIban(originalSelectedIban.cup.creditor_institution_code!, {
-          ...originalSelectedIban.cup,
-          labels: [],
-        });
-      }
-    }
-
-    async function resetStandIn(standInInitialized: boolean) {
-      if (standInInitialized) {
-        await updateIban(originalSelectedIban.standIn.creditor_institution_code!, {
-          ...originalSelectedIban.standIn,
-          labels: [],
-        });
-      }
-    }
   };
+  
+  async function updateNewIbans(standInTouched: boolean, cupTouched: boolean) {
+    if (newSelectedIban.cup.iban === newSelectedIban.standIn.iban) {
+      // update both new ibans with one call
+      await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+        ...newSelectedIban.cup,
+        labels: [standInLabel, cupLabel],
+      });
+    } else {
+      if (standInTouched) {
+        await updateIban(newSelectedIban.standIn.creditor_institution_code!, {
+          ...newSelectedIban.standIn,
+          labels: [standInLabel],
+        });
+      }
+      if (cupTouched) {
+        await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+          ...newSelectedIban.cup,
+          labels: [cupLabel],
+        });
+      }
+    }
+  }
+
+  async function resetOriginalIbans(standInInitialized: boolean, standInTouched: boolean, cupTouched: boolean, cupInitialized: boolean) {
+    if (originalSelectedIban.cup.iban === originalSelectedIban.standIn.iban) {
+      // reset both original ibans with one call
+      await resetStandIn(standInInitialized);
+    } else {
+      if (standInTouched) {
+        await resetStandIn(standInInitialized);
+      }
+      if (cupTouched) {
+        await resetCup(cupInitialized);
+      }
+    }
+  }
+
+  async function resetCup(cupInitialized: boolean) {
+    if (cupInitialized) {
+      await updateIban(originalSelectedIban.cup.creditor_institution_code!, {
+        ...originalSelectedIban.cup,
+        labels: [],
+      });
+    }
+  }
+
+  async function resetStandIn(standInInitialized: boolean) {
+    if (standInInitialized) {
+      await updateIban(originalSelectedIban.standIn.creditor_institution_code!, {
+        ...originalSelectedIban.standIn,
+        labels: [],
+      });
+    }
+  }
 
   return (
     <>

@@ -148,6 +148,27 @@ describe('StandInAndCupForm', () => {
     const backBtn = screen.getByTestId('back-button-test');
     fireEvent.click(backBtn);
   });
+  
+  it('Input test with manageButton false and no cup and standIn selected', async () => {
+    render(<TestStandInAndCupForm ibanList={ibanList} />);
+
+    const manageButton = screen.getByTestId('iban-manage-btn');
+    fireEvent.click(manageButton);
+
+    const manageChip = screen.getByText('ibanPage.updateInProgress');
+    expect(manageChip).toBeInTheDocument();
+
+    const standInIbanSelect = screen.getByTestId('stand-in-test');
+    fireEvent.click(standInIbanSelect);
+
+    const uploadIbans = screen.getByTestId('upload-iban-test');
+    fireEvent.click(uploadIbans);
+
+    const confirmBtn = await screen.findByTestId('confirm-button-test');
+    fireEvent.click(confirmBtn);
+
+    fireEvent.submit(confirmBtn);
+  });
 
   it('Input test with manageButton true', () => {
     render(<TestStandInAndCupForm ibanList={ibanList} />);

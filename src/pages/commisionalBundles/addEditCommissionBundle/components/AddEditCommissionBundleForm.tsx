@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
@@ -47,8 +48,8 @@ import { getTouchpoints } from '../../../../services/bundleService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
 import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
-import { FormAction } from '../../../../model/CommissionBundle';
 import { addCurrentPSP } from '../../../../utils/channel-utils';
+import { usePermissions } from '../../../../hooks/usePermissions';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -58,6 +59,7 @@ type Props = {
 
 const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => {
   const { t } = useTranslation();
+  const { isPspDirect } = usePermissions();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
@@ -80,11 +82,26 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
     setLoadingChannels(true);
     getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
       .then((data) => {
-        if (data) {
+        if (data && data.length > 0) {
           setChannelsId(data);
+        } else {
+          setChannelsId([]);
+          addError({
+            id: 'GET_BROKER_DELEGATIONS_DATA',
+            blocking: false,
+            error: new Error(`An error occurred while getting data`),
+            techDescription: `An error occurred while getting data`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
+            ),
+            component: 'Toast',
+          });
         }
       })
       .catch((error) => {
+        setChannelsId([]);
         addError({
           id: 'GET_CHANNEL_IDS_DATA',
           blocking: false,
@@ -115,8 +132,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
         if (touchpoints) {
           setTouchpointList(touchpoints);
         }
-        if (brokerDelegation && brokerDelegation.length > 0) {
-          setBrokerDelegationList(addCurrentPSP(brokerDelegation, selectedParty as Party));
+        let listBroker = brokerDelegation ?? [];
+        if (isPspDirect()) {
+          listBroker = addCurrentPSP(brokerDelegation, selectedParty as Party);
+        }
+        if (listBroker.length > 0) {
+          setBrokerDelegationList(listBroker);
           if (isEdit && idBrokerPsp) {
             getChannelsByBrokerCode(
               brokerDelegation?.find((el) => el.institution_name === idBrokerPsp)
@@ -125,14 +146,14 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
           }
         } else {
           addError({
-            id: 'GET_BROKER_DELEGATIONS_DATA',
+            id: 'GET_BROKER_DATA',
             blocking: false,
             error: new Error(`An error occurred while getting data`),
             techDescription: `An error occurred while getting data`,
             toNotify: true,
             displayableTitle: t('general.errorTitle'),
             displayableDescription: t(
-              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBroker'
             ),
             component: 'Toast',
           });
@@ -299,9 +320,9 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
-                      <MenuItem key={`payment_types$all`} value={'ANY'}>
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                      </MenuItem>
+                    <MenuItem key={`payment_types$all`} value={'ANY'}>
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                    </MenuItem>
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
@@ -331,9 +352,9 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                      <MenuItem key={`touchpoint$all`} value={'ANY'}>
-                        {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                      </MenuItem>
+                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                    </MenuItem>
                     {touchpointList?.touchpoints?.map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}

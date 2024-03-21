@@ -101,7 +101,7 @@ export default function SideMenu() {
                     )}
 
                     {useFlagValue('commission-bundles')
-                        && hasPermission("commission-bundles") && (
+                        && hasPermission("commission-bundles-list") && (
                             <SidenavItem
                                 title={t('sideMenu.commBundles.title')}
                                 handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}

@@ -170,13 +170,13 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
         labels: [standInLabel, cupLabel],
       });
     } else {
-      if (standInTouched) {
+      if (standInTouched || originalSelectedIban.cup.iban === originalSelectedIban.standIn.iban) {
         await updateIban(newSelectedIban.standIn.creditor_institution_code!, {
           ...newSelectedIban.standIn,
           labels: [standInLabel],
         });
       }
-      if (cupTouched) {
+      if (cupTouched || originalSelectedIban.cup.iban === originalSelectedIban.standIn.iban) {
         await updateIban(newSelectedIban.cup.creditor_institution_code!, {
           ...newSelectedIban.cup,
           labels: [cupLabel],

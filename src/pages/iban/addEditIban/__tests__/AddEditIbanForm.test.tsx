@@ -10,13 +10,16 @@ import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { emptyIban } from '../../IbanPage';
 import { add } from 'date-fns';
+import * as pagopaFe from '@pagopa/selfcare-common-frontend';
 
 let createIbanSpy: jest.SpyInstance;
 let updateIbanSpy: jest.SpyInstance;
+let addError: jest.SpyInstance;
 
 beforeEach(() => {
   createIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'createIban');
   updateIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'updateIban');
+  addError = jest.spyOn(pagopaFe, "useErrorDispatcher");
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -164,6 +167,11 @@ describe('AddEditIbanForm', () => {
     fireEvent.submit(submitBtn);
     expect(createIbanSpy).not.toBeCalled();
     expect(updateIbanSpy).not.toBeCalled();
+
+    await waitFor(() => {
+      const ibanErrorText = document.getElementById('iban-helper-text');
+      expect(ibanErrorText).toBeInTheDocument();
+    });
   });
 
   it('test create api response 409 Conflict', async () => {
@@ -209,5 +217,51 @@ describe('AddEditIbanForm', () => {
 
     ibanErrorText = document.getElementById('iban-helper-text');
     expect(ibanErrorText).toBeInTheDocument();
+  });
+
+  it('test create api response generic error', async () => {
+    createIbanSpy.mockRejectedValue(new Error('genericError'));
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/create`]}>
+          <Route path="/iban/:ibanId/:actionId">
+            <ThemeProvider theme={theme}>
+              <AddEditIbanForm
+                goBack={jest.fn()}
+                ibanBody={emptyIban}
+                formAction={IbanFormAction.Create}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const iban = screen.getByTestId('iban-test');
+    fireEvent.change(iban, { target: { value: validIban } });
+
+    const description = screen.getByTestId('description-test');
+    fireEvent.change(description, { target: { value: 'Descrizione iban' } });
+
+    const startDateInput = screen.getByTestId('start-date-test');
+    fireEvent.change(startDateInput, { target: { value: new Date() } });
+
+    const endDateInput = screen.getByTestId('end-date-test');
+    fireEvent.change(endDateInput, { target: { value: add(new Date(), { days: 1 }) } });
+
+    const submitBtn = screen.getByTestId('submit-button-test');
+    fireEvent.click(submitBtn);
+    fireEvent.submit(submitBtn);
+    await waitFor(() => {
+      expect(createIbanSpy).toBeCalled();
+      expect(updateIbanSpy).not.toBeCalled();
+    });
+
+    await waitFor(() => {
+      expect(addError).toBeCalled();
+    });
+
+    const ibanErrorText = document.getElementById('iban-helper-text');
+    expect(ibanErrorText).not.toBeInTheDocument();
   });
 });

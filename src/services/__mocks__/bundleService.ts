@@ -138,7 +138,7 @@ export const mockedBundleRequest: BundleRequest = {
   minPaymentAmount: 40,
   maxPaymentAmount: 150.1,
   paymentType: 'Bonifico - SEPA',
-  touchpoint: 'Tutti',
+  touchpoint: 'ANY',
   transferCategoryList: mockedTaxonomyList.map(el => el.specific_built_in_data),
   type: TypeEnum.GLOBAL,
   validityDateFrom: new Date('2024-02-17'),

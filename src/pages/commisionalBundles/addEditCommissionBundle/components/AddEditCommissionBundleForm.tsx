@@ -139,10 +139,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
         if (listBroker.length > 0) {
           setBrokerDelegationList(listBroker);
           if (isEdit && idBrokerPsp) {
-            getChannelsByBrokerCode(
-              brokerDelegation?.find((el) => el.institution_name === idBrokerPsp)
-                ?.broker_tax_code ?? ''
-            );
+            const brokerTaxCode = brokerDelegation?.find(
+              (el) => el.institution_name === idBrokerPsp
+            )?.tax_code;
+            if (brokerTaxCode) {
+              getChannelsByBrokerCode(brokerTaxCode);
+            }
           }
         } else {
           addError({
@@ -181,17 +183,20 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
   const shouldDisableDate = (date: Date) => date < new Date();
 
   function handleBrokerCodesSelection(
-    value: string | null | undefined,
-    formik: FormikProps<BundleRequest>
+    value: string | null | undefined
   ) {
+    formik.setFieldValue('idChannel', '');
     if (value === null || value === undefined) {
       formik.setFieldValue('idBrokerPsp', '');
       setChannelsId([]);
     } else {
       formik.handleChange('idBrokerPsp')(value);
-      getChannelsByBrokerCode(
-        brokerDelegationList?.find((el) => el.institution_name === value)?.broker_tax_code ?? ''
-      );
+      const brokerTaxCode = brokerDelegationList?.find(
+        (el) => el.institution_name === value
+      )?.tax_code;
+      if (brokerTaxCode) {
+        getChannelsByBrokerCode(brokerTaxCode);
+      }
     }
   }
 
@@ -484,8 +489,8 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     ?.sort((a, b) => a.localeCompare(b))}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   value={formik.values.idBrokerPsp}
-                  onChange={(_event, value) => {
-                    handleBrokerCodesSelection(value, formik);
+                  onChange={(_, value) => {
+                    handleBrokerCodesSelection(value);
                   }}
                   fullWidth
                   renderInput={(params) => (

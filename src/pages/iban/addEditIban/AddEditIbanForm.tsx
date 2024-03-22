@@ -153,17 +153,13 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          if (isValidIBANNumber(values.iban, true)) {
-            await createIban(values.creditor_institution_code, {
-              iban: values.iban,
-              description: values.description,
-              validity_date: values.validity_date!,
-              due_date: values.due_date,
-              is_active: true,
-            });
-          } else {
-            formik.setFieldError('iban', t('addEditIbanPage.validationMessage.ibanNotValid'));
-          }
+          await createIban(values.creditor_institution_code, {
+            iban: values.iban,
+            description: values.description,
+            validity_date: values.validity_date!,
+            due_date: values.due_date,
+            is_active: true,
+          });
         } else {
           await updateIban(values.creditor_institution_code, {
             iban: values.iban,
@@ -174,22 +170,23 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             is_active: true,
           });
         }
+
         history.push(ROUTES.IBAN);
       } catch (reason: any) {
-        if (reason.httpStatus === 409) {
+        if (reason?.message === '409') {
           formik.setFieldError('iban', t('addEditIbanPage.validationMessage.bankIbanConflict'));
+        } else {
+          addError({
+            id: 'CREATE_UPDATE_IBAN',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while adding/editing iban`,
+            toNotify: true,
+            displayableTitle: t('addEditIbanPage.errors.createIbanTitle'),
+            displayableDescription: t('addEditIbanPage.errors.createIbanMessage'),
+            component: 'Toast',
+          });
         }
-
-        addError({
-          id: 'CREATE_UPDATE_IBAN',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while adding/editing iban`,
-          toNotify: true,
-          displayableTitle: t('addEditIbanPage.errors.createIbanTitle'),
-          displayableDescription: t('addEditIbanPage.errors.createIbanMessage'),
-          component: 'Toast',
-        });
       } finally {
         setLoading(false);
       }

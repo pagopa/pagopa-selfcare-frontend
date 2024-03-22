@@ -185,6 +185,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
   function handleBrokerCodesSelection(
     value: string | null | undefined
   ) {
+    formik.setFieldValue('idChannel', '');
     if (value === null || value === undefined) {
       formik.setFieldValue('idBrokerPsp', '');
       setChannelsId([]);

@@ -4,6 +4,7 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useFlagValue } from '../../hooks/useFeatureFlags';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
 import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
@@ -37,6 +38,8 @@ const CustomTabPanel = (props: Props) => {
 const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const isPrivateEnabled = useFlagValue("commission-bundles-private");
+  const isPublicEnabled = useFlagValue("commission-bundles-public");
   const [value, setValue] = useState(2);
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
@@ -102,9 +105,9 @@ const CommissionBundlesPage = () => {
               centered
               variant="fullWidth"
             >
-              <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(0)} />
-              <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} />
-              <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(2)} />
+              <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(0)} disabled={!isPrivateEnabled} data-testid="tab-private"/>
+              <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} disabled={!isPublicEnabled} data-testid="tab-public"/>
+              <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(2)} data-testid="tab-global"/>
             </Tabs>
           </Box>
           <CustomTabPanel valueTab={value} index={0}>

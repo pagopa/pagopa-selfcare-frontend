@@ -50,6 +50,7 @@ import { Delegation } from '../../../../api/generated/portal/Delegation';
 import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
 import { addCurrentPSP } from '../../../../utils/channel-utils';
 import { usePermissions } from '../../../../hooks/usePermissions';
+import { useFlagValue } from '../../../../hooks/useFeatureFlags';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -63,6 +64,8 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
+  const isPrivateEnabled = useFlagValue("commission-bundles-private");
+  const isPublicEnabled = useFlagValue("commission-bundles-public");
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
@@ -235,13 +238,13 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
-              disabled={isEdit}
+              disabled={isEdit || !isPublicEnabled}
             />
             <FormControlLabel
               value={TypeEnum.PRIVATE}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
-              disabled={isEdit}
+              disabled={isEdit || !isPrivateEnabled}
             />
           </RadioGroup>
         </FormControl>

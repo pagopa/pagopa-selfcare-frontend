@@ -51,7 +51,7 @@ const TestAddEditCommissionBundleForm = ({
             <AddEditCommissionBundleForm
               formik={formik}
               isEdit={formAction === FormAction.Edit}
-              idBrokerPsp={'idBrokerPsp'}
+              idBrokerPsp={initialValues?.idBrokerPsp}
             />
           </ThemeProvider>
         </Route>

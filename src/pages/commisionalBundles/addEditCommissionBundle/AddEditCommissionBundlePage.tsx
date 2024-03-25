@@ -157,13 +157,14 @@ const AddEditCommissionBundlePage = () => {
   const submit = async (body: BundleRequest) => {
     setLoadingCreating(true);
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
-
+    const formattedBundleBody = {
+      ...body,
+      touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
+      paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+    };
     const promise = isEdit
-      ? updatePSPBundle(pspTaxCode, bundleId, {...body,
-            touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
-            paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
-      })
-      : createBundle(pspTaxCode, body);
+      ? updatePSPBundle(pspTaxCode, bundleId, formattedBundleBody)
+      : createBundle(pspTaxCode, formattedBundleBody);
 
     promise
       .then((_) => {
@@ -260,7 +261,11 @@ const AddEditCommissionBundlePage = () => {
           style={{ display: activeStep !== 0 ? 'none' : undefined }}
           data-testid="bundle-form-div"
         >
-          <AddEditCommissionBundleForm formik={formik} isEdit={isEdit} idBrokerPsp={isEdit ? bundleDetails?.idBrokerPsp : undefined}/>
+          <AddEditCommissionBundleForm
+            formik={formik}
+            isEdit={isEdit}
+            idBrokerPsp={isEdit ? bundleDetails?.idBrokerPsp : undefined}
+          />
         </div>
         <div
           style={{ display: activeStep !== 1 ? 'none' : undefined }}
@@ -269,7 +274,9 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleTaxonomies
             formik={formik}
             bundleTaxonomies={
-              isEdit && bundleDetails?.transferCategoryList && bundleDetails.transferCategoryList.length > 0
+              isEdit &&
+              bundleDetails?.transferCategoryList &&
+              bundleDetails.transferCategoryList.length > 0
                 ? [...bundleDetails.transferCategoryList]
                 : []
             }

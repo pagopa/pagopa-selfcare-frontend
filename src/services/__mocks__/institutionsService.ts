@@ -44,6 +44,7 @@ export const mockedDelegatedPSP: Array<Delegation> = [
     broker_id: '12345',
     institution_id: '0000001',
     broker_name: 'PSP1',
+    tax_code: '800011104871'
   },
   {
     broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
@@ -72,18 +73,22 @@ export const mockedDelegatedPSP: Array<Delegation> = [
   {
     institution_id: '0000004',
     broker_name: 'PSP4',
+    tax_code: '800011104874',
   },
   {
     institution_id: '0000005',
     broker_name: 'PSP5',
-  },
-  {
-    institution_id: '0000006',
-    broker_name: 'PSP65',
+    tax_code: '800011104875',
   },
   {
     institution_id: '0000006',
     broker_name: 'PSP6',
+    tax_code: '800011104876',
+  },
+  {
+    institution_id: '0000007',
+    broker_name: 'PSP76',
+    tax_code: '8000111048747',
   },
 ];
 

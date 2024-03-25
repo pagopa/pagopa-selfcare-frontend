@@ -20,9 +20,22 @@ describe('<CommissionBundleDetailConfiguration />', () => {
       <CommissionBundleDetailConfiguration bundleDetail={mockedCommissionBundlePspDetailGlobal} />
     );
 
+    await waitFor(async () => {
+      const buttonDrawer = await screen.findByTestId('show-more-bundle-configuration-test');
+      expect(buttonDrawer).toBeDefined();
+      expect(screen.queryAllByTestId('detail-column').length).toBe(3);
+
+      //Open Drawer
+      fireEvent.click(buttonDrawer);
+      expect(screen.queryByTestId('padded-drawer')).toBeInTheDocument();
+      expect(screen.queryAllByTestId('detail-column').length).toBe(15);
+    });
+
+    const closeDrawerButton = screen.getByTestId('close-drawer-button');
+    fireEvent.click(closeDrawerButton);
+
     await waitFor(() => {
-      expect(screen.queryAllByTestId('show-more-bundle-configuration-test').length).toBe(0);
-      expect(screen.queryAllByTestId('detail-column').length).toBe(12);
+      expect(screen.queryByTestId('padded-drawer')).not.toBeInTheDocument();
     });
   });
 
@@ -38,16 +51,16 @@ describe('<CommissionBundleDetailConfiguration />', () => {
 
       //Open Drawer
       fireEvent.click(buttonDrawer);
-      expect(screen.queryByTestId("padded-drawer")).toBeInTheDocument();
+      expect(screen.queryByTestId('padded-drawer')).toBeInTheDocument();
       expect(screen.queryAllByTestId('detail-column').length).toBe(15);
     });
 
-    const closeDrawerButton = screen.getByTestId("close-drawer-button");
-    fireEvent.click(closeDrawerButton)
+    const closeDrawerButton = screen.getByTestId('close-drawer-button');
+    fireEvent.click(closeDrawerButton);
 
     await waitFor(() => {
-      expect(screen.queryByTestId("padded-drawer")).not.toBeInTheDocument();
-    })
+      expect(screen.queryByTestId('padded-drawer')).not.toBeInTheDocument();
+    });
   });
 
   test('render component CommissionBundleDetailConfiguration bundle type PUBLIC', async () => {

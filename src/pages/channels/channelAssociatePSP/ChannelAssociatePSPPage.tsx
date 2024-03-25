@@ -13,8 +13,8 @@ import { useFormik } from 'formik';
 import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { theme } from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
-import { INSTITUTIONS_PSP_CHANNEL_TYPES, LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
-import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
+import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
+import { addCurrentPSP } from '../../../utils/channel-utils';
 import {
   associatePSPtoChannel,
   getChannelDetail,
@@ -206,18 +206,3 @@ function ChannelAssociatePSPPage() {
 }
 
 export default ChannelAssociatePSPPage;
-
-const addCurrentPSP = (availablePSP: Array<Delegation>, selectedParty: Party) => {
-  const value = {
-    institution_name: selectedParty?.description ?? '',
-    institution_id: selectedParty.partyId,
-    tax_code: selectedParty.fiscalCode,
-  };
-
-  if (checkInstitutionTypes(selectedParty?.institutionType as string, INSTITUTIONS_PSP_CHANNEL_TYPES)) {
-    // eslint-disable-next-line functional/immutable-data
-    availablePSP.push(value);
-  }
-
-  return availablePSP;
-};

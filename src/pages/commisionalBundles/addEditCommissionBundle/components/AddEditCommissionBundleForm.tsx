@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
@@ -33,6 +34,7 @@ import {
   LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
+import { Party } from '../../../../model/Party';
 import { sortPaymentType } from '../../../../model/PaymentType';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 import { useAppSelector } from '../../../../redux/hooks';
@@ -46,15 +48,18 @@ import { getTouchpoints } from '../../../../services/bundleService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
 import { TypeEnum } from '../../../../api/generated/portal/BundleResource';
-import { FormAction } from '../../../../model/CommissionBundle';
+import { addCurrentPSP } from '../../../../utils/channel-utils';
+import { usePermissions } from '../../../../hooks/usePermissions';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
-  actionId: string;
+  isEdit: boolean;
+  idBrokerPsp: string | undefined;
 };
 
-const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
+const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => {
   const { t } = useTranslation();
+  const { isPspDirect } = usePermissions();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
   const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
   const addError = useErrorDispatcher();
@@ -77,11 +82,26 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
     setLoadingChannels(true);
     getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
       .then((data) => {
-        if (data) {
+        if (data && data.length > 0) {
           setChannelsId(data);
+        } else {
+          setChannelsId([]);
+          addError({
+            id: 'GET_BROKER_DELEGATIONS_DATA',
+            blocking: false,
+            error: new Error(`An error occurred while getting data`),
+            techDescription: `An error occurred while getting data`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
+            ),
+            component: 'Toast',
+          });
         }
       })
       .catch((error) => {
+        setChannelsId([]);
         addError({
           id: 'GET_CHANNEL_IDS_DATA',
           blocking: false,
@@ -112,24 +132,30 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
         if (touchpoints) {
           setTouchpointList(touchpoints);
         }
-        if (brokerDelegation && brokerDelegation.length > 0) {
-          setBrokerDelegationList(brokerDelegation);
-          if (actionId === FormAction.Edit && formik.values.idBrokerPsp) {
-            getChannelsByBrokerCode(
-              brokerDelegation?.find((el) => el.institution_name === formik.values?.idBrokerPsp)
-                ?.broker_tax_code ?? ''
-            );
+        let listBroker = brokerDelegation ?? [];
+        if (isPspDirect()) {
+          listBroker = addCurrentPSP(listBroker, selectedParty as Party);
+        }
+        if (listBroker.length > 0) {
+          setBrokerDelegationList(listBroker);
+          if (isEdit && idBrokerPsp) {
+            const brokerTaxCode = brokerDelegation?.find(
+              (el) => el.institution_name === idBrokerPsp
+            )?.tax_code;
+            if (brokerTaxCode) {
+              getChannelsByBrokerCode(brokerTaxCode);
+            }
           }
         } else {
           addError({
-            id: 'GET_BROKER_DELEGATIONS_DATA',
+            id: 'GET_BROKER_DATA',
             blocking: false,
             error: new Error(`An error occurred while getting data`),
             techDescription: `An error occurred while getting data`,
             toNotify: true,
             displayableTitle: t('general.errorTitle'),
             displayableDescription: t(
-              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBrokerDelegations'
+              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBroker'
             ),
             component: 'Toast',
           });
@@ -157,17 +183,20 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
   const shouldDisableDate = (date: Date) => date < new Date();
 
   function handleBrokerCodesSelection(
-    value: string | null | undefined,
-    formik: FormikProps<BundleRequest>
+    value: string | null | undefined
   ) {
+    formik.setFieldValue('idChannel', '');
     if (value === null || value === undefined) {
       formik.setFieldValue('idBrokerPsp', '');
       setChannelsId([]);
     } else {
       formik.handleChange('idBrokerPsp')(value);
-      getChannelsByBrokerCode(
-        brokerDelegationList?.find((el) => el.institution_name === value)?.broker_tax_code ?? ''
-      );
+      const brokerTaxCode = brokerDelegationList?.find(
+        (el) => el.institution_name === value
+      )?.tax_code;
+      if (brokerTaxCode) {
+        getChannelsByBrokerCode(brokerTaxCode);
+      }
     }
   }
 
@@ -199,20 +228,20 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
               sx={{ pr: 8 }}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
             <FormControlLabel
               value={TypeEnum.PUBLIC}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
               sx={{ pr: 8 }}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
             <FormControlLabel
               value={TypeEnum.PRIVATE}
               control={<Radio />}
               label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
-              disabled={actionId === FormAction.Edit}
+              disabled={isEdit}
             />
           </RadioGroup>
         </FormControl>
@@ -296,6 +325,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
+                    <MenuItem key={`payment_types$all`} value={'ANY'}>
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                    </MenuItem>
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
@@ -325,6 +357,9 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
+                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
+                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                    </MenuItem>
                     {touchpointList?.touchpoints?.map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}
@@ -454,8 +489,8 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                     ?.sort((a, b) => a.localeCompare(b))}
                   disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
                   value={formik.values.idBrokerPsp}
-                  onChange={(_event, value) => {
-                    handleBrokerCodesSelection(value, formik);
+                  onChange={(_, value) => {
+                    handleBrokerCodesSelection(value);
                   }}
                   fullWidth
                   renderInput={(params) => (
@@ -622,7 +657,7 @@ const AddEditCommissionBundleForm = ({ actionId, formik }: Props) => {
                       />
                     )}
                     shouldDisableDate={shouldDisableDate}
-                    disabled={actionId === FormAction.Edit}
+                    disabled={isEdit}
                   />
                 </LocalizationProvider>
               </Grid>

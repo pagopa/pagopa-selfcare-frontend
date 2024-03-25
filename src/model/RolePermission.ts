@@ -49,9 +49,15 @@ export const permissions = {
         ROLE.PAGOPA_OPERATOR,
     ],
     iban: [ROLE.EC_DIRECT_ADMIN, ROLE.EC_ADMIN],
-    'commission-bundles': [
+    'commission-bundles-list': [
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_ADMIN,
+        ROLE.EC_ADMIN,
+        ROLE.EC_DIRECT_ADMIN
+    ],
+    'commission-bundles-addedit': [
+        ROLE.PSP_DIRECT_ADMIN,
+        ROLE.PSP_ADMIN
     ],
     'operation-table-read-write': [
         ROLE.EC_DIRECT_ADMIN,

@@ -104,7 +104,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         port: channelDetail.port ?? 0,
         primitive_version: channelDetail.primitive_version ?? undefined,
         protocol: channelDetail.protocol ?? undefined,
-        proxyUnion: channelDetail.proxy_host !== '' ?
+        proxyUnion: channelDetail.proxy_host !== undefined && channelDetail.proxy_host !== null &&
+            channelDetail.proxy_host !== '' && channelDetail.proxy_port !== undefined && channelDetail.proxy_port !== null ?
             `${channelDetail.proxy_host}:${channelDetail.proxy_port}` :
             '',
         proxy_host: channelDetail.proxy_host ?? '',

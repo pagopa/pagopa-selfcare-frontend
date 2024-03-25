@@ -44,38 +44,51 @@ export const mockedDelegatedPSP: Array<Delegation> = [
     broker_id: '12345',
     institution_id: '0000001',
     broker_name: 'PSP1',
+    tax_code: '800011104871'
   },
   {
-    broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e',
-    broker_name: 'Regione Toscana',
-    id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db',
-    institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be064847',
+    broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
+    broker_name: 'PSP2',
+    id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db2',
+    institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be064842',
     institution_name:
       "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
     institution_type: 'PA',
     product_id: 'prod-pagopa',
-    tax_code: '80001110487',
+    tax_code: '800011104872',
     type: 'PT',
   },
   {
-    institution_id: '0000002',
-    broker_name: 'PSP2',
-  },
-  {
-    institution_id: '0000003',
+    broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e3',
     broker_name: 'PSP3',
+    id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db3',
+    institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be0648473',
+    institution_name:
+      "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
+    institution_type: 'PA',
+    product_id: 'prod-pagopa',
+    tax_code: '800011104873',
+    type: 'PT',
   },
   {
     institution_id: '0000004',
     broker_name: 'PSP4',
+    tax_code: '800011104874',
   },
   {
     institution_id: '0000005',
     broker_name: 'PSP5',
+    tax_code: '800011104875',
   },
   {
     institution_id: '0000006',
     broker_name: 'PSP6',
+    tax_code: '800011104876',
+  },
+  {
+    institution_id: '0000007',
+    broker_name: 'PSP76',
+    tax_code: '8000111048747',
   },
 ];
 

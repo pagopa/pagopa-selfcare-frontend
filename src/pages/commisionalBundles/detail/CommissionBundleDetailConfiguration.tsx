@@ -40,7 +40,7 @@ const bundleConfigurationFields = {
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
   if (typeof value === 'string' && value) {
-    return value;
+    return t(value);
   }
   if (typeof value === 'boolean') {
     return formatBooleanValueToYesOrNo(value, t);
@@ -61,11 +61,8 @@ export default function CommissionBundleDetailConfiguration({
 }) {
   const { t } = useTranslation();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const bundleTypeGlobal: boolean = bundleDetail?.type === TypeEnum.GLOBAL;
 
-  const columns: Array<Array<Array<string>>> = bundleTypeGlobal
-    ? Object.values(bundleConfigurationFields)
-    : new Array(bundleConfigurationFields.col1);
+  const columns: Array<Array<Array<string>>> = new Array(bundleConfigurationFields.col1);
 
   const mapColumn = (col: Array<Array<string>>, isDrawer: boolean, isFirstColumn?: boolean) =>
     col.map((entry: Array<string>, index: number) => (
@@ -92,32 +89,25 @@ export default function CommissionBundleDetailConfiguration({
           </Grid>
         ))}
       </Grid>
-
-      {!bundleTypeGlobal && (
+      <ButtonNaked
+        size="large"
+        component="button"
+        onClick={() => setOpenDrawer(true)}
+        sx={{ color: 'primary.main', mt: 3 }}
+        weight="default"
+        data-testid="show-more-bundle-configuration-test"
+      >
+        + {t('general.showMore')}
+      </ButtonNaked>
+      <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
         <>
-          <ButtonNaked
-            size="large"
-            component="button"
-            onClick={() => setOpenDrawer(true)}
-            sx={{ color: 'primary.main', mt: 3 }}
-            weight="default"
-            data-testid="show-more-bundle-configuration-test"
-          >
-            + {t('general.showMore')}
-          </ButtonNaked>
-          <PaddedDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
-            <>
-              <TitleBox
-                title={t('commissionBundlesPage.commissionBundleDetail.configuration')}
-                variantTitle="h4"
-              />
-              {Object.values(bundleConfigurationFields).map((col, i) =>
-                mapColumn(col, true, i === 0)
-              )}
-            </>
-          </PaddedDrawer>
+          <TitleBox
+            title={t('commissionBundlesPage.commissionBundleDetail.configuration')}
+            variantTitle="h4"
+          />
+          {Object.values(bundleConfigurationFields).map((col, i) => mapColumn(col, true, i === 0))}
         </>
-      )}
+      </PaddedDrawer>
     </Paper>
   );
 }

@@ -3,12 +3,14 @@ import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { usePermissions } from '../../../hooks/usePermissions';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
-import { getBundleListByPSP } from '../../../services/bundleService';
+import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 import CommissionBundlesEmpty from './CommissionBundlesEmpty';
 
@@ -45,26 +47,54 @@ const mapBundle = (bundleType: string) => {
 
 const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
+  const { isPsp, isEc } = usePermissions();
   const [error, setError] = useState(false);
   //   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
-  const columns: Array<GridColDef> = buildColumnDefs(t);
+  const columns: Array<GridColDef> = buildColumnDefs(t, isPsp(), isEc());
   const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
   const brokerCode = selectedParty?.fiscalCode ?? '';
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
   };
 
   const pageLimit = 5;
-  const getBundleList = () => {
+  const getBundleList = (newPage?: number) => {
     setLoadingStatus(true);
-    getBundleListByPSP(mapBundle(bundleType), pageLimit, bundleNameFilter, page, `PSP${brokerCode}`)
+    if (isFirstRender) {
+      setIsFirstRender(false);
+    }
+    const mappedBundleType = mapBundle(bundleType);
+    // eslint-disable-next-line functional/no-let
+    let promise;
+    if (isPsp()) {
+      promise = getBundleListByPSP(
+        mappedBundleType,
+        pageLimit,
+        bundleNameFilter,
+        newPage ?? page,
+        brokerCode
+      );
+    } else if (isEc()) {
+      promise = getCisBundles(
+        mappedBundleType,
+        pageLimit,
+        bundleNameFilter,
+        newPage ?? page,
+        mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
+      );
+    } else {
+      promise = new Promise<BundlesResource>((resolve) => resolve({}));
+    }
+    promise
       .then((res) => {
         if (res?.bundles) {
-          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}` }));
+          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}`,
+            touchpoint: el.touchpoint ?? 'ANY', paymentType: el.paymentType ?? 'ANY'}));
           setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
         } else {
           setListFiltered([]);
@@ -75,20 +105,22 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   };
 
   useEffect(() => {
-    console.log('SAMU', brokerCode);
-    if (brokerCode) {
-      getBundleList();
-    }
-  }, [brokerCode]);
-
-  useEffect(() => {
-    const identifier = setTimeout(() => {
-      getBundleList();
-    }, 500);
+    const identifier = setTimeout(
+      () => {
+        getBundleList();
+      },
+      isFirstRender ? 0 : 500
+    );
     return () => {
       clearTimeout(identifier);
     };
-  }, [page]);
+  }, [bundleNameFilter, brokerCode]);
+
+  function handleChangePage(value: number) {
+    const newPage = value - 1;
+    setPage(newPage);
+    getBundleList(newPage);
+  }
 
   return (
     <Box
@@ -122,7 +154,9 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
                     color="primary"
                     count={listFiltered?.pageInfo?.total_pages ?? 1}
                     page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                      handleChangePage(value)
+                    }
                   />
                 </>
               ),

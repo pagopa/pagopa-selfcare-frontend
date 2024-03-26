@@ -238,11 +238,13 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
-                <Route path={routes.DELEGATIONS_LIST} exact={true}>
-                  <ProtectedRoute permission="delegations-list">
-                    <DelegationsPage />
-                  </ProtectedRoute>
-                </Route>
+                {useFlagValue('delegations-list') && (
+                  <Route path={routes.DELEGATIONS_LIST} exact={true}>
+                    <ProtectedRoute permission="delegations-list">
+                      <DelegationsPage />
+                    </ProtectedRoute>
+                  </Route>
+                )}
 
                 <Route path={routes.TOS} exact={true}>
                   <TOS />

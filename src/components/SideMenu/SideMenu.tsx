@@ -48,20 +48,18 @@ export default function SideMenu() {
     <Box display="grid" mt={1}>
       <Box gridColumn="auto">
         <List>
-          {
-            /* TODO useFlagValue('delegations-list') && */ hasPermission('delegations-list') && (
-              <>
-                <SidenavItem
-                  title={t('sideMenu.delegations.title')}
-                  handleClick={() => onExit(() => history.push(ROUTES.DELEGATIONS_LIST))}
-                  isSelected={pathname === ROUTES.DELEGATIONS_LIST}
-                  icon={StorageIcon}
-                  dataTestId={'delegations-test'}
-                />
-                <Divider sx={{ marginY: 1 }} />
-              </>
-            )
-          }
+          {useFlagValue('delegations-list') && hasPermission('delegations-list') && (
+            <>
+              <SidenavItem
+                title={t('sideMenu.delegations.title')}
+                handleClick={() => onExit(() => history.push(ROUTES.DELEGATIONS_LIST))}
+                isSelected={pathname === ROUTES.DELEGATIONS_LIST}
+                icon={StorageIcon}
+                dataTestId={'delegations-test'}
+              />
+              <Divider sx={{ marginY: 1 }} />
+            </>
+          )}
 
           {ENV.FEATURES.DASHBOARD.ENABLED && (
             <SidenavItem

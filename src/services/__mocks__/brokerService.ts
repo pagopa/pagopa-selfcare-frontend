@@ -39,8 +39,8 @@ const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
 
 export const getCIBrokerDelegationMock = (): Promise<CIBrokerDelegationPage> =>
   Promise.resolve({
-    ciBrokerDelegationResources: mockedCIDelegations,
-    pageInfo: {
+    ci_broker_delegations: mockedCIDelegations,
+    page_info: {
       page: 0,
       limit: 5,
       itemsFound: mockedCIDelegations.length,

@@ -37,7 +37,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATIONS_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [delegationsList, setDelegationsList] = useState<any>(emptyDelegationList);
+  const [delegationsList, setDelegationsList] = useState<CIBrokerDelegationPage>(emptyDelegationList);
   const [page, setPage] = useState(0);
 
   const getDelegationsList = () => {
@@ -51,6 +51,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
       page
     )
       .then((res: CIBrokerDelegationPage) => {
+        console.log("SAMU", res);
         if (res?.ci_broker_delegations && res.ci_broker_delegations.length > 0) {
           setDelegationsList(res);
         } else {
@@ -82,8 +83,8 @@ const DelegationsTable = ({ filterByName }: Props) => {
     >
       {error ? (
         <>{error}</>
-      ) : !delegationsList?.ci_broker_delegation ||
-        delegationsList.ci_broker_delegation?.length === 0 ? (
+      ) : !delegationsList?.ci_broker_delegations ||
+        delegationsList.ci_broker_delegations?.length === 0 ? (
         <DelegationsTableEmpty />
       ) : (
         <div data-testid="data-grid">
@@ -100,7 +101,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
               Pagination: () => (
                 <Pagination
                   color="primary"
-                  count={delegationsList?.total_pages ?? 1}
+                  count={delegationsList?.page_info?.total_pages ?? 1}
                   page={page + 1}
                   onChange={(_event: ChangeEvent<unknown>, value: number) =>
                     handleChangePage(value)
@@ -116,9 +117,9 @@ const DelegationsTable = ({ filterByName }: Props) => {
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"
-            rowCount={delegationsList?.ci_broker_delegation?.length}
+            rowCount={delegationsList?.ci_broker_delegations?.length}
             rowHeight={rowHeight}
-            rows={delegationsList?.ci_broker_delegation ?? []}
+            rows={delegationsList?.ci_broker_delegations ?? []}
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />

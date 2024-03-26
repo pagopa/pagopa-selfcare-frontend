@@ -172,7 +172,7 @@ export function showName(params: GridRenderCellParams) {
                 WebkitBoxOrient: 'vertical' as const,
               }}
             >
-              {params.row.name}
+              {params.row.institution_name}
             </Typography>
           </Grid>
         </Grid>

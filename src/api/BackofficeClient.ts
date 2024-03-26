@@ -66,6 +66,7 @@ import {BundleRequest} from './generated/portal/BundleRequest';
 import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
 import {BundleResource} from './generated/portal/BundleResource';
 import {FeatureFlags} from './generated/portal/FeatureFlags';
+import { MyCIResource } from './generated/portal/MyCIResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -921,4 +922,9 @@ export const BackofficeApi = {
         const result = await backofficeClient.getCisBundles({"types": [bundleType], "limit": pageLimit, "name": bundleName, page, cisTaxCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<Array<MyCIResource>> => {
+        const result = await backofficeClient.getCIBrokerDelegation({"broker-code": brokerTaxCode, brokerId, ciName, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    }
 };

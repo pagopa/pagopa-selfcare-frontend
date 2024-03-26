@@ -51,7 +51,6 @@ const DelegationsTable = ({ filterByName }: Props) => {
       page
     )
       .then((res: CIBrokerDelegationPage) => {
-        console.log("SAMU", res);
         if (res?.ci_broker_delegations && res.ci_broker_delegations.length > 0) {
           setDelegationsList(res);
         } else {

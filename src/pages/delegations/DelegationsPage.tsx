@@ -8,7 +8,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { formatDateToDDMMYYYY } from '../../utils/common-utils';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import DelegationsTable from './list/DelegationsTable';
-import DelegationTableSearchBar from './list/DelegationTableSearchBar';
+import DelegationsTableSearchBar from './list/DelegationsTableSearchBar';
 
 const DelegationsPage = () => {
   const { t } = useTranslation();
@@ -96,7 +96,7 @@ const DelegationsPage = () => {
               </Box>
             </Alert>
           )}
-          <DelegationTableSearchBar setSearchInput={setSearchInput} />
+          <DelegationsTableSearchBar setSearchInput={setSearchInput} />
           <DelegationsTable filterByName={searchInput} />
         </Box>
       </Grid>

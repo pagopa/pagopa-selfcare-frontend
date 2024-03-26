@@ -1,7 +1,7 @@
 import { CIBrokerDelegationPage } from '../../api/generated/portal/CIBrokerDelegationPage';
 import { CIBrokerDelegationResource } from '../../api/generated/portal/CIBrokerDelegationResource';
 
-const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
+export const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
   {
     broker_id: 'brokerId1',
     broker_name: 'brokerName1',

@@ -7,7 +7,7 @@ type Props = {
   setSearchInput: (name: string) => void;
 };
 
-export default function DelegationTableSearchBar({ setSearchInput }: Props) {
+export default function DelegationsTableSearchBar({ setSearchInput }: Props) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
 
@@ -24,6 +24,9 @@ export default function DelegationTableSearchBar({ setSearchInput }: Props) {
           sx: { height: 48 },
         }}
         value={internalSearchValue}
+        inputProps={{
+          'data-testid': 'search-input',
+        }}
         onChange={(event) => setInternalSearchValue(event.target.value)}
         fullWidth
         placeholder={t('delegationsPage.search.placeholder')}
@@ -31,6 +34,7 @@ export default function DelegationTableSearchBar({ setSearchInput }: Props) {
       <Button
         onClick={() => setSearchInput(internalSearchValue)}
         variant="contained"
+        data-testid="button-search"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
       >
         {t('general.search')}

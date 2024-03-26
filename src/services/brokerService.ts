@@ -1,10 +1,10 @@
 import { BackofficeApi } from "../api/BackofficeClient";
-import { MyCIResource } from "../api/generated/portal/MyCIResource";
+import { CIBrokerDelegationPage } from "../api/generated/portal/CIBrokerDelegationPage";
 import {getCIBrokerDelegationMock} from "./__mocks__/brokerService";
 
 export const getCIBrokerDelegation = (
     brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number
-  ): Promise<Array<MyCIResource>> => {
+  ): Promise<CIBrokerDelegationPage> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
       return getCIBrokerDelegationMock();
     } else {

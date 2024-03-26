@@ -1,6 +1,7 @@
-import { MyCIResource } from '../../api/generated/portal/MyCIResource';
+import { CIBrokerDelegationPage } from '../../api/generated/portal/CIBrokerDelegationPage';
+import { CIBrokerDelegationResource } from '../../api/generated/portal/CIBrokerDelegationResource';
 
-const mockedCIDelegations: Array<MyCIResource> = [
+const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
   {
     broker_id: 'brokerId1',
     broker_name: 'brokerName1',
@@ -36,5 +37,14 @@ const mockedCIDelegations: Array<MyCIResource> = [
   },
 ];
 
-export const getCIBrokerDelegationMock = (): Promise<Array<MyCIResource>> =>
-  Promise.resolve(mockedCIDelegations);
+export const getCIBrokerDelegationMock = (): Promise<CIBrokerDelegationPage> =>
+  Promise.resolve({
+    ciBrokerDelegationResources: mockedCIDelegations,
+    pageInfo: {
+      page: 0,
+      limit: 5,
+      itemsFound: mockedCIDelegations.length,
+      totalPages: 1,
+      totalItems: mockedCIDelegations.length,
+    },
+  });

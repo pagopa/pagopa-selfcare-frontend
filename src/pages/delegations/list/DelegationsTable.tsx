@@ -3,15 +3,15 @@ import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
+import { LOADING_TASK_CI_DELEGATIONS_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
-import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
+import { CIBrokerDelegationPage } from '../../../api/generated/portal/CIBrokerDelegationPage';
 import { getCIBrokerDelegation } from '../../../services/brokerService';
 import DelegationsTableEmpty from './DelegationsTableEmpty';
 import { buildColumnDefs } from './DelegationsTableColumns';
+
 
 type Props = {
   filterByName: string;
@@ -21,9 +21,9 @@ const rowHeight = 64;
 const headerHeight = 56;
 const pageLimit = 5;
 
-const emptyCommissionBundleList: BundlesResource = {
-  bundles: [],
-  pageInfo: {
+const emptyDelegationList: CIBrokerDelegationPage = {
+  ci_broker_delegations: [],
+  page_info: {
     items_found: 0,
     limit: 0,
     page: 0,
@@ -35,9 +35,9 @@ const DelegationsTable = ({ filterByName }: Props) => {
   const { t } = useTranslation();
   const [error, setError] = useState(false);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
+  const setLoading = useLoading(LOADING_TASK_CI_DELEGATIONS_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [delegationsList, setDelegationsList] = useState<any>([]);
+  const [delegationsList, setDelegationsList] = useState<any>(emptyDelegationList);
   const [page, setPage] = useState(0);
 
   const getDelegationsList = () => {
@@ -50,11 +50,11 @@ const DelegationsTable = ({ filterByName }: Props) => {
       pageLimit,
       page
     )
-      .then((res) => {
-        if (res && res.length > 0) {
+      .then((res: CIBrokerDelegationPage) => {
+        if (res?.ci_broker_delegations && res.ci_broker_delegations.length > 0) {
           setDelegationsList(res);
         } else {
-          setDelegationsList([]);
+          setDelegationsList(emptyDelegationList);
         }
       })
       .catch((reason) => setError(reason))
@@ -63,13 +63,13 @@ const DelegationsTable = ({ filterByName }: Props) => {
 
   useEffect(() => {
     getDelegationsList();
-  }, [page]);
+  }, [page, filterByName]);
 
   function handleChangePage(value: number) {
     const newPage = value - 1;
     setPage(newPage);
   }
-
+  // TODO generalize table box
   return (
     <Box
       id="delegationsTable"
@@ -82,7 +82,8 @@ const DelegationsTable = ({ filterByName }: Props) => {
     >
       {error ? (
         <>{error}</>
-      ) : delegationsList?.length === 0 ? (
+      ) : !delegationsList?.ci_broker_delegation ||
+        delegationsList.ci_broker_delegation?.length === 0 ? (
         <DelegationsTableEmpty />
       ) : (
         <div data-testid="data-grid">
@@ -115,9 +116,9 @@ const DelegationsTable = ({ filterByName }: Props) => {
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
             paginationMode="client"
-            rowCount={delegationsList?.length}
+            rowCount={delegationsList?.ci_broker_delegation?.length}
             rowHeight={rowHeight}
-            rows={delegationsList ?? []}
+            rows={delegationsList?.ci_broker_delegation ?? []}
             sortingMode="client"
             // onSortModelChange={handleSortModelChange}
           />

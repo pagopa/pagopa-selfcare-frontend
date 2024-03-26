@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Alert, Grid, IconButton, Stack } from '@mui/material';
+import { Alert, Button, Grid, Stack, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import DownloadIcon from '@mui/icons-material/Download';
 import { formatDateToDDMMYYYY } from '../../utils/common-utils';
@@ -15,14 +14,15 @@ const DelegationsPage = () => {
   const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState<string>('');
   const [alertMessage, setAlertMessage] = useState<string>('');
+  const theme = useTheme();
 
   const downloadList = () => {
-    /* TODO DOWNLOAD LIST */
+    /* TODO DOWNLOAD LIST (VAS-690) */
     const date = new Date();
     setAlertMessage(
       t('delegationsPage.alertMessage', {
         date: formatDateToDDMMYYYY(date),
-        hours: `${date.getHours}:${date.getMinutes}`,
+        hours: `${date.getHours()}:${date.getMinutes()}`,
       })
     );
   };
@@ -54,30 +54,49 @@ const DelegationsPage = () => {
               variantTitle="h4"
               variantSubTitle="body1"
             />
-            <Box display="flex" justifyContent="flex-end" mb={1}>
-              <IconButton onClick={downloadList} data-testid="download-list-button">
-                <DownloadIcon /> {t('delegationsPage.downloadButton')}
-              </IconButton>
-            </Box>
+            <Button
+              variant="outlined"
+              onClick={downloadList}
+              startIcon={<DownloadIcon />}
+              color="primary"
+              data-testid="download-list-button"
+              sx={{
+                border: `2px solid ${theme.palette.primary.main}`,
+                borderRadius: theme.spacing(0.5),
+                mt: 4,
+                px: 2,
+                py: 1.5,
+                display: 'flex',
+                justifyContent: 'center',
+                width: '11%',
+              }}
+            >
+              {t('delegationsPage.downloadButton')}
+            </Button>
           </Stack>
           {alertMessage && (
-            <Alert severity="success" variant="outlined" data-testid="alert-test">
-              <Stack direction="row" justifyContent="space-between">
+            <Alert
+              severity="success"
+              variant="outlined"
+              data-testid="alert-test"
+              sx={{ mb: 4, '.MuiAlert-message': { width: '100%' } }}
+            >
+              <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
                 {alertMessage}
                 <ButtonNaked
                   size="medium"
                   component="button"
                   onClick={() => setAlertMessage('')}
-                  sx={{ color: 'primary.main', mr: '20px' }}
+                  sx={{ color: 'primary.main', ml: 'auto' }}
                   weight="default"
                   data-testid="got-it-button"
                 >
                   {t('general.gotIt')}
                 </ButtonNaked>
-              </Stack>
+              </Box>
             </Alert>
           )}
-          <DelegationTableSearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
+          <DelegationTableSearchBar setSearchInput={setSearchInput} />
           <DelegationsTable filterByName={searchInput} />
         </Box>
       </Grid>

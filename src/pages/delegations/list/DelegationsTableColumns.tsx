@@ -6,7 +6,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { useAppDispatch } from '../../../redux/hooks';
-import { MyCIResource } from '../../../api/generated/portal/MyCIResource';
+import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>
@@ -127,7 +127,7 @@ export function renderCell(
   );
 }
 
-export const GridLinkActionDelegationDetails = ({ delegation }: { delegation: MyCIResource }) => {
+export const GridLinkActionDelegationDetails = ({ delegation }: { delegation: CIBrokerDelegationResource }) => {
   const dispatcher = useAppDispatch();
 
   return (

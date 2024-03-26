@@ -8,9 +8,7 @@ import ROUTES from '../../../routes';
 import { useAppDispatch } from '../../../redux/hooks';
 import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
 
-export function buildColumnDefs(
-  t: TFunction<'translation', undefined>
-) {
+export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
     {
       field: 'companyName',
@@ -36,7 +34,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.institution_tax_code),
+      renderCell: (params) => renderCell(params.row.institution_tax_code ?? '-'),
       sortable: true,
       flex: 4,
     },
@@ -50,7 +48,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(t(params.row.cbill_code)),
+      renderCell: (params) => renderCell(t(params.row.cbill_code ?? '-')),
       sortable: true,
       flex: 4,
     },
@@ -64,7 +62,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.institution_station_count),
+      renderCell: (params) => renderCell(params.row.institution_station_count ?? '-'),
       sortable: false,
       flex: 4,
     },
@@ -127,7 +125,11 @@ export function renderCell(
   );
 }
 
-export const GridLinkActionDelegationDetails = ({ delegation }: { delegation: CIBrokerDelegationResource }) => {
+export const GridLinkActionDelegationDetails = ({
+  delegation,
+}: {
+  delegation: CIBrokerDelegationResource;
+}) => {
   const dispatcher = useAppDispatch();
 
   return (
@@ -172,7 +174,7 @@ export function showName(params: GridRenderCellParams) {
                 WebkitBoxOrient: 'vertical' as const,
               }}
             >
-              {params.row.institution_name}
+              {params.row.institution_name ?? "-"}
             </Typography>
           </Grid>
         </Grid>

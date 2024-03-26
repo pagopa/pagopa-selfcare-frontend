@@ -854,17 +854,17 @@ export const BackofficeApi = {
     },
 
     exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
+        const result = await backofficeClient.exportIbansToCsv({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     exportCreditorInstitutionsToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportCreditorInstitutionToCsv({'broker-code': brokerCode});
+        const result = await backofficeClient.exportCreditorInstitutionToCsv({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     getBrokerExportStatus: async (brokerCode: string): Promise<BrokerECExportStatus> => {
-        const result = await backofficeClient.getBrokerExportStatus({'broker-code': brokerCode});
+        const result = await backofficeClient.getBrokerExportStatus({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -924,7 +924,7 @@ export const BackofficeApi = {
     },
 
     getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<CIBrokerDelegationPage> => {
-        const result = await backofficeClient.getCIBrokerDelegation({"broker-code": brokerTaxCode, brokerId, ciName, limit, page});
+        const result = await backofficeClient.getCIBrokerDelegation({"broker-tax-code": brokerTaxCode, brokerId, ciName, limit, page});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

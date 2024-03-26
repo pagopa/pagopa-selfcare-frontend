@@ -47,6 +47,7 @@ import CommissionBundleDetailPage from './pages/commisionalBundles/detail/Commis
 import MaintenancePage from './pages/maintenance/MaintenancePage';
 import { useFlagValue } from './hooks/useFeatureFlags';
 import withFeatureFlags from './decorators/withFeatureFlags';
+import DelegationsPage from './pages/delegations/DelegationsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -235,6 +236,11 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
                   <ProtectedRoute permission="operation-table-list">
                     <OperationTableListPage />
+                  </ProtectedRoute>
+                </Route>
+                <Route path={routes.DELEGATIONS_LIST} exact={true}>
+                  <ProtectedRoute permission="delegations-list">
+                    <DelegationsPage />
                   </ProtectedRoute>
                 </Route>
 

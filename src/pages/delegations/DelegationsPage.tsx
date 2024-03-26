@@ -19,10 +19,12 @@ const DelegationsPage = () => {
   const downloadList = () => {
     /* TODO DOWNLOAD LIST (VAS-690) */
     const date = new Date();
+    const minutes = date.getMinutes();
+    const hours = date.getHours();
     setAlertMessage(
       t('delegationsPage.alertMessage', {
         date: formatDateToDDMMYYYY(date),
-        hours: `${date.getHours()}:${date.getMinutes()}`,
+        hours: `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`,
       })
     );
   };

@@ -1,6 +1,6 @@
 import { Typography, Grid, Box } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import React, { CSSProperties, ReactNode } from 'react';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import React from 'react';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router';
 import { FormAction } from '../../../model/Channel';
@@ -8,6 +8,7 @@ import ROUTES from '../../../routes';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { StatusChip } from '../../../components/StatusChip';
 import { StatusEnum } from '../../../api/generated/portal/ChannelDetailsDto';
+import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -24,7 +25,12 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showChannelCode(params),
+      renderCell: (params: any) =>
+        renderCell({
+          value: params.row.channel_code,
+          mainCell: true,
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: true,
       flex: 4,
     },
@@ -38,7 +44,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showCreationData(params),
+      renderCell: (params) =>
+        renderCell({
+          value: params.row.createdAt?.toLocaleDateString('en-GB'),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 4,
     },
@@ -52,7 +62,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showModifiedData(params),
+      renderCell: (params) =>
+        renderCell({
+          value: params.row.modifiedAt?.toLocaleDateString('en-GB'),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 4,
     },
@@ -132,154 +146,16 @@ export function buildColumnDefs(
   ] as Array<GridColDef>;
 }
 
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params.value,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '16px',
-        paddingLeft: '16px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
-          fontSize: '14px',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <React.Fragment>
-      <Typography
-        color="colorTextPrimary"
-        variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 0 }}
-      >
-        {params.colDef.headerName}
-      </Typography>
-    </React.Fragment>
-  );
-}
-
-export function showChannelCode(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={7} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightMedium',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.channel_code}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
-export function showCreationData(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={7} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="#17324D"
-                sx={{
-                  fontWeight: 400,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.createdAt?.toLocaleDateString('en-GB')}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
-export function showModifiedData(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={7} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="#17324D"
-                sx={{
-                  fontWeight: 400,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.modifiedAt?.toLocaleDateString('en-GB')}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
+// TODO check if can be generalized
 export function showStatus(params: GridRenderCellParams) {
-  return renderCell(
-    params,
-    <Box>
-      <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} size="small" />
-    </Box>,
-    {
+  return renderCell({
+    value: (
+      <Box>
+        <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} size="small" />
+      </Box>
+    ),
+    overrideStyle: {
       textAlign: 'left',
-    }
-  );
+    },
+  });
 }

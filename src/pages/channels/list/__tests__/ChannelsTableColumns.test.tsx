@@ -1,6 +1,6 @@
-import {GridColumnHeaderParams, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
-import {cleanup} from '@testing-library/react';
-import {buildColumnDefs, renderCell, showChannelCode, showCustomHeader, showStatus,} from '../ChannelsTableColumns';
+import { GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
+import { cleanup } from '@testing-library/react';
+import { buildColumnDefs, showStatus } from '../ChannelsTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -46,21 +46,6 @@ describe('<ChannelsTableColumns />', () => {
       hasBeenResized: undefined,
       groupPath: undefined,
       headerName: 'Creation Date',
-    };
-
-    const customHeaderChannel: GridColumnHeaderParams = {
-      field: 'channel_code',
-      colDef: colDefMocked,
-    };
-
-    const customHeaderBroker: GridColumnHeaderParams = {
-      field: 'broker_description',
-      colDef: colDefMockedBroker,
-    };
-
-    const customHeaderStatus: GridColumnHeaderParams = {
-      field: 'enabled',
-      colDef: colDefMockedStatus,
     };
 
     const params: GridRenderCellParams<any, any, any> = {
@@ -183,20 +168,11 @@ describe('<ChannelsTableColumns />', () => {
 
     buildColumnDefs(mockTFunction, () => jest.fn());
 
-    showChannelCode(params);
     showStatus(params);
-    showCustomHeader(customHeaderChannel);
-    renderCell(params);
 
-    showChannelCode(paramsBroker);
     showStatus(paramsBroker);
-    showCustomHeader(customHeaderBroker);
-    renderCell(paramsBroker, undefined);
 
-    showChannelCode(paramsStatus);
     showStatus(paramsStatus);
-    showCustomHeader(customHeaderStatus);
-    renderCell(paramsStatus, undefined);
 
     // const columnDefs = buildColumnDefs(mockTFunction, onRowClickMocked);
 

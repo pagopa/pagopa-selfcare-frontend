@@ -76,7 +76,7 @@ Then('text {string} exists in the page', async function (text) {
 });
 
 After(async function () {
-    // await browser.close();
+    await browser.close();
 });
 
 

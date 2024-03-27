@@ -9,10 +9,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import {
   GridLinkActionBundleDetails,
   buildColumnDefs,
-  renderCell,
-  showBundleName,
-  showBundleState,
-  showCustomHeader,
+  showBundleState
 } from '../../list/CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -23,6 +20,7 @@ import { Router } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { BundleResource } from '../../../../api/generated/portal/BundleResource';
 import add from 'date-fns/add';
+import { showCustomHeader } from '../../../../components/Table/TableUtils';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -67,32 +65,12 @@ const params: GridRenderCellParams<any, any, any> = {
 };
 
 const AllCells = ({ isPsp, isEc }: { isPsp: boolean; isEc: boolean }) => {
-  const customHeader: GridColumnHeaderParams = {
-    field: 'name',
-    colDef: colDefMocked,
-  };
   const { t } = useTranslation('translation');
 
   return (
     <>
-      {showBundleName({
-        row: { name: 'name' },
-        api: undefined,
-        id: '',
-        field: '',
-        rowNode: undefined as any,
-        colDef: undefined as any,
-        cellMode: 'edit',
-        hasFocus: false,
-        tabIndex: 0,
-        getValue: function (id: GridRowId, field: string) {
-          throw new Error('Function not implemented.');
-        },
-      })}
       <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />
-      {showCustomHeader(customHeader)}
       {showBundleState(params, t, isPsp, isEc)}
-      {renderCell(params, params.value)}
     </>
   );
 };

@@ -1,9 +1,13 @@
-import { Box, Chip, Grid, IconButton, Typography } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import React, { CSSProperties, ReactNode } from 'react';
+import { Box, IconButton } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { RemoveCircle } from '@mui/icons-material';
 import { formatCodeInDoubleDigit } from '../../../utils/common-utils';
+import {
+  renderCell,
+  renderStatusChip,
+  showCustomHeader
+} from '../../../components/Table/TableUtils';
 
 const getAuxDigit = (station: any) => {
   const hasSegregationCode = station.segregationCode !== undefined;
@@ -35,7 +39,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showEcName(params),
+      renderCell: (params: any) => renderCell({value:params.row.businessName, mainCell: true}),
       sortable: false,
       flex: 4,
     },
@@ -48,7 +52,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showEcFiscalCode(params),
+      renderCell: (params: any) => renderCell({value:params.row.creditorInstitutionCode, mainCell: true}),
       sortable: false,
       flex: 4,
     },
@@ -61,7 +65,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, getAuxDigit(params.row)),
+      renderCell: (params) =>
+        renderCell({
+          value: getAuxDigit(params.row),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -74,7 +82,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, formatCodeInDoubleDigit(params.row.segregationCode)),
+      renderCell: (params) =>
+        renderCell({
+          value: formatCodeInDoubleDigit(params.row.segregationCode),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -87,7 +99,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, formatCodeInDoubleDigit(params.row.applicationCode)),
+      renderCell: (params) =>
+        renderCell({
+          value: formatCodeInDoubleDigit(params.row.applicationCode),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -100,7 +116,13 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showStatus(params),
+      renderCell: (params) =>
+        renderStatusChip({
+          params,
+          chipLabel: params.row.broadcast ? 'Attivo' : 'Disattivo',
+          chipColor: params.row.broadcast ? '#FFFFFF' : '#17324D',
+          chipBgColor: params.row.broadcast ? 'primary.main' : 'warning.light',
+        }),
       sortable: false,
       flex: 2,
     },
@@ -136,135 +158,4 @@ export function buildColumnDefs(
       flex: 1,
     },
   ] as Array<GridColDef>;
-}
-
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params.value,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '18px',
-        paddingLeft: '18px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
-          fontSize: '14px',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <React.Fragment>
-      <Typography
-        color="colorTextPrimary"
-        variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 1 }}
-      >
-        {params.colDef.headerName}
-      </Typography>
-    </React.Fragment>
-  );
-}
-
-export function showEcName(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={12} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightMedium',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.businessName}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
-export function showEcFiscalCode(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={12} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightMedium',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.creditorInstitutionCode}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
-export function showStatus(params: GridRenderCellParams) {
-  return renderCell(
-    params,
-    <Box>
-      <Chip
-        label={params.row.broadcast ? 'Attivo' : 'Disattivo'}
-        aria-label="Status"
-        sx={{
-          fontSize: '14px',
-          fontWeight: 'fontWeightMedium',
-          color: params.row.broadcast ? '#FFFFFF' : '#17324D',
-          backgroundColor: params.row.broadcast ? 'primary.main' : 'warning.light',
-          paddingBottom: '1px',
-          height: '24px',
-        }}
-      />
-    </Box>
-  );
 }

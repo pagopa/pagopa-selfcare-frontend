@@ -44,17 +44,11 @@ const DashboardPage = () => {
             </Box>
             <Grid container spacing={3} pb={4}>
               {selectedParty?.institutionType === 'PSP' ? (
-                <div data-testid="psp-registration">
-                  <PSPRegistrationData />
-                </div>
+                <PSPRegistrationData />
               ) : selectedParty?.institutionType === 'PT' ? (
-                <div data-testid="pt-registration">
-                  <PTRegistrationData />
-                </div>
+                <PTRegistrationData />
               ) : (
-                <div data-testid="ec-registration">
-                  <ECRegistrationData />
-                </div>
+                <ECRegistrationData />
               )}
             </Grid>
           </Card>

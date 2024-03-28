@@ -44,11 +44,17 @@ const DashboardPage = () => {
             </Box>
             <Grid container spacing={3} pb={4}>
               {selectedParty?.institutionType === 'PSP' ? (
-                <PSPRegistrationData />
+                <div data-testid="psp-registration">
+                  <PSPRegistrationData />
+                </div>
               ) : selectedParty?.institutionType === 'PT' ? (
-                <PTRegistrationData />
+                <div data-testid="pt-registration">
+                  <PTRegistrationData />
+                </div>
               ) : (
-                <ECRegistrationData />
+                <div data-testid="ec-registration">
+                  <ECRegistrationData />
+                </div>
               )}
             </Grid>
           </Card>
@@ -61,7 +67,9 @@ const DashboardPage = () => {
         {selectedParty &&
           hasPermission('operation-table-read-write') &&
           ENV.FEATURES.OPERATIONTABLE.ENABLED && (
-            <OperationTable ecCode={selectedParty.fiscalCode} />
+            <div data-testid="operation-table">
+              <OperationTable ecCode={selectedParty.fiscalCode} />
+            </div>
           )}
       </Grid>
     </SideMenuLayout>

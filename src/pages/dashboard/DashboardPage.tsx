@@ -61,9 +61,7 @@ const DashboardPage = () => {
         {selectedParty &&
           hasPermission('operation-table-read-write') &&
           ENV.FEATURES.OPERATIONTABLE.ENABLED && (
-            <div data-testid="operation-table">
-              <OperationTable ecCode={selectedParty.fiscalCode} />
-            </div>
+            <OperationTable ecCode={selectedParty.fiscalCode} />
           )}
       </Grid>
     </SideMenuLayout>

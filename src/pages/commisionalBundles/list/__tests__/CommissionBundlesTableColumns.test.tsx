@@ -8,7 +8,7 @@ import {
   GridLinkActionBundleDetails,
   buildColumnDefs,
   getStateChip,
-} from '../../list/CommissionBundlesTableColumns';
+} from '../CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate } from '../../../../services/__mocks__/bundleService';

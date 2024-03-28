@@ -8,7 +8,7 @@ import { cleanup, render } from '@testing-library/react';
 import {
   GridLinkActionDelegationDetails,
   buildColumnDefs
-} from '../../list/DelegationsTableColumns';
+} from '../DelegationsTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { store } from '../../../../redux/store';

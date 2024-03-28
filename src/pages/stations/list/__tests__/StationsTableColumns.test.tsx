@@ -1,6 +1,7 @@
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
-import { cleanup } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import { showStatus, buildColumnDefs } from '../StationsTableColumns';
+import React from 'react';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -150,7 +151,8 @@ describe('<StationsTableColumns />', () => {
       }
     };
 
-    showStatus(params);
     expect(buildColumnDefs(mockTFunction)).toEqual(ArrayBuildColumnDefs);
+
+    render(<>{showStatus(params)}</>);
   });
 });

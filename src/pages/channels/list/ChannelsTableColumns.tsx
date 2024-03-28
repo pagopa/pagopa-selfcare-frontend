@@ -1,6 +1,4 @@
-import { Typography, Grid, Box } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import React from 'react';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router';
 import { FormAction } from '../../../model/Channel';

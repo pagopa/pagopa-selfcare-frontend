@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import DelegationsTable from '../../list/DelegationsTable';
+import DelegationsTable from '../DelegationsTable';
 import * as BrokerService from '../../../../services/brokerService';
 import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
 import {

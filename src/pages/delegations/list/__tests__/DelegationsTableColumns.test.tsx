@@ -2,24 +2,18 @@ import {
   GridColDef,
   GridColumnHeaderParams,
   GridRenderCellParams,
-  GridRowId,
   GridStateColDef,
 } from '@mui/x-data-grid';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import {
   GridLinkActionDelegationDetails,
-  buildColumnDefs,
-  renderCell,
-  showName,
-  showCustomHeader,
-} from '../../list/DelegationsTableColumns';
+  buildColumnDefs
+} from '../DelegationsTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import add from 'date-fns/add';
 import { mockedCIDelegations } from '../../../../services/__mocks__/brokerService';
 
 beforeEach(() => {
@@ -29,66 +23,10 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const colDefMocked: GridStateColDef<any, any, any> = {
-  computedWidth: 0,
-  field: 'name',
-  type: '',
-  hasBeenResized: undefined,
-  groupPath: undefined,
-  headerName: 'name',
-};
-const rowNode = [
-  {
-    id: '',
-    parent: '',
-    depth: 0,
-    groupingKey: '',
-    groupingField: '',
-  },
-];
-
-const params: GridRenderCellParams<any, any, any> = {
-  value: 'some value',
-  row: {
-    ...mockedCIDelegations[0],
-  },
-  api: undefined,
-  id: '',
-  field: '',
-  rowNode: rowNode[0],
-  // @ts-ignore
-  colDef: colDefMocked[0],
-  cellMode: 'edit',
-  hasFocus: false,
-  tabIndex: 0,
-  getValue: () => jest.fn(),
-};
-
 const AllCells = () => {
-  const customHeader: GridColumnHeaderParams = {
-    field: 'name',
-    colDef: colDefMocked,
-  };
-
   return (
     <>
-      {showName({
-        row: { name: 'name' },
-        api: undefined,
-        id: '',
-        field: '',
-        rowNode: undefined as any,
-        colDef: undefined as any,
-        cellMode: 'edit',
-        hasFocus: false,
-        tabIndex: 0,
-        getValue: function (id: GridRowId, field: string) {
-          throw new Error('Function not implemented.');
-        },
-      })}
       <GridLinkActionDelegationDetails delegation={mockedCIDelegations[0]} />
-      {showCustomHeader(customHeader)}
-      {renderCell(params, params.value)}
     </>
   );
 };

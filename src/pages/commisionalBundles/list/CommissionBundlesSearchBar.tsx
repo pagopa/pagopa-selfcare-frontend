@@ -14,7 +14,7 @@ const CommissionBundlesSearchBar = ({ bundleNameInput, setBundleNameInput }: Pro
   const { isPsp } = usePermissions();
 
   return (
-    <Box width="100%" display="flex" sx={{ mt: 1 }}>
+    <Box width="100%" display="flex">
       <TextField
         sx={{ backgroundColor: '#FFFFFF' }}
         key="fixed"

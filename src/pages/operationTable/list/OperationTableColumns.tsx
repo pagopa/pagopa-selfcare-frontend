@@ -1,8 +1,8 @@
-import { Typography, Box, IconButton } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
-import React, { CSSProperties, ReactNode } from 'react';
+import { Box, IconButton } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { ArrowForwardIos } from '@mui/icons-material';
+import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -18,7 +18,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => renderCell(params, params.row.name),
+      renderCell: (params: any) =>
+        renderCell({
+          value: params.row.name,
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 4,
     },
@@ -31,7 +35,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.tax_code),
+      renderCell: (params) =>
+        renderCell({
+          value: params.row.tax_code,
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -44,7 +52,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.email),
+      renderCell: (params) =>
+        renderCell({
+          value: params.row.email,
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -57,7 +69,11 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params, params.row.telephone),
+      renderCell: (params) =>
+        renderCell({
+          value: params.row.telephone,
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
       sortable: false,
       flex: 3,
     },
@@ -93,55 +109,4 @@ export function buildColumnDefs(
       flex: 1,
     },
   ] as Array<GridColDef>;
-}
-
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params.value,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '18px',
-        paddingLeft: '18px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
-          fontSize: '14px',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <React.Fragment>
-      <Typography
-        color="colorTextPrimary"
-        variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 1 }}
-      >
-        {params.colDef.headerName}
-      </Typography>
-    </React.Fragment>
-  );
 }

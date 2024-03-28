@@ -1,15 +1,12 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import AddEditCommissionBundleTaxonomies from '../../addEditCommissionBundle/components/AddEditCommissionBundleTaxonomies';
 import { useFormik } from 'formik';
-import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Provider } from 'react-redux';
-import {
-  mockedBundleRequest,
-  mockedTaxonomyList,
-} from '../../../../services/__mocks__/bundleService';
-import { store } from '../../../../redux/store';
+import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
+import { store } from '../../../../redux/store';
+import { mockedBundleRequest, mockedTaxonomyList } from '../../../../services/__mocks__/bundleService';
+import AddEditCommissionBundleTaxonomies from '../components/AddEditCommissionBundleTaxonomies';
 
 Object.defineProperty(global.self, 'crypto', {
   value: {

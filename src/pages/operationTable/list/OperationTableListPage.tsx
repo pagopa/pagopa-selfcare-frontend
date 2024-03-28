@@ -9,7 +9,7 @@ import { ArrowBack } from '@mui/icons-material';
 import ROUTES from '../../../routes';
 import { LOADING_TASK_OPERATION_TABLE_LIST } from '../../../utils/constants';
 import { getOperationTableList } from '../../../services/operationTable';
-import SideMenu from '../../../components/SideMenu/SideMenu';
+import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
 import OperationTableList from './OperationTableList';
 
@@ -63,63 +63,45 @@ const OperationTableListPage = () => {
   }, []);
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
-        <Box>
-          <SideMenu />
-        </Box>
-      </Grid>
-      <Grid
-        container
-        item
-        xs={10}
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        sx={{ backgroundColor: '#F5F5F5' }}
-        pb={8}
-        pt={4}
-        px={3}
-      >
-        <Stack direction="row" mb={3}>
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
-            weight="default"
-          >
-            {t('general.back')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography fontWeight={'fontWeightMedium'}>{t('general.operationTable')}</Typography>
-          </Breadcrumbs>
-        </Stack>
+    <SideMenuLayout>
+      <Stack direction="row" mb={3}>
+        <ButtonNaked
+          size="small"
+          component="button"
+          onClick={goBack}
+          startIcon={<ArrowBack />}
+          sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
+          weight="default"
+        >
+          {t('general.back')}
+        </ButtonNaked>
+        <Breadcrumbs>
+          <Typography fontWeight={'fontWeightMedium'}>{t('general.operationTable')}</Typography>
+        </Breadcrumbs>
+      </Stack>
 
-        <Stack direction="row" justifyContent={'space-between'}>
-          <Box>
-            <TitleBox
-              title={t('operationTableListPage.title')}
-              subTitle={t('operationTableListPage.subtitle')}
-              mbTitle={2}
-              mbSubTitle={3}
-              variantTitle="h4"
-              variantSubTitle="body1"
-            />
-          </Box>
-        </Stack>
-        <Box display="flex" width="100%" mt={0}>
-          <Box pt={0} display="flex" width="100%">
-            <OperationTableList
-              operationTableList={operationTableList}
-              error={error}
-              loading={loading}
-            />
-          </Box>
+      <Stack direction="row" justifyContent={'space-between'}>
+        <Box>
+          <TitleBox
+            title={t('operationTableListPage.title')}
+            subTitle={t('operationTableListPage.subtitle')}
+            mbTitle={2}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
         </Box>
-      </Grid>
-    </Grid>
+      </Stack>
+      <Box display="flex" width="100%" mt={0}>
+        <Box pt={0} display="flex" width="100%">
+          <OperationTableList
+            operationTableList={operationTableList}
+            error={error}
+            loading={loading}
+          />
+        </Box>
+      </Box>
+    </SideMenuLayout>
   );
 };
 

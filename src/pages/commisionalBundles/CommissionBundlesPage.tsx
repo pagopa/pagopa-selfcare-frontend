@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
-import SideMenu from '../../components/SideMenu/SideMenu';
+import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
 import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
 
@@ -38,8 +38,8 @@ const CustomTabPanel = (props: Props) => {
 const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const isPrivateEnabled = useFlagValue("commission-bundles-private");
-  const isPublicEnabled = useFlagValue("commission-bundles-public");
+  const isPrivateEnabled = useFlagValue('commission-bundles-private');
+  const isPublicEnabled = useFlagValue('commission-bundles-public');
   const [value, setValue] = useState(2);
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
@@ -64,73 +64,69 @@ const CommissionBundlesPage = () => {
   };
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
-        <Box>
-          <SideMenu />
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={10}
-        sx={{ backgroundColor: '#F5F6F7' }}
-        display="flex"
-        justifyContent="center"
-        pb={8}
-      >
-        <Box width="100%" px={2}>
-          <TitleBox
-            title={t('commissionBundlesPage.title')}
-            subTitle={t('commissionBundlesPage.subtitle')}
-            mbTitle={2}
-            mtTitle={4}
-            mbSubTitle={3}
-            variantTitle="h4"
-            variantSubTitle="body1"
+    <SideMenuLayout>
+      <TitleBox
+        title={t('commissionBundlesPage.title')}
+        subTitle={t('commissionBundlesPage.subtitle')}
+        mbSubTitle={3}
+        variantTitle="h4"
+        variantSubTitle="body1"
+      />
+      {history.location.state && (history.location.state as any).alertSuccessMessage && (
+        <Alert severity="success" variant="outlined" data-testid="alert-test">
+          {(history.location.state as any).alertSuccessMessage}
+        </Alert>
+      )}
+      <CommissionBundlesSearchBar
+        bundleNameInput={bundleNameInput}
+        setBundleNameInput={setBundleNameInput}
+      />
+      <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          sx={{ width: '100%' }}
+          centered
+          variant="fullWidth"
+        >
+          <Tab
+            label={t('commissionBundlesPage.privateBundles')}
+            {...a11yProps(0)}
+            disabled={!isPrivateEnabled}
+            data-testid="tab-private"
           />
-          {history.location.state && (history.location.state as any).alertSuccessMessage && (
-            <Alert severity="success" variant="outlined" data-testid="alert-test">
-              {(history.location.state as any).alertSuccessMessage}
-            </Alert>
-          )}
-          <CommissionBundlesSearchBar
-            bundleNameInput={bundleNameInput}
-            setBundleNameInput={setBundleNameInput}
+          <Tab
+            label={t('commissionBundlesPage.publicBundles')}
+            {...a11yProps(1)}
+            disabled={!isPublicEnabled}
+            data-testid="tab-public"
           />
-          <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              sx={{ width: '100%' }}
-              centered
-              variant="fullWidth"
-            >
-              <Tab label={t('commissionBundlesPage.privateBundles')} {...a11yProps(0)} disabled={!isPrivateEnabled} data-testid="tab-private"/>
-              <Tab label={t('commissionBundlesPage.publicBundles')} {...a11yProps(1)} disabled={!isPublicEnabled} data-testid="tab-public"/>
-              <Tab label={t('commissionBundlesPage.globalBundles')} {...a11yProps(2)} data-testid="tab-global"/>
-            </Tabs>
-          </Box>
-          <CustomTabPanel valueTab={value} index={0}>
-            <CommissionBundlesTable
-              bundleType={'commissionBundlesPage.privateBundles'}
-              bundleNameFilter={bundleNameInput}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel valueTab={value} index={1}>
-            <CommissionBundlesTable
-              bundleType={'commissionBundlesPage.publicBundles'}
-              bundleNameFilter={bundleNameInput}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel valueTab={value} index={2}>
-            <CommissionBundlesTable
-              bundleType={'commissionBundlesPage.globalBundles'}
-              bundleNameFilter={bundleNameInput}
-            />
-          </CustomTabPanel>
-        </Box>
-      </Grid>
-    </Grid>
+          <Tab
+            label={t('commissionBundlesPage.globalBundles')}
+            {...a11yProps(2)}
+            data-testid="tab-global"
+          />
+        </Tabs>
+      </Box>
+      <CustomTabPanel valueTab={value} index={0}>
+        <CommissionBundlesTable
+          bundleType={'commissionBundlesPage.privateBundles'}
+          bundleNameFilter={bundleNameInput}
+        />
+      </CustomTabPanel>
+      <CustomTabPanel valueTab={value} index={1}>
+        <CommissionBundlesTable
+          bundleType={'commissionBundlesPage.publicBundles'}
+          bundleNameFilter={bundleNameInput}
+        />
+      </CustomTabPanel>
+      <CustomTabPanel valueTab={value} index={2}>
+        <CommissionBundlesTable
+          bundleType={'commissionBundlesPage.globalBundles'}
+          bundleNameFilter={bundleNameInput}
+        />
+      </CustomTabPanel>
+    </SideMenuLayout>
   );
 };
 

@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionBundlesTable from '../../list/CommissionBundlesTable';
+import CommissionBundlesTable from '../CommissionBundlesTable';
 import * as BundleService from "../../../../services/bundleService";
 import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
 

@@ -1,15 +1,15 @@
-import {ArrowBack, FileDownload} from '@mui/icons-material';
-import {Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router';
-
-import SideMenu from '../../../components/SideMenu/SideMenu';
+import { ArrowBack, FileDownload } from '@mui/icons-material';
+import { Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router';
+import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import ROUTES from '../../../routes';
 import ChannelPSPTable from './ChannelPSPTable';
 import ChannelPSPTableSearchBar from './ChannelPSPTableSearchBar';
+
 
 const ChannelPSPListPage = () => {
   const { t } = useTranslation();
@@ -17,7 +17,6 @@ const ChannelPSPListPage = () => {
   const { channelId } = useParams<{ channelId: string }>();
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.CHANNELS);
-
 
   const [pspNameInput, setPspNameInput] = useState<string>('');
   const [pspNameFilter, setPspNameFilter] = useState<string>('');
@@ -29,7 +28,6 @@ const ChannelPSPListPage = () => {
 
     return () => clearTimeout(setSearchValue);
   }, [pspNameInput]);
-
 
   useEffect(() => {
     if (history.location.state && (history.location.state as any).alertSuccessMessage) {
@@ -56,82 +54,60 @@ const ChannelPSPListPage = () => {
   };
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
+    <SideMenuLayout>
+      <Stack direction="row" mb={3}>
+        <ButtonNaked
+          size="small"
+          component="button"
+          onClick={goBack}
+          startIcon={<ArrowBack />}
+          sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
+          weight="default"
+        >
+          {t('general.back')}
+        </ButtonNaked>
+        <Breadcrumbs>
+          <Typography fontSize={16}>{channelId}</Typography>
+          <Typography fontWeight={'fontWeightMedium'}>{t('channelPSPList.title')}</Typography>
+        </Breadcrumbs>
+      </Stack>
+
+      <Stack direction="row" justifyContent={'space-between'}>
         <Box>
-          <SideMenu />
+          <TitleBox
+            title={t('channelPSPList.title')}
+            subTitle={t('channelPSPList.subtitle')}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
         </Box>
-      </Grid>
-      <Grid
-        container
-        item
-        xs={10}
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        sx={{ backgroundColor: '#F5F5F5' }}
-        pb={8}
-        pt={4}
-        px={3}
-      >
-        <Stack direction="row" mb={3}>
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
-            weight="default"
+        <Box>
+          <Button
+            variant="outlined"
+            sx={{ display: 'none' }}
+            startIcon={<FileDownload />}
+            onClick={() => downloadCSV()}
           >
-            {t('general.back')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography fontSize={16}>{channelId}</Typography>
-            <Typography fontWeight={'fontWeightMedium'}>{t('channelPSPList.title')}</Typography>
-          </Breadcrumbs>
-        </Stack>
-
-        <Stack direction="row" justifyContent={'space-between'}>
-          <Box>
-            <TitleBox
-              title={t('channelPSPList.title')}
-              subTitle={t('channelPSPList.subtitle')}
-              mbTitle={2}
-              mbSubTitle={3}
-              variantTitle="h4"
-              variantSubTitle="body1"
-            />
-          </Box>
-          <Box>
-            <Button
-              variant="outlined"
-              sx={{ display: 'none' }}
-              startIcon={<FileDownload />}
-              onClick={() => downloadCSV()}
-            >
-              {t('channelPSPList.csvDownload')}
-            </Button>
-          </Box>
-        </Stack>
-
-        {alertMessage && (
-          <Alert sx={{ mb: 3 }} severity="success" variant="outlined">
-            {alertMessage}
-          </Alert>
-        )}
-
-        <ChannelPSPTableSearchBar
-          channelId={channelId}
-          pspNameInput={pspNameInput}
-          setPspNameInput={setPspNameInput}
-        />
-        <Box display="flex" width="100%" mt={0}>
-          <Box pt={0} display="flex" width="100%">
-            <ChannelPSPTable pspNameFilter={pspNameFilter} setAlertMessage={setAlertMessage}  />
-          </Box>
+            {t('channelPSPList.csvDownload')}
+          </Button>
         </Box>
-      </Grid>
-    </Grid>
+      </Stack>
+
+      {alertMessage && (
+        <Alert sx={{ mb: 3 }} severity="success" variant="outlined">
+          {alertMessage}
+        </Alert>
+      )}
+
+      <ChannelPSPTableSearchBar
+        channelId={channelId}
+        pspNameInput={pspNameInput}
+        setPspNameInput={setPspNameInput}
+      />
+
+      <ChannelPSPTable pspNameFilter={pspNameFilter} setAlertMessage={setAlertMessage} />
+    </SideMenuLayout>
   );
 };
 

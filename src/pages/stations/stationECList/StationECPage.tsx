@@ -5,12 +5,12 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
-
-import SideMenu from '../../../components/SideMenu/SideMenu';
+import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import ROUTES from '../../../routes';
 // import { mockedStationECs } from '../../../services/__mocks__/stationService';
 import StationECTable from './StationECTable';
 import StationECTableSearchBar from './StationECTableSearchBar';
+
 
 const StationECListPage = () => {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ const StationECListPage = () => {
   const { stationId } = useParams<{ stationId: string }>();
   const [alertMessage, setAlertMessage] = useState('');
   const goBack = () => history.push(ROUTES.STATIONS);
-  
+
   const [ciNameOrFiscalCodeInput, setCiNameInput] = useState<string>('');
   const [ciNameOrFiscalCodeFilter, setCiNameOrFiscalCodeFilter] = useState<string>('');
 
@@ -44,91 +44,76 @@ const StationECListPage = () => {
   };
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
+    <SideMenuLayout>
+      <Stack direction="row" mb={3}>
+        <ButtonNaked
+          size="small"
+          component="button"
+          onClick={goBack}
+          startIcon={<ArrowBack />}
+          sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
+          weight="default"
+        >
+          {t('general.back')}
+        </ButtonNaked>
+        <Breadcrumbs>
+          <Typography fontSize={16}>{stationId}</Typography>
+          <Typography fontWeight={'fontWeightMedium'}>{t('stationECList.title')}</Typography>
+        </Breadcrumbs>
+      </Stack>
+
+      <Stack direction="row" justifyContent={'space-between'}>
         <Box>
-          <SideMenu />
+          <TitleBox
+            title={t('stationECList.title')}
+            subTitle={t('stationECList.subtitle')}
+            mbTitle={2}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
         </Box>
-      </Grid>
-      <Grid
-        container
-        item
-        xs={10}
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        sx={{ backgroundColor: '#F5F5F5' }}
-        pb={8}
-        pt={4}
-        px={3}
-      >
-        <Stack direction="row" mb={3}>
-          <ButtonNaked
-            size="small"
-            component="button"
-            onClick={goBack}
-            startIcon={<ArrowBack />}
-            sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
-            weight="default"
-          >
-            {t('general.back')}
-          </ButtonNaked>
-          <Breadcrumbs>
-            <Typography fontSize={16}>{stationId}</Typography>
-            <Typography fontWeight={'fontWeightMedium'}>{t('stationECList.title')}</Typography>
-          </Breadcrumbs>
-        </Stack>
-
-        <Stack direction="row" justifyContent={'space-between'}>
-          <Box>
-            <TitleBox
-              title={t('stationECList.title')}
-              subTitle={t('stationECList.subtitle')}
-              mbTitle={2}
-              mbSubTitle={3}
-              variantTitle="h4"
-              variantSubTitle="body1"
-            />
-          </Box>
-          <Box>
-            <Button
-              variant="outlined"
-              sx={{ display: 'none' }}
-              startIcon={<FileDownload />}
-              onClick={() => downloadCSV()}
-            >
-              {t('stationECList.csvDownload')}
-            </Button>
-          </Box>
-        </Stack>
-
-        {alertMessage && (
-          <Alert
-            sx={{
-              position: 'fixed',
-              bottom: '20px',
-              right: '20px',
-              zIndex: 1000,
-            }}
-            severity="success"
+        <Box>
+          <Button
             variant="outlined"
+            sx={{ display: 'none' }}
+            startIcon={<FileDownload />}
+            onClick={() => downloadCSV()}
           >
-            {alertMessage}
-          </Alert>
-        )}
-
-        <StationECTableSearchBar
-          stationId={stationId}
-          ciNameOrFiscalCodeInput={ciNameOrFiscalCodeInput}
-          setCiNameInput={setCiNameInput}
-        />
-        <Box display="flex" width="100%" mt={0}>
-          <Box pt={0} display="flex" width="100%">
-            <StationECTable ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter} setAlertMessage={setAlertMessage} />
-          </Box>
+            {t('stationECList.csvDownload')}
+          </Button>
         </Box>
-      </Grid>
-    </Grid>
+      </Stack>
+
+      {alertMessage && (
+        <Alert
+          sx={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: 1000,
+          }}
+          severity="success"
+          variant="outlined"
+        >
+          {alertMessage}
+        </Alert>
+      )}
+
+      <StationECTableSearchBar
+        stationId={stationId}
+        ciNameOrFiscalCodeInput={ciNameOrFiscalCodeInput}
+        setCiNameInput={setCiNameInput}
+      />
+      <Box display="flex" width="100%" mt={0}>
+        <Box pt={0} display="flex" width="100%">
+          <StationECTable
+            ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter}
+            setAlertMessage={setAlertMessage}
+          />
+        </Box>
+      </Box>
+    </SideMenuLayout>
   );
 };
 

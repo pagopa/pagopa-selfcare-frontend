@@ -2,7 +2,7 @@ import { Alert, Box, Card, Grid, Typography } from '@mui/material';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import SideMenu from '../../components/SideMenu/SideMenu';
+import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { ENV } from '../../utils/env';
@@ -22,66 +22,49 @@ const DashboardPage = () => {
   const { hasPermission } = usePermissions();
 
   return (
-    <Grid container item xs={12} sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
-        <Box>
-          <SideMenu />
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={10}
-        sx={{ backgroundColor: '#F5F6F7' }}
-        display="flex"
-        justifyContent="center"
-        pb={8}
-      >
-        <Box width="100%" px={2}>
-          <TitleBox
-            title={t('dashboardPage.title')}
-            subTitle={t('dashboardPage.subtitle')}
-            mbTitle={2}
-            mtTitle={4}
-            mbSubTitle={3}
-            variantTitle="h4"
-            variantSubTitle="body1"
-          />
-          {history.location.state && (history.location.state as any).alertSuccessMessage && (
-            <Alert severity="success" variant="outlined" sx={{ mb: 4 }}>
-              {(history.location.state as any).alertSuccessMessage}
-            </Alert>
-          )}
+    <SideMenuLayout>
+      <TitleBox
+        title={t('dashboardPage.title')}
+        subTitle={t('dashboardPage.subtitle')}
+        mbSubTitle={3}
+        variantTitle="h4"
+        variantSubTitle="body1"
+      />
+      {history.location.state && (history.location.state as any).alertSuccessMessage && (
+        <Alert severity="success" variant="outlined" sx={{ mb: 4 }}>
+          {(history.location.state as any).alertSuccessMessage}
+        </Alert>
+      )}
 
-          <Grid container spacing={2} mb={4}>
-            <Grid item xs={6}>
-              <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
-                <Box mb={3}>
-                  <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
-                </Box>
-                <Grid container spacing={3} pb={4}>
-                  {selectedParty?.institutionType === 'PSP' ? (
-                    <PSPRegistrationData />
-                  ) : selectedParty?.institutionType === 'PT' ? (
-                    <PTRegistrationData />
-                  ) : (
-                    <ECRegistrationData />
-                  )}
-                </Grid>
-              </Card>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
+            <Box mb={3}>
+              <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
+            </Box>
+            <Grid container spacing={3} pb={4}>
+              {selectedParty?.institutionType === 'PSP' ? (
+                <PSPRegistrationData />
+              ) : selectedParty?.institutionType === 'PT' ? (
+                <PTRegistrationData />
+              ) : (
+                <ECRegistrationData />
+              )}
             </Grid>
-            <Grid item xs={6}>
-              <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
-              <DownloadSection selectedParty={selectedParty}></DownloadSection>
-            </Grid>
-            
-            {selectedParty 
-            && hasPermission('operation-table-read-write') 
-            && ENV.FEATURES.OPERATIONTABLE.ENABLED 
-            && (<OperationTable ecCode={selectedParty.fiscalCode}/>)}
-          </Grid>
-        </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
+          <DownloadSection selectedParty={selectedParty}></DownloadSection>
+        </Grid>
+
+        {selectedParty &&
+          hasPermission('operation-table-read-write') &&
+          ENV.FEATURES.OPERATIONTABLE.ENABLED && (
+            <OperationTable ecCode={selectedParty.fiscalCode} />
+          )}
       </Grid>
-    </Grid>
+    </SideMenuLayout>
   );
 };
 

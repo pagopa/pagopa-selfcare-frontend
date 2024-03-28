@@ -77,7 +77,7 @@ export const pspAdminUnsigned: Party = {
         business_register_number: '00000000000',
         legal_register_name: 'ISTITUTI DI PAGAMENTO',
         legal_register_number: '09879',
-        abi_code: 'pspAdmin_UNSIGNED',
+        abi_code: 'N/A',
         vat_number_group: false,
     },
 };

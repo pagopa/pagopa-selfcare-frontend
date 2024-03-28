@@ -1,5 +1,12 @@
 {
+  "scripts": {
+    "cucumber": "npx cucumber-js"
+  },
   "dependencies": {
+    "npx": "^10.2.2",
     "puppeteer": "^21.6.1"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1"
   }
 }

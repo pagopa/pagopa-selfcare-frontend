@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { GridColumnHeaderParams } from '@mui/x-data-grid';
 import { renderCell, renderStatusChip, showCustomHeader } from '../TableUtils';
+import React from 'react';
 
 describe('Table utils components', () => {
   test('Render showCustomHeader', () => {

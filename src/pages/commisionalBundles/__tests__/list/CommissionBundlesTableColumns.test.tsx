@@ -1,15 +1,13 @@
 import {
   GridColDef,
-  GridColumnHeaderParams,
   GridRenderCellParams,
-  GridRowId,
   GridStateColDef,
 } from '@mui/x-data-grid';
 import { cleanup, render, screen } from '@testing-library/react';
 import {
   GridLinkActionBundleDetails,
   buildColumnDefs,
-  showBundleState
+  getStateChip,
 } from '../../list/CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -70,7 +68,6 @@ const AllCells = ({ isPsp, isEc }: { isPsp: boolean; isEc: boolean }) => {
   return (
     <>
       <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />
-      {showBundleState(params, t, isPsp, isEc)}
     </>
   );
 };
@@ -86,7 +83,7 @@ const BundleStateChip = ({
 }) => {
   const { t } = useTranslation('translation');
 
-  return <>{showBundleState({ ...params, row: bundle }, t, isPsp, isEc)}</>;
+  return <>{getStateChip({ ...params, row: bundle }, t, isPsp, isEc)}</>;
 };
 
 const mockTFunction = (key: string) => {

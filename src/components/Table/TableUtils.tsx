@@ -37,9 +37,10 @@ export function renderCell({
     >
       <Typography
         variant="body2"
-        color={mainCell ? 'primary' : undefined}
+        color={color ? color : mainCell ? 'primary' : undefined}
         fontWeight={mainCell ? 'fontWeightBold' : '16px'}
         noWrap
+        data-testid="render-cell"
       >
         {value ?? '-'}
       </Typography>
@@ -47,34 +48,34 @@ export function renderCell({
   );
 }
 
+type colorType =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | undefined;
 export function renderStatusChip({
   chipLabel,
-  chipColor,
-  chipBgColor,
+  chipColor = 'default',
   cellColor = undefined,
+  dataTestId,
 }: {
-  params: GridRenderCellParams;
   chipLabel: string;
-  chipColor: string;
-  chipBgColor: string;
+  chipColor?: colorType;
   cellColor?: string | undefined;
+  dataTestId?: string;
 }) {
   return renderCell({
     value: (
-      <Box>
-        <Chip
-          label={chipLabel}
-          aria-label="Status"
-          sx={{
-            fontSize: '14px',
-            fontWeight: 'fontWeightMedium',
-            color: chipColor,
-            backgroundColor: chipBgColor,
-            paddingBottom: '1px',
-            height: '24px',
-          }}
-        />
-      </Box>
+      <Chip
+        label={chipLabel}
+        aria-label="Status"
+        data-testid={dataTestId ?? 'status-chip'}
+        color={chipColor}
+      />
     ),
     color: cellColor,
   });

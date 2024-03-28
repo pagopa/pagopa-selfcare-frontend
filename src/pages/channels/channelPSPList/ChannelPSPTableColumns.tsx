@@ -69,10 +69,8 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderStatusChip({
-          params,
           chipLabel: params.row.enabled ? 'Attivo' : 'Disattivo',
-          chipColor: params.row.enabled ? '#FFFFFF' : '#17324D',
-          chipBgColor: params.row.enabled ? 'primary.main' : 'warning.light',
+          chipColor: params.row.enabled ? 'primary' : 'default',
           cellColor: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,

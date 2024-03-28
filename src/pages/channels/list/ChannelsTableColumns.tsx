@@ -146,13 +146,10 @@ export function buildColumnDefs(
   ] as Array<GridColDef>;
 }
 
-// TODO check if can be generalized
 export function showStatus(params: GridRenderCellParams) {
   return renderCell({
     value: (
-      <Box>
-        <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} size="small" />
-      </Box>
+        <StatusChip status={params.row.wrapperStatus ?? params.row.wrapperStatus} />
     ),
     overrideStyle: {
       textAlign: 'left',

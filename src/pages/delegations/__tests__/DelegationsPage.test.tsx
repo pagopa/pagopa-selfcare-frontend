@@ -33,8 +33,16 @@ describe('<DelegationsPage />', () => {
 
     fireEvent.click(downloadCSVButton);
 
+    let alertTest;
     await waitFor(() => {
-      expect(screen.queryByTestId('alert-test')).toBeInTheDocument();
+      alertTest = screen.queryByTestId('alert-test');
+      expect(alertTest).toBeInTheDocument();
+    });
+
+    const buttonGotIt = screen.getByTestId('got-it-button');
+    fireEvent.click(buttonGotIt);
+    await waitFor(() => {
+      expect(alertTest).not.toBeInTheDocument();
     });
   });
 });

@@ -4,7 +4,7 @@ const {Given, After, When, Then, Before} = require('@cucumber/cucumber')
 const puppeteer = require('puppeteer');
 const {setDefaultTimeout} = require('@cucumber/cucumber');
 const assert = require("assert");
-const idMapper = require('./alias.json');
+const idMapper = require(`./alias.json`);
 
 
 let page;
@@ -51,19 +51,32 @@ When('types {string} on {string}', async function (value, elem) {
 When('clicks on {string}', async function (elem) {
     await click(page, elem);
 });
-When('waits {int} ms', async function (ms) {
-    await delay(ms);
-});
+
 When(/^fills the form$/, async function (dataTable) {
     dataTable.raw();
     for (const key of dataTable.raw()[0]) {
+        console.log(`typing on ${key} the value`)
         await type(page, key, dataTable.hashes()[0][key]);
     }
 });
 When('selects for {string} the value {string}', async function (selector, valueSelector) {
     await click(page, selector);
     await click(page, valueSelector);
-})
+    await delay(500);
+});
+
+When('types and selects for {string} the value {string}', async function (selector, valueSelector) {
+    await click(page, selector);
+    await type(page, selector, valueSelector)
+    await puppeteer.Locator.race([
+        page.locator(selector),
+    ])
+        .setTimeout(defaultTimeout)
+        .fill(value);
+    await delay(1000);
+    await click(page, valueSelector);
+    await delay(1000);
+});
 
 Then('element {string} has {string} as value', async function (elem, expectedValue) {
     await check(page, elem, expectedValue);
@@ -74,9 +87,18 @@ Then('element {string} exists', async function (elem) {
 Then('text {string} exists in the page', async function (text) {
     await page.waitForXPath(`//*[contains(text(), "${text}")]`);
 });
+Then('{string} is disabled', async function (selector) {
+    selector = idMapper[selector] ?? selector;
+    selector += '[disabled]';
+
+    await page.waitForSelector(selector, {timeout: defaultTimeout});
+    const element = await page.$(selector);
+
+    assert.notEqual(element, null);
+});
 
 After(async function () {
-    await browser.close();
+    // await browser.close();
 });
 
 

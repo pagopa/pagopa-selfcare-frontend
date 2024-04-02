@@ -347,16 +347,16 @@ describe('<AddEditCommissionBundleForm />', () => {
         // expect(selectTouchPointBtn.textContent).toBe(mockedBundleRequest.paymentType);
 
         // Check min import number
-        expect(input.minImport.value * 100).toBe(
-            mockedBundleRequest.minPaymentAmount?.toString().replace('.', ',')
+        expect(input.minImport.value).toBe(
+            (mockedBundleRequest.minPaymentAmount! / 100)?.toString().replace('.', ',')
         );
         // Check max import number
-        expect(input.maxImport.value * 100).toBe(
-            mockedBundleRequest.maxPaymentAmount?.toString().replace('.', ',')
+        expect(input.maxImport.value).toBe(
+            (mockedBundleRequest.maxPaymentAmount! / 100)?.toString().replace('.', ',')
         );
 
-        expect(input.feeApplied.value * 100).toBe(
-            mockedBundleRequest.paymentAmount?.toString().replace('.', ',')
+        expect(input.feeApplied.value).toBe(
+            (mockedBundleRequest.paymentAmount! / 100)?.toString().replace('.', ',')
         );
 
         // Check broker code list

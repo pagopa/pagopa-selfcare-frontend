@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.18.24-1-hotfix-bundle-currency-format",
+  "version": "1.18.25",
   "homepage": "ui",
   "private": true,
   "scripts": {

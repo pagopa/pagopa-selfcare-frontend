@@ -66,6 +66,7 @@ import {BundleRequest} from './generated/portal/BundleRequest';
 import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
 import {BundleResource} from './generated/portal/BundleResource';
 import {FeatureFlags} from './generated/portal/FeatureFlags';
+import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -853,17 +854,17 @@ export const BackofficeApi = {
     },
 
     exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportIbansToCsv({'broker-code': brokerCode});
+        const result = await backofficeClient.exportIbansToCsv({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     exportCreditorInstitutionsToCsv: async (brokerCode: string): Promise<Buffer> => {
-        const result = await backofficeClient.exportCreditorInstitutionToCsv({'broker-code': brokerCode});
+        const result = await backofficeClient.exportCreditorInstitutionToCsv({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
     getBrokerExportStatus: async (brokerCode: string): Promise<BrokerECExportStatus> => {
-        const result = await backofficeClient.getBrokerExportStatus({'broker-code': brokerCode});
+        const result = await backofficeClient.getBrokerExportStatus({'broker-tax-code': brokerCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -921,4 +922,9 @@ export const BackofficeApi = {
         const result = await backofficeClient.getCisBundles({"types": [bundleType], "limit": pageLimit, "name": bundleName, page, cisTaxCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<CIBrokerDelegationPage> => {
+        const result = await backofficeClient.getCIBrokerDelegation({"broker-tax-code": brokerTaxCode, brokerId, ciName, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    }
 };

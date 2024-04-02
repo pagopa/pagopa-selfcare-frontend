@@ -37,6 +37,7 @@ export default function StationsTableSearchBar({stationCodeInput, setStationCode
                 variant="contained"
                 sx={{ml: 1, whiteSpace: 'nowrap', minWidth: 'auto'}}
                 disabled={operator}
+                data-testid={"create-station"}
             >
                 {t('stationsPage.createStationButtonLabel')}
             </Button>

@@ -29,6 +29,7 @@ async function checkXPath(page, selector, expectedValue) {
 
 async function clickXPath(page, selector) {
     selector = idMapper[selector] ?? selector;
+    console.log(`searching for ${selector}`);
 
     // wait for element defined by XPath appear in page
     await page.waitForXPath(selector, {timeout: defaultTimeout});

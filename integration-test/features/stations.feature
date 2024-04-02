@@ -13,7 +13,6 @@ Feature: Stazioni
       | endpoint-rt    | redirect       | modello unico  |
       | http://test.it | http://test.it | http://test.it |
     And selects for "versione primitive" the value "primitiva 1"
-    And waits 1000 ms
-    And clicks on "Conferma Stazione"
+    And clicks on "Conferma"
     And clicks on "Conferma Popup"
 

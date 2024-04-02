@@ -17,7 +17,7 @@ Before(function () {
 });
 
 Given('Logged User {string} {string} and selected org {string}', async (username, password, org) => {
-    browser = await puppeteer.launch({headless: false});
+    browser = await puppeteer.launch({headless: 'new'});
     page = await browser.newPage();
     page.setDefaultTimeout(defaultTimeout);
     let cookie = [
@@ -33,7 +33,7 @@ Given('Logged User {string} {string} and selected org {string}', async (username
         height: 900,
     });
     await page.goto("https://dev.selfcare.pagopa.it/auth/login");
-    // await login(page, username, password, org);
+    await login(page, username, password, org);
 });
 
 When('the client goes to {string}', async function (url) {
@@ -45,15 +45,25 @@ When('the client goes to {string}', async function (url) {
         await clickXPath(page, "/html/body/div[1]/div[2]/div[2]/div/div/div/div[3]/button");
     }
 });
-When('types {string} on {string}', async function (value, elem) {
-    await type(page, elem, value);
+When('types {string} on {string}', async function (value, selector) {
+    // await type(page, elem, value);
+    selector = idMapper[selector] ?? selector;
+    await puppeteer.Locator.race([
+        page.locator(selector),
+    ])
+        .setTimeout(defaultTimeout)
+        .click({count: 2});
+    await puppeteer.Locator.race([
+        page.locator(selector),
+    ])
+        .setTimeout(defaultTimeout)
+        .fill(value);
 });
 When('clicks on {string}', async function (elem) {
     await click(page, elem);
 });
 
 When(/^fills the form$/, async function (dataTable) {
-    dataTable.raw();
     for (const key of dataTable.raw()[0]) {
         console.log(`typing on ${key} the value`)
         await type(page, key, dataTable.hashes()[0][key]);
@@ -65,16 +75,18 @@ When('selects for {string} the value {string}', async function (selector, valueS
     await delay(500);
 });
 
-When('types and selects for {string} the value {string}', async function (selector, valueSelector) {
+When('types {string} in {string} and selects the value {string}', async function (text, selector, valueSelector) {
     await click(page, selector);
-    await type(page, selector, valueSelector)
+    await type(page, selector, text)
+    await delay(1000);
+
+    valueSelector = idMapper[valueSelector] ?? selector;
+    console.log(`searching for ${valueSelector}`);
     await puppeteer.Locator.race([
-        page.locator(selector),
+        page.locator(valueSelector),
     ])
         .setTimeout(defaultTimeout)
-        .fill(value);
-    await delay(1000);
-    await click(page, valueSelector);
+        .click();
     await delay(1000);
 });
 
@@ -98,7 +110,7 @@ Then('{string} is disabled', async function (selector) {
 });
 
 After(async function () {
-    // await browser.close();
+    await browser.close();
 });
 
 

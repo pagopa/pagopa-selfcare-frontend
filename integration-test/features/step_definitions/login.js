@@ -1,4 +1,5 @@
 const {clickXPath, typeXPath, click, type} = require("./user_event");
+const {delay} = require("./steps");
 
 
 const login = async (page, username, password, org) => {
@@ -16,6 +17,7 @@ const login = async (page, username, password, org) => {
     await clickXPath(page, "Ambiente Collaudo")
     await clickXPath(page, "Accedi a Backoffice")
     await page.waitForNetworkIdle();
+    await delay(1000);
     await clickXPath(page, "Accetta Privacy")
 }
 

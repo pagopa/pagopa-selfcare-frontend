@@ -25,7 +25,7 @@ Before(function () {
 });
 
 Given('Logged User {string} {string} and selected org {string}', async (username, password, org) => {
-    browser = await puppeteer.launch({headless: 'new'});
+    browser = await puppeteer.launch({headless: false});
     page = await browser.newPage();
     page.setDefaultTimeout(defaultTimeout);
     let cookie = [
@@ -119,7 +119,7 @@ Then('{string} is disabled', async function (selector) {
 
 
 After(async function () {
-    // await browser.close();
+    await browser.close();
 });
 
 
@@ -693,3 +693,6 @@ When(/^deletes the iban$/, async function () {
     }
 
 });
+
+
+module.exports = {delay}

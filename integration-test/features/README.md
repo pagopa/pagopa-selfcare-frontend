@@ -52,8 +52,11 @@ All the When steps.
 
 ### types and selects for {filter} the value {option}
 
+### types {text} in {filter} and selects the value {option}
+
 | var    | type     | description                                 |
 |--------|----------|---------------------------------------------|
+| text   | `string` | some text to type                           |
 | filter | `string` | an alias for a filtering input text element |
 | option | `string` | an alias for an option element              |
 

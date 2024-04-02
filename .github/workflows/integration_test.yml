@@ -31,8 +31,7 @@ jobs:
           cd ./integration-test
           yarn install
 
-          chmod +x ./run_integration.sh
-          ./run_integration.sh
+          yarn run cucumber
 
   notify:
     needs: [ integration_test ]

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "cucumber": "npx cucumber-js"
+    "cucumber": "npx cucumber-js --publish"
   },
   "dependencies": {
     "npx": "^10.2.2",

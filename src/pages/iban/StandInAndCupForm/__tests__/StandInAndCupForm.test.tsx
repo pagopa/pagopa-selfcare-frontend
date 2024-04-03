@@ -88,9 +88,6 @@ describe('StandInAndCupForm', () => {
         fireEvent.click(confirmBtn);
 
         fireEvent.submit(confirmBtn);
-
-        // const backBtn = screen.getByTestId('back-button-test');
-        // fireEvent.click(backBtn);
     });
 
     it('Input test with manageButton false and with cup and standIn selected, update with different iban', async () => {
@@ -117,9 +114,6 @@ describe('StandInAndCupForm', () => {
         fireEvent.click(confirmBtn);
 
         fireEvent.submit(confirmBtn);
-
-        // const backBtn = screen.getByTestId('back-button-test');
-        // fireEvent.click(backBtn);
     });
 
     it('Input test with manageButton false and with cup and standIn selected, update with same iban', async () => {
@@ -146,9 +140,6 @@ describe('StandInAndCupForm', () => {
         fireEvent.click(confirmBtn);
 
         fireEvent.submit(confirmBtn);
-
-        // const backBtn = screen.getByTestId('back-button-test');
-        // fireEvent.click(backBtn);
     });
 
     it('Input test with manageButton false and no cup and standIn selected', async () => {

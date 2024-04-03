@@ -45,5 +45,6 @@
   "Sfoglia Catalogo": "[data-testid='open-taxonomies-drawer']",
   "filtro tassonomie": "#catalogue-filter",
   "9/0601134AP/": "[data-testid='checkbox-taxonomy']",
-  "Aggiungi": "[data-testid=taxonomies-add-button-test]"
+  "Aggiungi": "[data-testid=taxonomies-add-button-test]",
+  "Conferma Stazione": "[data-testid=\"confirm-button-test\"",
 }

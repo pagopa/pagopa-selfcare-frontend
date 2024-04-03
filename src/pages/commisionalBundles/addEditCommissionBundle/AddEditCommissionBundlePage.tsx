@@ -17,8 +17,8 @@ import {FormAction} from '../../../model/CommissionBundle';
 import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
 import {createBundle, updatePSPBundle} from '../../../services/bundleService';
 import {
-  LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
-  LOADING_TASK_CREATING_COMMISSION_BUNDLE,
+    LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
+    LOADING_TASK_CREATING_COMMISSION_BUNDLE,
 } from '../../../utils/constants';
 import {BundleRequest} from '../../../api/generated/portal/BundleRequest';
 import {BundleResource} from '../../../api/generated/portal/BundleResource';
@@ -66,7 +66,7 @@ const validate = (
                 maxPaymentAmount: !values.maxPaymentAmount
                     ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
                     : undefined,
-                minPaymentAmount: !values.minPaymentAmount
+                minPaymentAmount: (!values.minPaymentAmount && values.minPaymentAmount !== 0)
                     ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
                     : undefined,
                 name: !values.name
@@ -106,7 +106,7 @@ const validate = (
 const enableSubmit = (values: BundleRequest) =>
     values.type !== undefined &&
     values.name !== '' &&
-    values.minPaymentAmount !== 0 &&
+    (values.minPaymentAmount ?? 0) >= 0 &&
     !Number.isNaN(values.minPaymentAmount) &&
     values.maxPaymentAmount !== 0 &&
     !Number.isNaN(values.maxPaymentAmount) &&

@@ -1,5 +1,4 @@
 const {clickXPath, typeXPath, click, type} = require("./user_event");
-const {delay} = require("./steps");
 
 
 const login = async (page, username, password, org) => {
@@ -22,3 +21,10 @@ const login = async (page, username, password, org) => {
 }
 
 module.exports = {login};
+
+
+function delay(time) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, time)
+    });
+}

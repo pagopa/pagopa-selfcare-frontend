@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import DelegationsTableSearchBar from '../../list/DelegationsTableSearchBar';
+import DelegationsTableSearchBar from '../DelegationsTableSearchBar';
 
 const spyOnSetSearchInput = jest.fn();
 

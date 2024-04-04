@@ -28,7 +28,7 @@ const OperationTable = ({ ecCode }: Props) => {
   }, [ecCode]);
 
   return (
-    <Grid item xs={6}>
+    <Grid item xs={6} data-testid="operation-table">
       <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
         <Box mb={3}>
           <Typography variant="h6">{t('dashboardPage.operationTable.title')}</Typography>

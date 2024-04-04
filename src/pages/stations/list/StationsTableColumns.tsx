@@ -1,13 +1,13 @@
-import { Box, Chip, Grid, Typography } from '@mui/material';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import { Box, Chip } from '@mui/material';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { TFunction } from 'react-i18next';
-import React, { CSSProperties, ReactNode } from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
 import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
+import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -21,7 +21,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showStationID(params),
+      renderCell: (params: any) => renderCell({ value: params.row.stationCode, mainCell: true }),
       sortable: true,
       flex: 4,
     },
@@ -36,7 +36,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.createdAt?.toLocaleDateString('en-GB'), undefined),
+        renderCell({ value: params.row.createdAt?.toLocaleDateString('en-GB') }),
       sortable: false,
       flex: 4,
     },
@@ -51,7 +51,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.modifiedAt?.toLocaleDateString('en-GB'), undefined),
+        renderCell({ value: params.row.modifiedAt?.toLocaleDateString('en-GB') }),
       sortable: false,
       flex: 4,
     },
@@ -66,7 +66,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
-        renderCell(params.row.activationDate?.toLocaleDateString('en-GB'), undefined),
+        renderCell({ value: params.row.activationDate?.toLocaleDateString('en-GB') }),
       sortable: false,
       flex: 4,
     },
@@ -148,123 +148,44 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   ] as Array<GridColDef>;
 }
 
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '16px',
-        paddingLeft: '16px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-        marginLeft: '11px',
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          fontSize: '14px',
-          variant: 'body2',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <React.Fragment>
-      <Typography
-        color="colorTextPrimary"
-        variant="caption"
-        sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 5 }}
-      >
-        {params.colDef.headerName}
-      </Typography>
-    </React.Fragment>
-  );
-}
-
-export function showStationID(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <>
-          <Grid container sx={{ width: '100%' }}>
-            <Grid item xs={9} sx={{ width: '100%' }}>
-              <Typography
-                variant="body2"
-                color="primary"
-                sx={{
-                  fontWeight: 'fontWeightBold',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical' as const,
-                }}
-              >
-                {params.row.stationCode}
-              </Typography>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </React.Fragment>
-  );
-}
-
+// TODO check to clean
 export function showStatus(params: GridRenderCellParams) {
-  return renderCell(
-    params,
-    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Chip
-        label={
-          params.row.wrapperStatus === 'APPROVED'
-            ? i18n.t('stationsPage.states.active')
-            : params.row.wrapperStatus === 'TO_CHECK' ||
-              params.row.wrapperStatus === 'TO_CHECK_UPDATE'
-            ? i18n.t('stationsPage.states.revision')
-            : i18n.t('stationsPage.states.needCorrection')
-        }
-        aria-label="Status"
-        sx={{
-          fontSize: '10px',
-          fontWeight: 'fontWeightRegular',
-          color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
-          backgroundColor:
+  return renderCell({
+    value: (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Chip
+          label={
             params.row.wrapperStatus === 'APPROVED'
-              ? 'primary.main'
+              ? i18n.t('stationsPage.states.active')
               : params.row.wrapperStatus === 'TO_CHECK' ||
                 params.row.wrapperStatus === 'TO_CHECK_UPDATE'
-              ? '#EEEEEE'
-              : 'warning.light',
-          paddingBottom: '1px',
-          height: '30px',
-          marginY: 2,
-          marginLeft: 2,
-        }}
-      />
-    </Box>,
-    {
+              ? i18n.t('stationsPage.states.revision')
+              : i18n.t('stationsPage.states.needCorrection')
+          }
+          aria-label="Status"
+          sx={{
+            fontSize: '10px',
+            fontWeight: 'fontWeightRegular',
+            color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
+            backgroundColor:
+              params.row.wrapperStatus === 'APPROVED'
+                ? 'primary.main'
+                : params.row.wrapperStatus === 'TO_CHECK' ||
+                  params.row.wrapperStatus === 'TO_CHECK_UPDATE'
+                ? '#EEEEEE'
+                : 'warning.light',
+            paddingBottom: '1px',
+            height: '30px',
+            marginY: 2,
+            marginLeft: 2,
+          }}
+        />
+      </Box>
+    ),
+    overrideStyle: {
       paddingLeft: 0,
       paddingRight: 0,
       textAlign: 'left',
-    }
-  );
+    },
+  });
 }

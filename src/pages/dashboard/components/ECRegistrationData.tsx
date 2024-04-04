@@ -21,7 +21,7 @@ const ECRegistrationData = () => {
   return (
     <>
       <CommonDetails t={t} selectedParty={selectedParty} />
-      <Grid item xs={4}>
+      <Grid item xs={4} data-testid="ec-registration">
         <Typography variant="body2">{t('dashboardPage.registrationData.fiscalCode')}</Typography>
       </Grid>
       <Grid item xs={8}>

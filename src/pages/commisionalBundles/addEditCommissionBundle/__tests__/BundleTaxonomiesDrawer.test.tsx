@@ -1,7 +1,7 @@
 import { cleanup, render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { store } from '../../../../redux/store';
-import BundleTaxonomiesDrawer from '../../addEditCommissionBundle/components/drawer/BundleTaxonomiesDrawer';
+import BundleTaxonomiesDrawer from '../components/drawer/BundleTaxonomiesDrawer';
 import { Provider } from 'react-redux';
 import {
   mockedTaxonomy,

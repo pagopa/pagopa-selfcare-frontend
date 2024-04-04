@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import CommissionBundleDetailPage from '../../detail/CommissionBundleDetailPage';
+import CommissionBundleDetailPage from '../CommissionBundleDetailPage';
 import * as BundleService from '../../../../services/bundleService';
 import {
   mockedCommissionBundlePspDetailGlobal,
@@ -46,7 +46,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
   beforeEach(() => {
     jest
     .spyOn(usePermissions, 'usePermissions')
-    .mockReturnValue({ isPsp: () => true, hasPermission: jest.fn(), isEc: () => false });
+    .mockReturnValue({ isPsp: () => true, hasPermission: jest.fn(), isEc: () => false, isPspDirect: jest.fn() });
   });
 
   test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
@@ -123,7 +123,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
   beforeEach(() => {
     jest
     .spyOn(usePermissions, 'usePermissions')
-    .mockReturnValue({ isPsp: () => false, hasPermission: jest.fn(), isEc: () => true });
+    .mockReturnValue({ isPsp: () => false, hasPermission: jest.fn(), isEc: () => true, isPspDirect: jest.fn() });
   });
 
   test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {

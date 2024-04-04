@@ -1039,7 +1039,7 @@
       "placeholder": "Cerca per nome"
     },
     "table": {
-      "noDelegations": "Non sono ancora presenti intermediari"
+      "noDelegations": "Non sono ancora presenti enti"
     },
     "column": {
       "companyName": "Nome o Ragione Sociale",

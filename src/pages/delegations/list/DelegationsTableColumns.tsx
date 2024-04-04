@@ -1,12 +1,11 @@
-import { Box, Grid, Typography } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import React, { CSSProperties, ReactNode } from 'react';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { useAppDispatch } from '../../../redux/hooks';
 import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
+import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -20,7 +19,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showName(params),
+      renderCell: (params: any) => renderCell({ value: params.row.institution_name, mainCell: true }),
       sortable: true,
       flex: 4,
     },
@@ -34,7 +33,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.institution_tax_code ?? '-'),
+      renderCell: (params) => renderCell({ value: params.row.institution_tax_code }),
       sortable: true,
       flex: 4,
     },
@@ -48,7 +47,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(t(params.row.cbill_code ?? '-')),
+      renderCell: (params) => renderCell({ value: params.row.cbill_code }),
       sortable: true,
       flex: 4,
     },
@@ -62,7 +61,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(params.row.institution_station_count ?? '-'),
+      renderCell: (params) => renderCell({ value: params.row.institution_station_count }),
       sortable: false,
       flex: 4,
     },
@@ -87,44 +86,6 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   ] as Array<GridColDef>;
 }
 
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '16px',
-        paddingLeft: '16px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-        marginLeft: '11px',
-        cursor: 'pointer',
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          fontSize: '14px',
-          variant: 'body2',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
 export const GridLinkActionDelegationDetails = ({
   delegation,
 }: {
@@ -141,44 +102,3 @@ export const GridLinkActionDelegationDetails = ({
     />
   );
 };
-
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <Typography
-      color="colorTextPrimary"
-      variant="caption"
-      justifyContent="center"
-      sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 2 }}
-    >
-      {params.colDef.headerName}
-    </Typography>
-  );
-}
-
-export function showName(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <Grid container sx={{ width: '100%' }}>
-          <Grid item xs={9} sx={{ width: '100%' }}>
-            <Typography
-              variant="body2"
-              color="primary"
-              sx={{
-                fontWeight: 'fontWeightBold',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical' as const,
-              }}
-            >
-              {params.row.institution_name ?? "-"}
-            </Typography>
-          </Grid>
-        </Grid>
-      )}
-    </React.Fragment>
-  );
-}

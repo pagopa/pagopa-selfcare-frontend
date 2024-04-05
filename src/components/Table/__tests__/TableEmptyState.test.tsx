@@ -1,14 +1,14 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import DelegationsTableEmpty from '../DelegationsTableEmpty';
+import TableEmptyState from '../TableEmptyState';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-describe('<DelegationsTableEmpty />', () => {
-  test('render component DelegationsTableEmpty', () => {
-    render(<DelegationsTableEmpty />);
+describe('<TableEmptyState />', () => {
+  test('render component TableEmptyState', () => {
+    render(<TableEmptyState componentName="componentName" />);
   });
 });

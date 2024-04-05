@@ -5,30 +5,28 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import DelegationsTable from '../DelegationsTable';
-import * as BrokerService from '../../../../services/brokerService';
-import {
-  getCIBrokerDelegationMock
-} from '../../../../services/__mocks__/brokerService';
+import * as PaymentsReceiptsService from '../../../../services/paymentsReceiptsService';
+import PaymentsReceiptsTable from '../PaymentsReceiptsTable';
+import { mockedPaymentsReceiptsList } from '../../../../services/__mocks__/paymentsReceiptsService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-const mock = jest.spyOn(BrokerService, 'getCIBrokerDelegation');
+const mock = jest.spyOn(PaymentsReceiptsService, 'getPaymentsReceipts');
 
 afterEach(cleanup);
 
-describe('<DelegationsTable />', () => {
-  test('render component DelegationsTable with CI delegation list', async () => {
-    mock.mockReturnValueOnce(new Promise((resolve) => resolve(getCIBrokerDelegationMock())));
+describe('<PaymentsReceiptsTable />', () => {
+  test('render component PaymentsReceiptsTable with receipt list', async () => {
+    mock.mockReturnValueOnce(new Promise((resolve) => resolve(mockedPaymentsReceiptsList)));
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/delegations-list`]}>
-          <Route path="/delegations-list">
+        <MemoryRouter initialEntries={[`/payments-receipts`]}>
+          <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <DelegationsTable filterByName={''} />
+              <PaymentsReceiptsTable filterInput={''} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -39,16 +37,18 @@ describe('<DelegationsTable />', () => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
       expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
     });
+
+    mock.mockReset();
   });
 
-  test('render component DelegationsTable without CI delegation list', async () => {
+  test('render component PaymentsReceiptsTable without receipt list', async () => {
     mock.mockReturnValueOnce(new Promise((resolve) => resolve({})));
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/delegations-list`]}>
-          <Route path="/delegations-list">
+        <MemoryRouter initialEntries={[`/payments-receipts`]}>
+          <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <DelegationsTable filterByName={''} />
+              <PaymentsReceiptsTable filterInput={''} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -59,5 +59,7 @@ describe('<DelegationsTable />', () => {
       expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
       expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
     });
+
+    mock.mockReset();
   });
 });

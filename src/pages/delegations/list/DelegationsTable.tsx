@@ -9,9 +9,8 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { CIBrokerDelegationPage } from '../../../api/generated/portal/CIBrokerDelegationPage';
 import { getCIBrokerDelegation } from '../../../services/brokerService';
-import DelegationsTableEmpty from './DelegationsTableEmpty';
+import TableEmptyState from '../../../components/Table/TableEmptyState';
 import { buildColumnDefs } from './DelegationsTableColumns';
-
 
 type Props = {
   filterByName: string;
@@ -84,7 +83,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
         <>{error}</>
       ) : !delegationsList?.ci_broker_delegations ||
         delegationsList.ci_broker_delegations?.length === 0 ? (
-        <DelegationsTableEmpty />
+        <TableEmptyState componentName="delegationsPage" />
       ) : (
         <div data-testid="data-grid">
           <CustomDataGrid

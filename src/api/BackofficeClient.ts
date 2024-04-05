@@ -67,6 +67,7 @@ import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
 import {BundleResource} from './generated/portal/BundleResource';
 import {FeatureFlags} from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
+import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -925,6 +926,16 @@ export const BackofficeApi = {
 
     getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<CIBrokerDelegationPage> => {
         const result = await backofficeClient.getCIBrokerDelegation({"broker-tax-code": brokerTaxCode, brokerId, ciName, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getPaymentsReceipts: async (organizationTaxCode: string, debtorTaxCode?: string): Promise<ReceiptsInfo> => {
+        const result = await backofficeClient.getPaymentsReceipts({'organization-tax-code': organizationTaxCode, debtorTaxCode, limit: 50});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getPaymentReceiptDetail: async (organizationTaxCode: string, iuv: string): Promise<string> => {
+        const result = await backofficeClient.getPaymentReceiptDetail({'organization-tax-code': organizationTaxCode, iuv});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

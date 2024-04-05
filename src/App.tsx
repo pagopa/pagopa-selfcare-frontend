@@ -48,6 +48,7 @@ import MaintenancePage from './pages/maintenance/MaintenancePage';
 import { useFlagValue } from './hooks/useFeatureFlags';
 import withFeatureFlags from './decorators/withFeatureFlags';
 import DelegationsPage from './pages/delegations/DelegationsPage';
+import PaymentsReceiptsPage from './pages/paymentsReceipts/PaymentsReceiptsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -242,6 +243,13 @@ const SecuredRoutes = withLogin(
                   <Route path={routes.DELEGATIONS_LIST} exact={true}>
                     <ProtectedRoute permission="delegations-list">
                       <DelegationsPage />
+                    </ProtectedRoute>
+                  </Route>
+                )}
+                {useFlagValue('payments-receipts') && (
+                  <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
+                    <ProtectedRoute permission="payments-receipts">
+                      <PaymentsReceiptsPage />
                     </ProtectedRoute>
                   </Route>
                 )}

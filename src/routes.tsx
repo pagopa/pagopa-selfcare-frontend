@@ -39,7 +39,9 @@ const ROUTES = {
   OPERATION_TABLE_DETAILS: `${BASE_ROUTE}/operation-table/:operationTableId`,
   OPERATION_TABLE_LIST: `${BASE_ROUTE}/operation-table-list`,
 
-  DELEGATIONS_LIST: `${BASE_ROUTE}/delegation-list`
+  DELEGATIONS_LIST: `${BASE_ROUTE}/delegation-list`,
+
+  PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`
 
   /* TOS: {
     PATH: '/terms-of-service',

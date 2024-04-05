@@ -833,7 +833,7 @@
         "paymentType": "Tipo di pagamento",
         "state": "Stato"
       },
-      "states":{
+      "states": {
         "inActivation": "In attivazione",
         "active": "Attivo",
         "expiring": "In scadenza",
@@ -912,7 +912,7 @@
         "to": "A",
         "all": "Tutti"
       },
-      "addTaxonomies":{
+      "addTaxonomies": {
         "subTitle": "Cerca i servici di incasso sfogliando il catalogo oppure carica una lista di codici.",
         "manualHelp": "Dubbi? Vai al manuale",
         "catalogueButton": "Sfoglia il catalogo",
@@ -1030,7 +1030,7 @@
       "getOperationTableListDesc": "Errore durante il recupero dei dati"
     }
   },
-  "delegationsPage":{
+  "delegationsPage": {
     "title": "I tuoi enti",
     "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
     "downloadButton": "Scarica lista",
@@ -1039,13 +1039,27 @@
       "placeholder": "Cerca per nome"
     },
     "table": {
-      "noDelegations": "Non sono ancora presenti enti"
+      "emptyState": "Non sono ancora presenti enti"
     },
     "column": {
       "companyName": "Nome o Ragione Sociale",
       "taxCode": "Codice Fiscale",
       "cbill": "CBILL",
       "stations": "Stazioni"
+    }
+  },
+  "paymentsReceiptsPage": {
+    "title": "Pagamenti Canone Unico Patrimoniale",
+    "search": {
+      "placeholder": "Cerca per codice fiscale del debitore"
+    },
+    "table": {
+      "emptyState": "Non sono ancora presenti posizioni debitorie"
+    },
+    "column": {
+      "iuv": "IUV",
+      "taxCode": "Codice Fiscale Debitore",
+      "downloadButton": "Scarica ricevuta"
     }
   },
   "sideMenu": {
@@ -1072,6 +1086,9 @@
     },
     "delegations": {
       "title": "I tuoi enti"
+    },
+    "paymentsReceipts": {
+      "title": "Pagamenti CUP"
     }
   },
   "header": {

@@ -10,6 +10,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import EuroIcon from '@mui/icons-material/Euro';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import StorageIcon from '@mui/icons-material/Storage';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
@@ -137,6 +138,19 @@ export default function SideMenu() {
               icon={ExtensionIcon}
               disabled={isDisabled}
               dataTestId="operation-table-test"
+            />
+          )}
+          {useFlagValue('payments-receipts') && hasPermission('payments-receipts') && (
+            <SidenavItem
+              title={t('sideMenu.paymentsReceipts.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.PAYMENTS_RECEIPTS))}
+              isSelected={
+                pathname === ROUTES.PAYMENTS_RECEIPTS ||
+                pathname.startsWith(ROUTES.PAYMENTS_RECEIPTS)
+              }
+              icon={ReceiptIcon}
+              disabled={isDisabled}
+              dataTestId="payments-receipts-test"
             />
           )}
         </List>

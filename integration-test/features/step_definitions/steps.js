@@ -28,6 +28,7 @@ Before(function () {
 
 Given('Logged User and selected org {string}', async (org) => {
     browser = await puppeteer.launch({headless: 'new'});
+    // browser = await puppeteer.launch({headless: false});
     page = await browser.newPage();
     page.setDefaultTimeout(defaultTimeout);
     let cookie = [
@@ -61,23 +62,10 @@ When('the client goes to {string}', async function (url) {
         window.localStorage.setItem('acceptTOS', JSON.stringify(tos));
         window.localStorage.setItem('token', jwt);
     }, jwt);
-    // store in localstorage the token
-    // await page.evaluateOnNewDocument (
-    //     jwt => {
-    //         let user = {
-    //                     "uid": "5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8",
-    //             "name": "Anselmo",
-    //             "surname": "Sartori",
-    //             "email": "furiovitale@martino.it"
-    //         };
-    //         let tos = {"id": "5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8", "timestamp": "2024-02-20T14:28:10.041Z"};
-    //         localStorage.setItem('user', JSON.stringify(user));
-    //             localStorage.setItem('acceptTOS', JSON.stringify(tos));
-    //             localStorage.setItem('token', jwt);
-    //     }, jwt);
     await delay(1000);
-    await page.goto(url.replace('#logged=forced', ''));
+    await page.goto(url.replace('#logged=forced', ''), {'waitUntil':'load'});
 });
+
 When('types {string} on {string}', async function (value, selector) {
     // await type(page, elem, value);
     selector = idMapper[selector] ?? selector;

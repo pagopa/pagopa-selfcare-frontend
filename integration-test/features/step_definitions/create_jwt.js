@@ -5,7 +5,7 @@ const create_jwt = async (org_id) => {
 
 
     let cert = process.env.KEY_PEM;
-    if (!cert || cert.length > 0) {
+    if (!cert) {
         console.log("read cert from file");
         cert = fs.readFileSync('./key.pem');
     }

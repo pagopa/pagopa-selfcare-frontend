@@ -144,7 +144,7 @@ Then('{string} is disabled', async function (selector) {
 
 
 After(async function () {
-    // await browser.close();
+    await browser.close();
 });
 
 

@@ -12,8 +12,12 @@ const login = async (page, username, password, org) => {
     await clickXPath(page, "selfcare ente selezionato")
     await clickXPath(page, "accedi su selfcare")
     await clickXPath(page, "Panoramica selfcare")
+    await page.waitForNetworkIdle();
+    await delay(500);
     await click(page, "Piattaforma pagoPA")
+    await delay(500);
     await clickXPath(page, "Ambiente Collaudo")
+    await delay(2000);
     await clickXPath(page, "Accedi a Backoffice")
     await page.waitForNetworkIdle();
     await delay(1000);

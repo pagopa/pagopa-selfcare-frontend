@@ -75,6 +75,7 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
         } else if (!selectedParty || selectedParty.partyId !== partyJwtConfig.partyId) {
             setLoadingDetails(true);
             if (ENV.MOCK.SELFCARE) {
+                // eslint-disable-next-line functional/immutable-data
                 partyJwtConfig.partyId = selectedParty?.partyId ?? pspAdminSignedDirect.partyId;
             }
             return fetchParty(partyJwtConfig.partyId)

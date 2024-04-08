@@ -144,7 +144,7 @@ export default function SideMenu() {
                     )}
 
 
-                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                    { (
                         <React.Fragment>
 
                             <Divider sx={{ marginY: 1 }} />

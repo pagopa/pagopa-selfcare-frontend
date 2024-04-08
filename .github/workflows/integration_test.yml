@@ -35,20 +35,20 @@ jobs:
 
           yarn run cucumber
 
-  notify:
-    needs: [ integration_test ]
-    runs-on: ubuntu-latest
-    name: Notify
-    if: ${{ always() }}
-    steps:
-      - name: Report Status
-        uses: ravsamhq/notify-slack-action@v2
-        with:
-          status: ${{ needs.integration_test.result }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          notify_when: 'success,failure,skipped'
-          notification_title: '<{run_url}|Scheduled Integration Test> has {status_message}'
-          message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
-          footer: 'Linked to <{workflow_url}| workflow file>'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#  notify:
+#    needs: [ integration_test ]
+#    runs-on: ubuntu-latest
+#    name: Notify
+#    if: ${{ always() }}
+#    steps:
+#      - name: Report Status
+#        uses: ravsamhq/notify-slack-action@v2
+#        with:
+#          status: ${{ needs.integration_test.result }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          notify_when: 'success,failure,skipped'
+#          notification_title: '<{run_url}|Scheduled Integration Test> has {status_message}'
+#          message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
+#          footer: 'Linked to <{workflow_url}| workflow file>'
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

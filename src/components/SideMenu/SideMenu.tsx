@@ -144,7 +144,7 @@ export default function SideMenu() {
                     )}
 
 
-                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                    { (
                         <SidenavItem
                             title={t('sideMenu.users.title')}
                             handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}

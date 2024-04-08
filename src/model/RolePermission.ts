@@ -87,9 +87,7 @@ export const permissions = {
   ],
   "payments-receipts": [
     ROLE.EC_ADMIN,
-    ROLE.EC_OPERATOR,
-    ROLE.EC_DIRECT_ADMIN,
-    ROLE.EC_DIRECT_OPERATOR
+    ROLE.EC_DIRECT_ADMIN
   ]
 };
 

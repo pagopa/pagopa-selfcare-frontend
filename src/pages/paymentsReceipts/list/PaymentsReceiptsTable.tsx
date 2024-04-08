@@ -29,7 +29,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
   function downloadReceiptXML(iuv: string) {
     getPaymentReceiptDetail(selectedParty?.fiscalCode ?? '', iuv)
       .then((xml: string) => {
-        const filename = `${iuv}-receipt.xml`;
+        const filename = `ricevuta_${iuv}.xml`;
         const download = document.createElement('a');
         const blob = new Blob([xml], { type: 'text/plain' });
         download.setAttribute('href', window.URL.createObjectURL(blob));

@@ -1050,6 +1050,12 @@
     },
     "operationTable": {
       "title": "Tavoli Operativi"
+    },
+    "users": {
+      "title": "Utenti"
+    },
+    "groups": {
+      "title": "Gruppi"
     }
   },
   "header": {

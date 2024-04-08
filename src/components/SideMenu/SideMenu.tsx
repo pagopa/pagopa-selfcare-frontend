@@ -9,6 +9,9 @@ import UsbIcon from '@mui/icons-material/Usb';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EuroIcon from '@mui/icons-material/Euro';
 import ExtensionIcon from '@mui/icons-material/Extension';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+
 
 import {useEffect, useState} from 'react';
 import {ENV} from '../../utils/env';
@@ -38,6 +41,7 @@ export default function SideMenu() {
         history.listen(() => setPathName(history.location.pathname));
         return history.location.pathname;
     });
+    const SELFCARE_URL = `${ENV.URL_FE.SELFCARE}${selectedParty?.partyId}`;
 
     useEffect(() => {
         const isSignedOnNode = signinData ? isSigned(signinData) : true;
@@ -127,6 +131,26 @@ export default function SideMenu() {
                             dataTestId="operation-table-test"
                         />
                     )}
+
+
+                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                        <SidenavItem
+                            title={t('sideMenu.users.title')}
+                            handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
+                            icon={PeopleAltIcon}
+                            dataTestId={'selfcare-users-test'}
+                        />
+                    )}
+
+                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                        <SidenavItem
+                            title={t('sideMenu.groups.title')}
+                            handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
+                            icon={SupervisedUserCircleIcon}
+                            dataTestId={'selfcare-groups-test'}
+                        />
+                    )}
+
                 </List>
             </Box>
         </Box>

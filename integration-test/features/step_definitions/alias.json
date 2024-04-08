@@ -1,4 +1,6 @@
 {
+  "Comune di Frosinone": "5b46b1d5-63fa-43fb-adc4-21093b1d6cd6",
+  "PSP Signed Direct": "2d6fe3c6-5656-43c8-afd4-ccf2bb352cec",
   "login con spid": "#spidButton",
   "spid test": "#xx_testenv2",
   "username": "#username",
@@ -34,7 +36,7 @@
   "touchpoint": "[data-testid=touchpoint-test]",
   "bancomat Pay": "li[data-value=BPAY]",
   "codice intermediario": "#brokerCodes",
-  "PSP Signed Direct": "#brokerCodes-option-0",
+  "PSP Signed Direct Option": "#brokerCodes-option-0",
   "codice canale": "#idChannel",
   "data inizio validità": "#validityDateFrom",
   "data fine validità": "#validityDateTo",

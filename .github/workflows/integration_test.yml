@@ -31,6 +31,8 @@ jobs:
           cd ./integration-test
           yarn install
 
+          export KEY_PEM='${{ secrets.KEY_PEM }}'
+
           yarn run cucumber
 
   notify:

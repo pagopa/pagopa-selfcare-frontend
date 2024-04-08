@@ -1,6 +1,6 @@
-prefix    = "pagopa"
-env       = "prod"
-env_short = "p"
+prefix     = "pagopa"
+env        = "prod"
+env_short  = "p"
 
 tags = {
   CreatedBy   = "Terraform"

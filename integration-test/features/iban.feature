@@ -1,7 +1,7 @@
 #Feature: IBAN
 #
 #  Background:
-#    Given Logged User "test" "test" and selected org "EC Signed Direct"
+#    Given Logged User and selected org "EC Signed Direct"
 #
 #
 #  Scenario: Iban Add

@@ -3,6 +3,7 @@
     "cucumber": "npx cucumber-js --publish"
   },
   "dependencies": {
+    "jsonwebtoken": "^9.0.2",
     "npx": "^10.2.2",
     "puppeteer": "^21.6.1"
   },

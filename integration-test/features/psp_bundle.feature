@@ -1,7 +1,7 @@
 Feature: Pacchetti Globali [PSP]
 
   Background:
-    Given Logged User "test" "test" and selected org "PSP Signed Direct"
+    Given Logged User and selected org "PSP Signed Direct"
 
 
   Scenario: Create Bundle
@@ -14,7 +14,7 @@ Feature: Pacchetti Globali [PSP]
     And fills the form
       | nome pacchetto     | descrizione pacchetto | importo minimo | importo massimo | fee |
       | pacchetto int test | test integrazione     | 1              | 100             | 1   |
-    And types "PSP Signed Direct" in "codice intermediario" and selects the value "PSP Signed Direct"
+    And types "PSP Signed Direct" in "codice intermediario" and selects the value "PSP Signed Direct Option"
     And types "99999000001_01" in "codice canale" and selects the value "99999000001_01"
     And types "13/01/2025" on "data inizio validità"
     And types "14/01/2025" on "data fine validità"

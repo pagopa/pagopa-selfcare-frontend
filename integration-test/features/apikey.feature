@@ -1,7 +1,7 @@
 Feature: Api Key
 
   Background:
-    Given Logged User "test" "test" and selected org "Comune di Frosinone"
+    Given Logged User and selected org "Comune di Frosinone"
 
 
   Scenario: Api Key for GPD Exists

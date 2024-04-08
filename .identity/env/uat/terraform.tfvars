@@ -1,6 +1,6 @@
-prefix    = "pagopa"
-env       = "uat"
-env_short = "u"
+prefix     = "pagopa"
+env        = "uat"
+env_short  = "u"
 
 tags = {
   CreatedBy   = "Terraform"

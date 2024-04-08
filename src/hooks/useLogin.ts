@@ -67,11 +67,8 @@ export const useLogin = () => {
             const {pathname, search} = history.location;
             history.replace({pathname, search, hash: ''});
 
-            const success = await couldSetTokenFromSelfCareIdentityToken(newSelfCareIdentityToken);
-            // If ok, no need to go on
-            if (success) {
-                // return;
-            }
+            await couldSetTokenFromSelfCareIdentityToken(newSelfCareIdentityToken);
+
         }
 
         const token = storageTokenOps.read();
@@ -87,16 +84,9 @@ export const useLogin = () => {
             return;
         }
 
-        // const sessionStorageUser = storageUserOps.read();
-
-        // if (isEmpty(sessionStorageUser)) {
         const user: User = userFromJwtToken(token);
         storageUserOps.write(user);
         setUser(user);
-        // } else {
-        //   // Otherwise, set the user to the one stored in the storage
-        //   setUser(sessionStorageUser);
-        // }
     };
 
     return {attemptSilentLogin};

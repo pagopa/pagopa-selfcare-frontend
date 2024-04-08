@@ -1,7 +1,7 @@
 #Feature: Stazioni
 #
 #  Background:
-#    Given Logged User "test" "test" and selected org "Comune di Frosinone"
+#    Given Logged User and selected org "Comune di Frosinone"
 #
 #
 #  Scenario: Create Station

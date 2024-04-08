@@ -6,12 +6,10 @@ See the alias.json file to map your alis with a selector.
 
 All the Given steps.
 
-### Logged User {user} {password} and selected org {organization name}
+### Logged User and selected org {organization name}
 
 | var               | type     | description          |
 |-------------------|----------|----------------------|
-| user              | `string` | username of the user |
-| password          | `string` | password of the user |
 | organization name | `string` | organization name    |
 
 ## When

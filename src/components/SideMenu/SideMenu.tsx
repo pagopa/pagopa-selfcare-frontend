@@ -153,7 +153,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                    { (
                         <SidenavItem
                             title={t('sideMenu.groups.title')}
                             handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}

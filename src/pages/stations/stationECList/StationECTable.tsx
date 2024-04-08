@@ -207,12 +207,12 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
       <SessionModal
         open={showConfirmModal}
         title={
-          t('stationECList.dissociateModal.title', {ecName: selectedECName})
+          t('stationECList.dissociateModal.title')
         }
         message={
-          <Trans i18nKey="stationECList.dissociateModal.message">
-            Se dissoci un EC, sarà disattivata la sua connessione al canale.
-          </Trans>
+          <Trans i18nKey="stationECList.dissociateModal.message"
+          values={{"ecName": selectedECName}}
+          defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione." />
         }
         onConfirmLabel={t('stationECList.dissociateModal.confirmButton')}
         onCloseLabel={t('stationECList.dissociateModal.cancelButton')}

@@ -12,7 +12,7 @@ import ExtensionIcon from '@mui/icons-material/Extension';
 import StorageIcon from '@mui/icons-material/Storage';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import { useAppSelector } from '../../redux/hooks';
@@ -145,21 +145,24 @@ export default function SideMenu() {
 
 
                     {ENV.FEATURES.DASHBOARD.ENABLED && (
-                        <SidenavItem
-                            title={t('sideMenu.users.title')}
-                            handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
-                            icon={PeopleAltIcon}
-                            dataTestId={'selfcare-users-test'}
-                        />
-                    )}
+                        <React.Fragment>
 
-                    {ENV.FEATURES.DASHBOARD.ENABLED && (
-                        <SidenavItem
-                            title={t('sideMenu.groups.title')}
-                            handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
-                            icon={SupervisedUserCircleIcon}
-                            dataTestId={'selfcare-groups-test'}
-                        />
+                            <Divider sx={{ marginY: 1 }} />
+
+                            <SidenavItem
+                                title={t('sideMenu.users.title')}
+                                handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
+                                icon={PeopleAltIcon}
+                                dataTestId={'selfcare-users-test'}
+                            />
+
+                            <SidenavItem
+                                title={t('sideMenu.groups.title')}
+                                handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
+                                icon={SupervisedUserCircleIcon}
+                                dataTestId={'selfcare-groups-test'}
+                            />
+                        </React.Fragment>
                     )}
 
                 </List>

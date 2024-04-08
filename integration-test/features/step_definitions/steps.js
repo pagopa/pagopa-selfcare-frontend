@@ -27,7 +27,7 @@ Before(function () {
 });
 
 Given('Logged User and selected org {string}', async (org) => {
-    browser = await puppeteer.launch({headless: false});
+    browser = await puppeteer.launch({headless: 'new'});
     page = await browser.newPage();
     page.setDefaultTimeout(defaultTimeout);
     let cookie = [

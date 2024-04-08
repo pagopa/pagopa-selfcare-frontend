@@ -33,8 +33,44 @@ describe('<DelegationsPage />', () => {
 
     fireEvent.click(downloadCSVButton);
 
+    let alertTest;
     await waitFor(() => {
-      expect(screen.queryByTestId('alert-test')).toBeInTheDocument();
+      alertTest = screen.queryByTestId('alert-test');
+      expect(alertTest).toBeInTheDocument();
     });
+
+    const buttonGotIt = screen.getByTestId('got-it-button');
+    fireEvent.click(buttonGotIt);
+    await waitFor(() => {
+      expect(alertTest).not.toBeInTheDocument();
+    });
+  });
+
+  test('render component DelegationsPage with mocked time', async () => {
+    jest.setSystemTime(new Date(2020, 3, 1, 5, 5))
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/delegations-list`]}>
+          <Route path="/delegations-list">
+            <ThemeProvider theme={theme}>
+              <DelegationsPage />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('alert-test')).not.toBeInTheDocument();
+    const downloadCSVButton = screen.getByTestId('download-list-button');
+
+    fireEvent.click(downloadCSVButton);
+
+    let alertTest;
+    await waitFor(() => {
+      alertTest = screen.queryByTestId('alert-test');
+      expect(alertTest).toBeInTheDocument();
+    });
+
+
   });
 });

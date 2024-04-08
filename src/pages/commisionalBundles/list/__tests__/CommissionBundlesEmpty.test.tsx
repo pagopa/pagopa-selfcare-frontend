@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import CommissionBundlesEmpty from '../../list/CommissionBundlesEmpty';
+import CommissionBundlesEmpty from '../CommissionBundlesEmpty';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,6 +1,8 @@
-import {GridColumnHeaderParams, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
-import {cleanup} from '@testing-library/react';
-import {buildColumnDefs, renderCell, showChannelCode, showCustomHeader, showStatus,} from '../ChannelsTableColumns';
+import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
+import { cleanup, render } from '@testing-library/react';
+import { buildColumnDefs, showStatus } from '../ChannelsTableColumns';
+import { showCustomHeader } from '../../../../components/Table/TableUtils';
+import React from 'react';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -48,21 +50,6 @@ describe('<ChannelsTableColumns />', () => {
       headerName: 'Creation Date',
     };
 
-    const customHeaderChannel: GridColumnHeaderParams = {
-      field: 'channel_code',
-      colDef: colDefMocked,
-    };
-
-    const customHeaderBroker: GridColumnHeaderParams = {
-      field: 'broker_description',
-      colDef: colDefMockedBroker,
-    };
-
-    const customHeaderStatus: GridColumnHeaderParams = {
-      field: 'enabled',
-      colDef: colDefMockedStatus,
-    };
-
     const params: GridRenderCellParams<any, any, any> = {
       value: 'some value',
       row: {
@@ -108,72 +95,86 @@ describe('<ChannelsTableColumns />', () => {
       tabIndex: 0,
     };
 
-    // const ArrayBuildColumnDefs = [
-    //   {
-    //     field: 'channel_code',
-    //     cellClassName: 'justifyContentBold',
-    //     headerName: 'Channel Name',
-    //     align: 'left',
-    //     headerAlign: 'left',
-    //     width: 403,
-    //     editable: false,
-    //     disableColumnMenu: true,
-    //     renderHeader: showCustomHeader,
-    //     renderCell: (params: any) => showChannelCode(params),
-    //     sortable: true,
-    //     flex: 4,
-    //   },
-    //   {
-    //     field: 'broker_description',
-    //     cellClassName: 'justifyContentNormal',
-    //     headerName: 'Creation Date',
-    //     align: 'left',
-    //     headerAlign: 'left',
-    //     width: 404,
-    //     editable: false,
-    //     disableColumnMenu: true,
-    //     renderHeader: showCustomHeader,
-    //     renderCell: (params) => renderCell(params, undefined),
-    //     sortable: false,
-    //     flex: 4,
-    //   },
-    //   {
-    //     field: 'enabled',
-    //     cellClassName: 'justifyContentNormal',
-    //     headerName: 'Status',
-    //     align: 'left',
-    //     headerAlign: 'left',
-    //     width: 404,
-    //     editable: false,
-    //     disableColumnMenu: true,
-    //     renderHeader: showCustomHeader,
-    //     renderCell: (params) => renderCell(params, undefined),
-    //     sortable: false,
-    //     flex: 4,
-    //     enabled: true,
-    //   },
-    //   {
-    //     field: 'actions',
-    //     cellClassName: 'justifyContentNormalRight',
-    //     type: 'actions',
-    //     headerName: '',
-    //     align: 'center',
-    //     hideSortIcons: true,
-    //     disableColumnMenu: true,
-    //     editable: false,
-
-    //     getActions: () => <React.Fragment></React.Fragment>,
-    //     sortable: false,
-    //     flex: 1,
-    //   },
-    // ] as Array<GridColDef>;
+    const ArrayBuildColumnDefs = [
+      {
+        field: 'channel_code',
+        cellClassName: 'justifyContentBold',
+        headerName: 'Channel Name',
+        align: 'left',
+        headerAlign: 'left',
+        width: 404,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: showCustomHeader,
+        renderCell: expect.any(Function),
+        sortable: true,
+        flex: 4,
+      },
+      {
+        field: 'createdAt',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Created At',
+        align: 'left',
+        headerAlign: 'left',
+        width: 404,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: showCustomHeader,
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'modifiedAt',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Modified At',
+        align: 'left',
+        headerAlign: 'left',
+        width: 404,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: showCustomHeader,
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'enabled',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Status',
+        align: 'left',
+        headerAlign: 'left',
+        width: 404,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: showCustomHeader,
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'actions',
+        cellClassName: 'justifyContentNormalRight',
+        type: 'actions',
+        headerName: '',
+        align: 'center',
+        hideSortIcons: true,
+        disableColumnMenu: true,
+        editable: false,
+        getActions: expect.any(Function),
+        sortable: false,
+        flex: 1,
+      },
+    ] as Array<GridColDef>;
 
     const mockTFunction = (key: string) => {
       switch (key) {
         case 'channelsPage.channelsTableColumns.headerFields.name':
           return 'Channel Name';
-        case 'channelsPage.channelsTableColumns.headerFields.description':
-          return 'Creation Date';
+        case 'channelsPage.channelsTableColumns.headerFields.creationDate':
+          return 'Created At';
+        case 'channelsPage.channelsTableColumns.headerFields.lastEditDate':
+          return 'Modified At';
         case 'channelsPage.channelsTableColumns.headerFields.status':
           return 'Status';
         default:
@@ -181,45 +182,9 @@ describe('<ChannelsTableColumns />', () => {
       }
     };
 
-    buildColumnDefs(mockTFunction, () => jest.fn());
+    const realColumns = buildColumnDefs(mockTFunction, () => jest.fn()) as Array<any>;
+    expect(realColumns).toEqual(ArrayBuildColumnDefs);
 
-    showChannelCode(params);
-    showStatus(params);
-    showCustomHeader(customHeaderChannel);
-    renderCell(params);
-
-    showChannelCode(paramsBroker);
-    showStatus(paramsBroker);
-    showCustomHeader(customHeaderBroker);
-    renderCell(paramsBroker, undefined);
-
-    showChannelCode(paramsStatus);
-    showStatus(paramsStatus);
-    showCustomHeader(customHeaderStatus);
-    renderCell(paramsStatus, undefined);
-
-    // const columnDefs = buildColumnDefs(mockTFunction, onRowClickMocked);
-
-    // const renderCellMocked =
-    //   typeof renderCell !== 'undefined' ? columnDefs[0].renderCell : colDefMocked[0].field;
-
-    // const result = renderCellMocked(ArrayBuildColumnDefs[0].field);
-    // expect(result).toEqual(ArrayBuildColumnDefs[0]);
-
-    // const columnDefsBrk = buildColumnDefs(mockTFunction, onRowClickMocked);
-    // const renderCellBrkMocked =
-    //   typeof renderCell !== 'undefined' ? columnDefsBrk[1].renderCell : colDefMockedBroker[1].field;
-
-    // const resultBrk = renderCellBrkMocked(ArrayBuildColumnDefs[1].field);
-    // expect(resultBrk).toEqual(ArrayBuildColumnDefs[1]);
-
-    // const columnDefsStatus = buildColumnDefs(mockTFunction, onRowClickMocked);
-    // const renderCellStatus =
-    //   typeof renderCell !== 'undefined'
-    //     ? columnDefsStatus[2].renderCell
-    //     : colDefMockedBroker[1].field;
-
-    // const resultStatus = renderCellStatus(ArrayBuildColumnDefs[2].field);
-    // expect(resultStatus).toEqual(ArrayBuildColumnDefs[2]);
+    render(<>{showStatus(params)}</>);
   });
 });

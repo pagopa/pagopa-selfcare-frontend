@@ -4,8 +4,11 @@ const jwt = require('jsonwebtoken');
 const create_jwt = async (org_id) => {
 
 
-    // const cert = fs.readFileSync('./key.pem');
-    const cert = process.env.KEY_PEM;
+    let cert = process.env.KEY_PEM;
+    if (!cert || cert.length > 0) {
+        console.log("read cert from file");
+        cert = fs.readFileSync('./key.pem');
+    }
 
     const payload = {
         iat: 1712578722,
@@ -23,17 +26,9 @@ const create_jwt = async (org_id) => {
 
     const signOptions = {
         algorithm: 'RS256',
-        expiresIn: '1h'
+        expiresIn: '1d'
     };
 
-    jwt.sign(payload, cert, signOptions, (err, token) => {
-        if (err) {
-            console.error('Erro during the creation of the token:', err);
-            throw err;
-        } else {
-            return token;
-        }
-    });
-
+    return jwt.sign(payload, cert, signOptions);
 }
 module.exports = {create_jwt};

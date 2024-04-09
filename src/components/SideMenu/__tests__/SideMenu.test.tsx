@@ -18,12 +18,8 @@ import { theme } from '@pagopa/mui-italia';
 import { createStore } from '../../../redux/store';
 import {
   ecAdminSignedDirect,
-  pspAdminSignedDirect,
   pspAdminUnsigned,
 } from '../../../services/__mocks__/partyService';
-import ROUTES from '../../../routes';
-import { pspDetails } from '../../../services/__mocks__/nodeService';
-import { useFlagValue } from '../../../hooks/useFeatureFlags';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,9 +1,9 @@
-import { Divider, Paper, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { TFunction, useTranslation } from 'react-i18next';
 import { CIPaymentContact } from '../../../api/generated/portal/CIPaymentContact';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';
 
@@ -32,32 +32,7 @@ export default function DelegationDetailPaymentContacts({
         ?.filter((_, i) => i < 1)
         ?.map((el) => (
           <Box key={`payment-contact-${el.id}`} mt={1} data-testid="payment-contact-column">
-            <Box mt={1}>
-              <Typography variant="body1" color="action.active">
-                {t('delegationDetailPage.paymentContacts.name')}
-              </Typography>
-              <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                {el?.name ?? '-'}
-              </Typography>
-            </Box>
-
-            <Box mt={1}>
-              <Typography variant="body1" color="action.active">
-                {t('delegationDetailPage.paymentContacts.surname')}
-              </Typography>
-              <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                {el?.surname ?? '-'}
-              </Typography>
-            </Box>
-
-            <Box mt={1}>
-              <Typography variant="body1" color="action.active">
-                {t('delegationDetailPage.paymentContacts.email')}
-              </Typography>
-              <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                {el?.email ?? '-'}
-              </Typography>
-            </Box>
+            <DelegationDetailPaymentContactsBody t={t} paymentContact={el}/>
           </Box>
         ))}
       {paymentContacts && paymentContacts.length > 1 && (
@@ -83,32 +58,7 @@ export default function DelegationDetailPaymentContacts({
                     </Typography>
                   </Box>
 
-                  <Box mt={1}>
-                    <Typography variant="body1" color="action.active">
-                      {t('delegationDetailPage.paymentContacts.name')}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                      {el?.name ?? '-'}
-                    </Typography>
-                  </Box>
-
-                  <Box mt={1}>
-                    <Typography variant="body1" color="action.active">
-                      {t('delegationDetailPage.paymentContacts.surname')}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                      {el?.surname ?? '-'}
-                    </Typography>
-                  </Box>
-
-                  <Box mt={1}>
-                    <Typography variant="body1" color="action.active">
-                      {t('delegationDetailPage.paymentContacts.email')}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                      {el?.email ?? '-'}
-                    </Typography>
-                  </Box>
+                  <DelegationDetailPaymentContactsBody t={t} paymentContact={el}/>
                 </Box>
               </React.Fragment>
             ))}
@@ -118,3 +68,40 @@ export default function DelegationDetailPaymentContacts({
     </Paper>
   );
 }
+
+export const DelegationDetailPaymentContactsBody = ({
+  t,
+  paymentContact,
+}: {
+  t: TFunction<'translation', undefined>;
+  paymentContact: CIPaymentContact;
+}) => (
+  <>
+    <Box mt={1}>
+      <Typography variant="body1" color="action.active">
+        {t('delegationDetailPage.paymentContacts.name')}
+      </Typography>
+      <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+        {paymentContact?.name ?? '-'}
+      </Typography>
+    </Box>
+
+    <Box mt={1}>
+      <Typography variant="body1" color="action.active">
+        {t('delegationDetailPage.paymentContacts.surname')}
+      </Typography>
+      <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+        {paymentContact?.surname ?? '-'}
+      </Typography>
+    </Box>
+
+    <Box mt={1}>
+      <Typography variant="body1" color="action.active">
+        {t('delegationDetailPage.paymentContacts.email')}
+      </Typography>
+      <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+        {paymentContact?.email ?? '-'}
+      </Typography>
+    </Box>
+    </>
+);

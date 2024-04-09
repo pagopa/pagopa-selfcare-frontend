@@ -49,7 +49,7 @@ Given('Logged User and selected org {string}', async (org) => {
 });
 
 When('the client goes to {string}', async function (url) {
-    await page.goto(url);
+    await page.goto(url+'#logged=forced');
     await page.evaluate((jwt) => {
         let user = {
             "uid": "5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8",
@@ -63,7 +63,7 @@ When('the client goes to {string}', async function (url) {
         window.localStorage.setItem('token', jwt);
     }, jwt);
     await delay(1000);
-    await page.goto(url.replace('#logged=forced', ''), {'waitUntil':'load'});
+    await page.goto(url, {'waitUntil':'load'});
 });
 
 When('types {string} on {string}', async function (value, selector) {

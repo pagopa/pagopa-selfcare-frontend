@@ -45,7 +45,7 @@ import OperationTableDetailPage from './pages/operationTable/detail/OperationTab
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import MaintenancePage from './pages/maintenance/MaintenancePage';
-import { useFlagValue } from './hooks/useFeatureFlags';
+import { useFeatureFlags, useFlagValue } from './hooks/useFeatureFlags';
 import withFeatureFlags from './decorators/withFeatureFlags';
 import DelegationsPage from './pages/delegations/DelegationsPage';
 import PaymentsReceiptsPage from './pages/paymentsReceipts/PaymentsReceiptsPage';
@@ -203,22 +203,22 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-list">
+                  <ProtectedRoute permission="commission-bundles-list" flagValue='commission-bundles'>
                     <CommissionBundlesPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_DETAIL} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-list">
+                  <ProtectedRoute permission="commission-bundles-list" flagValue='commission-bundles'>
                     <CommissionBundleDetailPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-addedit">
+                  <ProtectedRoute permission="commission-bundles-addedit" flagValue='commission-bundles'>
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_EDIT} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-addedit">
+                  <ProtectedRoute permission="commission-bundles-addedit" flagValue='commission-bundles'>
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
@@ -239,20 +239,16 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
-                {useFlagValue('delegations-list') && (
-                  <Route path={routes.DELEGATIONS_LIST} exact={true}>
-                    <ProtectedRoute permission="delegations-list">
-                      <DelegationsPage />
-                    </ProtectedRoute>
-                  </Route>
-                )}
-                {useFlagValue('payments-receipts') && (
-                  <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
-                    <ProtectedRoute permission="payments-receipts">
-                      <PaymentsReceiptsPage />
-                    </ProtectedRoute>
-                  </Route>
-                )}
+                <Route path={routes.DELEGATIONS_LIST} exact={true}>
+                  <ProtectedRoute permission="delegations-list" flagValue='delegations-list'>
+                    <DelegationsPage />
+                  </ProtectedRoute>
+                </Route>
+                <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
+                  <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
+                    <PaymentsReceiptsPage />
+                  </ProtectedRoute>
+                </Route>
 
                 <Route path={routes.TOS} exact={true}>
                   <TOS />

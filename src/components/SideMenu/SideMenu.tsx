@@ -10,8 +10,10 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import EuroIcon from '@mui/icons-material/Euro';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import StorageIcon from '@mui/icons-material/Storage';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-import { useEffect, useState } from 'react';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import { useAppSelector } from '../../redux/hooks';
@@ -39,6 +41,7 @@ export default function SideMenu() {
     history.listen(() => setPathName(history.location.pathname));
     return history.location.pathname;
   });
+  const SELFCARE_URL = `${ENV.URL_FE.SELFCARE}${selectedParty?.partyId}`;
 
   useEffect(() => {
     const isSignedOnNode = signinData ? isSigned(signinData) : true;
@@ -153,6 +156,24 @@ export default function SideMenu() {
               dataTestId="payments-receipts-test"
             />
           )}
+
+          <React.Fragment>
+            <Divider sx={{ marginY: 1 }} />
+
+            <SidenavItem
+              title={t('sideMenu.users.title')}
+              handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
+              icon={PeopleAltIcon}
+              dataTestId={'selfcare-users-test'}
+            />
+
+            <SidenavItem
+              title={t('sideMenu.groups.title')}
+              handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
+              icon={SupervisedUserCircleIcon}
+              dataTestId={'selfcare-groups-test'}
+            />
+          </React.Fragment>
         </List>
       </Box>
     </Box>

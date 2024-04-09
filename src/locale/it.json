@@ -603,7 +603,7 @@
     },
     "dissociateModal": {
       "title": "Dissocia EC",
-      "message": "Se dissoci un EC, sarà disattivata la sua connessione alla stazione.",
+      "message": "Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione.",
       "confirmButton": "Dissocia EC",
       "cancelButton": "Torna indietro"
     }
@@ -1089,6 +1089,12 @@
     },
     "paymentsReceipts": {
       "title": "Pagamenti CUP"
+    },
+    "users": {
+      "title": "Utenti"
+    },
+    "groups": {
+      "title": "Gruppi"
     }
   },
   "header": {

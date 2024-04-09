@@ -36,7 +36,8 @@ export function TOS() {
             variantSubTitle="body1"
           />
 
-          <div dangerouslySetInnerHTML={{ __html: htmlString }} />
+{/*           <div dangerouslySetInnerHTML={{ __html: htmlString }} /> */}
+         <div dangerouslySetInnerHTML={{ __html: t(`general.maintenancePageText`) }} />
         </Grid>
       </Grid>
     </React.Fragment>

@@ -80,7 +80,7 @@ const validate = (
                     : undefined,
                 validityDateFrom: !values.validityDateFrom
                     ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-                    : (edit === undefined || edit !== true) &&
+                    : (edit === undefined || !edit) &&
                     values.validityDateFrom.getTime() < minDateTomorrow.getTime()
                         ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
                         : values.validityDateTo &&

@@ -1,22 +1,34 @@
-const {clickXPath, typeXPath} = require("./user_event");
+const {clickXPath, typeXPath, click, type} = require("./user_event");
 
 
 const login = async (page, username, password, org) => {
-    await clickXPath(page, "login con spid");
-    await clickXPath(page, "spid test")
-    await typeXPath(page, "username", username)
-    await typeXPath(page, "password", password)
-    await clickXPath(page, "invia")
-    await clickXPath(page, "invia2")
+    await click(page, "login con spid");
+    await click(page, "spid test")
+    await type(page, "username", username)
+    await type(page, "password", password)
+    await click(page, "invia")
+    await click(page, "invia")
     await typeXPath(page, "selfcare cerca enti", org)
     await clickXPath(page, "selfcare ente selezionato")
     await clickXPath(page, "accedi su selfcare")
     await clickXPath(page, "Panoramica selfcare")
-    await clickXPath(page, "Piattaforma pagoPA")
+    await page.waitForNetworkIdle();
+    await delay(500);
+    await click(page, "Piattaforma pagoPA")
+    await delay(500);
     await clickXPath(page, "Ambiente Collaudo")
+    await delay(2000);
     await clickXPath(page, "Accedi a Backoffice")
     await page.waitForNetworkIdle();
+    await delay(1000);
     await clickXPath(page, "Accetta Privacy")
 }
 
 module.exports = {login};
+
+
+function delay(time) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, time)
+    });
+}

@@ -5,7 +5,6 @@ const idMapper = require('./alias.json');
 const {delay} = require("../../commons");
 
 async function typeXPath(page, selector, value) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
 
     // wait for element defined by XPath appear in page
@@ -17,7 +16,6 @@ async function typeXPath(page, selector, value) {
 }
 
 async function checkXPath(page, selector, expectedValue) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
 
     // wait for element defined by XPath appear in page
@@ -30,8 +28,8 @@ async function checkXPath(page, selector, expectedValue) {
 }
 
 async function clickXPath(page, selector) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
+    console.log(`searching for ${selector}`);
 
     // wait for element defined by XPath appear in page
     await page.waitForXPath(selector, {timeout: defaultTimeout});
@@ -56,7 +54,6 @@ async function clickXPath(page, selector) {
 
 
 async function type(page, selector, value) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
 
     await page.waitForSelector(selector, {timeout: defaultTimeout});
@@ -66,7 +63,6 @@ async function type(page, selector, value) {
 }
 
 async function check(page, selector, expectedValue) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
 
     await page.waitForSelector(selector, {timeout: defaultTimeout});
@@ -77,7 +73,6 @@ async function check(page, selector, expectedValue) {
 }
 
 async function exist(page, selector) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
 
     await page.waitForSelector(selector, {timeout: defaultTimeout});
@@ -87,14 +82,15 @@ async function exist(page, selector) {
 }
 
 async function click(page, selector) {
-    await delay(100);
     selector = idMapper[selector] ?? selector;
+    selector += ':not([disabled])'
+
+    console.log(`searching for ${selector}`);
 
     await page.waitForSelector(selector, {timeout: defaultTimeout});
     let element = await page.$(selector);
 
     const selectorSpinner = 'span[role="loadingSpinner"]';
-
     await page.waitForFunction((selectorSpinner) => {
             let isLoading = false;
             const node = document.querySelectorAll(selectorSpinner);

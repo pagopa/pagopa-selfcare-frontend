@@ -127,7 +127,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
             pathSplit: service,
         } = splitURL(station.newConnConcat);
 
-        const protocol = protocolSplit.includes('https') ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        const protocol = protocolForwarder.includes('https') ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
         const port = portSplit > 0 ? portSplit : protocol === ProtocolEnum.HTTPS ? 443 : 80;
 
         // IP/PORT/SERVICE/PROTOCOL fields will be valorized with Forwarder values

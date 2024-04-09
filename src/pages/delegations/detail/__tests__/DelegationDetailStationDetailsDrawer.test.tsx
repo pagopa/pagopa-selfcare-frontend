@@ -2,7 +2,6 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
@@ -52,7 +51,7 @@ const setShowDisassociateStationModalSpy = jest.fn();
 describe('<DelegationStationDetailsDrawer />', () => {
   test('render component Drawer with station details', async () => {
     setDrawerValueSpy.mockImplementation(() => {
-      return mockedInstitutionStation;
+      return mockedInstitutionStation[0];
     });
 
     render(
@@ -61,7 +60,7 @@ describe('<DelegationStationDetailsDrawer />', () => {
           <Route path="/delegations-list/detail">
             <ThemeProvider theme={theme}>
               <DelegationStationDetailsDrawer
-                drawerValue={mockedInstitutionStation}
+                drawerValue={mockedInstitutionStation[0]}
                 t={mockTFunction}
                 setDrawerValue={setDrawerValueSpy}
                 setShowDisassociateStationModal={setShowDisassociateStationModalSpy}
@@ -80,7 +79,7 @@ describe('<DelegationStationDetailsDrawer />', () => {
 
   test('render component Drawer with station details and click on disassociate station', async () => {
     setDrawerValueSpy.mockImplementation(() => {
-      return mockedInstitutionStation;
+      return mockedInstitutionStation[0];
     });
 
     render(
@@ -89,7 +88,7 @@ describe('<DelegationStationDetailsDrawer />', () => {
           <Route path="/delegations-list/detail">
             <ThemeProvider theme={theme}>
               <DelegationStationDetailsDrawer
-                drawerValue={mockedInstitutionStation}
+                drawerValue={mockedInstitutionStation[0]}
                 t={mockTFunction}
                 setDrawerValue={setDrawerValueSpy}
                 setShowDisassociateStationModal={setShowDisassociateStationModalSpy}

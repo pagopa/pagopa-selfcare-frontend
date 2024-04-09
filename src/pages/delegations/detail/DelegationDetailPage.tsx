@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
 import { CreditorInstitutionContactsResource } from '../../../api/generated/portal/CreditorInstitutionContactsResource';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
+import TableSearchBar from '../../../components/Table/TableSearchBar';
 import { Party } from '../../../model/Party';
 import { useAppSelector } from '../../../redux/hooks';
 import { delegationDetailSelectors } from '../../../redux/slices/delegationDetailSlice';
@@ -15,11 +16,9 @@ import { LOADING_TASK_CI_DELEGATION_CONTACTS_LIST } from '../../../utils/constan
 import DelegationDetailOperativeTable from './DelegationDetailOperativeTable';
 import DelegationDetailPaymentContacts from './DelegationDetailPaymentContacts';
 import DelegationStationsTable from './list/DelegationStationsTable';
-import DelegationStationsTableSearchBar from './list/DelegationStationsTableSearchBar';
 
 const DelegationDetailPage = () => {
   const { t } = useTranslation();
-  const history = useHistory();
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
 
@@ -72,7 +71,7 @@ const DelegationDetailPage = () => {
 
         <Grid container mt={5} spacing={1}>
           <TitleBox title={t('delegationDetailPage.tableTitle')} variantTitle="h4" />
-          <DelegationStationsTableSearchBar setSearchInput={setSearchInput} />
+          <TableSearchBar setSearchInput={setSearchInput} componentName='delegationDetailPage'/>
           <DelegationStationsTable
             ciTaxCode={delegationDetail.institution_tax_code ?? ''}
             filterByStationCode={searchInput}/>

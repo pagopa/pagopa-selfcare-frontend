@@ -28,6 +28,7 @@ import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
 import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { extractProblemJson } from '../../../utils/client-utils';
 import { createIban, updateIban } from '../../../services/ibanService';
 import { isIbanValidityDateEditable, isValidIBANNumber } from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
@@ -156,7 +157,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           await createIban(values.creditor_institution_code, {
             iban: values.iban,
             description: values.description,
-            validity_date: values.validity_date!,
+            validity_date: values.validity_date,
             due_date: values.due_date,
             is_active: true,
           });
@@ -164,7 +165,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           await updateIban(values.creditor_institution_code, {
             iban: values.iban,
             description: values.description,
-            validity_date: values.validity_date!,
+            validity_date: values.validity_date,
             due_date: values.due_date,
             labels: values.labels ?? undefined,
             is_active: true,
@@ -173,7 +174,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
 
         history.push(ROUTES.IBAN);
       } catch (reason: any) {
-        if (reason?.message === '409') {
+        const problemJson = extractProblemJson(reason);
+        if (problemJson?.status === 409) {
           formik.setFieldError('iban', t('addEditIbanPage.validationMessage.bankIbanConflict'));
         } else {
           addError({

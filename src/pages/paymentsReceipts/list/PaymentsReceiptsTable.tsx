@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
-import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
@@ -25,6 +25,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_PAYMENTS_RECEIPTS);
   const [receiptsList, setReceiptsList] = useState<Array<ReceiptModelResponse>>([]);
+  const addError = useErrorDispatcher();
 
   function downloadReceiptXML(iuv: string) {
     getPaymentReceiptDetail(selectedParty?.fiscalCode ?? '', iuv)
@@ -36,6 +37,18 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
         download.setAttribute('download', filename);
         download.dataset.downloadurl = ['text/plain', download.download, download.href].join(':');
         download.click();
+      })
+      .catch((reason) => {
+        addError({
+          component: 'Toast',
+          id: 'GET_RECEIPT_XML',
+          displayableTitle: t('general.errorTitle'),
+          techDescription: 'An error occured retrieving the receipt details',
+          blocking: false,
+          error: reason,
+          toNotify: true,
+          displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceiptDetail'),
+        });
       })
       .finally(() => setLoading(false));
   }
@@ -50,7 +63,18 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
           setReceiptsList([]);
         }
       })
-      // TODO handle API errors with generalized error alert
+      .catch((reason) => {
+        addError({
+          component: 'Toast',
+          id: 'GET_PAYMENTS_RECEIPTS',
+          displayableTitle: t('general.errorTitle'),
+          techDescription: "An error occured retrieving the payments receipts' list",
+          blocking: false,
+          error: reason,
+          toNotify: true,
+          displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceipt'),
+        });
+      })
       .finally(() => setLoading(false));
   };
 

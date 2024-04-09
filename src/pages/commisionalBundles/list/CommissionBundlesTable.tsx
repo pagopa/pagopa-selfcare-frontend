@@ -2,7 +2,7 @@ import { Box, Pagination } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
@@ -48,8 +48,7 @@ const mapBundle = (bundleType: string) => {
 const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
   const { isPsp, isEc } = usePermissions();
-  const [error, setError] = useState(false);
-  //   const addError = useErrorDispatcher();
+  const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t, isPsp(), isEc());
@@ -93,14 +92,31 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     promise
       .then((res) => {
         if (res?.bundles) {
-          const formattedBundles = res?.bundles?.map((el, ind) => ({ ...el, id: `bundle-${ind}`,
-            touchpoint: el.touchpoint ?? 'ANY', paymentType: el.paymentType ?? 'ANY'}));
+          const formattedBundles = res?.bundles?.map((el, ind) => ({
+            ...el,
+            id: `bundle-${ind}`,
+            touchpoint: el.touchpoint ?? 'ANY',
+            paymentType: el.paymentType ?? 'ANY',
+          }));
           setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
         } else {
           setListFiltered([]);
         }
       })
-      .catch((reason) => setError(reason))
+      .catch((reason) =>
+        addError({
+          id: 'COMMISSION_BUNDLES_RETRIEVE_BUNDLES',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while retrieving bundles`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t(
+            'commissionBundlesPage.list.error.retrieveCommissionBundlesErrorMessage'
+          ),
+          component: 'Toast',
+        })
+      )
       .finally(() => setLoadingStatus(false));
   };
 
@@ -132,9 +148,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
       }}
       justifyContent="start"
     >
-      {error ? (
-        <>{error}</>
-      ) : listFiltered?.bundles?.length === 0 ? (
+      {listFiltered?.bundles?.length === 0 ? (
         <CommissionBundlesEmpty bundleType={t(bundleType)} />
       ) : (
         <div data-testid="data-grid">

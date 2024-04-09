@@ -1029,6 +1029,7 @@
     "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
     "downloadButton": "Scarica lista",
     "alertMessage": "Il file che stai esportando contiene informazioni aggiornate al {{date}} alle ore {{hours}}",
+    "retrieveDelegationsErrorMessage": "Errore durante l'ottenimento delle deleghe",
     "search": {
       "placeholder": "Cerca per nome"
     },
@@ -1044,6 +1045,9 @@
     }
   },
   "delegationDetailPage": {
+    "dissociateStationErrorMessage": "Errore durante la dissociazione della stazione dall'EC",
+    "retrieveStationsErrorMessage": "Errore durante l'ottenimento delle stazioni dell'EC",
+    "retrieveContacsErrorMessage": "Errore durante l'ottenimento dei contatti dell'EC",
     "operativeTable": {
       "title": "Referente tavolo operativo",
       "email": "Email",

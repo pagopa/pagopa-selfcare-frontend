@@ -37,7 +37,6 @@ const emptyDelegationLStationist: CIBrokerStationPage = {
 
 const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
   const { t } = useTranslation();
-  const [error, setError] = useState(false);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATION_STATIONS_LIST);
@@ -65,7 +64,16 @@ const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
           setDelegationStationsList(emptyDelegationLStationist);
         }
       })
-      .catch((reason) => setError(reason))
+      .catch((reason) => addError({
+        id: 'DELEGATION_GET_CI_STATIONS',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while retrieving creditor institution's stations`,
+        toNotify: true,
+        displayableTitle: t('general.errorTitle'),
+        displayableDescription: t('delegationDetailPage.retrieveStationsErrorMessage'),
+        component: 'Toast',
+      }))
       .finally(() => setLoading(false));
   };
 
@@ -79,23 +87,22 @@ const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
     setShowDisassociateStationModal(undefined);
     setLoading(true);
 
-    try {
-      await dissociateECfromStation(ciTaxCode, stationCode);
-    } catch (reason) {
-      addError({
-        id: 'STATION_DELETE_RELATIONSHIP',
-        blocking: false,
-        error: reason as Error,
-        techDescription: `An error occurred while deleting relationship between EC and Station`,
-        toNotify: true,
-        displayableTitle: t('stationECList.dissociateEcErrorTitle'),
-        displayableDescription: t('stationECList.dissociateEcErrorMessage'),
-        component: 'Toast',
+      dissociateECfromStation(ciTaxCode, stationCode)
+      .catch((reason) => (
+        addError({
+          id: 'STATION_DELETE_RELATIONSHIP',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while deleting relationship between EC and station`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t('delegationDetailPage.dissociateStationErrorMessage'),
+          component: 'Toast',
+        })
+      )).finally(() => {
+        setLoading(false);
+        getDelegationStationsList();
       });
-    } finally {
-      setLoading(false);
-      getDelegationStationsList();
-    }
   };
 
   function handleChangePage(value: number) {
@@ -114,9 +121,7 @@ const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
         }}
         justifyContent="start"
       >
-        {error ? (
-          <>{error}</>
-        ) : !delegationStationsList?.ci_broker_stations ||
+        {!delegationStationsList?.ci_broker_stations ||
           delegationStationsList.ci_broker_stations?.length === 0 ? (
           <TableEmptyState componentName="delegationDetailPage" />
         ) : (

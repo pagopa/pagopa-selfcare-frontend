@@ -91,6 +91,7 @@ export const DelegationStationDetailsDrawer = ({
           <ButtonNaked
             size="large"
             component="button"
+            endIcon={<ArrowForwardIcon/>}
             onClick={() =>
               history.push(
                 generatePath(ROUTES.STATION_DETAIL, { stationId: drawerValue?.station_code })
@@ -101,7 +102,6 @@ export const DelegationStationDetailsDrawer = ({
             data-testid="show-more-payment-contacts-test"
           >
             {t('delegationDetailPage.stationDetail.goToStationDetails')}
-            <ArrowForwardIcon sx={{ ml: 1 }} fontSize="small" />
           </ButtonNaked>
         </Box>
 

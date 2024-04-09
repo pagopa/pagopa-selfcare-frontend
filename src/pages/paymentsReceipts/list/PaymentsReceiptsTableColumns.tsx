@@ -51,6 +51,7 @@ export function buildColumnDefs(
           onClick={() => downloadReceipt(params.row.iuv)}
           color="primary"
           variant="contained"
+          data-testid="download-receipt"
         >
           {t('paymentsReceiptsPage.column.downloadButton')}
         </Button>,

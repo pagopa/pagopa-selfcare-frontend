@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render, waitFor, screen } from '@testing-library/react';
+import { cleanup, render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
@@ -15,12 +15,15 @@ beforeEach(() => {
 });
 
 const mock = jest.spyOn(PaymentsReceiptsService, 'getPaymentsReceipts');
+const mockDetails = jest.spyOn(PaymentsReceiptsService, 'getPaymentReceiptDetail');
 
 afterEach(cleanup);
 
 describe('<PaymentsReceiptsTable />', () => {
+  global.URL.createObjectURL = jest.fn();
   test('render component PaymentsReceiptsTable with receipt list', async () => {
     mock.mockReturnValueOnce(new Promise((resolve) => resolve(mockedPaymentsReceiptsList)));
+    mockDetails.mockReturnValueOnce(new Promise((resolve) => resolve("<xml></xml>")))
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/payments-receipts`]}>
@@ -37,6 +40,13 @@ describe('<PaymentsReceiptsTable />', () => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
       expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
     });
+
+    const downloadReceipt = screen.queryAllByTestId("download-receipt")?.[0];
+    expect(downloadReceipt).toBeInTheDocument();
+
+    fireEvent.click(downloadReceipt);
+
+    expect(mockDetails).toBeCalledTimes(1);
 
     mock.mockReset();
   });

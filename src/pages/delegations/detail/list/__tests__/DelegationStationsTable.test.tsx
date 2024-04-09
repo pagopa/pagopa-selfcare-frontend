@@ -16,7 +16,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-const mock = jest.spyOn(BrokerService, 'getCIBrokerDelegation');
+const mock = jest.spyOn(BrokerService, 'getCIBrokerStations');
 
 afterEach(cleanup);
 

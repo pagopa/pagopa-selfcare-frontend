@@ -254,7 +254,6 @@ const SecuredRoutes = withLogin(
                     </ProtectedRoute>
                   </Route>
                 )}
-                </Route>
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                     <PaymentsReceiptsPage />

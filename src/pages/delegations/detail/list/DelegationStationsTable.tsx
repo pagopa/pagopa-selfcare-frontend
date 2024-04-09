@@ -7,6 +7,7 @@ import { CIBrokerStationPage } from '../../../../api/generated/portal/CIBrokerSt
 import { CIBrokerStationResource } from '../../../../api/generated/portal/CIBrokerStationResource';
 import GenericModal from '../../../../components/Form/GenericModal';
 import { CustomDataGrid } from '../../../../components/Table/CustomDataGrid';
+import TableEmptyState from '../../../../components/Table/TableEmptyState';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { getCIBrokerStations } from '../../../../services/brokerService';
@@ -14,7 +15,6 @@ import { dissociateECfromStation } from '../../../../services/stationService';
 import { LOADING_TASK_CI_DELEGATION_STATIONS_LIST } from '../../../../utils/constants';
 import { DelegationStationDetailsDrawer } from '../DelegationStationDetailsDrawer';
 import { buildColumnDefs } from './DelegationStationsTableColumns';
-import DelegationStationsTableEmpty from './DelegationStationsTableEmpty';
 
 type Props = {
   ciTaxCode: string;
@@ -118,7 +118,7 @@ const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
           <>{error}</>
         ) : !delegationStationsList?.ci_broker_stations ||
           delegationStationsList.ci_broker_stations?.length === 0 ? (
-          <DelegationStationsTableEmpty />
+          <TableEmptyState componentName="delegationDetailPage" />
         ) : (
           <div data-testid="data-grid">
             <CustomDataGrid

@@ -9,9 +9,9 @@ import { PaddedDrawer } from '../../../components/PaddedDrawer';
 
 export default function DelegationDetailPaymentContacts({
   paymentContacts,
-}: {
+}: Readonly<{
   paymentContacts: ReadonlyArray<CIPaymentContact> | undefined;
-}) {
+}>) {
   const { t } = useTranslation();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
@@ -32,7 +32,7 @@ export default function DelegationDetailPaymentContacts({
         ?.filter((_, i) => i < 1)
         ?.map((el) => (
           <Box key={`payment-contact-${el.id}`} mt={1} data-testid="payment-contact-column">
-            <Box key={`payment-contact-name-${el.id}`} mt={1}>
+            <Box mt={1}>
               <Typography variant="body1" color="action.active">
                 {t('delegationDetailPage.paymentContacts.name')}
               </Typography>
@@ -41,7 +41,7 @@ export default function DelegationDetailPaymentContacts({
               </Typography>
             </Box>
 
-            <Box key={`payment-contact-surname-${el.id}`} mt={1}>
+            <Box mt={1}>
               <Typography variant="body1" color="action.active">
                 {t('delegationDetailPage.paymentContacts.surname')}
               </Typography>
@@ -50,7 +50,7 @@ export default function DelegationDetailPaymentContacts({
               </Typography>
             </Box>
 
-            <Box key={`payment-contact-email-${el.id}`} mt={1}>
+            <Box mt={1}>
               <Typography variant="body1" color="action.active">
                 {t('delegationDetailPage.paymentContacts.email')}
               </Typography>
@@ -77,14 +77,13 @@ export default function DelegationDetailPaymentContacts({
             {paymentContacts?.map((el, index) => (
               <React.Fragment key={`payment-contact-${el.id}`}>
                 <Box mb={4} data-testid="payment-contact-drawer-column">
-
-                  <Box key={`payment-contact-subtitle-${el.id}`} mt={1}>
+                  <Box mt={1}>
                     <Typography variant="overline">
                       {t('delegationDetailPage.paymentContacts.drawerSubtitle')} {index + 1}
                     </Typography>
                   </Box>
 
-                  <Box key={`payment-contact-name-${el.id}`} mt={1}>
+                  <Box mt={1}>
                     <Typography variant="body1" color="action.active">
                       {t('delegationDetailPage.paymentContacts.name')}
                     </Typography>
@@ -93,7 +92,7 @@ export default function DelegationDetailPaymentContacts({
                     </Typography>
                   </Box>
 
-                  <Box key={`payment-contact-surname-${el.id}`} mt={1}>
+                  <Box mt={1}>
                     <Typography variant="body1" color="action.active">
                       {t('delegationDetailPage.paymentContacts.surname')}
                     </Typography>
@@ -102,7 +101,7 @@ export default function DelegationDetailPaymentContacts({
                     </Typography>
                   </Box>
 
-                  <Box key={`payment-contact-email-${el.id}`} mt={1}>
+                  <Box mt={1}>
                     <Typography variant="body1" color="action.active">
                       {t('delegationDetailPage.paymentContacts.email')}
                     </Typography>

@@ -27,7 +27,7 @@ Before(function () {
 });
 
 Given('Logged User and selected org {string}', async (org) => {
-    browser = await puppeteer.launch({headless: 'new'});
+    browser = await puppeteer.launch({headless: false});
     // browser = await puppeteer.launch({headless: false});
     page = await browser.newPage();
     page.setDefaultTimeout(defaultTimeout);
@@ -82,6 +82,7 @@ When('types {string} on {string}', async function (value, selector) {
 });
 When('clicks on {string}', async function (elem) {
     await click(page, elem);
+    await delay(500);
 });
 
 When(/^fills the form$/, async function (dataTable) {

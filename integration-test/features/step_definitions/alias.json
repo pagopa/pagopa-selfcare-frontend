@@ -22,7 +22,7 @@
   "modello unico": "[data-testid=\"targetPofConcat-test\"]",
   "versione primitive": "[data-testid=\"primitive-version-test\"]",
   "primitiva 1": "li[data-value=\"1\"]",
-  "Conferma": "[data-testid=\"confirm-button-test\"",
+  "Conferma": "[data-testid=\"confirm-button-test\"]",
   "Conferma Popup": "[data-testid=\"confirm-button-modal-test\"",
   "Pacchetti Commissione Menu": "[data-testid=\"commission-bundles-test\"]",
   "Crea Pacchetto": "[data-testid=\"create-bundle-button\"]",

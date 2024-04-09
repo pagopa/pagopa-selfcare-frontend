@@ -1033,13 +1033,57 @@
       "placeholder": "Cerca per nome"
     },
     "table": {
-      "emptyState": "Non sono ancora presenti enti"
+      "emptyState": "Non sono ancora presenti enti",
+      "info": "In attesa di registrazione sul Nodo"
     },
     "column": {
       "companyName": "Nome o Ragione Sociale",
       "taxCode": "Codice Fiscale",
       "cbill": "CBILL",
       "stations": "Stazioni"
+    }
+  },
+  "delegationDetailPage": {
+    "operativeTable": {
+      "title": "Referente tavolo operativo",
+      "email": "Email",
+      "phone": "Telefono"
+    },
+    "paymentContacts": {
+      "title": "Referente pagamenti",
+      "drawerSubtitle": "Referente",
+      "name": "Nome",
+      "surname" : "Cognome",
+      "email": "Email"
+    },
+    "tableTitle": "Stazioni associate",
+    "search": {
+      "placeholder": "Codice stazione"
+    },
+    "table": {
+    },
+    "column": {
+      "stationCode": "Codice stazione",
+      "auxDigit": "Auxdigit",
+      "segregationCode": "Segregation code",
+      "applicationCode": "Application code"
+    },
+    "stationDetail": {
+      "title": "Dettaglio stazione",
+      "registry": "Anagrafica",
+      "activationDate": "Data attivazione",
+      "stationCode": "Codice stazione",
+      "auxDigit": "Auxdigit",
+      "segregationCode": "Segregation code",
+      "applicationCode": "Application code",
+      "references": "Associazione",
+      "status": {
+        "label": "Stato",
+        "active": "Attiva",
+        "inactive": "Inattiva"
+      },
+      "lastUpdate": "A partire da",
+      "goToStationDetails": "Vai al dettaglio stazione"
     }
   },
   "paymentsReceiptsPage": {

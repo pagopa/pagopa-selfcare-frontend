@@ -50,6 +50,8 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
   const [pagePaginator, setPagePaginator] = useState(0);
   
   const [selectedECCode, setSelectedECCode] = useState<string>('');
+  const [selectedECName, setSelectedECName] = useState<string>('');
+
 
   const { stationId } = useParams<{ stationId: string }>();
 
@@ -64,6 +66,7 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
 
   const onRowClick = (ecIdRow: string) => {
     setSelectedECCode(ecIdRow);
+    setSelectedECName(ecListPage?.creditor_institutions?.find((item) => item.creditorInstitutionCode === selectedECCode )?.businessName ?? '');
     setShowConfirmModal(true);
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
@@ -203,11 +206,13 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
       </Box>
       <SessionModal
         open={showConfirmModal}
-        title={t('stationECList.dissociateModal.title')}
+        title={
+          t('stationECList.dissociateModal.title')
+        }
         message={
-          <Trans i18nKey="stationECList.dissociateModal.message">
-            Se dissoci un EC, sarà disattivata la sua connessione al canale.
-          </Trans>
+          <Trans i18nKey="stationECList.dissociateModal.message"
+          values={{"ecName": selectedECName}}
+          defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione." />
         }
         onConfirmLabel={t('stationECList.dissociateModal.confirmButton')}
         onCloseLabel={t('stationECList.dissociateModal.cancelButton')}

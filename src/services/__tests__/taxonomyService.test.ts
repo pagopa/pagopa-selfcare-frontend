@@ -10,7 +10,7 @@ describe('getTaxonomyGroups test', () => {
 
 describe('getTaxonomies test', () => {
   test('Test getTaxonomies', async () => {
-    const taxonomies = await getTaxonomies();
+    const taxonomies = await getTaxonomies("", "", "", false);
     expect(taxonomies).toMatchObject(mockedTaxonomy);
   });
 });

@@ -67,6 +67,8 @@ import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
 import {BundleResource} from './generated/portal/BundleResource';
 import {FeatureFlags} from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
+import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
+import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
@@ -926,6 +928,16 @@ export const BackofficeApi = {
 
     getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<CIBrokerDelegationPage> => {
         const result = await backofficeClient.getCIBrokerDelegation({"broker-tax-code": brokerTaxCode, brokerId, ciName, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+    
+    getCIBrokerStations: async (brokerTaxCode: string, ciTaxCode: string, stationCode: string, limit: number, page: number): Promise<CIBrokerStationPage> => {
+        const result = await backofficeClient.getCIBrokerStations({"broker-tax-code": brokerTaxCode, "ci-tax-code": ciTaxCode, stationCode, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getCreditorInstitutionContacts: async (ciTaxCode: string, institutionId: string): Promise<CreditorInstitutionContactsResource> => {
+        const result = await backofficeClient.getCreditorInstitutionContacts({"ci-tax-code": ciTaxCode, institutionId});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

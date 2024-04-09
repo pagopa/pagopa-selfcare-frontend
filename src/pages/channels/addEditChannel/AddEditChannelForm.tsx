@@ -239,7 +239,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
               error: reason as Error,
               techDescription: `An error occurred while getting payment types`,
               toNotify: true,
-              displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+              displayableTitle: t('general.errorTitle'),
               displayableDescription: t('addEditChannelPage.addForm.errorMessagePaymentTypesDesc'),
               component: 'Toast',
             });
@@ -455,7 +455,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         error: reason as Error,
         techDescription: `An error occurred while adding/editing channel`,
         toNotify: true,
-        displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+        displayableTitle: t('general.errorTitle'),
         displayableDescription: t('addEditChannelPage.addForm.errorMessageDesc'),
         component: 'Toast',
       });

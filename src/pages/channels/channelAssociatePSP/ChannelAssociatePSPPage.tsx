@@ -86,7 +86,7 @@ function ChannelAssociatePSPPage() {
               error: reason,
               techDescription: `An error occurred while psp association`,
               toNotify: true,
-              displayableTitle: t('channelAssociatePSPPage.associationForm.errorMessageTitle'),
+              displayableTitle: t('general.errorTitle'),
               displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
               component: 'Toast',
             })

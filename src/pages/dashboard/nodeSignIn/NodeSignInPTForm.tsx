@@ -90,7 +90,7 @@ const NodeSignInPTForm = ({goBack, signInData}: Props) => {
                     error: reason as Error,
                     techDescription: `An error occurred while creating pt`,
                     toNotify: true,
-                    displayableTitle: t('nodeSignInPage.form.errorMessageTitle'),
+                    displayableTitle: t('general.errorTitle'),
                     displayableDescription: t('nodeSignInPage.form.ptErrorMessageDesc'),
                     component: 'Toast',
                 });

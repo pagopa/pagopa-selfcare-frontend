@@ -1089,7 +1089,12 @@
         "inactive": "Inattiva"
       },
       "lastUpdate": "A partire da",
-      "goToStationDetails": "Vai al dettaglio stazione"
+      "goToStationDetails": "Vai al dettaglio stazione",
+      "disassociateStaion" : "Disassocia stazione",
+      "modal" : {
+        "title" : "Disassocia stazione",
+        "message": "L'ente potrà riscontrare l'interruzione dei servizi attivi su questa stazione."
+      } 
     }
   },
   "paymentsReceiptsPage": {

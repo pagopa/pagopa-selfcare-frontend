@@ -5,9 +5,8 @@ import { TavoloOpResource } from '../../../api/generated/portal/TavoloOpResource
 
 export default function DelegationDetailOperativeTable({
   operativeTable,
-}: {
-  operativeTable: TavoloOpResource | undefined;
-}) {
+}: Readonly<{operativeTable: TavoloOpResource | undefined}>
+) {
   const { t } = useTranslation();
 
   return (
@@ -24,18 +23,25 @@ export default function DelegationDetailOperativeTable({
       <Typography variant="overline">{t('delegationDetailPage.operativeTable.title')}</Typography>
 
       <Box key={`operative-table-deatil`} mt={1} data-testid="operative-table-column">
+
+      <Box key={`operative-table-email`} mt={1}>
         <Typography variant="body1" color="action.active">
           {t('delegationDetailPage.operativeTable.email')}
         </Typography>
         <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-          {operativeTable?.email}
+          {operativeTable?.email ?? '-'}
         </Typography>
+      </Box>
+
+        <Box key={`operative-table-phone`} mt={1}>
         <Typography variant="body1" color="action.active">
           {t('delegationDetailPage.operativeTable.phone')}
         </Typography>
         <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-          {operativeTable?.telephone}
+          {operativeTable?.telephone ?? '-'}
         </Typography>
+      </Box>
+
       </Box>
     </Paper>
   );

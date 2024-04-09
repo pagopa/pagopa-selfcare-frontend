@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
-import { CIBrokerStationResource } from '../../../api/generated/portal/CIBrokerStationResource';
 import { CreditorInstitutionContactsResource } from '../../../api/generated/portal/CreditorInstitutionContactsResource';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import { Party } from '../../../model/Party';
@@ -15,7 +14,6 @@ import { getCreditorInstitutionContacts } from '../../../services/creditorInstit
 import { LOADING_TASK_CI_DELEGATION_CONTACTS_LIST } from '../../../utils/constants';
 import DelegationDetailOperativeTable from './DelegationDetailOperativeTable';
 import DelegationDetailPaymentContacts from './DelegationDetailPaymentContacts';
-import { DelegationStationDetailsDrawer } from './DelegationStationDetailsDrawer';
 import DelegationStationsTable from './list/DelegationStationsTable';
 import DelegationStationsTableSearchBar from './list/DelegationStationsTableSearchBar';
 
@@ -28,7 +26,6 @@ const DelegationDetailPage = () => {
   const [contacts, setContacts] = useState<CreditorInstitutionContactsResource>();
   const [searchInput, setSearchInput] = useState<string>('');
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATION_CONTACTS_LIST);
-  const [drawerValue, setDrawerValue] = useState<CIBrokerStationResource>({});
 
   const delegationDetail: CIBrokerDelegationResource =
     useAppSelector(delegationDetailSelectors.selectDelegationDetail) ?? {};
@@ -55,7 +52,6 @@ const DelegationDetailPage = () => {
   }, [selectedParty]);
 
   return (
-    <>
       <SideMenuLayout>
         <Breadcrumbs>
           <Typography>{t('delegationsPage.title')}</Typography>
@@ -63,10 +59,10 @@ const DelegationDetailPage = () => {
         </Breadcrumbs>
         <Grid container mt={1} spacing={1}>
           <Grid item xs={12}>
-            <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h4" />
+            <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h3" />
           </Grid>
 
-          <Grid item xs={6} data-testid="payment-contacts">
+          <Grid item xs={6} mb={1} data-testid="payment-contacts">
             <DelegationDetailPaymentContacts paymentContacts={contacts?.ci_payment_contacts} />
           </Grid>
           <Grid item xs={6} data-testid="operative-table">
@@ -74,32 +70,14 @@ const DelegationDetailPage = () => {
           </Grid>
         </Grid>
 
-        <Grid container mt={1} spacing={1}>
+        <Grid container mt={5} spacing={1}>
           <TitleBox title={t('delegationDetailPage.tableTitle')} variantTitle="h4" />
           <DelegationStationsTableSearchBar setSearchInput={setSearchInput} />
           <DelegationStationsTable
             ciTaxCode={delegationDetail.institution_tax_code ?? ''}
-            filterByStationCode={searchInput}
-            setDrawerValue={setDrawerValue}
-          />
+            filterByStationCode={searchInput}/>
         </Grid>
-        <DelegationStationDetailsDrawer
-          drawerValue={drawerValue}
-          setDrawerValue={setDrawerValue}
-          t={t}
-        />
       </SideMenuLayout>
-      {/* <GenericModal
-        title={t('commissionBundlesPage.commissionBundleDetail.modal.title')}
-        message={t('commissionBundlesPage.commissionBundleDetail.modal.message')}
-        openModal={showConfirmModal}
-        onConfirmLabel={t('general.confirm')}
-        onCloseLabel={t('general.cancel')}
-        handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfirm={() => handleDeletePSP()}
-        data-testid="delete-modal"
-      /> */}
-    </>
   );
 };
 

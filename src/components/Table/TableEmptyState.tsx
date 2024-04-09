@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
-import { Trans, useTranslation } from 'react-i18next';
 import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 
-export default function TableEmptyState({ componentName }: { componentName: string }) {
+export default function TableEmptyState({ componentName }: Readonly<{ componentName: string }> ) {
   const { t } = useTranslation();
   return (
     <Box p={3} mt={3} sx={{ backgroundColor: '#EEEEEE' }} data-testid="empty-state-table">

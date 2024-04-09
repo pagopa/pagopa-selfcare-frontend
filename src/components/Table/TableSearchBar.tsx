@@ -9,7 +9,7 @@ type Props = {
     componentName?: string;
   };
 
-export default function TableSearchBar({ setSearchInput, componentName }: Props) {
+export default function TableSearchBar({ setSearchInput, componentName }: Readonly<Props>) {
     const { t } = useTranslation();
     const [internalSearchValue, setInternalSearchValue] = useState('');
   

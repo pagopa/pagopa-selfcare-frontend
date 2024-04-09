@@ -1061,6 +1061,7 @@
       "placeholder": "Codice stazione"
     },
     "table": {
+      "emptyState": "Non sono ancora presenti stazioni associate all'ente."
     },
     "column": {
       "stationCode": "Codice stazione",

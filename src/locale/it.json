@@ -1054,7 +1054,7 @@
       "placeholder": "Cerca per codice fiscale del debitore"
     },
     "table": {
-      "emptyState": "Non sono ancora presenti posizioni debitorie"
+      "emptyState": "Non sono ancora presenti ricevute"
     },
     "column": {
       "iuv": "IUV",

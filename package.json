@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.18.26-5-VAS-900-integration-test-bundle-globali",
+  "version": "1.18.27",
   "homepage": "ui",
   "private": true,
   "scripts": {

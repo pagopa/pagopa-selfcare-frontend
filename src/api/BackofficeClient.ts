@@ -243,7 +243,7 @@ export const BackofficeApi = {
     },
 
     getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndEcDetails({'ci-code': code});
+        const result = await backofficeClient.getBrokerAndEcDetails({'ci-tax-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -555,7 +555,7 @@ export const BackofficeApi = {
         station: CreditorInstitutionStationDto
     ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
         const result = await backofficeClient.associateStationToCreditorInstitution({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             body: {
                 auxDigit: station.auxDigit,
                 segregationCode: station.segregationCode,
@@ -568,7 +568,7 @@ export const BackofficeApi = {
 
     dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
         const result = await backofficeClient.deleteCreditorInstitutionStationRelationship({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             'station-code': stationcode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
@@ -593,7 +593,7 @@ export const BackofficeApi = {
         ec: CreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
         const result = await backofficeClient.createCreditorInstitutionAndBroker({
-            'ci-code': '',
+            'ci-tax-code': '',
             body: {
                 brokerDto: {
                     broker_code: ec.creditorInstitutionCode,
@@ -647,7 +647,7 @@ export const BackofficeApi = {
         ec: UpdateCreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
         const result = await backofficeClient.updateCreditorInstitutionDetails({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             body: {
                 address: ec.address,
                 businessName: ec.businessName,
@@ -823,7 +823,7 @@ export const BackofficeApi = {
     getCreditorInstitutionSegregationcodes: async (
         ecCode: string
     ): Promise<CreditorInstitutionAssociatedCodeList> => {
-        const result = await backofficeClient.getCreditorInstitutionSegregationcodes({'ci-code': ecCode});
+        const result = await backofficeClient.getCreditorInstitutionSegregationcodes({'ci-tax-code': ecCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 

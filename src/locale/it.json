@@ -844,7 +844,8 @@
       },
       "error": {
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",
-        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso"
+        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso",
+        "retrieveCommissionBundlesErrorMessage": "Errore durante l'ottenimento dei pacchetti commissionali'"
       }
     },
     "commissionBundleDetail": {

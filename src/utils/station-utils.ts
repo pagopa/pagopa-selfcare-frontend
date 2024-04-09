@@ -103,8 +103,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     // eslint-disable-next-line functional/immutable-data
     station.proxyHost = hostSplit;
 
-    // Async GPD
-    if (station.targetHost === '' && isGPD) {
+    if (isGPD) {
         const {
             protocolSplit,
             hostSplit: ip,
@@ -119,17 +118,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
         return {...station, protocol, ip, port, service, pofService: service};
     }
 
-    // Sync New Connectivity
-    if (station.targetConcat !== '' && isForwarder) {
-        const {
-            protocolSplit: targetProtocol,
-            hostSplit: targetHost,
-            portSplit: targetPortSplit,
-            pathSplit: targetPath,
-        } = splitURL(station.targetConcat);
-
-        const targetPort =
-            targetPortSplit > 0 ? targetPortSplit : (targetProtocol && targetProtocol.includes('https') ? 443 : 80);
+    if (isForwarder) {
 
         const {
             protocolSplit: protocolForwarder,

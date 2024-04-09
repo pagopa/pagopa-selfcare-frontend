@@ -18,15 +18,18 @@ import { theme } from '@pagopa/mui-italia';
 import { createStore } from '../../../redux/store';
 import {
   ecAdminSignedDirect,
-  pspAdminSignedDirect,
   pspAdminUnsigned,
 } from '../../../services/__mocks__/partyService';
-import ROUTES from '../../../routes';
-import { pspDetails } from '../../../services/__mocks__/nodeService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
+    hasPermission: (_) => true,
+    isPsp: jest.fn(),
+    isEc: jest.fn(),
+    isPspDirect: jest.fn(),
+  });
 });
 
 afterEach(() => {
@@ -54,12 +57,10 @@ const renderApp = (
 describe('SideMenu component', () => {
   jest.mock('../../../hooks/usePermissions');
 
-  test('should render SideMenu 1', async () => {
-    jest
-      .spyOn(usePermissions, 'usePermissions')
-      .mockReturnValue({ hasPermission: (permissionName) => true });
 
+  test('should render SideMenu 1', async () => {
     const { store } = renderApp();
+
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
@@ -91,60 +92,56 @@ describe('SideMenu component', () => {
     fireEvent.click(ibans);
   });
 
-//   test('should render SideMenu with psp admin unsigned', async () => {
-//     jest
-//       .spyOn(usePermissions, 'usePermissions')
-//       .mockReturnValue({ hasPermission: (permissionName) => true });
-//
-//     const { store, history } = renderApp();
-//     await waitFor(() =>
-//       store.dispatch({
-//         type: 'parties/setPartySelected',
-//         payload: pspAdminUnsigned,
-//       })
-//     );
-//
-//     const commBundlesItem = screen.getByTestId('commission-bundles-test');
-//
-//     expect(commBundlesItem).toBeInTheDocument();
-//     fireEvent.click(commBundlesItem);
-//
-//     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.COMMISSION_BUNDLES));
-//   });
+  //   test('should render SideMenu with psp admin unsigned', async () => {
+  //     jest
+  //       .spyOn(usePermissions, 'usePermissions')
+  //       .mockReturnValue({ hasPermission: (permissionName) => true });
+  //
+  //     const { store, history } = renderApp();
+  //     await waitFor(() =>
+  //       store.dispatch({
+  //         type: 'parties/setPartySelected',
+  //         payload: pspAdminUnsigned,
+  //       })
+  //     );
+  //
+  //     const commBundlesItem = screen.getByTestId('commission-bundles-test');
+  //
+  //     expect(commBundlesItem).toBeInTheDocument();
+  //     fireEvent.click(commBundlesItem);
+  //
+  //     await waitFor(() => expect(history.location.pathname).toBe(ROUTES.COMMISSION_BUNDLES));
+  //   });
 
-//   test('should render SideMenu 2', async () => {
-//     jest
-//       .spyOn(usePermissions, 'usePermissions')
-//       .mockReturnValue({ hasPermission: (permissionName) => true });
-//
-//     const { store, history } = renderApp();
-//
-//     await waitFor(() =>
-//       store.dispatch({
-//         type: 'parties/setPartySelected',
-//         payload: pspAdminUnsigned,
-//       })
-//     );
-//
-//     const commBundlesItem = screen.getByTestId('commission-bundles-test') as HTMLElement;
-//
-//     await waitFor(() =>
-//       store.dispatch({
-//         type: 'parties/setSigninData',
-//         payload: pspDetails,
-//       })
-//     );
-//
-//     expect(commBundlesItem).toHaveAttribute('aria-disabled');
-//   });
+  //   test('should render SideMenu 2', async () => {
+  //     jest
+  //       .spyOn(usePermissions, 'usePermissions')
+  //       .mockReturnValue({ hasPermission: (permissionName) => true });
+  //
+  //     const { store, history } = renderApp();
+  //
+  //     await waitFor(() =>
+  //       store.dispatch({
+  //         type: 'parties/setPartySelected',
+  //         payload: pspAdminUnsigned,
+  //       })
+  //     );
+  //
+  //     const commBundlesItem = screen.getByTestId('commission-bundles-test') as HTMLElement;
+  //
+  //     await waitFor(() =>
+  //       store.dispatch({
+  //         type: 'parties/setSigninData',
+  //         payload: pspDetails,
+  //       })
+  //     );
+  //
+  //     expect(commBundlesItem).toHaveAttribute('aria-disabled');
+  //   });
 
   test('should render SideMenu 3', async () => {
     jest.mock('../../../utils/env');
     ENV.ENV.FEATURES.DASHBOARD.ENABLED = false;
-
-    jest
-      .spyOn(usePermissions, 'usePermissions')
-      .mockReturnValue({ hasPermission: (permissionName) => true });
 
     const { store, history } = renderApp();
 
@@ -163,9 +160,6 @@ describe('SideMenu component', () => {
   });
 
   test('should render SideMenu 4', async () => {
-    jest
-      .spyOn(usePermissions, 'usePermissions')
-      .mockReturnValue({ hasPermission: (permissionName) => true });
     const { store, history } = renderApp();
 
     await waitFor(() =>
@@ -180,9 +174,22 @@ describe('SideMenu component', () => {
     jest.mock('../../../utils/env');
     ENV.ENV.FEATURES.DASHBOARD.ENABLED = true;
 
-    jest
-      .spyOn(usePermissions, 'usePermissions')
-      .mockReturnValue({ hasPermission: (permissionName) => true });
+    const { store, history } = renderApp();
+
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminUnsigned,
+      })
+    );
+
+    const users = await screen.getByTestId('selfcare-users-test');
+    fireEvent.click(users);
+  });
+
+  test('should render SideMenu with groups', async () => {
+    jest.mock('../../../utils/env');
+    ENV.ENV.FEATURES.DASHBOARD.ENABLED = true;
 
     const { store, history } = renderApp();
 
@@ -193,37 +200,7 @@ describe('SideMenu component', () => {
       })
     );
 
-    const apiKeyItem = screen.getByTestId('apikeys-test') as HTMLElement;
-    const dashboardItem = screen.queryAllByTestId('home-test');
-
-    const users = await screen.getByTestId('selfcare-users-test');
+    const users = await screen.getByTestId('selfcare-groups-test');
     fireEvent.click(users);
-
   });
-
-    test('should render SideMenu with groups', async () => {
-      jest.mock('../../../utils/env');
-      ENV.ENV.FEATURES.DASHBOARD.ENABLED = true;
-
-      jest
-        .spyOn(usePermissions, 'usePermissions')
-        .mockReturnValue({ hasPermission: (permissionName) => true });
-
-      const { store, history } = renderApp();
-
-      await waitFor(() =>
-        store.dispatch({
-          type: 'parties/setPartySelected',
-          payload: pspAdminUnsigned,
-        })
-      );
-
-      const apiKeyItem = screen.getByTestId('apikeys-test') as HTMLElement;
-      const dashboardItem = screen.queryAllByTestId('home-test');
-
-      const users = await screen.getByTestId('selfcare-groups-test');
-      fireEvent.click(users);
-
-    });
-
 });

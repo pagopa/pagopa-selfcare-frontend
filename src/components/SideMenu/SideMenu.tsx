@@ -11,6 +11,7 @@ import EuroIcon from '@mui/icons-material/Euro';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import StorageIcon from '@mui/icons-material/Storage';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
@@ -117,56 +118,64 @@ export default function SideMenu() {
           )}
 
           {useFlagValue('commission-bundles') && hasPermission('commission-bundles-list') && (
-                            <SidenavItem
-                                title={t('sideMenu.commBundles.title')}
-                                handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}
-                                isSelected={
-                                    pathname === ROUTES.COMMISSION_BUNDLES ||
-                                    pathname.startsWith(ROUTES.COMMISSION_BUNDLES)
-                                }
-                                icon={EuroIcon}
-                                disabled={isDisabled}
-                                dataTestId="commission-bundles-test"
-                            />
-                        )}
-                    {ENV.FEATURES.OPERATIONTABLE.ENABLED && hasPermission('operation-table-list') && (
-                        <SidenavItem
-                            title={t('sideMenu.operationTable.title')}
-                            handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}
-                            isSelected={
-                                pathname === ROUTES.OPERATION_TABLE_LIST ||
-                                pathname.startsWith(ROUTES.OPERATION_TABLE_LIST)
-                            }
-                            icon={ExtensionIcon}
-                            disabled={isDisabled}
-                            dataTestId="operation-table-test"
-                        />
-                    )}
+            <SidenavItem
+              title={t('sideMenu.commBundles.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.COMMISSION_BUNDLES))}
+              isSelected={
+                pathname === ROUTES.COMMISSION_BUNDLES ||
+                pathname.startsWith(ROUTES.COMMISSION_BUNDLES)
+              }
+              icon={EuroIcon}
+              disabled={isDisabled}
+              dataTestId="commission-bundles-test"
+            />
+          )}
+          {ENV.FEATURES.OPERATIONTABLE.ENABLED && hasPermission('operation-table-list') && (
+            <SidenavItem
+              title={t('sideMenu.operationTable.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}
+              isSelected={
+                pathname === ROUTES.OPERATION_TABLE_LIST ||
+                pathname.startsWith(ROUTES.OPERATION_TABLE_LIST)
+              }
+              icon={ExtensionIcon}
+              disabled={isDisabled}
+              dataTestId="operation-table-test"
+            />
+          )}
+          {useFlagValue('payments-receipts') && hasPermission('payments-receipts') && (
+            <SidenavItem
+              title={t('sideMenu.paymentsReceipts.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.PAYMENTS_RECEIPTS))}
+              isSelected={
+                pathname === ROUTES.PAYMENTS_RECEIPTS ||
+                pathname.startsWith(ROUTES.PAYMENTS_RECEIPTS)
+              }
+              icon={ReceiptIcon}
+              disabled={isDisabled}
+              dataTestId="payments-receipts-test"
+            />
+          )}
 
+          <React.Fragment>
+            <Divider sx={{ marginY: 1 }} />
 
-                    { (
-                        <React.Fragment>
+            <SidenavItem
+              title={t('sideMenu.users.title')}
+              handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
+              icon={PeopleAltIcon}
+              dataTestId={'selfcare-users-test'}
+            />
 
-                            <Divider sx={{ marginY: 1 }} />
-
-                            <SidenavItem
-                                title={t('sideMenu.users.title')}
-                                handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
-                                icon={PeopleAltIcon}
-                                dataTestId={'selfcare-users-test'}
-                            />
-
-                            <SidenavItem
-                                title={t('sideMenu.groups.title')}
-                                handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
-                                icon={SupervisedUserCircleIcon}
-                                dataTestId={'selfcare-groups-test'}
-                            />
-                        </React.Fragment>
-                    )}
-
-                </List>
-            </Box>
-        </Box>
-    );
+            <SidenavItem
+              title={t('sideMenu.groups.title')}
+              handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
+              icon={SupervisedUserCircleIcon}
+              dataTestId={'selfcare-groups-test'}
+            />
+          </React.Fragment>
+        </List>
+      </Box>
+    </Box>
+  );
 }

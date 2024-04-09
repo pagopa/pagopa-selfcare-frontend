@@ -67,6 +67,7 @@ import {BundleCreateResponse} from './generated/portal/BundleCreateResponse';
 import {BundleResource} from './generated/portal/BundleResource';
 import {FeatureFlags} from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
+import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -242,7 +243,7 @@ export const BackofficeApi = {
     },
 
     getBrokerAndEcDetails: async (code: string): Promise<BrokerAndEcDetailsResource> => {
-        const result = await backofficeClient.getBrokerAndEcDetails({'ci-code': code});
+        const result = await backofficeClient.getBrokerAndEcDetails({'ci-tax-code': code});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -554,7 +555,7 @@ export const BackofficeApi = {
         station: CreditorInstitutionStationDto
     ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
         const result = await backofficeClient.associateStationToCreditorInstitution({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             body: {
                 auxDigit: station.auxDigit,
                 segregationCode: station.segregationCode,
@@ -567,7 +568,7 @@ export const BackofficeApi = {
 
     dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
         const result = await backofficeClient.deleteCreditorInstitutionStationRelationship({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             'station-code': stationcode,
         });
         return extractResponse(result, 200, onRedirectToLogin);
@@ -592,7 +593,7 @@ export const BackofficeApi = {
         ec: CreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
         const result = await backofficeClient.createCreditorInstitutionAndBroker({
-            'ci-code': '',
+            'ci-tax-code': '',
             body: {
                 brokerDto: {
                     broker_code: ec.creditorInstitutionCode,
@@ -646,7 +647,7 @@ export const BackofficeApi = {
         ec: UpdateCreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
         const result = await backofficeClient.updateCreditorInstitutionDetails({
-            'ci-code': ecCode,
+            'ci-tax-code': ecCode,
             body: {
                 address: ec.address,
                 businessName: ec.businessName,
@@ -822,7 +823,7 @@ export const BackofficeApi = {
     getCreditorInstitutionSegregationcodes: async (
         ecCode: string
     ): Promise<CreditorInstitutionAssociatedCodeList> => {
-        const result = await backofficeClient.getCreditorInstitutionSegregationcodes({'ci-code': ecCode});
+        const result = await backofficeClient.getCreditorInstitutionSegregationcodes({'ci-tax-code': ecCode});
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
@@ -925,6 +926,16 @@ export const BackofficeApi = {
 
     getCIBrokerDelegation: async (brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number): Promise<CIBrokerDelegationPage> => {
         const result = await backofficeClient.getCIBrokerDelegation({"broker-tax-code": brokerTaxCode, brokerId, ciName, limit, page});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getPaymentsReceipts: async (organizationTaxCode: string, debtorTaxCode?: string): Promise<ReceiptsInfo> => {
+        const result = await backofficeClient.getPaymentsReceipts({'organization-tax-code': organizationTaxCode, debtorTaxCode, limit: 50});
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getPaymentReceiptDetail: async (organizationTaxCode: string, iuv: string): Promise<string> => {
+        const result = await backofficeClient.getPaymentReceiptDetail({'organization-tax-code': organizationTaxCode, iuv});
         return extractResponse(result, 200, onRedirectToLogin);
     }
 };

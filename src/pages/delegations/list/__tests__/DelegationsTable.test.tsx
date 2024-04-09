@@ -7,10 +7,8 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import DelegationsTable from '../DelegationsTable';
 import * as BrokerService from '../../../../services/brokerService';
-import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
 import {
-  getCIBrokerDelegationMock,
-  mockedCIDelegations,
+  getCIBrokerDelegationMock
 } from '../../../../services/__mocks__/brokerService';
 
 beforeEach(() => {
@@ -39,7 +37,7 @@ describe('<DelegationsTable />', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
-      expect(screen.queryByTestId('empty-delegations')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
     });
   });
 
@@ -59,7 +57,7 @@ describe('<DelegationsTable />', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('empty-delegations')).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
     });
   });
 });

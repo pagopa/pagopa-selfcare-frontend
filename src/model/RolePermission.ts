@@ -85,6 +85,10 @@ export const permissions = {
     ROLE.PT_PSPEC_OPERATOR,
     ROLE.PAGOPA_OPERATOR,
   ],
+  "payments-receipts": [
+    ROLE.EC_ADMIN,
+    ROLE.EC_DIRECT_ADMIN
+  ]
 };
 
 export type PermissionName = keyof typeof permissions;

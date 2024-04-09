@@ -2,10 +2,10 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
+import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
-import DelegationsTableSearchBar from '../DelegationsTableSearchBar';
+import TableSearchBar from '../TableSearchBar';
 
 const spyOnSetSearchInput = jest.fn();
 
@@ -17,14 +17,14 @@ beforeEach(() => {
 afterEach(cleanup);
 
 const filterInput = "newSearchFilter";
-describe('<DelegationsTableSearchBar />', () => {
-  test('render component DelegationsTableSearchBar', () => {
+describe('<TableSearchBar />', () => {
+  test('render component TableSearchBar', () => {
     render(
       <Provider store={store}>
            <MemoryRouter initialEntries={[`/delegations-list`]}>
           <Route path="/delegations-list">
             <ThemeProvider theme={theme}>
-              <DelegationsTableSearchBar
+              <TableSearchBar
                 setSearchInput={spyOnSetSearchInput}
               />
             </ThemeProvider>

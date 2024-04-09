@@ -264,6 +264,14 @@ export const getStateChip = (
     }
 
     if (params.row.type === TypeEnum.GLOBAL) {
+      if (todayDate.getTime() < validityDateFrom.getTime()) {
+        return renderStatusChip({
+          chipColor:"default",
+          chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+          dataTestId:"default-state-chip"
+        });
+      }
+      
       return renderStatusChip({
         chipColor:"success",
         chipLabel: t('commissionBundlesPage.list.states.active'),

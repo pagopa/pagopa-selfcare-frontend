@@ -5,10 +5,11 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import DownloadIcon from '@mui/icons-material/Download';
+import TableSearchBar from '../../components/Table/TableSearchBar';
 import { formatDateToDDMMYYYY } from '../../utils/common-utils';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import DelegationsTable from './list/DelegationsTable';
-import DelegationsTableSearchBar from './list/DelegationsTableSearchBar';
+
 
 const DelegationsPage = () => {
   const { t } = useTranslation();
@@ -80,7 +81,7 @@ const DelegationsPage = () => {
           </Box>
         </Alert>
       )}
-      <DelegationsTableSearchBar setSearchInput={setSearchInput} />
+      <TableSearchBar setSearchInput={setSearchInput} componentName='delegationsPage'/>
       <DelegationsTable filterByName={searchInput} />
     </SideMenuLayout>
   );

@@ -1072,6 +1072,12 @@
     },
     "delegations": {
       "title": "I tuoi enti"
+    },
+    "users": {
+      "title": "Utenti"
+    },
+    "groups": {
+      "title": "Gruppi"
     }
   },
   "header": {

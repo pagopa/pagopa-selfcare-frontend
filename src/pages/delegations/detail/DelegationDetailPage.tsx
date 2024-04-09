@@ -17,7 +17,6 @@ import ROUTES from '../../../routes';
 import { getCreditorInstitutionContacts } from '../../../services/creditorInstitutionService';
 import { LOADING_TASK_CI_DELEGATION_CONTACTS_LIST } from '../../../utils/constants';
 import DelegationDetailOperativeTable from './DelegationDetailOperativeTable';
-import DelegationDetailPaymentContacts from './DelegationDetailPaymentContacts';
 import DelegationStationsTable from './list/DelegationStationsTable';
 
 const DelegationDetailPage = () => {
@@ -78,10 +77,10 @@ const DelegationDetailPage = () => {
           <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h3" />
         </Grid>
 
-        <Grid item xs={6} mb={1} data-testid="payment-contacts">
+        {/* <Grid item xs={6} mb={1} data-testid="payment-contacts">
           <DelegationDetailPaymentContacts paymentContacts={contacts?.ci_payment_contacts} />
-        </Grid>
-        <Grid item xs={6} data-testid="operative-table">
+        </Grid> */}
+        <Grid item xs={12} data-testid="operative-table">
           <DelegationDetailOperativeTable operativeTable={contacts?.operative_table} />
         </Grid>
       </Grid>

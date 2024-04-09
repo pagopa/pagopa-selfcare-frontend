@@ -36,9 +36,8 @@ locals {
     "CDN_RESOURCE_GROUP" : "pagopa-${var.env_short}-fe-rg",
     "CDN_ENDPOINT" : "pagopa-${var.env_short}-selfcare-cdn-endpoint",
     "CDN_PROFILE" : "pagopa-${var.env_short}-selfcare-cdn-profile",
-
     "SELFCARE_HOST_FE" : var.env == "prod" || var.env == "uat" ? "https://selfcare.pagopa.it" : "https://${var.env}.selfcare.pagopa.it",
-    "SELFCARE_API_BE" : var.env == "prod" ? "https://api.platform.pagopa.it" : "https://api.${var.env}.platform.pagopa.it" ,
+    "SELFCARE_API_BE" : var.env == "prod" ? "https://api.platform.pagopa.it" : "https://api.${var.env}.platform.pagopa.it",
     "REACT_APP_URL_STORAGE" : "https://pagopa${var.env_short}selfcaresa.z6.web.core.windows.net",
   }
 }
@@ -81,7 +80,6 @@ resource "github_actions_secret" "secret_sonar_token" {
 
 #tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
 resource "github_actions_secret" "secret_bot_token" {
-
   repository      = local.github.repository
   secret_name     = "BOT_TOKEN_GITHUB"
   plaintext_value = data.azurerm_key_vault_secret.key_vault_bot_token.value
@@ -89,8 +87,14 @@ resource "github_actions_secret" "secret_bot_token" {
 
 #tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
 resource "github_actions_secret" "secret_cucumber_token" {
-
   repository      = local.github.repository
   secret_name     = "CUCUMBER_PUBLISH_TOKEN"
   plaintext_value = data.azurerm_key_vault_secret.key_vault_cucumber_token.value
+}
+
+#tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
+resource "github_actions_secret" "secret_key_pem" {
+  repository      = local.github.repository
+  secret_name     = "KEY_PEM"
+  plaintext_value =  var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
 }

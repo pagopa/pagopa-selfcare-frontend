@@ -60,43 +60,38 @@ export const useLogin = () => {
             return;
         }
 
-        // 2. Check if we are coming from Self Care and have a new token
-        const newSelfCareIdentityToken = window.location.hash.replace('#id=', '');
-        if (newSelfCareIdentityToken) {
-            // Remove token from hash
-            const {pathname, search} = history.location;
-            history.replace({pathname, search, hash: ''});
+        // used for testing. During integration test we inject the JWT in the localStorage
+        const logged = window.location.hash.search('#logged=forced');
+        if (logged===-1) {
 
-            const success = await couldSetTokenFromSelfCareIdentityToken(newSelfCareIdentityToken);
-            // If ok, no need to go on
-            if (success) {
-                // return;
+            // 2. Check if we are coming from Self Care and have a new token
+            const newSelfCareIdentityToken = window.location.hash.replace('#id=', '');
+            if (newSelfCareIdentityToken) {
+                // Remove token from hash
+                const {pathname, search} = history.location;
+                history.replace({pathname, search, hash: ''});
+
+                await couldSetTokenFromSelfCareIdentityToken(newSelfCareIdentityToken);
+
             }
+
+            const token = storageTokenOps.read();
+            const jwt = JSON.parse(atob(token.split('.')[1]));
+
+            // If there are no credentials, it is impossible to get the user, so
+            if (!token || (jwt.exp * 1000) < Date.now()) {
+                // Remove any partial data that might have remained, just for safety
+                storageUserOps.delete();
+                // Go to the login view
+                window.location.assign(CONFIG.URL_FE.LOGIN);
+                // This return is necessary
+                return;
+            }
+
+            const user: User = userFromJwtToken(token);
+            storageUserOps.write(user);
+            setUser(user);
         }
-
-        const token = storageTokenOps.read();
-        const jwt = JSON.parse(atob(token.split('.')[1]));
-
-        // If there are no credentials, it is impossible to get the user, so
-        if (!token || (jwt.exp * 1000) < Date.now()) {
-            // Remove any partial data that might have remained, just for safety
-            storageUserOps.delete();
-            // Go to the login view
-            window.location.assign(CONFIG.URL_FE.LOGIN);
-            // This return is necessary
-            return;
-        }
-
-        // const sessionStorageUser = storageUserOps.read();
-
-        // if (isEmpty(sessionStorageUser)) {
-        const user: User = userFromJwtToken(token);
-        storageUserOps.write(user);
-        setUser(user);
-        // } else {
-        //   // Otherwise, set the user to the one stored in the storage
-        //   setUser(sessionStorageUser);
-        // }
     };
 
     return {attemptSilentLogin};

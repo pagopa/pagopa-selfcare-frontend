@@ -48,7 +48,7 @@ variable "github_repository_environment" {
     reviewers_teams        = list(string)
   })
   description = "GitHub Continuous Integration roles"
-  default     = {
+  default = {
     protected_branches     = false
     custom_branch_policies = true
     reviewers_teams        = ["pagopa-team-backoffice"]

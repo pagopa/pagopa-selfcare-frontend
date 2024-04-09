@@ -9,6 +9,7 @@ import {LOADING_TASK_SEARCH_PARTY} from '../utils/constants';
 import {parseJwt} from '../utils/jwt-utils';
 import {ENV} from '../utils/env';
 import {JWTUser} from '../model/JwtUser';
+import {pspAdminSignedDirect} from "../services/__mocks__/partyService";
 import {useSigninData} from './useSigninData';
 
 export type PartyJwtConfig = {
@@ -73,6 +74,10 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
             return new Promise<Party>((_, reject) => reject());
         } else if (!selectedParty || selectedParty.partyId !== partyJwtConfig.partyId) {
             setLoadingDetails(true);
+            if (ENV.MOCK.SELFCARE) {
+                // eslint-disable-next-line functional/immutable-data
+                partyJwtConfig.partyId = selectedParty?.partyId ?? pspAdminSignedDirect.partyId;
+            }
             return fetchParty(partyJwtConfig.partyId)
                 .finally(() => setLoadingDetails(false))
                 .catch((e) => {

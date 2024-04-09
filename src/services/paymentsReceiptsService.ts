@@ -6,7 +6,7 @@ export const getPaymentsReceipts = (
   organizationTaxCode: string,
   debtorTaxCode?: string
 ): Promise<ReceiptsInfo> => {
-  if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
+  if (process.env. REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return new Promise((resolve) => resolve(mockedPaymentsReceiptsList));
   } else {
     return BackofficeApi.getPaymentsReceipts(organizationTaxCode, debtorTaxCode).then(
@@ -19,7 +19,7 @@ export const getPaymentReceiptDetail = (
   organizationTaxCode: string,
   iuv: string
 ): Promise<string> => {
-  if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return new Promise((resolve) => resolve('<note><body>example xml</body></note>'));
   } else {
     return BackofficeApi.getPaymentReceiptDetail(organizationTaxCode, iuv).then((data) => data);

@@ -1040,10 +1040,12 @@ export const BackofficeApi = {
   },
 
   getPaymentReceiptDetail: async (organizationTaxCode: string, iuv: string): Promise<string> => {
-    const result = await backofficeClient.getPaymentReceiptDetail({
-      'organization-tax-code': organizationTaxCode,
-      iuv,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
+    const token = storageTokenOps.read();
+    return fetch(`${ENV.URL_API.BACKOFFICE}/payments-receipts/${organizationTaxCode}/detail/${iuv}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((data) => Promise.resolve(data.text()));
   },
 };

@@ -22,17 +22,7 @@ export const getPaymentReceiptDetail = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve('<note><body>example xml</body></note>');
   } else {
-    return fetchPaymentReceiptDetail(organizationTaxCode, iuv);
+    return BackofficeApi.getPaymentReceiptDetail(organizationTaxCode, iuv);
     // return BackofficeApi.getPaymentReceiptDetail('99999000013', iuv).then((data) => data); TODO fix generate library to receive XMLs
   }
 };
-
-function fetchPaymentReceiptDetail(organizationTaxCode: string, iuv: string): Promise<string> {
-  const token = storageTokenOps.read();
-  return fetch(`${ENV.URL_API.BACKOFFICE}/payments-receipts/${organizationTaxCode}/detail/${iuv}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((data) => Promise.resolve(data.text()));
-}

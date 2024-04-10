@@ -126,7 +126,6 @@
       },
       "successMessage": "Registrazione sul Nodo completata con successo.",
       "seccesMessagePut": "Modifica dei dati registrati sul Nodo completata con successo",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
       "pspErrorMessageTitle": "Errore",
       "pspErrorMessageDesc": "Errore durante la creazione, PSP già censito",
@@ -181,7 +180,6 @@
       "backButton": "Annulla",
       "continueButton": "Genera API Key",
       "successMessage": "Pacchetto API Key generato correttamente.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore nella generazione delle API Key"
     },
     "products": {
@@ -254,7 +252,6 @@
         "paymentType": "Seleziona tipo di versamento",
         "addPayment": "Aggiunta metodo"
       },
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
@@ -406,7 +403,6 @@
     "associationForm": {
       "PSPSelectionInputPlaceholder": "Cerca PSP",
       "successMessage": "PSP associato con successo.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il PSP al canale",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
@@ -490,7 +486,6 @@
       "requiredInutNumber": "Non Valido, l’input dev’essere un numero"
     },
     "successMessage": "La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.",
-    "errorMessageTitle": "Errore",
     "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
     "errorMessageStationCodeTitle": "Impossibile creare stazione",
     "errorMessageStationCodeDesc": "Hai una stazione ancora in attesa di revisione, attendere approvazione",
@@ -619,7 +614,6 @@
       "segregationCode": "Codice segregazione",
       "auxDigit": "Aux digit",
       "successMessage": "EC associato con successo.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageAlreadyAssociated": "L'EC associato è già stato associato in precedenza alla stazione",
@@ -1054,7 +1048,9 @@
       "placeholder": "Cerca per codice fiscale del debitore"
     },
     "table": {
-      "emptyState": "Non sono ancora presenti ricevute"
+      "emptyState": "Non sono ancora presenti ricevute",
+      "errorMessageReceiptList": "Errore durante il recupero delle ricevute di pagamento",
+      "errorMessageReceiptDetail": "Errore durante il recupero del dettaglio della ricevuta"
     },
     "column": {
       "iuv": "IUV",

@@ -372,7 +372,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 error: reason as Error,
                 techDescription: `An error occurred while adding/editing station`,
                 toNotify: true,
-                displayableTitle: t('addEditStationPage.errorMessageTitle'),
+                displayableTitle: t('general.errorTitle'),
                 displayableDescription: t('addEditStationPage.errorMessageDesc'),
                 component: 'Toast',
             });

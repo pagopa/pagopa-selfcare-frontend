@@ -72,4 +72,56 @@ describe('<PaymentsReceiptsTable />', () => {
 
     mock.mockReset();
   });
+
+  test('render component PaymentsReceiptsTable getPaymentsReceipts error', async () => {
+    mock.mockRejectedValueOnce(new Error("error"));
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/payments-receipts`]}>
+          <Route path="/payments-receipts">
+            <ThemeProvider theme={theme}>
+              <PaymentsReceiptsTable filterInput={''} />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
+    });
+
+    mock.mockReset();
+  });
+
+  test('render component PaymentsReceiptsTable getPaymentReceiptDetail error', async () => {
+    mock.mockReturnValueOnce(new Promise((resolve) => resolve(mockedPaymentsReceiptsList)));
+    mockDetails.mockRejectedValueOnce(new Error("error"));
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/payments-receipts`]}>
+          <Route path="/payments-receipts">
+            <ThemeProvider theme={theme}>
+              <PaymentsReceiptsTable filterInput={''} />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+    });
+
+    const downloadReceipt = screen.queryAllByTestId("download-receipt")?.[0];
+    expect(downloadReceipt).toBeInTheDocument();
+
+    fireEvent.click(downloadReceipt);
+
+    expect(mockDetails).toBeCalledTimes(1);
+
+    mock.mockReset();
+  });
 });

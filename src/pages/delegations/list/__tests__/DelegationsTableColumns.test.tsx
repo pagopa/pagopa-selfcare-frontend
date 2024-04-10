@@ -128,7 +128,7 @@ describe('<DelegationsTableColumns /> for PSPs', () => {
 
     const goToDelegationDetailButton = screen.getByTestId(
       'column-go-to-delegation-detail'
-    ) as HTMLInputElement;
+    );
     await waitFor(() => {
       expect(goToDelegationDetailButton).toBeInTheDocument();
     });
@@ -144,9 +144,9 @@ describe('<DelegationsTableColumns /> for PSPs', () => {
       </Provider>
     );
 
-    const goToDelegationDetailButton = screen.getByTestId(
+    const goToDelegationDetailButton = screen.queryByTestId(
       'column-go-to-delegation-detail'
-    ) as HTMLInputElement;
+    );
     await waitFor(() => {
       expect(goToDelegationDetailButton).not.toBeInTheDocument();
     });

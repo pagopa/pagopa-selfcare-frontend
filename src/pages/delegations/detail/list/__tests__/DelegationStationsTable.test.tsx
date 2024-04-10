@@ -80,7 +80,7 @@ describe('<DelegationStationsTable />', () => {
       expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
     });
 
-    const goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
+    let goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
     expect(goToStationDetailButton.length).toBeTruthy();
     fireEvent.click(goToStationDetailButton[0]);
 
@@ -90,7 +90,7 @@ describe('<DelegationStationsTable />', () => {
 
     const disassociateStation = screen.getByTestId(
       'station-detail-disassociate-station-button'
-    ) as HTMLInputElement;
+    );
     fireEvent.click(disassociateStation);
 
     await waitFor(() => {
@@ -105,6 +105,7 @@ describe('<DelegationStationsTable />', () => {
       expect(screen.queryByTestId('station-detail-drawer-column')).not.toBeInTheDocument();
     });
 
+    goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
     fireEvent.click(goToStationDetailButton[0]);
 
     await waitFor(() => {

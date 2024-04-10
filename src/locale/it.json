@@ -1090,9 +1090,9 @@
       },
       "lastUpdate": "A partire da",
       "goToStationDetails": "Vai al dettaglio stazione",
-      "disassociateStaion" : "Disassocia stazione",
+      "disassociateStaion" : "Dissocia stazione",
       "modal" : {
-        "title" : "Disassocia stazione",
+        "title" : "Dissocia stazione",
         "message": "L'ente potrà riscontrare l'interruzione dei servizi attivi su questa stazione."
       } 
     }

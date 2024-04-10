@@ -1,17 +1,12 @@
-import {
-  GridColDef,
-  GridColumnHeaderParams,
-  GridRenderCellParams,
-  GridStateColDef,
-} from '@mui/x-data-grid';
-import { cleanup, render } from '@testing-library/react';
-import { GridLinkActionDelegationDetails, buildColumnDefs } from '../DelegationsTableColumns';
+import { GridColDef } from '@mui/x-data-grid';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+import { store } from '../../../../redux/store';
 import { mockedCIDelegations } from '../../../../services/__mocks__/brokerService';
+import { GridLinkActionDelegationDetails, buildColumnDefs } from '../DelegationsTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -120,5 +115,40 @@ describe('<DelegationsTableColumns /> for PSPs', () => {
 
     const realColumns = buildColumnDefs(mockTFunction) as Array<any>;
     expect(realColumns).toEqual(ArrayBuildColumnDefs);
+  });
+
+  test('Test click on go to delegation detail', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <GridLinkActionDelegationDetails delegation={mockedCIDelegations[0]} t={jest.fn()} />
+        </Router>
+      </Provider>
+    );
+
+    const goToDelegationDetailButton = screen.getByTestId(
+      'column-go-to-delegation-detail'
+    ) as HTMLInputElement;
+    await waitFor(() => {
+      expect(goToDelegationDetailButton).toBeInTheDocument();
+    });
+    fireEvent.click(goToDelegationDetailButton);
+  });
+
+  test('Test with CI not registered on Nodo', async () => {
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <GridLinkActionDelegationDetails delegation={mockedCIDelegations[2]} t={jest.fn()} />
+        </Router>
+      </Provider>
+    );
+
+    const goToDelegationDetailButton = screen.getByTestId(
+      'column-go-to-delegation-detail'
+    ) as HTMLInputElement;
+    await waitFor(() => {
+      expect(goToDelegationDetailButton).not.toBeInTheDocument();
+    });
   });
 });

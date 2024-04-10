@@ -76,7 +76,7 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       editable: false,
       getActions: (params: any) => [
-        <IconButton key={`station-detail-button-${params.row.station_code}`} data-test-id='column-station-detail-button' onClick={() => setDrawerValue(params.row)}>
+        <IconButton key={`station-detail-button-${params.row.station_code}`} data-testid='column-station-detail-button' onClick={() => setDrawerValue(params.row)}>
           <ChevronRightIcon color="primary" />
         </IconButton>,
       ],

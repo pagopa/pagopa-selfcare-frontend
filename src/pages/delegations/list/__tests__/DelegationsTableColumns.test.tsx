@@ -5,10 +5,7 @@ import {
   GridStateColDef,
 } from '@mui/x-data-grid';
 import { cleanup, render } from '@testing-library/react';
-import {
-  GridLinkActionDelegationDetails,
-  buildColumnDefs
-} from '../DelegationsTableColumns';
+import { GridLinkActionDelegationDetails, buildColumnDefs } from '../DelegationsTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { store } from '../../../../redux/store';
@@ -23,14 +20,6 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const AllCells = () => {
-  return (
-    <>
-      <GridLinkActionDelegationDetails delegation={mockedCIDelegations[0]} />
-    </>
-  );
-};
-
 const mockTFunction = (key: string) => {
   switch (key) {
     case 'delegationsPage.column.companyName':
@@ -40,7 +29,7 @@ const mockTFunction = (key: string) => {
     case 'delegationsPage.column.cbill':
       return 'CBILL';
     case 'delegationsPage.column.stations':
-      return "Stations";
+      return 'Stations';
     default:
       return '';
   }
@@ -52,7 +41,7 @@ describe('<DelegationsTableColumns /> for PSPs', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <AllCells />
+          <GridLinkActionDelegationDetails delegation={mockedCIDelegations[0]} t={jest.fn()} />
         </Router>
       </Provider>
     );

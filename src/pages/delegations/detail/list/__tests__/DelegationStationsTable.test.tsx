@@ -5,9 +5,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../../redux/store';
-import {
-  getCIBrokerStationsMock
-} from '../../../../../services/__mocks__/brokerService';
+import { getCIBrokerStationsMock } from '../../../../../services/__mocks__/brokerService';
 import * as BrokerService from '../../../../../services/brokerService';
 import DelegationStationsTable from '../DelegationStationsTable';
 
@@ -22,13 +20,13 @@ afterEach(cleanup);
 
 describe('<DelegationStationsTable />', () => {
   test('render component DelegationStationsTable with CI station list', async () => {
-    mock.mockReturnValueOnce(Promise.resolve(getCIBrokerStationsMock()));
+    mock.mockReturnValueOnce(getCIBrokerStationsMock());
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/delegations-list/detail`]}>
           <Route path="/delegations-list/detail">
             <ThemeProvider theme={theme}>
-              <DelegationStationsTable ciTaxCode={'ciTaxCode'} filterByStationCode='' />
+              <DelegationStationsTable ciTaxCode={'ciTaxCode'} filterByStationCode="" />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -48,7 +46,7 @@ describe('<DelegationStationsTable />', () => {
         <MemoryRouter initialEntries={[`/delegations-list/detail`]}>
           <Route path="/delegations-list/detail">
             <ThemeProvider theme={theme}>
-              <DelegationStationsTable ciTaxCode={'ciTaxCode'} filterByStationCode='' />
+              <DelegationStationsTable ciTaxCode={'ciTaxCode'} filterByStationCode="" />
             </ThemeProvider>
           </Route>
         </MemoryRouter>

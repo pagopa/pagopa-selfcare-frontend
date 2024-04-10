@@ -11,6 +11,14 @@ export const mockedCIContacts: Array<CIPaymentContact> = [
     surname: 'surname',
     user_tax_code: '012345678912',
   },
+  {
+    email: 'referent2@dummy.com',
+    id: '23453444',
+    name: 'referent2',
+    roles: ['admin'],
+    surname: 'surname2',
+    user_tax_code: '012345678916',
+  },
 ];
 export const mockedCIOperativeTable: TavoloOpResource = {
   createdAt: new Date(),

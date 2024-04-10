@@ -16,6 +16,24 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('<DelegationDetailPaymentContacts />', () => {
+  test('render component Drawer with single payment contact', async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/delegations-list/detail`]}>
+          <Route path="/delegations-list/detail">
+            <ThemeProvider theme={theme}>
+              <DelegationDetailPaymentContacts paymentContacts={[mockedCIContacts[0]]} />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('payment-contact-column')).toBeInTheDocument();
+    });
+  });
+  
   test('render component Drawer with payment contact list', async () => {
     render(
       <Provider store={store}>

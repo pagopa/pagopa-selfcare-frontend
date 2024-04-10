@@ -39,7 +39,7 @@ const ChannelDetailPage = () => {
           error: reason as Error,
           techDescription: `An error occurred while getting channel details`,
           toNotify: true,
-          displayableTitle: t('addEditChannelPage.addForm.errorMessageTitle'),
+          displayableTitle: t('general.errorTitle'),
           displayableDescription: t('addEditChannelPage.addForm.errorMessageChannelDetailsDesc'),
           component: 'Toast',
         });

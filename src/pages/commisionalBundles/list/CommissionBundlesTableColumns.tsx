@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { Box, Chip, Grid, Typography } from '@mui/material';
+import { Chip, Grid, Typography } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import React, { CSSProperties, ReactNode } from 'react';
+import React from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
@@ -11,6 +11,7 @@ import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import { BundleResource, TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
+import { renderCell, renderStatusChip, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -28,7 +29,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => showBundleName(params),
+      renderCell: (params: any) => renderCell({ value: params.row.name, mainCell: true }),
       sortable: true,
       flex: 4,
     },
@@ -45,7 +46,7 @@ export function buildColumnDefs(
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
             renderCell: (params: any) =>
-              renderCell(params.row.validityDateFrom?.toLocaleDateString('en-GB'), undefined),
+              renderCell({ value: params.row.validityDateFrom?.toLocaleDateString('en-GB') }),
             sortable: false,
             flex: 4,
           },
@@ -60,7 +61,7 @@ export function buildColumnDefs(
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
             renderCell: (params: any) =>
-              renderCell(params.row.validityDateTo?.toLocaleDateString('en-GB'), undefined),
+              renderCell({ value: params.row.validityDateTo?.toLocaleDateString('en-GB') }),
             sortable: false,
             flex: 4,
           },
@@ -76,7 +77,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(t(params.row.touchpoint)),
+      renderCell: (params) => renderCell({ value: t(params.row.touchpoint) }),
       sortable: false,
       flex: 4,
     },
@@ -90,7 +91,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell(t(params.row.paymentType)),
+      renderCell: (params) => renderCell({ value: t(params.row.paymentType) }),
       sortable: false,
       flex: 4,
     },
@@ -104,7 +105,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showBundleState(params, t, isPsp, isEc),
+      renderCell: (params) => getStateChip(params, t, isPsp, isEc),
       sortable: false,
       flex: 4,
     },
@@ -129,44 +130,6 @@ export function buildColumnDefs(
   ] as Array<GridColDef>;
 }
 
-export function renderCell(
-  params: GridRenderCellParams,
-  value: ReactNode = params,
-  overrideStyle: CSSProperties = {}
-) {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        paddingRight: '16px',
-        paddingLeft: '16px',
-        paddingTop: '-16px',
-        paddingBottom: '-16px',
-        marginLeft: '11px',
-        cursor: 'pointer',
-        WebkitBoxOrient: 'vertical' as const,
-        ...overrideStyle,
-      }}
-    >
-      <Box
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical' as const,
-          width: '100%',
-          fontSize: '14px',
-          variant: 'body2',
-        }}
-      >
-        {value}
-      </Box>
-    </Box>
-  );
-}
-
 export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource }) => {
   const dispatcher = useAppDispatch();
 
@@ -180,61 +143,7 @@ export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource
   );
 };
 
-export function showCustomHeader(params: GridColumnHeaderParams) {
-  return (
-    <Typography
-      color="colorTextPrimary"
-      variant="caption"
-      justifyContent="center"
-      sx={{ fontWeight: 'fontWeightBold', outline: 'none', paddingLeft: 2 }}
-    >
-      {params.colDef.headerName}
-    </Typography>
-  );
-}
-
-export function showBundleName(params: GridRenderCellParams) {
-  return (
-    <React.Fragment>
-      {renderCell(
-        params,
-        <Grid container sx={{ width: '100%' }}>
-          <Grid item xs={9} sx={{ width: '100%' }}>
-            <Typography
-              variant="body2"
-              color="primary"
-              sx={{
-                fontWeight: 'fontWeightBold',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical' as const,
-              }}
-            >
-              {params.row.name}
-            </Typography>
-          </Grid>
-        </Grid>
-      )}
-    </React.Fragment>
-  );
-}
-
-export function showBundleState(
-  params: GridRenderCellParams,
-  t: TFunction<'translation'>,
-  isPsp: boolean,
-  isEc: boolean
-) {
-  return (
-    <React.Fragment>
-      {renderCell(params, <>{getStateChip(params, t, isPsp, isEc)}</>)}
-    </React.Fragment>
-  );
-}
-
-const getStateChip = (
+export const getStateChip = (
   params: GridRenderCellParams,
   t: TFunction<'translation'>,
   isPsp: boolean,
@@ -246,40 +155,32 @@ const getStateChip = (
 
   if (isPsp && validityDateFrom && validityDateTo) {
     if (datesAreOnSameDay(todayDate, validityDateTo)) {
-      return (
-        <Chip
-          color={'error'}
-          label={t('commissionBundlesPage.list.states.eliminating')}
-          data-testid="error-state-chip"
-        />
-      );
+      return renderStatusChip({
+        chipColor:"error",
+        chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+        dataTestId:"error-state-chip"
+      });
     }
     if (todayDate.getTime() < validityDateFrom.getTime()) {
-      return (
-        <Chip
-          color={'default'}
-          label={t('commissionBundlesPage.list.states.inActivation')}
-          data-testid="default-state-chip"
-        />
-      );
+      return renderStatusChip({
+        chipColor:"default",
+        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+        dataTestId:"default-state-chip"
+      });
     }
     if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-      return (
-        <Chip
-          color={'warning'}
-          label={t('commissionBundlesPage.list.states.expiring')}
-          data-testid="warning-state-chip"
-        />
-      );
+      return renderStatusChip({
+        chipColor:"warning",
+        chipLabel: t('commissionBundlesPage.list.states.expiring'),
+        dataTestId:"warning-state-chip"
+      });
     }
 
-    return (
-      <Chip
-        color={'success'}
-        label={t('commissionBundlesPage.list.states.active')}
-        data-testid="success-state-chip"
-      />
-    );
+    return renderStatusChip({
+      chipColor:"success",
+      chipLabel: t('commissionBundlesPage.list.states.active'),
+      dataTestId:"success-state-chip"
+    });
   }
   if (isEc) {
     if (params.row.type === TypeEnum.PUBLIC) {
@@ -327,22 +228,18 @@ const getStateChip = (
 
     if (params.row.type === TypeEnum.PRIVATE) {
       if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
-        return (
-          <Chip
-            color={'error'}
-            label={t('commissionBundlesPage.list.states.eliminating')}
-            data-testid="error-state-chip"
-          />
-        );
+        return renderStatusChip({
+          chipColor:"error",
+          chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+          dataTestId:"error-state-chip"
+        });
       }
       if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-        return (
-          <Chip
-            color={'warning'}
-            label={t('commissionBundlesPage.list.states.expiring')}
-            data-testid="warning-state-chip"
-          />
-        );
+        return renderStatusChip({
+          chipColor:"warning",
+          chipLabel: t('commissionBundlesPage.list.states.expiring'),
+          dataTestId:"warning-state-chip"
+        });
       }
       /* TODO
     if(isEc  && bundle not activated by EC ){
@@ -367,13 +264,19 @@ const getStateChip = (
     }
 
     if (params.row.type === TypeEnum.GLOBAL) {
-      return (
-        <Chip
-          color={'success'}
-          label={t('commissionBundlesPage.list.states.active')}
-          data-testid="success-state-chip"
-        />
-      );
+      if (todayDate.getTime() < validityDateFrom.getTime()) {
+        return renderStatusChip({
+          chipColor:"default",
+          chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+          dataTestId:"default-state-chip"
+        });
+      }
+      
+      return renderStatusChip({
+        chipColor:"success",
+        chipLabel: t('commissionBundlesPage.list.states.active'),
+        dataTestId:"success-state-chip"
+      });
     }
   }
 

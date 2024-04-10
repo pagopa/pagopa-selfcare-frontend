@@ -175,7 +175,7 @@ describe('AddEditIbanForm', () => {
   });
 
   it('test create api response 409 Conflict', async () => {
-    createIbanSpy.mockRejectedValue(new Error('409'));
+    createIbanSpy.mockRejectedValue(new Error(JSON.stringify({status: 409})));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}/create`]}>

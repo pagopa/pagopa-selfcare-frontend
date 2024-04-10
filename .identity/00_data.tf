@@ -1,4 +1,4 @@
-data "azurerm_storage_account" "tf_storage_account"{
+data "azurerm_storage_account" "tf_storage_account" {
   name                = "pagopainfraterraform${var.env}"
   resource_group_name = "io-infra-rg"
 }
@@ -9,7 +9,7 @@ data "github_organization_teams" "all" {
 }
 
 data "azurerm_key_vault" "key_vault" {
-  name = "pagopa-${var.env_short}-kv"
+  name                = "pagopa-${var.env_short}-kv"
   resource_group_name = "pagopa-${var.env_short}-sec-rg"
 }
 
@@ -19,32 +19,38 @@ data "azurerm_key_vault" "domain_key_vault" {
 }
 
 data "azurerm_key_vault_secret" "key_vault_sonar" {
-  name = "sonar-token"
+  name         = "sonar-token"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_bot_token" {
-  name = "bot-token-github"
+  name         = "bot-token-github"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_cucumber_token" {
-  name = "cucumber-token"
+  name         = "cucumber-token"
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_mixpanel_token" {
-  name = "react-app-mixpanel-token"
+  name         = "react-app-mixpanel-token"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_onetrust_domain" {
-  name = "react-app-onetrust-domain-id"
+  name         = "react-app-onetrust-domain-id"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 
 data "azurerm_key_vault_secret" "key_vault_blob_connection_string" {
-  name = "web-storage-blob-connection-string"
+  name         = "web-storage-blob-connection-string"
+  key_vault_id = data.azurerm_key_vault.domain_key_vault.id
+}
+
+data "azurerm_key_vault_secret" "key_vault_key_pem" {
+  count        = var.env == "dev" ? 1 : 0
+  name         = "key-pem"
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 

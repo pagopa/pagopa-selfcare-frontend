@@ -22,7 +22,7 @@ const PTRegistrationData = () => {
   return (
     <>
       <CommonDetails t={t} selectedParty={selectedParty} />
-      <Grid item xs={4}>
+      <Grid item xs={4} data-testid="pt-registration">
         <Typography variant="body2">{t('dashboardPage.registrationData.statusLabel')}</Typography>
       </Grid>
       <Grid item xs={8}>

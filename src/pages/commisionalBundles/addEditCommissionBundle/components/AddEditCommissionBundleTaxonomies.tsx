@@ -190,8 +190,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.subTitle')}
       </Typography>
       <Typography variant="body1" mb={2} sx={{ textDecoration: 'underline', fontWeight: 'medium' }}>
-        {/* TODO ADD LINK TO MANUAL */}
-        <Link href="https://docs.pagopa.it/manuale-back-office-pagopa/v/manuale-bo-pagopa-psp" target="_blank">
+        <Link href="https://docs.pagopa.it/sanp/ente-creditore/tassonomia-dei-servizi-di-incasso" target="_blank">
           {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.manualHelp')}
         </Link>
       </Typography>

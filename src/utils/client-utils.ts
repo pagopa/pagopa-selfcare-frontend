@@ -25,7 +25,9 @@ export const extractResponse = async <R>(
     ) {
       throw new Error(`Operation not allowed!`);
     } else {
-      throw new Error(response.right.status);
+      throw new Error(
+        JSON.stringify({ status: response.right.status, response: response.right.value })
+      );
     }
   } else {
     console.error('Something gone wrong while fetching data');
@@ -34,4 +36,10 @@ export const extractResponse = async <R>(
   }
 };
 
-export const isErrorResponse = (data: any): boolean => data.title && data.status && data.detail;
+export const extractProblemJson = (data: any): any => {
+  try {
+    return data?.message ? JSON.parse(data.message) : {};
+  } catch (_) {
+    return {};
+  }
+};

@@ -126,7 +126,6 @@
       },
       "successMessage": "Registrazione sul Nodo completata con successo.",
       "seccesMessagePut": "Modifica dei dati registrati sul Nodo completata con successo",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
       "pspErrorMessageTitle": "Errore",
       "pspErrorMessageDesc": "Errore durante la creazione, PSP già censito",
@@ -181,7 +180,6 @@
       "backButton": "Annulla",
       "continueButton": "Genera API Key",
       "successMessage": "Pacchetto API Key generato correttamente.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore nella generazione delle API Key"
     },
     "products": {
@@ -254,7 +252,6 @@
         "paymentType": "Seleziona tipo di versamento",
         "addPayment": "Aggiunta metodo"
       },
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
       "errorMessageChannelDetailsDesc": "Errore durante la ricezione dei dettagli del canale",
@@ -406,7 +403,6 @@
     "associationForm": {
       "PSPSelectionInputPlaceholder": "Cerca PSP",
       "successMessage": "PSP associato con successo.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il PSP al canale",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
@@ -490,7 +486,6 @@
       "requiredInutNumber": "Non Valido, l’input dev’essere un numero"
     },
     "successMessage": "La stazione è in attesa di revisione da parte di un operatore PagoPA. Riceverai una mail a procedura completata.",
-    "errorMessageTitle": "Errore",
     "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
     "errorMessageStationCodeTitle": "Impossibile creare stazione",
     "errorMessageStationCodeDesc": "Hai una stazione ancora in attesa di revisione, attendere approvazione",
@@ -603,7 +598,7 @@
     },
     "dissociateModal": {
       "title": "Dissocia EC",
-      "message": "Se dissoci un EC, sarà disattivata la sua connessione alla stazione.",
+      "message": "Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione.",
       "confirmButton": "Dissocia EC",
       "cancelButton": "Torna indietro"
     }
@@ -619,7 +614,6 @@
       "segregationCode": "Codice segregazione",
       "auxDigit": "Aux digit",
       "successMessage": "EC associato con successo.",
-      "errorMessageTitle": "Errore",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageAlreadyAssociated": "L'EC associato è già stato associato in precedenza alla stazione",
@@ -833,7 +827,7 @@
         "paymentType": "Tipo di pagamento",
         "state": "Stato"
       },
-      "states":{
+      "states": {
         "inActivation": "In attivazione",
         "active": "Attivo",
         "expiring": "In scadenza",
@@ -912,7 +906,7 @@
         "to": "A",
         "all": "Tutti"
       },
-      "addTaxonomies":{
+      "addTaxonomies": {
         "subTitle": "Cerca i servici di incasso sfogliando il catalogo oppure carica una lista di codici.",
         "manualHelp": "Dubbi? Vai al manuale",
         "catalogueButton": "Sfoglia il catalogo",
@@ -1030,6 +1024,40 @@
       "getOperationTableListDesc": "Errore durante il recupero dei dati"
     }
   },
+  "delegationsPage": {
+    "title": "I tuoi enti",
+    "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
+    "downloadButton": "Scarica lista",
+    "alertMessage": "Il file che stai esportando contiene informazioni aggiornate al {{date}} alle ore {{hours}}",
+    "search": {
+      "placeholder": "Cerca per nome"
+    },
+    "table": {
+      "emptyState": "Non sono ancora presenti enti"
+    },
+    "column": {
+      "companyName": "Nome o Ragione Sociale",
+      "taxCode": "Codice Fiscale",
+      "cbill": "CBILL",
+      "stations": "Stazioni"
+    }
+  },
+  "paymentsReceiptsPage": {
+    "title": "Pagamenti Canone Unico Patrimoniale",
+    "search": {
+      "placeholder": "Cerca per codice fiscale del debitore"
+    },
+    "table": {
+      "emptyState": "Non sono ancora presenti ricevute",
+      "errorMessageReceiptList": "Errore durante il recupero delle ricevute di pagamento",
+      "errorMessageReceiptDetail": "Errore durante il recupero del dettaglio della ricevuta"
+    },
+    "column": {
+      "iuv": "IUV",
+      "taxCode": "Codice Fiscale Debitore",
+      "downloadButton": "Scarica ricevuta"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -1051,6 +1079,18 @@
     },
     "operationTable": {
       "title": "Tavoli Operativi"
+    },
+    "delegations": {
+      "title": "I tuoi enti"
+    },
+    "paymentsReceipts": {
+      "title": "Pagamenti CUP"
+    },
+    "users": {
+      "title": "Utenti"
+    },
+    "groups": {
+      "title": "Gruppi"
     }
   },
   "header": {
@@ -1077,6 +1117,7 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "showMore": "Mostra di più",
+    "search": "Cerca",
     "add": "Aggiungi",
     "back": "Indietro",
     "modify": "Modifica",
@@ -1105,6 +1146,7 @@
     },
     "yes": "Sì",
     "no": "No",
+    "gotIt": "Ho capito",
     "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
     "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
   },

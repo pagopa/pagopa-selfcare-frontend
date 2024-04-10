@@ -45,15 +45,22 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
         }
     }, [selectedParty]);
 
+    function getPspCode(selectedParty: Party): string {
+        if (signInData?.paymentServiceProviderDetailsResource?.psp_code) {
+            return signInData?.paymentServiceProviderDetailsResource?.psp_code;
+        } else if (selectedParty?.pspData?.abi_code && /^\d{5}$/.test(selectedParty?.pspData?.abi_code)) {
+            return 'ABI'.concat(selectedParty?.pspData?.abi_code as string);
+        } else {
+            return signInData?.paymentServiceProviderDetailsResource?.bic ?? '';
+        }
+    }
+
     const initialFormData = (selectedParty?: Party) => ({
         name: selectedParty?.description ?? '',
         businessName: selectedParty?.description ?? '',
         fiscalCode: selectedParty?.fiscalCode ?? '',
         abiCode: selectedParty?.pspData?.abi_code ?? '',
-        pspCode:
-            signInData?.paymentServiceProviderDetailsResource?.psp_code ??
-            selectedParty?.pspData?.abi_code ? 'ABI'.concat(selectedParty?.pspData?.abi_code as string) :
-                signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
+        pspCode: getPspCode(selectedParty!),
         bicCode: signInData?.paymentServiceProviderDetailsResource?.bic ?? '',
         digitalStamp: signInData?.paymentServiceProviderDetailsResource?.stamp ? true : false,
     });
@@ -98,12 +105,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
     });
 
     useEffect(() => {
-        if ((signInData?.paymentServiceProviderDetailsResource?.psp_code === undefined ||
-                signInData?.paymentServiceProviderDetailsResource?.psp_code === null ||
-                signInData?.paymentServiceProviderDetailsResource?.psp_code === '') &&
-            (selectedParty?.pspData?.abi_code === undefined ||
-                selectedParty?.pspData?.abi_code === null ||
-                selectedParty?.pspData?.abi_code === '')) {
+        if (!signInData?.paymentServiceProviderDetailsResource?.psp_code && !/^\d{5}$/.test(selectedParty?.pspData?.abi_code ?? '')) {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             formik.setFieldValue('pspCode', formik.values.bicCode);
         }

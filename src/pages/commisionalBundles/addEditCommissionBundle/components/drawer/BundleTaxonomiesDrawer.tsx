@@ -150,7 +150,7 @@ export const BundleTaxonomiesDrawer = ({
           error: reason,
           techDescription: `An error occurred while retrieving taxonomy groups list`,
           toNotify: true,
-          displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+          displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
             'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
           ),
@@ -186,7 +186,7 @@ export const BundleTaxonomiesDrawer = ({
           error: reason,
           techDescription: `An error occurred while retrieving taxonomy list`,
           toNotify: true,
-          displayableTitle: t('addEditCommissionBundle.associationForm.errorMessageTitle'),
+          displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
             'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
           ),

@@ -11,7 +11,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
-import SideMenu from '../../../components/SideMenu/SideMenu';
+import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { deletePSPBundle } from '../../../services/bundleService';
@@ -75,13 +75,8 @@ const CommissionBundleDetailPage = () => {
   }
 
   return (
-    <Grid container sx={{ backgroundColor: 'background.paper' }}>
-      <Grid item xs={2}>
-        <Box>
-          <SideMenu />
-        </Box>
-      </Grid>
-      <Grid item xs={10} sx={{ backgroundColor: '#F5F6F7' }} pb={8} p={3}>
+    <>
+      <SideMenuLayout>
         <Breadcrumbs>
           <Typography>{t('general.Bundles')}</Typography>
           <Typography color={'action.active'}>
@@ -147,7 +142,7 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
         </Grid>
-      </Grid>
+      </SideMenuLayout>
       <GenericModal
         title={t('commissionBundlesPage.commissionBundleDetail.modal.title')}
         message={t('commissionBundlesPage.commissionBundleDetail.modal.message')}
@@ -158,7 +153,7 @@ const CommissionBundleDetailPage = () => {
         handleConfirm={() => handleDeletePSP()}
         data-testid="delete-modal"
       />
-    </Grid>
+    </>
   );
 };
 

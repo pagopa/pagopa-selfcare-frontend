@@ -223,12 +223,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
   return (
     <>
-      <Grid container spacing={2} mb={4}>
-        <Grid item xs={12}>
-          <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-            <Grid container spacing={3}>
+      <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+            <Grid container spacing={1}>
+          {!showManageButton && (
               <Grid item xs={12} textAlign={'end'}>
-                {!showManageButton ? (
+
                   <Chip
                     label={t('ibanPage.updateInProgress')}
                     aria-label="update-in-progress"
@@ -240,11 +239,9 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                       paddingBottom: '1px',
                       height: '32px',
                     }}
-                  ></Chip>
-                ) : (
-                  <></>
-                )}
-              </Grid>
+                  />
+                </Grid>
+                  )}
               <Grid item xs={12} md={6}>
                 <Typography variant="overline">{t('ibanPage.standIn')}</Typography>
                 <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
@@ -278,7 +275,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                       </Typography>
                     </>
                   ) : (
-                    <FormControl sx={{minWidth:"55%"}}>
+                    <FormControl sx={{ minWidth:"55%"}}>
                       <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
                       <Select
                         id="ibanStandIn"
@@ -332,7 +329,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                       </Typography>
                     </>
                   ) : (
-                    <FormControl sx={{minWidth:"55%"}}>
+                    <FormControl sx={{ minWidth:"55%"}}>
                       <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
                       <Select
                         id="ibanCup"
@@ -357,8 +354,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                   )}
                 </Box>
               </Grid>
-              <Grid container direction="row" justifyContent="space-between" mt={3}>
-                <Grid item md={1} display="flex" justifyContent="flex-start" ml={3}>
+              <Grid container direction="row" justifyContent="space-between" mt={1} spacing={1}>
+                <Grid item xs={1} ml={1}>
                   {showManageButton ? (
                     <ButtonNaked
                       size="small"
@@ -375,7 +372,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     <></>
                   )}
                 </Grid>
-                <Grid item md={1} display="flex" justifyContent="flex-end">
+                <Grid item xs={1} display="flex" justifyContent="flex-end">
                   {showManageButton ? (
                     <></>
                   ) : (
@@ -408,11 +405,9 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
               </Grid>
             </Grid>
           </Card>
-          <Grid item xs={12}>
+
             {selectedParty && <IbanTable ibanList={ibanList} error={error} loading={loading} />}
-          </Grid>
-        </Grid>
-      </Grid>
+
 
       <GenericModal
         title={t('addEditIbanPage.modal.title')}

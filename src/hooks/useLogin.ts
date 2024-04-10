@@ -62,7 +62,7 @@ export const useLogin = () => {
 
         // used for testing. During integration test we inject the JWT in the localStorage
         const logged = window.location.hash.search('#logged=forced');
-        if (logged===-1) {
+        if (logged === -1) {
 
             // 2. Check if we are coming from Self Care and have a new token
             const newSelfCareIdentityToken = window.location.hash.replace('#id=', '');

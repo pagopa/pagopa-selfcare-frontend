@@ -61,7 +61,7 @@ describe('<DelegationStationsTable />', () => {
     });
   });
 
-  test('render component DelegationStationsTable without CI station list', async () => {
+  test('render component DelegationStationsTable with click on dissociate station', async () => {
     mock.mockReturnValueOnce(getCIBrokerStationsMock());
     render(
       <Provider store={store}>
@@ -74,22 +74,25 @@ describe('<DelegationStationsTable />', () => {
         </MemoryRouter>
       </Provider>
     );
-    
+
     await waitFor(() => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
       expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
     });
 
-    const goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button')[0] as HTMLInputElement;
-    fireEvent.click(goToStationDetailButton);
-    
+    const goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
+    expect(goToStationDetailButton.length).toBeTruthy();
+    fireEvent.click(goToStationDetailButton[0]);
+
     await waitFor(() => {
       expect(screen.queryByTestId('station-detail-drawer-column')).toBeInTheDocument();
     });
 
-    const disassociateStation = screen.getByTestId('station-detail-disassociate-station-button') as HTMLInputElement;
+    const disassociateStation = screen.getByTestId(
+      'station-detail-disassociate-station-button'
+    ) as HTMLInputElement;
     fireEvent.click(disassociateStation);
-    
+
     await waitFor(() => {
       expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
     });
@@ -102,12 +105,12 @@ describe('<DelegationStationsTable />', () => {
       expect(screen.queryByTestId('station-detail-drawer-column')).not.toBeInTheDocument();
     });
 
-    fireEvent.click(goToStationDetailButton);
+    fireEvent.click(goToStationDetailButton[0]);
 
     await waitFor(() => {
       expect(screen.queryByTestId('station-detail-drawer-column')).toBeInTheDocument();
     });
-    
+
     fireEvent.click(disassociateStation);
 
     await waitFor(() => {

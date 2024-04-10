@@ -1,15 +1,15 @@
 import { Box, Pagination } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLoading } from '@pagopa/selfcare-common-frontend';
-import { LOADING_TASK_CI_DELEGATIONS_LIST } from '../../../utils/constants';
+import { CIBrokerDelegationPage } from '../../../api/generated/portal/CIBrokerDelegationPage';
+import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import TableEmptyState from '../../../components/Table/TableEmptyState';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
-import { CIBrokerDelegationPage } from '../../../api/generated/portal/CIBrokerDelegationPage';
 import { getCIBrokerDelegation } from '../../../services/brokerService';
-import TableEmptyState from '../../../components/Table/TableEmptyState';
+import { LOADING_TASK_CI_DELEGATIONS_LIST } from '../../../utils/constants';
 import { buildColumnDefs } from './DelegationsTableColumns';
 
 type Props = {
@@ -32,7 +32,7 @@ const emptyDelegationList: CIBrokerDelegationPage = {
 
 const DelegationsTable = ({ filterByName }: Props) => {
   const { t } = useTranslation();
-  const [error, setError] = useState(false);
+  const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATIONS_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t);
@@ -56,7 +56,16 @@ const DelegationsTable = ({ filterByName }: Props) => {
           setDelegationsList(emptyDelegationList);
         }
       })
-      .catch((reason) => setError(reason))
+      .catch((reason) =>  addError({
+        id: 'DELEGATION_GET_DELEGATIONS',
+        blocking: false,
+        error: reason as Error,
+        techDescription: `An error occurred while retrieving delegations`,
+        toNotify: true,
+        displayableTitle: t('general.errorTitle'),
+        displayableDescription: t('delegationsPage.retrieveDelegationsErrorMessage'),
+        component: 'Toast',
+      }))
       .finally(() => setLoading(false));
   };
 
@@ -79,9 +88,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
       }}
       justifyContent="start"
     >
-      {error ? (
-        <>{error}</>
-      ) : !delegationsList?.ci_broker_delegations ||
+      {!delegationsList?.ci_broker_delegations ||
         delegationsList.ci_broker_delegations?.length === 0 ? (
         <TableEmptyState componentName="delegationsPage" />
       ) : (

@@ -1,15 +1,13 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render, waitFor, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
-import { Provider } from 'react-redux';
-import React from 'react';
-import DelegationsTable from '../DelegationsTable';
+import { getCIBrokerDelegationMock } from '../../../../services/__mocks__/brokerService';
 import * as BrokerService from '../../../../services/brokerService';
-import {
-  getCIBrokerDelegationMock
-} from '../../../../services/__mocks__/brokerService';
+import DelegationsTable from '../DelegationsTable';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,6 +1,7 @@
 import { BackofficeApi } from "../api/BackofficeClient";
 import { CIBrokerDelegationPage } from "../api/generated/portal/CIBrokerDelegationPage";
-import {getCIBrokerDelegationMock} from "./__mocks__/brokerService";
+import { CIBrokerStationPage } from "../api/generated/portal/CIBrokerStationPage";
+import {getCIBrokerDelegationMock, getCIBrokerStationsMock} from "./__mocks__/brokerService";
 
 export const getCIBrokerDelegation = (
     brokerTaxCode: string, brokerId: string, ciName: string, limit: number, page: number
@@ -8,6 +9,16 @@ export const getCIBrokerDelegation = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
       return getCIBrokerDelegationMock();
     } else {
-      return BackofficeApi.getCIBrokerDelegation( brokerTaxCode, brokerId, ciName, limit, page);
+      return BackofficeApi.getCIBrokerDelegation(brokerTaxCode, brokerId, ciName, limit, page);
+    }
+  };
+
+export const getCIBrokerStations = (
+  brokerTaxCode: string, ciTaxCode: string, stationCode: string, limit: number, page: number
+  ): Promise<CIBrokerStationPage> => {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+      return getCIBrokerStationsMock();
+    } else {
+      return BackofficeApi.getCIBrokerStations(brokerTaxCode, ciTaxCode, stationCode, limit, page);
     }
   };

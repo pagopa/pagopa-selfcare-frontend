@@ -72,7 +72,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
           blocking: false,
           error: reason,
           toNotify: true,
-          displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceipt'),
+          displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceiptList'),
         });
       })
       .finally(() => setLoading(false));

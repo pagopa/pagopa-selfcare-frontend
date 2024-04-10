@@ -838,7 +838,8 @@
       },
       "error": {
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",
-        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso"
+        "taxonomiesErrorMessageDesc": "Errore durante la ricezione della lista dei servizi d'incasso",
+        "retrieveCommissionBundlesErrorMessage": "Errore durante l'ottenimento dei pacchetti commissionali'"
       }
     },
     "commissionBundleDetail": {
@@ -1029,17 +1030,71 @@
     "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
     "downloadButton": "Scarica lista",
     "alertMessage": "Il file che stai esportando contiene informazioni aggiornate al {{date}} alle ore {{hours}}",
+    "retrieveDelegationsErrorMessage": "Errore durante l'ottenimento delle deleghe",
     "search": {
       "placeholder": "Cerca per nome"
     },
     "table": {
-      "emptyState": "Non sono ancora presenti enti"
+      "emptyState": "Non sono ancora presenti enti",
+      "info": "In attesa di registrazione sul Nodo"
     },
     "column": {
       "companyName": "Nome o Ragione Sociale",
       "taxCode": "Codice Fiscale",
       "cbill": "CBILL",
       "stations": "Stazioni"
+    }
+  },
+  "delegationDetailPage": {
+    "dissociateStationErrorMessage": "Errore durante la dissociazione della stazione dall'EC",
+    "retrieveStationsErrorMessage": "Errore durante l'ottenimento delle stazioni dell'EC",
+    "retrieveContacsErrorMessage": "Errore durante l'ottenimento dei contatti dell'EC",
+    "operativeTable": {
+      "title": "Referente tavolo operativo",
+      "email": "Email",
+      "phone": "Telefono"
+    },
+    "paymentContacts": {
+      "title": "Referente pagamenti",
+      "drawerSubtitle": "Referente",
+      "name": "Nome",
+      "surname" : "Cognome",
+      "email": "Email"
+    },
+    "tableTitle": "Stazioni associate",
+    "search": {
+      "placeholder": "Codice stazione"
+    },
+    "table": {
+      "emptyState": "Non sono ancora presenti stazioni associate all'ente."
+    },
+    "column": {
+      "stationCode": "Codice stazione",
+      "auxDigit": "Auxdigit",
+      "segregationCode": "Segregation code",
+      "applicationCode": "Application code"
+    },
+    "stationDetail": {
+      "title": "Dettaglio stazione",
+      "registry": "Anagrafica",
+      "activationDate": "Data attivazione",
+      "stationCode": "Codice stazione",
+      "auxDigit": "Auxdigit",
+      "segregationCode": "Segregation code",
+      "applicationCode": "Application code",
+      "references": "Associazione",
+      "status": {
+        "label": "Stato",
+        "active": "Attiva",
+        "inactive": "Inattiva"
+      },
+      "lastUpdate": "A partire da",
+      "goToStationDetails": "Vai al dettaglio stazione",
+      "disassociateStaion" : "Dissocia stazione",
+      "modal" : {
+        "title" : "Dissocia stazione",
+        "message": "L'ente potrà riscontrare l'interruzione dei servizi attivi su questa stazione."
+      } 
     }
   },
   "paymentsReceiptsPage": {

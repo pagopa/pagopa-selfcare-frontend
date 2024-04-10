@@ -1,55 +1,55 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
-import React, { useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { Alert, IconButton } from '@mui/material';
 import {
   ErrorBoundary,
   LoadingOverlay,
   UnloadEventHandler,
   UserNotifyHandle,
 } from '@pagopa/selfcare-common-frontend';
-import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import withLogin from './decorators/withLogin';
+import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import routes from './routes';
-import ApiKeysPage from './pages/apiKeys/ApiKeysPage';
-import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
-import Auth from './pages/auth/Auth';
-import { TOS } from './pages/tos/TOS';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import TOSWall from './components/TOS/TOSWall';
+import withFeatureFlags from './decorators/withFeatureFlags';
+import withLogin from './decorators/withLogin';
+import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
+import { useFlagValue } from './hooks/useFeatureFlags';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apiKeys/AddApiKeyPage';
-import ChannelsPage from './pages/channels/list/ChannelsPage';
+import ApiKeysPage from './pages/apiKeys/ApiKeysPage';
+import Auth from './pages/auth/Auth';
 import AddEditChannelPage from './pages/channels/addEditChannel/AddEditChannelPage';
-import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
-import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
 import ChannelAssociatePSPPage from './pages/channels/channelAssociatePSP/ChannelAssociatePSPPage';
+import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPage';
+import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
+import ChannelsPage from './pages/channels/list/ChannelsPage';
+import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
+import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
+import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
-import StationsPage from './pages/stations/list/StationsPage';
-import StationDetailPage from './pages/stations/detail/StationDetailPage';
-import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
-import { ENV } from './utils/env';
-import StationECListPage from './pages/stations/stationECList/StationECPage';
-import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
+import DelegationsPage from './pages/delegations/DelegationsPage';
+import DelegationDetailPage from './pages/delegations/detail/DelegationDetailPage';
 import IbanPage from './pages/iban/IbanPage';
-import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
 import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
-import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
-import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
-import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
+import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
+import MaintenancePage from './pages/maintenance/MaintenancePage';
 import AddEditOperationTablePage from './pages/operationTable/addEditOperationTable/AddEditOperationTablePage';
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
-import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
-import MaintenancePage from './pages/maintenance/MaintenancePage';
-import { useFeatureFlags, useFlagValue } from './hooks/useFeatureFlags';
-import withFeatureFlags from './decorators/withFeatureFlags';
-import DelegationsPage from './pages/delegations/DelegationsPage';
-import DelegationDetailPage from './pages/delegations/detail/DelegationDetailPage';
 import PaymentsReceiptsPage from './pages/paymentsReceipts/PaymentsReceiptsPage';
+import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
+import StationDetailPage from './pages/stations/detail/StationDetailPage';
+import StationsPage from './pages/stations/list/StationsPage';
+import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
+import StationECListPage from './pages/stations/stationECList/StationECPage';
+import { TOS } from './pages/tos/TOS';
+import routes from './routes';
+import { ENV } from './utils/env';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -204,22 +204,34 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-list" flagValue='commission-bundles'>
+                  <ProtectedRoute
+                    permission="commission-bundles-list"
+                    flagValue="commission-bundles"
+                  >
                     <CommissionBundlesPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_DETAIL} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-list" flagValue='commission-bundles'>
+                  <ProtectedRoute
+                    permission="commission-bundles-list"
+                    flagValue="commission-bundles"
+                  >
                     <CommissionBundleDetailPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-addedit" flagValue='commission-bundles'>
+                  <ProtectedRoute
+                    permission="commission-bundles-addedit"
+                    flagValue="commission-bundles"
+                  >
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_EDIT} exact={true}>
-                  <ProtectedRoute permission="commission-bundles-addedit" flagValue='commission-bundles'>
+                  <ProtectedRoute
+                    permission="commission-bundles-addedit"
+                    flagValue="commission-bundles"
+                  >
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
@@ -240,20 +252,16 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
-                {useFlagValue('delegations-list') && (
-                  <Route path={routes.DELEGATIONS_LIST} exact={true}>
-                    <ProtectedRoute permission="delegations-list">
-                      <DelegationsPage />
-                    </ProtectedRoute>
-                  </Route>
-                )}
-                {useFlagValue('delegations-list') && (
-                  <Route path={routes.DELEGATIONS_DETAIL} exact={true}>
-                    <ProtectedRoute permission="delegations-list">
-                      <DelegationDetailPage />
-                    </ProtectedRoute>
-                  </Route>
-                )}
+                <Route path={routes.DELEGATIONS_LIST} exact={true}>
+                  <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
+                    <DelegationsPage />
+                  </ProtectedRoute>
+                </Route>
+                <Route path={routes.DELEGATIONS_DETAIL} exact={true}>
+                  <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
+                    <DelegationDetailPage />
+                  </ProtectedRoute>
+                </Route>
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                     <PaymentsReceiptsPage />

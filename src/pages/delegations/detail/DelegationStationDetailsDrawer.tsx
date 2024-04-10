@@ -30,7 +30,6 @@ export const DelegationStationDetailsDrawer = ({
     >
       <TitleBox title={t('delegationDetailPage.stationDetail.title')} variantTitle="h5" />
       <Box
-        key={`station-detail-${drawerValue.station_code}`}
         mb={1}
         data-testid="station-detail-drawer-column"
       >

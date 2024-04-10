@@ -78,7 +78,7 @@ export const getCIBrokerDelegationMock = (): Promise<CIBrokerDelegationPage> =>
 
 export const getCIBrokerStationsMock = (): Promise<CIBrokerStationPage> =>
   Promise.resolve({
-    ci_broker_delegations: mockedInstitutionStation,
+    ci_broker_stations: mockedInstitutionStation,
     page_info: {
       page: 0,
       limit: 5,

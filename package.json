@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.18.32",
+  "version": "1.18.32-1-VAS-687-add-delegation-detail-page",
   "homepage": "ui",
   "private": true,
   "scripts": {

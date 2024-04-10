@@ -77,6 +77,39 @@ describe('<DelegationStationDetailsDrawer />', () => {
     });
   });
 
+  test('render component Drawer with station details and click on go to station detail button', async () => {
+    setDrawerValueSpy.mockImplementation(() => {
+      return mockedInstitutionStation[0];
+    });
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/delegations-list/detail`]}>
+          <Route path="/delegations-list/detail">
+            <ThemeProvider theme={theme}>
+              <DelegationStationDetailsDrawer
+                drawerValue={mockedInstitutionStation[0]}
+                t={mockTFunction}
+                setDrawerValue={setDrawerValueSpy}
+                setShowDisassociateStationModal={setShowDisassociateStationModalSpy}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const goToStationDetailButton = screen.getByTestId(
+      'go-to-station-details-test'
+    ) as HTMLInputElement;
+    fireEvent.click(goToStationDetailButton);
+    
+    await waitFor(() => {
+      expect(screen.queryByTestId('station-detail-drawer-column')).not.toBeInTheDocument();
+      expect(setShowDisassociateStationModalSpy).not.toBeCalled();
+    });
+  });
+
   test('render component Drawer with station details and click on disassociate station', async () => {
     setDrawerValueSpy.mockImplementation(() => {
       return mockedInstitutionStation[0];

@@ -99,7 +99,7 @@ export const DelegationStationDetailsDrawer = ({
             }
             sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
             weight="default"
-            data-testid="show-more-payment-contacts-test"
+            data-testid="go-to-station-details-test"
           >
             {t('delegationDetailPage.stationDetail.goToStationDetails')}
           </ButtonNaked>

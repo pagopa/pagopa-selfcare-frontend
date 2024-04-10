@@ -29,7 +29,7 @@ export const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
   {
     broker_id: 'brokerId3',
     broker_name: 'brokerName3',
-    cbill_code: 'cbillCode3',
+    cbill_code: undefined,
     id: 'id3',
     institution_id: 'institutionId3',
     institution_name: 'institutionName3',

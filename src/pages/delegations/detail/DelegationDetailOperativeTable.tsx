@@ -21,7 +21,7 @@ export default function DelegationDetailOperativeTable({
     >
       <Typography variant="overline">{t('delegationDetailPage.operativeTable.title')}</Typography>
 
-      <Box key={`operative-table-deatil`} mt={1} data-testid="operative-table-column">
+      <Box mt={1} data-testid="operative-table-column">
         <Box mt={1}>
           <Typography variant="body1" color="action.active">
             {t('delegationDetailPage.operativeTable.email')}

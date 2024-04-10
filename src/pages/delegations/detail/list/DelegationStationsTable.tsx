@@ -179,7 +179,7 @@ const DelegationStationsTable = ({ ciTaxCode, filterByStationCode }: Props) => {
         onCloseLabel={t('general.cancel')}
         handleCloseModal={() => setShowDisassociateStationModal(undefined)}
         handleConfirm={() => dissociateEC()}
-        data-testid="delete-modal"
+        data-testid="dissociate-station-modal"
       />
     </>
   );

@@ -106,6 +106,7 @@ export const GridLinkActionDelegationDetails = ({
         <GridLinkAction
           label="Gestisci intermediario"
           onClick={() => dispatcher(delegationDetailActions.setDelegationDetailState(delegation))}
+          data-test-id='column-go-to-delegation-detail'
           to={ROUTES.DELEGATIONS_DETAIL}
           icon={<ChevronRightIcon color="primary" />}
         />

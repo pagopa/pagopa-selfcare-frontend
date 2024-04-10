@@ -62,7 +62,8 @@ describe('<DelegationStationsTable />', () => {
   });
 
   test('render component DelegationStationsTable with click on dissociate station', async () => {
-    mock.mockReturnValueOnce(getCIBrokerStationsMock());
+    mock.mockReturnValue(getCIBrokerStationsMock());
+    dissociateStationMock.mockReturnValueOnce(Promise.resolve());
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/delegations-list/detail`]}>
@@ -88,9 +89,7 @@ describe('<DelegationStationsTable />', () => {
       expect(screen.queryByTestId('station-detail-drawer-column')).toBeInTheDocument();
     });
 
-    const disassociateStation = screen.getByTestId(
-      'station-detail-disassociate-station-button'
-    ) as HTMLInputElement;
+    let disassociateStation = screen.getByTestId('station-detail-disassociate-station-button');
     fireEvent.click(disassociateStation);
 
     await waitFor(() => {
@@ -111,6 +110,7 @@ describe('<DelegationStationsTable />', () => {
       expect(screen.queryByTestId('station-detail-drawer-column')).toBeInTheDocument();
     });
 
+    disassociateStation = screen.getByTestId('station-detail-disassociate-station-button');
     fireEvent.click(disassociateStation);
 
     await waitFor(() => {

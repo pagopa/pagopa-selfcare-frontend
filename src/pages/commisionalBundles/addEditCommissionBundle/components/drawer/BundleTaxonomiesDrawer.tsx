@@ -234,7 +234,6 @@ export const BundleTaxonomiesDrawer = ({
                 key={item.ecTypeCode}
                 title={item.ecType as string}
                 action={() => handleSelectEC(item)}
-                maxCharactersNumberMultiLine={100}
               />
             ))}
           </>
@@ -250,7 +249,6 @@ export const BundleTaxonomiesDrawer = ({
                 key={item.macroAreaEcProgressive}
                 title={item.macroAreaName as string}
                 action={() => handleSelectArea(item)}
-                maxCharactersNumberMultiLine={100}
               />
             ))}
           </>
@@ -261,20 +259,22 @@ export const BundleTaxonomiesDrawer = ({
             <Typography pb={2} variant="overline" color="action.active" data-testid="title-step2">
               {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.selectServices')}
             </Typography>
-            <ButtonNaked
-              size="large"
-              component="button"
-              onClick={() => (checkedTaxonomiesCount < 1 ? selectAll() : deselectAll())}
-              sx={{ color: 'primary.main', mt: 'auto', justifyContent: 'start' }}
-              weight="default"
-              data-testid="toggle-all-bundle-taxonomies-test"
-            >
-              {t(
-                `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.${
-                  checkedTaxonomiesCount < 1 ? 'selectAll' : 'deselectAll'
-                }`
-              )}
-            </ButtonNaked>
+            <div>
+              <ButtonNaked
+                size="large"
+                component="button"
+                onClick={() => (checkedTaxonomiesCount < 1 ? selectAll() : deselectAll())}
+                sx={{ color: 'primary.main' }}
+                weight="default"
+                data-testid="toggle-all-bundle-taxonomies-test"
+              >
+                {t(
+                  `commissionBundlesPage.addEditCommissionBundle.addTaxonomies.${
+                    checkedTaxonomiesCount < 1 ? 'selectAll' : 'deselectAll'
+                  }`
+                )}
+              </ButtonNaked>
+            </div>
             <Box
               display="flex"
               flexDirection={'column'}
@@ -289,7 +289,6 @@ export const BundleTaxonomiesDrawer = ({
                     subtitle={item.service_type}
                     checked={checkedTaxonomies?.get(item.specific_built_in_data)}
                     action={() => handleTaxonomyCheck(item)}
-                    maxCharactersNumberMultiLine={100}
                   />
                 ))}
               </Box>
@@ -344,7 +343,7 @@ export const BundleTaxonomiesDrawer = ({
             <InputAdornment position="start">
               <SearchIcon />
             </InputAdornment>
-          )
+          ),
         }}
         size="small"
         label={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.filterTitle')}

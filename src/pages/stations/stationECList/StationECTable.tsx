@@ -33,7 +33,7 @@ type StationECTableProps = {
 
 export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilter }: StationECTableProps) {
   const { t } = useTranslation();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState({show: false, data: ''});
   const [error, setError] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -50,8 +50,6 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
   const [pagePaginator, setPagePaginator] = useState(0);
   
   const [selectedECCode, setSelectedECCode] = useState<string>('');
-  const [selectedECName, setSelectedECName] = useState<string>('');
-
 
   const { stationId } = useParams<{ stationId: string }>();
 
@@ -66,13 +64,16 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
 
   const onRowClick = (ecIdRow: string) => {
     setSelectedECCode(ecIdRow);
-    setSelectedECName(ecListPage?.creditor_institutions?.find((item) => item.creditorInstitutionCode === selectedECCode )?.businessName ?? '');
-    setShowConfirmModal(true);
+    setShowConfirmModal({
+        show: true,
+        data: ecListPage?.creditor_institutions?.find((item) =>
+        item.creditorInstitutionCode === ecIdRow )?.businessName ?? ''
+    });
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
 
   const dissociateEC = async () => {
-    setShowConfirmModal(false);
+    setShowConfirmModal({show: false, data: ''});
     setLoading(true);
 
     try {
@@ -205,20 +206,20 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
         )}
       </Box>
       <SessionModal
-        open={showConfirmModal}
+        open={showConfirmModal.show}
         title={
           t('stationECList.dissociateModal.title')
         }
         message={
           <Trans i18nKey="stationECList.dissociateModal.message"
-          values={{"ecName": selectedECName}}
+          values={{"ecName": showConfirmModal.data}}
           defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione." />
         }
         onConfirmLabel={t('stationECList.dissociateModal.confirmButton')}
         onCloseLabel={t('stationECList.dissociateModal.cancelButton')}
         onConfirm={dissociateEC}
         handleClose={() => {
-          setShowConfirmModal(false);
+          setShowConfirmModal({show: false, data: ''});
         }}
       />
     </>

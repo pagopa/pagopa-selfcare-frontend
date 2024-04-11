@@ -99,20 +99,19 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
       ibanCup = {
         iban: ibanCupFiltered.iban!,
         description: ibanCupFiltered.description,
-        validity_date: new Date(ibanCupFiltered!.validity_date!),
-        due_date: new Date(ibanCupFiltered!.due_date!),
+        validity_date: new Date(ibanCupFiltered.validity_date!),
+        due_date: new Date(ibanCupFiltered.due_date!),
         creditor_institution_code: creditorInstitutionCode,
         labels: ibanCupFiltered.labels,
-        is_active: ibanCupFiltered!.is_active!,
+        is_active: ibanCupFiltered.is_active!,
       };
     }
     setOriginalSelectedIban({ standIn: ibanStandIn, cup: ibanCup });
     setNewSelectedIban({ standIn: ibanStandIn, cup: ibanCup });
   };
 
-  const handleIbanSelected = (event: any, type: string) => {
+  const handleIbanSelected = (event: any, type: string) => {    
     const selectedIban = ibanList.ibans_enhanced.find((e) => e.iban === event.target.value);
-
     setNewSelectedIban((prev) => ({
       ...prev,
       [type]: {
@@ -164,19 +163,19 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
   async function updateNewIbans(standInTouched: boolean, cupTouched: boolean) {
     if (newSelectedIban.cup.iban === newSelectedIban.standIn.iban) {
       // update both new ibans with one call
-      await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+      await updateIban(newSelectedIban.cup.creditor_institution_code, {
         ...newSelectedIban.cup,
         labels: [standInLabel, cupLabel],
       });
     } else {
       if (standInTouched || originalSelectedIban.cup.iban === originalSelectedIban.standIn.iban) {
-        await updateIban(newSelectedIban.standIn.creditor_institution_code!, {
+        await updateIban(newSelectedIban.standIn.creditor_institution_code, {
           ...newSelectedIban.standIn,
           labels: [standInLabel],
         });
       }
       if (cupTouched || originalSelectedIban.cup.iban === originalSelectedIban.standIn.iban) {
-        await updateIban(newSelectedIban.cup.creditor_institution_code!, {
+        await updateIban(newSelectedIban.cup.creditor_institution_code, {
           ...newSelectedIban.cup,
           labels: [cupLabel],
         });
@@ -205,7 +204,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
   async function resetCup(cupInitialized: boolean) {
     if (cupInitialized) {
-      await updateIban(originalSelectedIban.cup.creditor_institution_code!, {
+      await updateIban(originalSelectedIban.cup.creditor_institution_code, {
         ...originalSelectedIban.cup,
         labels: [],
       });
@@ -214,7 +213,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
 
   async function resetStandIn(standInInitialized: boolean) {
     if (standInInitialized) {
-      await updateIban(originalSelectedIban.standIn.creditor_institution_code!, {
+      await updateIban(originalSelectedIban.standIn.creditor_institution_code, {
         ...originalSelectedIban.standIn,
         labels: [],
       });
@@ -258,49 +257,41 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
               </Typography>
 
               {showManageButton ? (
-                <>
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    component="span"
-                    fontSize="inherit"
-                    mr={4}
-                    data-testid="iban-standin-with-manage-btn-false"
-                  >
-                    {originalSelectedIban.standIn?.iban &&
-                    originalSelectedIban.standIn.iban?.length > 0
-                      ? originalSelectedIban.standIn.iban
-                      : '-'}
-                  </Typography>
-                </>
-              ) : (
                 <Typography
+                  variant="body2"
+                  fontWeight={600}
                   component="span"
-                  fontSize={'inherit'}
-                  fontWeight="fontWeightMedium"
-                  sx={{ width: '-webkit-fill-available' }}
+                  fontSize="inherit"
+                  mr={4}
+                  data-testid="iban-standin-with-manage-btn-false"
                 >
-                  <FormControl sx={{ width: '60%' }}>
-                    <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
-                    <Select
-                      id="ibanStandIn"
-                      name="ibanStandIn"
-                      label={t('ibanPage.selectIban')}
-                      size="small"
-                      value={newSelectedIban.standIn.iban}
-                      onChange={(e) => handleIbanSelected(e, 'standIn')}
-                      inputProps={{
-                        'data-testid': 'stand-in-test',
-                      }}
-                    >
-                      {ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
-                        <MenuItem key={i} value={r.iban}>
-                          {r.iban}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  {originalSelectedIban.standIn?.iban &&
+                  originalSelectedIban.standIn.iban?.length > 0
+                    ? originalSelectedIban.standIn.iban
+                    : '-'}
                 </Typography>
+              ) : (
+                <FormControl sx={{ minWidth: '55%' }}>
+                  <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                  <Select
+                    id="ibanStandIn"
+                    name="ibanStandIn"
+                    label={t('ibanPage.selectIban')}
+                    size="small"
+                    value={newSelectedIban.standIn.iban}
+                    onChange={(e) => handleIbanSelected(e, 'standIn')}
+                    data-testid="stand-in-test-ext"
+                    inputProps={{
+                      'data-testid': 'stand-in-test',
+                    }}
+                  >
+                    {ibanActiveList.ibans_enhanced.map((r: any) => (
+                      <MenuItem key={`ibanStandInList-${r.iban}`} value={r.iban}>
+                        {r.iban}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
             </Box>
           </Grid>
@@ -321,50 +312,39 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                 IBAN
               </Typography>
               {showManageButton ? (
-                <>
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    component="span"
-                    fontSize="inherit"
-                    mr={4}
-                  >
-                    {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
-                      ? originalSelectedIban.cup.iban
-                      : '-'}
-                  </Typography>
-                </>
-              ) : (
                 <Typography
+                  variant="body2"
+                  fontWeight={600}
                   component="span"
-                  fontSize={'inherit'}
-                  fontWeight="fontWeightMedium"
-                  sx={{ width: '-webkit-fill-available' }}
+                  fontSize="inherit"
+                  mr={4}
                 >
-                  <FormControl sx={{ width: '60%' }}>
-                    <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
-                    <Select
-                      id="ibanCup"
-                      name="ibanCup"
-                      label={t('ibanPage.selectIban')}
-                      size="small"
-                      value={newSelectedIban.cup.iban}
-                      onChange={(e) => handleIbanSelected(e, 'cup')}
-                      inputProps={{
-                        'data-testid': 'cup-test',
-                      }}
-                    >
-                      {
-                        // eslint-disable-next-line sonarjs/no-identical-functions
-                        ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
-                          <MenuItem key={i} value={r.iban}>
-                            {r.iban}
-                          </MenuItem>
-                        ))
-                      }
-                    </Select>
-                  </FormControl>
+                  {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
+                    ? originalSelectedIban.cup.iban
+                    : '-'}
                 </Typography>
+              ) : (
+                <FormControl sx={{ minWidth: '55%' }}>
+                  <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                  <Select
+                    id="ibanCup"
+                    name="ibanCup"
+                    label={t('ibanPage.selectIban')}
+                    size="small"
+                    value={newSelectedIban.cup.iban}
+                    onChange={(e) => handleIbanSelected(e, 'cup')}
+                    data-testid="cup-test-ext"
+                    inputProps={{
+                      'data-testid': 'cup-test',
+                    }}
+                  >
+                    {ibanActiveList.ibans_enhanced.map((r: any) => (
+                      <MenuItem key={`ibanActiveList-${r.iban}`} value={r.iban}>
+                        {r.iban}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
             </Box>
           </Grid>
@@ -419,6 +399,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
           </Grid>
         </Grid>
       </Card>
+
       {selectedParty && <IbanTable ibanList={ibanList} error={error} loading={loading} />}
 
       <GenericModal

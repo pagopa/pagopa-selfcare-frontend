@@ -103,8 +103,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
     // eslint-disable-next-line functional/immutable-data
     station.proxyHost = hostSplit;
 
-    // Async GPD
-    if (station.targetHost === '' && isGPD) {
+    if (isGPD) {
         const {
             protocolSplit,
             hostSplit: ip,
@@ -112,24 +111,14 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
             pathSplit: service,
         } = splitURL(station.gdpConcat);
 
-        const protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        const port = portSplit > 0 ? portSplit : (protocolSplit && protocolSplit === 'https:' ? 443 : 80);
+        const protocol = protocolSplit.includes('https') ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        const port = portSplit > 0 ? portSplit : protocol === ProtocolEnum.HTTPS ? 443 : 80;
 
         // IP/PORT/SERVICE/PROTOCOL fields will be valorized with GPD values
         return {...station, protocol, ip, port, service, pofService: service};
     }
 
-    // Sync New Connectivity
-    if (station.targetConcat !== '' && isForwarder) {
-        const {
-            protocolSplit: targetProtocol,
-            hostSplit: targetHost,
-            portSplit: targetPortSplit,
-            pathSplit: targetPath,
-        } = splitURL(station.targetConcat);
-
-        const targetPort =
-            targetPortSplit > 0 ? targetPortSplit : (targetProtocol && targetProtocol === 'https:' ? 443 : 80);
+    if (isForwarder) {
 
         const {
             protocolSplit: protocolForwarder,
@@ -138,8 +127,8 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
             pathSplit: service,
         } = splitURL(station.newConnConcat);
 
-        const protocol = protocolForwarder === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        const port = portSplit > 0 ? portSplit : (targetProtocol && targetProtocol === 'https:' ? 443 : 80);
+        const protocol = protocolForwarder.includes('https') ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        const port = portSplit > 0 ? portSplit : protocol === ProtocolEnum.HTTPS ? 443 : 80;
 
         // IP/PORT/SERVICE/PROTOCOL fields will be valorized with Forwarder values
         return {
@@ -161,8 +150,8 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
             pathSplit: service,
         } = splitURL(station.targetConcat);
 
-        const protocol = protocolSplit === 'https:' ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
-        const port = portSplit > 0 ? portSplit : protocolSplit === 'https:' ? 443 : 80;
+        const protocol = protocolSplit.includes('https') ? ProtocolEnum.HTTPS : ProtocolEnum.HTTP;
+        const port = portSplit > 0 ? portSplit : protocol === ProtocolEnum.HTTPS ? 443 : 80;
 
         // a. IP/PORT/SERVICE/PROTOCOL fields will be valorized with Target
         return {...station, protocol, ip, port, service};

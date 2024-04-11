@@ -75,6 +75,7 @@ import { BundleResource } from './generated/portal/BundleResource';
 import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
+import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1048,4 +1049,16 @@ export const BackofficeApi = {
       },
     }).then((data) => Promise.resolve(data.text()));
   },
+
+  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+    const result = await backofficeClient.testStation({
+        body: {
+            hostUrl: hostUrl,
+            hostPort: hostPort,
+            hostPath: hostPath
+        }
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 };

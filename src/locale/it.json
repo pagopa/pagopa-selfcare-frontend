@@ -437,7 +437,8 @@
         "endpointRTConcat": "Endpoint RT",
         "endpointRedirectConcat": "Endpoint Redirect",
         "primitiveVersion": "Versione primitive"
-      }
+      },
+      "testStation": "Verifica URL"
     },
     "addFormValidation": {
       "title": "Informazione da completare",
@@ -468,7 +469,8 @@
         "timeoutB": "Timeout B",
         "timeoutC": "Timeout C",
         "select": "Seleziona"
-      }
+      },
+      "testFailed": "Test fallito"
     },
     "confirmModal": {
       "title": "Invio per la revisione",

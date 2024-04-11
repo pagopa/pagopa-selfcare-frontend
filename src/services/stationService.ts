@@ -18,6 +18,7 @@ import {
   getWrapperStation as getStationWrap,
   updateStation as UpdateStationMocked,
   getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
+  testStation as testStationMocked
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
@@ -30,6 +31,7 @@ import {Delegation} from "../api/generated/portal/Delegation";
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { ProblemJson } from '../api/generated/portal/ProblemJson';
+import { TestStationResource } from '../api/generated/portal/TestStationResource';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -207,5 +209,13 @@ export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
     return getCreditorInstitutionSegregationcodesMocked(ecCode);
   } else {
     return BackofficeApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
+  }
+};
+
+export const testStation = (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+  if (process.env.REACT_APP_API_MOCK_FORWARDER_TEST === 'true') {
+    return testStationMocked(hostUrl, hostPort, hostPath);
+  } else {
+    return BackofficeApi.testStation(hostUrl, hostPort, hostPath).then((resource) => resource);
   }
 };

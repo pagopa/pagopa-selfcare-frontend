@@ -2,6 +2,7 @@ import {Ibans} from "../../api/generated/portal/Ibans";
 import {Iban} from "../../api/generated/portal/Iban";
 import {IbanCreate} from "../../api/generated/portal/IbanCreate";
 import { BrokerECExportStatus } from "../../api/generated/portal/BrokerECExportStatus";
+import { add } from "date-fns";
 
 export const ibanList: Ibans = {
 // @ts-ignore
@@ -10,7 +11,7 @@ export const ibanList: Ibans = {
       iban: 'IT99C0222211111000000000001',
       publication_date: '2023-06-01T23:59:59.999Z',
       validity_date: '2023-04-01T13:49:19.897Z',
-      due_date: '2024-04-01T13:49:19.897Z',
+      due_date: add(new Date(), {days: 1}).toString(),
       ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       labels: [
@@ -25,7 +26,7 @@ export const ibanList: Ibans = {
       iban: 'IT99C0222211111000000000002',
       publication_date: '2024-06-01T23:59:59.999Z',
       validity_date: '2024-04-01T13:49:19.897Z',
-      due_date: '2024-04-01T13:49:19.897Z',
+      due_date: add(new Date(), {days: 1}).toString(),
       ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       labels: [
@@ -40,7 +41,7 @@ export const ibanList: Ibans = {
       iban: 'IT99C0222211111000000000003',
       publication_date: '2024-06-01T23:59:59.999Z',
       validity_date: '2024-04-01T13:49:19.897Z',
-      due_date: '2024-04-01T13:49:19.897Z',
+      due_date: add(new Date(), {days: 1}).toString(),
       ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       is_active: true,
@@ -49,7 +50,7 @@ export const ibanList: Ibans = {
       iban: 'IT99C0222211111000000000004',
       publication_date: '2024-06-01T23:59:59.999Z',
       validity_date: '2024-04-01T13:49:19.897Z',
-      due_date: '2024-04-01T13:49:19.897Z',
+      due_date: add(new Date(), {days: 6}).toString(),
       ci_owner: 'RSSMRA98H27F205Q',
       description: 'Tassa di concorso - servizio tesoreria comunale',
       is_active: true,

@@ -110,9 +110,8 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
     setNewSelectedIban({ standIn: ibanStandIn, cup: ibanCup });
   };
 
-  const handleIbanSelected = (event: any, type: string) => {
+  const handleIbanSelected = (event: any, type: string) => {    
     const selectedIban = ibanList.ibans_enhanced.find((e) => e.iban === event.target.value);
-
     setNewSelectedIban((prev) => ({
       ...prev,
       [type]: {
@@ -258,19 +257,19 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
               </Typography>
 
               {showManageButton ? (
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    component="span"
-                    fontSize="inherit"
-                    mr={4}
-                    data-testid="iban-standin-with-manage-btn-false"
-                  >
-                    {originalSelectedIban.standIn?.iban &&
-                    originalSelectedIban.standIn.iban?.length > 0
-                      ? originalSelectedIban.standIn.iban
-                      : '-'}
-                  </Typography>
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  component="span"
+                  fontSize="inherit"
+                  mr={4}
+                  data-testid="iban-standin-with-manage-btn-false"
+                >
+                  {originalSelectedIban.standIn?.iban &&
+                  originalSelectedIban.standIn.iban?.length > 0
+                    ? originalSelectedIban.standIn.iban
+                    : '-'}
+                </Typography>
               ) : (
                 <FormControl sx={{ minWidth: '55%' }}>
                   <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
@@ -281,12 +280,13 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     size="small"
                     value={newSelectedIban.standIn.iban}
                     onChange={(e) => handleIbanSelected(e, 'standIn')}
+                    data-testid="stand-in-test-ext"
                     inputProps={{
                       'data-testid': 'stand-in-test',
                     }}
                   >
-                    {ibanActiveList.ibans_enhanced.map((r: any, i: any) => (
-                      <MenuItem key={i} value={r.iban}>
+                    {ibanActiveList.ibans_enhanced.map((r: any) => (
+                      <MenuItem key={`ibanStandInList-${r.iban}`} value={r.iban}>
                         {r.iban}
                       </MenuItem>
                     ))}
@@ -312,17 +312,17 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                 IBAN
               </Typography>
               {showManageButton ? (
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    component="span"
-                    fontSize="inherit"
-                    mr={4}
-                  >
-                    {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
-                      ? originalSelectedIban.cup.iban
-                      : '-'}
-                  </Typography>
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  component="span"
+                  fontSize="inherit"
+                  mr={4}
+                >
+                  {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
+                    ? originalSelectedIban.cup.iban
+                    : '-'}
+                </Typography>
               ) : (
                 <FormControl sx={{ minWidth: '55%' }}>
                   <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
@@ -333,6 +333,7 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                     size="small"
                     value={newSelectedIban.cup.iban}
                     onChange={(e) => handleIbanSelected(e, 'cup')}
+                    data-testid="cup-test-ext"
                     inputProps={{
                       'data-testid': 'cup-test',
                     }}

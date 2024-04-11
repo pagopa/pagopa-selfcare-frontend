@@ -441,10 +441,13 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 });
         } else {
             setValidatingRt(true);
-            const testRtResult = testStation(
-                formik.values.targetHost,
-                formik.values.targetPort,
-                formik.values.targetPath,
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.targetConcat
+            );
+            testStation(
+                protocolSplit+"://"+hostSplit,
+                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                pathSplit
             ).then((item : TestStationResource) => {
                 setTestRtResult(item);
             }).finally(() => {
@@ -464,10 +467,13 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 });
         } else {
             setValidatingRedirect(true);
-            const testRtResult = testStation(
-                formik.values.redirectIp,
-                formik.values.redirectPort,
-                formik.values.redirectPath,
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.redirectConcat
+            );
+            testStation(
+                protocolSplit+"://"+hostSplit,
+                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                pathSplit
             ).then((item : TestStationResource) => {
                 setTestRedirectResult(item);
             }).finally(() => {
@@ -487,10 +493,13 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 });
         } else {
             setValidatingPof(true);
-            const testRtResult = testStation(
-                formik.values.targetHostPof,
-                formik.values.targetPortPof,
-                formik.values.targetPathPof,
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.targetPofConcat
+            );
+            testStation(
+                protocolSplit+"://"+hostSplit,
+                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                pathSplit
             ).then((item : TestStationResource) => {
                 setTestPofResult(item);
             }).finally(() => {
@@ -734,8 +743,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         value={formik.values.targetConcat}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.targetConcat && Boolean(formik.errors.targetConcat)}
-                                        helperText={formik.touched.targetConcat && formik.errors.targetConcat}
+                                        error={(formik.touched.targetConcat || testRtResult) && Boolean(formik.errors.targetConcat)}
+                                        helperText={(formik.touched.targetConcat || testRtResult) && formik.errors.targetConcat}
                                         inputProps={{
                                             'data-testid': 'targetConcat-test',
                                         }}
@@ -776,8 +785,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         value={formik.values.redirectConcat}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        error={formik.touched.redirectConcat && Boolean(formik.errors.redirectConcat)}
-                                        helperText={formik.touched.redirectConcat && formik.errors.redirectConcat}
+                                        error={(formik.touched.redirectConcat || testRedirectResult) && Boolean(formik.errors.redirectConcat)}
+                                        helperText={(formik.touched.redirectConcat || testRedirectResult) && formik.errors.redirectConcat}
                                         inputProps={{
                                             'data-testid': 'redirectConcat-test',
                                         }}
@@ -824,8 +833,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     value={formik.values.targetPofConcat}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.targetPofConcat && Boolean(formik.errors.targetPofConcat)}
-                                    helperText={formik.touched.targetPofConcat && formik.errors.targetPofConcat}
+                                    error={(formik.touched.targetPofConcat || testPofResult) && Boolean(formik.errors.targetPofConcat)}
+                                    helperText={(formik.touched.targetPofConcat || testPofResult) && formik.errors.targetPofConcat}
                                     inputProps={{
                                         'data-testid': 'targetPofConcat-test',
                                     }}
@@ -840,8 +849,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     (<ButtonNaked
                                       size="large"
                                       component="button"
-                                      disabled={formik.values.targetConcat === undefined ||
-                                                formik.values.targetConcat === ''}
+                                      disabled={formik.values.targetPofConcat === undefined ||
+                                                formik.values.targetPofConcat === ''}
                                       onClick={() => validatePofEndpoint()}
                                       sx={{ color: 'primary.main'}}
                                       weight="default"

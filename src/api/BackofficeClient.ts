@@ -81,6 +81,7 @@ import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPag
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
+import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1106,4 +1107,16 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+    const result = await backofficeClient.testStation({
+        body: {
+            hostUrl: hostUrl,
+            hostPort: hostPort,
+            hostPath: hostPath
+        }
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 };

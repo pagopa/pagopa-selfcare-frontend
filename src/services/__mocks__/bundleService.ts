@@ -130,7 +130,7 @@ export const mockedBundleRequest: BundleRequest = {
     digitalStamp: false,
     digitalStampRestriction: true,
     idChannel: '97735020584_01',
-    idBrokerPsp: "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
+    idBrokerPsp: "idBrokerPsp",
     name: 'Commission Bundle Name',
     description: 'Commission bundle description',
     paymentAmount: 5556,

@@ -8,6 +8,7 @@ export const addCurrentPSP = (availablePSP: Array<Delegation>, selectedParty: Pa
     institution_name: selectedParty?.description ?? '',
     institution_id: selectedParty.partyId,
     tax_code: selectedParty.fiscalCode,
+    broker_id: selectedParty.fiscalCode
   };
 
   if (checkInstitutionTypes(selectedParty?.institutionType as string, INSTITUTIONS_PSP_CHANNEL_TYPES)) {

@@ -41,8 +41,10 @@ export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
 
 export const mockedDelegatedPSP: Array<Delegation> = [
   {
-    broker_id: '12345',
+    broker_id: 'idBrokerPsp',
     institution_id: '0000001',
+    institution_name:
+    "Azienda Pubblica di Servizi alla Persona Test 1",
     broker_name: 'PSP1',
     tax_code: '800011104871'
   },
@@ -52,7 +54,7 @@ export const mockedDelegatedPSP: Array<Delegation> = [
     id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db2',
     institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be064842',
     institution_name:
-      "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
+      "Azienda Pubblica di Servizi alla Persona Test 2",
     institution_type: 'PA',
     product_id: 'prod-pagopa',
     tax_code: '800011104872',
@@ -64,7 +66,7 @@ export const mockedDelegatedPSP: Array<Delegation> = [
     id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db3',
     institution_id: 'dccdade9-4ce4-444b-8b4d-ef50be0648473',
     institution_name:
-      "Azienda Pubblica di Servizi alla Persona Montedomini - Sant'Ambrogio - Fuligno - Bigallo",
+      "Azienda Pubblica di Servizi alla Persona Test 3",
     institution_type: 'PA',
     product_id: 'prod-pagopa',
     tax_code: '800011104873',

@@ -140,7 +140,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                     setBrokerDelegationList(listBroker);
                     if (isEdit && idBrokerPsp) {
                         const brokerTaxCode = brokerDelegation?.find(
-                            (el) => el.institution_name === idBrokerPsp
+                            (el) => el.broker_id === idBrokerPsp
                         )?.tax_code;
                         if (brokerTaxCode) {
                             getChannelsByBrokerCode(brokerTaxCode);
@@ -190,12 +190,12 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
             formik.setFieldValue('idBrokerPsp', '');
             setChannelsId([]);
         } else {
-            formik.handleChange('idBrokerPsp')(value);
-            const brokerTaxCode = brokerDelegationList?.find(
+            const broker = brokerDelegationList?.find(
                 (el) => el.institution_name === value
-            )?.tax_code;
-            if (brokerTaxCode) {
-                getChannelsByBrokerCode(brokerTaxCode);
+            );
+            formik.handleChange('idBrokerPsp')(broker?.broker_id ?? "");
+            if (broker?.tax_code) {
+                getChannelsByBrokerCode(broker?.tax_code);
             }
         }
     }
@@ -488,7 +488,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         ?.map((el) => el?.institution_name ?? '')
                                         ?.sort((a, b) => a.localeCompare(b))}
                                     disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
-                                    value={formik.values.idBrokerPsp}
+                                    value={brokerDelegationList?.find(el => el.broker_id === formik.values.idBrokerPsp)?.institution_name ?? ""}
                                     onChange={(_, value) => {
                                         handleBrokerCodesSelection(value);
                                     }}

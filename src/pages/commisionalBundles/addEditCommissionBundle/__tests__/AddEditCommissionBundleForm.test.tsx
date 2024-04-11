@@ -13,7 +13,7 @@ import AddEditCommissionBundleForm from '../../addEditCommissionBundle/component
 import {useFormik} from 'formik';
 import {BundleRequest} from '../../../../api/generated/portal/BundleRequest';
 import {FormAction} from '../../../../model/CommissionBundle';
-import {mockedDelegatedPSP} from '../../../../services/__mocks__/institutionsService';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 import {formatDateToDDMMYYYY} from '../../../../utils/common-utils';
 import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
 import * as useFeatureFlags from "../../../../hooks/useFeatureFlags";
@@ -360,7 +360,7 @@ describe('<AddEditCommissionBundleForm />', () => {
         );
 
         // Check broker code list
-        expect(input.brokerCodeList.value).toBe(mockedBundleRequest.idBrokerPsp);
+        expect(input.brokerCodeList.value).toBe(mockedDelegatedPSP.find(el => el.broker_id === mockedBundleRequest.idBrokerPsp)?.institution_name);
 
         // Check channel id
         expect(input.channelList.value).toBe(mockedBundleRequest.idChannel);

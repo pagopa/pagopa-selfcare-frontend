@@ -40,7 +40,8 @@ const ROUTES = {
   OPERATION_TABLE_LIST: `${BASE_ROUTE}/operation-table-list`,
 
   DELEGATIONS_LIST: `${BASE_ROUTE}/delegation-list`,
-
+  DELEGATIONS_DETAIL: `${BASE_ROUTE}/delegation-list/detail`,
+  
   PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`
 
   /* TOS: {

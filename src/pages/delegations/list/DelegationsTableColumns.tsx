@@ -1,11 +1,14 @@
+import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Tooltip from '@mui/material/Tooltip';
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import GridLinkAction from '../../../components/Table/GridLinkAction';
-import ROUTES from '../../../routes';
-import { useAppDispatch } from '../../../redux/hooks';
 import { CIBrokerDelegationResource } from '../../../api/generated/portal/CIBrokerDelegationResource';
+import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
+import { useAppDispatch } from '../../../redux/hooks';
+import { delegationDetailActions } from '../../../redux/slices/delegationDetailSlice';
+import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -19,7 +22,8 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => renderCell({ value: params.row.institution_name, mainCell: true }),
+      renderCell: (params: any) =>
+        renderCell({ value: params.row.institution_name, mainCell: true }),
       sortable: true,
       flex: 4,
     },
@@ -78,6 +82,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
         <GridLinkActionDelegationDetails
           key={`Gestisci intermediario-${params.row.id}`}
           delegation={params.row}
+          t={t}
         />,
       ],
       sortable: false,
@@ -88,17 +93,28 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
 
 export const GridLinkActionDelegationDetails = ({
   delegation,
+  t,
 }: {
   delegation: CIBrokerDelegationResource;
+  t: TFunction<'translation', undefined>;
 }) => {
   const dispatcher = useAppDispatch();
 
   return (
-    <GridLinkAction
-      label="Gestisci intermediario"
-      onClick={() => /* TODO ADD ON CLICK DETAILS */ {}}
-      to={ROUTES.DELEGATIONS_LIST}
-      icon={<ChevronRightIcon color="primary" />}
-    />
+    <>
+      {delegation.cbill_code ? (
+        <GridLinkAction
+          label="Gestisci intermediario"
+          onClick={() => dispatcher(delegationDetailActions.setDelegationDetailState(delegation))}
+          data-testid='column-go-to-delegation-detail'
+          to={ROUTES.DELEGATIONS_DETAIL}
+          icon={<ChevronRightIcon color="primary" />}
+        />
+      ) : (
+        <Tooltip title={t('delegationsPage.table.info')} placement="right">
+          <InfoOutlinedIcon fontSize="small" color="primary" />
+        </Tooltip>
+      )}
+    </>
   );
 };

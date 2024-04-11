@@ -74,6 +74,8 @@ import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
 import { BundleResource } from './generated/portal/BundleResource';
 import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
+import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
+import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
@@ -1022,6 +1024,34 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
+  getCIBrokerStations: async (
+    brokerTaxCode: string,
+    ciTaxCode: string,
+    stationCode: string,
+    limit: number,
+    page: number
+  ): Promise<CIBrokerStationPage> => {
+    const result = await backofficeClient.getCIBrokerStations({
+      'broker-tax-code': brokerTaxCode,
+      'ci-tax-code': ciTaxCode,
+      stationCode,
+      limit,
+      page,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getCreditorInstitutionContacts: async (
+    ciTaxCode: string,
+    institutionId: string
+  ): Promise<CreditorInstitutionContactsResource> => {
+    const result = await backofficeClient.getCreditorInstitutionContacts({
+      'ci-tax-code': ciTaxCode,
+      institutionId,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   getPaymentsReceipts: async (
     organizationTaxCode: string,
     debtorTaxCode?: string
@@ -1041,11 +1071,14 @@ export const BackofficeApi = {
 
   getPaymentReceiptDetail: async (organizationTaxCode: string, iuv: string): Promise<string> => {
     const token = storageTokenOps.read();
-    return fetch(`${ENV.URL_API.BACKOFFICE}/payments-receipts/${organizationTaxCode}/detail/${iuv}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((data) => Promise.resolve(data.text()));
+    return fetch(
+      `${ENV.URL_API.BACKOFFICE}/payments-receipts/${organizationTaxCode}/detail/${iuv}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((data) => Promise.resolve(data.text()));
   },
 };

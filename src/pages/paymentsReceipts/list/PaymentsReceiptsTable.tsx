@@ -103,6 +103,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
             disableColumnSelector
             disableDensitySelector
             disableSelectionOnClick
+            hideFooterPagination={true}
             autoHeight={true}
             className="CustomDataGrid"
             columnBuffer={5}

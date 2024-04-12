@@ -17,7 +17,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import ROUTES from '../../../routes';
-
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { useSigninData } from '../../../hooks/useSigninData';

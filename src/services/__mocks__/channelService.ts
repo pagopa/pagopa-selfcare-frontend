@@ -204,6 +204,7 @@ export const mockedChannelsMerged: WrapperChannelsResource = {
     limit: 10,
     items_found: 5,
     total_pages: 1,
+    total_items: 5
   },
   channels: [
     {

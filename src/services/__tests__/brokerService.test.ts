@@ -1,5 +1,5 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
-import { getCIBrokerDelegation, getCIBrokerStations } from '../brokerService';
+import { deleteCIBroker, getCIBrokerDelegation, getCIBrokerStations } from '../brokerService';
 
 describe('BrokerService test client', () => {
   const OLD_ENV = process.env;
@@ -24,6 +24,13 @@ describe('BrokerService test client', () => {
       .spyOn(BackofficeApi, 'getCIBrokerStations')
       .mockReturnValue(new Promise((resolve) => resolve('')));
     expect(getCIBrokerStations('brokerTaxCode', 'ciTaxCode', 'stationCode', 10, 0)).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test deleteCIBroker', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'deleteCIBroker')
+      .mockReturnValue(new Promise((resolve) => resolve()));
+    expect(deleteCIBroker('brokerTaxCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
 });

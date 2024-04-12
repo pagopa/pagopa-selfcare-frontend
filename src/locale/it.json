@@ -83,6 +83,12 @@
     "subtitlePSP": "Completa i dati necessari alla registrazione.",
     "subtitleEC": "Completa i dati mancanti per completare il censimento sul Nodo.",
     "breadcrumb": "Registrazione sul Nodo",
+    "error" : {
+      "retrieveChannelsErrorMessage" : "Errore durante l'ottenimento dei canali del PSP",
+      "retrieveStationsErrorMessage" : "Errore durante l'ottenimento delle stazioni dell'EC",
+      "retrieveChannelsAndStationsErrorMessage" : "Errore durante l'ottenimento dei canali e delle stazioni del PT"
+    },
+    "directConnectionAlertMessage": "Attenzione! Selezionando connessione diretta dichiari di non avvalerti in maniera esclusiva di un Partner Tecnologico per interagire con la piattaforma pagoPa e di curare tutte le integrazioni necessarie.",
     "form": {
       "sections": {
         "registrationData": "Dati di registrazione",
@@ -127,10 +133,8 @@
       "successMessage": "Registrazione sul Nodo completata con successo.",
       "seccesMessagePut": "Modifica dei dati registrati sul Nodo completata con successo",
       "errorMessageDesc": "Errore durante la creazione, ID Channel duplicato",
-      "pspErrorMessageTitle": "Errore",
       "pspErrorMessageDesc": "Errore durante la creazione, PSP già censito",
       "pspUpdateErrorMessageDesc": "Errore durante l'update del PSP",
-      "ecErrorMessageTitle": "Errore",
       "ecErrorMessageDesc": "Errore durante la creazione, EC già censito",
       "ecUpdateErrorMessageDesc": "Errore durante la modifica dei dati",
       "ptErrorMessageDesc": "Errore durante la creazione del PT",

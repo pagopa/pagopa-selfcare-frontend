@@ -1081,4 +1081,18 @@ export const BackofficeApi = {
       }
     ).then((data) => Promise.resolve(data.text()));
   },
+
+  deleteCIBroker: async (brokerTaxCode: string): Promise<void> => {
+    const result = await backofficeClient.deleteCIBroker({
+      'broker-tax-code': brokerTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  deletePSPBroker: async (brokerTaxCode: string): Promise<void> => {
+    const result = await backofficeClient.deletePspBroker({
+      'broker-tax-code': brokerTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
 };

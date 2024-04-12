@@ -22,11 +22,13 @@ import { Party } from '../../../model/Party';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
+import { deleteCIBroker } from '../../../services/brokerService';
+import { getChannelsMerged } from '../../../services/channelService';
 import { createEcBroker, createPspBroker } from '../../../services/nodeService';
+import { deletePSPBroker } from '../../../services/pspBrokerService';
+import { getStationsMerged } from '../../../services/stationService';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
 import { isEcBrokerSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
-import { getStationsMerged } from '../../../services/stationService';
-import { getChannelsMerged } from '../../../services/channelService';
 
 type Props = {
   goBack: () => void;
@@ -41,12 +43,12 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const isPartnerPSP = isPspBrokerSigned(signInData) ?? false;
-  const isPartnerEC = isEcBrokerSigned(signInData) ?? false;
+  const isPartnerCI = isEcBrokerSigned(signInData) ?? false;
 
   const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(isPartnerPSP);
-  const [isPartnerECChecked, setIsPartnerECChecked] = useState(isPartnerEC);
-  const [isPartnerECJustSigned, setIsPartnerECJustSigned] = useState(false);
-  const [isPartnerPSPJustSigned, setIsPartnerPSPJustSigned] = useState(false);
+  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(isPartnerCI);
+  const [hasCIStations, setHasCIStations] = useState(true);
+  const [hasPSPChannels, setHasPSPChannels] = useState(true);
 
   useEffect(() => {
     if (selectedParty) {
@@ -58,8 +60,12 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
         getChannelsMerged(0, brokerCode, undefined, 1),
       ])
         .then(([stations, channels]) => {
-          setIsPartnerECJustSigned(stations === undefined || stations?.pageInfo?.total_items === 0);
-          setIsPartnerPSPJustSigned(channels === undefined || channels?.page_info?.total_items === 0);
+          setHasCIStations(
+            stations?.pageInfo?.total_items !== undefined && stations?.pageInfo?.total_items > 0
+          );
+          setHasPSPChannels(
+            channels?.page_info?.total_items !== undefined && channels?.page_info?.total_items > 0
+          );
         })
         .catch((reason) => {
           addError({
@@ -78,7 +84,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
         .finally(() => setLoading(false));
 
       setIsPartnerPSPChecked(isPartnerPSP);
-      setIsPartnerECChecked(isPartnerEC);
+      setIsPartnerCIChecked(isPartnerCI);
     }
   }, [selectedParty, signInData]);
 
@@ -100,18 +106,18 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
             extended_fault_bean: true,
           });
         }
-        if (isPartnerECChecked && !isPartnerEC) {
+        if (isPartnerCIChecked && !isPartnerCI) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,
           });
         }
 
-        if (isPartnerPSPJustSigned && isPartnerPSP && !isPartnerPSPChecked) {
-          // TODO delete broker PSP
+        if (!hasPSPChannels && isPartnerPSP && !isPartnerPSPChecked) {
+          await deletePSPBroker(selectedParty.fiscalCode);
         }
-        if (isPartnerECJustSigned && isPartnerEC && !isPartnerECChecked) {
-          // TODO delete broker EC
+        if (!hasCIStations && isPartnerCI && !isPartnerCIChecked) {
+          await deleteCIBroker(selectedParty.fiscalCode);
         }
 
         await updateSigninData(selectedParty);
@@ -136,7 +142,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   };
 
   const disabledSubmit = () =>
-    isPartnerPSPChecked === isPartnerPSP && isPartnerECChecked === isPartnerEC;
+    isPartnerPSPChecked === isPartnerPSP && isPartnerCIChecked === isPartnerCI;
 
   const formik = useFormik<NodeOnSignInPT>({
     initialValues: initialFormData(selectedParty),
@@ -213,7 +219,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
                 <Checkbox
                   checked={isPartnerPSPChecked}
                   onChange={(event) => setIsPartnerPSPChecked(event.target.checked)}
-                  disabled={!isPartnerPSPJustSigned}
+                  disabled={hasPSPChannels}
                   data-testid="psp-checkbox-test"
                 />
               }
@@ -222,9 +228,9 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
               label="EC"
               control={
                 <Checkbox
-                  checked={isPartnerECChecked}
-                  onChange={(event) => setIsPartnerECChecked(event.target.checked)}
-                  disabled={!isPartnerECJustSigned}
+                  checked={isPartnerCIChecked}
+                  onChange={(event) => setIsPartnerCIChecked(event.target.checked)}
+                  disabled={hasCIStations}
                   data-testid="ec-checkbox-test"
                 />
               }

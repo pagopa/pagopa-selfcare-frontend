@@ -32,6 +32,7 @@ import {
   createPSPIndirect,
   updatePSPInfo,
 } from '../../../services/nodeService';
+import { deletePSPBroker } from '../../../services/pspBrokerService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import { isPspBrokerSigned, isPspSigned } from '../../../utils/rbac-utils';
 import CommonRadioGroup from './components/CommonRadioGroup';
@@ -52,7 +53,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
   const pspDirect = isPspBrokerSigned(signInData) && isPspSigned(signInData);
-  const [isEcJustSigned, setIsEcJustSigned] = useState(false);
+  const [hasPSPChannels, setHasPSPChannels] = useState(true);
 
   useEffect(() => {
     if (pspDirect) {
@@ -66,7 +67,9 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
 
     getChannelsMerged(0, brokerCode, undefined, 1)
       .then((channels) => {
-        setIsEcJustSigned(channels === undefined || channels?.page_info?.total_items === 0);
+        setHasPSPChannels(
+          channels?.page_info?.total_items !== undefined && channels?.page_info?.total_items > 0
+        );
       })
       .catch((reason) => {
         addError({
@@ -170,8 +173,8 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (isEcJustSigned && pspDirect && !intermediaryAvailableValue) {
-          // TODO delete broker
+        if (!hasPSPChannels && pspDirect && !intermediaryAvailableValue) {
+          await deletePSPBroker(selectedParty.fiscalCode);
         }
 
         if (signInData.paymentServiceProviderDetailsResource?.tax_code) {
@@ -377,7 +380,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
               labelFalse={t('nodeSignInPage.form.pspFields.intermediaryAvailable.no')}
               value={intermediaryAvailableValue}
               setIntermediaryAvailableValue={setIntermediaryAvailableValue}
-              isChangeDisabled={!isEcJustSigned}
+              isChangeDisabled={hasPSPChannels}
             />
           </Box>
         </Box>

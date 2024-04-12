@@ -15,6 +15,7 @@ import { useSigninData } from '../../../hooks/useSigninData';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
+import { deleteCIBroker } from '../../../services/brokerService';
 import {
   createECAndBroker,
   createECIndirect,
@@ -31,7 +32,7 @@ type Props = {
   signInData: BrokerAndEcDetailsResource;
 };
 
-const NodeSignInECForm = ({ goBack, signInData }: Props) => {
+const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -39,11 +40,11 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
-  const ecDirect = signInData && isEcBrokerSigned(signInData) && isEcSigned(signInData);
-  const [isEcJustSigned, setIsEcJustSigned] = useState(false);
+  const ciDirect = signInData && isEcBrokerSigned(signInData) && isEcSigned(signInData);
+  const [hasCIStations, setHasCIStations] = useState(true);
 
   useEffect(() => {
-    if (ecDirect) {
+    if (ciDirect) {
       setIntermediaryAvailableValue(true);
     } else {
       setIntermediaryAvailableValue(false);
@@ -54,7 +55,9 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
 
     getStationsMerged(0, brokerCode, undefined, 1)
       .then((stations) => {
-        setIsEcJustSigned(stations === undefined || stations?.pageInfo?.total_items === 0);
+        setHasCIStations(
+          stations?.pageInfo?.total_items !== undefined && stations?.pageInfo?.total_items > 0
+        );
       })
       .catch((reason) => {
         addError({
@@ -133,8 +136,8 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (isEcJustSigned && ecDirect && !intermediaryAvailableValue) {
-          // TODO delete broker
+        if (!hasCIStations && ciDirect && !intermediaryAvailableValue) {
+          await deleteCIBroker(selectedParty.fiscalCode);
         }
 
         await updateCreditorInstitution(selectedParty.fiscalCode, commonPayload);
@@ -347,7 +350,7 @@ const NodeSignInECForm = ({ goBack, signInData }: Props) => {
             labelFalse={t('nodeSignInPage.form.ecFields.intermediaryAvailable.no')}
             value={intermediaryAvailableValue}
             setIntermediaryAvailableValue={setIntermediaryAvailableValue}
-            isChangeDisabled={!isEcJustSigned}
+            isChangeDisabled={hasCIStations}
           />
         </Box>
       </Paper>
@@ -388,4 +391,4 @@ export const inputGroupStyle = {
   mb: 3,
 };
 
-export default NodeSignInECForm;
+export default NodeSignInCIForm;

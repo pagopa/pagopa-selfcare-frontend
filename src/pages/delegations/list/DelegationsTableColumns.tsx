@@ -102,7 +102,7 @@ export const GridLinkActionDelegationDetails = ({
 
   return (
     <>
-      {delegation.cbill_code ? (
+      {delegation.is_institution_signed_in ? (
         <GridLinkAction
           label="Gestisci intermediario"
           onClick={() => dispatcher(delegationDetailActions.setDelegationDetailState(delegation))}

@@ -1111,6 +1111,7 @@
     "column": {
       "iuv": "IUV",
       "taxCode": "Codice Fiscale Debitore",
+      "paymentDate": "Data pagamento",
       "downloadButton": "Scarica ricevuta"
     }
   },

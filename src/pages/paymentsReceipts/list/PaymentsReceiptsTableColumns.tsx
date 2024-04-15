@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(
@@ -28,11 +28,24 @@ export function buildColumnDefs(
       headerName: t('paymentsReceiptsPage.column.taxCode'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 400,
+      minWidth: 300,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => renderCell({ value: params.row.debtor }),
+      sortable: true,
+      flex: 4,
+    },
+    {
+      field: 'paymentDateTime',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('paymentsReceiptsPage.column.paymentDate'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) => renderCell({ value: params.row.paymentDateTime }),
       sortable: true,
       flex: 4,
     },
@@ -43,18 +56,20 @@ export function buildColumnDefs(
       headerName: '',
       align: 'center',
       hideSortIcons: true,
+      minWidth: 170,
       disableColumnMenu: true,
       editable: false,
       getActions: (params: any) => [
-        <Button
-          key={`DownloadReceipts-${params.row.iuv}`}
-          onClick={() => downloadReceipt(params.row.iuv)}
-          color="primary"
-          variant="contained"
-          data-testid="download-receipt"
-        >
-          {t('paymentsReceiptsPage.column.downloadButton')}
-        </Button>,
+        <Box key={`DownloadReceipts-${params.row.iuv}`} pr={1}>
+          <Button
+            onClick={() => downloadReceipt(params.row.iuv)}
+            color="primary"
+            variant="contained"
+            data-testid="download-receipt"
+          >
+            {t('paymentsReceiptsPage.column.downloadButton')}
+          </Button>
+        </Box>,
       ],
       sortable: false,
       flex: 1,

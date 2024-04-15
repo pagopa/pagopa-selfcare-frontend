@@ -4,6 +4,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { DateFromString } from '@pagopa/ts-commons/lib/dates';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -20,7 +21,7 @@ import { buildColumnDefs } from './PaymentsReceiptsTableColumns';
 const rowHeight = 64;
 const headerHeight = 56;
 
-export default function PaymentsReceiptsTable({ filterInput }: { filterInput: string }) {
+export default function PaymentsReceiptsTable({ filterInput, filterYear, searchTrigger }: { filterInput: string; filterYear: number | null; searchTrigger: boolean }) {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_PAYMENTS_RECEIPTS);
@@ -55,7 +56,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
 
   const getReceipts = () => {
     setLoading(true);
-    getPaymentsReceipts(selectedParty?.fiscalCode ?? '', filterInput ?? '')
+    getPaymentsReceipts(selectedParty?.fiscalCode ?? '', filterInput ?? '', filterYear)
       .then((res: ReceiptsInfo) => {
         if (res?.receipts_list && res.receipts_list.length > 0) {
           setReceiptsList([...res.receipts_list]);
@@ -80,7 +81,7 @@ export default function PaymentsReceiptsTable({ filterInput }: { filterInput: st
 
   useEffect(() => {
     getReceipts();
-  }, [filterInput]);
+  }, [searchTrigger]);
 
   const columns: Array<GridColDef> = buildColumnDefs(t, downloadReceiptXML);
   // TODO generalize table box

@@ -243,7 +243,7 @@ export const BackofficeApi = {
   },
 
   getPSPBrokerDetails: async (brokerpspcode: string): Promise<BrokerPspDetailsResource> => {
-    const result = await backofficeClient.getBrokerPsp({ 'broker-code': brokerpspcode });
+    const result = await backofficeClient.getBrokerPsp({ 'broker-tax-code': brokerpspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -1054,16 +1054,29 @@ export const BackofficeApi = {
 
   getPaymentsReceipts: async (
     organizationTaxCode: string,
-    debtorTaxCode?: string
+    debtorTaxCode?: string,
+    filterYear?: number | null
   ): Promise<ReceiptsInfo> => {
     // eslint-disable-next-line functional/no-let, prefer-const
-    let filterBody: { 'organization-tax-code': string; limit: number; debtorTaxCode?: string } = {
+    let filterBody: {
+      'organization-tax-code': string;
+      limit: number;
+      debtorTaxCode?: string;
+      fromDate?: string;
+      toDate?: string;
+    } = {
       'organization-tax-code': organizationTaxCode,
       limit: 50,
     };
     if (debtorTaxCode) {
       // eslint-disable-next-line functional/immutable-data
       filterBody.debtorTaxCode = debtorTaxCode;
+    }
+    if (filterYear) {
+      // eslint-disable-next-line functional/immutable-data
+      filterBody.fromDate = `01-01-${filterYear}`;
+      // eslint-disable-next-line functional/immutable-data
+      filterBody.toDate = `31-12-${filterYear}`;
     }
     const result = await backofficeClient.getPaymentsReceipts(filterBody);
     return extractResponse(result, 200, onRedirectToLogin);

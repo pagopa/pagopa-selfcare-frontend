@@ -49,13 +49,17 @@ export default function PaymentsReceiptsPage() {
                 inputProps={{
                   ...params.inputProps,
                   placeholder: 'aaaa',
-                  'data-testid': 'select-year',
+                  'data-testid': 'select-year'
                 }}
                 id="year"
                 name="year"
                 type="date"
                 size="small"
-                sx={{ ml: 1, height: 48 }}
+                sx={{ ml: 1, ".MuiOutlinedInput-root": {
+                  height: "48px"
+                }, ".MuiInputLabel-root": {
+                  paddingTop: "2px"
+                }}}
               />
             )}
           />

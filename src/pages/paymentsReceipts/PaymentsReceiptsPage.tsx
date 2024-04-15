@@ -41,7 +41,7 @@ export default function PaymentsReceiptsPage() {
             views={['year']}
             onChange={(value) => handleSetYear(value)}
             value={selectedYear ? `01/01/${selectedYear}` : null}
-            minDate="01/01/2015"
+            minDate="01/01/2022"
             maxDate={`01/01/${todaysYear}`}
             renderInput={(params: TextFieldProps) => (
               <TextField

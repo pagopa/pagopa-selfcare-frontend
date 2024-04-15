@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material';
 import {generatePath, useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import { useFlagValue } from '../../../hooks/useFeatureFlags';
 import {RedirectProtocolEnum, StatusEnum} from '../../../api/generated/portal/StationDetailsDto';
 import {TestStationResource, TestResultEnum} from '../../../api/generated/portal/TestStationResource';
 import ROUTES from '../../../routes';
@@ -92,6 +93,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
 
     const [testPofResult, setTestPofResult] = useState<TestStationResource>();
     const [validatingPof, setValidatingPof] = useState<boolean>(false);
+
+    const isTesting = useFlagValue("test-stations");
 
     useEffect(() => {
         if (formAction !== StationFormAction.Edit) {
@@ -760,7 +763,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
-                                          disabled={formik.values.targetConcat === undefined ||
+                                          disabled={!isTesting || formik.values.targetConcat === undefined ||
                                           formik.values.targetConcat === ''}
                                           onClick={() => validateRtEndpoint()}
                                           sx={{ color: 'primary.main'}}
@@ -801,7 +804,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
-                                          disabled={formik.values.redirectConcat === undefined ||
+                                          disabled={!isTesting || formik.values.redirectConcat === undefined ||
                                             formik.values.redirectConcat === ''}
                                           onClick={() => validateRedirectEndpoint()}
                                           sx={{ color: 'primary.main'}}
@@ -849,7 +852,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     (<ButtonNaked
                                       size="large"
                                       component="button"
-                                      disabled={formik.values.targetPofConcat === undefined ||
+                                      disabled={!isTesting || formik.values.targetPofConcat === undefined ||
                                                 formik.values.targetPofConcat === ''}
                                       onClick={() => validatePofEndpoint()}
                                       sx={{ color: 'primary.main'}}

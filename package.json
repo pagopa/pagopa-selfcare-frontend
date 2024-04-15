@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.18.39",
+  "version": "1.18.39-1-VAS-844-enable-flag-direct-connection",
   "homepage": "ui",
   "private": true,
   "scripts": {

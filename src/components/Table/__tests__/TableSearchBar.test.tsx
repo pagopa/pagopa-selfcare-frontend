@@ -44,5 +44,25 @@ describe('<TableSearchBar />', () => {
 
     expect(spyOnSetSearchInput).toBeCalledWith(filterInput);
   });
+
+  test('render component TableSearchBar with children', () => {
+    render(
+      <Provider store={store}>
+           <MemoryRouter initialEntries={[`/delegations-list`]}>
+          <Route path="/delegations-list">
+            <ThemeProvider theme={theme}>
+              <TableSearchBar
+                setSearchInput={spyOnSetSearchInput}
+              >
+                <div data-testid="children-test"></div>
+              </TableSearchBar>
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(screen.getByTestId("children-test")).toBeInTheDocument();
+  });
 });
 

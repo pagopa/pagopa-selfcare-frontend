@@ -66,7 +66,6 @@ export const ENV = {
         FDR: {
             ENABLED: getConfig('REACT_APP_FEATURES_FDR_ENABLED', {default: false, type: Type.boolean}),
         },
-
     },
 
     ANALYTCS: {

@@ -16,7 +16,6 @@ import { FormikProps, useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
-import ROUTES from '../../../routes';
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
 import { useSigninData } from '../../../hooks/useSigninData';
@@ -24,11 +23,12 @@ import { NodeOnSignInPSP } from '../../../model/Node';
 import { Party } from '../../../model/Party';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import ROUTES from '../../../routes';
 import { getChannelsMerged } from '../../../services/channelService';
 import {
-  createPspBroker,
   createPSPDirect,
   createPSPIndirect,
+  createPspBroker,
   updatePSPInfo,
 } from '../../../services/nodeService';
 import { deletePSPBroker } from '../../../services/pspBrokerService';

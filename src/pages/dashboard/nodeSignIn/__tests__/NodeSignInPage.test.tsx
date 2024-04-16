@@ -79,33 +79,6 @@ test('Test rendering with pt', async () => {
   fireEvent.click(screen.getByText(/Esci/i));
 });
 
-const pspPartySelected: Party = {
-  partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-  externalId: '15376371009',
-  originId: 'PAGOPASPA',
-  origin: 'SELC',
-  description: 'PagoPA S.p.A.',
-  fiscalCode: '15376371009',
-  digitalAddress: 'selfcare@pec.pagopa.it',
-  status: 'ACTIVE',
-  registeredOffice: 'Piazza Colonna, 370',
-  institutionType: 'PSP',
-  roles: [
-    {
-      partyRole: 'DELEGATE',
-      roleKey: 'admin',
-    },
-  ],
-  urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
-  pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: '36042',
-    vatNumberGroup: false,
-  },
-};
-
 const ecPartySelected: Party = {
   partyId: '6b82300e-4fad-459d-a75b-91b5e7ae4f04',
   externalId: '1122334455',

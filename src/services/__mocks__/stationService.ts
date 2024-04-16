@@ -288,7 +288,8 @@ const stationList: Array<WrapperStationResource> = [
   },
 ];
 export const mockedStationsMerged2: WrapperStationsResource = {
-  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1 },
+  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1,
+    total_items: stationList.length },
   stationsList: stationList,
 };
 

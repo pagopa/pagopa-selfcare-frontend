@@ -23,7 +23,7 @@ Object.defineProperty(global.self, 'crypto', {
     getRandomValues: function (buffer) {
       const nodeCrypto = require('crypto');
       return nodeCrypto.randomFillSync(buffer);
-    }
+    },
   },
 });
 
@@ -123,8 +123,17 @@ describe('<AddEditCommissionBundlePage />', () => {
     const confirmButtonModal = screen.getByTestId('confirm-button-test');
     fireEvent.click(confirmButtonModal);
 
+    let requestBundle = {
+      ...mockedCommissionBundlePspDetailGlobal,
+      abi: "",
+      pspBusinessName: "",
+      transferCategoryList: mockedCommissionBundlePspDetailGlobal!.transferCategoryList!.map((el) => el.specific_built_in_data)
+    };
+    delete requestBundle.idBundle;
+    delete requestBundle.lastUpdatedDate;
+    delete requestBundle.insertedDate;
     await waitFor(() => {
-      expect(spyOnUpdateBundle).toBeCalled();
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith("", name, requestBundle);
     });
   });
 
@@ -240,5 +249,124 @@ describe('<AddEditCommissionBundlePage />', () => {
 
     expect(bundleFormDiv).toBeVisible();
     expect(bundleTaxonomiesDiv).not.toBeVisible();
+  });
+
+  test('AddEditCommissionBundlePage API error during submit', async () => {
+    spyOnUpdateBundle.mockRejectedValueOnce(new Error());
+    const name = 'someNameId';
+    const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
+    const path = '/comm-bundles/:bundleId/:actionId';
+    render(
+      <Provider store={store}>
+        <RenderComponent
+          initialEntries={initialEntries}
+          path={path}
+          bundle={mockedCommissionBundlePspDetailGlobal}
+        />
+      </Provider>
+    );
+
+    let bundleFormDiv = screen.getByTestId('bundle-form-div');
+    let stepConfig = screen.queryByTestId('step-config');
+    expect(bundleFormDiv).toBeInTheDocument();
+    expect(stepConfig).toBeInTheDocument();
+
+    let bundleTaxonomiesDiv;
+    let stepTaxonomies;
+    await waitFor(() => {
+      bundleTaxonomiesDiv = screen.queryByTestId('bundle-taxonomies-div');
+      expect(bundleTaxonomiesDiv).toBeInTheDocument();
+      stepTaxonomies = screen.queryByTestId('step-taxonomies');
+      expect(stepTaxonomies).toBeInTheDocument();
+    });
+
+    expect(bundleFormDiv).toBeVisible();
+    expect(bundleTaxonomiesDiv).not.toBeVisible();
+
+    const confirmButton = screen.getByTestId('open-modal-button-test');
+    fireEvent.click(confirmButton);
+
+    expect(bundleFormDiv).not.toBeVisible();
+    expect(bundleTaxonomiesDiv).toBeVisible();
+
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    });
+
+    const confirmButtonModal = screen.getByTestId('confirm-button-test');
+    fireEvent.click(confirmButtonModal);
+
+    await waitFor(() => {
+      expect(spyOnUpdateBundle).toBeCalled();
+    });
+  });
+
+  test('AddEditCommissionBundlePage API covering all conditions', async () => {
+    spyOnUpdateBundle.mockReturnValueOnce(new Promise<void>((resolve) => resolve()));
+    const name = 'someNameId';
+    const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
+    const path = '/comm-bundles/:bundleId/:actionId';
+    let bundle = mockedCommissionBundlePspDetailGlobal;
+    bundle.touchpoint = 'ANY';
+    bundle.paymentType = 'ANY';
+    bundle.transferCategoryList = [];
+    render(
+      <Provider store={store}>
+        <RenderComponent
+          initialEntries={initialEntries}
+          path={path}
+          bundle={mockedCommissionBundlePspDetailGlobal}
+        />
+      </Provider>
+    );
+
+    let bundleFormDiv = screen.getByTestId('bundle-form-div');
+    let stepConfig = screen.queryByTestId('step-config');
+    expect(bundleFormDiv).toBeInTheDocument();
+    expect(stepConfig).toBeInTheDocument();
+
+    let bundleTaxonomiesDiv;
+    let stepTaxonomies;
+    await waitFor(() => {
+      bundleTaxonomiesDiv = screen.queryByTestId('bundle-taxonomies-div');
+      expect(bundleTaxonomiesDiv).toBeInTheDocument();
+      stepTaxonomies = screen.queryByTestId('step-taxonomies');
+      expect(stepTaxonomies).toBeInTheDocument();
+    });
+
+    expect(bundleFormDiv).toBeVisible();
+    expect(bundleTaxonomiesDiv).not.toBeVisible();
+
+    const confirmButton = screen.getByTestId('open-modal-button-test');
+    fireEvent.click(confirmButton);
+
+    expect(bundleFormDiv).not.toBeVisible();
+    expect(bundleTaxonomiesDiv).toBeVisible();
+
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    });
+
+    const confirmButtonModal = screen.getByTestId('confirm-button-test');
+    fireEvent.click(confirmButtonModal);
+
+    let requestBundle = {
+      ...mockedCommissionBundlePspDetailGlobal,
+      abi: "",
+      pspBusinessName: "",
+      touchpoint: undefined,
+      paymentType: undefined,
+      transferCategoryList: undefined,
+    };
+    delete requestBundle.idBundle;
+    delete requestBundle.lastUpdatedDate;
+    delete requestBundle.insertedDate;
+    await waitFor(() => {
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith("", name, requestBundle);
+    });
   });
 });

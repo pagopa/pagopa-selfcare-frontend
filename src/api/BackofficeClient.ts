@@ -9,6 +9,10 @@ import { ProductKeys } from '../model/ApiKey';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
 import { StationOnCreation } from '../model/Station';
+import {
+  PaymentsReceiptsListMethodParams,
+  PaymentsReceiptsListRequestBody,
+} from '../model/PaymentsReceipts';
 import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
@@ -76,7 +80,7 @@ import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
-import { ReceiptsInfo } from './generated/portal/ReceiptsInfo';
+import { PaymentsResult } from './generated/portal/PaymentsResult';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1052,30 +1056,26 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getPaymentsReceipts: async (
-    organizationTaxCode: string,
-    debtorTaxCode?: string,
-    filterYear?: number | null
-  ): Promise<ReceiptsInfo> => {
+  getPaymentsReceipts: async ({
+    organizationTaxCode,
+    debtorTaxCodeOrIuv,
+    filterYear,
+    page,
+    pageLimit,
+  }: PaymentsReceiptsListMethodParams): Promise<PaymentsResult> => {
     // eslint-disable-next-line functional/no-let, prefer-const
-    let filterBody: {
-      'organization-tax-code': string;
-      limit: number;
-      debtorTaxCode?: string;
-      fromDate?: string;
-      toDate?: string;
-    } = {
+    let filterBody: PaymentsReceiptsListRequestBody = {
       'organization-tax-code': organizationTaxCode,
-      limit: 50,
+      limit: pageLimit ?? 50,
     };
-    if (debtorTaxCode) {
-      // eslint-disable-next-line functional/immutable-data
-      filterBody.debtorTaxCode = debtorTaxCode;
+    if (page) {
+      filterBody.page = page;
+    }
+    if (debtorTaxCodeOrIuv) {
+      filterBody.debtorOrIuv = debtorTaxCodeOrIuv;
     }
     if (filterYear) {
-      // eslint-disable-next-line functional/immutable-data
       filterBody.fromDate = `${filterYear}-01-01`;
-      // eslint-disable-next-line functional/immutable-data
       filterBody.toDate = `${filterYear}-12-31`;
     }
     const result = await backofficeClient.getPaymentsReceipts(filterBody);

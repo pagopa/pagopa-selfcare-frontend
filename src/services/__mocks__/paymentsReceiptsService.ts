@@ -1,7 +1,8 @@
-import { ReceiptsInfo } from '../../api/generated/portal/ReceiptsInfo';
+import { PaymentsResult } from '../../api/generated/portal/PaymentsResult';
 
-export const mockedPaymentsReceiptsList: ReceiptsInfo = {
-  receipts_list: [
+export const mockedPaymentsReceiptsList: PaymentsResult = {
+  totalPages: 1,
+  results: [
     {
       organizationFiscalCode: 'orgTaxCode1',
       iuv: 'iuv1',

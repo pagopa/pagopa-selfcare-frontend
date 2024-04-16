@@ -1067,10 +1067,8 @@ export const BackofficeApi = {
     let filterBody: PaymentsReceiptsListRequestBody = {
       'organization-tax-code': organizationTaxCode,
       limit: pageLimit ?? 50,
+      page
     };
-    if (page) {
-      filterBody.page = page;
-    }
     if (debtorTaxCodeOrIuv) {
       filterBody.debtorOrIuv = debtorTaxCodeOrIuv;
     }

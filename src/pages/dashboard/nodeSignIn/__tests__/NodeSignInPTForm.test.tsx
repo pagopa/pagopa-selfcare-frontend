@@ -7,9 +7,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { PTResource } from '../../../../model/Node';
 import { createStore } from '../../../../redux/store';
 import {
-  brokerAndEcDetailsResource_ECAndBroker,
-  brokerOrPspDetailsResource_Empty,
-  brokerOrPspDetailsResource_PSPAndBroker,
   ecBrokerDetails,
   pspBrokerDetails,
 } from '../../../../services/__mocks__/nodeService';
@@ -22,11 +19,15 @@ import {
 import NodeSignInPTForm from '../NodeSignInPTForm';
 import { createMemoryHistory } from 'history';
 import { screen, render } from '@testing-library/react';
+import { mockedStationsMerged2 } from '../../../../services/__mocks__/stationService';
+import { mockedChannelsMerged } from '../../../../services/__mocks__/channelService';
 
 let spyOnCreateBrokerPsp;
 let spyOnCreateEcBroker;
 let spyOnGetPSPBrokerDetails;
 let spyOnGetBrokerAndEcDetails;
+let spyOnGetStationsMerged: jest.SpyInstance;
+let spyOnGetChannelsMerged: jest.SpyInstance;
 
 beforeEach(() => {
   spyOnCreateBrokerPsp = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
@@ -38,6 +39,14 @@ beforeEach(() => {
   spyOnGetBrokerAndEcDetails = jest.spyOn(
     require('../../../../services/nodeService'),
     'getBrokerAndEcDetails'
+  );
+  spyOnGetStationsMerged = jest.spyOn(
+    require("../../../../services/stationService"),
+    "getStationsMerged"
+  );
+  spyOnGetChannelsMerged = jest.spyOn(
+    require("../../../../services/channelService"),
+    "getChannelsMerged"
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -96,7 +105,7 @@ describe('<NodeSignInPTForm />', () => {
   });
 
   test('Test Render NodeSignInPTForm with PT PSP/EC signed', async () => {
-    const signInData = {
+    const signInData: PTResource = {
       brokerDetailsResource: ecBrokerDetails,
       brokerPspDetailsResource: pspBrokerDetails,
     };
@@ -114,14 +123,11 @@ describe('<NodeSignInPTForm />', () => {
     expect(businessName.value).toBe(PTECPSPSigned.description);
     expect(pspCheckbox).toBeChecked();
     expect(ecCheckbox).toBeChecked();
-    expect(pspCheckbox).toBeDisabled();
-    expect(ecCheckbox).toBeDisabled();
     expect(continueBtn).toBeDisabled();
   });
 
   test('Test Render NodeSignInPTForm with PT PSP signed and EC unsigned | submit the form with EC checked', async () => {
-    const signInData = {
-      brokerDetailsResource: {},
+    const signInData: PTResource = {
       brokerPspDetailsResource: pspBrokerDetails,
     };
 
@@ -148,9 +154,6 @@ describe('<NodeSignInPTForm />', () => {
     expect(pspCheckbox).toBeChecked();
     expect(ecCheckbox).not.toBeChecked();
 
-    expect(pspCheckbox).toBeDisabled();
-    expect(continueBtn).toBeDisabled();
-
     fireEvent.click(ecCheckbox);
 
     expect(ecCheckbox).toBeChecked();
@@ -166,9 +169,8 @@ describe('<NodeSignInPTForm />', () => {
   });
 
   test('Test Render NodeSignInPTForm with PT EC signed and PSP unsigned | submit the form with PSP checked', async () => {
-    const signInData = {
-      brokerDetailsResource: ecBrokerDetails,
-      brokerPspDetailsResource: {},
+    const signInData: PTResource = {
+      brokerDetailsResource: ecBrokerDetails
     };
 
     const { store, name, businessName, pspCheckbox, ecCheckbox, continueBtn } =
@@ -193,9 +195,6 @@ describe('<NodeSignInPTForm />', () => {
 
     expect(pspCheckbox).not.toBeChecked();
     expect(ecCheckbox).toBeChecked();
-
-    expect(ecCheckbox).toBeDisabled();
-    expect(continueBtn).toBeDisabled();
 
     fireEvent.click(pspCheckbox);
 
@@ -366,5 +365,70 @@ describe('<NodeSignInPTForm />', () => {
 
     fireEvent.click(pspCheckbox);
     fireEvent.click(continueBtn);
+  });
+
+  test('Test Render NodeSignInPTForm all checks active', async () => {
+    spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve({}));
+    spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve({}));
+    const { store, pspCheckbox, ecCheckbox } = renderApp({});
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: PTUnsigned,
+      })
+    );
+    await waitFor(() => {
+      expect(pspCheckbox).not.toBeDisabled();
+      expect(ecCheckbox).not.toBeDisabled();
+    });
+  });
+
+  test('Test Render NodeSignInPTForm all checks disabled', async () => {
+    spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
+    spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
+    const { store, pspCheckbox, ecCheckbox } = renderApp({});
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: PTUnsigned,
+      })
+    );
+
+    await waitFor(() => {
+      expect(pspCheckbox).toBeDisabled();
+      expect(ecCheckbox).toBeDisabled();
+    });
+  });
+
+  test('Test Render NodeSignInPTForm ec check disabled', async () => {
+    spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
+    spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve({}));
+    const { store, pspCheckbox, ecCheckbox } = renderApp({});
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: PTUnsigned,
+      })
+    );
+
+    await waitFor(() => {
+      expect(pspCheckbox).not.toBeDisabled();
+      expect(ecCheckbox).toBeDisabled();
+    });
+  });
+
+  test('Test Render NodeSignInPTForm psp check disabled', async () => {
+    spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve({}));
+    spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
+    const { store, pspCheckbox, ecCheckbox } = renderApp({});
+    await waitFor(() =>
+      store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: PTUnsigned,
+      })
+    );
+
+    expect(pspCheckbox).toBeDisabled();
+    expect(ecCheckbox).not.toBeDisabled();
   });
 });

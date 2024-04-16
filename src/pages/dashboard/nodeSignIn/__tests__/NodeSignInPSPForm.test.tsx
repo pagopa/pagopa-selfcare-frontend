@@ -8,9 +8,6 @@ import {MemoryRouter, Route} from 'react-router-dom';
 import {createStore} from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import {
-  PaymentServiceProviderDetailsResource
-} from '../../../../api/generated/portal/PaymentServiceProviderDetailsResource';
-import {
   brokerOrPspDetailsResource_PSPAndBroker,
   brokerOrPspDetailsResource_PSPOnly
 } from '../../../../services/__mocks__/nodeService';
@@ -19,6 +16,7 @@ import {
   pspAdminSignedUndirect,
   pspAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
+import { BrokerOrPspDetailsResource } from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;
@@ -30,7 +28,7 @@ let createPspBroker: jest.SpyInstance;
 jest.mock('../../../../decorators/withSelectedParty');
 
 const renderApp = (
-    signInData: PaymentServiceProviderDetailsResource,
+    signInData: BrokerOrPspDetailsResource,
     injectedStore?: ReturnType<typeof createStore>,
     injectedHistory?: ReturnType<typeof createMemoryHistory>
 ) => {

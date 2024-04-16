@@ -11,7 +11,7 @@ import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/Broker
 import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import { PTResource } from '../../../model/Node';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
-import NodeSignInECForm from './NodeSignInECForm';
+import NodeSignInCIForm from './NodeSignInECForm';
 import NodeSignInPTForm from './NodeSignInPTForm';
 
 const NodeSignInPage = () => {
@@ -61,7 +61,7 @@ const NodeSignInPage = () => {
         ) : !selectedParty?.pspData && selectedParty?.institutionType === 'PT' ? (
           <NodeSignInPTForm goBack={goBack} signInData={signInData as PTResource} />
         ) : (
-          <NodeSignInECForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource} />
+          <NodeSignInCIForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource} />
         )}
       </Grid>
     </Grid>

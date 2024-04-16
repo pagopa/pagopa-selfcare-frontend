@@ -243,7 +243,7 @@ export const BackofficeApi = {
   },
 
   getPSPBrokerDetails: async (brokerpspcode: string): Promise<BrokerPspDetailsResource> => {
-    const result = await backofficeClient.getBrokerPsp({ 'broker-code': brokerpspcode });
+    const result = await backofficeClient.getBrokerPsp({ 'broker-tax-code': brokerpspcode });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

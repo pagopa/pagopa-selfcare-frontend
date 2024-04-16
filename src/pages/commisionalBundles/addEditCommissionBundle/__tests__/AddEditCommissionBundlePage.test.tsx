@@ -125,15 +125,17 @@ describe('<AddEditCommissionBundlePage />', () => {
 
     let requestBundle = {
       ...mockedCommissionBundlePspDetailGlobal,
-      abi: "",
-      pspBusinessName: "",
-      transferCategoryList: mockedCommissionBundlePspDetailGlobal!.transferCategoryList!.map((el) => el.specific_built_in_data)
+      abi: '',
+      pspBusinessName: '',
+      transferCategoryList: mockedCommissionBundlePspDetailGlobal!.transferCategoryList!.map(
+        (el) => el.specific_built_in_data
+      ),
     };
     delete requestBundle.idBundle;
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
     await waitFor(() => {
-      expect(spyOnUpdateBundle).toHaveBeenCalledWith("", name, requestBundle);
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
     });
   });
 
@@ -308,16 +310,18 @@ describe('<AddEditCommissionBundlePage />', () => {
     const name = 'someNameId';
     const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
     const path = '/comm-bundles/:bundleId/:actionId';
-    let bundle = mockedCommissionBundlePspDetailGlobal;
-    bundle.touchpoint = 'ANY';
-    bundle.paymentType = 'ANY';
-    bundle.transferCategoryList = [];
+    let bundle = {
+      ...mockedCommissionBundlePspDetailGlobal,
+      touchpoint: 'ANY',
+      paymentType: 'ANY',
+      transferCategoryList: [],
+    };
     render(
       <Provider store={store}>
         <RenderComponent
           initialEntries={initialEntries}
           path={path}
-          bundle={mockedCommissionBundlePspDetailGlobal}
+          bundle={bundle}
         />
       </Provider>
     );
@@ -356,8 +360,8 @@ describe('<AddEditCommissionBundlePage />', () => {
 
     let requestBundle = {
       ...mockedCommissionBundlePspDetailGlobal,
-      abi: "",
-      pspBusinessName: "",
+      abi: '',
+      pspBusinessName: '',
       touchpoint: undefined,
       paymentType: undefined,
       transferCategoryList: undefined,
@@ -366,7 +370,7 @@ describe('<AddEditCommissionBundlePage />', () => {
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
     await waitFor(() => {
-      expect(spyOnUpdateBundle).toHaveBeenCalledWith("", name, requestBundle);
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
     });
   });
 });

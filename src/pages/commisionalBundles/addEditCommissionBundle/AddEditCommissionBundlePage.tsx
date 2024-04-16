@@ -16,6 +16,7 @@ import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {FormAction} from '../../../model/CommissionBundle';
 import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
 import {createBundle, updatePSPBundle} from '../../../services/bundleService';
+import { isValidArray } from '../../../utils/common-utils';
 import {
     LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
     LOADING_TASK_CREATING_COMMISSION_BUNDLE,
@@ -42,7 +43,7 @@ const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource):
     touchpoint: data?.touchpoint ?? 'ANY',
     transferCategoryList: data?.transferCategoryList
         ? data.transferCategoryList.map((item) => item.specific_built_in_data)
-        : [''],
+        : [],
     type: data?.type ?? undefined,
     validityDateFrom: data?.validityDateFrom ?? minDateTomorrow,
     validityDateTo: data?.validityDateTo ?? minDateTomorrow,
@@ -151,6 +152,7 @@ const AddEditCommissionBundlePage = () => {
             ...body,
             touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
             paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+            transferCategoryList: isValidArray(body.transferCategoryList) ? body.transferCategoryList : undefined
         };
         const promise = isEdit
             ? updatePSPBundle(pspTaxCode, bundleId, formattedBundleBody)

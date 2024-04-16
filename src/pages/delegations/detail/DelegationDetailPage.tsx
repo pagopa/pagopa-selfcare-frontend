@@ -72,11 +72,9 @@ const DelegationDetailPage = () => {
           <Typography color={'action.active'}>{delegationDetail.institution_name ?? ''}</Typography>
         </Breadcrumbs>
       </Stack>
-      <Grid container mt={1} spacing={1}>
-        <Grid item xs={12}>
-          <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h3" />
-        </Grid>
+      <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h3" mtTitle={3} />
 
+      <Grid container mt={1} spacing={1}>
         {/* <Grid item xs={6} mb={1} data-testid="payment-contacts">
           <DelegationDetailPaymentContacts paymentContacts={contacts?.ci_payment_contacts} />
         </Grid> */}
@@ -85,14 +83,12 @@ const DelegationDetailPage = () => {
         </Grid>
       </Grid>
 
-      <Grid container mt={5} spacing={1}>
-        <TitleBox title={t('delegationDetailPage.tableTitle')} variantTitle="h4" />
-        <TableSearchBar setSearchInput={setSearchInput} componentName="delegationDetailPage" />
-        <DelegationStationsTable
-          ciTaxCode={delegationDetail.institution_tax_code ?? ''}
-          filterByStationCode={searchInput}
-        />
-      </Grid>
+      <TitleBox title={t('delegationDetailPage.tableTitle')} variantTitle="h4" mtTitle={5} />
+      <TableSearchBar setSearchInput={setSearchInput} componentName="delegationDetailPage" />
+      <DelegationStationsTable
+        ciTaxCode={delegationDetail.institution_tax_code ?? ''}
+        filterByStationCode={searchInput}
+      />
     </SideMenuLayout>
   );
 };

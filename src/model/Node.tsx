@@ -18,6 +18,9 @@ export type NodeOnSignInPT = {
   businessName: string;
 };
 
-export type PTResource = BrokerPspDetailsResource & BrokerResource;
+export type PTResource = {
+  brokerPspDetailsResource?: BrokerPspDetailsResource;
+  brokerDetailsResource?: BrokerResource;
+};
 
 export type SigninData = BrokerOrPspDetailsResource & BrokerAndEcDetailsResource;

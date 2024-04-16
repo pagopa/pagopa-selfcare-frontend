@@ -2,6 +2,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { Box, Button } from '@mui/material';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
+import { formatDateToDDMMYYYY } from '../../../utils/common-utils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -45,7 +46,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell({ value: params.row.paymentDateTime }),
+      renderCell: (params) => renderCell({ value: params.row.paymentDateTime ? formatDateToDDMMYYYY(new Date(params.row.paymentDateTime)) : undefined}),
       sortable: true,
       flex: 4,
     },

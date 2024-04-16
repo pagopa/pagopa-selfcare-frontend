@@ -8,14 +8,14 @@ type Props = {
   setSearchInput: (name: string) => void;
   componentName?: string;
   children?: React.ReactNode;
-  setExtraTrigger?: (any: any) => void;
+  handleExtraTrigger?: (any?: any) => void;
 };
 
 export default function TableSearchBar({
   setSearchInput,
   componentName,
   children,
-  setExtraTrigger,
+  handleExtraTrigger,
 }: Readonly<Props>) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
@@ -44,8 +44,8 @@ export default function TableSearchBar({
       <Button
         onClick={() => {
           setSearchInput(internalSearchValue);
-          if (setExtraTrigger) {
-            setExtraTrigger((prev: boolean) => !prev);
+          if (handleExtraTrigger) {
+            handleExtraTrigger();
           }
         }}
         variant="contained"

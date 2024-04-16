@@ -26,11 +26,11 @@ const emptyList: PaymentsResult = {
 };
 
 export default function PaymentsReceiptsTable({
-  filterInput,
+  filterDebtorOrIuv,
   filterYear,
   searchTrigger,
 }: {
-  filterInput: string;
+  filterDebtorOrIuv: string;
   filterYear: number | null;
   searchTrigger: boolean;
 }) {
@@ -39,6 +39,7 @@ export default function PaymentsReceiptsTable({
   const setLoading = useLoading(LOADING_TASK_PAYMENTS_RECEIPTS);
   const [receiptsList, setReceiptsList] = useState<PaymentsResult>(emptyList);
   const addError = useErrorDispatcher();
+  const [page, setPage] = useState(0);
 
   function downloadReceiptXML(iuv: string) {
     getPaymentReceiptDetail(selectedParty?.fiscalCode ?? '', iuv)
@@ -68,11 +69,12 @@ export default function PaymentsReceiptsTable({
 
   const getReceipts = (newPage?: number) => {
     setLoading(true);
+    const toPage = newPage ?? 0;
     getPaymentsReceipts({
       organizationTaxCode: selectedParty?.fiscalCode ?? '',
-      debtorTaxCodeOrIuv: filterInput ?? '',
+      debtorTaxCodeOrIuv: filterDebtorOrIuv ?? '',
       filterYear,
-      page: newPage ?? 0,
+      page: toPage,
       pageLimit: 10,
     })
       .then((res: PaymentsResult) => {
@@ -94,7 +96,10 @@ export default function PaymentsReceiptsTable({
           displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceiptList'),
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setPage(toPage);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -122,15 +127,28 @@ export default function PaymentsReceiptsTable({
             disableColumnSelector
             disableDensitySelector
             disableSelectionOnClick
-            onPageChange={(newPage) => getReceipts(newPage-1)}
+            onPageChange={(newPage) => getReceipts(newPage - 1)}
             autoHeight={true}
             className="CustomDataGrid"
+            components={{
+              Pagination: () => (
+                <>
+                  <Pagination
+                    color="primary"
+                    count={receiptsList?.totalPages ?? 1}
+                    page={page + 1}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                      getReceipts(value - 1)
+                    }
+                  />
+                </>
+              ),
+            }}
             columnBuffer={5}
             columns={columns}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
-            paginationMode='server'
-            rowCount={receiptsList.totalPages}
+            rowCount={receiptsList?.results?.length}
             getRowId={(el) => el.iuv}
             rowHeight={rowHeight}
             rows={receiptsList.results ?? []}

@@ -14,6 +14,8 @@ const mockTFunction = (key: string) => {
       return 'IUV';
     case 'paymentsReceiptsPage.column.taxCode':
       return 'Tax code';
+    case 'paymentsReceiptsPage.column.paymentDate':
+      return 'Payment Date';
     default:
       return '';
   }
@@ -42,7 +44,20 @@ describe('<PaymentsReceiptsTableColumns />', () => {
         headerName: mockTFunction('paymentsReceiptsPage.column.taxCode'),
         align: 'left',
         headerAlign: 'left',
-        minWidth: 400,
+        minWidth: 300,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: true,
+        flex: 4,
+      },
+      {
+        field: 'paymentDateTime',
+        cellClassName: 'justifyContentNormal',
+        headerName: mockTFunction('paymentsReceiptsPage.column.paymentDate'),
+        align: 'left',
+        headerAlign: 'left',
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -56,6 +71,7 @@ describe('<PaymentsReceiptsTableColumns />', () => {
         type: 'actions',
         headerName: '',
         align: 'center',
+        minWidth: 170,
         hideSortIcons: true,
         disableColumnMenu: true,
         editable: false,

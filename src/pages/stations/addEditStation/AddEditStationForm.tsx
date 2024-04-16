@@ -15,6 +15,7 @@ import {
     Stack,
     TextField,
     Typography,
+    InputAdornment
 } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import {Box} from '@mui/system';
@@ -24,7 +25,8 @@ import {
     MenuBook,
     NorthEast as NorthEastIcon,
     CheckCircle as CheckCircleIcon,
-    Error as ErrorIcon
+    Error as ErrorIcon,
+    Check as CheckIcon
 } from '@mui/icons-material';
 import {generatePath, useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
@@ -94,7 +96,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     const [testPofResult, setTestPofResult] = useState<TestStationResource>();
     const [validatingPof, setValidatingPof] = useState<boolean>(false);
 
-    const isTesting = useFlagValue("test-stations");
+    const isTesting = true;
 
     useEffect(() => {
         if (formAction !== StationFormAction.Edit) {
@@ -751,19 +753,29 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         inputProps={{
                                             'data-testid': 'targetConcat-test',
                                         }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {testRtResult !== undefined &&
+                                                        testRtResult.testResult === TestResultEnum.SUCCESS ?
+                                                        (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                        ""
+                                                    }
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid container item xs={2}>
                                     {
                                         validatingRt ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                        testRtResult !== undefined && testRtResult.testResult
-                                            === TestResultEnum.SUCCESS ?
-                                            (<CheckCircleIcon sx={{ color: 'primary.main', }}/>) :
-                                        testRtResult !== undefined ? (<ErrorIcon  sx={{ color: '#D85757' }} />) :
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
-                                          disabled={!isTesting || formik.values.targetConcat === undefined ||
+                                          disabled={!isTesting ||
+                                           (testRtResult !== undefined &&
+                                            testRtResult.testResult === TestResultEnum.SUCCESS) ||
+                                           formik.values.targetConcat === undefined ||
                                           formik.values.targetConcat === ''}
                                           onClick={() => validateRtEndpoint()}
                                           sx={{ color: 'primary.main'}}
@@ -793,18 +805,29 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         inputProps={{
                                             'data-testid': 'redirectConcat-test',
                                         }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {testRedirectResult !== undefined &&
+                                                        testRedirectResult.testResult === TestResultEnum.SUCCESS ?
+                                                        (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                        ""
+                                                    }
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid container item xs={2}>
                                     {
                                         validatingRedirect ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                        testRedirectResult !== undefined && testRedirectResult.testResult
-                                            === TestResultEnum.SUCCESS ? (<CheckCircleIcon sx={{ color: 'primary.main', }} />) :
-                                        testRedirectResult !== undefined ? (<ErrorIcon sx={{ color: '#D85757' }} />) :
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
-                                          disabled={!isTesting || formik.values.redirectConcat === undefined ||
+                                          disabled={!isTesting ||
+                                            (testRedirectResult !== undefined &&
+                                            testRedirectResult.testResult === TestResultEnum.SUCCESS) ||
+                                            formik.values.redirectConcat === undefined ||
                                             formik.values.redirectConcat === ''}
                                           onClick={() => validateRedirectEndpoint()}
                                           sx={{ color: 'primary.main'}}
@@ -841,18 +864,29 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     inputProps={{
                                         'data-testid': 'targetPofConcat-test',
                                     }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {testPofResult !== undefined &&
+                                                    testPofResult.testResult === TestResultEnum.SUCCESS ?
+                                                    (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                    ""
+                                                }
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
                             </Grid>
                             <Grid container item xs={2}>
                                 {
                                     validatingPof ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                    testPofResult !== undefined && testPofResult.testResult
-                                        === TestResultEnum.SUCCESS ? (<CheckCircleIcon sx={{ color: 'primary.main', }} />) :
-                                    testPofResult !== undefined ? (<ErrorIcon sx={{ color: '#D85757' }} />) :
                                     (<ButtonNaked
                                       size="large"
                                       component="button"
-                                      disabled={!isTesting || formik.values.targetPofConcat === undefined ||
+                                      disabled={!isTesting ||
+                                        (testPofResult !== undefined &&
+                                        testPofResult.testResult === TestResultEnum.SUCCESS) ||
+                                        formik.values.targetPofConcat === undefined ||
                                                 formik.values.targetPofConcat === ''}
                                       onClick={() => validatePofEndpoint()}
                                       sx={{ color: 'primary.main'}}

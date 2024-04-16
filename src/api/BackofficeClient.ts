@@ -1053,9 +1053,9 @@ export const BackofficeApi = {
   testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
     const result = await backofficeClient.testStation({
         body: {
-            hostUrl: hostUrl,
-            hostPort: hostPort,
-            hostPath: hostPath
+            hostUrl,
+            hostPort,
+            hostPath
         }
     });
     return extractResponse(result, 200, onRedirectToLogin);

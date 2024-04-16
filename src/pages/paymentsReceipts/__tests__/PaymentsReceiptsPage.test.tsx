@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
@@ -27,5 +27,17 @@ describe('<PaymentsReceiptsPage />', () => {
         </MemoryRouter>
       </Provider>
     );
+
+    const filterDate = screen.getByTestId("select-year") as HTMLInputElement;
+
+    fireEvent.change(filterDate, {target: {value: "2023"}});
+    await waitFor(() => {
+      expect(filterDate.value).toBe("2023");
+    })
+
+    fireEvent.change(filterDate, {target: {value: null}});
+    await waitFor(() => {
+      expect(filterDate.value).toBe("");
+    })
   });
 });

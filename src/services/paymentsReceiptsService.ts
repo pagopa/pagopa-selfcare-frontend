@@ -6,12 +6,13 @@ import { mockedPaymentsReceiptsList } from './__mocks__/paymentsReceiptsService'
 
 export const getPaymentsReceipts = (
   organizationTaxCode: string,
-  debtorTaxCode?: string
+  debtorTaxCode?: string,
+  filterYear?: number | null
 ): Promise<ReceiptsInfo> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve(mockedPaymentsReceiptsList);
   } else {
-    return BackofficeApi.getPaymentsReceipts(organizationTaxCode, debtorTaxCode).then((data) => data);
+    return BackofficeApi.getPaymentsReceipts(organizationTaxCode, debtorTaxCode, filterYear).then((data) => data);
   }
 };
 

@@ -8,6 +8,7 @@ import React from 'react';
 import TableSearchBar from '../TableSearchBar';
 
 const spyOnSetSearchInput = jest.fn();
+const spyOnExtraTrigger = jest.fn();
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -26,6 +27,7 @@ describe('<TableSearchBar />', () => {
             <ThemeProvider theme={theme}>
               <TableSearchBar
                 setSearchInput={spyOnSetSearchInput}
+                setExtraTrigger={spyOnExtraTrigger}
               />
             </ThemeProvider>
           </Route>
@@ -43,6 +45,27 @@ describe('<TableSearchBar />', () => {
     fireEvent.click(searchButton);
 
     expect(spyOnSetSearchInput).toBeCalledWith(filterInput);
+    expect(spyOnExtraTrigger).toBeCalled();
+  });
+
+  test('render component TableSearchBar with children', () => {
+    render(
+      <Provider store={store}>
+           <MemoryRouter initialEntries={[`/delegations-list`]}>
+          <Route path="/delegations-list">
+            <ThemeProvider theme={theme}>
+              <TableSearchBar
+                setSearchInput={spyOnSetSearchInput}
+              >
+                <div data-testid="children-test"></div>
+              </TableSearchBar>
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(screen.getByTestId("children-test")).toBeInTheDocument();
   });
 });
 

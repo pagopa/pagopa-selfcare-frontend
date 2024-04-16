@@ -46,7 +46,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell({ value: params.row.paymentDateTime ? formatDateToDDMMYYYY(params.row.paymentDateTime) : undefined}),
+      renderCell: (params) => renderCell({ value: params.row.paymentDateTime ? formatDateToDDMMYYYY(new Date(params.row.paymentDateTime)) : undefined}),
       sortable: true,
       flex: 4,
     },

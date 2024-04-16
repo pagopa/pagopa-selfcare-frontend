@@ -29,7 +29,7 @@ describe('<PaymentsReceiptsTable />', () => {
         <MemoryRouter initialEntries={[`/payments-receipts`]}>
           <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <PaymentsReceiptsTable filterInput={''} />
+              <PaymentsReceiptsTable filterInput={''} filterYear={null} searchTrigger={false} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -58,7 +58,7 @@ describe('<PaymentsReceiptsTable />', () => {
         <MemoryRouter initialEntries={[`/payments-receipts`]}>
           <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <PaymentsReceiptsTable filterInput={''} />
+              <PaymentsReceiptsTable filterInput={''} filterYear={null} searchTrigger={false} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -80,7 +80,7 @@ describe('<PaymentsReceiptsTable />', () => {
         <MemoryRouter initialEntries={[`/payments-receipts`]}>
           <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <PaymentsReceiptsTable filterInput={''} />
+              <PaymentsReceiptsTable filterInput={''} filterYear={null} searchTrigger={false} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -103,7 +103,7 @@ describe('<PaymentsReceiptsTable />', () => {
         <MemoryRouter initialEntries={[`/payments-receipts`]}>
           <Route path="/payments-receipts">
             <ThemeProvider theme={theme}>
-              <PaymentsReceiptsTable filterInput={''} />
+              <PaymentsReceiptsTable filterInput={''} filterYear={null} searchTrigger={false} />
             </ThemeProvider>
           </Route>
         </MemoryRouter>

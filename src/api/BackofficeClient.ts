@@ -1074,9 +1074,9 @@ export const BackofficeApi = {
     }
     if (filterYear) {
       // eslint-disable-next-line functional/immutable-data
-      filterBody.fromDate = `01-01-${filterYear}`;
+      filterBody.fromDate = `${filterYear}-01-01`;
       // eslint-disable-next-line functional/immutable-data
-      filterBody.toDate = `31-12-${filterYear}`;
+      filterBody.toDate = `${filterYear}-12-31`;
     }
     const result = await backofficeClient.getPaymentsReceipts(filterBody);
     return extractResponse(result, 200, onRedirectToLogin);

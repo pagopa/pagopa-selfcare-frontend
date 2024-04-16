@@ -227,11 +227,16 @@ export function isValidIBANNumber(input: string, onlySepa: boolean) {
 }
 
 export function isValidArray(array: any) {
-  return array && typeof array === 'object' && array.length > 0 && array.length === 1
-    ? typeof array[0] === 'string'
-      ? array[0].trim()
-      : isNaN(array[0])
-      ? Object.entries(array[0]).length > 0
-      : true
-    : true;
+  return (
+    array &&
+    typeof array === 'object' &&
+    array.length > 0 &&
+    (array.length === 1
+      ? typeof array[0] === 'string'
+        ? array[0].trim()
+        : isNaN(array[0])
+        ? Object.entries(array[0]).length > 0
+        : true
+      : true)
+  );
 }

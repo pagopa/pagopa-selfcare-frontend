@@ -22,7 +22,7 @@ test("isValidArray should return false", () => {
     expect(isValidArray(array)).toBeFalsy();
 
     const array2 = [];
-    expect(isValidArray(array2)).toBeTruthy();
+    expect(isValidArray(array2)).toBeFalsy();
 
     const array3 = ["      "];
     expect(isValidArray(array3)).toBeFalsy();

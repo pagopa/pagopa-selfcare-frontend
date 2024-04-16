@@ -14,6 +14,7 @@ export const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
     institution_station_count: 0,
     institution_tax_code: 'institutionTaxCode1',
     institution_type: 'institutionType1',
+    is_institution_signed_in: true,
   },
   {
     broker_id: 'brokerId2',
@@ -25,6 +26,7 @@ export const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
     institution_station_count: 1,
     institution_tax_code: 'institutionTaxCode2',
     institution_type: 'institutionType2',
+    is_institution_signed_in: true,
   },
   {
     broker_id: 'brokerId3',
@@ -36,6 +38,7 @@ export const mockedCIDelegations: Array<CIBrokerDelegationResource> = [
     institution_station_count: 2,
     institution_tax_code: 'institutionTaxCode3',
     institution_type: 'institutionType3',
+    is_institution_signed_in: false,
   },
 ];
 

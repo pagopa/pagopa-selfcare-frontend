@@ -82,6 +82,7 @@ import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { TestStationResource } from './generated/portal/TestStationResource';
+import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;

@@ -78,7 +78,8 @@ export default function CommissionBundleDetailConfiguration({
     ));
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 2, padding: 3, minHeight: '310px' }}>
+    <Paper elevation={3} sx={{ borderRadius: 2, padding: 3, minHeight: '310px',        display: 'flex',
+    flexDirection: 'column' }}>
       <Typography variant="overline">
         {t('commissionBundlesPage.commissionBundleDetail.configuration')}
       </Typography>
@@ -93,7 +94,7 @@ export default function CommissionBundleDetailConfiguration({
         size="large"
         component="button"
         onClick={() => setOpenDrawer(true)}
-        sx={{ color: 'primary.main', mt: 3 }}
+        sx={{ color: 'primary.main',  mt: 'auto', justifyContent: 'start' }}
         weight="default"
         data-testid="show-more-bundle-configuration-test"
       >

@@ -3,16 +3,16 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
+import { usePermissions } from '../../hooks/usePermissions';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { ENV } from '../../utils/env';
-import { usePermissions } from '../../hooks/usePermissions';
+import DownloadSection from './components/DownloadSection';
 import ECRegistrationData from './components/ECRegistrationData';
-import PSPRegistrationData from './components/PSPRegistrationData';
 import NextSteps from './components/NextSteps';
 import OperationTable from './components/OperationTable';
+import PSPRegistrationData from './components/PSPRegistrationData';
 import PTRegistrationData from './components/PTRegistrationData';
-import DownloadSection from './components/DownloadSection';
 
 const DashboardPage = () => {
   const { t } = useTranslation();

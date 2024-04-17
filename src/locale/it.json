@@ -58,6 +58,7 @@
     },
     "nextStep": {
       "title": "E ora?",
+      "retrieveHasApiKeysErrorMessage": "Errore durante l'ottenimento delle API keys generate",
       "signInStepAlert": "Completa la registrazione sul Nodo inserendo i dati mancanti.",
       "signInCTA": "Completa registrazione",
       "generateApiKeysStepAlertPSP": "Genera le API Key di connessione al Nodo per abilitare la creazione dei canali.",

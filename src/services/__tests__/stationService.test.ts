@@ -18,6 +18,17 @@ describe('StationService test mocked', () => {
 });
 
 describe('StationService test', () => {
+
+  const OLD_ENV = process.env;
+  beforeEach(() => {
+    jest.resetModules();
+    process.env = { ...OLD_ENV, REACT_APP_API_MOCK_FORWARDER_TEST: 'false' };
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV;
+  });
+
   test('Test testStation', async () => {
     const spyOn = jest.spyOn(BackofficeApi, "testStation").mockReturnValue(
         new Promise((resolve) => resolve(stationTestMocked)));

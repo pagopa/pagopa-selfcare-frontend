@@ -4,8 +4,8 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
-import { PaddedDrawer } from '../../../components/PaddedDrawer';
+import { BundleResource } from '../../../../api/generated/portal/BundleResource';
+import { PaddedDrawer } from '../../../../components/PaddedDrawer';
 
 export default function CommissionBundleDetailTaxonomies({
   bundleDetail,

@@ -2,21 +2,21 @@ import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
-import {createStore, store} from '../../../../redux/store';
+import {createStore, store} from '../../../../../redux/store';
 import {Provider} from 'react-redux';
 import React from 'react';
-import {mockedBundleRequest, mockedChannelsIdList,} from '../../../../services/__mocks__/bundleService';
-import {partiesActions} from '../../../../redux/slices/partiesSlice';
-import {pspOperatorSignedDirect} from '../../../../services/__mocks__/partyService';
-import {TypeEnum} from '../../../../api/generated/portal/BundleResource';
-import AddEditCommissionBundleForm from '../../addEditCommissionBundle/components/AddEditCommissionBundleForm';
+import {mockedBundleRequest, mockedChannelsIdList,} from '../../../../../services/__mocks__/bundleService';
+import {partiesActions} from '../../../../../redux/slices/partiesSlice';
+import {pspOperatorSignedDirect} from '../../../../../services/__mocks__/partyService';
+import {TypeEnum} from '../../../../../api/generated/portal/BundleResource';
+import AddEditCommissionBundleForm from '../AddEditCommissionBundleForm';
 import {useFormik} from 'formik';
-import {BundleRequest} from '../../../../api/generated/portal/BundleRequest';
-import {FormAction} from '../../../../model/CommissionBundle';
-import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
-import {formatDateToDDMMYYYY} from '../../../../utils/common-utils';
+import {BundleRequest} from '../../../../../api/generated/portal/BundleRequest';
+import {FormAction} from '../../../../../model/CommissionBundle';
+import { mockedDelegatedPSP } from '../../../../../services/__mocks__/institutionsService';
+import {formatDateToDDMMYYYY} from '../../../../../utils/common-utils';
 import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
-import * as useFeatureFlags from "../../../../hooks/useFeatureFlags";
+import * as useFeatureFlags from "../../../../../hooks/useFeatureFlags";
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
@@ -65,23 +65,23 @@ const bundleDescription = 'description';
 describe('<AddEditCommissionBundleForm />', () => {
     beforeEach(() => {
         spyOnGetPaymentTypes = jest.spyOn(
-            require('../../../../services/configurationService'),
+            require('../../../../../services/configurationService'),
             'getPaymentTypes'
         );
         spyOnGetTouchpoint = jest.spyOn(
-            require('../../../../services/bundleService'),
+            require('../../../../../services/bundleService'),
             'getTouchpoints'
         );
         spyOnGetInstitutionService = jest.spyOn(
-            require('../../../../services/institutionService'),
+            require('../../../../../services/institutionService'),
             'getBrokerDelegation'
         );
         spyOnCreateCommissionBundle = jest.spyOn(
-            require('../../../../services/bundleService'),
+            require('../../../../../services/bundleService'),
             'createBundle'
         );
         spyOnGetChannelService = jest.spyOn(
-            require('../../../../services/channelService'),
+            require('../../../../../services/channelService'),
             'getChannelsIdAssociatedToPSP'
         );
         spyOnErrorHook = jest

@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { store } from '../../../../redux/store';
-import BundleTaxonomiesTable from '../../addEditCommissionBundle/components/BundleTaxonomiesTable';
+import { store } from '../../../../../redux/store';
+import BundleTaxonomiesTable from '../BundleTaxonomiesTable';
 import { Provider } from 'react-redux';
-import { mockedTaxonomyList } from '../../../../services/__mocks__/bundleService';
-import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
+import { mockedTaxonomyList } from '../../../../../services/__mocks__/bundleService';
+import { Taxonomy } from '../../../../../api/generated/portal/Taxonomy';
 
 const spyOnActionDeleteTaxonomy = jest.fn();
 const spyOnActionDeleteArea = jest.fn();

@@ -1,6 +1,6 @@
 import { cleanup, render } from '@testing-library/react';
 import React from 'react';
-import BundleTaxonomiesGroupButton from '../../addEditCommissionBundle/components/drawer/BundleTaxonomiesGroupButton';
+import BundleTaxonomiesGroupButton from '../BundleTaxonomiesGroupButton';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

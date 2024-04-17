@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
-import CommissionBundleDetailTaxonomies from '../../detail/CommissionBundleDetailTaxonomies';
-import { mockedCommissionBundlePspDetailGlobal } from '../../../../services/__mocks__/bundleService';
-import { store } from '../../../../redux/store';
+import { mockedCommissionBundlePspDetailGlobal } from '../../../../../services/__mocks__/bundleService';
+import { store } from '../../../../../redux/store';
+import CommissionBundleDetailTaxonomies from '../CommissionBundleDetailTaxonomies';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

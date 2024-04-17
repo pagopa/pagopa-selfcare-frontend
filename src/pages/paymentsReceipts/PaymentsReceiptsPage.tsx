@@ -4,8 +4,6 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { TextField, TextFieldProps } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DateFromString } from '@pagopa/ts-commons/lib/dates';
-import { formatDateToDDMMYYYY } from '../../utils/common-utils';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import TableSearchBar from '../../components/Table/TableSearchBar';
 import PaymentsReceiptsTable from './list/PaymentsReceiptsTable';
@@ -14,7 +12,9 @@ const todaysYear = new Date().getFullYear();
 
 export default function PaymentsReceiptsPage() {
   const { t } = useTranslation();
-  const [searchInput, setSearchInput] = useState<string>('');
+  const [debtorOrIuvInput, setDebtorOrIuvInput] = useState<string>('');
+  const [yearInput, setYearInput] = useState<number | null>(null);
+
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
 
@@ -26,6 +26,11 @@ export default function PaymentsReceiptsPage() {
     }
   }
 
+  const handleSearchTrigger = () => {
+    setYearInput(selectedYear);
+    setSearchTrigger((prev) => !prev);
+  };
+
   return (
     <SideMenuLayout>
       <TitleBox
@@ -34,10 +39,14 @@ export default function PaymentsReceiptsPage() {
         variantTitle="h4"
         variantSubTitle="body1"
       />
-      <TableSearchBar setSearchInput={setSearchInput} componentName="paymentsReceiptsPage" setExtraTrigger={setSearchTrigger}>
+      <TableSearchBar
+        setSearchInput={setDebtorOrIuvInput}
+        componentName="paymentsReceiptsPage"
+        handleExtraTrigger={handleSearchTrigger}
+      >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDatePicker
-            label={t("paymentsReceiptsPage.search.yearFilter")}
+            label={t('paymentsReceiptsPage.search.yearFilter')}
             views={['year']}
             onChange={(value) => handleSetYear(value)}
             value={selectedYear ? `01/01/${selectedYear}` : null}
@@ -49,25 +58,29 @@ export default function PaymentsReceiptsPage() {
                 inputProps={{
                   ...params.inputProps,
                   placeholder: 'aaaa',
-                  'data-testid': 'select-year'
+                  'data-testid': 'select-year',
                 }}
                 id="year"
                 name="year"
                 type="date"
                 size="small"
-                sx={{ ml: 1, ".MuiOutlinedInput-root": {
-                  height: "48px"
-                }, ".MuiInputLabel-root": {
-                  paddingTop: "2px"
-                }}}
+                sx={{
+                  ml: 1,
+                  '.MuiOutlinedInput-root': {
+                    height: '48px',
+                  },
+                  '.MuiInputLabel-root': {
+                    paddingTop: '2px',
+                  },
+                }}
               />
             )}
           />
         </LocalizationProvider>
       </TableSearchBar>
       <PaymentsReceiptsTable
-        filterInput={searchInput}
-        filterYear={selectedYear}
+        filterDebtorOrIuv={debtorOrIuvInput}
+        filterYear={yearInput}
         searchTrigger={searchTrigger}
       />
     </SideMenuLayout>

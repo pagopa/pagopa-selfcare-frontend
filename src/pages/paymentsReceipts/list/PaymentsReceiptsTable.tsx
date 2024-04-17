@@ -3,30 +3,43 @@ import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
-import { DateFromString } from '@pagopa/ts-commons/lib/dates';
+import { useState, useEffect, ChangeEvent } from 'react';
+import { Pagination } from '@mui/material';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_PAYMENTS_RECEIPTS } from '../../../utils/constants';
 import TableEmptyState from '../../../components/Table/TableEmptyState';
-import { ReceiptModelResponse } from '../../../api/generated/portal/ReceiptModelResponse';
 import {
   getPaymentReceiptDetail,
   getPaymentsReceipts,
 } from '../../../services/paymentsReceiptsService';
-import { ReceiptsInfo } from '../../../api/generated/portal/ReceiptsInfo';
+import { PaymentsResult } from '../../../api/generated/portal/PaymentsResult';
 import { buildColumnDefs } from './PaymentsReceiptsTableColumns';
 
 const rowHeight = 64;
 const headerHeight = 56;
 
-export default function PaymentsReceiptsTable({ filterInput, filterYear, searchTrigger }: { filterInput: string; filterYear: number | null; searchTrigger: boolean }) {
+const emptyList: PaymentsResult = {
+  results: [],
+  totalPages: 0,
+};
+
+export default function PaymentsReceiptsTable({
+  filterDebtorOrIuv,
+  filterYear,
+  searchTrigger,
+}: {
+  filterDebtorOrIuv: string;
+  filterYear: number | null;
+  searchTrigger: boolean;
+}) {
   const { t } = useTranslation();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_PAYMENTS_RECEIPTS);
-  const [receiptsList, setReceiptsList] = useState<Array<ReceiptModelResponse>>([]);
+  const [receiptsList, setReceiptsList] = useState<PaymentsResult>(emptyList);
   const addError = useErrorDispatcher();
+  const [page, setPage] = useState(0);
 
   function downloadReceiptXML(iuv: string) {
     getPaymentReceiptDetail(selectedParty?.fiscalCode ?? '', iuv)
@@ -54,14 +67,21 @@ export default function PaymentsReceiptsTable({ filterInput, filterYear, searchT
       .finally(() => setLoading(false));
   }
 
-  const getReceipts = () => {
+  const getReceipts = (newPage?: number) => {
     setLoading(true);
-    getPaymentsReceipts(selectedParty?.fiscalCode ?? '', filterInput ?? '', filterYear)
-      .then((res: ReceiptsInfo) => {
-        if (res?.receipts_list && res.receipts_list.length > 0) {
-          setReceiptsList([...res.receipts_list]);
+    const toPage = newPage ?? 0;
+    getPaymentsReceipts({
+      organizationTaxCode: selectedParty?.fiscalCode ?? '',
+      debtorTaxCodeOrIuv: filterDebtorOrIuv ?? '',
+      filterYear,
+      page: toPage,
+      pageLimit: 10,
+    })
+      .then((res: PaymentsResult) => {
+        if (res?.results && res.results.length > 0) {
+          setReceiptsList(res);
         } else {
-          setReceiptsList([]);
+          setReceiptsList(emptyList);
         }
       })
       .catch((reason) => {
@@ -76,7 +96,10 @@ export default function PaymentsReceiptsTable({ filterInput, filterYear, searchT
           displayableDescription: t('paymentsReceiptsPage.table.errorMessageReceiptList'),
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setPage(toPage);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -95,7 +118,7 @@ export default function PaymentsReceiptsTable({ filterInput, filterYear, searchT
       }}
       justifyContent="start"
     >
-      {!receiptsList || receiptsList.length === 0 ? (
+      {!receiptsList?.results || receiptsList.results.length === 0 ? (
         <TableEmptyState componentName="paymentsReceiptsPage" />
       ) : (
         <div data-testid="data-grid">
@@ -104,17 +127,31 @@ export default function PaymentsReceiptsTable({ filterInput, filterYear, searchT
             disableColumnSelector
             disableDensitySelector
             disableSelectionOnClick
-            hideFooterPagination={true}
+            onPageChange={(newPage) => getReceipts(newPage - 1)}
             autoHeight={true}
             className="CustomDataGrid"
+            components={{
+              Pagination: () => (
+                <>
+                  <Pagination
+                    color="primary"
+                    count={receiptsList?.totalPages ?? 1}
+                    page={page + 1}
+                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                      getReceipts(value - 1)
+                    }
+                  />
+                </>
+              ),
+            }}
             columnBuffer={5}
             columns={columns}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}
-            rowCount={receiptsList.length}
+            rowCount={receiptsList?.results?.length}
             getRowId={(el) => el.iuv}
             rowHeight={rowHeight}
-            rows={receiptsList ?? []}
+            rows={receiptsList.results ?? []}
           />
         </div>
       )}

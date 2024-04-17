@@ -40,7 +40,7 @@ const DelegationsPage = () => {
           variantTitle="h4"
           variantSubTitle="body1"
         />
-        <Button
+        {/* <Button
           variant="outlined"
           onClick={downloadList}
           startIcon={<DownloadIcon />}
@@ -57,7 +57,7 @@ const DelegationsPage = () => {
           }}
         >
           {t('delegationsPage.downloadButton')}
-        </Button>
+        </Button> */}
       </Stack>
       {alertMessage && (
         <Alert

@@ -1067,14 +1067,14 @@ export const BackofficeApi = {
     let filterBody: PaymentsReceiptsListRequestBody = {
       'organization-tax-code': organizationTaxCode,
       limit: pageLimit ?? 50,
-      page
+      page,
     };
     if (debtorTaxCodeOrIuv) {
-      filterBody.debtorOrIuv = debtorTaxCodeOrIuv;
+      filterBody = { ...filterBody, debtorOrIuv: debtorTaxCodeOrIuv };
     }
     if (filterYear) {
-      filterBody.fromDate = `${filterYear}-01-01`;
-      filterBody.toDate = `${filterYear}-12-31`;
+      filterBody = { ...filterBody, fromDate: `${filterYear}-01-01` };
+      filterBody = { ...filterBody, toDate: `${filterYear}-12-31` };
     }
     const result = await backofficeClient.getPaymentsReceipts(filterBody);
     return extractResponse(result, 200, onRedirectToLogin);

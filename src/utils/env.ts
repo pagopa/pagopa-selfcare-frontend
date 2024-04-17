@@ -32,7 +32,6 @@ export const ENV = {
         TOKEN: getConfig('REACT_APP_API_MOCK_TOKEN', {required: true, type: Type.boolean}),
         BACKOFFICE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type: Type.boolean}),
         SELFCARE: getConfig('REACT_APP_API_MOCK_SELFCARE', {required: true, type: Type.boolean}),
-        FORWARDER_TEST: getConfig('REACT_APP_API_MOCK_FORWARDER_TEST', {required: true, type: Type.boolean}),
     },
 
     API_TIMEOUT_MS: {

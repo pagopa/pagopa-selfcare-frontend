@@ -769,22 +769,23 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                 <Grid container item xs={2}>
                                     {
                                         validatingRt ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                        (<ButtonNaked
-                                          size="large"
-                                          component="button"
-                                          disabled={!isTesting ||
-                                           (testRtResult !== undefined &&
-                                            testRtResult.testResult === TestResultEnum.SUCCESS) ||
-                                           formik.values.targetConcat === undefined ||
-                                          formik.values.targetConcat === ''}
-                                          onClick={() => validateRtEndpoint()}
-                                          sx={{ color: 'primary.main'}}
-                                          weight="default"
-                                          data-testid="test-rt-endpoint-test"
-                                          endIcon={<NorthEastIcon />}
-                                        >
-                                          {t('addEditStationPage.addForm.testStation')}
-                                        </ButtonNaked>)
+                                        !isTesting ?
+                                            (<ButtonNaked
+                                              size="large"
+                                              component="button"
+                                              disabled={
+                                               (testRtResult !== undefined &&
+                                                testRtResult.testResult === TestResultEnum.SUCCESS) ||
+                                               formik.values.targetConcat === undefined ||
+                                              formik.values.targetConcat === ''}
+                                              onClick={() => validateRtEndpoint()}
+                                              sx={{ color: 'primary.main'}}
+                                              weight="default"
+                                              data-testid="test-rt-endpoint-test"
+                                              endIcon={<NorthEastIcon />}
+                                            >
+                                              {t('addEditStationPage.addForm.testStation')}
+                                            </ButtonNaked>) : ""
                                     }
                                 </Grid>
                             </Grid>
@@ -821,10 +822,12 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                 <Grid container item xs={2}>
                                     {
                                         validatingRedirect ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
+                                        !isTesting ?
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
-                                          disabled={!isTesting ||
+                                          hidden={!isTesting}
+                                          disabled={
                                             (testRedirectResult !== undefined &&
                                             testRedirectResult.testResult === TestResultEnum.SUCCESS) ||
                                             formik.values.redirectConcat === undefined ||
@@ -836,7 +839,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                           endIcon={<NorthEastIcon />}
                                         >
                                           {t('addEditStationPage.addForm.testStation')}
-                                        </ButtonNaked>)
+                                        </ButtonNaked>) : ""
                                     }
                                 </Grid>
                             </Grid>
@@ -880,10 +883,11 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                             <Grid container item xs={2}>
                                 {
                                     validatingPof ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
+                                    !isTesting ?
                                     (<ButtonNaked
                                       size="large"
                                       component="button"
-                                      disabled={!isTesting ||
+                                      disabled={
                                         (testPofResult !== undefined &&
                                         testPofResult.testResult === TestResultEnum.SUCCESS) ||
                                         formik.values.targetPofConcat === undefined ||
@@ -895,7 +899,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                       endIcon={<NorthEastIcon />}
                                     >
                                       {t('addEditStationPage.addForm.testStation')}
-                                    </ButtonNaked>)
+                                    </ButtonNaked>) : ""
                                 }
                             </Grid>
 

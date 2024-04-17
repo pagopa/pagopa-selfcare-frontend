@@ -96,7 +96,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     const [testPofResult, setTestPofResult] = useState<TestStationResource>();
     const [validatingPof, setValidatingPof] = useState<boolean>(false);
 
-    const isTesting = true;
+    const isTesting = useFlagValue("test-stations");
 
     useEffect(() => {
         if (formAction !== StationFormAction.Edit) {
@@ -769,7 +769,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                 <Grid container item xs={2}>
                                     {
                                         validatingRt ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                        !isTesting ?
+                                        isTesting ?
                                             (<ButtonNaked
                                               size="large"
                                               component="button"
@@ -822,7 +822,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                 <Grid container item xs={2}>
                                     {
                                         validatingRedirect ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                        !isTesting ?
+                                        isTesting ?
                                         (<ButtonNaked
                                           size="large"
                                           component="button"
@@ -883,7 +883,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                             <Grid container item xs={2}>
                                 {
                                     validatingPof ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
-                                    !isTesting ?
+                                    isTesting ?
                                     (<ButtonNaked
                                       size="large"
                                       component="button"

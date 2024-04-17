@@ -450,7 +450,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.targetConcat
             );
             testStation(
-                protocolSplit+"://"+hostSplit,
+                hostSplit,
                 portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
                 pathSplit
             ).then((item : TestStationResource) => {
@@ -476,8 +476,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.redirectConcat
             );
             testStation(
-                protocolSplit+"://"+hostSplit,
-                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                hostSplit,
+                portSplit > 0 ? portSplit : 443,
                 pathSplit
             ).then((item : TestStationResource) => {
                 setTestRedirectResult(item);
@@ -502,8 +502,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.targetPofConcat
             );
             testStation(
-                protocolSplit+"://"+hostSplit,
-                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                hostSplit,
+                portSplit > 0 ? portSplit : 443,
                 pathSplit
             ).then((item : TestStationResource) => {
                 setTestPofResult(item);

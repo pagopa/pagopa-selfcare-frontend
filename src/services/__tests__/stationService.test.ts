@@ -22,7 +22,7 @@ describe('StationService test', () => {
   const OLD_ENV = process.env;
   beforeEach(() => {
     jest.resetModules();
-    process.env = { ...OLD_ENV, REACT_APP_API_MOCK_FORWARDER_TEST: 'false' };
+    process.env = { ...OLD_ENV, REACT_APP_API_MOCK_BACKOFFICE: 'false' };
   });
 
   afterAll(() => {

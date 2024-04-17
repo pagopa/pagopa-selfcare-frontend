@@ -1104,7 +1104,7 @@
   "paymentsReceiptsPage": {
     "title": "Pagamenti Canone Unico Patrimoniale",
     "search": {
-      "placeholder": "Cerca per codice fiscale del debitore",
+      "placeholder": "Cerca per codice fiscale del debitore o IUV",
       "yearFilter": "Anno"
     },
     "table": {

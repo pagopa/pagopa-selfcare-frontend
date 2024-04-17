@@ -27,7 +27,7 @@ describe('<TableSearchBar />', () => {
             <ThemeProvider theme={theme}>
               <TableSearchBar
                 setSearchInput={spyOnSetSearchInput}
-                setExtraTrigger={spyOnExtraTrigger}
+                handleExtraTrigger={spyOnExtraTrigger}
               />
             </ThemeProvider>
           </Route>

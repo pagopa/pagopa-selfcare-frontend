@@ -476,7 +476,7 @@
         "select": "Seleziona"
       },
       "testFailed": "Test fallito",
-      "testFailedCertificate": "Test fallito: Mancata autorizzazione, verificare certificati"
+      "testFailedCertificate": "Test fallito causa errore con il certificato"
     },
     "confirmModal": {
       "title": "Invio per la revisione",

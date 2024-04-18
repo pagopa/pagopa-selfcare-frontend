@@ -46,6 +46,12 @@ describe('BundleService test mocked', () => {
     const response = await getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode');
     expect(response).toMatchObject(mockedCommissionBundlePspList);
   });
+  test('Test acceptBundleSubscriptionRequest', async () => {
+    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+  });
+  test('Test rejectPublicBundleSubscription', async () => {
+    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+  });
 });
 
 describe('BundleService test client', () => {
@@ -96,7 +102,7 @@ describe('BundleService test client', () => {
   });
   test('Test acceptBundleSubscriptionRequest', async () => {
     const spyOn = jest.spyOn(BackofficeApi, "acceptBundleSubscriptionRequest").mockReturnValue(new Promise((resolve) => resolve()));
-    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'cisTaxCode')).resolves.not.toThrow();
+    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test rejectPublicBundleSubscription', async () => {

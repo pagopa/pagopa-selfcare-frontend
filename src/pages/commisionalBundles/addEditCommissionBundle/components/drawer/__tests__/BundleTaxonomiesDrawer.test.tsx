@@ -9,11 +9,11 @@ import {
 } from '../../../../../../services/__mocks__/taxonomyService';
 
 const spyOnGetTaxonomiesGroup = jest.spyOn(
-  require('../../../../services/taxonomyService.ts'),
+  require('../../../../../../services/taxonomyService.ts'),
   'getTaxonomyGroups'
 );
 const spyOnGetTaxonomiesListByGroup = jest.spyOn(
-  require('../../../../services/taxonomyService.ts'),
+  require('../../../../../../services/taxonomyService.ts'),
   'getTaxonomies'
 );
 const spyOnAddAction = jest.fn();

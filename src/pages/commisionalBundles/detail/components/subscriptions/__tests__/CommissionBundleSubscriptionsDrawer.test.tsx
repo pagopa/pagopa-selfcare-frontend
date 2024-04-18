@@ -3,6 +3,7 @@ import React from 'react';
 import { mockedCommissionBundlePspDetailGlobal } from '../../../../../../services/__mocks__/bundleService';
 import { CommissionBundleSubscriptionsDrawer } from '../CommissionBundleSubscriptionsDrawer';
 import { SubscriptionStateType } from '../CommissionBundleSubscriptionsTable';
+import { createBroker_1Decoder } from '../../../../../../api/generated/portal/requestTypes';
 
 const spySetModal = jest.fn();
 // TODO USE MOCKED RESPONSE OBJ FROM SUBSCRIPTION API TO MOCK DRAWER VALURE
@@ -12,8 +13,8 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
     render(
       <CommissionBundleSubscriptionsDrawer
         t={jest.fn()}
-        setDrawerValue={jest.fn()}
-        drawerValue={{ci_tax_code: "TAX CODE"}}
+        setSelectedCreditorInsitutition={jest.fn()}
+        selectedCreditorInsitutition={{ci_tax_code: "TAX CODE"}}
         setOpenMenageSubscriptionModal={spySetModal}
         stateType={SubscriptionStateType.Waiting}
       />
@@ -34,8 +35,8 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
     render(
       <CommissionBundleSubscriptionsDrawer
         t={jest.fn()}
-        setDrawerValue={jest.fn()}
-        drawerValue={{ci_tax_code: "TAX CODE"}}
+        setSelectedCreditorInsitutition={jest.fn()}
+        selectedCreditorInsitutition={{ci_tax_code: "TAX CODE"}}
         setOpenMenageSubscriptionModal={spySetModal}
         stateType={SubscriptionStateType.Accepted}
       />

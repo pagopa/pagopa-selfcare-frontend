@@ -543,31 +543,43 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     }, [formik.values.targetConcat]);
 
     useEffect(() => {
-        if (testRtResult && testRtResult.testResult === TestResultEnum.ERROR) {
+        if (testRtResult &&
+           (testRtResult.testResult === TestResultEnum.ERROR ||
+            testRtResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                targetConcat: t("addEditStationPage.addFormValidation.testFailed")
+                                targetConcat: testRtResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
                             });
         }
     }, [testRtResult]);
 
     useEffect(() => {
-        if (testRedirectResult && testRedirectResult.testResult === TestResultEnum.ERROR) {
+        if (testRedirectResult &&
+           (testRedirectResult.testResult === TestResultEnum.ERROR ||
+            testRedirectResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                redirectConcat: t("addEditStationPage.addFormValidation.testFailed")
+                                redirectConcat: testRedirectResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
                             });
         }
     }, [testRedirectResult]);
 
     useEffect(() => {
-        if (testPofResult && testPofResult.testResult === TestResultEnum.ERROR) {
+        if (testPofResult &&
+            (testPofResult.testResult === TestResultEnum.ERROR ||
+             testPofResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                targetPofConcat: t("addEditStationPage.addFormValidation.testFailed")
+                                targetPofConcat: testPofResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
                             });
         }
     }, [testPofResult]);

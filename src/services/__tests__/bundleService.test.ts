@@ -8,12 +8,14 @@ import {
   mockedTouchpoints,
 } from '../__mocks__/bundleService';
 import {
+  acceptBundleSubscriptionRequest,
   createBundle,
   deletePSPBundle,
   getBundleDetailByPSP,
   getBundleListByPSP,
   getCisBundles,
   getTouchpoints,
+  rejectPublicBundleSubscription,
   updatePSPBundle,
 } from '../bundleService';
 
@@ -90,6 +92,16 @@ describe('BundleService test client', () => {
   test('Test getCisBundles', async () => {
     const spyOn = jest.spyOn(BackofficeApi, "getCisBundles").mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode')).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test acceptBundleSubscriptionRequest', async () => {
+    const spyOn = jest.spyOn(BackofficeApi, "acceptBundleSubscriptionRequest").mockReturnValue(new Promise((resolve) => resolve()));
+    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'cisTaxCode')).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test rejectPublicBundleSubscription', async () => {
+    const spyOn = jest.spyOn(BackofficeApi, "rejectPublicBundleSubscription").mockReturnValue(new Promise((resolve) => resolve()));
+    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
 });

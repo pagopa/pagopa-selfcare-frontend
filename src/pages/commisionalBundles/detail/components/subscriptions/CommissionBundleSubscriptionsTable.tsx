@@ -13,7 +13,10 @@ import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
 import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
-import { acceptBundleSubscriptionRequest } from '../../../../../services/bundleService';
+import {
+  acceptBundleSubscriptionRequest,
+  rejectPublicBundleSubscription,
+} from '../../../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
 import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
 
@@ -46,7 +49,7 @@ const CommissionBundleSubscriptionsTable = () => {
   );
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
-  const [selectedCreditorInsitutition, setSelectedCreditorInsitutition] = useState<any>({}); // TODO TYPE
+  const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] = useState<any>({}); // TODO TYPE
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
@@ -55,7 +58,11 @@ const CommissionBundleSubscriptionsTable = () => {
 
   const [subscriptionList, setSubscriptionList] = useState<any>(emptySubriptionList); // TODO TYPE & EMPTY STATE
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, setSelectedCreditorInsitutition);
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    selectedState,
+    setSelectedSubscriptionRequest
+  );
 
   const getSubscriptionList = (newPage?: number, taxCodeFilter?: string) => {
     setLoading(true);
@@ -98,13 +105,16 @@ const CommissionBundleSubscriptionsTable = () => {
     let errorDescription = 'general.errorDescription';
     if (selectedParty?.fiscalCode) {
       if (actionType === 'reject') {
-        promise = Promise.resolve('reject'); // TODO IMPLEMENT REJECT API
+        promise = rejectPublicBundleSubscription(
+          selectedParty.fiscalCode,
+          selectedSubscriptionRequest.idBundleRequest
+        );
         actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
         errorDescription = `${componentPath}.error.errorReject`;
       } else if (actionType === 'accept') {
         promise = acceptBundleSubscriptionRequest(
           selectedParty.fiscalCode,
-          selectedCreditorInsitutition.ci_tax_code
+          selectedSubscriptionRequest.ci_tax_code
         );
         actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
         errorDescription = `${componentPath}.error.errorAccept`;
@@ -220,8 +230,8 @@ const CommissionBundleSubscriptionsTable = () => {
       </Box>
       <CommissionBundleSubscriptionsDrawer
         t={t}
-        setSelectedCreditorInsitutition={setSelectedCreditorInsitutition}
-        selectedCreditorInsitutition={selectedCreditorInsitutition}
+        setSelectedSubscriptionRequest={setSelectedSubscriptionRequest}
+        selectedSubscriptionRequest={selectedSubscriptionRequest}
         setOpenMenageSubscriptionModal={setOpenMenageSubscriptionModal}
         stateType={selectedState}
       />

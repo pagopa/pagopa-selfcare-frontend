@@ -103,3 +103,14 @@ export const acceptBundleSubscriptionRequest = (
     return BackofficeApi.acceptBundleSubscriptionRequest(pspTaxCode, ciTaxCode);
   }
 };
+
+export const rejectPublicBundleSubscription = (
+  pspTaxCode: string,
+  bundleRequestId: string
+): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.rejectPublicBundleSubscription(pspTaxCode, bundleRequestId);
+  }
+};

@@ -13,8 +13,8 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
     render(
       <CommissionBundleSubscriptionsDrawer
         t={jest.fn()}
-        setSelectedCreditorInsitutition={jest.fn()}
-        selectedCreditorInsitutition={{ci_tax_code: "TAX CODE"}}
+        setSelectedSubscriptionRequest={jest.fn()}
+        selectedSubscriptionRequest={{ci_tax_code: "TAX CODE"}}
         setOpenMenageSubscriptionModal={spySetModal}
         stateType={SubscriptionStateType.Waiting}
       />
@@ -35,8 +35,8 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
     render(
       <CommissionBundleSubscriptionsDrawer
         t={jest.fn()}
-        setSelectedCreditorInsitutition={jest.fn()}
-        selectedCreditorInsitutition={{ci_tax_code: "TAX CODE"}}
+        setSelectedSubscriptionRequest={jest.fn()}
+        selectedSubscriptionRequest={{ci_tax_code: "TAX CODE"}}
         setOpenMenageSubscriptionModal={spySetModal}
         stateType={SubscriptionStateType.Accepted}
       />

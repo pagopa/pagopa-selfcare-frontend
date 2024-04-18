@@ -114,7 +114,7 @@ const CommissionBundleSubscriptionsTable = () => {
       } else if (actionType === 'accept') {
         promise = acceptBundleSubscriptionRequest(
           selectedParty.fiscalCode,
-          selectedSubscriptionRequest.ci_tax_code
+          selectedSubscriptionRequest.idBundleRequest
         );
         actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
         errorDescription = `${componentPath}.error.errorAccept`;

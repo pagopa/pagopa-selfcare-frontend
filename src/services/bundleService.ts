@@ -95,12 +95,12 @@ export const getCisBundles = (
 
 export const acceptBundleSubscriptionRequest = (
   pspTaxCode: string,
-  ciTaxCode: string
+  idBundleRequest: string
 ): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.acceptBundleSubscriptionRequest(pspTaxCode, ciTaxCode);
+    return BackofficeApi.acceptBundleSubscriptionRequest(pspTaxCode, idBundleRequest);
   }
 };
 

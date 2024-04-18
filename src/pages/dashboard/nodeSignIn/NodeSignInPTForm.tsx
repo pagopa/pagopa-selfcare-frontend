@@ -61,10 +61,10 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
       ])
         .then(([stations, channels]) => {
           setHasCIStations(
-            stations?.pageInfo?.total_items !== undefined && stations?.pageInfo?.total_items > 0
+            stations?.pageInfo?.items_found !== undefined && stations.pageInfo.items_found > 0
           );
           setHasPSPChannels(
-            channels?.page_info?.total_items !== undefined && channels?.page_info?.total_items > 0
+            channels?.page_info?.items_found !== undefined && channels.page_info.items_found > 0
           );
         })
         .catch((reason) => {

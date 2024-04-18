@@ -475,7 +475,8 @@
         "timeoutC": "Timeout C",
         "select": "Seleziona"
       },
-      "testFailed": "Test fallito"
+      "testFailed": "Test fallito",
+      "testFailedCertificate": "Test fallito: Mancata autorizzazione, verificare certificati"
     },
     "confirmModal": {
       "title": "Invio per la revisione",

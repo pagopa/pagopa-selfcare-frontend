@@ -7,8 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import TableSearchBar from '../TableSearchBar';
 
-const spyOnSetSearchInput = jest.fn();
-const spyOnExtraTrigger = jest.fn();
+const spyOnSetSearchTrigger = jest.fn();
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -26,8 +25,7 @@ describe('<TableSearchBar />', () => {
           <Route path="/delegations-list">
             <ThemeProvider theme={theme}>
               <TableSearchBar
-                setSearchInput={spyOnSetSearchInput}
-                handleExtraTrigger={spyOnExtraTrigger}
+                handleSearchTrigger={spyOnSetSearchTrigger}
               />
             </ThemeProvider>
           </Route>
@@ -44,8 +42,7 @@ describe('<TableSearchBar />', () => {
     const searchButton = screen.getByTestId("button-search");
     fireEvent.click(searchButton);
 
-    expect(spyOnSetSearchInput).toBeCalledWith(filterInput);
-    expect(spyOnExtraTrigger).toBeCalled();
+    expect(spyOnSetSearchTrigger).toBeCalledWith(filterInput);
   });
 
   test('render component TableSearchBar with children', () => {
@@ -55,7 +52,7 @@ describe('<TableSearchBar />', () => {
           <Route path="/delegations-list">
             <ThemeProvider theme={theme}>
               <TableSearchBar
-                setSearchInput={spyOnSetSearchInput}
+                handleSearchTrigger={spyOnSetSearchTrigger}
               >
                 <div data-testid="children-test"></div>
               </TableSearchBar>

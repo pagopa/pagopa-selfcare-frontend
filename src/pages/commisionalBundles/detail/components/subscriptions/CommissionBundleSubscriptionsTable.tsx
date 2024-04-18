@@ -44,9 +44,9 @@ const CommissionBundleSubscriptionsTable = () => {
     SubscriptionStateType.Waiting
   );
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
-  const [filterCiTaxCode, setFilterCiTaxCode] = useState<string>('');
-  const [page, setPage] = useState<number>(0);
+  const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
 
+  const [page, setPage] = useState<number>(0);
   const [drawerValue, setDrawerValue] = useState<any>({}); // TODO TYPE
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
     string | undefined
@@ -56,9 +56,12 @@ const CommissionBundleSubscriptionsTable = () => {
 
   const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, setDrawerValue);
 
-  const getSubscriptionList = (newPage?: number) => {
+  const getSubscriptionList = (newPage?: number, taxCodeFilter?: string) => {
     setLoading(true);
-    setSelectedState(filterState);
+    if (taxCodeFilter) {
+      setSelectedState(filterState);
+      setSelectedTaxCode(taxCodeFilter);
+    }
 
     // TODO IMPLEMENT API
     const getSubRes = Promise.resolve(emptySubriptionList);
@@ -121,8 +124,7 @@ const CommissionBundleSubscriptionsTable = () => {
         })
       )
       .finally(() => {
-        setLoading(false);
-        getSubscriptionList();
+        getSubscriptionList(0);
       });
   };
 
@@ -138,9 +140,8 @@ const CommissionBundleSubscriptionsTable = () => {
         <Typography variant="h5">{t(`${componentPath}.title`)}</Typography>
       </Box>
       <TableSearchBar
-        setSearchInput={setFilterCiTaxCode}
         componentName={componentPath}
-        setExtraTrigger={() => getSubscriptionList(0)}
+        handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter)}
       >
         <FormControl sx={{ ml: 1, minWidth: '200px' }}>
           <InputLabel id="state-select-label">{t(`${componentPath}.state`)}</InputLabel>

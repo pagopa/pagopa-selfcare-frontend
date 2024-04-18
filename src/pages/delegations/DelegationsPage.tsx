@@ -81,7 +81,7 @@ const DelegationsPage = () => {
           </Box>
         </Alert>
       )}
-      <TableSearchBar setSearchInput={setSearchInput} componentName='delegationsPage'/>
+      <TableSearchBar handleSearchTrigger={setSearchInput} componentName='delegationsPage'/>
       <DelegationsTable filterByName={searchInput} />
     </SideMenuLayout>
   );

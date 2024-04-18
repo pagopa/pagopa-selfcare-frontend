@@ -5,17 +5,15 @@ import { GridSearchIcon } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 
 type Props = {
-  setSearchInput: (name: string) => void;
+  handleSearchTrigger: (name: string) => void;
   componentName?: string;
   children?: React.ReactNode;
-  handleExtraTrigger?: (any?: any) => void;
 };
 
 export default function TableSearchBar({
-  setSearchInput,
+  handleSearchTrigger,
   componentName,
   children,
-  handleExtraTrigger,
 }: Readonly<Props>) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
@@ -43,10 +41,7 @@ export default function TableSearchBar({
       {children}
       <Button
         onClick={() => {
-          setSearchInput(internalSearchValue);
-          if (handleExtraTrigger) {
-            handleExtraTrigger();
-          }
+          handleSearchTrigger(internalSearchValue);
         }}
         variant="contained"
         data-testid="button-search"

@@ -84,7 +84,7 @@ const DelegationDetailPage = () => {
       </Grid>
 
       <TitleBox title={t('delegationDetailPage.tableTitle')} variantTitle="h4" mtTitle={5} />
-      <TableSearchBar setSearchInput={setSearchInput} componentName="delegationDetailPage" />
+      <TableSearchBar handleSearchTrigger={setSearchInput} componentName="delegationDetailPage" />
       <DelegationStationsTable
         ciTaxCode={delegationDetail.institution_tax_code ?? ''}
         filterByStationCode={searchInput}

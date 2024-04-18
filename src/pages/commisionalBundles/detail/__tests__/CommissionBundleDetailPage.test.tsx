@@ -61,6 +61,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
     });
 
     const deleteButton = screen.getByTestId('delete-button');
@@ -100,6 +101,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
     });
   });
 
@@ -115,6 +117,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
     });
   });
 });
@@ -138,6 +141,8 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
     });
   });
 
@@ -153,6 +158,8 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
     });
   });
 
@@ -168,6 +175,8 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
     });
   });
 });

@@ -10,7 +10,7 @@ import {
   getCommissionBundlePsp,
   getTouchpoints as getTouchpointsMock,
   deletePSPBundle as deletePSPBundleMock,
-  updatePSPBundle as updatePSPBundleMock
+  updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -48,7 +48,10 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
   }
 };
 
-export const getBundleDetailByPSP = (pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
+export const getBundleDetailByPSP = (
+  pspTaxCode: string,
+  bundleId: string
+): Promise<BundleResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleDetails();
   } else {
@@ -64,7 +67,11 @@ export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<v
   }
 };
 
-export const updatePSPBundle = (pspTaxCode: string, bundleId: string, bundle: BundleRequest): Promise<void> => {
+export const updatePSPBundle = (
+  pspTaxCode: string,
+  bundleId: string,
+  bundle: BundleRequest
+): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updatePSPBundleMock();
   } else {
@@ -83,5 +90,16 @@ export const getCisBundles = (
     return getCommissionBundlePsp(bundleName);
   } else {
     return BackofficeApi.getCisBundles(bundleType, pageLimit, bundleName, page, cisTaxCode);
+  }
+};
+
+export const acceptBundleSubscriptionRequest = (
+  pspTaxCode: string,
+  ciTaxCode: string
+): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.acceptBundleSubscriptionRequest(pspTaxCode, ciTaxCode);
   }
 };

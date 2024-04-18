@@ -13,6 +13,7 @@ import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
 import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
+import { acceptBundleSubscriptionRequest } from '../../../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
 import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
 
@@ -45,16 +46,16 @@ const CommissionBundleSubscriptionsTable = () => {
   );
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
+  const [selectedCreditorInsitutition, setSelectedCreditorInsitutition] = useState<any>({}); // TODO TYPE
 
   const [page, setPage] = useState<number>(0);
-  const [drawerValue, setDrawerValue] = useState<any>({}); // TODO TYPE
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
     string | undefined
   >(undefined);
 
   const [subscriptionList, setSubscriptionList] = useState<any>(emptySubriptionList); // TODO TYPE & EMPTY STATE
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, setDrawerValue);
+  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, setSelectedCreditorInsitutition);
 
   const getSubscriptionList = (newPage?: number, taxCodeFilter?: string) => {
     setLoading(true);
@@ -92,21 +93,28 @@ const CommissionBundleSubscriptionsTable = () => {
     const actionType = openMenageSubscriptionModal;
     setOpenMenageSubscriptionModal(undefined);
 
-    let promise: Promise<string> = Promise.reject(new Error('Wrong action'));
+    let promise: Promise<string | void> = Promise.reject(new Error('Wrong action'));
     let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
     let errorDescription = 'general.errorDescription';
-    if (actionType === 'reject') {
-      promise = Promise.resolve('reject'); // TODO IMPLEMENT REJECT API
-      actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
-      errorDescription = `${componentPath}.error.errorReject`;
-    } else if (actionType === 'accept') {
-      promise = Promise.resolve('accept'); // TODO IMPLEMENT ACCEPT API
-      actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
-      errorDescription = `${componentPath}.error.errorAccept`;
-    } else if (actionType === 'delete') {
-      promise = Promise.resolve('delete'); // TODO IMPLEMENT DELETE API
-      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
-      errorDescription = `${componentPath}.error.errorDelete`;
+    if (selectedParty?.fiscalCode) {
+      if (actionType === 'reject') {
+        promise = Promise.resolve('reject'); // TODO IMPLEMENT REJECT API
+        actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
+        errorDescription = `${componentPath}.error.errorReject`;
+      } else if (actionType === 'accept') {
+        promise = acceptBundleSubscriptionRequest(
+          selectedParty.fiscalCode,
+          selectedCreditorInsitutition.ci_tax_code
+        );
+        actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
+        errorDescription = `${componentPath}.error.errorAccept`;
+      } else if (actionType === 'delete') {
+        promise = Promise.resolve('delete'); // TODO IMPLEMENT DELETE API
+        actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
+        errorDescription = `${componentPath}.error.errorDelete`;
+      }
+    } else {
+      promise = Promise.reject(new Error('No psp tax code'));
     }
 
     setLoading(true);
@@ -212,8 +220,8 @@ const CommissionBundleSubscriptionsTable = () => {
       </Box>
       <CommissionBundleSubscriptionsDrawer
         t={t}
-        setDrawerValue={setDrawerValue}
-        drawerValue={drawerValue}
+        setSelectedCreditorInsitutition={setSelectedCreditorInsitutition}
+        selectedCreditorInsitutition={selectedCreditorInsitutition}
         setOpenMenageSubscriptionModal={setOpenMenageSubscriptionModal}
         stateType={selectedState}
       />

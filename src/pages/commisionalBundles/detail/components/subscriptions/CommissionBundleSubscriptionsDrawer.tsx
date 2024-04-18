@@ -9,21 +9,21 @@ import { getStatusChip } from './CommissionBundleSubscriptionsColumns';
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.drawer';
 export const CommissionBundleSubscriptionsDrawer = ({
   t,
-  setDrawerValue,
-  drawerValue,
+  setSelectedCreditorInsitutition,
+  selectedCreditorInsitutition,
   setOpenMenageSubscriptionModal,
   stateType,
 }: {
   t: TFunction<'translation', undefined>;
-  setDrawerValue: (openDrawer: any) => void; // TODO TYPE
-  drawerValue: any; // TODO TYPE
+  setSelectedCreditorInsitutition: (openDrawer: any) => void; // TODO TYPE
+  selectedCreditorInsitutition: any; // TODO TYPE
   setOpenMenageSubscriptionModal: (openModal: string) => void;
   stateType: SubscriptionStateType;
 }) => (
   <PaddedDrawer
-    openDrawer={drawerValue?.ci_tax_code !== undefined}
-    setOpenDrawer={setDrawerValue}
-    drawerButtons={getButtons(t, stateType, setOpenMenageSubscriptionModal)}
+    openDrawer={selectedCreditorInsitutition?.ci_tax_code !== undefined}
+    setOpenDrawer={() => setSelectedCreditorInsitutition({})}
+    drawerButtons={getButtons(t, stateType, setOpenMenageSubscriptionModal)} 
   >
     <TitleBox title={t(`${componentPath}.title`)} variantTitle="h5" />
 
@@ -32,7 +32,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
         {t(`${componentPath}.businessName`)}
       </Typography>
       <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-        {drawerValue?.business_name ?? '-'}
+        {selectedCreditorInsitutition?.business_name ?? '-'}
       </Typography>
     </Box>
     <Divider />
@@ -41,7 +41,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
         {t(`${componentPath}.taxCode`)}
       </Typography>
       <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-        {drawerValue?.ci_tax_code ?? '-'}
+        {selectedCreditorInsitutition?.ci_tax_code ?? '-'}
       </Typography>
     </Box>
     <Divider />

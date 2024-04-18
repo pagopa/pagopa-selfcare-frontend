@@ -1106,4 +1106,9 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  acceptBundleSubscriptionRequest: async(pspTaxCode: string, ciTaxCode: string): Promise<void> => {
+    const result = await backofficeClient.acceptPublicBundleSubscriptions({"psp-tax-code": pspTaxCode, body: [ciTaxCode]});
+    return extractResponse(result, 200, onRedirectToLogin);
+  }
 };

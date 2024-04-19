@@ -19,6 +19,7 @@ import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
 import {TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
+import { TestResultEnum, TestStationResource } from '../../api/generated/portal/TestStationResource';
 
 // @ts-ignore
 const mockedStation: StationDetailResource = {
@@ -594,6 +595,17 @@ export const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = 
   unused: createFormattedArray(),
 };
 
+export const stationTestErrorMocked: TestStationResource = {
+  message: "ERROR",
+  testResult: TestResultEnum.ERROR
+};
+
+export const stationTestMocked: TestStationResource = {
+  message: "OK",
+  testResult: TestResultEnum.SUCCESS
+};
+
+
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
@@ -660,3 +672,6 @@ export const getCreditorInstitutionSegregationcodes = (
   _ecCode: string
 ): Promise<CreditorInstitutionAssociatedCodeList> =>
   new Promise((resolve) => resolve(mockedSegregationCodeList));
+
+export const testStation = (hostUrl: string, hostPort: number, hostPath: string) : Promise<TestStationResource> =>
+    new Promise((resolve) => resolve(hostPath === "/error" ? stationTestErrorMocked : stationTestMocked));

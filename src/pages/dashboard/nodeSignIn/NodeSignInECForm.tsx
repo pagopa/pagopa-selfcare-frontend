@@ -56,7 +56,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
     getStationsMerged(0, brokerCode, undefined, 1)
       .then((stations) => {
         setHasCIStations(
-          stations?.pageInfo?.total_items !== undefined && stations?.pageInfo?.total_items > 0
+          stations?.pageInfo?.items_found !== undefined && stations.pageInfo.items_found > 0
         );
       })
       .catch((reason) => {

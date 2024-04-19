@@ -29,7 +29,6 @@ import {
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
 import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
 
-
 const rowHeight = 64;
 const headerHeight = 56;
 const pageLimit = 5;
@@ -72,11 +71,11 @@ const CommissionBundleSubscriptionsTable = () => {
     getPublicBundleCISubscriptionsDetail({
       idBundle: bundleId,
       pspTaxCode: selectedParty?.fiscalCode ?? '',
-      ciTaxCode: selectedRequest.creditor_institution_code ?? "",
+      ciTaxCode: selectedRequest.creditor_institution_code ?? '',
       status: selectedState,
     })
       .then((res: PublicBundleCISubscriptionsDetail) => {
-        setSelectedSubscriptionRequest({  ...res,  ...selectedRequest });
+        setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
       })
       .catch((reason) =>
         addError({
@@ -103,11 +102,10 @@ const CommissionBundleSubscriptionsTable = () => {
     setLoadingList(true);
     if (searchTriggered) {
       setSelectedState(filterState);
-      if (taxCodeFilter) {
+      if (taxCodeFilter !== undefined) {
         setSelectedTaxCode(taxCodeFilter);
       }
     }
-
     getPublicBundleCISubscriptions({
       idBundle: bundleId,
       pspTaxCode: selectedParty?.fiscalCode ?? '',
@@ -145,7 +143,7 @@ const CommissionBundleSubscriptionsTable = () => {
     const actionType = openMenageSubscriptionModal;
     setOpenMenageSubscriptionModal(undefined);
 
-    let promise: Promise<string | void> = Promise.reject(new Error('Wrong action'));
+    let promise: Promise<string | void> = Promise.reject('Wrong action');
     let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
     let errorDescription = 'general.errorDescription';
     if (selectedParty?.fiscalCode && selectedSubscriptionRequest?.bundle_request_id) {
@@ -169,7 +167,7 @@ const CommissionBundleSubscriptionsTable = () => {
         errorDescription = `${componentPath}.error.errorDelete`;
       }
     } else {
-      promise = Promise.reject(new Error('No psp tax code or bundle request id'));
+      promise = Promise.reject('No psp tax code or bundle request id');
     }
 
     setLoadingList(true);

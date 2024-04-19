@@ -153,33 +153,38 @@ const CommissionBundleSubscriptionsTable = () => {
     let promise: Promise<string | void> = Promise.reject('Wrong action');
     let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
     let errorDescription = 'general.errorDescription';
-    if (selectedParty?.fiscalCode && selectedSubscriptionRequest?.bundle_request_id) {
-      if (actionType === 'reject') {
-        promise = rejectPublicBundleSubscription(
-          selectedParty.fiscalCode,
-          selectedSubscriptionRequest.bundle_request_id
-        );
-        actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
-        errorDescription = `${componentPath}.error.errorReject`;
-      } else if (actionType === 'accept') {
-        promise = acceptBundleSubscriptionRequest(
-          selectedParty.fiscalCode,
-          selectedSubscriptionRequest.bundle_request_id
-        );
-        actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
-        errorDescription = `${componentPath}.error.errorAccept`;
-      } else if (actionType === 'delete') {
-        promise = Promise.resolve('delete'); // TODO IMPLEMENT DELETE API
-        actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
-        errorDescription = `${componentPath}.error.errorDelete`;
+    if (selectedParty?.fiscalCode) {
+      if (selectedSubscriptionRequest?.bundle_request_id) {
+        if (actionType === 'reject') {
+          promise = rejectPublicBundleSubscription(
+            selectedParty.fiscalCode,
+            selectedSubscriptionRequest.bundle_request_id
+          );
+          actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
+          errorDescription = `${componentPath}.error.errorReject`;
+        } else if (actionType === 'accept') {
+          promise = acceptBundleSubscriptionRequest(
+            selectedParty.fiscalCode,
+            selectedSubscriptionRequest.bundle_request_id
+          );
+          actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
+          errorDescription = `${componentPath}.error.errorAccept`;
+        }
+      } else {
+        if (actionType === 'delete') {
+          promise = Promise.resolve('delete'); // TODO IMPLEMENT DELETE API
+          actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
+          errorDescription = `${componentPath}.error.errorDelete`;
+        } else {
+          promise = Promise.reject('No bundle request id');
+        }
       }
     } else {
-      promise = Promise.reject('No psp tax code or bundle request id');
+      promise = Promise.reject('No psp tax code');
     }
 
     promise
       .then(() => {
-        setLoadingRequestAction(false);
         setSelectedSubscriptionRequest({});
         getSubscriptionList(0);
       })
@@ -194,7 +199,8 @@ const CommissionBundleSubscriptionsTable = () => {
           displayableDescription: t(`${componentPath}.error.${errorDescription}`),
           component: 'Toast',
         })
-      );
+      )
+      .finally(() => setLoadingRequestAction(false));
   };
 
   function handleChangePage(value: number) {
@@ -249,7 +255,7 @@ const CommissionBundleSubscriptionsTable = () => {
       >
         {!subscriptionList?.creditor_institutions_subscriptions ||
         subscriptionList?.creditor_institutions_subscriptions?.length === 0 ? (
-          <TableEmptyState componentName={componentPath} translationPathSuffix={selectedState}/>
+          <TableEmptyState componentName={componentPath} translationPathSuffix={selectedState} />
         ) : (
           <div data-testid="data-grid">
             <CustomDataGrid

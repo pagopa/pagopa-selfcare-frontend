@@ -27,7 +27,7 @@
       "accessionDate": "Data adesione",
       "address": "Indirizzo",
       "city": "Città",
-      "province": "Provinca",
+      "province": "Provincia",
       "CAP": "CAP",
       "fiscalDomicile": "Domicilio Fiscale",
       "abiCode": "Codice ABI",
@@ -117,7 +117,7 @@
       "ecFields": {
         "address": "Indirizzo",
         "city": "Città",
-        "province": "Provinca",
+        "province": "Provincia",
         "CAP": "CAP",
         "fiscalDomicile": "Domicilio Fiscale",
         "intermediaryAvailable": {

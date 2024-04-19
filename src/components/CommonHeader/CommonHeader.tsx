@@ -1,16 +1,25 @@
 import {Fragment} from 'react';
-import {HeaderProduct} from '@pagopa/mui-italia/dist/components/HeaderProduct/HeaderProduct';
 import {HeaderAccount} from '@pagopa/mui-italia/dist/components/HeaderAccount/HeaderAccount';
-import {JwtUser, ProductEntity, ProductSwitchItem, RootLinkType, theme, UserAction,} from '@pagopa/mui-italia';
+import {
+    HeaderProduct,
+    JwtUser,
+    ProductEntity,
+    ProductSwitchItem,
+    RootLinkType,
+    theme,
+    UserAction,
+} from '@pagopa/mui-italia';
 import {PartySwitchItem} from '@pagopa/mui-italia/dist/components/PartySwitch';
 import {buildAssistanceURI} from '@pagopa/selfcare-common-frontend/services/assistanceService';
 import {useTranslation} from 'react-i18next';
 import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
+import {isOperator} from "../../pages/components/commonFunctions";
 import {ENV} from '../../utils/env';
+import MyHeaderProduct from "./MyHeaderProduct";
 
 type PartyEntity = PartySwitchItem;
 type HeaderProps = {
-    /** If true, it will render an other toolbar under the Header */
+    /** If true, it will render another toolbar under the Header */
     withSecondHeader: boolean;
     /** The list of products in header */
     productsList?: Array<ProductEntity>;
@@ -80,6 +89,43 @@ const CommonHeader = ({
                           enableAssistanceButton = true,
                       }: HeaderProps) => {
     const {t} = useTranslation();
+
+
+    function getMyHeaderProduct() {
+        return <MyHeaderProduct
+            borderBottom={ENV.ENV !== 'prod' ? 3 : undefined}
+            borderColor={ENV.ENV !== 'prod' ? theme.palette.warning.main : undefined}
+            chipColor={ENV.ENV !== 'prod' ? 'warning' : undefined}
+            chipLabel={t(`header.envLabel.${ENV.ENV}`)}
+            productId={selectedProductId}
+            productsList={
+                addSelfcareProduct ? [selfcareProduct].concat(productsList) : productsList
+            }
+            onSelectedProduct={onSelectedProduct}
+            data-testid={"party"}
+        />;
+    }
+
+    function getHeaderProduct() {
+        return <HeaderProduct
+            borderBottom={ENV.ENV !== 'prod' ? 3 : undefined}
+            borderColor={ENV.ENV !== 'prod' ? theme.palette.warning.main : undefined}
+            chipColor={ENV.ENV !== 'prod' ? 'warning' : undefined}
+            chipLabel={t(`header.envLabel.${ENV.ENV}`)}
+            productId={selectedProductId}
+            productsList={
+                addSelfcareProduct ? [selfcareProduct].concat(productsList) : productsList
+            }
+            partyId={selectedPartyId}
+            partyList={partyList}
+            onSelectedProduct={onSelectedProduct}
+            onSelectedParty={onSelectedParty}
+            maxCharactersNumberMultiLineButton={maxCharactersNumberMultiLineButton}
+            maxCharactersNumberMultiLineItem={maxCharactersNumberMultiLineItem}
+            data-testid={"party"}
+        />;
+    }
+
     return (
         <Fragment>
             <header>
@@ -105,23 +151,7 @@ const CommonHeader = ({
             </header>
             {withSecondHeader === true ? (
                 <nav>
-                    <HeaderProduct
-                        borderBottom={ENV.ENV !== 'prod' ? 3 : undefined}
-                        borderColor={ENV.ENV !== 'prod' ? theme.palette.warning.main : undefined}
-                        chipColor={ENV.ENV !== 'prod' ? 'warning' : undefined}
-                        chipLabel={t(`header.envLabel.${ENV.ENV}`)}
-                        productId={selectedProductId}
-                        productsList={
-                            addSelfcareProduct ? [selfcareProduct].concat(productsList) : productsList
-                        }
-                        partyId={selectedPartyId}
-                        partyList={partyList}
-                        onSelectedProduct={onSelectedProduct}
-                        onSelectedParty={onSelectedParty}
-                        maxCharactersNumberMultiLineButton={maxCharactersNumberMultiLineButton}
-                        maxCharactersNumberMultiLineItem={maxCharactersNumberMultiLineItem}
-                        data-testid={"party"}
-                    />
+                    {isOperator() ? getMyHeaderProduct() : getHeaderProduct()}
                 </nav>
             ) : (
                 ''

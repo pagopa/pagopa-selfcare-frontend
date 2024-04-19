@@ -51,7 +51,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
       t,
       stateType,
       setOpenMenageSubscriptionModal,
-      selectedSubscriptionRequest.bundle_request_id
+      selectedSubscriptionRequest.ci_bundle_fee_list !== undefined
     )}
   >
     <TitleBox title={t(`${componentPath}.title`)} variantTitle="h5" />
@@ -80,11 +80,9 @@ export const CommissionBundleSubscriptionsDrawer = ({
       </Typography>
       {getStatusChip(t, stateType, 'small')}
     </Box>
-
-    {!selectedSubscriptionRequest?.bundle_request_id ? (
+    {selectedSubscriptionRequest?.ci_bundle_fee_list === undefined ? (
       <SkeletonComponent />
     ) : (
-      selectedSubscriptionRequest?.ci_bundle_fee_list &&
       selectedSubscriptionRequest?.ci_bundle_fee_list.length > 0 && (
         <Box mb={3} mt={4}>
           <Box mb={2}>
@@ -118,9 +116,9 @@ function getButtons(
   t: TFunction<'translation', undefined>,
   stateType: string,
   setOpenMenageSubscriptionModal: (openModal: string) => void,
-  bundleRequestId?: string
+  showButtons?: boolean
 ) {
-  if (bundleRequestId) {
+  if (showButtons) {
     if (stateType === SubscriptionStateType.Waiting) {
       return (
         <>

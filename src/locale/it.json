@@ -880,7 +880,10 @@
           "stateFilter": "Stato"
         },
         "table": {
-          "emptyState": "Nessuna sono presenti richieste d'adesione"
+          "emptyState": {
+            "WAITING": "Non sono presenti richieste d'adesione in attesa",
+            "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
+          }
         },
         "name": "Nome ente",
         "taxCode": "Codice Fiscale",

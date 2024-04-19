@@ -12,7 +12,10 @@ import TableEmptyState from '../../../../../components/Table/TableEmptyState';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
-import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
+import {
+  LOADING_TASK_SUBSCRIPTION_ACTION,
+  LOADING_TASK_SUBSCRIPTION_LIST,
+} from '../../../../../utils/constants';
 import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
@@ -46,6 +49,7 @@ const CommissionBundleSubscriptionsTable = () => {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoadingList = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
+  const setLoadingRequestAction = useLoading(LOADING_TASK_SUBSCRIPTION_ACTION);
 
   const { bundleId } = useParams<{ bundleId: string }>();
 
@@ -140,6 +144,7 @@ const CommissionBundleSubscriptionsTable = () => {
   };
 
   const handleConfirmModal = async () => {
+    setLoadingRequestAction(true);
     const actionType = openMenageSubscriptionModal;
     setOpenMenageSubscriptionModal(undefined);
 
@@ -170,8 +175,12 @@ const CommissionBundleSubscriptionsTable = () => {
       promise = Promise.reject('No psp tax code or bundle request id');
     }
 
-    setLoadingList(true);
     promise
+      .then(() => {
+        setLoadingRequestAction(false);
+        setSelectedSubscriptionRequest({});
+        getSubscriptionList(0);
+      })
       .catch((reason) =>
         addError({
           id: actionId,
@@ -183,10 +192,7 @@ const CommissionBundleSubscriptionsTable = () => {
           displayableDescription: t(`${componentPath}.error.${errorDescription}`),
           component: 'Toast',
         })
-      )
-      .finally(() => {
-        getSubscriptionList(0);
-      });
+      );
   };
 
   function handleChangePage(value: number) {
@@ -241,7 +247,7 @@ const CommissionBundleSubscriptionsTable = () => {
       >
         {!subscriptionList?.creditor_institutions_subscriptions ||
         subscriptionList?.creditor_institutions_subscriptions?.length === 0 ? (
-          <TableEmptyState componentName={componentPath} />
+          <TableEmptyState componentName={componentPath} translationPathSuffix={selectedState}/>
         ) : (
           <div data-testid="data-grid">
             <CustomDataGrid
@@ -283,16 +289,18 @@ const CommissionBundleSubscriptionsTable = () => {
         setOpenMenageSubscriptionModal={setOpenMenageSubscriptionModal}
         stateType={selectedState}
       />
-      <GenericModal
-        title={t(`${componentPath}.modal.${openMenageSubscriptionModal}.title`)}
-        message={t(`${componentPath}.modal.${openMenageSubscriptionModal}.message`)}
-        openModal={openMenageSubscriptionModal !== undefined}
-        onConfirmLabel={t('general.confirm')}
-        onCloseLabel={t('general.turnBack')}
-        handleCloseModal={() => setOpenMenageSubscriptionModal(undefined)}
-        handleConfirm={() => handleConfirmModal()}
-        data-testid="confirm-modal"
-      />
+      {openMenageSubscriptionModal !== undefined && (
+        <GenericModal
+          title={t(`${componentPath}.modal.${openMenageSubscriptionModal}.title`)}
+          message={t(`${componentPath}.modal.${openMenageSubscriptionModal}.message`)}
+          openModal={openMenageSubscriptionModal !== undefined}
+          onConfirmLabel={t('general.confirm')}
+          onCloseLabel={t('general.turnBack')}
+          handleCloseModal={() => setOpenMenageSubscriptionModal(undefined)}
+          handleConfirm={() => handleConfirmModal()}
+          data-testid="confirm-modal"
+        />
+      )}
     </>
   );
 };

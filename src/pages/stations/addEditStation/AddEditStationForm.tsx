@@ -451,7 +451,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             );
             testStation(
                 hostSplit,
-                portSplit > 0 ? portSplit : (protocolSplit === 'https' ? 443 : 80),
+                portSplit > 0 ? portSplit : 443,
                 pathSplit
             ).then((item : TestStationResource) => {
                 setTestRtResult(item);

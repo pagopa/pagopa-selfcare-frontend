@@ -916,6 +916,11 @@
           "acceptButton": "Accetta richiesta",
           "deleteButton": "Rimuovi ente"
         },
+        "alert": {
+          "reject": "Richiesta rifiutata",
+          "accept": "Richiesta accettata",
+          "delete": "Ente rimosso"
+        },
         "error": {
           "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
           "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",

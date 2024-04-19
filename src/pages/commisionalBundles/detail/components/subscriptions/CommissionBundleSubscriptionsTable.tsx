@@ -1,5 +1,13 @@
 /* eslint-disable functional/no-let */
-import { Select, MenuItem, Pagination, FormControl, InputLabel, Typography } from '@mui/material';
+import {
+  Select,
+  MenuItem,
+  Pagination,
+  FormControl,
+  InputLabel,
+  Typography,
+  Alert,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -65,6 +73,7 @@ const CommissionBundleSubscriptionsTable = () => {
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
     string | undefined
   >(undefined);
+  const [successAlert, setSuccessAlert] = useState<string>();
 
   const [subscriptionList, setSubscriptionList] =
     useState<PublicBundleCISubscriptionsResource>(emptySubriptionList);
@@ -200,7 +209,10 @@ const CommissionBundleSubscriptionsTable = () => {
           component: 'Toast',
         })
       )
-      .finally(() => setLoadingRequestAction(false));
+      .finally(() => {
+        setLoadingRequestAction(false);
+        setSuccessAlert(actionType);
+      });
   };
 
   function handleChangePage(value: number) {
@@ -212,6 +224,14 @@ const CommissionBundleSubscriptionsTable = () => {
   useEffect(() => {
     getSubscriptionList();
   }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSuccessAlert(undefined);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [successAlert]);
 
   return (
     <>
@@ -290,6 +310,13 @@ const CommissionBundleSubscriptionsTable = () => {
           </div>
         )}
       </Box>
+      {successAlert && (
+        <div style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}>
+          <Alert severity="success" variant="outlined" >
+            {t(`${componentPath}.alert.${successAlert}`)}
+          </Alert>
+        </div>
+      )}
       <CommissionBundleSubscriptionsDrawer
         t={t}
         setSelectedSubscriptionRequest={setSelectedSubscriptionRequest}

@@ -143,7 +143,7 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
 
-          {commissionBundleDetail.type === TypeEnum.GLOBAL && isPsp() && (
+          {commissionBundleDetail.type === TypeEnum.PUBLIC && isPsp() && (
             <Grid item xs={12} data-testid="subscription-table">
               <CommissionBundleSubscriptionsTable />
             </Grid>

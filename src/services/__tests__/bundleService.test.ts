@@ -1,8 +1,10 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { TypeEnum } from '../../api/generated/portal/BundleRequest';
+import { SubscriptionStateType } from '../../model/CommissionBundle';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
+  mockedCiSubscriptionList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
   mockedTouchpoints,
@@ -14,6 +16,7 @@ import {
   getBundleDetailByPSP,
   getBundleListByPSP,
   getCisBundles,
+  getPublicBundleCISubscriptions,
   getTouchpoints,
   rejectPublicBundleSubscription,
   updatePSPBundle,
@@ -52,6 +55,17 @@ describe('BundleService test mocked', () => {
   test('Test rejectPublicBundleSubscription', async () => {
     expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
   });
+  test('Test getPublicBundleCISubscriptions', async () => {
+    const response = await getPublicBundleCISubscriptions({
+      idBundle: 'idBundle',
+      pspTaxCode: 'pspTaxCode',
+      ciTaxCode: 'ciTaxCode',
+      limit: 10,
+      page: 0,
+      status: SubscriptionStateType.Accepted,
+    });
+    expect(response).toMatchObject(mockedCiSubscriptionList);
+  });
 });
 
 describe('BundleService test client', () => {
@@ -66,48 +80,84 @@ describe('BundleService test client', () => {
   });
 
   test('Test getBundlesByPsp', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "getBundlesByPsp").mockReturnValue(new Promise((resolve) => resolve({})));
-    expect(getBundleListByPSP(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'pspTaxCode')).resolves.not.toThrow();
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getBundlesByPsp')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
+    expect(
+      getBundleListByPSP(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'pspTaxCode')
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test createBundle', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "createBundle").mockReturnValue(new Promise((resolve) => resolve({})));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'createBundle')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(createBundle('pspTaxCode', mockedBundleRequest)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getTouchpoints', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "getTouchpoints").mockReturnValue(new Promise((resolve) => resolve({})));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getTouchpoints')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getTouchpoints(0, 0)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getBundleDetailByPSP', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "getBundleDetailByPSP").mockReturnValue(new Promise((resolve) => resolve({})));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getBundleDetailByPSP')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getBundleDetailByPSP('pspTaxCode', 'bundleId')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test deletePSPBundle', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "deletePSPBundle").mockReturnValue(new Promise((resolve) => resolve()));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'deletePSPBundle')
+      .mockReturnValue(new Promise((resolve) => resolve()));
     expect(deletePSPBundle('pspTaxCode', 'bundleId')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test updatePSPBundle', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "updatePSPBundle").mockReturnValue(new Promise((resolve) => resolve()));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'updatePSPBundle')
+      .mockReturnValue(new Promise((resolve) => resolve()));
     expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getCisBundles', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "getCisBundles").mockReturnValue(new Promise((resolve) => resolve({})));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getCisBundles')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test acceptBundleSubscriptionRequest', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "acceptBundleSubscriptionRequest").mockReturnValue(new Promise((resolve) => resolve()));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'acceptBundleSubscriptionRequest')
+      .mockReturnValue(new Promise((resolve) => resolve()));
     expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test rejectPublicBundleSubscription', async () => {
-    const spyOn = jest.spyOn(BackofficeApi, "rejectPublicBundleSubscription").mockReturnValue(new Promise((resolve) => resolve()));
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'rejectPublicBundleSubscription')
+      .mockReturnValue(new Promise((resolve) => resolve()));
     expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test getPublicBundleCISubscriptions', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getPublicBundleCISubscriptions')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
+    expect(
+      getPublicBundleCISubscriptions({
+        idBundle: 'idBundle',
+        pspTaxCode: 'pspTaxCode',
+        ciTaxCode: 'ciTaxCode',
+        limit: 10,
+        page: 0,
+        status: SubscriptionStateType.Accepted,
+      })
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
 });

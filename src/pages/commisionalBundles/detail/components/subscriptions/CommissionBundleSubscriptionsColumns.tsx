@@ -7,7 +7,7 @@ import {
   renderStatusChip,
   showCustomHeader,
 } from '../../../../../components/Table/TableUtils';
-import { SubscriptionStateType } from './CommissionBundleSubscriptionsTable';
+import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,

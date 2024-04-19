@@ -13,6 +13,10 @@ import {
   PaymentsReceiptsListMethodParams,
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
+import {
+  PublicBundleCISubscriptionsMethodParams,
+  PublicBundleCISubscriptionsRequest,
+} from '../model/CommissionBundle';
 import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
@@ -81,6 +85,7 @@ import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPag
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
+import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1107,13 +1112,48 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  acceptBundleSubscriptionRequest: async(pspTaxCode: string, idBundleRequest: string): Promise<void> => {
-    const result = await backofficeClient.acceptPublicBundleSubscriptions({"psp-tax-code": pspTaxCode, body: [idBundleRequest]});
+  getPublicBundleCISubscriptions: async ({
+    idBundle,
+    pspTaxCode,
+    ciTaxCode,
+    limit,
+    page,
+    status,
+  }: PublicBundleCISubscriptionsMethodParams): Promise<PublicBundleCISubscriptionsResource> => {
+    // eslint-disable-next-line functional/no-let
+    let params: PublicBundleCISubscriptionsRequest = {
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      limit,
+      page,
+      status,
+    };
+    if (ciTaxCode) {
+      params = { ...params, ciTaxCode };
+    }
+    const result = await backofficeClient.getPublicBundleCISubscriptions(params);
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+  
+  acceptBundleSubscriptionRequest: async (
+    pspTaxCode: string,
+    idBundleRequest: string
+  ): Promise<void> => {
+    const result = await backofficeClient.acceptPublicBundleSubscriptions({
+      'psp-tax-code': pspTaxCode,
+      body: [idBundleRequest],
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  rejectPublicBundleSubscription: async(pspTaxCode: string, bundleRequestId: string): Promise<void> => {
-    const result = await backofficeClient.rejectPublicBundleSubscription({"psp-tax-code": pspTaxCode, "bundle-request-id": bundleRequestId});
+  rejectPublicBundleSubscription: async (
+    pspTaxCode: string,
+    bundleRequestId: string
+  ): Promise<void> => {
+    const result = await backofficeClient.rejectPublicBundleSubscription({
+      'psp-tax-code': pspTaxCode,
+      'bundle-request-id': bundleRequestId,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
-  }
+  },
 };

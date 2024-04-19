@@ -13,8 +13,12 @@ import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
 import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
+import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
+import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
+import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
+  getPublicBundleCISubscriptions,
   rejectPublicBundleSubscription,
 } from '../../../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
@@ -26,15 +30,10 @@ const pageLimit = 5;
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
 
-const emptySubriptionList = {
-  total_pages: 0,
-  results: [{ business_name: 'NOME BUSINESS', ci_tax_code: 'CI_TAX_CODE' }],
-}; // TODO TYPE AND CORRECT EMPTY STATE
-
-export enum SubscriptionStateType {
-  Waiting = 'waiting',
-  Accepted = 'accepted',
-}
+const emptySubriptionList: PublicBundleCISubscriptionsResource = {
+  page_info: { total_pages: 0 },
+  creditor_institutions_subscriptions: [],
+};
 
 const CommissionBundleSubscriptionsTable = () => {
   const { t } = useTranslation();
@@ -49,33 +48,49 @@ const CommissionBundleSubscriptionsTable = () => {
   );
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
-  const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] = useState<any>({}); // TODO TYPE
+  const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
+    useState<PublicBundleCISubscriptionsDetail>({});
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
     string | undefined
   >(undefined);
 
-  const [subscriptionList, setSubscriptionList] = useState<any>(emptySubriptionList); // TODO TYPE & EMPTY STATE
+  const [subscriptionList, setSubscriptionList] =
+    useState<PublicBundleCISubscriptionsResource>(emptySubriptionList);
 
-  const columns: Array<GridColDef> = buildColumnDefs(
-    t,
-    selectedState,
-    setSelectedSubscriptionRequest
-  );
+  function getSubscriptionDetail() {
+    setSelectedSubscriptionRequest({}); // TODO IMPLEMENT API
+  }
 
-  const getSubscriptionList = (newPage?: number, taxCodeFilter?: string) => {
+  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail);
+
+  const getSubscriptionList = (
+    newPage?: number,
+    taxCodeFilter?: string,
+    searchTriggered?: boolean
+  ) => {
     setLoading(true);
-    if (taxCodeFilter) {
+    if (searchTriggered) {
       setSelectedState(filterState);
-      setSelectedTaxCode(taxCodeFilter);
+      if (taxCodeFilter) {
+        setSelectedTaxCode(taxCodeFilter);
+      }
     }
 
-    // TODO IMPLEMENT API
-    const getSubRes = Promise.resolve(emptySubriptionList);
-    getSubRes
-      .then((res: any) => {
-        if (res?.results && res.results.length > 0) {
+    getPublicBundleCISubscriptions({
+      idBundle: bundleId,
+      pspTaxCode: selectedParty?.fiscalCode ?? '',
+      ciTaxCode: taxCodeFilter ?? selectedTaxCode,
+      limit: pageLimit,
+      page: newPage ?? 0,
+      status: searchTriggered ? filterState : selectedState,
+    })
+      .then((res: PublicBundleCISubscriptionsResource) => {
+        if (
+          res?.creditor_institutions_subscriptions &&
+          res.creditor_institutions_subscriptions.length > 0
+        ) {
           setSubscriptionList(res);
         } else {
           setSubscriptionList(emptySubriptionList);
@@ -103,18 +118,18 @@ const CommissionBundleSubscriptionsTable = () => {
     let promise: Promise<string | void> = Promise.reject(new Error('Wrong action'));
     let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
     let errorDescription = 'general.errorDescription';
-    if (selectedParty?.fiscalCode) {
+    if (selectedParty?.fiscalCode && selectedSubscriptionRequest?.bundle_request_id) {
       if (actionType === 'reject') {
         promise = rejectPublicBundleSubscription(
           selectedParty.fiscalCode,
-          selectedSubscriptionRequest.idBundleRequest
+          selectedSubscriptionRequest.bundle_request_id
         );
         actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
         errorDescription = `${componentPath}.error.errorReject`;
       } else if (actionType === 'accept') {
         promise = acceptBundleSubscriptionRequest(
           selectedParty.fiscalCode,
-          selectedSubscriptionRequest.idBundleRequest
+          selectedSubscriptionRequest.bundle_request_id
         );
         actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
         errorDescription = `${componentPath}.error.errorAccept`;
@@ -124,7 +139,7 @@ const CommissionBundleSubscriptionsTable = () => {
         errorDescription = `${componentPath}.error.errorDelete`;
       }
     } else {
-      promise = Promise.reject(new Error('No psp tax code'));
+      promise = Promise.reject(new Error('No psp tax code or bundle request id'));
     }
 
     setLoading(true);
@@ -159,7 +174,7 @@ const CommissionBundleSubscriptionsTable = () => {
       </Box>
       <TableSearchBar
         componentName={componentPath}
-        handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter)}
+        handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter, true)}
       >
         <FormControl sx={{ ml: 1, minWidth: '200px' }}>
           <InputLabel id="state-select-label">{t(`${componentPath}.state`)}</InputLabel>
@@ -192,7 +207,8 @@ const CommissionBundleSubscriptionsTable = () => {
         }}
         justifyContent="start"
       >
-        {!subscriptionList?.results || subscriptionList?.results?.length === 0 ? (
+        {!subscriptionList?.creditor_institutions_subscriptions ||
+        subscriptionList?.creditor_institutions_subscriptions?.length === 0 ? (
           <TableEmptyState componentName={componentPath} />
         ) : (
           <div data-testid="data-grid">
@@ -209,7 +225,7 @@ const CommissionBundleSubscriptionsTable = () => {
                 Pagination: () => (
                   <Pagination
                     color="primary"
-                    count={subscriptionList?.total_pages ?? 1}
+                    count={subscriptionList?.page_info?.total_pages ?? 1}
                     page={page + 1}
                     onChange={(_event: ChangeEvent<unknown>, value: number) =>
                       handleChangePage(value)
@@ -221,9 +237,9 @@ const CommissionBundleSubscriptionsTable = () => {
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="client"
-              rowCount={subscriptionList?.results?.length}
+              rowCount={subscriptionList?.creditor_institutions_subscriptions?.length}
               rowHeight={rowHeight}
-              rows={subscriptionList?.results ?? []}
+              rows={subscriptionList?.creditor_institutions_subscriptions ?? []}
             />
           </div>
         )}

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Paper, Typography, Divider, Alert } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Box } from '@mui/system';
@@ -50,7 +51,7 @@ export default function CommissionBundleDetailTaxonomies({
             ) : null
           )
       ) : (
-        <Alert severity="info"  data-testid="alert-test" sx={{ mt: 2 }}>
+        <Alert severity="info" data-testid="alert-test" sx={{ mt: 2 }}>
           {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
         </Alert>
       )}
@@ -72,19 +73,15 @@ export default function CommissionBundleDetailTaxonomies({
               variantTitle="h5"
             />
             {bundleTaxonomies.map((el, index) => (
-              <>
+              <React.Fragment key={`taxonomies-list-${el.specific_built_in_data}`}>
                 {index !== 0 && <Divider />}
-                <Box
-                  key={`taxonomies-list-${el.specific_built_in_data}`}
-                  mb={1}
-                  data-testid="taxonomy-drawer-column"
-                >
+                <Box mb={1} data-testid="taxonomy-drawer-column">
                   <Typography variant="body1" color="action.active">
                     {el.service_type}
                   </Typography>
                   <Typography variant="body1">{el.specific_built_in_data}</Typography>
                 </Box>
-              </>
+              </React.Fragment>
             ))}
           </PaddedDrawer>
         </>

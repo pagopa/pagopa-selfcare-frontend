@@ -5,12 +5,16 @@ import { BundleRequest } from '../api/generated/portal/BundleRequest';
 import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
+  PublicBundleCISubscriptionsMethodParams,
+} from '../model/CommissionBundle';
+import {
   createCommissionBundle,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
   getTouchpoints as getTouchpointsMock,
   deletePSPBundle as deletePSPBundleMock,
   updatePSPBundle as updatePSPBundleMock,
+  getPublicBundleCISubscriptionsMock,
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -112,5 +116,27 @@ export const rejectPublicBundleSubscription = (
     return Promise.resolve();
   } else {
     return BackofficeApi.rejectPublicBundleSubscription(pspTaxCode, bundleRequestId);
+  }
+};
+
+export const getPublicBundleCISubscriptions = ({
+  idBundle,
+  pspTaxCode,
+  ciTaxCode,
+  limit,
+  page,
+  status,
+}: PublicBundleCISubscriptionsMethodParams) => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getPublicBundleCISubscriptionsMock();
+  } else {
+    return BackofficeApi.getPublicBundleCISubscriptions({
+      idBundle,
+      pspTaxCode,
+      ciTaxCode,
+      limit,
+      page,
+      status,
+    });
   }
 };

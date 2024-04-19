@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { TFunction } from 'react-i18next';
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
-import { SubscriptionStateType } from './CommissionBundleSubscriptionsTable';
+import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
 import { getStatusChip } from './CommissionBundleSubscriptionsColumns';
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.drawer';

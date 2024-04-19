@@ -88,6 +88,7 @@ import { CreditorInstitutionContactsResource } from './generated/portal/Creditor
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
+import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1110,6 +1111,17 @@ export const BackofficeApi = {
   deletePSPBroker: async (brokerTaxCode: string): Promise<void> => {
     const result = await backofficeClient.deletePspBroker({
       'broker-tax-code': brokerTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+    const result = await backofficeClient.testStation({
+        body: {
+            hostUrl,
+            hostPort,
+            hostPath
+        }
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

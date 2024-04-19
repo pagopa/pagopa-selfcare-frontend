@@ -81,6 +81,7 @@ import {CIBrokerDelegationPage} from './generated/portal/CIBrokerDelegationPage'
 import {CIBrokerStationPage} from './generated/portal/CIBrokerStationPage';
 import {CreditorInstitutionContactsResource} from './generated/portal/CreditorInstitutionContactsResource';
 import {PaymentsResult} from './generated/portal/PaymentsResult';
+import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1106,6 +1107,18 @@ export const BackofficeApi = {
         });
         return extractResponse(result, 200, onRedirectToLogin);
     },
+
+  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+    const result = await backofficeClient.testStation({
+        body: {
+            hostUrl,
+            hostPort,
+            hostPath
+        }
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 
     getCreditorInstitutions: async (taxCode: string, name: string | undefined, page: number, limit: number): Promise<CreditorInstitutionsResource> => {
         const result = await backofficeClient.getCreditorInstitutions({

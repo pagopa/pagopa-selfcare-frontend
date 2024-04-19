@@ -15,12 +15,24 @@ import {
     Stack,
     TextField,
     Typography,
+    InputAdornment
 } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import {Box} from '@mui/system';
-import {Badge as BadgeIcon, MenuBook} from '@mui/icons-material';
+import CircularProgressIcon from '@mui/material/CircularProgress';
+import {
+    Badge as BadgeIcon,
+    MenuBook,
+    NorthEast as NorthEastIcon,
+    CheckCircle as CheckCircleIcon,
+    Error as ErrorIcon,
+    Check as CheckIcon
+} from '@mui/icons-material';
 import {generatePath, useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import { useFlagValue } from '../../../hooks/useFeatureFlags';
 import {RedirectProtocolEnum, StatusEnum} from '../../../api/generated/portal/StationDetailsDto';
+import {TestStationResource, TestResultEnum} from '../../../api/generated/portal/TestStationResource';
 import ROUTES from '../../../routes';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -31,6 +43,7 @@ import {
     updateStation,
     updateWrapperStationToCheck,
     updateWrapperStationToCheckUpdate,
+    testStation
 } from '../../../services/stationService';
 import {LOADING_TASK_GENERATION_STATION_CODE, LOADING_TASK_STATION_ADD_EDIT,} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
@@ -49,6 +62,7 @@ import {alterStationValuesToFitCategories, getStationCategoryFromDetail, splitUR
 import {ENV} from '../../../utils/env';
 import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
+
 
 type Props = {
     goBack: () => void;
@@ -73,6 +87,16 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
     const [newConn, setNewConn] = useState<boolean>(false);
     const [gdp, setGDP] = useState<boolean>(false);
+    const [testRtResult, setTestRtResult] = useState<TestStationResource>();
+    const [validatingRt, setValidatingRt] = useState<boolean>(false);
+
+    const [testRedirectResult, setTestRedirectResult] = useState<TestStationResource>();
+    const [validatingRedirect, setValidatingRedirect] = useState<boolean>(false);
+
+    const [testPofResult, setTestPofResult] = useState<TestStationResource>();
+    const [validatingPof, setValidatingPof] = useState<boolean>(false);
+
+    const isTesting = useFlagValue("test-stations");
 
     useEffect(() => {
         if (formAction !== StationFormAction.Edit) {
@@ -412,7 +436,86 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
         }
     };
 
+    const validateRtEndpoint = () => {
+        const rtValidationUrl = validateURL(formik.values.targetConcat, false);
+        if (rtValidationUrl !== undefined) {
+            formik
+                .setErrors({
+                    ...formik.errors,
+                    targetConcat: rtValidationUrl
+                });
+        } else {
+            setValidatingRt(true);
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.targetConcat
+            );
+            testStation(
+                hostSplit,
+                portSplit > 0 ? portSplit : 443,
+                pathSplit
+            ).then((item : TestStationResource) => {
+                setTestRtResult(item);
+            }).finally(() => {
+                setValidatingRt(false);
+            });
+
+        }
+    };
+
+    const validateRedirectEndpoint = () => {
+        const redirectValidationUrl = validateURL(formik.values.redirectConcat, false);
+        if (redirectValidationUrl !== undefined) {
+            formik
+                .setErrors({
+                    ...formik.errors,
+                    redirectConcat: redirectValidationUrl
+                });
+        } else {
+            setValidatingRedirect(true);
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.redirectConcat
+            );
+            testStation(
+                hostSplit,
+                portSplit > 0 ? portSplit : 443,
+                pathSplit
+            ).then((item : TestStationResource) => {
+                setTestRedirectResult(item);
+            }).finally(() => {
+                setValidatingRedirect(false);
+            });
+
+        }
+    };
+
+    const validatePofEndpoint = () => {
+        const pofValidationUrl = validateURL(formik.values.targetPofConcat, false);
+        if (pofValidationUrl !== undefined) {
+            formik
+                .setErrors({
+                    ...formik.errors,
+                    targetPofConcat: pofValidationUrl
+                });
+        } else {
+            setValidatingPof(true);
+            const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
+                formik.values.targetPofConcat
+            );
+            testStation(
+                hostSplit,
+                portSplit > 0 ? portSplit : 443,
+                pathSplit
+            ).then((item : TestStationResource) => {
+                setTestPofResult(item);
+            }).finally(() => {
+                setValidatingPof(false);
+            });
+
+        }
+    };
+
     useEffect(() => {
+        setTestRtResult(undefined);
         if (formik.values.targetConcat && formik.values.targetConcat !== '') {
             const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
                 formik.values.targetConcat
@@ -440,6 +543,50 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     }, [formik.values.targetConcat]);
 
     useEffect(() => {
+        if (testRtResult &&
+           (testRtResult.testResult === TestResultEnum.ERROR ||
+            testRtResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
+                        formik
+                            .setErrors({
+                                ...formik.errors,
+                                targetConcat: testRtResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
+                            });
+        }
+    }, [testRtResult]);
+
+    useEffect(() => {
+        if (testRedirectResult &&
+           (testRedirectResult.testResult === TestResultEnum.ERROR ||
+            testRedirectResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
+                        formik
+                            .setErrors({
+                                ...formik.errors,
+                                redirectConcat: testRedirectResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
+                            });
+        }
+    }, [testRedirectResult]);
+
+    useEffect(() => {
+        if (testPofResult &&
+            (testPofResult.testResult === TestResultEnum.ERROR ||
+             testPofResult.testResult === TestResultEnum.CERTIFICATE_ERROR)) {
+                        formik
+                            .setErrors({
+                                ...formik.errors,
+                                targetPofConcat: testPofResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
+                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                    t("addEditStationPage.addFormValidation.testFailed")
+                            });
+        }
+    }, [testPofResult]);
+
+
+    useEffect(() => {
+        setTestRedirectResult(undefined);
         if (formik.values.redirectConcat && formik.values.redirectConcat !== '') {
             const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
                 formik.values.redirectConcat
@@ -474,6 +621,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
 
 
     useEffect(() => {
+        setTestPofResult(undefined);
         if (formik.values.targetPofConcat && formik.values.targetPofConcat !== '') {
             const {protocolSplit, hostSplit, portSplit, pathSplit} = splitURL(
                 formik.values.targetPofConcat
@@ -600,44 +748,113 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                             title={t('addEditStationPage.addForm.sections.modello1')}
                             icon={<MenuBook/>}
                         />
-                        <Grid container spacing={2} mt={1}>
-                            <Grid container item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    id="targetConcat"
-                                    name="targetConcat"
-                                    label={t('addEditStationPage.addForm.fields.endpointRTConcat')}
-                                    placeholder={t('addEditStationPage.addForm.fields.endpointRTConcat')}
-                                    size="small"
-                                    value={formik.values.targetConcat}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.targetConcat && Boolean(formik.errors.targetConcat)}
-                                    helperText={formik.touched.targetConcat && formik.errors.targetConcat}
-                                    inputProps={{
-                                        'data-testid': 'targetConcat-test',
-                                    }}
-                                />
+                            <Grid container item spacing={2} mt={1} justifyContent={'center'}>
+                                <Grid container item xs={10}>
+                                    <TextField
+                                        fullWidth
+                                        id="targetConcat"
+                                        name="targetConcat"
+                                        label={t('addEditStationPage.addForm.fields.endpointRTConcat')}
+                                        placeholder={t('addEditStationPage.addForm.fields.endpointRTConcat')}
+                                        size="small"
+                                        value={formik.values.targetConcat}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        error={(formik.touched.targetConcat || testRtResult) && Boolean(formik.errors.targetConcat)}
+                                        helperText={(formik.touched.targetConcat || testRtResult) && formik.errors.targetConcat}
+                                        inputProps={{
+                                            'data-testid': 'targetConcat-test',
+                                        }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {testRtResult !== undefined &&
+                                                        testRtResult.testResult === TestResultEnum.SUCCESS ?
+                                                        (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                        ""
+                                                    }
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid container item xs={2}>
+                                    {
+                                        validatingRt ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
+                                        isTesting ?
+                                            (<ButtonNaked
+                                              size="large"
+                                              component="button"
+                                              disabled={
+                                               (testRtResult !== undefined &&
+                                                testRtResult.testResult === TestResultEnum.SUCCESS) ||
+                                               formik.values.targetConcat === undefined ||
+                                              formik.values.targetConcat === ''}
+                                              onClick={() => validateRtEndpoint()}
+                                              sx={{ color: 'primary.main'}}
+                                              weight="default"
+                                              data-testid="test-rt-endpoint-test"
+                                              endIcon={<NorthEastIcon />}
+                                            >
+                                              {t('addEditStationPage.addForm.testStation')}
+                                            </ButtonNaked>) : ""
+                                    }
+                                </Grid>
                             </Grid>
-                            <Grid container item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    id="redirectConcat"
-                                    name="redirectConcat"
-                                    label={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
-                                    placeholder={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
-                                    size="small"
-                                    value={formik.values.redirectConcat}
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.redirectConcat && Boolean(formik.errors.redirectConcat)}
-                                    helperText={formik.touched.redirectConcat && formik.errors.redirectConcat}
-                                    inputProps={{
-                                        'data-testid': 'redirectConcat-test',
-                                    }}
-                                />
+                            <Grid container item spacing={2} mt={1} justifyContent={'center'}>
+                                <Grid container item xs={10}>
+                                    <TextField
+                                        fullWidth
+                                        id="redirectConcat"
+                                        name="redirectConcat"
+                                        label={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
+                                        placeholder={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
+                                        size="small"
+                                        value={formik.values.redirectConcat}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        error={(formik.touched.redirectConcat || testRedirectResult) && Boolean(formik.errors.redirectConcat)}
+                                        helperText={(formik.touched.redirectConcat || testRedirectResult) && formik.errors.redirectConcat}
+                                        inputProps={{
+                                            'data-testid': 'redirectConcat-test',
+                                        }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {testRedirectResult !== undefined &&
+                                                        testRedirectResult.testResult === TestResultEnum.SUCCESS ?
+                                                        (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                        ""
+                                                    }
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid container item xs={2}>
+                                    {
+                                        validatingRedirect ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
+                                        isTesting ?
+                                        (<ButtonNaked
+                                          size="large"
+                                          component="button"
+                                          hidden={!isTesting}
+                                          disabled={
+                                            (testRedirectResult !== undefined &&
+                                            testRedirectResult.testResult === TestResultEnum.SUCCESS) ||
+                                            formik.values.redirectConcat === undefined ||
+                                            formik.values.redirectConcat === ''}
+                                          onClick={() => validateRedirectEndpoint()}
+                                          sx={{ color: 'primary.main'}}
+                                          weight="default"
+                                          data-testid="test-redirect-endpoint-test"
+                                          endIcon={<NorthEastIcon />}
+                                        >
+                                          {t('addEditStationPage.addForm.testStation')}
+                                        </ButtonNaked>) : ""
+                                    }
+                                </Grid>
                             </Grid>
-                        </Grid>
                     </Box>
 
                     <Box sx={inputGroupStyle}>
@@ -646,7 +863,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                             icon={<MenuBook/>}
                         />
                         <Grid container spacing={2} mt={1}>
-                            <Grid container item xs={6}>
+                            <Grid container item xs={10}>
                                 <TextField
                                     fullWidth
                                     id="targetPofConcat"
@@ -657,13 +874,49 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     value={formik.values.targetPofConcat}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={formik.touched.targetPofConcat && Boolean(formik.errors.targetPofConcat)}
-                                    helperText={formik.touched.targetPofConcat && formik.errors.targetPofConcat}
+                                    error={(formik.touched.targetPofConcat || testPofResult) && Boolean(formik.errors.targetPofConcat)}
+                                    helperText={(formik.touched.targetPofConcat || testPofResult) && formik.errors.targetPofConcat}
                                     inputProps={{
                                         'data-testid': 'targetPofConcat-test',
                                     }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {testPofResult !== undefined &&
+                                                    testPofResult.testResult === TestResultEnum.SUCCESS ?
+                                                    (<CheckIcon sx={{ color: 'success.main'}} />) :
+                                                    ""
+                                                }
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
                             </Grid>
+                            <Grid container item xs={2}>
+                                {
+                                    validatingPof ? (<CircularProgressIcon sx={{ color: 'primary.main', }} />) :
+                                    isTesting ?
+                                    (<ButtonNaked
+                                      size="large"
+                                      component="button"
+                                      disabled={
+                                        (testPofResult !== undefined &&
+                                        testPofResult.testResult === TestResultEnum.SUCCESS) ||
+                                        formik.values.targetPofConcat === undefined ||
+                                                formik.values.targetPofConcat === ''}
+                                      onClick={() => validatePofEndpoint()}
+                                      sx={{ color: 'primary.main'}}
+                                      weight="default"
+                                      data-testid="test-pof-endpoint-test"
+                                      endIcon={<NorthEastIcon />}
+                                    >
+                                      {t('addEditStationPage.addForm.testStation')}
+                                    </ButtonNaked>) : ""
+                                }
+                            </Grid>
+
+                        </Grid>
+                        <Grid container spacing={2} mt={1}>
                             <Grid container item xs={6}>
                                 <FormControl fullWidth>
                                     <InputLabel size="small">

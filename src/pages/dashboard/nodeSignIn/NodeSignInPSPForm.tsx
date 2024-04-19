@@ -67,7 +67,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
     getChannelsMerged(0, brokerCode, undefined, 1)
       .then((channels) => {
         setHasPSPChannels(
-          channels?.page_info?.total_items !== undefined && channels?.page_info?.total_items > 0
+          channels?.page_info?.items_found !== undefined && channels.page_info.items_found > 0
         );
       })
       .catch((reason) => {

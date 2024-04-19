@@ -62,11 +62,13 @@ export function renderStatusChip({
   chipColor = 'default',
   cellColor = undefined,
   dataTestId,
+  size
 }: {
   chipLabel: string;
   chipColor?: colorType;
   cellColor?: string | undefined;
   dataTestId?: string;
+  size?: "small" | "medium" | undefined;
 }) {
   return renderCell({
     value: (
@@ -75,6 +77,7 @@ export function renderStatusChip({
         aria-label="Status"
         data-testid={dataTestId ?? 'status-chip'}
         color={chipColor}
+        size={size}
       />
     ),
     color: cellColor,

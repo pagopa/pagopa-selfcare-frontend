@@ -886,8 +886,8 @@
         "taxCode": "Codice Fiscale",
         "state": "Stato",
         "stateChip": {
-          "waiting": "In attesa",
-          "accepted": "Accettata"
+          "WAITING": "In attesa",
+          "ACCEPTED": "Accettata"
         },
         "modal": {
           "reject": {
@@ -905,6 +905,7 @@
         },
         "drawer": {
           "title": "Dettaglio richiedente",
+          "feesTitle": "Commissioni a carico dell'ente",
           "businessName": "Nome Ente",
           "taxCode": "Codice Fiscale",
           "state": "Stato",

@@ -83,7 +83,8 @@ export function buildColumnDefs(
 
 export const getStatusChip = (
   t: TFunction<'translation', undefined>,
-  filterState: SubscriptionStateType
+  filterState: SubscriptionStateType,
+  size?: "small" | "medium" | undefined
 ) =>
   renderStatusChip({
     chipColor: filterState === SubscriptionStateType.Accepted ? 'success' : 'default',
@@ -91,4 +92,5 @@ export const getStatusChip = (
       `commissionBundlesPage.commissionBundleDetail.subscriptionsTable.stateChip.${filterState}`
     ),
     dataTestId: `${filterState}-state-chip`,
+    size
   });

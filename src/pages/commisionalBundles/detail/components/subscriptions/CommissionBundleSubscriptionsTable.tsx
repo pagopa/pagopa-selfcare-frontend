@@ -3,7 +3,7 @@ import { Select, MenuItem, Pagination, FormControl, InputLabel, Typography } fro
 import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
@@ -12,9 +12,7 @@ import TableEmptyState from '../../../../../components/Table/TableEmptyState';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
-import {
-  LOADING_TASK_SUBSCRIPTION_LIST,
-} from '../../../../../utils/constants';
+import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
 import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
@@ -31,6 +29,7 @@ import {
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
 import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
 
+
 const rowHeight = 64;
 const headerHeight = 56;
 const pageLimit = 5;
@@ -42,6 +41,7 @@ const emptySubriptionList: PublicBundleCISubscriptionsResource = {
   creditor_institutions_subscriptions: [],
 };
 
+// TODO manage get detail alert error on top of drawer
 const CommissionBundleSubscriptionsTable = () => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
@@ -72,11 +72,11 @@ const CommissionBundleSubscriptionsTable = () => {
     getPublicBundleCISubscriptionsDetail({
       idBundle: bundleId,
       pspTaxCode: selectedParty?.fiscalCode ?? '',
-      ciTaxCode: selectedTaxCode,
+      ciTaxCode: selectedRequest.creditor_institution_code ?? "",
       status: selectedState,
     })
       .then((res: PublicBundleCISubscriptionsDetail) => {
-        setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
+        setSelectedSubscriptionRequest({  ...res,  ...selectedRequest });
       })
       .catch((reason) =>
         addError({
@@ -99,6 +99,7 @@ const CommissionBundleSubscriptionsTable = () => {
     taxCodeFilter?: string,
     searchTriggered?: boolean
   ) => {
+    setSubscriptionList(emptySubriptionList);
     setLoadingList(true);
     if (searchTriggered) {
       setSelectedState(filterState);
@@ -196,6 +197,10 @@ const CommissionBundleSubscriptionsTable = () => {
     getSubscriptionList(newPage);
   }
 
+  useEffect(() => {
+    getSubscriptionList();
+  }, []);
+
   return (
     <>
       <Box my={2}>
@@ -219,10 +224,10 @@ const CommissionBundleSubscriptionsTable = () => {
             sx={{ height: '48px' }}
           >
             <MenuItem value={SubscriptionStateType.Waiting}>
-              {t(`${componentPath}.stateChip.waiting`)}
+              {t(`${componentPath}.stateChip.${SubscriptionStateType.Waiting}`)}
             </MenuItem>
             <MenuItem value={SubscriptionStateType.Accepted}>
-              {t(`${componentPath}.stateChip.accepted`)}
+              {t(`${componentPath}.stateChip.${SubscriptionStateType.Accepted}`)}
             </MenuItem>
           </Select>
         </FormControl>

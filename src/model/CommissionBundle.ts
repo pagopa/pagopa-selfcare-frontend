@@ -6,8 +6,8 @@ export enum FormAction {
   Edit = 'edit',
 }
 export enum SubscriptionStateType {
-  Waiting = 'waiting',
-  Accepted = 'accepted',
+  Waiting = 'WAITING',
+  Accepted = 'ACCEPTED',
 }
 
 export type PublicBundleCISubscriptionsMethodParams = {

@@ -1,11 +1,9 @@
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
 import { cleanup, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { SubscriptionStateType } from '../CommissionBundleSubscriptionsTable';
 import { buildColumnDefs, getStatusChip } from '../CommissionBundleSubscriptionsColumns';
 import { showCustomHeader } from '../../../../../../components/Table/TableUtils';
+import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

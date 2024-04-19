@@ -7,6 +7,8 @@ import { mockedChannelsMerged } from './channelService';
 import { PublicBundleCISubscriptionsResource } from '../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { CISubscriptionInfo } from '../../api/generated/portal/CISubscriptionInfo';
 import { PublicBundleCISubscriptionsDetail } from '../../api/generated/portal/PublicBundleCISubscriptionsDetail';
+import { PublicBundleCiSubscriptionDetailModel } from '../../model/CommissionBundle';
+import { CIBundleFee } from '../../api/generated/portal/CIBundleFee';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -195,15 +197,20 @@ export const mockedCiSubscriptionList: PublicBundleCISubscriptionsResource = {
   },
 };
 
+export const mockedCiBundleFee: CIBundleFee = {
+  service_type: 'service type',
+  specific_built_in_data: 'specific_build_in_data',
+  payment_amount: 50,
+};
+
 export const mockedCiSubscriptionDetail: PublicBundleCISubscriptionsDetail = {
-  ci_bundle_fee_list: [
-    {
-      service_type: 'service type',
-      specific_built_in_data: 'specific_build_in_data',
-      payment_amount: 50,
-    },
-  ],
+  ci_bundle_fee_list: [mockedCiBundleFee],
   bundle_request_id: 'bundleRequestId',
+};
+
+export const mockedCiSubscriptionIntersectDetail: PublicBundleCiSubscriptionDetailModel = {
+  ...mockedCiSubscriptionDetail,
+  ...mockedCiSubscription,
 };
 
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>

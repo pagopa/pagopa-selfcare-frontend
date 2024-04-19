@@ -135,14 +135,14 @@ describe('<CommissionBundleSubscriptionsColumns />', () => {
   test('Test status chip cell with waiting request', () => {
     render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Waiting)}</>);
 
-    expect(screen.queryByTestId('waiting-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('accepted-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('WAITING-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
   });
 
   test('Test status chip cell with accepted request', () => {
     render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Accepted)}</>);
 
-    expect(screen.queryByTestId('waiting-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('accepted-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('ACCEPTED-state-chip')).toBeInTheDocument();
   });
 });

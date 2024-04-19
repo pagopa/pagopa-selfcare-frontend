@@ -61,7 +61,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
     });
 
     const deleteButton = screen.getByTestId('delete-button');
@@ -117,7 +117,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
       expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
     });
   });
 });

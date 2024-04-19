@@ -33,7 +33,29 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
     expect(spySetModal).toBeCalledWith('reject');
   });
 
-  test('render component CommissionBundleSubscriptionsDrawer open for request already accepted, with skeleton', async () => {
+  test('render component CommissionBundleSubscriptionsDrawer open for request already accepted', async () => {
+    render(
+      <CommissionBundleSubscriptionsDrawer
+        t={jest.fn()}
+        setSelectedSubscriptionRequest={jest.fn()}
+        selectedSubscriptionRequest={mockedCiSubscriptionIntersectDetail}
+        setOpenMenageSubscriptionModal={spySetModal}
+        stateType={SubscriptionStateType.Accepted}
+      />
+    );
+
+    expect(screen.queryByTestId('skeleton-component')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('bundle-fee-list')).toBeInTheDocument();
+
+    expect(screen.queryByTestId('subscription-accept-button')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('subscription-reject-button')).not.toBeInTheDocument();
+    const deleteButton = screen.getByTestId('subscription-delete-button');
+
+    fireEvent.click(deleteButton);
+    expect(spySetModal).toBeCalledWith('delete');
+  });
+
+  test('render component CommissionBundleSubscriptionsDrawer open with skeleton', async () => {
     render(
       <CommissionBundleSubscriptionsDrawer
         t={jest.fn()}
@@ -52,10 +74,7 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
 
     expect(screen.queryByTestId('subscription-accept-button')).not.toBeInTheDocument();
     expect(screen.queryByTestId('subscription-reject-button')).not.toBeInTheDocument();
-    const deleteButton = screen.getByTestId('subscription-delete-button');
-
-    fireEvent.click(deleteButton);
-    expect(spySetModal).toBeCalledWith('delete');
+    expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
   });
 
   test('render component CommissionBundleSubscriptionsDrawer without bundle fee list & skeleton', async () => {
@@ -77,9 +96,6 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
 
     expect(screen.queryByTestId('subscription-accept-button')).not.toBeInTheDocument();
     expect(screen.queryByTestId('subscription-reject-button')).not.toBeInTheDocument();
-    const deleteButton = screen.getByTestId('subscription-delete-button');
-
-    fireEvent.click(deleteButton);
-    expect(spySetModal).toBeCalledWith('delete');
+    expect(screen.queryByTestId('subscription-delete-button')).toBeInTheDocument();
   });
 });

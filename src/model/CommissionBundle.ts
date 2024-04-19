@@ -1,10 +1,13 @@
+import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
+import { PublicBundleCISubscriptionsDetail } from "../api/generated/portal/PublicBundleCISubscriptionsDetail";
+
 export enum FormAction {
   Create = 'create',
   Edit = 'edit',
 }
 export enum SubscriptionStateType {
   Waiting = 'waiting',
-  Accepted = 'accepted'
+  Accepted = 'accepted',
 }
 
 export type PublicBundleCISubscriptionsMethodParams = {
@@ -17,11 +20,19 @@ export type PublicBundleCISubscriptionsMethodParams = {
 };
 
 export type PublicBundleCISubscriptionsRequest = {
-  "id-bundle": string;
-  "psp-tax-code": string;
+  'id-bundle': string;
+  'psp-tax-code': string;
   limit: number;
   page: number;
   status: SubscriptionStateType;
   ciTaxCode?: string;
 };
 
+export type PublicBundleCiSubscriptionsDetailMethodParams = {
+  idBundle: string;
+  pspTaxCode: string;
+  ciTaxCode: string;
+  status: string;
+};
+
+export type PublicBundleCiSubscriptionDetailModel = CISubscriptionInfo & PublicBundleCISubscriptionsDetail;

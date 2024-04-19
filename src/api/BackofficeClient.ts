@@ -14,6 +14,7 @@ import {
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
 import {
+  PublicBundleCiSubscriptionsDetailMethodParams,
   PublicBundleCISubscriptionsMethodParams,
   PublicBundleCISubscriptionsRequest,
 } from '../model/CommissionBundle';
@@ -86,6 +87,7 @@ import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
+import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1134,7 +1136,22 @@ export const BackofficeApi = {
     const result = await backofficeClient.getPublicBundleCISubscriptions(params);
     return extractResponse(result, 200, onRedirectToLogin);
   },
-  
+
+  getPublicBundleCISubscriptionsDetail: async ({
+    idBundle,
+    pspTaxCode,
+    ciTaxCode,
+    status,
+  }: PublicBundleCiSubscriptionsDetailMethodParams): Promise<PublicBundleCISubscriptionsDetail> => {
+    const result = await backofficeClient.getPublicBundleCISubscriptionsDetail({
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      'ci-tax-code': ciTaxCode,
+      status,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
   acceptBundleSubscriptionRequest: async (
     pspTaxCode: string,
     idBundleRequest: string

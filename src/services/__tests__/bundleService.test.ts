@@ -4,6 +4,7 @@ import { SubscriptionStateType } from '../../model/CommissionBundle';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
+  mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
@@ -17,6 +18,7 @@ import {
   getBundleListByPSP,
   getCisBundles,
   getPublicBundleCISubscriptions,
+  getPublicBundleCISubscriptionsDetail,
   getTouchpoints,
   rejectPublicBundleSubscription,
   updatePSPBundle,
@@ -65,6 +67,15 @@ describe('BundleService test mocked', () => {
       status: SubscriptionStateType.Accepted,
     });
     expect(response).toMatchObject(mockedCiSubscriptionList);
+  });
+  test('Test getPublicBundleCISubscriptionsDetail', async () => {
+    const response = await getPublicBundleCISubscriptionsDetail({
+      idBundle: 'idBundle',
+      pspTaxCode: 'pspTaxCode',
+      ciTaxCode: 'ciTaxCode',
+      status: SubscriptionStateType.Accepted,
+    });
+    expect(response).toMatchObject(mockedCiSubscriptionDetail);
   });
 });
 
@@ -155,6 +166,20 @@ describe('BundleService test client', () => {
         ciTaxCode: 'ciTaxCode',
         limit: 10,
         page: 0,
+        status: SubscriptionStateType.Accepted,
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test getPublicBundleCISubscriptionsDetail', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'getPublicBundleCISubscriptionsDetail')
+      .mockReturnValue(new Promise((resolve) => resolve({})));
+    expect(
+      getPublicBundleCISubscriptionsDetail({
+        idBundle: 'idBundle',
+        pspTaxCode: 'pspTaxCode',
+        ciTaxCode: 'ciTaxCode',
         status: SubscriptionStateType.Accepted,
       })
     ).resolves.not.toThrow();

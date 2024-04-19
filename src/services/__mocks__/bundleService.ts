@@ -6,6 +6,7 @@ import { Touchpoints } from '../../api/generated/portal/Touchpoints';
 import { mockedChannelsMerged } from './channelService';
 import { PublicBundleCISubscriptionsResource } from '../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { CISubscriptionInfo } from '../../api/generated/portal/CISubscriptionInfo';
+import { PublicBundleCISubscriptionsDetail } from '../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -194,6 +195,17 @@ export const mockedCiSubscriptionList: PublicBundleCISubscriptionsResource = {
   },
 };
 
+export const mockedCiSubscriptionDetail: PublicBundleCISubscriptionsDetail = {
+  ci_bundle_fee_list: [
+    {
+      service_type: 'service type',
+      specific_built_in_data: 'specific_build_in_data',
+      payment_amount: 50,
+    },
+  ],
+  bundle_request_id: 'bundleRequestId',
+};
+
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
   Promise.resolve(mockedChannelsIdList);
 
@@ -224,5 +236,8 @@ export const deletePSPBundle = (): Promise<void> => new Promise((resolve) => res
 
 export const updatePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());
 
-export const getPublicBundleCISubscriptionsMock = (): Promise<PublicBundleCISubscriptionsResource> =>
-  Promise.resolve(mockedCiSubscriptionList);
+export const getPublicBundleCISubscriptionsMock =
+  (): Promise<PublicBundleCISubscriptionsResource> => Promise.resolve(mockedCiSubscriptionList);
+
+export const getPublicBundleCISubscriptionsDetailMock =
+  (): Promise<PublicBundleCISubscriptionsDetail> => Promise.resolve(mockedCiSubscriptionDetail);

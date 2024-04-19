@@ -39,7 +39,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell({ value: t(params.row.ci_tax_code) }),
+      renderCell: (params) => renderCell({ value: t(params.row.creditor_institution_code) }),
       sortable: false,
       flex: 4,
     },
@@ -68,7 +68,7 @@ export function buildColumnDefs(
       editable: false,
       getActions: (params: any) => [
         <IconButton
-          key={`subsription-detail-button-${params.row.ci_tax_code}`}
+          key={`subsription-detail-button-${params.row.creditor_institution_code}`}
           data-testid="subsription-detail-button"
           onClick={() => setDrawerValue(params.row)}
         >

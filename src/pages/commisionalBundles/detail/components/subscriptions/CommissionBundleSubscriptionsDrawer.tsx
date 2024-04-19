@@ -1,9 +1,12 @@
-import { Typography, Button, Divider } from '@mui/material';
+import { Typography, Button, Divider, Skeleton } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { TFunction } from 'react-i18next';
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
-import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
+import {
+  PublicBundleCiSubscriptionDetailModel,
+  SubscriptionStateType,
+} from '../../../../../model/CommissionBundle';
 import { getStatusChip } from './CommissionBundleSubscriptionsColumns';
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.drawer';
@@ -15,15 +18,15 @@ export const CommissionBundleSubscriptionsDrawer = ({
   stateType,
 }: {
   t: TFunction<'translation', undefined>;
-  setSelectedSubscriptionRequest: (openDrawer: any) => void; // TODO TYPE
-  selectedSubscriptionRequest: any; // TODO TYPE
+  setSelectedSubscriptionRequest: (openDrawer: PublicBundleCiSubscriptionDetailModel) => void;
+  selectedSubscriptionRequest: PublicBundleCiSubscriptionDetailModel;
   setOpenMenageSubscriptionModal: (openModal: string) => void;
   stateType: SubscriptionStateType;
 }) => (
   <PaddedDrawer
-    openDrawer={selectedSubscriptionRequest?.ci_tax_code !== undefined}
+    openDrawer={selectedSubscriptionRequest.creditor_institution_code !== undefined}
     setOpenDrawer={() => setSelectedSubscriptionRequest({})}
-    drawerButtons={getButtons(t, stateType, setOpenMenageSubscriptionModal)} 
+    drawerButtons={getButtons(t, stateType, setOpenMenageSubscriptionModal)}
   >
     <TitleBox title={t(`${componentPath}.title`)} variantTitle="h5" />
 
@@ -41,7 +44,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
         {t(`${componentPath}.taxCode`)}
       </Typography>
       <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-        {selectedSubscriptionRequest?.ci_tax_code ?? '-'}
+        {selectedSubscriptionRequest?.creditor_institution_code ?? '-'}
       </Typography>
     </Box>
     <Divider />
@@ -53,6 +56,12 @@ export const CommissionBundleSubscriptionsDrawer = ({
     </Box>
 
     {/* TODO ADD TAXONOMIES */}
+    {!selectedSubscriptionRequest?.bundle_request_id ? (
+      <Skeleton animation="wave" variant="rectangular" width={'50%'} height={'1vh'} /> // TODO SKELETON COMPONENT
+    ) : (
+      selectedSubscriptionRequest?.ci_bundle_fee_list &&
+      selectedSubscriptionRequest.ci_bundle_fee_list.length > 0 && <></>
+    )}
   </PaddedDrawer>
 );
 

@@ -914,6 +914,7 @@
         },
         "error": {
           "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
+          "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
           "errorReject": "Errore durante il rifiuto della richiesta",
           "errorAccept": "Errore durante l'accettazione della richiesta",
           "errorDelete": "Errore durante l'eliminazione dell'adesione"

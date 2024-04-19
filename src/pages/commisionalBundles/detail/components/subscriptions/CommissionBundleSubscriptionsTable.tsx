@@ -12,13 +12,20 @@ import TableEmptyState from '../../../../../components/Table/TableEmptyState';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
-import { LOADING_TASK_SUBSCRIPTION_LIST } from '../../../../../utils/constants';
+import {
+  LOADING_TASK_SUBSCRIPTION_LIST,
+} from '../../../../../utils/constants';
 import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
-import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
+import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
+import {
+  PublicBundleCiSubscriptionDetailModel,
+  SubscriptionStateType,
+} from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
   getPublicBundleCISubscriptions,
+  getPublicBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
 } from '../../../../../services/bundleService';
 import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
@@ -39,7 +46,7 @@ const CommissionBundleSubscriptionsTable = () => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
+  const setLoadingList = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
 
   const { bundleId } = useParams<{ bundleId: string }>();
 
@@ -49,7 +56,7 @@ const CommissionBundleSubscriptionsTable = () => {
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
   const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
-    useState<PublicBundleCISubscriptionsDetail>({});
+    useState<PublicBundleCiSubscriptionDetailModel>({});
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
@@ -59,8 +66,30 @@ const CommissionBundleSubscriptionsTable = () => {
   const [subscriptionList, setSubscriptionList] =
     useState<PublicBundleCISubscriptionsResource>(emptySubriptionList);
 
-  function getSubscriptionDetail() {
-    setSelectedSubscriptionRequest({}); // TODO IMPLEMENT API
+  function getSubscriptionDetail(selectedRequest: CISubscriptionInfo) {
+    setSelectedSubscriptionRequest(selectedRequest);
+
+    getPublicBundleCISubscriptionsDetail({
+      idBundle: bundleId,
+      pspTaxCode: selectedParty?.fiscalCode ?? '',
+      ciTaxCode: selectedTaxCode,
+      status: selectedState,
+    })
+      .then((res: PublicBundleCISubscriptionsDetail) => {
+        setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
+      })
+      .catch((reason) =>
+        addError({
+          id: 'COMMISSION_BUNDLE_GET_SUBSCRIPTION_DETAIL',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while retrieving the subscriptions' detail`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t(`${componentPath}.error.errorGetDetail`),
+          component: 'Toast',
+        })
+      );
   }
 
   const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail);
@@ -70,7 +99,7 @@ const CommissionBundleSubscriptionsTable = () => {
     taxCodeFilter?: string,
     searchTriggered?: boolean
   ) => {
-    setLoading(true);
+    setLoadingList(true);
     if (searchTriggered) {
       setSelectedState(filterState);
       if (taxCodeFilter) {
@@ -108,7 +137,7 @@ const CommissionBundleSubscriptionsTable = () => {
           component: 'Toast',
         })
       )
-      .finally(() => setLoading(false));
+      .finally(() => setLoadingList(false));
   };
 
   const handleConfirmModal = async () => {
@@ -142,7 +171,7 @@ const CommissionBundleSubscriptionsTable = () => {
       promise = Promise.reject(new Error('No psp tax code or bundle request id'));
     }
 
-    setLoading(true);
+    setLoadingList(true);
     promise
       .catch((reason) =>
         addError({
@@ -233,7 +262,7 @@ const CommissionBundleSubscriptionsTable = () => {
                   />
                 ),
               }}
-              getRowId={(r) => r.ci_tax_code}
+              getRowId={(r) => r.creditor_institution_code}
               headerHeight={headerHeight}
               hideFooterSelectedRowCount={true}
               paginationMode="client"

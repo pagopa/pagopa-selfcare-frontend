@@ -102,14 +102,8 @@ const CommissionBundleSubscriptionsTable = () => {
     taxCodeFilter?: string,
     searchTriggered?: boolean
   ) => {
-    setSubscriptionList(emptySubriptionList);
     setLoadingList(true);
-    if (searchTriggered) {
-      setSelectedState(filterState);
-      if (taxCodeFilter !== undefined) {
-        setSelectedTaxCode(taxCodeFilter);
-      }
-    }
+
     getPublicBundleCISubscriptions({
       idBundle: bundleId,
       pspTaxCode: selectedParty?.fiscalCode ?? '',
@@ -140,7 +134,15 @@ const CommissionBundleSubscriptionsTable = () => {
           component: 'Toast',
         })
       )
-      .finally(() => setLoadingList(false));
+      .finally(() => {
+        if (searchTriggered) {
+          setSelectedState(filterState);
+          if (taxCodeFilter !== undefined) {
+            setSelectedTaxCode(taxCodeFilter);
+          }
+        }
+        setLoadingList(false);
+      });
   };
 
   const handleConfirmModal = async () => {

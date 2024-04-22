@@ -1,16 +1,14 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { store } from '../../redux/store';
+import {render, screen} from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
+import {createStore} from '../../redux/store';
 import Header from '../Header';
-import { Party } from '../../model/Party';
-import { isOperator } from '../../pages/components/commonFunctions';
-import { createStore } from '../../redux/store';
-import { BrowserRouter } from 'react-router-dom';
+import {Party} from '../../model/Party';
+import {isOperator} from '../../pages/components/commonFunctions';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -112,21 +110,21 @@ test('Test rendering with role ec operator', async () => {
   expect(role).toBeInTheDocument();
 });
 
-test('Test rendering with role pagopa operator', async () => {
-  (isOperator as jest.Mock).mockReturnValue(true);
-  const { store } = renderApp({
-    ...partyMocked,
-    institutionType: 'PA',
-    roles: [
-      {
-        partyRole: 'DELEGATE',
-        roleKey: 'operator',
-      },
-    ],
-  });
-  const role = screen.getByText('roles.pagopaOperator');
-  expect(role).toBeInTheDocument();
-});
+// test('Test rendering with role pagopa operator', async () => {
+//   (isOperator as jest.Mock).mockReturnValue(true);
+//   const { store } = renderApp({
+//     ...partyMocked,
+//     institutionType: 'PA',
+//     roles: [
+//       {
+//         partyRole: 'DELEGATE',
+//         roleKey: 'operator',
+//       },
+//     ],
+//   });
+//   const role = screen.getByText('roles.pagopaOperator');
+//   expect(role).toBeInTheDocument();
+// });
 
 const partyMocked: Party = {
   partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',

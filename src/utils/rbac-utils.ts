@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { SigninData } from '../model/Node';
-import { Party } from '../model/Party';
-import { ROLE } from '../model/RolePermission';
-import { isOperator } from '../pages/components/commonFunctions';
-import { getInstitutionApiKeys } from '../services/apiKeyService';
+import {SigninData} from '../model/Node';
+import {Party} from '../model/Party';
+import {ROLE} from '../model/RolePermission';
+import {isOperator} from '../pages/components/commonFunctions';
+import {getInstitutionApiKeys} from '../services/apiKeyService';
 
 export const isPspBrokerSigned = (signInData: SigninData | null) =>
   signInData?.brokerPspDetailsResource &&

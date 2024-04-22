@@ -32,6 +32,7 @@ import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { ProblemJson } from '../api/generated/portal/ProblemJson';
 import { TestStationResource } from '../api/generated/portal/TestStationResource';
+import { TestStationTypeEnum } from '../api/generated/portal/StationTestsDto';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -212,10 +213,12 @@ export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
   }
 };
 
-export const testStation = (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+export const testStation = (hostProtocol: string, hostUrl: string, hostPort: number,
+ hostPath: string, testStationType: TestStationTypeEnum): Promise<TestStationResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return testStationMocked(hostUrl, hostPort, hostPath);
   } else {
-    return BackofficeApi.testStation(hostUrl, hostPort, hostPath).then((resource) => resource);
+    return BackofficeApi.testStation(hostProtocol, hostUrl, hostPort, hostPath, testStationType)
+    .then((resource) => resource);
   }
 };

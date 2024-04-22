@@ -74,6 +74,7 @@ const HeaderProduct = ({
             }]
         };
         if (orgDetails.psp_data) {
+            // @ts-ignore
             party.pspData = orgDetails?.psp_data;
         }
         setParty(party);

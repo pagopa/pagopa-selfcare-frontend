@@ -52,7 +52,6 @@ const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
   creditor_institutions_subscriptions: [],
 };
 
-// TODO manage get detail alert error on top of drawer
 const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: BundleResource }) => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();

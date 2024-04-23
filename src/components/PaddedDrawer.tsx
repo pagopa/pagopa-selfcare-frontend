@@ -20,7 +20,7 @@ export const PaddedDrawer = ({
   onClose?: () => void;
   drawerButtons?: React.ReactNode;
 }) => (
-  <Drawer open={openDrawer} onClose={() => onClose()} anchor="right" data-testid="padded-drawer">
+  <Drawer open={openDrawer} onClose={() => onClose()} anchor="right" data-testid="padded-drawer" style={{zIndex: 499}}>
     <Box p={3} py={1} sx={{ maxWidth: '420px', minWidth: '420px', minHeight: '65vh', height: "100%" }}>
       <Stack direction="row" justifyContent="space-between">
         <Box display="flex" justifyContent="flex-start" mb={1}>

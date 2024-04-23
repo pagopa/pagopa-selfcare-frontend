@@ -26,10 +26,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import { createBundle, updatePSPBundle } from '../../../services/bundleService';
-import {
-  isValidArray,
-  removeDateZoneInfo,
-} from '../../../utils/common-utils';
+import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
 import {
   LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
   LOADING_TASK_CREATING_COMMISSION_BUNDLE,
@@ -67,6 +64,7 @@ const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource):
   pspBusinessName: selectedParty?.description ?? '',
 });
 
+// eslint-disable-next-line complexity
 const validate = (
   values: Partial<BundleRequest>,
   edit: boolean | undefined,
@@ -83,10 +81,16 @@ const validate = (
           : undefined,
         maxPaymentAmount: !values.maxPaymentAmount
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          : values.minPaymentAmount && values.minPaymentAmount > values.maxPaymentAmount
+          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.lessThanMinPayment')
           : undefined,
         minPaymentAmount:
           !values.minPaymentAmount && values.minPaymentAmount !== 0
             ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+            : values.maxPaymentAmount && values.maxPaymentAmount < values.minPaymentAmount
+            ? t(
+                'commissionBundlesPage.addEditCommissionBundle.validationMessage.moreThanMaxPayment'
+              )
             : undefined,
         name: !values.name
           ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')

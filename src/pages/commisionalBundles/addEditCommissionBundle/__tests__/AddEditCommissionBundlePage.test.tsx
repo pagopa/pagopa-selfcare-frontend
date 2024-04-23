@@ -15,6 +15,7 @@ import {
   mockedCommissionBundlePspDetailPublic,
 } from '../../../../services/__mocks__/bundleService';
 import { BundleResource } from '../../../../api/generated/portal/BundleResource';
+import { removeDateZoneInfo } from '../../../../utils/common-utils';
 
 let spyOnUpdateBundle: jest.SpyInstance<any, unknown[]>;
 
@@ -134,6 +135,8 @@ describe('<AddEditCommissionBundlePage />', () => {
     delete requestBundle.idBundle;
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
+    requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
+    requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {
       expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
     });
@@ -369,6 +372,8 @@ describe('<AddEditCommissionBundlePage />', () => {
     delete requestBundle.idBundle;
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
+    requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
+    requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {
       expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
     });

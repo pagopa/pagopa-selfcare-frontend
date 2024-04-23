@@ -556,8 +556,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                targetConcat: testRtResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
-                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                targetConcat:
                                     t("addEditStationPage.addFormValidation.testFailed")
                             });
         }
@@ -570,8 +569,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                redirectConcat: testRedirectResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
-                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                redirectConcat:
                                     t("addEditStationPage.addFormValidation.testFailed")
                             });
         }
@@ -584,8 +582,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         formik
                             .setErrors({
                                 ...formik.errors,
-                                targetPofConcat: testPofResult.testResult === TestResultEnum.CERTIFICATE_ERROR ?
-                                    t("addEditStationPage.addFormValidation.testFailedCertificate") :
+                                targetPofConcat:
                                     t("addEditStationPage.addFormValidation.testFailed")
                             });
         }

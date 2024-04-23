@@ -12,7 +12,6 @@ import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, ChangeEvent, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
 import { CustomDataGrid } from '../../../../../components/Table/CustomDataGrid';
@@ -48,7 +47,7 @@ const pageLimit = 5;
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
 
-const emptySubriptionList: PublicBundleCISubscriptionsResource = {
+const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],
 };
@@ -76,7 +75,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
   const [successAlert, setSuccessAlert] = useState<string>();
 
   const [subscriptionList, setSubscriptionList] =
-    useState<PublicBundleCISubscriptionsResource>(emptySubriptionList);
+    useState<PublicBundleCISubscriptionsResource>(emptySubscriptionList);
 
   function getSubscriptionDetail(selectedRequest: CISubscriptionInfo) {
     setSelectedSubscriptionRequest(selectedRequest);
@@ -128,7 +127,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         ) {
           setSubscriptionList(res);
         } else {
-          setSubscriptionList(emptySubriptionList);
+          setSubscriptionList(emptySubscriptionList);
         }
       })
       .catch((reason) =>
@@ -159,61 +158,55 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     const actionType = openMenageSubscriptionModal;
     setOpenMenageSubscriptionModal(undefined);
 
-    let promise: Promise<string | void> = Promise.reject('Wrong action');
-    let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
-    if (selectedParty?.fiscalCode) {
-      if (selectedSubscriptionRequest?.bundle_request_id) {
-        if (actionType === 'reject') {
-          promise = rejectPublicBundleSubscription(
-            selectedParty.fiscalCode,
-            selectedSubscriptionRequest.bundle_request_id
-          );
-          actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
-        } else if (actionType === 'accept') {
-          promise = acceptBundleSubscriptionRequest(
-            selectedParty.fiscalCode,
-            selectedSubscriptionRequest.bundle_request_id
-          );
-          actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
-        }
-      } else {
-        promise = Promise.reject('No bundle request id');
-      }
-    } else {
-      promise = Promise.reject('No psp tax code');
-    }
+    let promise: Promise<string | void> | undefined;
+    let actionId: string;
 
-    // TODO instead of bundleId needed EC-Bundle relation id
+    if (actionType === 'reject') {
+      promise = rejectPublicBundleSubscription(
+        selectedParty?.fiscalCode ?? '',
+        selectedSubscriptionRequest?.bundle_request_id ?? ''
+      );
+      actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
+    }
+    if (actionType === 'accept') {
+      promise = acceptBundleSubscriptionRequest(
+        selectedParty?.fiscalCode ?? '',
+        selectedSubscriptionRequest?.bundle_request_id ?? ''
+      );
+      actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
+    }
     if (actionType === 'delete') {
+      // TODO instead of bundleId needed EC-Bundle relation id
       promise = deleteCIBundleSubscription(
-        bundleDetail?.idBundle ?? "",
+        bundleDetail?.idBundle ?? '',
         selectedSubscriptionRequest?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
-
-    promise
-      .then(() => {
-        setSelectedSubscriptionRequest({});
-        getSubscriptionList(0);
-        setSuccessAlert(actionType);
-      })
-      .catch((reason) =>
-        addError({
-          id: actionId,
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while managing the subscription request`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(`${componentPath}.error.${actionType}`),
-          component: 'Toast',
+    if (promise) {
+      promise
+        .then(() => {
+          setSelectedSubscriptionRequest({});
+          getSubscriptionList(0);
+          setSuccessAlert(actionType);
         })
-      )
-      .finally(() => {
-        setLoadingRequestAction(false);
-      });
+        .catch((reason) =>
+          addError({
+            id: actionId,
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while managing the subscription request`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(`${componentPath}.error.${actionType}`),
+            component: 'Toast',
+          })
+        )
+        .finally(() => {
+          setLoadingRequestAction(false);
+        });
+    }
   };
 
   function handleChangePage(value: number) {
@@ -312,11 +305,14 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         )}
       </Box>
       {successAlert && (
-        <div style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}>
-          <Alert severity="success" variant="outlined">
-            {t(`${componentPath}.alert.${successAlert}`)}
-          </Alert>
-        </div>
+        <Alert
+          severity="success"
+          variant="outlined"
+          style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}
+          data-testid="success-alert"
+        >
+          {t(`${componentPath}.alert.${successAlert}`)}
+        </Alert>
       )}
       <CommissionBundleSubscriptionsDrawer
         t={t}

@@ -68,8 +68,8 @@ export function buildColumnDefs(
       editable: false,
       getActions: (params: any) => [
         <IconButton
-          key={`subsription-detail-button-${params.row.creditor_institution_code}`}
-          data-testid="subsription-detail-button"
+          key={`subscription-detail-button-${params.row.creditor_institution_code}`}
+          data-testid="subscription-detail-button"
           onClick={() => setDrawerValue(params.row)}
         >
           <ChevronRightIcon color="primary" />

@@ -82,6 +82,8 @@ import {CIBrokerStationPage} from './generated/portal/CIBrokerStationPage';
 import {CreditorInstitutionContactsResource} from './generated/portal/CreditorInstitutionContactsResource';
 import {PaymentsResult} from './generated/portal/PaymentsResult';
 import { TestStationResource } from './generated/portal/TestStationResource';
+import { TestStationTypeEnum } from './generated/portal/StationTestDto';
+
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1108,12 +1110,15 @@ export const BackofficeApi = {
         return extractResponse(result, 200, onRedirectToLogin);
     },
 
-  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+  testStation: async (hostProtocol: string, hostUrl: string, hostPort: number,
+                       hostPath: string, testStationType: TestStationTypeEnum): Promise<TestStationResource> => {
     const result = await backofficeClient.testStation({
         body: {
+            hostProtocol,
             hostUrl,
             hostPort,
-            hostPath
+            hostPath,
+            testStationType
         }
     });
     return extractResponse(result, 200, onRedirectToLogin);

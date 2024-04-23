@@ -27,12 +27,14 @@ import {
 import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
+import { BundleResource } from '../../../../../api/generated/portal/BundleResource';
 import {
   PublicBundleCiSubscriptionDetailModel,
   SubscriptionStateType,
 } from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
+  deleteCIBundleSubscription,
   getPublicBundleCISubscriptions,
   getPublicBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
@@ -52,14 +54,12 @@ const emptySubriptionList: PublicBundleCISubscriptionsResource = {
 };
 
 // TODO manage get detail alert error on top of drawer
-const CommissionBundleSubscriptionsTable = () => {
+const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: BundleResource }) => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoadingList = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
   const setLoadingRequestAction = useLoading(LOADING_TASK_SUBSCRIPTION_ACTION);
-
-  const { bundleId } = useParams<{ bundleId: string }>();
 
   const [filterState, setFilterState] = useState<SubscriptionStateType>(
     SubscriptionStateType.Waiting
@@ -82,7 +82,7 @@ const CommissionBundleSubscriptionsTable = () => {
     setSelectedSubscriptionRequest(selectedRequest);
 
     getPublicBundleCISubscriptionsDetail({
-      idBundle: bundleId,
+      idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: selectedRequest.creditor_institution_code ?? '',
       status: selectedState,
@@ -114,7 +114,7 @@ const CommissionBundleSubscriptionsTable = () => {
     setLoadingList(true);
 
     getPublicBundleCISubscriptions({
-      idBundle: bundleId,
+      idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: taxCodeFilter ?? selectedTaxCode,
       limit: pageLimit,
@@ -161,7 +161,6 @@ const CommissionBundleSubscriptionsTable = () => {
 
     let promise: Promise<string | void> = Promise.reject('Wrong action');
     let actionId: string = 'COMMISSION_BUNDLE_SUBSCRIPTION_ACTION';
-    let errorDescription = 'general.errorDescription';
     if (selectedParty?.fiscalCode) {
       if (selectedSubscriptionRequest?.bundle_request_id) {
         if (actionType === 'reject') {
@@ -170,32 +169,35 @@ const CommissionBundleSubscriptionsTable = () => {
             selectedSubscriptionRequest.bundle_request_id
           );
           actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
-          errorDescription = `${componentPath}.error.errorReject`;
         } else if (actionType === 'accept') {
           promise = acceptBundleSubscriptionRequest(
             selectedParty.fiscalCode,
             selectedSubscriptionRequest.bundle_request_id
           );
           actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
-          errorDescription = `${componentPath}.error.errorAccept`;
         }
       } else {
-        if (actionType === 'delete') {
-          promise = Promise.resolve('delete'); // TODO IMPLEMENT DELETE API
-          actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
-          errorDescription = `${componentPath}.error.errorDelete`;
-        } else {
-          promise = Promise.reject('No bundle request id');
-        }
+        promise = Promise.reject('No bundle request id');
       }
     } else {
       promise = Promise.reject('No psp tax code');
+    }
+
+    // TODO instead of bundleId needed EC-Bundle relation id
+    if (actionType === 'delete') {
+      promise = deleteCIBundleSubscription(
+        bundleDetail?.idBundle ?? "",
+        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
+      );
+      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
 
     promise
       .then(() => {
         setSelectedSubscriptionRequest({});
         getSubscriptionList(0);
+        setSuccessAlert(actionType);
       })
       .catch((reason) =>
         addError({
@@ -205,13 +207,12 @@ const CommissionBundleSubscriptionsTable = () => {
           techDescription: `An error occurred while managing the subscription request`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(`${componentPath}.error.${errorDescription}`),
+          displayableDescription: t(`${componentPath}.error.${actionType}`),
           component: 'Toast',
         })
       )
       .finally(() => {
         setLoadingRequestAction(false);
-        setSuccessAlert(actionType);
       });
   };
 
@@ -312,7 +313,7 @@ const CommissionBundleSubscriptionsTable = () => {
       </Box>
       {successAlert && (
         <div style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}>
-          <Alert severity="success" variant="outlined" >
+          <Alert severity="success" variant="outlined">
             {t(`${componentPath}.alert.${successAlert}`)}
           </Alert>
         </div>

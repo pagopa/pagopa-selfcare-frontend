@@ -1185,4 +1185,17 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  deleteCIBundleSubscription: async (
+    idBundle: string,
+    ciTaxCode: string,
+    bundleName: string
+  ): Promise<void> => {
+    const result = await backofficeClient.deleteCIBundleSubscription({
+      'id-bundle': idBundle,
+      'ci-tax-code': ciTaxCode,
+      bundleName
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  }
 };

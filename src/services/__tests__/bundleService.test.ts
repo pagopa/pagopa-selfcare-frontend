@@ -13,6 +13,7 @@ import {
 import {
   acceptBundleSubscriptionRequest,
   createBundle,
+  deleteCIBundleSubscription,
   deletePSPBundle,
   getBundleDetailByPSP,
   getBundleListByPSP,
@@ -76,6 +77,11 @@ describe('BundleService test mocked', () => {
       status: SubscriptionStateType.Accepted,
     });
     expect(response).toMatchObject(mockedCiSubscriptionDetail);
+  });
+  test('Test deleteCIBundleSubscription', async () => {
+    expect(
+      deleteCIBundleSubscription('idBundle', 'ciTaxCode', 'bundleName')
+    ).resolves.not.toThrow();
   });
 });
 
@@ -182,6 +188,15 @@ describe('BundleService test client', () => {
         ciTaxCode: 'ciTaxCode',
         status: SubscriptionStateType.Accepted,
       })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test deleteCIBundleSubscription', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'deleteCIBundleSubscription')
+      .mockReturnValue(Promise.resolve());
+    expect(
+      deleteCIBundleSubscription('idBundle', 'ciTaxCode', 'bundleName')
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });

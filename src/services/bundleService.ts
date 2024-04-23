@@ -160,3 +160,19 @@ export const getPublicBundleCISubscriptionsDetail = ({
     });
   }
 };
+
+export const deleteCIBundleSubscription = (
+  idBundle: string,
+  ciTaxCode: string,
+  bundleName: string
+) => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.deleteCIBundleSubscription(
+      idBundle,
+      ciTaxCode,
+      bundleName,
+    );
+  }
+};

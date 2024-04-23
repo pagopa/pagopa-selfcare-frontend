@@ -145,7 +145,7 @@ const CommissionBundleDetailPage = () => {
 
           {commissionBundleDetail.type === TypeEnum.PUBLIC && isPsp() && (
             <Grid item xs={12} data-testid="subscription-table">
-              <CommissionBundleSubscriptionsTable />
+              <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail}/>
             </Grid>
           )}
         </Grid>

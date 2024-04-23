@@ -62,6 +62,7 @@ describe('<CommissionBundleSubscriptionsDrawer />', () => {
         setSelectedSubscriptionRequest={jest.fn()}
         selectedSubscriptionRequest={{
           ...mockedCiSubscriptionIntersectDetail,
+          ci_bundle_fee_list: undefined,
           bundle_request_id: undefined,
         }}
         setOpenMenageSubscriptionModal={spySetModal}

@@ -57,6 +57,14 @@ export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'transl
 
 export const formatDateToDDMMYYYY = (value: any): string => value.toLocaleDateString('en-GB');
 
+export const removeDateZoneInfo = (value: Date | undefined): Date | undefined => {
+  if(!value){
+    return value;
+  }
+  const userTimezoneOffset = value.getTimezoneOffset() * 60000;
+ return new Date(value.getTime() - userTimezoneOffset);
+};
+
 export const formatDateToDDMMYYYYhhmm = (value: any): string =>
   value.toLocaleString('en-GB', {
     year: 'numeric',

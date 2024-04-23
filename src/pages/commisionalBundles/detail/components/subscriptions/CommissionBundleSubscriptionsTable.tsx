@@ -175,9 +175,8 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }
     if (actionType === 'delete') {
-      // TODO instead of bundleId needed EC-Bundle relation id
       promise = deleteCIBundleSubscription(
-        bundleDetail?.idBundle ?? '',
+        selectedSubscriptionRequest?.ci_bundle_id ?? '',
         selectedSubscriptionRequest?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );

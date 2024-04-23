@@ -162,7 +162,7 @@ export const getPublicBundleCISubscriptionsDetail = ({
 };
 
 export const deleteCIBundleSubscription = (
-  idBundle: string,
+  ciBundleId: string,
   ciTaxCode: string,
   bundleName: string
 ) => {
@@ -170,7 +170,7 @@ export const deleteCIBundleSubscription = (
     return Promise.resolve();
   } else {
     return BackofficeApi.deleteCIBundleSubscription(
-      idBundle,
+      ciBundleId,
       ciTaxCode,
       bundleName,
     );

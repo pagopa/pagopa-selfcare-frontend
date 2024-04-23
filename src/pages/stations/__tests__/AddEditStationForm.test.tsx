@@ -163,27 +163,27 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
     const targetConcat = screen.getByTestId('targetConcat-test') as HTMLInputElement;
 
-    fireEvent.change(targetConcat, { target: { value: 'https:www.test.it:8080/pathTest' } });
+    fireEvent.change(targetConcat, { target: { value: 'https://www.test.it:8080/pathTest' } });
 
-    await waitFor(() => expect(targetConcat.value).toBe('https:www.test.it:8080/pathTest'));
+    await waitFor(() => expect(targetConcat.value).toBe('https://www.test.it:8080/pathTest'));
 
     const testTargetButton = screen.getByTestId('test-rt-endpoint-test');
     fireEvent.click(testTargetButton);
 
     const targePofConcat = screen.getByTestId('targetPofConcat-test') as HTMLInputElement;
 
-    fireEvent.change(targePofConcat, { target: { value: 'https:www.test.it:8080/pathTest' } });
+    fireEvent.change(targePofConcat, { target: { value: 'https://www.test.it:8080/pathTest' } });
 
-    await waitFor(() => expect(targePofConcat.value).toBe('https:www.test.it:8080/pathTest'));
+    await waitFor(() => expect(targePofConcat.value).toBe('https://www.test.it:8080/pathTest'));
 
     const testPofTargetButton = screen.getByTestId('test-pof-endpoint-test');
     fireEvent.click(testPofTargetButton);
 
     const redirectConcat = screen.getByTestId('redirectConcat-test') as HTMLInputElement;
 
-    fireEvent.change(redirectConcat, { target: { value: 'https:www.test.it:8080/pathTest' } });
+    fireEvent.change(redirectConcat, { target: { value: 'http://www.test.it/pathTest' } });
 
-    await waitFor(() => expect(redirectConcat.value).toBe('https:www.test.it:8080/pathTest'));
+    await waitFor(() => expect(redirectConcat.value).toBe('http://www.test.it/pathTest'));
 
     const testRedirectButton = screen.getByTestId('test-redirect-endpoint-test');
     fireEvent.click(testRedirectButton);
@@ -210,8 +210,16 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     (isOperator as jest.Mock).mockReturnValue(true);
+    const flags = {
+        flags: {['test-stations']: true}
+    };
+    await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
     const createStation = jest.spyOn(stationService, 'createStation');
+    const testStation = jest.spyOn(
+      stationService,
+      'testStation'
+    );
 
     render(
       <Provider store={store}>
@@ -235,11 +243,11 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.change(password, { target: { value: 123 } });
 
-    fireEvent.change(targetConcat, { target: { value: 'https:www.pagopa.it:8080/pathTest' } });
-    expect(targetConcat.value).toBe('https:www.pagopa.it:8080/pathTest');
+    fireEvent.change(targetConcat, { target: { value: 'https://www.pagopa.it:8080/pathTest' } });
+    expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest');
 
-    fireEvent.change(proxyConcat, { target: { value: 'http:10.79.20.33:80' } });
-    expect(proxyConcat.value).toBe('http:10.79.20.33:80');
+    fireEvent.change(proxyConcat, { target: { value: 'http://10.79.20.33:80' } });
+    expect(proxyConcat.value).toBe('http://10.79.20.33:80');
 
     const continueBtn = screen.getByText('addEditStationPage.addForm.continueButton');
     await waitFor(() => fireEvent.click(continueBtn));

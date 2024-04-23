@@ -61,6 +61,7 @@ import {isOperator} from '../../components/commonFunctions';
 import {alterStationValuesToFitCategories, getStationCategoryFromDetail, splitURL,} from '../../../utils/station-utils';
 import {ENV} from '../../../utils/env';
 import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
+import { TestStationTypeEnum } from '../../../api/generated/portal/StationTestDto';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 
@@ -450,9 +451,11 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.targetConcat
             );
             testStation(
+                protocolSplit,
                 hostSplit,
                 portSplit > 0 ? portSplit : 443,
-                pathSplit
+                pathSplit,
+                TestStationTypeEnum.PA_INVIA_RT
             ).then((item : TestStationResource) => {
                 setTestRtResult(item);
             }).finally(() => {
@@ -476,9 +479,11 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.redirectConcat
             );
             testStation(
+                protocolSplit,
                 hostSplit,
-                portSplit > 0 ? portSplit : 443,
-                pathSplit
+                portSplit > 0 ? portSplit : (protocolSplit.includes('https') ? 443 : 80),
+                pathSplit,
+                TestStationTypeEnum.PA_REDIRECT
             ).then((item : TestStationResource) => {
                 setTestRedirectResult(item);
             }).finally(() => {
@@ -502,9 +507,11 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 formik.values.targetPofConcat
             );
             testStation(
+                protocolSplit,
                 hostSplit,
                 portSplit > 0 ? portSplit : 443,
-                pathSplit
+                pathSplit,
+                TestStationTypeEnum.PA_VERIFY
             ).then((item : TestStationResource) => {
                 setTestPofResult(item);
             }).finally(() => {

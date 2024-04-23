@@ -32,7 +32,7 @@ import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { ProblemJson } from '../api/generated/portal/ProblemJson';
 import { TestStationResource } from '../api/generated/portal/TestStationResource';
-import { TestStationTypeEnum } from '../api/generated/portal/StationTestsDto';
+import { TestStationTypeEnum } from '../api/generated/portal/StationTestDto';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {

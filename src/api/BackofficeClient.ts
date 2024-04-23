@@ -14,10 +14,10 @@ import {
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
 import {
-  PublicBundleCiSubscriptionsDetailMethodParams,
-  PublicBundleCISubscriptionsMethodParams,
-  PublicBundleCISubscriptionsRequest,
-} from '../model/CommissionBundle';
+    PublicBundleCiSubscriptionsDetailMethodParams,
+    PublicBundleCISubscriptionsMethodParams,
+    PublicBundleCISubscriptionsRequest,
+  } from '../model/CommissionBundle';
 import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
@@ -48,6 +48,8 @@ import {
   Redirect_protocolEnum,
   WrapperChannelDetailsDto,
 } from './generated/portal/WrapperChannelDetailsDto';
+import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
+import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
 import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
 import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
@@ -86,8 +88,6 @@ import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPag
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
-import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
-import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
 import { TestStationResource } from './generated/portal/TestStationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
@@ -191,8 +191,8 @@ const channelBody = (channel: ChannelDetailsDto) => ({
 });
 
 export const BackofficeApi = {
-  getInstitutions: async (): Promise<Array<InstitutionDetail>> => {
-    const result = await backofficeClient.getInstitutions({});
+  getInstitutions: async (taxCode: string | undefined): Promise<Array<InstitutionDetail>> => {
+    const result = await backofficeClient.getInstitutions({ 'tax-code': taxCode });
 
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1115,13 +1115,32 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  testStation: async (hostUrl: string, hostPort: number, hostPath: string): Promise<TestStationResource> => {
+  testStation: async (
+    hostUrl: string,
+    hostPort: number,
+    hostPath: string
+  ): Promise<TestStationResource> => {
     const result = await backofficeClient.testStation({
-        body: {
-            hostUrl,
-            hostPort,
-            hostPath
-        }
+      body: {
+        hostUrl,
+        hostPort,
+        hostPath,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getCreditorInstitutions: async (
+    taxCode: string,
+    name: string | undefined,
+    page: number,
+    limit: number
+  ): Promise<CreditorInstitutionsResource> => {
+    const result = await backofficeClient.getCreditorInstitutions({
+      'ci-tax-code': taxCode,
+      name,
+      page,
+      limit,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1194,8 +1213,8 @@ export const BackofficeApi = {
     const result = await backofficeClient.deleteCIBundleSubscription({
       'id-bundle': idBundle,
       'ci-tax-code': ciTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
-  }
+  },
 };

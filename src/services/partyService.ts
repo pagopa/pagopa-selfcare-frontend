@@ -7,7 +7,7 @@ export const fetchParties = (): Promise<Array<Party>> => {
     if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
         return new Promise((resolve) => resolve(mockedParties));
     } else {
-        return BackofficeApi.getInstitutions().then((institutionResources) => institutionResources ? institutionResources.map(institutionResource2Party) : []);
+        return BackofficeApi.getInstitutions(undefined).then((institutionResources) => institutionResources ? institutionResources.map(institutionResource2Party) : []);
     }
 };
 

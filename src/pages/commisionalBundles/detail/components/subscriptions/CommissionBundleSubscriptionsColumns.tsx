@@ -3,6 +3,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import {
+  colorType,
   renderCell,
   renderStatusChip,
   showCustomHeader,
@@ -53,7 +54,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (_) => getStatusChip(t, filterState),
+      renderCell: (params) => getStatusChip(t, filterState, params.row.on_removal),
       sortable: false,
       flex: 4,
     },
@@ -84,13 +85,22 @@ export function buildColumnDefs(
 export const getStatusChip = (
   t: TFunction<'translation', undefined>,
   filterState: SubscriptionStateType,
+  onRemoval: boolean | undefined = undefined,
   size: 'small' | 'medium' | undefined = undefined
-) =>
-  renderStatusChip({
-    chipColor: filterState === SubscriptionStateType.Accepted ? 'success' : 'default',
+) => {
+  // eslint-disable-next-line functional/no-let
+  let chipColor: colorType = filterState === SubscriptionStateType.Accepted ? 'success' : 'default';
+  if (onRemoval) {
+    chipColor = 'error';
+  }
+  return renderStatusChip({
+    chipColor,
     chipLabel: t(
-      `commissionBundlesPage.commissionBundleDetail.subscriptionsTable.stateChip.${filterState}`
+      `commissionBundlesPage.commissionBundleDetail.subscriptionsTable.stateChip.${
+        onRemoval ? 'DELETING' : filterState
+      }`
     ),
-    dataTestId: `${filterState}-state-chip`,
+    dataTestId: `${onRemoval ? 'DELETING' : filterState}-state-chip`,
     size,
   });
+};

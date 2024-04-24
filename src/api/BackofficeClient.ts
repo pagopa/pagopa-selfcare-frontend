@@ -1211,12 +1211,12 @@ export const BackofficeApi = {
   },
 
   deleteCIBundleSubscription: async (
-    idBundle: string,
+    ciBundleId: string,
     ciTaxCode: string,
     bundleName: string
   ): Promise<void> => {
     const result = await backofficeClient.deleteCIBundleSubscription({
-      'id-bundle': idBundle,
+      'ci-bundle-id': ciBundleId,
       'ci-tax-code': ciTaxCode,
       bundleName,
     });

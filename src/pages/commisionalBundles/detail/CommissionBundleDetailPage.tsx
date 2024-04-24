@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
+import { BundleResource, TypeEnum } from '../../../api/generated/portal/BundleResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -17,8 +17,9 @@ import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { deletePSPBundle } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
-import CommissionBundleDetailConfiguration from './CommissionBundleDetailConfiguration';
-import CommissionBundleDetailTaxonomies from './CommissionBundleDetailTaxonomies';
+import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
+import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
+import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
 
 function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
   const { t } = useTranslation();
@@ -141,6 +142,12 @@ const CommissionBundleDetailPage = () => {
           <Grid item xs={6} data-testid="taxonomies-detail">
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
+
+          {commissionBundleDetail.type === TypeEnum.PUBLIC && isPsp() && (
+            <Grid item xs={12} data-testid="subscription-table">
+              <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail}/>
+            </Grid>
+          )}
         </Grid>
       </SideMenuLayout>
       <GenericModal

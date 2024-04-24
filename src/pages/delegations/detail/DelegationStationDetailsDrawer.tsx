@@ -27,12 +27,23 @@ export const DelegationStationDetailsDrawer = ({
     <PaddedDrawer
       openDrawer={drawerValue?.station_code !== undefined}
       setOpenDrawer={setDrawerValue}
+      drawerButtons={
+        <Button
+          fullWidth
+          onClick={() => {
+            setShowDisassociateStationModal(drawerValue?.station_code ?? '');
+            setDrawerValue({});
+          }}
+          color="error"
+          variant="outlined"
+          data-testid="station-detail-disassociate-station-button"
+        >
+          {t('delegationDetailPage.stationDetail.disassociateStaion')}
+        </Button>
+      }
     >
       <TitleBox title={t('delegationDetailPage.stationDetail.title')} variantTitle="h5" />
-      <Box
-        mb={1}
-        data-testid="station-detail-drawer-column"
-      >
+      <Box mb={1} data-testid="station-detail-drawer-column">
         <Box mt={3}>
           <Typography variant="overline">
             {t('delegationDetailPage.stationDetail.registry')}
@@ -90,7 +101,7 @@ export const DelegationStationDetailsDrawer = ({
           <ButtonNaked
             size="large"
             component="button"
-            endIcon={<ArrowForwardIcon/>}
+            endIcon={<ArrowForwardIcon />}
             onClick={() =>
               history.push(
                 generatePath(ROUTES.STATION_DETAIL, { stationId: drawerValue?.station_code })
@@ -135,26 +146,6 @@ export const DelegationStationDetailsDrawer = ({
               ? formatDateToDDMMYYYY(drawerValue?.last_modified_date)
               : '-'}
           </Typography>
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection={'column-reverse'}
-          justifyContent={'space-between'}
-          minHeight="40vh"
-        >
-          <Button
-            fullWidth
-            onClick={() => {
-              setShowDisassociateStationModal(drawerValue?.station_code ?? '');
-              setDrawerValue({});
-            }}
-            color="error"
-            variant="outlined"
-            data-testid="station-detail-disassociate-station-button"
-          >
-            {t('delegationDetailPage.stationDetail.disassociateStaion')}
-          </Button>
         </Box>
       </Box>
     </PaddedDrawer>

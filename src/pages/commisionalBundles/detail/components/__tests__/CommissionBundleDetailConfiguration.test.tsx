@@ -1,11 +1,11 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import CommissionBundleDetailConfiguration from '../../detail/CommissionBundleDetailConfiguration';
+import CommissionBundleDetailConfiguration from '../CommissionBundleDetailConfiguration';
 import {
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspDetailPrivate,
   mockedCommissionBundlePspDetailPublic,
-} from '../../../../services/__mocks__/bundleService';
+} from '../../../../../services/__mocks__/bundleService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

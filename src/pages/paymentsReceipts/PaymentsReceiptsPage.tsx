@@ -26,7 +26,8 @@ export default function PaymentsReceiptsPage() {
     }
   }
 
-  const handleSearchTrigger = () => {
+  const handleSearchTrigger = (filterDebtorOrIuv: string) => {
+    setDebtorOrIuvInput(filterDebtorOrIuv);
     setYearInput(selectedYear);
     setSearchTrigger((prev) => !prev);
   };
@@ -40,9 +41,8 @@ export default function PaymentsReceiptsPage() {
         variantSubTitle="body1"
       />
       <TableSearchBar
-        setSearchInput={setDebtorOrIuvInput}
+        handleSearchTrigger={handleSearchTrigger}
         componentName="paymentsReceiptsPage"
-        handleExtraTrigger={handleSearchTrigger}
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDatePicker

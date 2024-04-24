@@ -39,5 +39,8 @@ describe('<PaymentsReceiptsPage />', () => {
     await waitFor(() => {
       expect(filterDate.value).toBe("");
     })
+
+    const searchTrigger = screen.getByTestId("button-search");
+    fireEvent.click(searchTrigger)
   });
 });

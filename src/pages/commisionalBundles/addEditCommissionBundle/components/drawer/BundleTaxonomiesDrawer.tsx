@@ -275,35 +275,15 @@ export const BundleTaxonomiesDrawer = ({
                 )}
               </ButtonNaked>
             </div>
-            <Box
-              display="flex"
-              flexDirection={'column'}
-              justifyContent={'space-between'}
-              minHeight="60vh"
-            >
-              <Box>
-                {taxonomies?.map((item) => (
-                  <BundleTaxonomiesCheckboxButton
-                    key={item.specific_built_in_data}
-                    title={item.specific_built_in_data}
-                    subtitle={item.service_type}
-                    checked={checkedTaxonomies?.get(item.specific_built_in_data)}
-                    action={() => handleTaxonomyCheck(item)}
-                  />
-                ))}
-              </Box>
-              <Button
-                fullWidth
-                onClick={(_) => handleAdd()}
-                disabled={!checkedTaxonomiesCount}
-                color="primary"
-                variant="contained"
-                data-testid="taxonomies-add-button-test"
-              >
-                {t('general.add')}
-                {checkedTaxonomiesCount > 0 && ` (${checkedTaxonomiesCount})`}
-              </Button>
-            </Box>
+            {taxonomies?.map((item) => (
+              <BundleTaxonomiesCheckboxButton
+                key={item.specific_built_in_data}
+                title={item.specific_built_in_data}
+                subtitle={item.service_type}
+                checked={checkedTaxonomies?.get(item.specific_built_in_data)}
+                action={() => handleTaxonomyCheck(item)}
+              />
+            ))}
           </>
         );
       }
@@ -324,6 +304,22 @@ export const BundleTaxonomiesDrawer = ({
       hasBackButton={step !== 0}
       backButtonAction={(_) => handleBackButton()}
       onClose={() => handleOnClose()}
+      drawerButtons={
+        step === 2 &&
+        taxonomies.length > 0 && (
+          <Button
+            fullWidth
+            onClick={(_) => handleAdd()}
+            disabled={!checkedTaxonomiesCount}
+            color="primary"
+            variant="contained"
+            data-testid="taxonomies-add-button-test"
+          >
+            {t('general.add')}
+            {checkedTaxonomiesCount > 0 && ` (${checkedTaxonomiesCount})`}
+          </Button>
+        )
+      }
     >
       <TitleBox
         title={t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueTitle')}

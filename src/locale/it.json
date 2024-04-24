@@ -27,7 +27,7 @@
       "accessionDate": "Data adesione",
       "address": "Indirizzo",
       "city": "Città",
-      "province": "Provinca",
+      "province": "Provincia",
       "CAP": "CAP",
       "fiscalDomicile": "Domicilio Fiscale",
       "abiCode": "Codice ABI",
@@ -84,10 +84,10 @@
     "subtitlePSP": "Completa i dati necessari alla registrazione.",
     "subtitleEC": "Completa i dati mancanti per completare il censimento sul Nodo.",
     "breadcrumb": "Registrazione sul Nodo",
-    "error" : {
-      "retrieveChannelsErrorMessage" : "Errore durante l'ottenimento dei canali del PSP",
-      "retrieveStationsErrorMessage" : "Errore durante l'ottenimento delle stazioni dell'EC",
-      "retrieveChannelsAndStationsErrorMessage" : "Errore durante l'ottenimento dei canali e delle stazioni del PT"
+    "error": {
+      "retrieveChannelsErrorMessage": "Errore durante l'ottenimento dei canali del PSP",
+      "retrieveStationsErrorMessage": "Errore durante l'ottenimento delle stazioni dell'EC",
+      "retrieveChannelsAndStationsErrorMessage": "Errore durante l'ottenimento dei canali e delle stazioni del PT"
     },
     "directConnectionAlertMessage": "Attenzione! Selezionando connessione diretta dichiari di non avvalerti in maniera esclusiva di un Partner Tecnologico per interagire con la piattaforma pagoPa e di curare tutte le integrazioni necessarie.",
     "form": {
@@ -117,7 +117,7 @@
       "ecFields": {
         "address": "Indirizzo",
         "city": "Città",
-        "province": "Provinca",
+        "province": "Provincia",
         "CAP": "CAP",
         "fiscalDomicile": "Domicilio Fiscale",
         "intermediaryAvailable": {
@@ -875,6 +875,63 @@
       "modal": {
         "title": "Eliminazione pacchetto commissionale",
         "message": "Attenzione confermando l’operazione il pacchetto verrà eliminato."
+      },
+      "subscriptionsTable": {
+        "title": "Richieste di adesione",
+        "search": {
+          "placeholder": "Cerca per codice fiscale",
+          "stateFilter": "Stato"
+        },
+        "table": {
+          "emptyState": {
+            "WAITING": "Non sono presenti richieste d'adesione in attesa",
+            "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
+          }
+        },
+        "name": "Nome ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
+        "stateChip": {
+          "WAITING": "In attesa",
+          "ACCEPTED": "Accettata",
+          "DELETING": "In eliminazione"
+        },
+        "modal": {
+          "reject": {
+            "title": "Rifiuta richiesta",
+            "message": "L'ente riceverà una mail di avviso."
+          },
+          "accept": {
+            "title": "Conferma di accettazione",
+            "message": "L'ente riceverà una mail di conferma."
+          },
+          "delete": {
+            "title": "Rimuovi ente",
+            "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
+          }
+        },
+        "drawer": {
+          "title": "Dettaglio richiedente",
+          "feesTitle": "Commissioni a carico dell'ente",
+          "businessName": "Nome Ente",
+          "taxCode": "Codice Fiscale",
+          "state": "Stato",
+          "rejectButton": "Rifiuta richiesta",
+          "acceptButton": "Accetta richiesta",
+          "deleteButton": "Rimuovi ente"
+        },
+        "alert": {
+          "reject": "Richiesta rifiutata",
+          "accept": "Richiesta accettata",
+          "delete": "Ente rimosso"
+        },
+        "error": {
+          "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
+          "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
+          "reject": "Errore durante il rifiuto della richiesta",
+          "accept": "Errore durante l'accettazione della richiesta",
+          "delete": "Errore durante l'eliminazione dell'adesione"
+        }
       }
     },
     "addEditCommissionBundle": {
@@ -1066,7 +1123,7 @@
       "title": "Referente pagamenti",
       "drawerSubtitle": "Referente",
       "name": "Nome",
-      "surname" : "Cognome",
+      "surname": "Cognome",
       "email": "Email"
     },
     "tableTitle": "Stazioni associate",
@@ -1098,11 +1155,11 @@
       },
       "lastUpdate": "A partire da",
       "goToStationDetails": "Vai al dettaglio stazione",
-      "disassociateStaion" : "Dissocia stazione",
-      "modal" : {
-        "title" : "Dissocia stazione",
+      "disassociateStaion": "Dissocia stazione",
+      "modal": {
+        "title": "Dissocia stazione",
         "message": "L'ente potrà riscontrare l'interruzione dei servizi attivi su questa stazione."
-      } 
+      }
     }
   },
   "paymentsReceiptsPage": {
@@ -1185,6 +1242,7 @@
     "search": "Cerca",
     "add": "Aggiungi",
     "back": "Indietro",
+    "turnBack": "Torna indietro",
     "modify": "Modifica",
     "delete": "Elimina",
     "remove": "Rimuovi",
@@ -1199,6 +1257,7 @@
     "Iban": "IBAN",
     "errorTitle": "Errore",
     "operationTable": "Tavolo Operativo",
+    "errorDescription": "Errore generico",
     "validation": {
       "requiredField": "Campo obbligatorio"
     },

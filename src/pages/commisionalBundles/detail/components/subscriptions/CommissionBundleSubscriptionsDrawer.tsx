@@ -51,7 +51,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
       t,
       stateType,
       setOpenMenageSubscriptionModal,
-      selectedSubscriptionRequest.ci_bundle_fee_list !== undefined
+      selectedSubscriptionRequest.ci_bundle_fee_list !== undefined && !selectedSubscriptionRequest.on_removal
     )}
   >
     <TitleBox title={t(`${componentPath}.title`)} variantTitle="h5" />
@@ -78,7 +78,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
       <Typography variant="body1" color="action.active">
         {t(`${componentPath}.state`)}
       </Typography>
-      {getStatusChip(t, stateType, 'small')}
+      {getStatusChip(t, stateType, selectedSubscriptionRequest.on_removal, 'small')}
     </Box>
     {selectedSubscriptionRequest?.ci_bundle_fee_list === undefined ? (
       <SkeletonComponent />

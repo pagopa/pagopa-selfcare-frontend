@@ -48,7 +48,7 @@ export function renderCell({
   );
 }
 
-type colorType =
+export type colorType =
   | 'default'
   | 'primary'
   | 'secondary'

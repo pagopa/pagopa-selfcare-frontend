@@ -137,6 +137,7 @@ describe('<CommissionBundleSubscriptionsColumns />', () => {
 
     expect(screen.queryByTestId('WAITING-state-chip')).toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('WARNING-state-chip')).not.toBeInTheDocument();
   });
 
   test('Test status chip cell with accepted request', () => {
@@ -144,5 +145,14 @@ describe('<CommissionBundleSubscriptionsColumns />', () => {
 
     expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).toBeInTheDocument();
+    expect(screen.queryByTestId('WARNING-state-chip')).not.toBeInTheDocument();
+  });
+
+  test('Test status chip cell with on removal request', () => {
+    render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Accepted, true)}</>);
+
+    expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('DELETING-state-chip')).toBeInTheDocument();
   });
 });

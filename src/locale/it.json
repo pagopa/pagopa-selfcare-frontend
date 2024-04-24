@@ -893,7 +893,8 @@
         "state": "Stato",
         "stateChip": {
           "WAITING": "In attesa",
-          "ACCEPTED": "Accettata"
+          "ACCEPTED": "Accettata",
+          "DELETING": "In eliminazione"
         },
         "modal": {
           "reject": {

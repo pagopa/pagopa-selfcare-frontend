@@ -1,15 +1,15 @@
 /* eslint-disable complexity */
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory, useParams} from 'react-router';
 import ROUTES from '../../../routes';
-import { getChannelDetail, getChannelPSPs } from '../../../services/channelService';
-import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { isOperator } from '../../components/commonFunctions';
+import {getChannelDetail, getChannelPSPs} from '../../../services/channelService';
+import {LOADING_TASK_CHANNEL_DETAIL} from '../../../utils/constants';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
+import {useUserRole} from "../../../hooks/useUserRole";
 import ChannelDetails from './components/ChannelDetails';
 import ChannelDetailsWrap from './components/ChannelDetailsWrap';
 
@@ -22,7 +22,7 @@ const ChannelDetailPage = () => {
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const operator = isOperator();
+  const {userIsOperator} =  useUserRole();
   const goBack = () => history.push(ROUTES.CHANNELS);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const ChannelDetailPage = () => {
       .finally(() => setLoading(false));
   }, [selectedParty]);
 
-  return operator ? (
+  return userIsOperator ? (
     <ChannelDetails
       channelDetail={channelDetail}
       channelId={channelId}

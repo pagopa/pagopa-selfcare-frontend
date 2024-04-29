@@ -1,13 +1,13 @@
-import { Chip, Divider, Grid, Typography } from '@mui/material';
+import {Chip, Divider, Grid, Typography} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTranslation } from 'react-i18next';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { useHistory } from 'react-router';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useTranslation} from 'react-i18next';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {useHistory} from 'react-router';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
-import { usePermissions } from '../../../hooks/usePermissions';
+import {usePermissions} from '../../../hooks/usePermissions';
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 import CommonDetails from './CommonDetails';
 
 const ECRegistrationData = () => {
@@ -15,8 +15,9 @@ const ECRegistrationData = () => {
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
-  const { hasPermission } = usePermissions();
-  const isEcBroker = signinData && isEcBrokerSigned(signinData) && isEcSigned(signinData);
+  const { userHasPermission } = usePermissions();
+  const {orgIsEcSigned, orgIsEcBrokerSigned} = useOrganizationType();
+  const isEcBroker = signinData && orgIsEcBrokerSigned() && orgIsEcSigned();
 
   return (
     <>
@@ -123,7 +124,7 @@ const ECRegistrationData = () => {
         <ButtonNaked
           size="medium"
           component="button"
-          disabled={!hasPermission('node-signin')}
+          disabled={!userHasPermission('node-signin')}
           onClick={() => history.push(ROUTES.NODE_SIGNIN)}
           endIcon={<EditIcon />}
           sx={{ color: 'primary.main', mr: '20px' }}

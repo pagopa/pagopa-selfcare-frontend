@@ -1,31 +1,32 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { Badge as BadgeIcon } from '@mui/icons-material';
-import { Box, Button, Grid, Paper, Stack, TextField } from '@mui/material';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { FormikProps, useFormik } from 'formik';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import { BrokerAndEcDetailsResource } from '../../../api/generated/portal/BrokerAndEcDetailsResource';
-import { CreditorInstitutionAddressDto } from '../../../api/generated/portal/CreditorInstitutionAddressDto';
+import {Badge as BadgeIcon} from '@mui/icons-material';
+import {Box, Button, Grid, Paper, Stack, TextField} from '@mui/material';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {FormikProps, useFormik} from 'formik';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router';
+import {BrokerAndEcDetailsResource} from '../../../api/generated/portal/BrokerAndEcDetailsResource';
+import {CreditorInstitutionAddressDto} from '../../../api/generated/portal/CreditorInstitutionAddressDto';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { useSigninData } from '../../../hooks/useSigninData';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useSigninData} from '../../../hooks/useSigninData';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { deleteCIBroker } from '../../../services/brokerService';
+import {deleteCIBroker} from '../../../services/brokerService';
 import {
   createECAndBroker,
-  createECIndirect,
   createEcBroker,
+  createECIndirect,
   updateCreditorInstitution,
 } from '../../../services/nodeService';
-import { getStationsMerged } from '../../../services/stationService';
-import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
-import { isEcBrokerSigned, isEcSigned } from '../../../utils/rbac-utils';
+import {getStationsMerged} from '../../../services/stationService';
+import {LOADING_TASK_NODE_SIGN_IN_EC} from '../../../utils/constants';
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 import CommonRadioGroup from './components/CommonRadioGroup';
+
 
 type Props = {
   goBack: () => void;
@@ -34,13 +35,14 @@ type Props = {
 
 const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
+  const {orgIsEcBrokerSigned, orgIsEcSigned} = useOrganizationType();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
-  const ciDirect = signInData && isEcBrokerSigned(signInData) && isEcSigned(signInData);
+  const ciDirect = signInData && orgIsEcBrokerSigned() && orgIsEcSigned;
   const [hasCIStations, setHasCIStations] = useState(true);
 
   useEffect(() => {
@@ -127,9 +129,9 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
       reportingZip: false,
     };
 
-    if (isEcSigned(signInData) && selectedParty) {
+    if (orgIsEcSigned() && selectedParty) {
       try {
-        if (!isEcBrokerSigned(signInData) && intermediaryAvailableValue) {
+        if (!orgIsEcBrokerSigned() && intermediaryAvailableValue) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -162,7 +164,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
       }
     }
 
-    if (!isEcSigned(signInData) && selectedParty) {
+    if (!orgIsEcSigned() && selectedParty) {
       try {
         if (intermediaryAvailableValue) {
           await createECAndBroker(commonPayload);

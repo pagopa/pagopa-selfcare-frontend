@@ -3,7 +3,7 @@ import {GridSearchIcon} from '@mui/x-data-grid';
 import {useTranslation} from 'react-i18next';
 import {Link} from 'react-router-dom';
 import ROUTES from '../../../routes';
-import {isOperator} from '../../components/commonFunctions';
+import {useUserRole} from "../../../hooks/useUserRole";
 
 type Props = {
     stationCodeInput: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export default function StationsTableSearchBar({stationCodeInput, setStationCodeInput}: Props) {
     const {t} = useTranslation();
-    const operator = isOperator();
+    const {userIsOperator} = useUserRole();
 
     return (
         <Box width="100%" display="flex" sx={{mt: 1}}>
@@ -36,7 +36,7 @@ export default function StationsTableSearchBar({stationCodeInput, setStationCode
                 to={ROUTES.STATION_ADD}
                 variant="contained"
                 sx={{ml: 1, whiteSpace: 'nowrap', minWidth: 'auto'}}
-                disabled={operator}
+                disabled={userIsOperator}
                 data-testid={"create-station"}
             >
                 {t('stationsPage.createStationButtonLabel')}

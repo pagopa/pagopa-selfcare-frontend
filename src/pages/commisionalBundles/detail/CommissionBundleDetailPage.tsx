@@ -1,22 +1,21 @@
-import { Grid, Typography, Stack, Breadcrumbs, Button, Alert, AlertTitle } from '@mui/material';
-import { Box } from '@mui/system';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { Link, generatePath, useHistory, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import {Alert, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {generatePath, Link, useHistory, useParams} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {useState} from 'react';
+import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import { BundleResource, TypeEnum } from '../../../api/generated/portal/BundleResource';
-import { useAppSelector } from '../../../redux/hooks';
-import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { FormAction } from '../../../model/CommissionBundle';
+import {BundleResource, TypeEnum} from '../../../api/generated/portal/BundleResource';
+import {useAppSelector} from '../../../redux/hooks';
+import {LOADING_TASK_COMMISSION_BUNDLE_DETAIL} from '../../../utils/constants';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {FormAction} from '../../../model/CommissionBundle';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import { deletePSPBundle } from '../../../services/bundleService';
+import {formatDateToDDMMYYYYhhmm} from '../../../utils/common-utils';
+import {deletePSPBundle} from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
-import { Party } from '../../../model/Party';
+import {Party} from '../../../model/Party';
+import {useUserRole} from "../../../hooks/useUserRole";
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
@@ -40,7 +39,7 @@ function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
-  const { isPsp, isEc } = usePermissions();
+  const { userIsPspAdmin, userIsEcAdmin } = useUserRole();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
@@ -94,7 +93,7 @@ const CommissionBundleDetailPage = () => {
 
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {isPsp() && (
+              {userIsPspAdmin && (
                 <>
                   <Button
                     color="error"
@@ -143,7 +142,7 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
 
-          {commissionBundleDetail.type === TypeEnum.PUBLIC && isPsp() && (
+          {commissionBundleDetail.type === TypeEnum.PUBLIC && userIsPspAdmin && (
             <Grid item xs={12} data-testid="subscription-table">
               <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail}/>
             </Grid>

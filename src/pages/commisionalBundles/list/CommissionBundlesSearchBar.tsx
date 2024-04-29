@@ -2,7 +2,7 @@ import {Box, Button, TextField} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {generatePath, Link as RouterLink} from 'react-router-dom';
 import ROUTES from '../../../routes';
-import {usePermissions} from '../../../hooks/usePermissions';
+import {useUserRole} from "../../../hooks/useUserRole";
 
 type Props = {
     bundleNameInput: string;
@@ -11,7 +11,7 @@ type Props = {
 
 const CommissionBundlesSearchBar = ({bundleNameInput, setBundleNameInput}: Props) => {
     const {t} = useTranslation();
-    const {isPsp} = usePermissions();
+    const {userIsPspAdmin} = useUserRole();
 
     return (
     <Box width="100%" display="flex">
@@ -26,7 +26,7 @@ const CommissionBundlesSearchBar = ({bundleNameInput, setBundleNameInput}: Props
                     'data-testid': 'search-name-test',
                 }}
             />
-            {isPsp() && (
+            {userIsPspAdmin && (
                 <Button
                     component={RouterLink}
                     to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}

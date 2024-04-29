@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -6,31 +6,30 @@ import Paper from '@mui/material/Paper';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Trans, useTranslation } from 'react-i18next';
-import { Box } from '@mui/system';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useFormik } from 'formik';
-import { generatePath, useHistory, useParams } from 'react-router-dom';
-import { theme } from '@pagopa/mui-italia';
-import { FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
+import {Trans, useTranslation} from 'react-i18next';
+import {Box} from '@mui/system';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useFormik} from 'formik';
+import {generatePath, useHistory, useParams} from 'react-router-dom';
+import {theme} from '@pagopa/mui-italia';
+import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import ROUTES from '../../../routes';
 import {
-  INSTITUTIONS_EC_STATION_TYPES,
+  INSTITUTIONS_EC_TYPES,
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
-import { checkInstitutionTypes } from '../../../utils/institution-types-utils';
+import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
+import {associateEcToStation, getCreditorInstitutionSegregationcodes,} from '../../../services/stationService';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {CreditorInstitutionStationDto} from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import {
-  associateEcToStation,
-  getCreditorInstitutionSegregationcodes,
-} from '../../../services/stationService';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
-import { CreditorInstitutionAssociatedCodeList } from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
-import { Delegation } from '../../../api/generated/portal/Delegation';
-import { getBrokerDelegation } from '../../../services/institutionService';
-import { extractProblemJson } from '../../../utils/client-utils';
+  CreditorInstitutionAssociatedCodeList
+} from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
+import {Delegation} from '../../../api/generated/portal/Delegation';
+import {getBrokerDelegation} from '../../../services/institutionService';
+import {extractProblemJson} from '../../../utils/client-utils';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -148,7 +147,7 @@ function StationAssociateECPage() {
   const addItselfAsAvaliableEC = (delegations: Array<Delegation>) => {
     if (
       selectedParty &&
-      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_STATION_TYPES)
+      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_TYPES)
     ) {
       // eslint-disable-next-line functional/immutable-data
       delegations.push({

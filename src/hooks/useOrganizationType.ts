@@ -5,9 +5,15 @@ import {useAppSelector} from '../redux/hooks';
 import {partiesSelectors} from '../redux/slices/partiesSlice';
 import {INSTITUTIONS_EC_TYPES, INSTITUTIONS_PSP_TYPES, INSTITUTIONS_PT_TYPES} from "../utils/constants";
 
+type OrgTypes = { isPsp: boolean, isPspBroker: boolean, isEc: boolean, isEcBroker: boolean };
+
+type OrgInfo = {
+    types: OrgTypes,
+    isSigned: boolean
+};
+
 export const useOrganizationType = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-
     const signInData = useAppSelector(partiesSelectors.selectSigninData);
 
     const orgIsPspAndBroker: boolean =
@@ -22,7 +28,7 @@ export const useOrganizationType = () => {
     const orgIsEc: boolean =
         (signInData?.creditorInstitutionDetailsResource && Object.keys(signInData?.creditorInstitutionDetailsResource).length > 0) ?? false;
 
-    const info = {
+    const info: OrgInfo = {
         // pagopa types
         types: {
             isPsp: INSTITUTIONS_PSP_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsPsp,

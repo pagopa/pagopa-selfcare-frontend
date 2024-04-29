@@ -8,7 +8,8 @@ import {BrowserRouter} from 'react-router-dom';
 import {createStore} from '../../redux/store';
 import Header from '../Header';
 import {Party} from '../../model/Party';
-import {isOperator} from '../../pages/components/commonFunctions';
+import {ROLE} from "../../model/RolePermission";
+import * as useUserRole from "../../hooks/useUserRole";
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -42,13 +43,23 @@ const renderApp = (
 };
 
 test('Test rendering', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp(partyMocked);
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+  });  const { store } = renderApp(partyMocked);
 });
 
 test('Test rendering with role psp admin', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PSP',
     roles: [
@@ -63,8 +74,13 @@ test('Test rendering with role psp admin', async () => {
 });
 
 test('Test rendering with role psp operator', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PSP',
     roles: [
@@ -79,7 +95,13 @@ test('Test rendering with role psp operator', async () => {
 });
 
 test('Test rendering with role ec admin', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+  });
   const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PA',
@@ -95,8 +117,13 @@ test('Test rendering with role ec admin', async () => {
 });
 
 test('Test rendering with role ec operator', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PA',
     roles: [

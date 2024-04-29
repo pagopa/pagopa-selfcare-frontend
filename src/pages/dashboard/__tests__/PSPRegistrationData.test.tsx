@@ -1,20 +1,16 @@
-import React from 'react';
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-
-import {Provider} from 'react-redux';
+import {fireEvent, screen, waitFor} from '@testing-library/react';
 import {createMemoryHistory} from 'history';
-import {ThemeProvider} from '@mui/material';
-import {theme} from '@pagopa/mui-italia';
 import '../../../locale';
-import {Router} from 'react-router-dom';
 
 import {createStore} from '../../../redux/store';
 import {pspAdminSignedDirect, pspAdminUnsigned,} from '../../../services/__mocks__/partyService';
-import PSPRegistrationData from '../components/PSPRegistrationData';
 import {SigninData} from '../../../model/Node';
 import {brokerOrPspDetailsResource_PSPAndBroker} from '../../../services/__mocks__/nodeService';
 import ROUTES from '../../../routes';
-import {isOperator} from "../../components/commonFunctions";
+import * as usePermissions from '../../../hooks/usePermissions';
+import * as useUserRole from '../../../hooks/useUserRole';
+import * as useOrganizationType from '../../../hooks/useOrganizationType';
+import {ROLE} from "../../../model/RolePermission";
 
 const signInData: SigninData = {};
 
@@ -26,6 +22,9 @@ beforeEach(() => {
 });
 
 jest.mock("../../components/commonFunctions");
+jest.mock('../../../../hooks/usePermissions');
+jest.mock('../../../../hooks/useUserRole');
+jest.mock('../../../../hooks/useOrganizationType');
 
 
 const renderApp = (
@@ -34,16 +33,36 @@ const renderApp = (
 ) => {
     const store = injectedStore ? injectedStore : createStore();
     const history = injectedHistory ? injectedHistory : createMemoryHistory();
-    (isOperator as jest.Mock).mockReturnValue(false);
-    render(
-        <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <Router history={history}>
-                    <PSPRegistrationData/>
-                </Router>
-            </ThemeProvider>
-        </Provider>
-    );
+    jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
+        userHasPermission: (_) => true,
+    });
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PSP_ADMIN,
+        userIsPspAdmin: true,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: false,
+    });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            isSigned: true,
+            types: {
+                isEc: false,
+                isPsp: true,
+                isEcBroker: false,
+                isPspBroker: false,
+            }
+        },
+
+        orgIsPspDirect: () => true,
+        orgIsEcDirect: () => false,
+        orgIsDirect: () => false,
+
+        orgIsPspSigned: () => true,
+        orgIsPspBrokerSigned: () => false,
+        orgIsEcSigned: () => false,
+        orgIsEcBrokerSigned: () => false,
+    });
     return {store, history};
 };
 

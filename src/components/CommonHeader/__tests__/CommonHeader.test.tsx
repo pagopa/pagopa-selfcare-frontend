@@ -1,31 +1,46 @@
 import {JwtUser} from '@pagopa/mui-italia';
 import {render} from '@testing-library/react';
 import CommonHeader from '../CommonHeader';
-import {isOperator} from '../../../pages/components/commonFunctions';
+import * as useUserRole from "../../../hooks/useUserRole";
+import {ROLE} from "../../../model/RolePermission";
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+    });
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+    });
 });
 
 jest.mock('../../../pages/components/commonFunctions.ts');
 
 
 describe('<CommonHeader />', () => {
-  const mockedUser: JwtUser = {
-    id: '0',
-    name: 'loggedName',
-    surname: 'loggedSurname',
-    email: 'loggedEmail@aa.aa',
-  };
+    const mockedUser: JwtUser = {
+        id: '0',
+        name: 'loggedName',
+        surname: 'loggedSurname',
+        email: 'loggedEmail@aa.aa',
+    };
 
-  test('render CommonHeader component', () => {
-    (isOperator as jest.Mock).mockReturnValue(false);
-    render(<CommonHeader withSecondHeader={true} loggedUser={mockedUser} />);
-  });
+    test('render CommonHeader component', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+        });
+        render(<CommonHeader withSecondHeader={true} loggedUser={mockedUser}/>);
+    });
 
-  test('render CommonHeader component withSecondHeader false', () => {
-    (isOperator as jest.Mock).mockReturnValue(false);
-    render(<CommonHeader withSecondHeader={false} loggedUser={mockedUser} />);
-  });
+    test('render CommonHeader component withSecondHeader false', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: false,
+        });
+        render(<CommonHeader withSecondHeader={false} loggedUser={mockedUser}/>);
+    });
 });

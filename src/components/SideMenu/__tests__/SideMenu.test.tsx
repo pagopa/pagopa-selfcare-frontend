@@ -1,34 +1,21 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import {
-  fireEvent,
-  queryAllByText,
-  queryByText,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import {Provider} from 'react-redux';
+import {fireEvent, render, screen, waitFor,} from '@testing-library/react';
 import * as usePermissions from '../../../hooks/usePermissions';
 import * as ENV from '../../../utils/env';
-import { createMemoryHistory } from 'history';
+import {createMemoryHistory} from 'history';
 import SideMenu from '../SideMenu';
-import { ThemeProvider } from '@mui/material';
-import { Router } from 'react-router-dom';
-import { theme } from '@pagopa/mui-italia';
-import { createStore } from '../../../redux/store';
-import {
-  ecAdminSignedDirect,
-  pspAdminUnsigned,
-} from '../../../services/__mocks__/partyService';
+import {ThemeProvider} from '@mui/material';
+import {Router} from 'react-router-dom';
+import {theme} from '@pagopa/mui-italia';
+import {createStore} from '../../../redux/store';
+import {ecAdminSignedDirect, pspAdminUnsigned,} from '../../../services/__mocks__/partyService';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
-    hasPermission: (_) => true,
-    isPsp: jest.fn(),
-    isEc: jest.fn(),
-    isPspDirect: jest.fn(),
+    userHasPermission: () => true,
   });
 });
 

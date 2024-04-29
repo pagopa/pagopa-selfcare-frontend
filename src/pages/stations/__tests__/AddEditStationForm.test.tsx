@@ -1,32 +1,22 @@
 import * as React from 'react';
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  getByRole,
-  within,
-} from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor, within,} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {store} from '../../../redux/store';
 import AddEditStationForm from '../addEditStation/AddEditStationForm';
-import { StationFormAction, StationOnCreation } from '../../../model/Station';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
-import {
-  ProtocolEnum,
-  RedirectProtocolEnum,
-} from '../../../api/generated/portal/StationDetailsDto';
-import { isOperator } from '../../components/commonFunctions';
-import { partiesActions } from '../../../redux/slices/partiesSlice';
-import { ecAdminSignedDirect } from '../../../services/__mocks__/partyService';
+import {StationFormAction, StationOnCreation} from '../../../model/Station';
+import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
+import {ProtocolEnum, RedirectProtocolEnum,} from '../../../api/generated/portal/StationDetailsDto';
+import {partiesActions} from '../../../redux/slices/partiesSlice';
+import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
 import * as stationService from '../../../services/stationService';
+import * as useUserRole from '../../../hooks/useUserRole';
 import {featureFlagsActions} from "../../../redux/slices/featureFlagsSlice";
+import {ROLE} from "../../../model/RolePermission";
 
 
 jest.mock('../../components/commonFunctions');
@@ -74,7 +64,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   };
 
   test('Test rendering AddEditStationForm with operator false', async () => {
-    (isOperator as jest.Mock).mockReturnValue(false);
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PSP_ADMIN,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: false,
+    });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
 
@@ -129,7 +125,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test Edit AddEditStationForm with operator false', async () => {
-    (isOperator as jest.Mock).mockReturnValue(false);
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PSP_ADMIN,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: false,
+    });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const flags = {
         flags: {['test-stations']: true}
@@ -209,7 +211,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
   test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
-    (isOperator as jest.Mock).mockReturnValue(true);
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+    });
     const flags = {
         flags: {['test-stations']: true}
     };
@@ -260,8 +268,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test rendering AddEditStationForm with operator true', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
-
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+    });
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -313,8 +326,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test rendering AddEditStationForm with operator true', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
-
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+    });
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -357,7 +375,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   });
 
   test('Test gdpConcat select handleChange with operator true', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+    });
 
     const container = render(
       <Provider store={store}>

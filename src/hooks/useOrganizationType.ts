@@ -5,11 +5,16 @@ import {useAppSelector} from '../redux/hooks';
 import {partiesSelectors} from '../redux/slices/partiesSlice';
 import {INSTITUTIONS_EC_TYPES, INSTITUTIONS_PSP_TYPES, INSTITUTIONS_PT_TYPES} from "../utils/constants";
 
-type OrgTypes = { isPsp: boolean, isPspBroker: boolean, isEc: boolean, isEcBroker: boolean };
+export type OrgTypes = {
+    isPsp: boolean;
+    isPspBroker: boolean;
+    isEc: boolean;
+    isEcBroker: boolean;
+};
 
-type OrgInfo = {
-    types: OrgTypes,
-    isSigned: boolean
+export type OrgInfo = {
+    types: OrgTypes;
+    isSigned: boolean;
 };
 
 export const useOrganizationType = () => {

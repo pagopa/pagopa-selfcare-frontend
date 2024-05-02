@@ -23,7 +23,7 @@ export const useUserRole = () => {
         userIsPspAdmin,
         userIsEcAdmin,
         userIsPspDirectAdmin,
-        userIsAdmin: userIsAdmin,
+        userIsAdmin,
         userIsOperator: isOperator,
     };
 };

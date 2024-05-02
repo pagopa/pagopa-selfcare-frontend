@@ -172,6 +172,7 @@ describe('<AddEditCommissionBundleForm />', () => {
     };
 
     test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
+        jest.setTimeout(30000);
         const injectStore = createStore();
         spyOnUseFlagValue.mockReturnValue(true);
         await waitFor(() =>

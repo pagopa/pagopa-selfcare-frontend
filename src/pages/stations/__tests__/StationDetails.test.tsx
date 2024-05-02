@@ -8,13 +8,14 @@ import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import StationDetails from '../detail/components/StationDetails';
 import {
-  RedirectProtocolEnum,
-  StationDetailResource,
-  WrapperStatusEnum,
+    RedirectProtocolEnum,
+    StationDetailResource,
+    WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
 import {partiesActions} from '../../../redux/slices/partiesSlice';
 import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
-import {isOperator} from '../../components/commonFunctions';
+import {ROLE} from "../../../model/RolePermission";
+import * as useUserRole from "../../../hooks/useUserRole";
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -24,10 +25,12 @@ beforeEach(() => {
 });
 
 jest.mock('../../components/commonFunctions');
+jest.mock("../../../hooks/useUserRole");
 
 afterEach(cleanup);
 
 const nodeCrypto = require('crypto');
+// @ts-ignore
 window.crypto = {
     getRandomValues: function (buffer) {
         return nodeCrypto.randomFillSync(buffer);
@@ -91,6 +94,14 @@ describe('<StationDetails />', () => {
 
     test('render component StationDetails and exit button test', () => {
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/stations/${mockedFullStationToCheck.stationCode}`]}>
@@ -107,8 +118,15 @@ describe('<StationDetails />', () => {
                 </MemoryRouter>
             </Provider>
         );
-        (isOperator as jest.Mock).mockReturnValue(false);
-        if (!isOperator()) {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: false,
+            userIsAdmin: false
+        });
+        if (!useUserRole.useUserRole().userIsOperator) {
             const backBtn = screen.getByTestId('exit-btn-test');
             fireEvent.click(backBtn);
             expect(history.location.pathname).toBe('/');
@@ -117,6 +135,14 @@ describe('<StationDetails />', () => {
 
     test('Test edit Button with StationDetails in role operator and status approved', async () => {
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/stations/${mockedFullStationApproved.stationCode}`]}>
@@ -133,14 +159,29 @@ describe('<StationDetails />', () => {
                 </MemoryRouter>
             </Provider>
         );
-        (isOperator as jest.Mock).mockReturnValue(true);
-        if (!isOperator()) {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true
+        });
+        if (!useUserRole.useUserRole().userIsOperator) {
             const editBtn = await screen.findByTestId('edit-btn-sts-approved');
             fireEvent.click(editBtn);
         }
     });
 
     test('render component StationDetails', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/stations/${mockedFullStationToCheck.stationCode}`]}>
@@ -157,14 +198,29 @@ describe('<StationDetails />', () => {
                 </MemoryRouter>
             </Provider>
         );
-        (isOperator as jest.Mock).mockReturnValue(false);
-        if (!isOperator()) {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: false
+        });
+        if (!useUserRole.useUserRole().userIsOperator) {
             const editBtn = await screen.findByTestId('edit-btn-sts-approved');
             fireEvent.click(editBtn);
         }
     });
 
     test('render component StationDetails and test ShowHidePassword button', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/stations/${mockedFullStationApproved.stationCode}`]}>

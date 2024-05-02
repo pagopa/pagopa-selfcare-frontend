@@ -50,7 +50,8 @@ test('Test rendering', async () => {
     userIsPspDirectAdmin: false,
     userIsOperator: false,
     userIsAdmin: true
-  });  const { store } = renderApp(partyMocked);
+  });
+  const { store } = renderApp(partyMocked);
 });
 
 test('Test rendering with role psp admin', async () => {
@@ -177,10 +178,10 @@ const partyMocked: Party = {
   ],
   urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: '36042',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09878',
+    abi_code: '36042',
+    vat_number_group: false,
   },
 };

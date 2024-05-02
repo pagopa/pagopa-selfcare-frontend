@@ -32,6 +32,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
 
   const stationDetail: StationOnCreation = {
+    redirectConcat: "", targetPofConcat: "",
     stationCode: '81001870922_06',
     enabled: true,
     brokerDescription: '',
@@ -57,10 +58,10 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     wrapperStatus: WrapperStatusEnum.APPROVED,
     password: 'password',
     proxyConcat: '',
-    proxyHost: 'http:10.79.20.33',
+    proxyHost: 'http://10.79.20.33',
     proxyPort: 80,
     gdpConcat: '',
-    newConnConcat: '',
+    newConnConcat: ''
   };
 
   test('Test rendering AddEditStationForm with operator false', async () => {

@@ -23,24 +23,18 @@ import {Party} from '../../../model/Party';
 import {createStore} from "../../../redux/store";
 import {ROLE} from "../../../model/RolePermission";
 import * as useUserRole from "../../../hooks/useUserRole";
+import * as useOrganizationType from "../../../hooks/useOrganizationType";
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-        userRole: ROLE.PAGOPA_OPERATOR,
-        userIsPspAdmin: false,
-        userIsEcAdmin: false,
-        userIsPspDirectAdmin: false,
-        userIsOperator: true,
-        userIsAdmin: true,
-    });
 });
 
 jest.mock('../../components/commonFunctions');
 jest.mock("../../../hooks/useUserRole");
+jest.mock("../../../hooks/useOrganizationType");
 
 const renderApp = (
     signinData?: SigninData,
@@ -70,6 +64,32 @@ const renderApp = (
 };
 
 test('Test rendering - PSP unsigned admin', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            types: {
+                isPsp: true,
+                isPspBroker: false,
+                isEc: false,
+                isEcBroker: false
+            },
+            isSigned: false
+        },
+        orgIsPspDirect: false,
+        orgIsEcDirect: false,
+        orgIsBroker: false,
+        orgIsPspSigned: false,
+        orgIsPspBrokerSigned: false,
+        orgIsEcSigned: false,
+        orgIsEcBrokerSigned: false
+    });
     const {store} = renderApp(undefined, pspAdminUnsigned);
     await waitFor(() =>
         store.dispatch({
@@ -93,6 +113,32 @@ test('Test rendering - PSP unsigned admin', async () => {
 });
 
 test('Test - EC direct signed - admin', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            types: {
+                isPsp: false,
+                isPspBroker: false,
+                isEc: true,
+                isEcBroker: false
+            },
+            isSigned: true
+        },
+        orgIsPspDirect: false,
+        orgIsEcDirect: false,
+        orgIsBroker: false,
+        orgIsPspSigned: false,
+        orgIsPspBrokerSigned: false,
+        orgIsEcSigned: true,
+        orgIsEcBrokerSigned: false
+    });
     const {store} = renderApp(brokerAndEcDetailsResource_ECAndBroker, ecAdminSignedDirect);
 
     await waitFor(() =>
@@ -117,6 +163,32 @@ test('Test - EC direct signed - admin', async () => {
 });
 
 test('Test - PSP direct signed - operator', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            types: {
+                isPsp: true,
+                isPspBroker: false,
+                isEc: false,
+                isEcBroker: false
+            },
+            isSigned: true
+        },
+        orgIsPspDirect: true,
+        orgIsEcDirect: false,
+        orgIsBroker: true,
+        orgIsPspSigned: false,
+        orgIsPspBrokerSigned: false,
+        orgIsEcSigned: false,
+        orgIsEcBrokerSigned: false
+    });
     const {store} = renderApp(brokerOrPspDetailsResource_PSPAndBroker, pspOperatorSignedDirect);
 
     await waitFor(() =>
@@ -141,6 +213,32 @@ test('Test - PSP direct signed - operator', async () => {
 });
 
 test('Test - PSP unsigned - operator', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            types: {
+                isPsp: true,
+                isPspBroker: false,
+                isEc: false,
+                isEcBroker: false
+            },
+            isSigned: false
+        },
+        orgIsPspDirect: false,
+        orgIsEcDirect: false,
+        orgIsBroker: false,
+        orgIsPspSigned: false,
+        orgIsPspBrokerSigned: false,
+        orgIsEcSigned: false,
+        orgIsEcBrokerSigned: false
+    });
     const {store} = renderApp(undefined, pspOperatorSignedDirect);
 
     await waitFor(() =>
@@ -154,5 +252,5 @@ test('Test - PSP unsigned - operator', async () => {
         screen.queryByRole('link', {
             name: /Completa registrazione/i,
         })
-    ).toBeNull();
+    ).toBeVisible();
 });

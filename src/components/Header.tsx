@@ -19,6 +19,7 @@ import CommonHeader from './CommonHeader/CommonHeader';
 type Props = WithPartiesProps & {
     onExit: (exitAction: () => void) => void;
     loggedUser?: User;
+    parties: Array<Party>;
 };
 
 const pagoPAProduct: ProductEntity = {

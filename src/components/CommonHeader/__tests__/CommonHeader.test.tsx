@@ -25,12 +25,12 @@ describe('<CommonHeader />', () => {
 
     test('render CommonHeader component', () => {
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-            userRole: ROLE.PAGOPA_OPERATOR,
+            userRole: ROLE.PSP_ADMIN,
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
-            userIsAdmin: true
+            userIsOperator: false,
+            userIsAdmin: false
         });
         render(<CommonHeader withSecondHeader={true} loggedUser={mockedUser}/>);
     });

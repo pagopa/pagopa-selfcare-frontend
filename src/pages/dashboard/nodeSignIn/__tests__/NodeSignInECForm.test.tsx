@@ -1,22 +1,21 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {createMemoryHistory} from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createStore } from '../../../../redux/store';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {createStore} from '../../../../redux/store';
 import NodeSignInECForm from '../NodeSignInECForm';
-import { BrokerAndEcDetailsResource } from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
+import {BrokerAndEcDetailsResource} from '../../../../api/generated/portal/BrokerAndEcDetailsResource';
 import {
-  brokerAndEcDetailsResource_ECAndBroker,
-  brokerAndEcDetailsResource_ECOnly,
-  ecDetails,
+    brokerAndEcDetailsResource_ECAndBroker,
+    brokerAndEcDetailsResource_ECOnly,
 } from '../../../../services/__mocks__/nodeService';
 import {
-  ecAdminSignedDirect,
-  ecAdminSignedUndirect,
-  ecAdminUnsigned,
+    ecAdminSignedDirect,
+    ecAdminSignedUndirect,
+    ecAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
 
 const renderApp = (
@@ -61,10 +60,10 @@ const setupForm = () => {
   expect(fiscalDomicile.value).toBe('Via Calindri 21');
 };
 
-let spyOnCreateECAndBroker;
-let spyOnCreateEcIndirect;
-let spyOnUpdateCreditorInstitution;
-let SpyOnCreateEcBroker;
+let spyOnCreateECAndBroker: jest.SpyInstance<any, unknown[]>;
+let spyOnCreateEcIndirect: jest.SpyInstance<any, unknown[]>;
+let spyOnUpdateCreditorInstitution: jest.SpyInstance<any, unknown[]>;
+let SpyOnCreateEcBroker: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
   spyOnCreateECAndBroker = jest.spyOn(
@@ -88,7 +87,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('NodeSignInECForm', () => {
-  const dispatchAdminUsignedAndSignInDataEmpty = async (store) => {
+  const dispatchAdminUsignedAndSignInDataEmpty = async (store: any) => {
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
@@ -104,7 +103,7 @@ describe('NodeSignInECForm', () => {
     );
   };
 
-  const dispatchAdminSignedIndirectAndEcDetailsOnly = async (store) => {
+  const dispatchAdminSignedIndirectAndEcDetailsOnly = async (store: any) => {
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
@@ -120,7 +119,7 @@ describe('NodeSignInECForm', () => {
     );
   };
 
-  const dispatchAdminSignedInDirectAndFullEcDetails = async (store) => {
+  const dispatchAdminSignedInDirectAndFullEcDetails = async (store: any) => {
     await waitFor(() =>
       store.dispatch({
         type: 'parties/setPartySelected',
@@ -215,19 +214,19 @@ describe('NodeSignInECForm', () => {
     const fiscalDomicile = screen.getByTestId('fiscal-domicile-test') as HTMLInputElement;
 
     expect(address.value).toBe(
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.location
+      brokerAndEcDetailsResource_ECAndBroker!.creditorInstitutionDetailsResource!.address!.location!
     );
     expect(city.value).toBe(
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.city
+      brokerAndEcDetailsResource_ECAndBroker!.creditorInstitutionDetailsResource!.address!.city!
     );
     expect(province.value).toBe(
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.countryCode
+      brokerAndEcDetailsResource_ECAndBroker!.creditorInstitutionDetailsResource!.address!.countryCode!
     );
     expect(CAP.value).toBe(
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.zipCode
+      brokerAndEcDetailsResource_ECAndBroker!.creditorInstitutionDetailsResource!.address!.zipCode!
     );
     expect(fiscalDomicile.value).toBe(
-      brokerAndEcDetailsResource_ECAndBroker.creditorInstitutionDetailsResource?.address.taxDomicile
+      brokerAndEcDetailsResource_ECAndBroker!.creditorInstitutionDetailsResource!.address!.taxDomicile!
     );
 
     fireEvent.change(address, { target: { value: 'Via Roma 11' } });
@@ -259,19 +258,19 @@ describe('NodeSignInECForm', () => {
       .querySelector('[value=false]') as HTMLInputElement;
 
     expect(address.value).toBe(
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.location
+      brokerAndEcDetailsResource_ECOnly!.creditorInstitutionDetailsResource!.address!.location!
     );
     expect(city.value).toBe(
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.city
+      brokerAndEcDetailsResource_ECOnly!.creditorInstitutionDetailsResource!.address!.city!
     );
     expect(province.value).toBe(
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.countryCode
+      brokerAndEcDetailsResource_ECOnly!.creditorInstitutionDetailsResource!.address!.countryCode!
     );
     expect(CAP.value).toBe(
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.zipCode
+      brokerAndEcDetailsResource_ECOnly!.creditorInstitutionDetailsResource!.address!.zipCode!
     );
     expect(fiscalDomicile.value).toBe(
-      brokerAndEcDetailsResource_ECOnly.creditorInstitutionDetailsResource?.address.taxDomicile
+      brokerAndEcDetailsResource_ECOnly!.creditorInstitutionDetailsResource!.address!.taxDomicile!
     );
 
     expect(intermediaryFalse.checked).toBe(true);

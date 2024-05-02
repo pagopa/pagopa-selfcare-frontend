@@ -54,12 +54,12 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             userHasPermission: (_) => true,
         });
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-            userRole: ROLE.PSP_ADMIN,
+            userRole: ROLE.PAGOPA_OPERATOR,
             userIsPspAdmin: true,
-            userIsEcAdmin: false,
-            userIsPspDirectAdmin: false,
-            userIsOperator: false,
-            userIsAdmin: false,
+            userIsEcAdmin: true,
+            userIsPspDirectAdmin: true,
+            userIsOperator: true,
+            userIsAdmin: true,
         });
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {
@@ -72,14 +72,14 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
                 }
             },
 
-            orgIsPspDirect: () => true,
-            orgIsEcDirect: () => false,
-            orgIsDirect: () => false,
+            orgIsPspDirect: true,
+            orgIsEcDirect: false,
+            orgIsBroker: false,
 
-            orgIsPspSigned: () => true,
-            orgIsPspBrokerSigned: () => false,
-            orgIsEcSigned: () => false,
-            orgIsEcBrokerSigned: () => false,
+            orgIsPspSigned: true,
+            orgIsPspBrokerSigned: false,
+            orgIsEcSigned: false,
+            orgIsEcBrokerSigned: false,
         });
     });
 
@@ -172,19 +172,35 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 }
             },
 
-            orgIsPspDirect: () => false,
-            orgIsEcDirect: () => true,
-            orgIsDirect: () => false,
+            orgIsPspDirect: false,
+            orgIsEcDirect: true,
+            orgIsBroker: false,
 
-            orgIsPspSigned: () => false,
-            orgIsPspBrokerSigned: () => false,
-            orgIsEcSigned: () => true,
-            orgIsEcBrokerSigned: () => false,
+            orgIsPspSigned: false,
+            orgIsPspBrokerSigned: false,
+            orgIsEcSigned: true,
+            orgIsEcBrokerSigned: false,
         });
+    });
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
     });
 
     test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
 
         render(
             <Provider store={store}>
@@ -202,7 +218,14 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
 
     test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate}/>
@@ -219,7 +242,14 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
 
     test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
         render(
             <Provider store={store}>
                 <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic}/>

@@ -35,8 +35,8 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const updateSigninData = useSigninData();
   const {orgInfo, orgIsPspDirect, orgIsEcDirect} = useOrganizationType();
 
-  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspDirect());
-  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcDirect());
+  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspDirect);
+  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcDirect);
   const [hasCIStations, setHasCIStations] = useState(true);
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
 

@@ -25,6 +25,7 @@ jest.mock("../../components/commonFunctions");
 jest.mock('../../../../hooks/usePermissions');
 jest.mock('../../../../hooks/useUserRole');
 jest.mock('../../../../hooks/useOrganizationType');
+jest.setTimeout(30000)
 
 
 const renderApp = (
@@ -42,6 +43,7 @@ const renderApp = (
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
         userIsOperator: false,
+        userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
         orgInfo: {

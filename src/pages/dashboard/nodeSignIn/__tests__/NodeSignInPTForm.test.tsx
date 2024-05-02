@@ -1,26 +1,19 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { fireEvent, waitFor } from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { PTResource } from '../../../../model/Node';
-import { createStore } from '../../../../redux/store';
-import {
-  ecBrokerDetails,
-  pspBrokerDetails,
-} from '../../../../services/__mocks__/nodeService';
-import {
-  PTUnsigned,
-  PTECPSPSigned,
-  PTPSPSigned,
-  PTECSigned,
-} from '../../../../services/__mocks__/partyService';
+import {Provider} from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
+import {PTResource} from '../../../../model/Node';
+import {createStore} from '../../../../redux/store';
+import {ecBrokerDetails, pspBrokerDetails,} from '../../../../services/__mocks__/nodeService';
+import {PTECPSPSigned, PTECSigned, PTPSPSigned, PTUnsigned,} from '../../../../services/__mocks__/partyService';
 import NodeSignInPTForm from '../NodeSignInPTForm';
-import { createMemoryHistory } from 'history';
-import { screen, render } from '@testing-library/react';
-import { mockedStationsMerged2 } from '../../../../services/__mocks__/stationService';
-import { mockedChannelsMerged } from '../../../../services/__mocks__/channelService';
+import {createMemoryHistory} from 'history';
+import {mockedStationsMerged2} from '../../../../services/__mocks__/stationService';
+import {mockedChannelsMerged} from '../../../../services/__mocks__/channelService';
+import * as useUserRole from "../../../../hooks/useUserRole";
+import {ROLE} from "../../../../model/RolePermission";
 
 let spyOnCreateBrokerPsp;
 let spyOnCreateEcBroker;
@@ -50,6 +43,15 @@ beforeEach(() => {
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.mock("../../../../hooks/useUserRole");
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PAGOPA_OPERATOR,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: true,
+    userIsAdmin: true
+  });
 });
 
 const renderApp = (

@@ -1,6 +1,5 @@
 import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
-import {isOperator} from '../../components/commonFunctions';
 
 import {Provider} from 'react-redux';
 import {createMemoryHistory} from 'history';
@@ -22,15 +21,26 @@ import NextSteps from '../components/NextSteps';
 import {SigninData} from '../../../model/Node';
 import {Party} from '../../../model/Party';
 import {createStore} from "../../../redux/store";
+import {ROLE} from "../../../model/RolePermission";
+import * as useUserRole from "../../../hooks/useUserRole";
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });
 });
 
 jest.mock('../../components/commonFunctions');
+jest.mock("../../../hooks/useUserRole");
 
 const renderApp = (
     signinData?: SigninData,
@@ -40,8 +50,14 @@ const renderApp = (
 ) => {
     const store = injectedStore ? injectedStore : createStore();
     const history = injectedHistory ? injectedHistory : createMemoryHistory();
-    (isOperator as jest.Mock).mockReturnValue(false);
-    render(
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
+    });    render(
         <Provider store={store}>
             <BrowserRouter>
                 <ThemeProvider theme={theme}>

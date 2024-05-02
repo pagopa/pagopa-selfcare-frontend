@@ -17,7 +17,7 @@ const ECRegistrationData = () => {
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
   const { userHasPermission } = usePermissions();
   const {orgIsEcSigned, orgIsEcBrokerSigned} = useOrganizationType();
-  const isEcBroker = signinData && orgIsEcBrokerSigned() && orgIsEcSigned();
+  const isEcBroker = signinData && orgIsEcBrokerSigned && orgIsEcSigned;
 
   return (
     <>

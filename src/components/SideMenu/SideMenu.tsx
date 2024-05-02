@@ -54,7 +54,7 @@ export default function SideMenu() {
         <Box display="grid" mt={1}>
             <Box gridColumn="auto">
                 <List>
-                    {useFlagValue('delegations-list') && orgIsDirect() && userHasPermission('delegations-list') && (
+                    {useFlagValue('delegations-list') && orgIsDirect && userHasPermission('delegations-list') && (
                         <>
                             <SidenavItem
                                 title={t('sideMenu.delegations.title')}
@@ -77,7 +77,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {userHasPermission('apikey') && orgIsDirect() && (
+                    {userHasPermission('apikey') && orgIsDirect && (
                         <SidenavItem
                             title={t('sideMenu.apikeys.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}

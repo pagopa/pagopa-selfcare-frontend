@@ -17,8 +17,8 @@ const PTRegistrationData = () => {
     const signinData = useAppSelector(partiesSelectors.selectSigninData);
     const {userHasPermission} = usePermissions();
     const {orgIsEcBrokerSigned, orgIsPspBrokerSigned} = useOrganizationType();
-    const isPspBroker = signinData && orgIsPspBrokerSigned();
-    const isEcBroker = signinData && orgIsEcBrokerSigned();
+    const isPspBroker = signinData && orgIsPspBrokerSigned;
+    const isEcBroker = signinData && orgIsEcBrokerSigned;
 
     return (
         <>

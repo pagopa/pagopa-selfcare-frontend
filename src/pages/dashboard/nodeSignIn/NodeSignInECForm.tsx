@@ -42,7 +42,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
-  const ciDirect = signInData && orgIsEcBrokerSigned() && orgIsEcSigned;
+  const ciDirect = signInData && orgIsEcBrokerSigned && orgIsEcSigned;
   const [hasCIStations, setHasCIStations] = useState(true);
 
   useEffect(() => {
@@ -129,9 +129,9 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
       reportingZip: false,
     };
 
-    if (orgIsEcSigned() && selectedParty) {
+    if (orgIsEcSigned && selectedParty) {
       try {
-        if (!orgIsEcBrokerSigned() && intermediaryAvailableValue) {
+        if (!orgIsEcBrokerSigned && intermediaryAvailableValue) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -164,7 +164,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
       }
     }
 
-    if (!orgIsEcSigned() && selectedParty) {
+    if (!orgIsEcSigned && selectedParty) {
       try {
         if (intermediaryAvailableValue) {
           await createECAndBroker(commonPayload);

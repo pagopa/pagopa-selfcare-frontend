@@ -59,6 +59,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsOperator: false,
+            userIsAdmin: false,
         });
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {

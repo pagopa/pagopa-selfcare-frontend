@@ -98,6 +98,7 @@ describe('<AddEditCommissionBundleForm />', () => {
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsOperator: false,
+            userIsAdmin: false,
         });
         jest.spyOn(console, 'error').mockImplementation(() => {
         });

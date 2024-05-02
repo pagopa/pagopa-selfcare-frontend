@@ -15,6 +15,7 @@ import {formatDateToDDMMYYYYhhmm} from '../../../utils/common-utils';
 import {deletePSPBundle} from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import {Party} from '../../../model/Party';
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 import {useUserRole} from "../../../hooks/useUserRole";
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
@@ -39,7 +40,8 @@ function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource
 
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
-  const { userIsPspAdmin, userIsEcAdmin } = useUserRole();
+  const {orgInfo } = useOrganizationType();
+  const {userIsAdmin } = useUserRole();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
@@ -93,7 +95,7 @@ const CommissionBundleDetailPage = () => {
 
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {userIsPspAdmin && (
+              {orgInfo.types.isPsp && userIsAdmin && (
                 <>
                   <Button
                     color="error"
@@ -142,7 +144,7 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
 
-          {commissionBundleDetail.type === TypeEnum.PUBLIC && userIsPspAdmin && (
+          {commissionBundleDetail.type === TypeEnum.PUBLIC && orgInfo.types.isPsp  && userIsAdmin && (
             <Grid item xs={12} data-testid="subscription-table">
               <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail}/>
             </Grid>

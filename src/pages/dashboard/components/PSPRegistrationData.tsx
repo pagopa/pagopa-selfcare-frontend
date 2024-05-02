@@ -22,7 +22,7 @@ const PSPRegistrationData = () => {
             ? t(`dashboardPage.registrationData.digitalStampValue.yes`)
             : t(`dashboardPage.registrationData.digitalStampValue.no`);
 
-    const isPspBroker = signinData && orgIsPspSigned() && orgIsPspBrokerSigned();
+    const isPspBroker = signinData && orgIsPspSigned && orgIsPspBrokerSigned;
 
     return (
         <>

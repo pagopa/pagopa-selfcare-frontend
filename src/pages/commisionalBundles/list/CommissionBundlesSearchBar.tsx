@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {generatePath, Link as RouterLink} from 'react-router-dom';
 import ROUTES from '../../../routes';
 import {useUserRole} from "../../../hooks/useUserRole";
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 
 type Props = {
     bundleNameInput: string;
@@ -11,7 +12,8 @@ type Props = {
 
 const CommissionBundlesSearchBar = ({bundleNameInput, setBundleNameInput}: Props) => {
     const {t} = useTranslation();
-    const {userIsPspAdmin} = useUserRole();
+    const {userIsAdmin} = useUserRole();
+    const {orgInfo} = useOrganizationType();
 
     return (
     <Box width="100%" display="flex">
@@ -26,7 +28,7 @@ const CommissionBundlesSearchBar = ({bundleNameInput, setBundleNameInput}: Props
                     'data-testid': 'search-name-test',
                 }}
             />
-            {userIsPspAdmin && (
+            {orgInfo.types.isPsp && userIsAdmin && (
                 <Button
                     component={RouterLink}
                     to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}

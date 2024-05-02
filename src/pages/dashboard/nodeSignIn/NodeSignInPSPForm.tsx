@@ -40,7 +40,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
     const [hasPSPChannels, setHasPSPChannels] = useState(true);
 
     useEffect(() => {
-        if (orgIsPspDirect()) {
+        if (orgIsPspDirect) {
             setIntermediaryAvailableValue(true);
         } else {
             setIntermediaryAvailableValue(false);
@@ -148,7 +148,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
 
         if (selectedParty && orgInfo.isSigned && orgInfo.types.isPsp) {
             try {
-                if (!orgIsPspDirect() && intermediaryAvailableValue) {
+                if (!orgIsPspDirect && intermediaryAvailableValue) {
                     await createPspBroker({
                         broker_psp_code: selectedParty.fiscalCode,
                         description: selectedParty.description,
@@ -157,7 +157,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
                     });
                 }
 
-                if (!hasPSPChannels && orgIsPspDirect() && !intermediaryAvailableValue) {
+                if (!hasPSPChannels && orgIsPspDirect && !intermediaryAvailableValue) {
                     await deletePSPBroker(selectedParty.fiscalCode);
                 }
 

@@ -70,6 +70,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: false,
+      userIsAdmin: false,
     });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
@@ -131,6 +132,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: false,
+      userIsAdmin: false,
     });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     const flags = {
@@ -217,6 +219,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: true,
+      userIsAdmin: true,
     });
     const flags = {
         flags: {['test-stations']: true}
@@ -274,6 +277,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: true,
+      userIsAdmin: true,
     });
     render(
       <Provider store={store}>
@@ -332,6 +336,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: true,
+      userIsAdmin: true,
     });
     render(
       <Provider store={store}>
@@ -381,6 +386,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
       userIsOperator: true,
+      userIsAdmin: true,
     });
 
     const container = render(

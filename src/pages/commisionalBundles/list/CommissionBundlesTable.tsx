@@ -48,12 +48,12 @@ const mapBundle = (bundleType: string) => {
 
 const CommissionBundlesTable = ({bundleNameFilter, bundleType}: Props) => {
     const {t} = useTranslation();
-    const {userIsPspAdmin, userIsEcAdmin} = useUserRole();
+    const {userIsAdmin} = useUserRole();
     const {orgInfo} = useOrganizationType();
     const addError = useErrorDispatcher();
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
-    const columns: Array<GridColDef> = buildColumnDefs(t, userIsPspAdmin, userIsEcAdmin);
+    const columns: Array<GridColDef> = buildColumnDefs(t, orgInfo.types.isPsp, orgInfo.types.isEc);
     const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
     const [page, setPage] = useState(0);
     const brokerCode = selectedParty?.fiscalCode ?? '';

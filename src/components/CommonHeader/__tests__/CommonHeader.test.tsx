@@ -12,6 +12,7 @@ beforeEach(() => {
 });
 
 jest.mock('../../../pages/components/commonFunctions.ts');
+jest.mock("../../../hooks/useUserRole");
 
 
 describe('<CommonHeader />', () => {
@@ -29,6 +30,7 @@ describe('<CommonHeader />', () => {
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsOperator: true,
+            userIsAdmin: true
         });
         render(<CommonHeader withSecondHeader={true} loggedUser={mockedUser}/>);
     });
@@ -40,6 +42,7 @@ describe('<CommonHeader />', () => {
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsOperator: false,
+            userIsAdmin: true
         });
         render(<CommonHeader withSecondHeader={false} loggedUser={mockedUser}/>);
     });

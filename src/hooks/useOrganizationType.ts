@@ -47,14 +47,14 @@ export const useOrganizationType = () => {
     return {
         orgInfo: info,
 
-        orgIsPspDirect: () => info.types.isPsp && info.types.isPspBroker,
-        orgIsEcDirect: () => info.types.isEc && info.types.isEcBroker,
-        orgIsDirect: () => info.types.isPspBroker || info.types.isEcBroker,
+        orgIsPspDirect: info.types.isPsp && info.types.isPspBroker,
+        orgIsEcDirect: info.types.isEc && info.types.isEcBroker,
+        orgIsDirect: info.types.isPspBroker || info.types.isEcBroker,
 
-        orgIsPspSigned: () => info.isSigned && info.types.isPsp,
-        orgIsPspBrokerSigned: () => info.isSigned && info.types.isPspBroker,
-        orgIsEcSigned: () => info.isSigned && info.types.isEc,
-        orgIsEcBrokerSigned: () => info.isSigned && info.types.isEcBroker,
+        orgIsPspSigned: info.isSigned && info.types.isPsp,
+        orgIsPspBrokerSigned: info.isSigned && info.types.isPspBroker,
+        orgIsEcSigned: info.isSigned && info.types.isEc,
+        orgIsEcBrokerSigned: info.isSigned && info.types.isEcBroker,
     };
 };
 

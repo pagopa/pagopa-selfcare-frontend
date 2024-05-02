@@ -8,21 +8,23 @@ import {useFlagValue} from "./useFeatureFlags";
 
 export const useUserRole = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const {orgInfo, orgIsPspDirect} = useOrganizationType();
+    const {orgInfo} = useOrganizationType();
 
     const userRole: ROLE = selectedParty ? mapUserRole(selectedParty, orgInfo) : ROLE.UNKNOWN;
 
     const userIsPspAdmin = userRole === ROLE.PSP_ADMIN || userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsPspDirectAdmin = userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsEcAdmin = userRole === ROLE.EC_ADMIN || userRole === ROLE.EC_DIRECT_ADMIN;
-
+    const isOperator = userIsOperator();
+    const userIsAdmin = userIsPspAdmin || userIsEcAdmin || isOperator;
 
     return {
         userRole,
         userIsPspAdmin,
         userIsEcAdmin,
         userIsPspDirectAdmin,
-        userIsOperator: userIsOperator(),
+        userIsAdmin: userIsAdmin,
+        userIsOperator: isOperator,
     };
 };
 

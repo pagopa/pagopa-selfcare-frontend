@@ -11,12 +11,12 @@ import {
 } from '../CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate } from '../../../../services/__mocks__/bundleService';
+import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate, mockedCommissionBundlePspDetailPublic } from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BundleResource } from '../../../../api/generated/portal/BundleResource';
+import { BundleResource, CiBundleStatusEnum } from '../../../../api/generated/portal/BundleResource';
 import add from 'date-fns/add';
 import { showCustomHeader } from '../../../../components/Table/TableUtils';
 
@@ -398,79 +398,150 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     expect(realColumns).toEqual(ArrayBuildColumnDefs);
   });
 
-  test('Test state chip cell with active bundle for GLOBAL', () => {
-    let bundle = { ...mockedCommissionBundlePspDetailGlobal };
-    bundle.validityDateFrom = new Date('01/01/2020');
-    bundle.validityDateTo = add(new Date(), { days: 8 });
+  describe("GLOBAL bundles",() => {
+    test('Test state chip cell with active bundle for GLOBAL', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailGlobal };
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = add(new Date(), { days: 8 });
+  
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+  
+    test('Test state chip cell with to be activated bundle for GLOBAL', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailGlobal };
+      bundle.validityDateFrom = add(new Date(), { days: 8 });
+      bundle.validityDateTo = add(new Date(), { days: 8 });
+  
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
+    });
+  })
 
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
-        </Router>
-      </Provider>
-    );
+  describe("PUBLIC bundles", () => {
+    test('Bundle AVAILABLE', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
+    });
+    test('Bundle ON_REMOVAL', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      bundle.ciBundleStatus = CiBundleStatusEnum.ON_REMOVAL;
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+    test('Bundle REQUESTED', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      bundle.ciBundleStatus = CiBundleStatusEnum.REQUESTED;
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+    test('Bundle ENABLED', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+  })
 
-    expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
-  });
-
-  test('Test state chip cell with to be activated bundle for GLOBAL', () => {
-    let bundle = { ...mockedCommissionBundlePspDetailGlobal };
-    bundle.validityDateFrom = add(new Date(), { days: 8 });
-    bundle.validityDateTo = add(new Date(), { days: 8 });
-
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
-        </Router>
-      </Provider>
-    );
-
-    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
-  });
-
-  test('Test state chip cell with expiring bundle for PRIVATE', () => {
-    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
-    bundle.validityDateFrom = new Date('01/01/2020');
-    bundle.validityDateTo = add(new Date(), { days: 7 });
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
-        </Router>
-      </Provider>
-    );
-
-    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
-  });
-
-  test('Test state chip cell with expired bundle for PRIVATE', () => {
-    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
-    bundle.validityDateFrom = new Date('01/01/2020');
-    bundle.validityDateTo = new Date();
-    render(
-      <Provider store={store}>
-        <Router history={history}>
-          <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
-        </Router>
-      </Provider>
-    );
-
-    expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
-  });
+  describe("PRIVATE bundles", () => {
+    test('Test state chip cell with expiring bundle for PRIVATE', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = add(new Date(), { days: 7 });
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+  
+    test('Test state chip cell with expired bundle for PRIVATE', () => {
+      let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = new Date();
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+  
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+  })
 
   test('Test state chip cell bundle with no dates', () => {
     let bundle = { ...mockedCommissionBundlePspDetailPrivate };

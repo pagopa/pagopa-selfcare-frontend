@@ -243,7 +243,7 @@ describe('<NodeSignInPTForm />', () => {
                 isSigned: true
             },
             orgIsBroker: true,
-            orgIsEcBrokerSigned: false,
+            orgIsEcBrokerSigned: true,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
             orgIsPspBrokerSigned: false,

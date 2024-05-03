@@ -167,6 +167,7 @@ export default function SideMenu() {
                             handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/users`))}
                             icon={PeopleAltIcon}
                             dataTestId={'selfcare-users-test'}
+                            isLink={true}
                         />
 
                         <SidenavItem
@@ -174,6 +175,7 @@ export default function SideMenu() {
                             handleClick={() => onExit(() => window.location.assign(`${SELFCARE_URL}/groups`))}
                             icon={SupervisedUserCircleIcon}
                             dataTestId={'selfcare-groups-test'}
+                            isLink={true}
                         />
                     </React.Fragment>
                 </List>

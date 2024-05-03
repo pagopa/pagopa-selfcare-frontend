@@ -60,7 +60,7 @@ describe('ProtectedRoute component', () => {
 
     const { getByText } = render(
       <MemoryRouter initialEntries={['/some-route']}>
-        <ProtectedRoute permission="node-signin">
+        <ProtectedRoute permission="node-signin" flagValue={"node-signin"}>
           <div>Child Component</div>
         </ProtectedRoute>
       </MemoryRouter>

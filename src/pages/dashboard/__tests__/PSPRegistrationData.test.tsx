@@ -61,7 +61,7 @@ test('Test rendering ', async () => {
         userIsPspAdmin: true,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: false,
+        userIsPagopaOperator: false,
         userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -103,7 +103,7 @@ test('Test rendering digitalStamp false, bic undefined ', async () => {
         userIsPspAdmin: true,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: false,
+        userIsPagopaOperator: false,
         userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -156,7 +156,7 @@ test('Test rendering digitalStamp undefined ', async () => {
         userIsPspAdmin: true,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: false,
+        userIsPagopaOperator: false,
         userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -207,7 +207,7 @@ test('Test onClick modify button', async () => {
         userIsPspAdmin: true,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: false,
+        userIsPagopaOperator: false,
         userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({

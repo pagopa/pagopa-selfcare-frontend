@@ -23,7 +23,7 @@ const StationDetailPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const goBack = () => history.push(ROUTES.STATIONS);
 
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
 
     useEffect(() => {
         setLoadingWrap(true);
@@ -77,7 +77,7 @@ const StationDetailPage = () => {
             .finally(() => setLoadingWrap(false));
     }, [selectedParty]);
 
-    return userIsOperator ? (
+    return userIsPagopaOperator ? (
         <StationDetailsValidation stationDetail={stationDetail}/>
     ) : (
         <StationDetails

@@ -22,7 +22,7 @@ const ChannelDetailPage = () => {
   const addError = useErrorDispatcher();
   const { channelId } = useParams<{ channelId: string }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const {userIsOperator} =  useUserRole();
+  const {userIsPagopaOperator} =  useUserRole();
   const goBack = () => history.push(ROUTES.CHANNELS);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const ChannelDetailPage = () => {
       .finally(() => setLoading(false));
   }, [selectedParty]);
 
-  return userIsOperator ? (
+  return userIsPagopaOperator ? (
     <ChannelDetails
       channelDetail={channelDetail}
       channelId={channelId}

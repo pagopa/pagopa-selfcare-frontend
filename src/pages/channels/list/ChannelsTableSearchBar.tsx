@@ -12,7 +12,7 @@ type Props = {
 
 export default function ChannelsTableSearchBar({channelCodeInput, setChannelCodeInput}: Props) {
     const {t} = useTranslation();
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
 
     return (
         <Box width="100%" display="flex">
@@ -36,7 +36,7 @@ export default function ChannelsTableSearchBar({channelCodeInput, setChannelCode
                 to={ROUTES.CHANNEL_ADD}
                 variant="contained"
                 sx={{ml: 1, whiteSpace: 'nowrap', minWidth: 'auto'}}
-                disabled={userIsOperator}
+                disabled={userIsPagopaOperator}
             >
                 {t('channelsPage.createChannelButtonLabel')}
             </Button>

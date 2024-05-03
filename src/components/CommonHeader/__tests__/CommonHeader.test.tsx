@@ -29,7 +29,7 @@ describe('<CommonHeader />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: false,
+            userIsPagopaOperator: false,
             userIsAdmin: false
         });
         render(<CommonHeader withSecondHeader={true} loggedUser={mockedUser}/>);
@@ -41,7 +41,7 @@ describe('<CommonHeader />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: false,
+            userIsPagopaOperator: false,
             userIsAdmin: true
         });
         render(<CommonHeader withSecondHeader={false} loggedUser={mockedUser}/>);

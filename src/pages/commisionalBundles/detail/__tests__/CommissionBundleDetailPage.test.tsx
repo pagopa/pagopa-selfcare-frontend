@@ -58,7 +58,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             userIsPspAdmin: true,
             userIsEcAdmin: true,
             userIsPspDirectAdmin: true,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -187,7 +187,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });
 
@@ -198,7 +198,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
 
@@ -223,7 +223,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(
@@ -247,7 +247,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(

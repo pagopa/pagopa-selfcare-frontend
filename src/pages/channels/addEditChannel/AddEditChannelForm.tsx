@@ -65,7 +65,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>({ payment_types: [] });
-  const {userIsOperator} = useUserRole();
+  const {userIsPagopaOperator} = useUserRole();
 
   const forwarder01 =
     ENV.ENV === 'PROD'
@@ -179,7 +179,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
         },
-        ...(userIsOperator && {
+        ...(userIsPagopaOperator && {
           primitive_version: !values.primitive_version
             ? t('addEditChannelPage.validationMessage.requiredField')
             : validatePrimitiveVersion(values.primitive_version)
@@ -354,7 +354,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
-      if (!userIsOperator) {
+      if (!userIsPagopaOperator) {
         return true;
       } else {
         if (
@@ -362,7 +362,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           values.password !== '' &&
           values.proxyUnion !== ''
         ) {
-          if (userIsOperator && values.payment_types && values.payment_types.length > 0) {
+          if (userIsPagopaOperator && values.payment_types && values.payment_types.length > 0) {
             for (const paymentType of values.payment_types) {
               if (paymentType === '') {
                 return false;
@@ -378,14 +378,14 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const addPaymentMethod = async () => {
-    if (userIsOperator && formik.values.payment_types) {
+    if (userIsPagopaOperator && formik.values.payment_types) {
       const newArr = [...formik.values.payment_types, ''];
       await formik.setFieldValue('payment_types', newArr);
     }
   };
 
   const deletePaymentMethod = async (index: number) => {
-    if (userIsOperator && formik.values.payment_types) {
+    if (userIsPagopaOperator && formik.values.payment_types) {
       const newArr = [...formik.values.payment_types];
       if (index > -1 && index < formik.values.payment_types.length) {
         // eslint-disable-next-line functional/immutable-data
@@ -396,7 +396,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const redirect = () => {
-    if (userIsOperator) {
+    if (userIsPagopaOperator) {
       history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code }));
     } else {
       history.push(ROUTES.CHANNELS);
@@ -423,7 +423,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       if (formAction === FormAction.Edit) {
         switch (channelDetail?.wrapperStatus) {
           case WrapperStatusEnum.TO_CHECK:
-            if (userIsOperator) {
+            if (userIsPagopaOperator) {
               await createChannel(values);
             } else {
               await updateWrapperChannelDetailsToCheck(values, validationUrl);
@@ -431,7 +431,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             break;
           case WrapperStatusEnum.APPROVED:
           case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (userIsOperator) {
+            if (userIsPagopaOperator) {
               await updateChannel(channelCode, values);
             } else {
               await updateWrapperChannelDetailsToCheckUpdate(values, validationUrl);
@@ -605,7 +605,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             <Grid container spacing={2} mt={1}>
               {formik.values.payment_types?.map((_pT, i) => (
                 <Grid container spacing={2} mt={1} key={i} ml={1}>
-                  {i > 0 && userIsOperator ? (
+                  {i > 0 && userIsPagopaOperator ? (
                     <Grid container item xs={1} key={`remove${i}`} mt={1}>
                       <RemoveCircleOutline
                         color="error"
@@ -618,7 +618,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                       />
                     </Grid>
                   ) : null}
-                  <Grid container item xs={i > 0 && userIsOperator ? 5 : 6} key={`item${i}`}>
+                  <Grid container item xs={i > 0 && userIsPagopaOperator ? 5 : 6} key={`item${i}`}>
                     <FormControl fullWidth key={`FormControl${i}`}>
                       <InputLabel size="small" key={`InputLabel${i}_label`}>
                         {t('addEditChannelPage.addForm.fields.paymentType')}
@@ -631,7 +631,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         placeholder={t('addEditChannelPage.addForm.fields.paymentType')}
                         size="small"
                         defaultValue={undefined}
-                        disabled={userIsOperator ? false : formAction === FormAction.Edit ? true : false}
+                        disabled={userIsPagopaOperator ? false : formAction === FormAction.Edit ? true : false}
                         value={formik.values.payment_types ? formik.values.payment_types[i] : ''}
                         onChange={(event) =>
                           formik.setFieldValue(
@@ -656,7 +656,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                       </Select>
                     </FormControl>
                   </Grid>
-                  {userIsOperator && (
+                  {userIsPagopaOperator && (
                     <Grid container spacing={2} mt={1} ml={1}>
                       {i === 0 && (
                         <Grid container item xs={6}>
@@ -681,7 +681,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         </Box>
       </Paper>
 
-      {formAction === FormAction.Edit && userIsOperator ? (
+      {formAction === FormAction.Edit && userIsPagopaOperator ? (
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
@@ -698,7 +698,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             color="primary"
             variant="outlined"
             onClick={() =>
-              userIsOperator
+              userIsPagopaOperator
                 ? history.push(
                     generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code })
                   )
@@ -727,12 +727,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
       <ConfirmModal
         title={
-          userIsOperator
+          userIsPagopaOperator
             ? t('addEditChannelPage.confirmModal.channelConfiguration')
             : t('addEditStationPage.confirmModal.title')
         }
         message={
-          userIsOperator ? (
+          userIsPagopaOperator ? (
             t('addEditChannelPage.confirmModal.messageChannelOperation')
           ) : (
             <Trans i18nKey="addEditChannelPage.confirmModal.message">
@@ -744,7 +744,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         }
         openConfirmModal={showConfirmModal}
         onConfirmLabel={
-          userIsOperator
+          userIsPagopaOperator
             ? t('addEditChannelPage.confirmModal.confirmButtonOpe')
             : t('addEditChannelPage.confirmModal.confirmButton')
         }

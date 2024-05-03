@@ -53,7 +53,7 @@ describe('<StationDetailPage />', () => {
       userIsPspAdmin: false,
       userIsEcAdmin: true,
       userIsPspDirectAdmin: false,
-      userIsOperator: false,
+      userIsPagopaOperator: false,
       userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -93,7 +93,7 @@ describe('<StationDetailPage />', () => {
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     const { store } = renderApp(stationId);

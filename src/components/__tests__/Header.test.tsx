@@ -48,7 +48,7 @@ test('Test rendering', async () => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: true
   });
   const { store } = renderApp(partyMocked);
@@ -60,7 +60,7 @@ test('Test rendering with role psp admin', async () => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: true
   });  const { store } = renderApp({
     ...partyMocked,
@@ -82,7 +82,7 @@ test('Test rendering with role psp operator', async () => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: false
   });  const { store } = renderApp({
     ...partyMocked,
@@ -104,7 +104,7 @@ test('Test rendering with role ec admin', async () => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: false,
   });
   const { store } = renderApp({
@@ -127,7 +127,7 @@ test('Test rendering with role ec operator', async () => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: false,
   });  const { store } = renderApp({
     ...partyMocked,

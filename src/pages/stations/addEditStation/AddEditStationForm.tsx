@@ -74,7 +74,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     const [stationCodeGenerated, setStationCodeGenerated] = useState('');
     const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
     const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
     const env: string = ENV.ENV;
     const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
     const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
@@ -270,7 +270,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         ? t('addEditStationPage.validation.requiredField')
                         : undefined,
                     brokerCode:
-                        userIsOperator && formAction !== StationFormAction.Create
+                        userIsPagopaOperator && formAction !== StationFormAction.Create
                             ? ''
                             : !values.brokerCode
                                 ? t('addEditStationPage.validation.requiredField')
@@ -284,7 +284,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                     redirectConcat: validateURL(values.redirectConcat, true),
                     targetPofConcat: validateURL(values.targetPofConcat, false),
                 },
-                ...(userIsOperator && formAction !== StationFormAction.Create
+                ...(userIsPagopaOperator && formAction !== StationFormAction.Create
                     ? {
                         version: !values.version
                             ? 'Campo obbligatorio'
@@ -315,9 +315,9 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             return false;
         }
 
-        if (!userIsOperator) {
+        if (!userIsPagopaOperator) {
             return baseConditions;
-        } else if (userIsOperator && baseConditions && operatorConditions) {
+        } else if (userIsPagopaOperator && baseConditions && operatorConditions) {
             return true;
         } else {
             return false;
@@ -325,7 +325,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     };
 
     const redirect = (stCode: string) => {
-        if (userIsOperator) {
+        if (userIsPagopaOperator) {
             history.push(generatePath(ROUTES.STATION_DETAIL, {stationId: stCode}));
         } else {
             history.push(ROUTES.STATIONS);
@@ -355,7 +355,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             if (formAction === StationFormAction.Edit) {
                 switch (stationDetail?.wrapperStatus) {
                     case WrapperStatusEnum.TO_CHECK:
-                        if (userIsOperator) {
+                        if (userIsPagopaOperator) {
                             await createStation(values);
                             redirect(stationCode4Redirect);
                         } else {
@@ -365,7 +365,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         break;
                     case WrapperStatusEnum.APPROVED:
                     case WrapperStatusEnum.TO_CHECK_UPDATE:
-                        if (userIsOperator) {
+                        if (userIsPagopaOperator) {
                             await updateStation(values, stationCode);
                             redirect(stationCode4Redirect);
                         } else {
@@ -715,7 +715,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     required
                                 />
                             </Grid>
-                            {userIsOperator && formAction !== StationFormAction.Create ? (
+                            {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
                                 <Grid container item xs={6}>
                                     <TextField
                                         fullWidth
@@ -954,7 +954,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 </Box>
             </Paper>
 
-            {userIsOperator && formAction !== StationFormAction.Create ? (
+            {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
                 <AddEditStationFormValidation
                     formik={formik}
                     handleChangeNumberOnly={handleChangeNumberOnly}
@@ -990,7 +990,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         type="submit"
                         data-testid="confirm-button-test"
                     >
-                        {userIsOperator
+                        {userIsPagopaOperator
                             ? t('addEditStationPage.addForm.continueButton')
                             : t('addEditStationPage.addForm.confirmButton')}
                     </Button>
@@ -998,12 +998,12 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
             </Stack>
             <ConfirmModal
                 title={
-                    userIsOperator
+                    userIsPagopaOperator
                         ? t('addEditStationPage.confirmModal.titleOperator')
                         : t('addEditStationPage.confirmModal.title')
                 }
                 message={
-                    userIsOperator ? (
+                    userIsPagopaOperator ? (
                         <Trans i18nKey="addEditStationPage.confirmModal.messageStationOperator">
                             L’ente riceverà una notifica di conferma attivazione della stazione.
                             <br/>
@@ -1018,7 +1018,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                 }
                 openConfirmModal={showConfirmModal}
                 onConfirmLabel={
-                    userIsOperator
+                    userIsPagopaOperator
                         ? t('addEditStationPage.confirmModal.confirmButtonOpe')
                         : t('addEditStationPage.confirmModal.confirmButton')
                 }

@@ -49,7 +49,7 @@ const renderApp = (
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });    render(
         <Provider store={store}>
@@ -69,7 +69,7 @@ test('Test rendering - PSP unsigned admin', async () => {
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -118,7 +118,7 @@ test('Test - EC direct signed - admin', async () => {
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -168,7 +168,7 @@ test('Test - PSP direct signed - operator', async () => {
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -218,7 +218,7 @@ test('Test - PSP unsigned - operator', async () => {
         userIsPspAdmin: false,
         userIsEcAdmin: false,
         userIsPspDirectAdmin: false,
-        userIsOperator: true,
+        userIsPagopaOperator: true,
         userIsAdmin: true,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({

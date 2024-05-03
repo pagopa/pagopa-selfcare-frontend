@@ -22,7 +22,7 @@ const ConfirmModal = ({
                           handleCloseConfirmModal,
                           handleConfrimSubmit,
                       }: Props) => {
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
     const renderContent = () => (
         <>
             <Typography variant="h6">{title}</Typography>
@@ -39,7 +39,7 @@ const ConfirmModal = ({
                 <Button
                     variant="outlined"
                     sx={
-                        userIsOperator
+                        userIsPagopaOperator
                             ? {gridColumn: 'span 5', justifySelf: 'end', mr: 4}
                             : {gridColumn: 'span 5', justifySelf: 'end', mr: 2}
                     }

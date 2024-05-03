@@ -6,8 +6,8 @@ import {getECListByStationCode, getStationDetail, getWrapperStation} from '../..
 import {LOADING_TASK_STATION_DETAILS_WRAPPER} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {useUserRole} from "../../../hooks/useUserRole";
 import ROUTES from '../../../routes';
-import {isOperator} from '../../components/commonFunctions';
 import {StationDetailResource} from '../../../api/generated/portal/StationDetailResource';
 import StationDetails from './components/StationDetails';
 import StationDetailsValidation from './components/StationDetailsValidation';
@@ -23,7 +23,7 @@ const StationDetailPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const goBack = () => history.push(ROUTES.STATIONS);
 
-    const operator = isOperator();
+    const {userIsOperator} = useUserRole();
 
     useEffect(() => {
         setLoadingWrap(true);
@@ -77,7 +77,7 @@ const StationDetailPage = () => {
             .finally(() => setLoadingWrap(false));
     }, [selectedParty]);
 
-    return operator ? (
+    return userIsOperator ? (
         <StationDetailsValidation stationDetail={stationDetail}/>
     ) : (
         <StationDetails

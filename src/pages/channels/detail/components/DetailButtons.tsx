@@ -1,13 +1,10 @@
-import { Stack, Button } from '@mui/material';
-import { Link, generatePath, useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { FormAction } from '../../../../model/Channel';
+import {Button, Stack} from '@mui/material';
+import {generatePath, Link, useParams} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {FormAction} from '../../../../model/Channel';
 import ROUTES from '../../../../routes';
-import {
-  ChannelDetailsResource,
-  WrapperStatusEnum,
-} from '../../../../api/generated/portal/ChannelDetailsResource';
-import { isOperator } from '../../../components/commonFunctions';
+import {ChannelDetailsResource, WrapperStatusEnum,} from '../../../../api/generated/portal/ChannelDetailsResource';
+import {useUserRole} from "../../../../hooks/useUserRole";
 
 type Props = {
   channelDetails?: ChannelDetailsResource;
@@ -16,7 +13,7 @@ type Props = {
 
 const DetailButtons = ({ channelDetails, goBack }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
-  const operator = isOperator();
+  const {userIsOperator} = useUserRole();
   const { t } = useTranslation();
 
   return (
@@ -32,7 +29,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
               </Button>
               */}
 
-      {operator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
+      {userIsOperator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -45,7 +42,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
             {t('channelDetailPage.edit')}
           </Button>
         </>
-      ) : operator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
+      ) : userIsOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}

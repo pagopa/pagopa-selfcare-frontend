@@ -89,7 +89,7 @@ const BundleActionButtons = ({
             {bundleDetail.type === TypeEnum.PRIVATE && (
               <Button
                 onClick={() => {}} // TODO IMPLEMENT REJECT PRIVATE BUNDLE OFFER API VAS-941
-                variant="contained"
+                variant="outlined"
                 color="error"
                 data-testid="reject-button"
               >
@@ -111,7 +111,7 @@ const BundleActionButtons = ({
         return (
           <Button
             onClick={() => {}} // TODO IMPLEMENT DISABLE BUNDLE SUBSCRIPTION API
-            variant="contained"
+            variant="outlined"
             color="error"
             data-testid="deactivate-button"
           >
@@ -123,7 +123,7 @@ const BundleActionButtons = ({
         return (
           <Button
             onClick={() => {}} // TODO IMPLEMENT DELETE BUNDLE SUBSCRIPTION REQUEST API
-            variant="contained"
+            variant="outlined"
             color="error"
             data-testid="delete-request-button"
           >

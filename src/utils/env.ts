@@ -5,10 +5,6 @@ export const ENV = {
     ENV: env.get('REACT_APP_ENV').required().default('dev').asString(),
     PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', {default: 'ui'}),
 
-    PAGOPA_OPERATOR: {
-        MAIL_ADDRESSES: getConfig('REACT_APP_OPERATOR_EMAIL_ADDRESSES', {required: true}),
-    },
-
     ASSISTANCE: {
         EMAIL: env.get('REACT_APP_PAGOPA_HELP_EMAIL').required().asString(),
     },
@@ -31,7 +27,7 @@ export const ENV = {
     MOCK: {
         TOKEN: getConfig('REACT_APP_API_MOCK_TOKEN', {required: true, type: Type.boolean}),
         BACKOFFICE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type: Type.boolean}),
-        SELFCARE: getConfig('REACT_APP_API_MOCK_SELFCARE', {required: true, type: Type.boolean}),
+        SELFCARE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type: Type.boolean}),
     },
 
     API_TIMEOUT_MS: {
@@ -44,24 +40,6 @@ export const ENV = {
     },
 
     FEATURES: {
-        DASHBOARD: {
-            ENABLED: getConfig('REACT_APP_FEATURES_DASHBOARD_ENABLED', {default: false, type: Type.boolean}),
-        },
-        CHANNELS: {
-            ENABLED: getConfig('REACT_APP_FEATURES_CHANNELS_ENABLED', {default: false, type: Type.boolean}),
-        },
-        STATIONS: {
-            ENABLED: getConfig('REACT_APP_FEATURES_STATIONS_ENABLED', {default: false, type: Type.boolean}),
-        },
-        IBAN: {
-            ENABLED: getConfig('REACT_APP_FEATURES_IBAN_ENABLED', {default: false, type: Type.boolean}),
-        },
-        COMMISSION_BUNDLES: {
-            ENABLED: getConfig('REACT_APP_FEATURES_COMMISSION_BUNDLES_ENABLED', {default: false, type: Type.boolean}),
-        },
-        OPERATIONTABLE: {
-            ENABLED: getConfig('REACT_APP_FEATURES_OPERATIONTABLE_ENABLED', {default: false, type: Type.boolean}),
-        },
         FDR: {
             ENABLED: getConfig('REACT_APP_FEATURES_FDR_ENABLED', {default: false, type: Type.boolean}),
         },
@@ -72,10 +50,7 @@ export const ENV = {
         MOCK: env.get('REACT_APP_ANALYTICS_MOCK').default('false').asBool(),
         DEBUG: env.get('REACT_APP_ANALYTICS_DEBUG').default('false').asBool(),
         TOKEN: env.get('REACT_APP_MIXPANEL_TOKEN').required().asString(),
-        API_HOST: env
-            .get('REACT_APP_MIXPANEL_API_HOST')
-            .default('https://api-eu.mixpanel.com')
-            .asString(),
+        API_HOST: env.get('REACT_APP_MIXPANEL_API_HOST').default('https://api-eu.mixpanel.com').asString(),
     },
 
     HEADER: {

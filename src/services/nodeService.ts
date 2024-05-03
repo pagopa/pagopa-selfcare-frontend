@@ -13,18 +13,18 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {NodeOnSignInPSP} from '../model/Node';
 
 import {
-  createECAndBroker as createECAndBrokerMocked,
-  createEcBroker as createEcBrokerMocked,
-  createECIndirect as createECIndirectMocked,
-  createPspBroker as createPspBrokerMocked,
-  createPSPDirect as createPSPDirectMocked,
-  createPSPIndirect as createPSPIndirectMocked,
-  getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
-  getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
-  getPaymentServiceProviders as getPaymentServiceProvidersMocked,
-  getPSPBrokerDetails as getPSPBrokerDetailsMocked,
-  updateECDirect,
-  updatePSPInfo as updatePSPInfoMocked,
+    createECAndBroker as createECAndBrokerMocked,
+    createEcBroker as createEcBrokerMocked,
+    createECIndirect as createECIndirectMocked,
+    createPspBroker as createPspBrokerMocked,
+    createPSPDirect as createPSPDirectMocked,
+    createPSPIndirect as createPSPIndirectMocked,
+    getBrokerAndEcDetails as getBrokerAndEcDetailsMocked,
+    getBrokerAndPspDetails as getBrokerAndPspDetailsMocked,
+    getPaymentServiceProviders as getPaymentServiceProvidersMocked,
+    getPSPBrokerDetails as getPSPBrokerDetailsMocked,
+    updateECDirect,
+    updatePSPInfo as updatePSPInfoMocked,
 } from './__mocks__/nodeService';
 
 export const createPSPDirect = (
@@ -103,7 +103,7 @@ export const getPaymentServiceProviders = (
 
 export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetailsResource> => {
     /* istanbul ignore if */
-    if (process.env.REACT_APP_API_MOCK_SELFCARE === 'true') {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getBrokerAndEcDetailsMocked(ecCode);
     } else {
         return BackofficeApi.getBrokerAndEcDetails(ecCode).then((resources) => resources);

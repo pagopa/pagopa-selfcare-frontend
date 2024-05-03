@@ -6,7 +6,6 @@ import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import {usePermissions} from '../../hooks/usePermissions';
 import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
-import {ENV} from '../../utils/env';
 import DownloadSection from './components/DownloadSection';
 import ECRegistrationData from './components/ECRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -59,8 +58,7 @@ const DashboardPage = () => {
         </Grid>
 
         {selectedParty &&
-          userHasPermission('operation-table-read-write') &&
-          ENV.FEATURES.OPERATIONTABLE.ENABLED && (
+          userHasPermission('operation-table-read-write')  && (
             <OperationTable ecCode={selectedParty.fiscalCode} />
           )}
       </Grid>

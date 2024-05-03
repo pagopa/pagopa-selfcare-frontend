@@ -132,7 +132,6 @@ jobs:
           export REACT_APP_URL_BETA='false'
           
           export REACT_APP_API_MOCK_BACKOFFICE='false'
-          export REACT_APP_API_MOCK_SELFCARE='false'
           export REACT_APP_API_MOCK_TOKEN='false'
           
           export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
@@ -146,33 +145,15 @@ jobs:
           export REACT_APP_ANALYTICS_MOCKED='false'
 
           if [ "${{ needs.setup.outputs.environment }}" = "dev" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
-            export REACT_APP_FEATURES_IBAN_ENABLED='true'
-            export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
             export REACT_APP_FEATURES_FDR_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
           if [ "${{ needs.setup.outputs.environment }}" = "uat" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
-            export REACT_APP_FEATURES_IBAN_ENABLED='true'
-            export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
             export REACT_APP_FEATURES_FDR_ENABLED='true'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
           if [ "${{ needs.setup.outputs.environment }}" = "prod" ]; then
-            export REACT_APP_FEATURES_DASHBOARD_ENABLED='true'
-            export REACT_APP_FEATURES_CHANNELS_ENABLED='true'
-            export REACT_APP_FEATURES_STATIONS_ENABLED='true'
-            export REACT_APP_FEATURES_IBAN_ENABLED='true'
-            export REACT_APP_FEATURES_OPERATIONTABLE_ENABLED='true'
             export REACT_APP_FEATURES_FDR_ENABLED='false'
-            export REACT_APP_OPERATOR_EMAIL_ADDRESSES='alessandra.guerriero@pagopa.it;simone.esposito@pagopa.it;stefano.bafaro@pagopa.it;terenzio.cerqua@pagopa.it;ferruccio.masarie@emeal.nttdata.com;massimiliano.carnevale@emeal.nttdata.com;simone.strippoli@emeal.nttdata.com'
           fi
 
           yarn install

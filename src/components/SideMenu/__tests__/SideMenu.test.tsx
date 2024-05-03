@@ -4,7 +4,6 @@ import {fireEvent, render, screen, waitFor,} from '@testing-library/react';
 import * as usePermissions from '../../../hooks/usePermissions';
 import * as useOrganizationType from '../../../hooks/useOrganizationType';
 import * as useUserRole from '../../../hooks/useUserRole';
-import * as ENV from '../../../utils/env';
 import {createMemoryHistory} from 'history';
 import SideMenu from '../SideMenu';
 import {ThemeProvider} from '@mui/material';
@@ -157,25 +156,6 @@ describe('SideMenu component', () => {
   //     expect(commBundlesItem).toHaveAttribute('aria-disabled');
   //   });
 
-  test('should render SideMenu 3', async () => {
-    jest.mock('../../../utils/env');
-    ENV.ENV.FEATURES.DASHBOARD.ENABLED = false;
-
-    const { store, history } = renderApp();
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: pspAdminUnsigned,
-      })
-    );
-
-    const apiKeyItem = screen.getByTestId('apikeys-test') as HTMLElement;
-    const dashboardItem = screen.queryAllByTestId('home-test');
-
-    expect(apiKeyItem).toBeVisible();
-    expect(dashboardItem.length).toBeLessThanOrEqual(0);
-  });
 
   test('should render SideMenu 4', async () => {
     const { store, history } = renderApp();
@@ -190,7 +170,6 @@ describe('SideMenu component', () => {
 
   test('should render SideMenu with users', async () => {
     jest.mock('../../../utils/env');
-    ENV.ENV.FEATURES.DASHBOARD.ENABLED = true;
 
     const { store, history } = renderApp();
 
@@ -207,7 +186,6 @@ describe('SideMenu component', () => {
 
   test('should render SideMenu with groups', async () => {
     jest.mock('../../../utils/env');
-    ENV.ENV.FEATURES.DASHBOARD.ENABLED = true;
 
     const { store, history } = renderApp();
 

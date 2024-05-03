@@ -15,8 +15,8 @@ export const useUserRole = () => {
     const userIsPspAdmin = userRole === ROLE.PSP_ADMIN || userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsPspDirectAdmin = userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsEcAdmin = userRole === ROLE.EC_ADMIN || userRole === ROLE.EC_DIRECT_ADMIN;
-    const userIsPagopaOperator = userIsPagopaOperator();
-    const userIsAdmin = userIsPspAdmin || userIsEcAdmin || userIsPagopaOperator;
+    const isPagopaOperator = userIsPagopaOperator();
+    const userIsAdmin = userIsPspAdmin || userIsEcAdmin || isPagopaOperator;
 
     return {
         userRole,
@@ -24,7 +24,7 @@ export const useUserRole = () => {
         userIsEcAdmin,
         userIsPspDirectAdmin,
         userIsAdmin,
-        userIsPagopaOperator,
+        userIsPagopaOperator: isPagopaOperator,
     };
 };
 

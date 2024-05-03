@@ -68,4 +68,4 @@ public/env-config.js
 public/version.json
 
 /integration-test/key.pem
-**/__tests__/*.js
+**/*.test.js

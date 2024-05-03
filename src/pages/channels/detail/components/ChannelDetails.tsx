@@ -1,22 +1,19 @@
 /* eslint-disable complexity */
-import { ManageAccounts, VisibilityOff } from '@mui/icons-material';
-import { Grid, Typography, Alert, Paper, Chip, Divider, IconButton } from '@mui/material';
-import { Box } from '@mui/system';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { Link, generatePath } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import {ManageAccounts, VisibilityOff} from '@mui/icons-material';
+import {Alert, Chip, Divider, Grid, IconButton, Paper, Typography} from '@mui/material';
+import {Box} from '@mui/system';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {generatePath, Link} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {useState} from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ROUTES from '../../../../routes';
-import { isOperator } from '../../../components/commonFunctions';
-import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
-import {
-  ProtocolEnum,
-  WrapperStatusEnum,
-} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
-import { StatusChip } from '../../../../components/StatusChip';
-import { ENV } from '../../../../utils/env';
+import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDetailsResource';
+import {ProtocolEnum, WrapperStatusEnum,} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
+import {StatusChip} from '../../../../components/StatusChip';
+import {ENV} from '../../../../utils/env';
+import {useUserRole} from "../../../../hooks/useUserRole";
 import DetailButtons from './DetailButtons';
 
 type Props = {
@@ -29,8 +26,7 @@ type Props = {
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber }: Props) => {
   const { t } = useTranslation();
-  const operator = isOperator();
-
+  const {userIsOperator} =  useUserRole();
   const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
   const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`;
 
@@ -70,7 +66,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
           <Grid item xs={6}>
             <DetailButtons channelDetails={channelDetail} goBack={goBack} />
           </Grid>
-          {operator &&
+          {userIsOperator &&
           (channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
             channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) ? (
             <Grid item xs={12} sx={{ mb: 5 }}>

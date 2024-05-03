@@ -15,7 +15,7 @@ import {theme} from '@pagopa/mui-italia';
 import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import ROUTES from '../../../routes';
 import {
-  INSTITUTIONS_EC_STATION_TYPES,
+  INSTITUTIONS_EC_TYPES,
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
@@ -147,7 +147,7 @@ function StationAssociateECPage() {
   const addItselfAsAvaliableEC = (delegations: Array<Delegation>) => {
     if (
       selectedParty &&
-      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_STATION_TYPES)
+      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_TYPES)
     ) {
       // eslint-disable-next-line functional/immutable-data
       delegations.push({

@@ -12,13 +12,14 @@ import {Party} from '../model/Party';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {partiesActions, partiesSelectors} from '../redux/slices/partiesSlice';
 import {useSigninData} from '../hooks/useSigninData';
-import {isOperator} from '../pages/components/commonFunctions';
-import {ENV} from './../utils/env';
+import {userIsOperator} from "../hooks/useUserRole";
+import {ENV} from '../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
 type Props = WithPartiesProps & {
     onExit: (exitAction: () => void) => void;
     loggedUser?: User;
+    parties: Array<Party>;
 };
 
 const pagoPAProduct: ProductEntity = {
@@ -45,7 +46,8 @@ const selfcareProduct: ProductModel = {
 
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
-    if (isOperator()) {
+    const isOperator = userIsOperator();
+    if (isOperator) {
         return 'roles.pagopaOperator';
     }
     if (party.institutionType === 'PSP' && roleKey === 'operator') {

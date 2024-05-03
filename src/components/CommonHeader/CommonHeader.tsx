@@ -13,8 +13,8 @@ import {PartySwitchItem} from '@pagopa/mui-italia/dist/components/PartySwitch';
 import {buildAssistanceURI} from '@pagopa/selfcare-common-frontend/services/assistanceService';
 import {useTranslation} from 'react-i18next';
 import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
-import {isOperator} from "../../pages/components/commonFunctions";
 import {ENV} from '../../utils/env';
+import {useUserRole} from "../../hooks/useUserRole";
 import MyHeaderProduct from "./MyHeaderProduct";
 
 type PartyEntity = PartySwitchItem;
@@ -89,7 +89,7 @@ const CommonHeader = ({
                           enableAssistanceButton = true,
                       }: HeaderProps) => {
     const {t} = useTranslation();
-
+    const {userIsOperator} = useUserRole();
 
     function getMyHeaderProduct() {
         return <MyHeaderProduct
@@ -151,7 +151,7 @@ const CommonHeader = ({
             </header>
             {withSecondHeader === true ? (
                 <nav>
-                    {isOperator() ? getMyHeaderProduct() : getHeaderProduct()}
+                    {userIsOperator ? getMyHeaderProduct() : getHeaderProduct()}
                 </nav>
             ) : (
                 ''

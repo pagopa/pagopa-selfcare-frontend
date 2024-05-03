@@ -148,7 +148,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
 
         if (selectedParty && orgInfo.isSigned && orgInfo.types.isPsp) {
             try {
-                if (!orgIsPspDirect && intermediaryAvailableValue) {
+                if (!orgInfo.types.isPspBroker && intermediaryAvailableValue) {
                     await createPspBroker({
                         broker_psp_code: selectedParty.fiscalCode,
                         description: selectedParty.description,

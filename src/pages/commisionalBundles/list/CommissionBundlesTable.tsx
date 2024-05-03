@@ -89,19 +89,7 @@ const CommissionBundlesTable = ({bundleNameFilter, bundleType}: Props) => {
                 mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
             );
         } else {
-            promise = new Promise<BundlesResource>((resolve) => resolve({}));
-            addError({
-                id: 'COMMISSION_BUNDLES_RETRIEVE_BUNDLES',
-                blocking: false,
-                error: {} as Error,
-                techDescription: `An error occurred while retrieving bundles`,
-                toNotify: true,
-                displayableTitle: t('general.errorTitle'),
-                displayableDescription: t(
-                    'commissionBundlesPage.list.error.retrieveCommissionBundlesErrorMessage'
-                ),
-                component: 'Toast',
-            });
+            promise = new Promise<BundlesResource>((resolve, reject) => reject({'cause': 'wrong organisation type'}));
         }
         promise
             .then((res) => {

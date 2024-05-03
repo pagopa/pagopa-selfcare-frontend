@@ -33,10 +33,10 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const {orgInfo, orgIsPspDirect, orgIsEcDirect} = useOrganizationType();
+  const {orgInfo, orgIsPspDirect, orgIsEcDirect,orgIsPspBrokerSigned, orgIsEcBrokerSigned} = useOrganizationType();
 
-  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspDirect);
-  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcDirect);
+  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspBrokerSigned);
+  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcBrokerSigned);
   const [hasCIStations, setHasCIStations] = useState(true);
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
 
@@ -73,8 +73,8 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
         })
         .finally(() => setLoading(false));
 
-      setIsPartnerPSPChecked(orgInfo.types.isPspBroker);
-      setIsPartnerCIChecked(orgInfo.types.isEcBroker);
+      setIsPartnerPSPChecked(orgIsPspBrokerSigned);
+      setIsPartnerCIChecked(orgIsEcBrokerSigned);
     }
   }, [selectedParty, signInData]);
 
@@ -88,7 +88,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
     setLoading(true);
     if (selectedParty) {
       try {
-        if (isPartnerPSPChecked && !orgInfo.types.isPspBroker) {
+        if (isPartnerPSPChecked && !orgIsPspBrokerSigned) {
           await createPspBroker({
             broker_psp_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -96,17 +96,17 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
             extended_fault_bean: true,
           });
         }
-        if (isPartnerCIChecked && !orgInfo.types.isEcBroker) {
+        if (isPartnerCIChecked && !orgIsEcBrokerSigned) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,
           });
         }
 
-        if (!hasPSPChannels && orgInfo.types.isPspBroker && !isPartnerPSPChecked) {
+        if (!hasPSPChannels && orgIsPspBrokerSigned && !isPartnerPSPChecked) {
           await deletePSPBroker(selectedParty.fiscalCode);
         }
-        if (!hasCIStations && orgInfo.types.isEcBroker && !isPartnerCIChecked) {
+        if (!hasCIStations && orgIsEcBrokerSigned && !isPartnerCIChecked) {
           await deleteCIBroker(selectedParty.fiscalCode);
         }
 
@@ -132,7 +132,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   };
 
   const disabledSubmit = () =>
-    isPartnerPSPChecked === orgInfo.types.isPspBroker && isPartnerCIChecked === orgInfo.types.isEcBroker;
+    isPartnerPSPChecked === orgIsPspBrokerSigned && isPartnerCIChecked === orgIsEcBrokerSigned;
 
   const formik = useFormik<NodeOnSignInPT>({
     initialValues: initialFormData(selectedParty),

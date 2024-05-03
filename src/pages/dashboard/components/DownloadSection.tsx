@@ -39,9 +39,9 @@ const DownloadSection = ({selectedParty}: Props) => {
     const exportIbanToCSV = () => downloadIbansAsCSV(brokerCode!);
     const downloadCreditorInstitutionToCSV = () => downloadCreditorInstitutionsAsCSV(brokerCode!);
 
-    const {hasPermission} = usePermissions();
-    const canDownloadIBANs = hasPermission('download-iban');
-    const canDownloadCreditorInstitutions = hasPermission('download-creditor-institutions');
+    const {userHasPermission} = usePermissions();
+    const canDownloadIBANs = userHasPermission('download-iban');
+    const canDownloadCreditorInstitutions = userHasPermission('download-creditor-institutions');
     const canSeeDownloadSection = canDownloadIBANs || canDownloadCreditorInstitutions;
     const [ibanExportUpdatedAt, setIbanExportUpdatedAt] = useState<Date | undefined>();
     const [ciExportUpdatedAt, setCiExportUpdatedAt] = useState<Date | undefined>();

@@ -1,10 +1,9 @@
-import { Box, Button, InputAdornment, TextField } from '@mui/material';
-import { GridSearchIcon } from '@mui/x-data-grid';
-import { useTranslation } from 'react-i18next';
-import { Link, generatePath } from 'react-router-dom';
-import { Add } from '@mui/icons-material';
+import {Box, Button, InputAdornment, TextField} from '@mui/material';
+import {GridSearchIcon} from '@mui/x-data-grid';
+import {useTranslation} from 'react-i18next';
+import {generatePath, Link} from 'react-router-dom';
+import {Add} from '@mui/icons-material';
 import ROUTES from '../../../routes';
-import { isOperator } from '../../components/commonFunctions';
 
 type Props = {
   stationId: string;
@@ -14,7 +13,6 @@ type Props = {
 
 export default function StationECTableSearchBar({ stationId, ciNameOrFiscalCodeInput, setCiNameInput }: Props) {
   const { t } = useTranslation();
-  const operator = isOperator();
 
   return (
     <Box width="100%" display="flex">

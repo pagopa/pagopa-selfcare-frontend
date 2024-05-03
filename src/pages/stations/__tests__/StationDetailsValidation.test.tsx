@@ -1,21 +1,23 @@
 import React from 'react';
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../redux/store';
-import { createMemoryHistory } from 'history';
-import { Provider } from 'react-redux';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../redux/store';
+import {createMemoryHistory} from 'history';
+import {Provider} from 'react-redux';
 import {
   RedirectProtocolEnum,
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import { Protocol4ModEnum, ProtocolEnum } from '../../../api/generated/portal/StationDetailsDto';
+import {Protocol4ModEnum, ProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
 import StationDetailsValidation from '../detail/components/StationDetailsValidation';
-import { isOperator } from '../../components/commonFunctions';
+import * as useUserRole from "../../../hooks/useUserRole";
+import {ROLE} from "../../../model/RolePermission";
 
 const nodeCrypto = require('crypto');
+// @ts-ignore
 window.crypto = {
   getRandomValues: function (buffer) {
     return nodeCrypto.randomFillSync(buffer);
@@ -24,6 +26,7 @@ window.crypto = {
 const genPassword = crypto.getRandomValues(new Uint32Array(1)).toString();
 
 jest.mock('../../components/commonFunctions');
+jest.mock("../../../hooks/useUserRole");
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -33,6 +36,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 export const mockedFullStation: StationDetailResource = {
+  associatedCreditorInstitutions: 0,
   enabled: true,
   stationCode: '97735020584_01',
   wrapperStatus: WrapperStatusEnum.APPROVED,
@@ -62,6 +66,14 @@ describe('<StationDetailsValidation.test />', () => {
   createMemoryHistory();
 
   test('render component StationDetailsValidation', () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true
+    });
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
@@ -82,8 +94,14 @@ describe('<StationDetailsValidation.test />', () => {
   });
 
   test('Test edit Button with StationDetails in role operator and status approved', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
-
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true
+    });
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>
@@ -102,8 +120,14 @@ describe('<StationDetailsValidation.test />', () => {
   });
 
   test('Test show password button', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
-
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true
+    });
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${mockedFullStation.stationCode}`]}>

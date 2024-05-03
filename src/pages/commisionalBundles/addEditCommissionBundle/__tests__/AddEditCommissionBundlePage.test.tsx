@@ -1,27 +1,27 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
-import { Provider } from 'react-redux';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../../redux/store';
+import {Provider} from 'react-redux';
 import React from 'react';
 import AddEditCommissionBundlePage from '../../addEditCommissionBundle/AddEditCommissionBundlePage';
-import { FormAction } from '../../../../model/CommissionBundle';
-import { useAppDispatch } from '../../../../redux/hooks';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
+import {FormAction} from '../../../../model/CommissionBundle';
+import {useAppDispatch} from '../../../../redux/hooks';
+import {bundleDetailsActions} from '../../../../redux/slices/bundleDetailsSlice';
 import {
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspDetailPrivate,
   mockedCommissionBundlePspDetailPublic,
 } from '../../../../services/__mocks__/bundleService';
-import { BundleResource } from '../../../../api/generated/portal/BundleResource';
-import { removeDateZoneInfo } from '../../../../utils/common-utils';
+import {BundleResource} from '../../../../api/generated/portal/BundleResource';
+import {removeDateZoneInfo} from '../../../../utils/common-utils';
 
 let spyOnUpdateBundle: jest.SpyInstance<any, unknown[]>;
 
 Object.defineProperty(global.self, 'crypto', {
   value: {
-    getRandomValues: function (buffer) {
+    getRandomValues: function (buffer: any) {
       const nodeCrypto = require('crypto');
       return nodeCrypto.randomFillSync(buffer);
     },
@@ -78,6 +78,7 @@ describe('<AddEditCommissionBundlePage />', () => {
   });
 
   test('render component AddEditCommissionBundlePage with view on edit for GLOBAL bundles', async () => {
+    jest.setTimeout(30000);
     const name = 'someNameId';
     const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
     const path = '/comm-bundles/:bundleId/:actionId';

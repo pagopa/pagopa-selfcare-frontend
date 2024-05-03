@@ -1,11 +1,11 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import { Button, Stack } from '@mui/material';
-import { generatePath, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import {Button, Stack} from '@mui/material';
+import {generatePath, Link} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 import ROUTES from '../../../../routes';
-import { StationFormAction } from '../../../../model/Station';
-import { isOperator } from '../../../components/commonFunctions';
-import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
+import {StationFormAction} from '../../../../model/Station';
+import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
+import {useUserRole} from "../../../../hooks/useUserRole";
 
 type Props = {
   status: WrapperStatusEnum | undefined;
@@ -14,11 +14,11 @@ type Props = {
 
 const DetailButtonsStation = ({ status, stationCode }: Props) => {
   const { t } = useTranslation();
-  const operator = isOperator();
+  const {userIsOperator} = useUserRole();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {operator && status === WrapperStatusEnum.APPROVED ? (
+      {userIsOperator && status === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -35,7 +35,7 @@ const DetailButtonsStation = ({ status, stationCode }: Props) => {
             {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : operator && status !== WrapperStatusEnum.APPROVED ? (
+      ) : userIsOperator && status !== WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}

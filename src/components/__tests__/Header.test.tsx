@@ -8,7 +8,8 @@ import {BrowserRouter} from 'react-router-dom';
 import {createStore} from '../../redux/store';
 import Header from '../Header';
 import {Party} from '../../model/Party';
-import {isOperator} from '../../pages/components/commonFunctions';
+import {ROLE} from "../../model/RolePermission";
+import * as useUserRole from "../../hooks/useUserRole";
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -42,13 +43,26 @@ const renderApp = (
 };
 
 test('Test rendering', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+    userIsAdmin: true
+  });
   const { store } = renderApp(partyMocked);
 });
 
 test('Test rendering with role psp admin', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+    userIsAdmin: true
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PSP',
     roles: [
@@ -63,8 +77,14 @@ test('Test rendering with role psp admin', async () => {
 });
 
 test('Test rendering with role psp operator', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+    userIsAdmin: false
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PSP',
     roles: [
@@ -79,7 +99,14 @@ test('Test rendering with role psp operator', async () => {
 });
 
 test('Test rendering with role ec admin', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+    userIsAdmin: false,
+  });
   const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PA',
@@ -95,8 +122,14 @@ test('Test rendering with role ec admin', async () => {
 });
 
 test('Test rendering with role ec operator', async () => {
-  (isOperator as jest.Mock).mockReturnValue(false);
-  const { store } = renderApp({
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsOperator: false,
+    userIsAdmin: false,
+  });  const { store } = renderApp({
     ...partyMocked,
     institutionType: 'PA',
     roles: [
@@ -145,10 +178,10 @@ const partyMocked: Party = {
   ],
   urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
   pspData: {
-    businessRegisterNumber: '00000000000',
-    legalRegisterName: 'ISTITUTI DI PAGAMENTO',
-    legalRegisterNumber: '09878',
-    abiCode: '36042',
-    vatNumberGroup: false,
+    business_register_number: '00000000000',
+    legal_register_name: 'ISTITUTI DI PAGAMENTO',
+    legal_register_number: '09878',
+    abi_code: '36042',
+    vat_number_group: false,
   },
 };

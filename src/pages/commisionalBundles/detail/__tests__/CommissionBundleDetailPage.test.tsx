@@ -1,182 +1,266 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import React from 'react';
 import CommissionBundleDetailPage from '../CommissionBundleDetailPage';
 import * as BundleService from '../../../../services/bundleService';
 import {
-  mockedCommissionBundlePspDetailGlobal,
-  mockedCommissionBundlePspDetailPrivate,
-  mockedCommissionBundlePspDetailPublic,
+    mockedCommissionBundlePspDetailGlobal,
+    mockedCommissionBundlePspDetailPrivate,
+    mockedCommissionBundlePspDetailPublic,
 } from '../../../../services/__mocks__/bundleService';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
-import { Provider } from 'react-redux';
-import { useAppDispatch } from '../../../../redux/hooks';
-import { BundleResource } from '../../../../api/generated/portal/BundleResource';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../../redux/store';
+import {Provider} from 'react-redux';
+import {useAppDispatch} from '../../../../redux/hooks';
+import {BundleResource} from '../../../../api/generated/portal/BundleResource';
+import {bundleDetailsActions} from '../../../../redux/slices/bundleDetailsSlice';
 import * as usePermissions from '../../../../hooks/usePermissions';
+import * as useUserRole from '../../../../hooks/useUserRole';
+import * as useOrganizationType from '../../../../hooks/useOrganizationType';
+import {ROLE} from "../../../../model/RolePermission";
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+    });
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+    });
 });
 
 afterEach(cleanup);
 jest.mock('../../../../hooks/usePermissions');
+jest.mock('../../../../hooks/useUserRole');
+jest.mock('../../../../hooks/useOrganizationType');
 
 const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
 
 const idBundle = 'idBundle';
 
-const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
-  const dispatcher = useAppDispatch();
-  dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+const ComponentToRender = ({bundle}: { bundle: BundleResource }) => {
+    const dispatcher = useAppDispatch();
+    dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
 
-  return (
-    <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
-      <Route path="/comm-bundles/:bundleId/">
-        <CommissionBundleDetailPage />
-      </Route>
-    </MemoryRouter>
-  );
+    return (
+        <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
+            <Route path="/comm-bundles/:bundleId/">
+                <CommissionBundleDetailPage/>
+            </Route>
+        </MemoryRouter>
+    );
 };
 
-jest.mock('../../../../hooks/usePermissions');
 
 describe('<CommissionBundleDetailPage /> for PSP', () => {
-  beforeEach(() => {
-    jest
-    .spyOn(usePermissions, 'usePermissions')
-    .mockReturnValue({ isPsp: () => true, hasPermission: jest.fn(), isEc: () => false, isPspDirect: jest.fn() });
-  });
+    beforeEach(() => {
+        jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
+            userHasPermission: (_) => true,
+        });
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: true,
+            userIsEcAdmin: true,
+            userIsPspDirectAdmin: true,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
+        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+            orgInfo: {
+                isSigned: true,
+                types: {
+                    isEc: false,
+                    isPsp: true,
+                    isEcBroker: false,
+                    isPspBroker: false,
+                }
+            },
 
-  test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            orgIsPspDirect: true,
+            orgIsEcDirect: false,
+            orgIsBroker: false,
 
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            orgIsPspSigned: true,
+            orgIsPspBrokerSigned: false,
+            orgIsEcSigned: false,
+            orgIsEcBrokerSigned: false,
+        });
     });
 
-    const deleteButton = screen.getByTestId('delete-button');
-    fireEvent.click(deleteButton);
+    test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+        });
+
+        const deleteButton = screen.getByTestId('delete-button');
+        fireEvent.click(deleteButton);
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        });
+
+        const cancelDeleteButton = screen.getByTestId('cancel-button-test');
+        fireEvent.click(cancelDeleteButton);
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('fade-test')).not.toBeInTheDocument();
+        });
+
+        fireEvent.click(deleteButton);
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        });
+
+        const confirmDeleteButton = screen.getByTestId('confirm-button-test');
+        fireEvent.click(confirmDeleteButton);
+        expect(deleteMock).toBeCalledTimes(1);
     });
 
-    const cancelDeleteButton = screen.getByTestId('cancel-button-test');
-    fireEvent.click(cancelDeleteButton);
+    test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('fade-test')).not.toBeInTheDocument();
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+        });
     });
 
-    fireEvent.click(deleteButton);
+    test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
+        });
     });
-
-    const confirmDeleteButton = screen.getByTestId('confirm-button-test');
-    fireEvent.click(confirmDeleteButton);
-    expect(deleteMock).toBeCalledTimes(1);
-  });
-
-  test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-    });
-  });
-
-  test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
-    });
-  });
 });
 
 describe('<CommissionBundleDetailPage /> for EC', () => {
-  beforeEach(() => {
-    jest
-    .spyOn(usePermissions, 'usePermissions')
-    .mockReturnValue({ isPsp: () => false, hasPermission: jest.fn(), isEc: () => true, isPspDirect: jest.fn() });
-  });
+    beforeEach(() => {
+        jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
+            userHasPermission: (_) => true,
+        });
+        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+            orgInfo: {
+                isSigned: true,
+                types: {
+                    isEc: true,
+                    isPsp: false,
+                    isEcBroker: false,
+                    isPspBroker: false,
+                }
+            },
 
-  test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            orgIsPspDirect: false,
+            orgIsEcDirect: true,
+            orgIsBroker: false,
 
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+            orgIsPspSigned: false,
+            orgIsPspBrokerSigned: false,
+            orgIsEcSigned: true,
+            orgIsEcBrokerSigned: false,
+        });
     });
-  });
-
-  test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate} />
-      </Provider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+        userRole: ROLE.PAGOPA_OPERATOR,
+        userIsPspAdmin: false,
+        userIsEcAdmin: false,
+        userIsPspDirectAdmin: false,
+        userIsOperator: true,
+        userIsAdmin: true,
     });
-  });
 
-  test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
-    deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+    test('render component CommissionBundleDetailPage bundle type GLOBAl', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
 
-    render(
-      <Provider store={store}>
-        <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic} />
-      </Provider>
-    );
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailGlobal}/>
+            </Provider>
+        );
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-      expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+        });
     });
-  });
+
+    test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+        });
+    });
+
+    test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: true,
+            userIsAdmin: true,
+        });
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+        });
+    });
 });

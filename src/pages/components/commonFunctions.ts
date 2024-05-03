@@ -1,9 +1,3 @@
-import {useFlagValue} from "../../hooks/useFeatureFlags";
-
-export const isOperator = (): boolean =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useFlagValue('isOperator');
-
 export const splitURL = (targetURL: string) => {
     try {
         const url = new URL(targetURL);

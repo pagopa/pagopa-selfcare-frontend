@@ -1008,14 +1008,14 @@ export const BackofficeApi = {
     pageLimit: number,
     bundleName: string,
     page: number,
-    cisTaxCode: string | undefined
+    ciTaxCode: string | undefined
   ): Promise<BundlesResource> => {
     const result = await backofficeClient.getCisBundles({
-      types: [bundleType],
+      bundleType,
       limit: pageLimit,
       name: bundleName,
       page,
-      cisTaxCode,
+      ciTaxCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

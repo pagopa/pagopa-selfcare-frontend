@@ -1,22 +1,28 @@
-import {Alert, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
-import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {generatePath, Link, useHistory, useParams} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
-import {useState} from 'react';
-import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
+import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import {
+  bundleDetailsSelectors,
+} from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import {BundleResource, TypeEnum} from '../../../api/generated/portal/BundleResource';
-import {useAppSelector} from '../../../redux/hooks';
-import {LOADING_TASK_COMMISSION_BUNDLE_DETAIL} from '../../../utils/constants';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {FormAction} from '../../../model/CommissionBundle';
+import {
+  BundleResource,
+  CiBundleStatusEnum,
+  TypeEnum,
+} from '../../../api/generated/portal/BundleResource';
+import { useAppSelector } from '../../../redux/hooks';
+import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { FormAction } from '../../../model/CommissionBundle';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
-import {formatDateToDDMMYYYYhhmm} from '../../../utils/common-utils';
-import {deletePSPBundle} from '../../../services/bundleService';
+import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { deletePSPBundle } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
-import {Party} from '../../../model/Party';
-import {useOrganizationType} from "../../../hooks/useOrganizationType";
-import {useUserRole} from "../../../hooks/useUserRole";
+import { Party } from '../../../model/Party';
+import { useOrganizationType } from '../../../hooks/useOrganizationType';
+import { useUserRole } from '../../../hooks/useUserRole';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
@@ -38,10 +44,103 @@ function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource
   ) : null;
 }
 
+const BundleActionButtons = ({
+  setShowConfirmModal,
+  bundleDetail,
+}: {
+  setShowConfirmModal: (bool: boolean) => void;
+  bundleDetail: BundleResource;
+}) => {
+  const { t } = useTranslation();
+  const { orgInfo } = useOrganizationType();
+  const { userIsAdmin } = useUserRole();
+  const { bundleId } = useParams<{ bundleId: string }>();
+
+  if (userIsAdmin) {
+    if (orgInfo.types.isPsp) {
+      return (
+        <>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => setShowConfirmModal(true)}
+            data-testid="delete-button"
+          >
+            {t('general.delete')}
+          </Button>
+          <Button
+            component={Link}
+            to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
+              bundleId,
+              actionId: FormAction.Edit,
+            })}
+            variant="contained"
+            data-testid="modify-button"
+          >
+            {t('general.modify')}
+          </Button>
+        </>
+      );
+    }
+    if (orgInfo.types.isEc) {
+      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.AVAILABLE) {
+        return (
+          <>
+            {bundleDetail.type === TypeEnum.PRIVATE && (
+              <Button
+                onClick={() => {}} // TODO IMPLEMENT REJECT PRIVATE BUNDLE OFFER API VAS-941
+                variant="contained"
+                color="error"
+                data-testid="reject-button"
+              >
+                {t('general.reject')}
+              </Button>
+            )}
+            <Button
+              // component={Link}
+              // to={ROUTES.COMMISSION_BUNDLES_EDIT} TODO re-direct to activation page VAS-958
+              variant="contained"
+              data-testid="activate-button"
+            >
+              {t('general.activate')}
+            </Button>
+          </>
+        );
+      }
+      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.ENABLED) {
+        return (
+          <Button
+            onClick={() => {}} // TODO IMPLEMENT DISABLE BUNDLE SUBSCRIPTION API
+            variant="contained"
+            color="error"
+            data-testid="deactivate-button"
+          >
+            {t('general.deactivate')}
+          </Button>
+        );
+      }
+      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
+        return (
+          <Button
+            onClick={() => {}} // TODO IMPLEMENT DELETE BUNDLE SUBSCRIPTION REQUEST API
+            variant="contained"
+            color="error"
+            data-testid="delete-request-button"
+          >
+            {t('commissionBundlesPage.deleteRequest')}
+          </Button>
+        );
+      }
+    }
+  }
+
+  return null;
+};
+
 const CommissionBundleDetailPage = () => {
   const { t } = useTranslation();
-  const {orgInfo } = useOrganizationType();
-  const {userIsAdmin } = useUserRole();
+  const { orgInfo } = useOrganizationType();
+  const { userIsAdmin } = useUserRole();
   const history = useHistory();
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
@@ -95,28 +194,10 @@ const CommissionBundleDetailPage = () => {
 
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-              {orgInfo.types.isPsp && userIsAdmin && (
-                <>
-                  <Button
-                    color="error"
-                    variant="outlined"
-                    onClick={() => setShowConfirmModal(true)}
-                    data-testid="delete-button"
-                  >
-                    {t('general.delete')}
-                  </Button>
-                  <Button
-                    component={Link}
-                    to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
-                      bundleId,
-                      actionId: FormAction.Edit,
-                    })}
-                    variant="contained"
-                  >
-                    {t('general.modify')}
-                  </Button>
-                </>
-              )}
+              <BundleActionButtons
+                setShowConfirmModal={setShowConfirmModal}
+                bundleDetail={commissionBundleDetail}
+              />
             </Stack>
           </Grid>
           <Grid item xs={12}>
@@ -144,11 +225,13 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
 
-          {commissionBundleDetail.type === TypeEnum.PUBLIC && orgInfo.types.isPsp  && userIsAdmin && (
-            <Grid item xs={12} data-testid="subscription-table">
-              <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail}/>
-            </Grid>
-          )}
+          {commissionBundleDetail.type === TypeEnum.PUBLIC &&
+            orgInfo.types.isPsp &&
+            userIsAdmin && (
+              <Grid item xs={12} data-testid="subscription-table">
+                <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail} />
+              </Grid>
+            )}
         </Grid>
       </SideMenuLayout>
       <GenericModal

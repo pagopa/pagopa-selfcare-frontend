@@ -1,15 +1,16 @@
-import { ArrowForward } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Typography } from '@mui/material';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { SigninData } from '../../../model/Node';
-import { Party } from '../../../model/Party';
+import {ArrowForward} from '@mui/icons-material';
+import {Alert, Box, Button, Card, Typography} from '@mui/material';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Link} from 'react-router-dom';
+import {usePermissions} from '../../../hooks/usePermissions';
+import {SigninData} from '../../../model/Node';
+import {Party} from '../../../model/Party';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_DASHBOARD } from '../../../utils/constants';
-import { hasGeneratedApiKey, isSigned } from '../../../utils/rbac-utils';
+import {LOADING_TASK_DASHBOARD} from '../../../utils/constants';
+import {hasGeneratedApiKey} from '../../../utils/rbac-utils';
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 
 type Props = {
   selectedParty?: Party;
@@ -20,9 +21,10 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_DASHBOARD);
-  const isSignedIn = signinData ? isSigned(signinData) : false;
+  const {orgInfo}= useOrganizationType();
+  const isSignedIn = signinData ? orgInfo.isSigned : false;
   const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
-  const { hasPermission } = usePermissions();
+  const { userHasPermission } = usePermissions();
   const [hasApiKey, setApiKey] = useState(false);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
     if (!isSignedIn) {
       return <Alert severity="warning">{t('dashboardPage.nextStep.signInStepAlert')}</Alert>;
     }
-    if (!hasPermission('apikey')) {
+    if (!userHasPermission('apikey')) {
       return <Alert severity="info">{t(`dashboardPage.nextStep.emptyState`)}</Alert>;
     }
     if (hasApiKey) {
@@ -71,7 +73,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
         {t('dashboardPage.nextStep.title')}
       </Typography>
       <Box mb={3}>{nextStepsAlert()}</Box>
-      {isSignedIn && !hasApiKey && hasPermission('apikey') ? (
+      {isSignedIn && !hasApiKey && userHasPermission('apikey') ? (
         <Button
           component={Link}
           to={ROUTES.APIKEYS}
@@ -83,7 +85,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
         </Button>
       ) : (
         !isSignedIn &&
-        hasPermission('node-signin') && (
+        userHasPermission('node-signin') && (
           <Button
             component={Link}
             to={ROUTES.NODE_SIGNIN}

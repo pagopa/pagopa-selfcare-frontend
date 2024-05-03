@@ -1,11 +1,11 @@
 import React from 'react';
-import { queryAllByText, queryByText, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { ProtectedRoute } from '../ProtectedRoute';
+import {render, screen} from '@testing-library/react';
+import {Provider} from 'react-redux';
+import {MemoryRouter} from 'react-router-dom';
+import {ProtectedRoute} from '../ProtectedRoute';
 import * as usePermissions from '../../../hooks/usePermissions';
 import * as useFlagValue from '../../../hooks/useFeatureFlags';
-import { store } from '../../../redux/store';
+import {store} from '../../../redux/store';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -17,10 +17,7 @@ describe('ProtectedRoute component', () => {
 
   test('should render children when user has permission', () => {
     jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
-      hasPermission: (_) => true,
-      isPsp: jest.fn(),
-      isEc: jest.fn(),
-      isPspDirect: jest.fn(),
+      userHasPermission: (_) => true,
     });
     jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
 
@@ -39,10 +36,7 @@ describe('ProtectedRoute component', () => {
   });
   test("should not render children when user hasn't permission", () => {
     jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
-      hasPermission: (permissionName) => false,
-      isPsp: jest.fn(),
-      isEc: jest.fn(),
-      isPspDirect: jest.fn(),
+      userHasPermission: (permissionName) => false,
     });
     jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
 
@@ -60,10 +54,7 @@ describe('ProtectedRoute component', () => {
 
   test("should not render children when feature flag false", () => {
     jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
-      hasPermission: (permissionName) => true,
-      isPsp: jest.fn(),
-      isEc: jest.fn(),
-      isPspDirect: jest.fn(),
+      userHasPermission: (permissionName) => true,
     });
     jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(false);
 

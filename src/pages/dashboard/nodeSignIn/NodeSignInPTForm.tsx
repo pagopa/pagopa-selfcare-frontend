@@ -1,34 +1,25 @@
-import { Badge as BadgeIcon, CompareArrows as CompareArrowsIcon } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Paper,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import {Badge as BadgeIcon, CompareArrows as CompareArrowsIcon} from '@mui/icons-material';
+import {Box, Button, Checkbox, FormControlLabel, Grid, Paper, Stack, TextField,} from '@mui/material';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useFormik} from 'formik';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import { useSigninData } from '../../../hooks/useSigninData';
-import { NodeOnSignInPT, PTResource } from '../../../model/Node';
-import { Party } from '../../../model/Party';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useSigninData} from '../../../hooks/useSigninData';
+import {NodeOnSignInPT, PTResource} from '../../../model/Node';
+import {Party} from '../../../model/Party';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { deleteCIBroker } from '../../../services/brokerService';
-import { getChannelsMerged } from '../../../services/channelService';
-import { createEcBroker, createPspBroker } from '../../../services/nodeService';
-import { deletePSPBroker } from '../../../services/pspBrokerService';
-import { getStationsMerged } from '../../../services/stationService';
-import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
-import { isEcBrokerSigned, isPspBrokerSigned } from '../../../utils/rbac-utils';
+import {deleteCIBroker} from '../../../services/brokerService';
+import {getChannelsMerged} from '../../../services/channelService';
+import {createEcBroker, createPspBroker} from '../../../services/nodeService';
+import {deletePSPBroker} from '../../../services/pspBrokerService';
+import {getStationsMerged} from '../../../services/stationService';
+import {LOADING_TASK_NODE_SIGN_IN_EC} from '../../../utils/constants';
+import {useOrganizationType} from "../../../hooks/useOrganizationType";
 
 type Props = {
   goBack: () => void;
@@ -42,11 +33,10 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const isPartnerPSP = isPspBrokerSigned(signInData) ?? false;
-  const isPartnerCI = isEcBrokerSigned(signInData) ?? false;
+  const {orgInfo, orgIsPspDirect, orgIsEcDirect,orgIsPspBrokerSigned, orgIsEcBrokerSigned} = useOrganizationType();
 
-  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(isPartnerPSP);
-  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(isPartnerCI);
+  const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspBrokerSigned);
+  const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcBrokerSigned);
   const [hasCIStations, setHasCIStations] = useState(true);
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
 
@@ -83,8 +73,8 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
         })
         .finally(() => setLoading(false));
 
-      setIsPartnerPSPChecked(isPartnerPSP);
-      setIsPartnerCIChecked(isPartnerCI);
+      setIsPartnerPSPChecked(orgIsPspBrokerSigned);
+      setIsPartnerCIChecked(orgIsEcBrokerSigned);
     }
   }, [selectedParty, signInData]);
 
@@ -98,7 +88,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
     setLoading(true);
     if (selectedParty) {
       try {
-        if (isPartnerPSPChecked && !isPartnerPSP) {
+        if (isPartnerPSPChecked && !orgIsPspBrokerSigned) {
           await createPspBroker({
             broker_psp_code: selectedParty.fiscalCode,
             description: selectedParty.description,
@@ -106,17 +96,17 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
             extended_fault_bean: true,
           });
         }
-        if (isPartnerCIChecked && !isPartnerCI) {
+        if (isPartnerCIChecked && !orgIsEcBrokerSigned) {
           await createEcBroker({
             broker_code: selectedParty.fiscalCode,
             description: selectedParty.description,
           });
         }
 
-        if (!hasPSPChannels && isPartnerPSP && !isPartnerPSPChecked) {
+        if (!hasPSPChannels && orgIsPspBrokerSigned && !isPartnerPSPChecked) {
           await deletePSPBroker(selectedParty.fiscalCode);
         }
-        if (!hasCIStations && isPartnerCI && !isPartnerCIChecked) {
+        if (!hasCIStations && orgIsEcBrokerSigned && !isPartnerCIChecked) {
           await deleteCIBroker(selectedParty.fiscalCode);
         }
 
@@ -142,7 +132,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   };
 
   const disabledSubmit = () =>
-    isPartnerPSPChecked === isPartnerPSP && isPartnerCIChecked === isPartnerCI;
+    isPartnerPSPChecked === orgIsPspBrokerSigned && isPartnerCIChecked === orgIsEcBrokerSigned;
 
   const formik = useFormik<NodeOnSignInPT>({
     initialValues: initialFormData(selectedParty),

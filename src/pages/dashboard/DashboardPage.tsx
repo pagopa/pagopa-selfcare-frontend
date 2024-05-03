@@ -1,12 +1,12 @@
-import { Alert, Box, Card, Grid, Typography } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import {Alert, Box, Card, Grid, Typography} from '@mui/material';
+import {TitleBox} from '@pagopa/selfcare-common-frontend';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
-import { usePermissions } from '../../hooks/usePermissions';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { ENV } from '../../utils/env';
+import {usePermissions} from '../../hooks/usePermissions';
+import {useAppSelector} from '../../redux/hooks';
+import {partiesSelectors} from '../../redux/slices/partiesSlice';
+import {ENV} from '../../utils/env';
 import DownloadSection from './components/DownloadSection';
 import ECRegistrationData from './components/ECRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -19,7 +19,7 @@ const DashboardPage = () => {
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
-  const { hasPermission } = usePermissions();
+  const { userHasPermission } = usePermissions();
 
   return (
     <SideMenuLayout>
@@ -59,7 +59,7 @@ const DashboardPage = () => {
         </Grid>
 
         {selectedParty &&
-          hasPermission('operation-table-read-write') &&
+          userHasPermission('operation-table-read-write') &&
           ENV.FEATURES.OPERATIONTABLE.ENABLED && (
             <OperationTable ecCode={selectedParty.fiscalCode} />
           )}

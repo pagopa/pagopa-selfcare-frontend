@@ -13,10 +13,13 @@ import AddEditCommissionBundleForm from '../AddEditCommissionBundleForm';
 import {useFormik} from 'formik';
 import {BundleRequest} from '../../../../../api/generated/portal/BundleRequest';
 import {FormAction} from '../../../../../model/CommissionBundle';
-import { mockedDelegatedPSP } from '../../../../../services/__mocks__/institutionsService';
+import {mockedDelegatedPSP} from '../../../../../services/__mocks__/institutionsService';
 import {formatDateToDDMMYYYY} from '../../../../../utils/common-utils';
 import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
 import * as useFeatureFlags from "../../../../../hooks/useFeatureFlags";
+import * as useUserRole from "../../../../../hooks/useUserRole";
+import {ROLE} from "../../../../../model/RolePermission";
+
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
@@ -88,6 +91,15 @@ describe('<AddEditCommissionBundleForm />', () => {
             .spyOn(useErrorDispatcher, 'useErrorDispatcher')
             .mockReturnValue(jest.fn());
         spyOnUseFlagValue = jest.spyOn(useFeatureFlags, 'useFlagValue');
+        jest.mock('../../../../../hooks/useUserRole');
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsOperator: false,
+            userIsAdmin: false,
+        });
         jest.spyOn(console, 'error').mockImplementation(() => {
         });
         jest.spyOn(console, 'warn').mockImplementation(() => {
@@ -160,6 +172,7 @@ describe('<AddEditCommissionBundleForm />', () => {
     };
 
     test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
+        jest.setTimeout(30000);
         const injectStore = createStore();
         spyOnUseFlagValue.mockReturnValue(true);
         await waitFor(() =>

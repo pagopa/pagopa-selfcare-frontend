@@ -1,25 +1,26 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
+import {createMemoryHistory} from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { FormAction } from '../../../../model/Channel';
-import { store } from '../../../../redux/store';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {FormAction} from '../../../../model/Channel';
+import {store} from '../../../../redux/store';
 import AddEditChannelForm from '../AddEditChannelForm';
-import {
-  pspAdminSignedDirect,
-  pspOperatorSignedDirect,
-} from '../../../../services/__mocks__/partyService';
-import { BackofficeApi } from '../../../../api/BackofficeClient';
-import { Party } from '../../../../model/Party';
-import { isOperator, isValidURL, splitURL } from '../../../components/commonFunctions';
-import { ChannelDetailsResource } from '../../../../api/generated/portal/ChannelDetailsResource';
+import {pspAdminSignedDirect, pspOperatorSignedDirect,} from '../../../../services/__mocks__/partyService';
+import {BackofficeApi} from '../../../../api/BackofficeClient';
+import {Party} from '../../../../model/Party';
+import {isValidURL} from '../../../components/commonFunctions';
+import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDetailsResource';
+import {ROLE} from "../../../../model/RolePermission";
+import * as useUserRole from "../../../../hooks/useUserRole"
+
 // import { wait } from '@testing-library/user-event/dist/types/utils';
 
 jest.mock('../../../components/commonFunctions.ts');
+jest.mock("../../../../hooks/useUserRole");
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -46,6 +47,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   const operatorUser: Array<Party> = [pspOperatorSignedDirect];
 
   test('Test rendering AddEditChannelForm', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -103,6 +112,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('test catch case api getPaymentTypes', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
     render(
       <Provider store={store}>
@@ -120,6 +137,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test rendering AddEditChannelForm with formAction duplicate', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -136,6 +161,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test rendering AddEditChannelForm with formAction edit', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -152,6 +185,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('Test rendering AddEditChannelForm with formAction Create', async () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     render(
       <Provider store={store}>
         <Router history={history}>
@@ -246,7 +287,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   // });
 
   test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     (isValidURL as jest.Mock).mockReturnValue(true);
 
     const { getByTestId, getByText } = render(
@@ -328,8 +376,14 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
   });
 
   test('test targetUnion condition', async () => {
-    (isOperator as jest.Mock).mockReturnValue(true);
-
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsOperator: true,
+      userIsAdmin: true,
+    });
     render(
       <Provider store={store}>
         <Router history={history}>

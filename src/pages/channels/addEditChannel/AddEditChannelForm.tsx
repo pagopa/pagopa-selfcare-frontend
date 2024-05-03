@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router';
 import {
   Box,
   Button,
@@ -15,40 +15,37 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormikProps, useFormik } from 'formik';
-import { Trans, useTranslation } from 'react-i18next';
-import { ButtonNaked, theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import {FormikProps, useFormik} from 'formik';
+import {Trans, useTranslation} from 'react-i18next';
+import {ButtonNaked, theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {
   Badge as BadgeIcon,
-  MenuBook as MenuBookIcon,
   CreditCard as CreditCardIcon,
+  MenuBook as MenuBookIcon,
   RemoveCircleOutline,
 } from '@mui/icons-material';
-import { generatePath } from 'react-router-dom';
+import {generatePath} from 'react-router-dom';
 import ROUTES from '../../../routes';
 import {
-  // associatePSPtoChannel,
   createChannel,
   createWrapperChannelDetails,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
 } from '../../../services/channelService';
-import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
-import { Party } from '../../../model/Party';
-import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
-import { sortPaymentType } from '../../../model/PaymentType';
-import { isOperator, isValidURL } from '../../components/commonFunctions';
-import {
-  ChannelDetailsResource,
-  ProtocolEnum,
-} from '../../../api/generated/portal/ChannelDetailsResource';
-import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
-import { ENV } from '../../../utils/env';
+import {PaymentTypes} from '../../../api/generated/portal/PaymentTypes';
+import {Party} from '../../../model/Party';
+import {LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE} from '../../../utils/constants';
+import {sortPaymentType} from '../../../model/PaymentType';
+import {isValidURL} from '../../components/commonFunctions';
+import {ChannelDetailsResource, ProtocolEnum,} from '../../../api/generated/portal/ChannelDetailsResource';
+import {WrapperStatusEnum} from '../../../api/generated/portal/WrapperChannelDetailsResource';
+import {ChannelOnCreation, FormAction} from '../../../model/Channel';
+import {ENV} from '../../../utils/env';
 import ConfirmModal from '../../components/ConfirmModal';
-import { getPaymentTypes } from '../../../services/configurationService';
+import {getPaymentTypes} from '../../../services/configurationService';
+import {useUserRole} from "../../../hooks/useUserRole";
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -68,7 +65,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const setLoadingPayment = useLoading(LOADING_TASK_PAYMENT_TYPE);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>({ payment_types: [] });
-  const operator = isOperator();
+  const {userIsOperator} = useUserRole();
 
   const forwarder01 =
     ENV.ENV === 'PROD'
@@ -182,7 +179,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             ? t('addEditChannelPage.validationMessage.requiredField')
             : undefined,
         },
-        ...(operator && {
+        ...(userIsOperator && {
           primitive_version: !values.primitive_version
             ? t('addEditChannelPage.validationMessage.requiredField')
             : validatePrimitiveVersion(values.primitive_version)
@@ -357,7 +354,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       values.payment_types?.toString() !== '';
 
     if (baseConditions) {
-      if (!operator) {
+      if (!userIsOperator) {
         return true;
       } else {
         if (
@@ -365,7 +362,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           values.password !== '' &&
           values.proxyUnion !== ''
         ) {
-          if (operator && values.payment_types && values.payment_types.length > 0) {
+          if (userIsOperator && values.payment_types && values.payment_types.length > 0) {
             for (const paymentType of values.payment_types) {
               if (paymentType === '') {
                 return false;
@@ -381,14 +378,14 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const addPaymentMethod = async () => {
-    if (operator && formik.values.payment_types) {
+    if (userIsOperator && formik.values.payment_types) {
       const newArr = [...formik.values.payment_types, ''];
       await formik.setFieldValue('payment_types', newArr);
     }
   };
 
   const deletePaymentMethod = async (index: number) => {
-    if (operator && formik.values.payment_types) {
+    if (userIsOperator && formik.values.payment_types) {
       const newArr = [...formik.values.payment_types];
       if (index > -1 && index < formik.values.payment_types.length) {
         // eslint-disable-next-line functional/immutable-data
@@ -399,7 +396,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   };
 
   const redirect = () => {
-    if (operator) {
+    if (userIsOperator) {
       history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code }));
     } else {
       history.push(ROUTES.CHANNELS);
@@ -426,7 +423,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       if (formAction === FormAction.Edit) {
         switch (channelDetail?.wrapperStatus) {
           case WrapperStatusEnum.TO_CHECK:
-            if (operator) {
+            if (userIsOperator) {
               await createChannel(values);
             } else {
               await updateWrapperChannelDetailsToCheck(values, validationUrl);
@@ -434,7 +431,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             break;
           case WrapperStatusEnum.APPROVED:
           case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (operator) {
+            if (userIsOperator) {
               await updateChannel(channelCode, values);
             } else {
               await updateWrapperChannelDetailsToCheckUpdate(values, validationUrl);
@@ -608,7 +605,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             <Grid container spacing={2} mt={1}>
               {formik.values.payment_types?.map((_pT, i) => (
                 <Grid container spacing={2} mt={1} key={i} ml={1}>
-                  {i > 0 && operator ? (
+                  {i > 0 && userIsOperator ? (
                     <Grid container item xs={1} key={`remove${i}`} mt={1}>
                       <RemoveCircleOutline
                         color="error"
@@ -621,7 +618,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                       />
                     </Grid>
                   ) : null}
-                  <Grid container item xs={i > 0 && operator ? 5 : 6} key={`item${i}`}>
+                  <Grid container item xs={i > 0 && userIsOperator ? 5 : 6} key={`item${i}`}>
                     <FormControl fullWidth key={`FormControl${i}`}>
                       <InputLabel size="small" key={`InputLabel${i}_label`}>
                         {t('addEditChannelPage.addForm.fields.paymentType')}
@@ -634,7 +631,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                         placeholder={t('addEditChannelPage.addForm.fields.paymentType')}
                         size="small"
                         defaultValue={undefined}
-                        disabled={operator ? false : formAction === FormAction.Edit ? true : false}
+                        disabled={userIsOperator ? false : formAction === FormAction.Edit ? true : false}
                         value={formik.values.payment_types ? formik.values.payment_types[i] : ''}
                         onChange={(event) =>
                           formik.setFieldValue(
@@ -659,7 +656,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
                       </Select>
                     </FormControl>
                   </Grid>
-                  {operator && (
+                  {userIsOperator && (
                     <Grid container spacing={2} mt={1} ml={1}>
                       {i === 0 && (
                         <Grid container item xs={6}>
@@ -684,7 +681,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         </Box>
       </Paper>
 
-      {formAction === FormAction.Edit && operator ? (
+      {formAction === FormAction.Edit && userIsOperator ? (
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
@@ -701,7 +698,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             color="primary"
             variant="outlined"
             onClick={() =>
-              operator
+              userIsOperator
                 ? history.push(
                     generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code })
                   )
@@ -730,12 +727,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
       <ConfirmModal
         title={
-          operator
+          userIsOperator
             ? t('addEditChannelPage.confirmModal.channelConfiguration')
             : t('addEditStationPage.confirmModal.title')
         }
         message={
-          operator ? (
+          userIsOperator ? (
             t('addEditChannelPage.confirmModal.messageChannelOperation')
           ) : (
             <Trans i18nKey="addEditChannelPage.confirmModal.message">
@@ -747,7 +744,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         }
         openConfirmModal={showConfirmModal}
         onConfirmLabel={
-          operator
+          userIsOperator
             ? t('addEditChannelPage.confirmModal.confirmButtonOpe')
             : t('addEditChannelPage.confirmModal.confirmButton')
         }

@@ -110,6 +110,9 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     searchTriggered?: boolean
   ) => {
     setLoadingList(true);
+    if(newPage){
+      setPage(newPage);
+    }
 
     getPublicBundleCISubscriptions({
       idBundle: bundleDetail?.idBundle ?? '',

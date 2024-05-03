@@ -76,7 +76,25 @@ describe('<CommissionBundlesTable />', () => {
   });
 
   test('render component CommissionBundlesTable without bundle list', async () => {
- 
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+      orgInfo: {
+        isSigned: true,
+        types: {
+          isPsp: true,
+          isPspBroker: true,
+          isEc: false,
+          isEcBroker: false,
+        }
+      },
+      orgIsBroker: false,
+      orgIsEcBrokerSigned: false,
+      orgIsEcDirect: false,
+      orgIsEcSigned: false,
+      orgIsPspBrokerSigned: false,
+      orgIsPspDirect: false,
+      orgIsPspSigned: false
+
+    });
     mock.mockReturnValueOnce(new Promise(resolve => resolve({})));
     render(
       <Provider store={store}>

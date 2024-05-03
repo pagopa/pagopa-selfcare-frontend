@@ -3,9 +3,9 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import {
-  bundleDetailsSelectors,
-} from '../../../redux/slices/bundleDetailsSlice';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { ArrowBack } from '@mui/icons-material';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
 import {
   BundleResource,
@@ -178,12 +178,25 @@ const CommissionBundleDetailPage = () => {
   return (
     <>
       <SideMenuLayout>
-        <Breadcrumbs>
-          <Typography>{t('general.Bundles')}</Typography>
-          <Typography color={'action.active'}>
-            {t('commissionBundlesPage.commissionBundleDetail.title')}
-          </Typography>
-        </Breadcrumbs>
+        <Stack direction="row">
+          <ButtonNaked
+            size="small"
+            component="button"
+            onClick={() => history.push(ROUTES.COMMISSION_BUNDLES)}
+            startIcon={<ArrowBack />}
+            sx={{ color: 'primary.main', mr: '20px' }}
+            weight="default"
+            data-testid="exit-btn-test"
+          >
+            {t('general.back')}
+          </ButtonNaked>
+          <Breadcrumbs>
+            <Typography>{t('general.Bundles')}</Typography>
+            <Typography color={'action.active'}>
+              {t('commissionBundlesPage.commissionBundleDetail.title')}
+            </Typography>
+          </Breadcrumbs>
+        </Stack>
         <Grid container mt={1} spacing={1}>
           <Grid item xs={6}>
             <TitleBox title={commissionBundleDetail.name ?? ''} variantTitle="h4" />

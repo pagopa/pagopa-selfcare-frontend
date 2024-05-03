@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.20.15",
+  "version": "1.20.16",
   "homepage": "ui",
   "private": true,
   "scripts": {
@@ -58,7 +58,7 @@
     "url": "^0.11.3"
   },
   "devDependencies": {
-    "@babel/core": "7.18.6",
+    "@babel/core": "7.24.4",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.14.5",
@@ -68,7 +68,7 @@
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.0.4",
     "@types/react-test-renderer": "^17.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.45.0",
     "api-spec-converter": "^2.12.0",
     "babel-jest": "^29.7.0",
@@ -86,7 +86,7 @@
     "jest-sonar-reporter": "^2.0.0",
     "mkdirp": "^1.0.4",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.7",
+    "prettier": "^3.2.5",
     "puppeteer": "^21.1.1",
     "puppeteer-extra-plugin-session": "^1.0.1",
     "raw.macro": "^0.4.2",

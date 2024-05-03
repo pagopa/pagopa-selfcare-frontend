@@ -1,22 +1,29 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { Chip, Grid, Typography } from '@mui/material';
+import { Chip } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { GridColDef, GridColumnHeaderParams, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import React from 'react';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
-import { BundleResource, TypeEnum } from '../../../api/generated/portal/BundleResource';
+import {
+  BundleResource,
+  CiBundleStatusEnum,
+  TypeEnum,
+} from '../../../api/generated/portal/BundleResource';
 import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
-import { renderCell, renderStatusChip, showCustomHeader } from '../../../components/Table/TableUtils';
+import {
+  renderCell,
+  renderStatusChip,
+  showCustomHeader,
+} from '../../../components/Table/TableUtils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   isPsp: boolean,
-  isEc: boolean
+  isCi: boolean
 ) {
   return [
     {
@@ -105,7 +112,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => getStateChip(params, t, isPsp, isEc),
+      renderCell: (params) => getStateChip(params, t, isPsp, isCi),
       sortable: false,
       flex: 4,
     },
@@ -147,137 +154,166 @@ export const getStateChip = (
   params: GridRenderCellParams,
   t: TFunction<'translation'>,
   isPsp: boolean,
-  isEc: boolean
+  isCi: boolean
 ) => {
-  const validityDateFrom = params.row.validityDateFrom;
-  const validityDateTo = params.row.validityDateTo;
+  const bundleDetails: BundleResource = params.row;
+  const validityDateFrom = bundleDetails.validityDateFrom;
+  const validityDateTo = bundleDetails.validityDateTo;
   const todayDate = new Date();
 
   if (isPsp && validityDateFrom && validityDateTo) {
-    if (datesAreOnSameDay(todayDate, validityDateTo)) {
-      return renderStatusChip({
-        chipColor:"error",
-        chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-        dataTestId:"error-state-chip"
-      });
-    }
-    if (todayDate.getTime() < validityDateFrom.getTime()) {
-      return renderStatusChip({
-        chipColor:"default",
-        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-        dataTestId:"default-state-chip"
-      });
-    }
-    if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-      return renderStatusChip({
-        chipColor:"warning",
-        chipLabel: t('commissionBundlesPage.list.states.expiring'),
-        dataTestId:"warning-state-chip"
-      });
-    }
+    return getPSPStatusChip(t, todayDate, validityDateTo, validityDateFrom);
+  }
+  if (isCi) {
+    return getCIStatusChip(
+      t,
+      todayDate,
+      validityDateTo,
+      validityDateFrom,
+      bundleDetails.type,
+      bundleDetails.ciBundleStatus
+    );
+  }
 
+  return '-';
+};
+
+const getPSPStatusChip = (
+  t: TFunction<'translation'>,
+  todayDate: Date,
+  validityDateTo: Date,
+  validityDateFrom: Date
+) => {
+  if (datesAreOnSameDay(todayDate, validityDateTo)) {
     return renderStatusChip({
-      chipColor:"success",
-      chipLabel: t('commissionBundlesPage.list.states.active'),
-      dataTestId:"success-state-chip"
+      chipColor: 'error',
+      chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+      dataTestId: 'error-state-chip',
     });
   }
-  if (isEc) {
-    if (params.row.type === TypeEnum.PUBLIC) {
-      /* TODO
-    if(isEc  && bundle not activated by EC ){
-            return (
+  if (todayDate.getTime() < validityDateFrom.getTime()) {
+    return renderStatusChip({
+      chipColor: 'default',
+      chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+      dataTestId: 'default-state-chip',
+    });
+  }
+  if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+    return renderStatusChip({
+      chipColor: 'warning',
+      chipLabel: t('commissionBundlesPage.list.states.expiring'),
+      dataTestId: 'warning-state-chip',
+    });
+  }
+
+  return renderStatusChip({
+    chipColor: 'success',
+    chipLabel: t('commissionBundlesPage.list.states.active'),
+    dataTestId: 'success-state-chip',
+  });
+};
+
+const getCIStatusChip = (
+  t: TFunction<'translation'>,
+  todayDate: Date,
+  validityDateTo: Date | undefined,
+  validityDateFrom: Date | undefined,
+  bundleType: TypeEnum | undefined,
+  bundleStatus: CiBundleStatusEnum | undefined
+) => {
+  if (bundleType === TypeEnum.PUBLIC) {
+    if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
+      return (
         <Chip
           color={'default'}
           label={t('commissionBundlesPage.list.states.toBeActivated')}
           data-testid="default-state-chip"
-        />);
+        />
+      );
     }
-*/
-      /* TODO
-    if(isEc  && bundle deactivated by EC ){
-            return (
+
+    if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+      return (
         <Chip
           color={'error'}
           label={t('commissionBundlesPage.list.states.deactivated')}
           data-testid="error-state-chip"
-        />);
+        />
+      );
     }
-*/
-      /* TODO
-    if(isEc  && bundle activated by EC less than 24 hours ago ){
-            return (
+
+    if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
+      return (
         <Chip
           color={'primary'}
           label={t('commissionBundlesPage.list.states.requestInProgress')}
           data-testid="primary-state-chip"
-        />);
-    }
-*/
-      /* TODO
-    if(isEc  && bundle activated by EC ){
-            return (
-       <Chip
-          color={'success'}
-          label={t('commissionBundlesPage.list.states.active')}
-          data-testid="success-state-chip"
-        />);
-    }
-*/
+        />
+      );
     }
 
-    if (params.row.type === TypeEnum.PRIVATE) {
-      if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
-        return renderStatusChip({
-          chipColor:"error",
-          chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-          dataTestId:"error-state-chip"
-        });
-      }
-      if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-        return renderStatusChip({
-          chipColor:"warning",
-          chipLabel: t('commissionBundlesPage.list.states.expiring'),
-          dataTestId:"warning-state-chip"
-        });
-      }
-      /* TODO
-    if(isEc  && bundle not activated by EC ){
-            return (
+    if (bundleStatus === CiBundleStatusEnum.ENABLED) {
+      return (
         <Chip
-          color={'default'}
-          label={t('commissionBundlesPage.list.states.toBeActivated')}
-          data-testid="default-state-chip"
-        />);
-    }
-*/
-      /* TODO
-    if(isEc  && bundle activated by EC ){
-            return (
-       <Chip
           color={'success'}
           label={t('commissionBundlesPage.list.states.active')}
           data-testid="success-state-chip"
-        />);
+        />
+      );
     }
-*/
-    }
+  }
 
-    if (params.row.type === TypeEnum.GLOBAL) {
-      if (todayDate.getTime() < validityDateFrom.getTime()) {
-        return renderStatusChip({
-          chipColor:"default",
-          chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-          dataTestId:"default-state-chip"
-        });
-      }
-      
+  if (bundleType === TypeEnum.PRIVATE) {
+    if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
       return renderStatusChip({
-        chipColor:"success",
-        chipLabel: t('commissionBundlesPage.list.states.active'),
-        dataTestId:"success-state-chip"
+        chipColor: 'error',
+        chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+        dataTestId: 'error-state-chip',
       });
     }
+    if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+      return renderStatusChip({
+        chipColor: 'warning',
+        chipLabel: t('commissionBundlesPage.list.states.expiring'),
+        dataTestId: 'warning-state-chip',
+      });
+    }
+    /* TODO
+  if(isEc  && bundle not activated by EC ){
+          return (
+      <Chip
+        color={'default'}
+        label={t('commissionBundlesPage.list.states.toBeActivated')}
+        data-testid="default-state-chip"
+      />);
+  }
+*/
+    /* TODO
+  if(isEc  && bundle activated by EC ){
+          return (
+     <Chip
+        color={'success'}
+        label={t('commissionBundlesPage.list.states.active')}
+        data-testid="success-state-chip"
+      />);
+  }
+*/
+  }
+
+  if (bundleType === TypeEnum.GLOBAL) {
+    if (validityDateFrom && todayDate.getTime() < validityDateFrom.getTime()) {
+      return renderStatusChip({
+        chipColor: 'default',
+        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+        dataTestId: 'default-state-chip',
+      });
+    }
+
+    return renderStatusChip({
+      chipColor: 'success',
+      chipLabel: t('commissionBundlesPage.list.states.active'),
+      dataTestId: 'success-state-chip',
+    });
   }
 
   return '-';

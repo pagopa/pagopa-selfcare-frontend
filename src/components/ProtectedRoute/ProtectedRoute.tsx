@@ -18,7 +18,8 @@ export const ProtectedRoute = ({permission, flagValue = "", children}: Protected
         );
     }
 
-    return (flagValue === "" || useFlagValue(flagValue)) && userHasPermission(permission) ? (
+    const featureIsEnabled = useFlagValue(flagValue) || flagValue === "";
+    return featureIsEnabled && userHasPermission(permission) ? (
         children
     ) : (
         <Redirect to={ROUTES.HOME}/>

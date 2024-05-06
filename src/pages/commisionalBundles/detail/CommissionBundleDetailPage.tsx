@@ -43,7 +43,7 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
 
   if (bundleDetail?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
     return (
-      <Alert severity={'error'} data-testid="alert-error-test">
+      <Alert severity={'error'} data-testid="alert-error-test" variant='outlined'>
         {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
       </Alert>
     );
@@ -58,7 +58,7 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
   });
   if (expiredFound) {
     return (
-      <Alert severity={'warning'} data-testid="alert-warning-test">
+      <Alert severity={'warning'} data-testid="alert-warning-test" variant='outlined'>
         {t('commissionBundlesPage.commissionBundleDetail.alert.expiredTaxonomies')}
       </Alert>
     );
@@ -291,7 +291,7 @@ const CommissionBundleDetailPage = () => {
             )}
         </Grid>
       </SideMenuLayout>
-      <GenericModal
+      {showConfirmModal && <GenericModal
         title={t(`commissionBundlesPage.commissionBundleDetail.modal.title.${showConfirmModal}`)}
         message={t(
           `commissionBundlesPage.commissionBundleDetail.modal.message.${showConfirmModal}`
@@ -302,7 +302,7 @@ const CommissionBundleDetailPage = () => {
         handleCloseModal={() => setShowConfirmModal(null)}
         handleConfirm={() => handleModalAction()}
         data-testid="delete-modal"
-      />
+      />}
     </>
   );
 };

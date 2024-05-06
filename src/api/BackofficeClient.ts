@@ -1232,7 +1232,7 @@ export const BackofficeApi = {
     ciTaxCode: string;
   }): Promise<void> => {
     const result = await backofficeClient.deleteCIBundleRequest({
-      'id-bundle-request': idBundleRequest,
+      'bundle-request-id': idBundleRequest,
       'ci-tax-code': ciTaxCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);

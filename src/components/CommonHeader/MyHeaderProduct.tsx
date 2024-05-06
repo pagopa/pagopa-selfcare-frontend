@@ -1,13 +1,26 @@
 import {ProductEntity, ProductSwitch, ProductSwitchItem,} from '@pagopa/mui-italia';
-import {Autocomplete, Box, Chip, Container, IconButton, Paper, Stack, TextField, Typography,} from '@mui/material';
+import {
+    Autocomplete,
+    Avatar,
+    Box,
+    Chip,
+    Container,
+    IconButton,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {trackEvent} from "@pagopa/selfcare-common-frontend/services/analyticsService";
+import {ArrowDropDownRounded} from "@mui/icons-material";
 import {getInstitutions} from "../../services/institutionService";
 import {InstitutionDetail} from "../../api/generated/portal/InstitutionDetail";
 import {Party} from "../../model/Party";
-import {partiesActions} from "../../redux/slices/partiesSlice";
-import {useAppDispatch} from "../../redux/hooks";
+import {partiesActions, partiesSelectors} from "../../redux/slices/partiesSlice";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {useSigninData} from "../../hooks/useSigninData";
+import {PaddedDrawer} from "../PaddedDrawer";
 
 type HeaderProductProps = {
     borderBottom?: number;
@@ -41,16 +54,21 @@ const HeaderProduct = ({
         [productId, productsList]
     ) as ProductSwitchItem;
     const [iconSelected, setIconSelected] = useState<ReactNode | null | undefined>(null);
+    const [organizations, setOrganizations] = useState<Array<InstitutionDetail>>();
     const [organization, setOrganization] = useState<InstitutionDetail>();
     const [autocompleteValue, setAutocompleteValue] = useState<string>();
+    const [drawerIsOpened, setDrawerIsOpened] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
     const updateSigninData = useSigninData();
+    const signinData = useAppSelector(partiesSelectors.selectSigninData);
+
 
 
     useEffect(() => {
+        console.log('useEffect');
         getOptions();
-    }, [organization]);
+    }, [organizations]);
 
     const updateState = (orgDetails: InstitutionDetail) => {
         trackEvent('PARTY_SELECTION', {
@@ -86,8 +104,7 @@ const HeaderProduct = ({
             .then((value: Array<InstitutionDetail>) => {
                 if (value && value.length > 0) {
                     // @ts-ignore
-                    const organization: InstitutionDetail = value.at(0);
-                    setOrganization(organization);
+                    setOrganizations(value);
                 }
             })
             .catch(error => {
@@ -115,8 +132,8 @@ const HeaderProduct = ({
     };
 
     function getOptions(): Array<string> {
-        if (organization) {
-            return [organization.tax_code];
+        if (organizations) {
+            return organizations.map(elem => elem.tax_code + ' - ' + elem.name);
         } else {
             return [];
         }
@@ -168,45 +185,63 @@ const HeaderProduct = ({
                             </Stack>
                         )}
                     </Stack>
-                    <Box minWidth="20rem">
-                        <Autocomplete
-                            disablePortal={true}
-                            id="org-search"
-                            options={getOptions()}
-                            onChange={(_event, value) => {
-                                console.log('onChange');
-                                if (value && value.length > 0 && organization) {
-                                    updateState(organization);
-                                    setAutocompleteValue(organization.tax_code);
-                                }
-                            }}
-                            onInput={_event => {
-                                // searchCreditorInstitutions(_event.target.value ?? '');
-                            }}
-                            onInputChange={(_event, value) => {
-                                console.log('onInputChange');
-                                if (value && value.length > 0) {
-                                    searchCreditorInstitutions(value);
-                                }
-                            }}
-                            onSubmit={(_event) => {
-                            }}
-                            value={autocompleteValue ?? ""}
-                            fullWidth
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label={"Scegli il CF dell'organizzazione"}
-                                    sx={{fontWeight: 'medium'}}
-                                />
-                            )}
-                            PaperComponent={({children}) => (
-                                <Paper sx={{overflowY: 'auto', mb: 1}}>{children}</Paper>
-                            )}
-                            noOptionsText={'nessuna organizzazione trovata'}
-                            data-testid="org-search"
-                        />
-                    </Box>
+
+
+                    <Container onClick={() => setDrawerIsOpened(true)} sx={{cursor: 'pointer'}}>
+                        <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+                            <Avatar></Avatar>
+                            <Stack direction="column" flexWrap={'wrap'} justifyContent={'flex-start'}>
+                                <Typography fontWeight={"bolder"}>
+                                    {signinData?.brokerDetailsResource?.broker_code
+                                    ?? signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode
+                                        ?? signinData?.paymentServiceProviderDetailsResource?.tax_code
+                                    ?? signinData?.brokerPspDetailsResource?.broker_psp_code ?? 'No Data'}
+                                </Typography>
+                                <Typography color={"disabled"}>
+                                    { 'Operatore PagoPA' }
+                                </Typography>
+                            </Stack>
+                            <ArrowDropDownRounded></ArrowDropDownRounded>
+                        </Stack>
+                    </Container>
+                    <PaddedDrawer openDrawer={drawerIsOpened} setOpenDrawer={setDrawerIsOpened}>
+                        <Box minWidth="20rem">
+                            <Autocomplete
+                                disablePortal={true}
+                                id="org-search"
+                                options={getOptions()}
+                                onChange={(_event, value) => {
+                                    if (value && value.length > 0 && organizations) {
+                                        const index = organizations.findIndex(elem => elem.name.includes(value.split('- ')[1]));
+                                        const organization: InstitutionDetail = organizations.at(index)!;
+                                        updateState(organization);
+                                        setAutocompleteValue(organization.tax_code);
+                                        setOrganization(organization);
+                                    }
+                                }}
+                                onInputChange={(_event, value) => {
+                                    if (value && value.length > 0) {
+                                        searchCreditorInstitutions(value);
+                                    }
+                                }}
+                                value={autocompleteValue ?? ""}
+                                fullWidth
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label={"Scegli il CF dell'organizzazione"}
+                                        sx={{fontWeight: 'medium'}}
+                                    />
+                                )}
+                                PaperComponent={({children}) => (
+                                    <Paper sx={{overflowY: 'auto', mb: 1}}>{children}</Paper>
+                                )}
+                                noOptionsText={'nessuna organizzazione trovata'}
+                                data-testid="org-search"
+                            />
+
+                        </Box>
+                    </PaddedDrawer>
                 </Stack>
             </Container>
         </Box>

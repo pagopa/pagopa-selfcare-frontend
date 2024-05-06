@@ -2330,27 +2330,27 @@
     prop-types "^15.8.1"
     react-is "^17.0.2"
 
-"@mui/x-data-grid-generator@^6.18.4":
-  version "6.18.4"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-generator/-/x-data-grid-generator-6.18.4.tgz#b248175b057acf3a271a58e56e6d843da923fafa"
-  integrity sha512-S1SjpHMKKPgPJMQyVN0vVp0X+R9vSv0gCpvunpckIYnqXLm1s9DXNwTaCYW+7j6HFVZGQkzBjY/OUtl7dHUt5g==
+"@mui/x-data-grid-generator@^6.19.11":
+  version "6.19.11"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-generator/-/x-data-grid-generator-6.19.11.tgz#8de8bb4c1a5dec8f018511da328c4c13deefed91"
+  integrity sha512-uwO2gn2fm1GNzfXoLp2HYN/hftU4p3HWhLCzFD8HfykJTyviSgzWp9ckoFYq6LV2bOgikSabg43DyVc68N9Jkw==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@mui/base" "^5.0.0-beta.22"
-    "@mui/x-data-grid-premium" "6.18.4"
+    "@mui/x-data-grid-premium" "6.19.11"
     chance "^1.1.11"
     clsx "^2.0.0"
     lru-cache "^7.18.3"
 
-"@mui/x-data-grid-premium@6.18.4":
-  version "6.18.4"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-premium/-/x-data-grid-premium-6.18.4.tgz#3e0f54553836dba82991314d9736d9698cc9ad2a"
-  integrity sha512-Ljbq/KKImwkmbJeiM0NR6lYe04ze/wNDtSWsaycR2ZggEDaes9Xlq44ShZuKpH68/N580svbJUlYs4H98UM5Tg==
+"@mui/x-data-grid-premium@6.19.11":
+  version "6.19.11"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-premium/-/x-data-grid-premium-6.19.11.tgz#df5ed310fc86e0b741b3e3db34b40aa91dea8e57"
+  integrity sha512-A8BU6q2diK7B/s44IduPpHYguoasnTrRKEXRzzMlJ/L3eNEvynBBKwL29sOdXP1HjLieT5aijzX8FhNIMEwAsw==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@mui/utils" "^5.14.16"
-    "@mui/x-data-grid" "6.18.4"
-    "@mui/x-data-grid-pro" "6.18.4"
+    "@mui/x-data-grid" "6.19.11"
+    "@mui/x-data-grid-pro" "6.19.11"
     "@mui/x-license-pro" "6.10.2"
     "@types/format-util" "^1.0.3"
     clsx "^2.0.0"
@@ -2358,14 +2358,14 @@
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
-"@mui/x-data-grid-pro@6.18.4":
-  version "6.18.4"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-6.18.4.tgz#c13e2c7e9bb089db69ad2484fc588fb8c9a8bc3f"
-  integrity sha512-xcQFNvf8p8EU6K05uDd9k83nfRm4UkffxXvXH9RRvV2B4rfcfsGlRZRpmt0+LeGh8jSdMNnAfSGLMgzbCXJ08A==
+"@mui/x-data-grid-pro@6.19.11":
+  version "6.19.11"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-6.19.11.tgz#82d122b5ed513710a0fd53ec3d07fe5980f58633"
+  integrity sha512-Kttf9+J8qZ4hINfA+Aj/P0WL/KSItsDZW4sVIjF5Eb+lra3VGwvTNAsvT28OCcvg+dIzk4MVksGXklA7871GqA==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@mui/utils" "^5.14.16"
-    "@mui/x-data-grid" "6.18.4"
+    "@mui/x-data-grid" "6.19.11"
     "@mui/x-license-pro" "6.10.2"
     "@types/format-util" "^1.0.3"
     clsx "^2.0.0"
@@ -2383,10 +2383,10 @@
     prop-types "^15.8.1"
     reselect "^4.1.6"
 
-"@mui/x-data-grid@6.18.4":
-  version "6.18.4"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.18.4.tgz#5066d3b6f017ea6fe524ed57059365f684f2cc43"
-  integrity sha512-uiinfqioCRoesUlJF3gvh67Ja3TrJJvPRTu4Gkf/RQBjr0BDNQ8BJrnuffqD8D/0SVUiqRZvcrjtgG1BIyjKRw==
+"@mui/x-data-grid@6.19.11":
+  version "6.19.11"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.19.11.tgz#3add2173059e98a909f8c86b696896ecfb56eb48"
+  integrity sha512-QsUp2cPkjUm8vyTR5gYWuCFqxspljOzElbCm412wzvMTJSKaB0kz7CEecFhxjlsMjQ8B7kY8oDF3LXjjucFcPQ==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@mui/utils" "^5.14.16"

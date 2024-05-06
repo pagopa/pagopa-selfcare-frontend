@@ -1194,7 +1194,7 @@ export const BackofficeApi = {
   ): Promise<void> => {
     const result = await backofficeClient.acceptPublicBundleSubscriptions({
       'psp-tax-code': pspTaxCode,
-      body: [idBundleRequest],
+      'bundle-request-id': idBundleRequest,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

@@ -31,6 +31,8 @@ jest.mock('../../../../hooks/useUserRole');
 jest.mock('../../../../hooks/useOrganizationType');
 
 const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
+const deleteCISubscription = jest.spyOn(BundleService, "deleteCIBundleSubscription");
+const deleteCIRequest = jest.spyOn(BundleService, "deleteCIBundleRequest");
 
 const idBundle = 'idBundle';
 
@@ -249,7 +251,6 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         test('With bundle in state AVAILABLE', async () => {
             let bundle = {...mockedCommissionBundlePspDetailPublic};
             bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
-            deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
             jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
                 userRole: ROLE.PAGOPA_OPERATOR,
                 userIsPspAdmin: false,
@@ -279,7 +280,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         test('With bundle in state ENABLED', async () => {
             let bundle = {...mockedCommissionBundlePspDetailPublic};
             bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
-            deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            deleteCISubscription.mockReturnValueOnce(new Promise((resolve) => resolve()));
             jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
                 userRole: ROLE.PAGOPA_OPERATOR,
                 userIsPspAdmin: false,
@@ -305,11 +306,21 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 expect(screen.queryByTestId('deactivate-button')).toBeInTheDocument();
                 expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
             });
+
+            fireEvent.click(screen.getByTestId('deactivate-button'));
+
+            await waitFor(() => {
+                expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
+            })
+
+            fireEvent.click(screen.getByTestId('confirm-button-test'));
+
+            expect(deleteCISubscription).toBeCalled();
         });
         test('With bundle in state REQUESTED', async () => {
             let bundle = {...mockedCommissionBundlePspDetailPublic};
             bundle.ciBundleStatus = CiBundleStatusEnum.REQUESTED;
-            deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            deleteCIRequest.mockReturnValueOnce(new Promise((resolve) => resolve()));
             jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
                 userRole: ROLE.PAGOPA_OPERATOR,
                 userIsPspAdmin: false,
@@ -335,6 +346,16 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
                 expect(screen.queryByTestId('delete-request-button')).toBeInTheDocument();
             });
+
+            fireEvent.click(screen.getByTestId('delete-request-button'));
+
+            await waitFor(() => {
+                expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
+            })
+
+            fireEvent.click(screen.getByTestId('confirm-button-test'));
+
+            expect(deleteCIRequest).toBeCalled();
         });
         test('With bundle in state ON_REMOVAL', async () => {
             let bundle = {...mockedCommissionBundlePspDetailPublic};

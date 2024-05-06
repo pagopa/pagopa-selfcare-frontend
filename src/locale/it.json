@@ -869,13 +869,30 @@
       "configuration": "Configurazione",
       "updatedOn": "Aggiornato il",
       "noTaxonomiesAlert": "Nessun servizio associato",
-      "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
+      "alert": {
+        "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
+        "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani."
+      },
       "error": {
         "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
       },
       "modal": {
-        "title": "Eliminazione pacchetto commissionale",
-        "message": "Attenzione confermando l’operazione il pacchetto verrà eliminato."
+        "title": {
+          "deleteBundlePsp": "Eliminazione pacchetto commissionale",
+          "deleteBundleEc": "Disattivazione pacchetto",
+          "deleteRequestEc": "Annulla richiesta di attivazione",
+          "createRequestEc": "Richiesta di attivazione pacchetto",
+          "rejectOfferEc": "Rifiuta pacchetto",
+          "acceptOfferEc": "Attivazione pacchetto"
+        },
+        "message": {
+          "deleteBundlePsp": "Attenzione confermando l’operazione il pacchetto verrà eliminato.",
+          "deleteBundleEc": "Il pacchetto sarà disattivato e non più visibile a partire da domani.",
+          "deleteRequestEc": "La richiesta di attivazione sarà annullata e potrai rifarla in seguito.",
+          "createRequestEc": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail.",
+          "rejectOfferEc": "Notificheremo l’ente che hai rifiutato l’attivazione del pacchetto.",
+          "acceptOfferEc": "Conferma l’attivazione del pacchetto."
+        }
       },
       "subscriptionsTable": {
         "title": "Richieste di adesione",

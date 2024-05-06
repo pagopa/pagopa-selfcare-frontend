@@ -1,4 +1,11 @@
-import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Breadcrumbs,
+  Button,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +22,14 @@ import {
 import { useAppSelector } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { FormAction } from '../../../model/CommissionBundle';
+import { BundleDetailsActionTypes, FormAction } from '../../../model/CommissionBundle';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import { deletePSPBundle } from '../../../services/bundleService';
+import {
+  deleteCIBundleRequest,
+  deleteCIBundleSubscription,
+  deletePSPBundle,
+} from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
@@ -27,8 +38,16 @@ import CommissionBundleDetailConfiguration from './components/CommissionBundleDe
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
 
-function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
+function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
   const { t } = useTranslation();
+
+  if (bundleDetail?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+    return (
+      <Alert severity={'error'} data-testid="alert-error-test">
+        {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
+      </Alert>
+    );
+  }
   // eslint-disable-next-line functional/no-let
   let expiredFound = false;
   bundleDetail?.transferCategoryList?.forEach((el) => {
@@ -37,18 +56,21 @@ function TaxonomiesExpiredAlert({ bundleDetail }: { bundleDetail: BundleResource
       expiredFound = true;
     }
   });
-  return expiredFound ? (
-    <Alert severity={'warning'} data-testid="alert-warning-test">
-      {t('commissionBundlesPage.commissionBundleDetail.expiredTaxonomies')}
-    </Alert>
-  ) : null;
+  if (expiredFound) {
+    return (
+      <Alert severity={'warning'} data-testid="alert-warning-test">
+        {t('commissionBundlesPage.commissionBundleDetail.alert.expiredTaxonomies')}
+      </Alert>
+    );
+  }
+  return null;
 }
 
 const BundleActionButtons = ({
   setShowConfirmModal,
   bundleDetail,
 }: {
-  setShowConfirmModal: (bool: boolean) => void;
+  setShowConfirmModal: (arg: BundleDetailsActionTypes | null) => void;
   bundleDetail: BundleResource;
 }) => {
   const { t } = useTranslation();
@@ -63,7 +85,7 @@ const BundleActionButtons = ({
           <Button
             color="error"
             variant="outlined"
-            onClick={() => setShowConfirmModal(true)}
+            onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_PSP)}
             data-testid="delete-button"
           >
             {t('general.delete')}
@@ -88,7 +110,7 @@ const BundleActionButtons = ({
           <>
             {bundleDetail.type === TypeEnum.PRIVATE && (
               <Button
-                onClick={() => {}} // TODO IMPLEMENT REJECT PRIVATE BUNDLE OFFER API VAS-941
+                onClick={() => setShowConfirmModal(BundleDetailsActionTypes.REJECT_OFFER_EC)}
                 variant="outlined"
                 color="error"
                 data-testid="reject-button"
@@ -110,7 +132,7 @@ const BundleActionButtons = ({
       if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.ENABLED) {
         return (
           <Button
-            onClick={() => {}} // TODO IMPLEMENT DISABLE BUNDLE SUBSCRIPTION API
+            onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_EC)}
             variant="outlined"
             color="error"
             data-testid="deactivate-button"
@@ -122,7 +144,7 @@ const BundleActionButtons = ({
       if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
         return (
           <Button
-            onClick={() => {}} // TODO IMPLEMENT DELETE BUNDLE SUBSCRIPTION REQUEST API
+            onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_REQUEST_EC)}
             variant="outlined"
             color="error"
             data-testid="delete-request-button"
@@ -149,30 +171,52 @@ const CommissionBundleDetailPage = () => {
 
   const commissionBundleDetail: BundleResource =
     useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState<BundleDetailsActionTypes | null>(null);
 
-  function handleDeletePSP() {
+  function handleModalAction() {
     setLoading(true);
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
-    deletePSPBundle(pspTaxCode, bundleId)
-      .then((_) => {
-        history.push(ROUTES.COMMISSION_BUNDLES);
-      })
-      .catch((reason: Error) => {
-        addError({
-          id: 'DELETE_COMMISSION_BUNDLE',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while deleting a commission bundle`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.commissionBundleDetail.error.deleteCommissionBundle'
-          ),
-          component: 'Toast',
+
+    // eslint-disable-next-line functional/no-let
+    let promise: Promise<string | void> | undefined;
+    if (showConfirmModal) {
+      if (showConfirmModal === BundleDetailsActionTypes.DELETE_BUNDLE_PSP) {
+        promise = deletePSPBundle(pspTaxCode, bundleId);
+      } else if (showConfirmModal === BundleDetailsActionTypes.DELETE_BUNDLE_EC) {
+        promise = deleteCIBundleSubscription(
+          commissionBundleDetail?.ciBundleId ?? '',
+          selectedParty?.fiscalCode ?? '',
+          commissionBundleDetail?.name ?? ''
+        );
+      } else if (showConfirmModal === BundleDetailsActionTypes.DELETE_REQUEST_EC) {
+        promise = deleteCIBundleRequest({
+          idBundleRequest: commissionBundleDetail?.ciRequestId ?? '',
+          ciTaxCode: selectedParty?.fiscalCode ?? '',
         });
-      })
-      .finally(() => setLoading(false));
+      }
+      // TODO IMPLEMENT REJECT PRIVATE BUNDLE OFFER API VAS-941
+      if (promise) {
+        promise
+          .then(() => {
+            history.push(ROUTES.COMMISSION_BUNDLES);
+          })
+          .catch((reason: Error) => {
+            addError({
+              id: showConfirmModal,
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while deleting a commission bundle`,
+              toNotify: true,
+              displayableTitle: t('general.errorTitle'),
+              displayableDescription: t(
+                'commissionBundlesPage.commissionBundleDetail.error.deleteCommissionBundle'
+              ),
+              component: 'Toast',
+            });
+          })
+          .finally(() => setLoading(false));
+      }
+    }
   }
 
   return (
@@ -214,7 +258,7 @@ const CommissionBundleDetailPage = () => {
             </Stack>
           </Grid>
           <Grid item xs={12}>
-            <TaxonomiesExpiredAlert bundleDetail={commissionBundleDetail} />
+            <RenderAlert bundleDetail={commissionBundleDetail} />
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h5">
@@ -248,13 +292,15 @@ const CommissionBundleDetailPage = () => {
         </Grid>
       </SideMenuLayout>
       <GenericModal
-        title={t('commissionBundlesPage.commissionBundleDetail.modal.title')}
-        message={t('commissionBundlesPage.commissionBundleDetail.modal.message')}
-        openModal={showConfirmModal}
+        title={t(`commissionBundlesPage.commissionBundleDetail.modal.title.${showConfirmModal}`)}
+        message={t(
+          `commissionBundlesPage.commissionBundleDetail.modal.message.${showConfirmModal}`
+        )}
+        openModal={showConfirmModal !== null}
         onConfirmLabel={t('general.confirm')}
-        onCloseLabel={t('general.cancel')}
-        handleCloseModal={() => setShowConfirmModal(false)}
-        handleConfirm={() => handleDeletePSP()}
+        onCloseLabel={t('general.turnBack')}
+        handleCloseModal={() => setShowConfirmModal(null)}
+        handleConfirm={() => handleModalAction()}
         data-testid="delete-modal"
       />
     </>

@@ -67,7 +67,7 @@ export default function SideMenu() {
                         </>
                     )}
 
-                    {ENV.FEATURES.DASHBOARD.ENABLED && (
+                    {(
                         <SidenavItem
                             title={t('sideMenu.home.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.HOME))}
@@ -88,7 +88,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {ENV.FEATURES.CHANNELS.ENABLED && orgInfo.types.isPspBroker && userHasPermission('channels') && (
+                    {orgInfo.types.isPspBroker && userHasPermission('channels') && (
                         <SidenavItem
                             title={t('sideMenu.channels.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.CHANNELS))}
@@ -98,7 +98,7 @@ export default function SideMenu() {
                             dataTestId="channels-test"
                         />
                     )}
-                    {ENV.FEATURES.STATIONS.ENABLED && orgInfo.types.isEcBroker && userHasPermission('stations') && (
+                    {orgInfo.types.isEcBroker && userHasPermission('stations') && (
                         <SidenavItem
                             title={t('sideMenu.stations.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
@@ -108,7 +108,7 @@ export default function SideMenu() {
                             dataTestId="stations-test"
                         />
                     )}
-                    {ENV.FEATURES.IBAN.ENABLED && orgInfo.types.isEc && userHasPermission('iban') && (
+                    {orgInfo.types.isEc && userHasPermission('iban') && (
                         <SidenavItem
                             title={t('sideMenu.iban.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.IBAN))}
@@ -132,7 +132,7 @@ export default function SideMenu() {
                             dataTestId="commission-bundles-test"
                         />
                     )}
-                    {ENV.FEATURES.OPERATIONTABLE.ENABLED && userHasPermission('operation-table-list') && userIsOperator() && (
+                    {userHasPermission('operation-table-list') && userIsOperator() && (
                         <SidenavItem
                             title={t('sideMenu.operationTable.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}

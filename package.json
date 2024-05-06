@@ -89,7 +89,7 @@
     "prettier": "^3.2.5",
     "puppeteer": "^21.1.1",
     "puppeteer-extra-plugin-session": "^1.0.1",
-    "raw.macro": "^0.4.2",
+    "raw.macro": "^0.7.0",
     "react-test-renderer": "^17.0.2",
     "regex-replace": "^2.3.1",
     "rimraf": "^3.0.2",

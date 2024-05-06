@@ -15,8 +15,8 @@ export const useUserRole = () => {
     const userIsPspAdmin = userRole === ROLE.PSP_ADMIN || userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsPspDirectAdmin = userRole === ROLE.PSP_DIRECT_ADMIN;
     const userIsEcAdmin = userRole === ROLE.EC_ADMIN || userRole === ROLE.EC_DIRECT_ADMIN;
-    const isOperator = userIsOperator();
-    const userIsAdmin = userIsPspAdmin || userIsEcAdmin || isOperator;
+    const isPagopaOperator = userIsPagopaOperator();
+    const userIsAdmin = userIsPspAdmin || userIsEcAdmin || isPagopaOperator;
 
     return {
         userRole,
@@ -24,11 +24,11 @@ export const useUserRole = () => {
         userIsEcAdmin,
         userIsPspDirectAdmin,
         userIsAdmin,
-        userIsOperator: isOperator,
+        userIsPagopaOperator: isPagopaOperator,
     };
 };
 
-export const userIsOperator = (): boolean =>
+export const userIsPagopaOperator = (): boolean =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useFlagValue('isOperator');
 
@@ -37,7 +37,7 @@ const mapUserRole = (party: Party, orgInfo: any): ROLE => {
 
     // eslint-disable-next-line
     let role = ROLE.UNKNOWN;
-    if (userIsOperator()) {
+    if (userIsPagopaOperator()) {
         role = ROLE.PAGOPA_OPERATOR;
     } else if (party.institutionType === 'PT') {
         role = mapPtRoles(orgInfo.types.isPspBroker, orgInfo.types.isEcBroker);

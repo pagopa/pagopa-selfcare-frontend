@@ -14,11 +14,11 @@ type Props = {
 
 const DetailButtonsStation = ({ status, stationCode }: Props) => {
   const { t } = useTranslation();
-  const {userIsOperator} = useUserRole();
+  const {userIsPagopaOperator} = useUserRole();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {userIsOperator && status === WrapperStatusEnum.APPROVED ? (
+      {userIsPagopaOperator && status === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -35,7 +35,7 @@ const DetailButtonsStation = ({ status, stationCode }: Props) => {
             {t('stationDetailPage.stationOptions.editStation')}
           </Button>
         </>
-      ) : userIsOperator && status !== WrapperStatusEnum.APPROVED ? (
+      ) : userIsPagopaOperator && status !== WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}

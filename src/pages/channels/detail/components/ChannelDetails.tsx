@@ -26,7 +26,7 @@ type Props = {
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber }: Props) => {
   const { t } = useTranslation();
-  const {userIsOperator} =  useUserRole();
+  const {userIsPagopaOperator} =  useUserRole();
   const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
   const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`;
 
@@ -66,7 +66,7 @@ const ChannelDetails = ({ channelDetail, channelId, goBack, PSPAssociatedNumber 
           <Grid item xs={6}>
             <DetailButtons channelDetails={channelDetail} goBack={goBack} />
           </Grid>
-          {userIsOperator &&
+          {userIsPagopaOperator &&
           (channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
             channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) ? (
             <Grid item xs={12} sx={{ mb: 5 }}>

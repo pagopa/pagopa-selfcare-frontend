@@ -12,7 +12,7 @@ type Props = {
 
 export default function StationsTableSearchBar({stationCodeInput, setStationCodeInput}: Props) {
     const {t} = useTranslation();
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
 
     return (
         <Box width="100%" display="flex" sx={{mt: 1}}>
@@ -36,7 +36,7 @@ export default function StationsTableSearchBar({stationCodeInput, setStationCode
                 to={ROUTES.STATION_ADD}
                 variant="contained"
                 sx={{ml: 1, whiteSpace: 'nowrap', minWidth: 'auto'}}
-                disabled={userIsOperator}
+                disabled={userIsPagopaOperator}
                 data-testid={"create-station"}
             >
                 {t('stationsPage.createStationButtonLabel')}

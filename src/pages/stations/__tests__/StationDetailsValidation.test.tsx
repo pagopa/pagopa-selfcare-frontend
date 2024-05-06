@@ -71,7 +71,7 @@ describe('<StationDetailsValidation.test />', () => {
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true
     });
     render(
@@ -99,7 +99,7 @@ describe('<StationDetailsValidation.test />', () => {
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true
     });
     render(
@@ -125,7 +125,7 @@ describe('<StationDetailsValidation.test />', () => {
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true
     });
     render(

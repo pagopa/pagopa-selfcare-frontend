@@ -8,6 +8,7 @@ import {
   PublicBundleCiSubscriptionsDetailMethodParams,
   PublicBundleCISubscriptionsMethodParams,
 } from '../model/CommissionBundle';
+import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import {
   createCommissionBundle,
   getCommissionBundleDetails,
@@ -169,10 +170,43 @@ export const deleteCIBundleSubscription = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.deleteCIBundleSubscription(
-      ciBundleId,
+    return BackofficeApi.deleteCIBundleSubscription(ciBundleId, ciTaxCode, bundleName);
+  }
+};
+
+export const deleteCIBundleRequest = ({
+  idBundleRequest,
+  ciTaxCode,
+}: {
+  idBundleRequest: string;
+  ciTaxCode: string;
+}) => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.deleteCIBundleRequest({
+      idBundleRequest,
       ciTaxCode,
+    });
+  }
+};
+
+export const createCIBundleRequest = ({
+  ciTaxCode,
+  bundleRequest,
+  bundleName,
+}: {
+  ciTaxCode: string;
+  bundleRequest: PublicBundleRequest;
+  bundleName: string;
+}) => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.createCIBundleRequest({
+      ciTaxCode,
+      bundleRequest,
       bundleName,
-    );
+    });
   }
 };

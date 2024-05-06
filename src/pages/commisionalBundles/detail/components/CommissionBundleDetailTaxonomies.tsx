@@ -46,7 +46,7 @@ export default function CommissionBundleDetailTaxonomies({
                 <Typography variant="body1" color="action.active">
                   {el.service_type}
                 </Typography>
-                <Typography variant="body1">{el.specific_built_in_data}</Typography>
+                <Typography variant="body1" fontWeight={'fontWeightMedium'}>{el.specific_built_in_data}</Typography>
               </Box>
             ) : null
           )
@@ -79,7 +79,7 @@ export default function CommissionBundleDetailTaxonomies({
                   <Typography variant="body1" color="action.active">
                     {el.service_type}
                   </Typography>
-                  <Typography variant="body1">{el.specific_built_in_data}</Typography>
+                  <Typography variant="body1" fontWeight={'fontWeightMedium'}>{el.specific_built_in_data}</Typography>
                 </Box>
               </React.Fragment>
             ))}

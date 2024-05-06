@@ -90,6 +90,7 @@ import { CreditorInstitutionContactsResource } from './generated/portal/Creditor
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { TestStationResource } from './generated/portal/TestStationResource';
 import { TestStationTypeEnum } from './generated/portal/StationTestDto';
+import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1218,6 +1219,37 @@ export const BackofficeApi = {
     const result = await backofficeClient.deleteCIBundleSubscription({
       'ci-bundle-id': ciBundleId,
       'ci-tax-code': ciTaxCode,
+      bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  deleteCIBundleRequest: async ({
+    idBundleRequest,
+    ciTaxCode,
+  }: {
+    idBundleRequest: string;
+    ciTaxCode: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.deleteCIBundleRequest({
+      'bundle-request-id': idBundleRequest,
+      'ci-tax-code': ciTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createCIBundleRequest: async ({
+    ciTaxCode,
+    bundleRequest,
+    bundleName,
+  }: {
+    ciTaxCode: string;
+    bundleRequest: PublicBundleRequest;
+    bundleName: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.createCIBundleRequest({
+      'ci-tax-code': ciTaxCode,
+      body: bundleRequest,
       bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);

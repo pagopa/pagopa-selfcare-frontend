@@ -36,3 +36,12 @@ export type PublicBundleCiSubscriptionsDetailMethodParams = {
 };
 
 export type PublicBundleCiSubscriptionDetailModel = CISubscriptionInfo & PublicBundleCISubscriptionsDetail;
+
+export enum BundleDetailsActionTypes {
+  DELETE_BUNDLE_PSP = "deleteBundlePsp",
+  DELETE_BUNDLE_EC = "deleteBundleEc",
+  REJECT_OFFER_EC = "rejectOfferEc",
+  ACCEPT_OFFER_EC = "acceptOfferEc",
+  DELETE_REQUEST_EC = "deleteRequestEc",
+  CREATE_REQUEST_EC = "createRequestEc"
+}

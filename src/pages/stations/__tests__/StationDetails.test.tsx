@@ -99,7 +99,7 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(
@@ -123,10 +123,10 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: false,
+            userIsPagopaOperator: false,
             userIsAdmin: false
         });
-        if (!useUserRole.useUserRole().userIsOperator) {
+        if (!useUserRole.useUserRole().userIsPagopaOperator) {
             const backBtn = screen.getByTestId('exit-btn-test');
             fireEvent.click(backBtn);
             expect(history.location.pathname).toBe('/');
@@ -140,7 +140,7 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(
@@ -164,10 +164,10 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true
         });
-        if (!useUserRole.useUserRole().userIsOperator) {
+        if (!useUserRole.useUserRole().userIsPagopaOperator) {
             const editBtn = await screen.findByTestId('edit-btn-sts-approved');
             fireEvent.click(editBtn);
         }
@@ -179,7 +179,7 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(
@@ -203,10 +203,10 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: false
         });
-        if (!useUserRole.useUserRole().userIsOperator) {
+        if (!useUserRole.useUserRole().userIsPagopaOperator) {
             const editBtn = await screen.findByTestId('edit-btn-sts-approved');
             fireEvent.click(editBtn);
         }
@@ -218,7 +218,7 @@ describe('<StationDetails />', () => {
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
-            userIsOperator: true,
+            userIsPagopaOperator: true,
             userIsAdmin: true,
         });
         render(

@@ -89,7 +89,7 @@ const CommonHeader = ({
                           enableAssistanceButton = true,
                       }: HeaderProps) => {
     const {t} = useTranslation();
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
 
     function getMyHeaderProduct() {
         return <MyHeaderProduct
@@ -151,7 +151,7 @@ const CommonHeader = ({
             </header>
             {withSecondHeader === true ? (
                 <nav>
-                    {userIsOperator ? getMyHeaderProduct() : getHeaderProduct()}
+                    {userIsPagopaOperator ? getMyHeaderProduct() : getHeaderProduct()}
                 </nav>
             ) : (
                 ''

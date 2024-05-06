@@ -23,7 +23,7 @@ const AddEditChannelPage = () => {
     const {channelId, actionId} = useParams<{ channelId: string; actionId: string }>();
     const formAction = actionId ?? FormAction.Create;
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
     const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
     const [channelCode, setChannelCode] = useState<string>('');
     const pspTaxCode = selectedParty?.fiscalCode ? selectedParty.fiscalCode : '';
@@ -97,7 +97,7 @@ const AddEditChannelPage = () => {
                             <Typography color={'text.disaled'}>{channelId}</Typography>
                         )}
                         <Typography color={'text.disaled'}>
-                            {userIsOperator
+                            {userIsPagopaOperator
                                 ? t(`addEditChannelPage.config.titleConfiguration`)
                                 : t(`addEditChannelPage.${formAction}.breadcrumb`)}
                         </Typography>
@@ -105,12 +105,12 @@ const AddEditChannelPage = () => {
                 </Stack>
                 <TitleBox
                     title={
-                        userIsOperator
+                        userIsPagopaOperator
                             ? t(`addEditChannelPage.config.titleConfiguration`)
                             : t(`addEditChannelPage.${formAction}.title`)
                     }
                     subTitle={
-                        userIsOperator
+                        userIsPagopaOperator
                             ? t(`addEditChannelPage.config.subtitleConfiguration`)
                             : t(`addEditChannelPage.${formAction}.subtitle`)
                     }

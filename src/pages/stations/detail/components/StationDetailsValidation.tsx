@@ -33,7 +33,7 @@ const StationDetailsValidation = ({
                                   }: // eslint-disable-next-line sonarjs/cognitive-complexity
                                       Props) => {
     const {t} = useTranslation();
-    const {userIsOperator} = useUserRole();
+    const {userIsPagopaOperator} = useUserRole();
     const {stationId} = useParams<{ stationId: string }>();
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const hidePassword = 'XXXXXXXXXXXXXX';
@@ -101,13 +101,13 @@ const StationDetailsValidation = ({
                     <Grid item xs={6}>
                         <DetailButtonsStation status={stationDetail?.wrapperStatus} stationCode={stationId}/>
                     </Grid>
-                    {userIsOperator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ? (
+                    {userIsPagopaOperator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ? (
                         <Grid item xs={12} sx={{mb: 5}}>
                             <Alert severity="warning" variant="outlined">
                                 <Typography sx={{py: 2}}>{t('stationDetailPageValidation.alert')}</Typography>
                             </Alert>
                         </Grid>
-                    ) : userIsOperator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ? (
+                    ) : userIsPagopaOperator && stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ? (
                         <Grid item xs={12} sx={{mb: 5}}>
                             <Alert severity="warning" variant="outlined">
                                 <Typography sx={{py: 2}}>

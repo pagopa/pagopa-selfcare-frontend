@@ -71,7 +71,7 @@ export default function CommissionBundleDetailConfiguration({
         <Typography variant="body1" color="action.active">
           {t(entry[1])}
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" fontWeight={'fontWeightMedium'}>
           {formatConfigValues(bundleDetail?.[entry[0] as keyof BundleResource], t)}
         </Typography>
       </Box>

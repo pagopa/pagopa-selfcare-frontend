@@ -4,6 +4,7 @@ import { SubscriptionStateType } from '../../model/CommissionBundle';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
+  mockedCIBundleRequest,
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
   mockedCommissionBundlePspDetailGlobal,
@@ -13,6 +14,8 @@ import {
 import {
   acceptBundleSubscriptionRequest,
   createBundle,
+  createCIBundleRequest,
+  deleteCIBundleRequest,
   deleteCIBundleSubscription,
   deletePSPBundle,
   getBundleDetailByPSP,
@@ -81,6 +84,16 @@ describe('BundleService test mocked', () => {
   test('Test deleteCIBundleSubscription', async () => {
     expect(
       deleteCIBundleSubscription('idBundle', 'ciTaxCode', 'bundleName')
+    ).resolves.not.toThrow();
+  });
+  test('Test deleteCIBundleRequest', async () => {
+    expect(
+      deleteCIBundleRequest({idBundleRequest:'idBundleRequest', ciTaxCode:'ciTaxCode'})
+    ).resolves.not.toThrow();
+  });
+  test('Test createCIBundleRequest', async () => {
+    expect(
+      createCIBundleRequest({ciTaxCode: 'ciTaxCode', bundleRequest: mockedCIBundleRequest , bundleName: 'bundleName'})
     ).resolves.not.toThrow();
   });
 });
@@ -197,6 +210,24 @@ describe('BundleService test client', () => {
       .mockReturnValue(Promise.resolve());
     expect(
       deleteCIBundleSubscription('idBundle', 'ciTaxCode', 'bundleName')
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test deleteCIBundleRequest', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'deleteCIBundleRequest')
+      .mockReturnValue(Promise.resolve());
+    expect(
+      deleteCIBundleRequest({idBundleRequest: 'idBundleRequest', ciTaxCode: 'ciTaxCode'})
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test createCIBundleRequest', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'createCIBundleRequest')
+      .mockReturnValue(Promise.resolve());
+    expect(
+      createCIBundleRequest({ciTaxCode: 'ciTaxCode', bundleRequest: mockedCIBundleRequest , bundleName: 'bundleName'})
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });

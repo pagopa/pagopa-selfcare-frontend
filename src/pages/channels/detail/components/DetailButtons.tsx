@@ -13,7 +13,7 @@ type Props = {
 
 const DetailButtons = ({ channelDetails, goBack }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
-  const {userIsOperator} = useUserRole();
+  const {userIsPagopaOperator} = useUserRole();
   const { t } = useTranslation();
 
   return (
@@ -29,7 +29,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
               </Button>
               */}
 
-      {userIsOperator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
+      {userIsPagopaOperator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}
@@ -42,7 +42,7 @@ const DetailButtons = ({ channelDetails, goBack }: Props) => {
             {t('channelDetailPage.edit')}
           </Button>
         </>
-      ) : userIsOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
+      ) : userIsPagopaOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}

@@ -44,7 +44,7 @@ beforeEach(() => {
     userIsPspAdmin: false,
     userIsEcAdmin: false,
     userIsPspDirectAdmin: false,
-    userIsOperator: false,
+    userIsPagopaOperator: false,
     userIsAdmin: true
   });
 });

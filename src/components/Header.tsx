@@ -12,7 +12,7 @@ import {Party} from '../model/Party';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {partiesActions, partiesSelectors} from '../redux/slices/partiesSlice';
 import {useSigninData} from '../hooks/useSigninData';
-import {userIsOperator} from "../hooks/useUserRole";
+import {userIsPagopaOperator} from "../hooks/useUserRole";
 import {ENV} from '../utils/env';
 import CommonHeader from './CommonHeader/CommonHeader';
 
@@ -46,7 +46,7 @@ const selfcareProduct: ProductModel = {
 
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
-    const isOperator = userIsOperator();
+    const isOperator = userIsPagopaOperator();
     if (isOperator) {
         return 'roles.pagopaOperator';
     }

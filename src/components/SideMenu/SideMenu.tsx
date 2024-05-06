@@ -19,7 +19,7 @@ import ROUTES from '../../routes';
 import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
 import {usePermissions} from '../../hooks/usePermissions';
-import {userIsOperator} from "../../hooks/useUserRole";
+import {userIsPagopaOperator} from "../../hooks/useUserRole";
 import {useFlagValue} from '../../hooks/useFeatureFlags';
 import {useOrganizationType} from "../../hooks/useOrganizationType";
 import SidenavItem from './SidenavItem';
@@ -132,7 +132,7 @@ export default function SideMenu() {
                             dataTestId="commission-bundles-test"
                         />
                     )}
-                    {userHasPermission('operation-table-list') && userIsOperator() && (
+                    {userHasPermission('operation-table-list') && userIsPagopaOperator() && (
                         <SidenavItem
                             title={t('sideMenu.operationTable.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.OPERATION_TABLE_LIST))}

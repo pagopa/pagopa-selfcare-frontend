@@ -55,7 +55,7 @@ const DelegationDetailPage = () => {
 
   return (
     <SideMenuLayout>
-      <Stack direction="row" mt={2}>
+      <Stack direction="row">
         <ButtonNaked
           size="small"
           component="button"

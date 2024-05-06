@@ -9,6 +9,8 @@ import { CISubscriptionInfo } from '../../api/generated/portal/CISubscriptionInf
 import { PublicBundleCISubscriptionsDetail } from '../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { PublicBundleCiSubscriptionDetailModel } from '../../model/CommissionBundle';
 import { CIBundleFee } from '../../api/generated/portal/CIBundleFee';
+import { PublicBundleRequest } from '../../api/generated/portal/PublicBundleRequest';
+import { TransferCategoryRelationEnum } from '../../api/generated/portal/PspCiBundleAttribute';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -211,6 +213,20 @@ export const mockedCiSubscriptionDetail: PublicBundleCISubscriptionsDetail = {
 export const mockedCiSubscriptionIntersectDetail: PublicBundleCiSubscriptionDetailModel = {
   ...mockedCiSubscriptionDetail,
   ...mockedCiSubscription,
+};
+
+export const mockedCIBundleRequest: PublicBundleRequest = {
+  idBundleRequest: "bundleRequestId",
+  idBundle: "idBundle",
+  idPsp: "idPsp",
+  ciFiscalCode: "ciFiscalCode",
+  attributes: [
+    {
+      maxPaymentAmount: 500,
+      transferCategory: mockedTaxonomyList[0].specific_built_in_data,
+      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL
+    }
+  ]
 };
 
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>

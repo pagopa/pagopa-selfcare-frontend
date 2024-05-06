@@ -70,7 +70,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: false,
+      userIsPagopaOperator: false,
       userIsAdmin: false,
     });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
@@ -132,7 +132,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: false,
+      userIsPagopaOperator: false,
       userIsAdmin: false,
     });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
@@ -219,7 +219,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     const flags = {
@@ -277,7 +277,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -336,7 +336,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -386,7 +386,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
 

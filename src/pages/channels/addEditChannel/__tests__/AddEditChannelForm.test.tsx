@@ -52,7 +52,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -117,7 +117,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
@@ -142,7 +142,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -166,7 +166,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -190,7 +190,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(
@@ -292,7 +292,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     (isValidURL as jest.Mock).mockReturnValue(true);
@@ -381,7 +381,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       userIsPspAdmin: false,
       userIsEcAdmin: false,
       userIsPspDirectAdmin: false,
-      userIsOperator: true,
+      userIsPagopaOperator: true,
       userIsAdmin: true,
     });
     render(

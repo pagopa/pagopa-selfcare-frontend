@@ -21,7 +21,7 @@ on:
         type: choice
         description: Select the version
         options:
-          - ''
+          - patch
           - skip_or_promote
           - new_release
           - breaking_change

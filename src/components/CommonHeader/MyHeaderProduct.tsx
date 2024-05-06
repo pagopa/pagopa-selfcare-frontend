@@ -212,7 +212,7 @@ const HeaderProduct = ({
                                 options={getOptions()}
                                 onChange={(_event, value) => {
                                     if (value && value.length > 0 && organizations) {
-                                        const index = organizations.findIndex(elem => elem.tax_code === value);
+                                        const index = organizations.findIndex(elem => elem.name.includes(value.split('- ')[1]));
                                         const organization: InstitutionDetail = organizations.at(index)!;
                                         updateState(organization);
                                         setAutocompleteValue(organization.tax_code);

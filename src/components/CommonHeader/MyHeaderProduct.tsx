@@ -133,7 +133,7 @@ const HeaderProduct = ({
 
     function getOptions(): Array<string> {
         if (organizations) {
-            return organizations.map(elem => elem.tax_code + ' - ' + elem.name);
+            return organizations.map(elem => `${elem.tax_code} - ${elem.name}`);
         } else {
             return [];
         }

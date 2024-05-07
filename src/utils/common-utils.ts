@@ -43,7 +43,10 @@ export const formatCodeInDoubleDigit = (code: string | undefined): string => {
   }
 };
 
-export const formatCurrencyEur = (value: number): string => {
+export const formatCurrencyEur = (value: number | undefined): string => {
+  if(value === undefined){
+    return "";
+  }
   const newValue = value / 100;
   return newValue.toLocaleString('it-IT', {
     style: 'currency',

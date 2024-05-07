@@ -1,18 +1,23 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import CloseIcon from '@mui/icons-material/Close';
-import {Alert, IconButton} from '@mui/material';
-import {ErrorBoundary, LoadingOverlay, UnloadEventHandler, UserNotifyHandle,} from '@pagopa/selfcare-common-frontend';
-import {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {BrowserRouter, Redirect, Route, Switch, useLocation} from 'react-router-dom';
+import { Alert, IconButton } from '@mui/material';
+import {
+  ErrorBoundary,
+  LoadingOverlay,
+  UnloadEventHandler,
+  UserNotifyHandle,
+} from '@pagopa/selfcare-common-frontend';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import {ProtectedRoute} from './components/ProtectedRoute/ProtectedRoute';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import TOSWall from './components/TOS/TOSWall';
 import withFeatureFlags from './decorators/withFeatureFlags';
 import withLogin from './decorators/withLogin';
 import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
-import {useFlagValue} from './hooks/useFeatureFlags';
+import { useFlagValue } from './hooks/useFeatureFlags';
 import useTOSAgreementLocalStorage from './hooks/useTOSAgreementLocalStorage';
 import AddApiKeyPage from './pages/apiKeys/AddApiKeyPage';
 import ApiKeysPage from './pages/apiKeys/ApiKeysPage';
@@ -23,8 +28,7 @@ import ChannelPSPListPage from './pages/channels/channelPSPList/ChannelPSPListPa
 import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
 import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
-import AddEditCommissionBundlePage
-  from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
+import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
@@ -43,8 +47,9 @@ import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
-import {TOS} from './pages/tos/TOS';
+import { TOS } from './pages/tos/TOS';
 import routes from './routes';
+import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -97,22 +102,22 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.HOME} exact={true}>
                   {<DashboardPage />}
                 </Route>
+
                 <Route path={routes.NODE_SIGNIN} exact={true}>
                   <ProtectedRoute permission="node-signin">
                     <NodeSignInPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.APIKEYS} exact={true}>
                   <ProtectedRoute permission="apikey">
                     <ApiKeysPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.APIKEYS_CREATE} exact={true}>
-                  {(
                     <ProtectedRoute permission="apikey">
                       <AddApiKeyPage />
                     </ProtectedRoute>
-                  )}
                 </Route>
 
                 <Route path={routes.CHANNELS} exact={true}>
@@ -135,7 +140,6 @@ const SecuredRoutes = withLogin(
                     <ChannelPSPListPage />
                   </ProtectedRoute>
                 </Route>
-
                 <Route path={routes.CHANNEL_ASSOCIATE_PSP} exact={true}>
                   <ProtectedRoute permission="channels">
                     <ChannelAssociatePSPPage />
@@ -146,6 +150,7 @@ const SecuredRoutes = withLogin(
                     <AddEditChannelPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.STATIONS} exact={true}>
                   <ProtectedRoute permission="stations">
                     <StationsPage />
@@ -176,6 +181,7 @@ const SecuredRoutes = withLogin(
                     <AddEditStationPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.IBAN} exact={true}>
                   <ProtectedRoute permission="iban">
                     <IbanPage />
@@ -196,6 +202,7 @@ const SecuredRoutes = withLogin(
                     <AddEditIbanPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.COMMISSION_BUNDLES} exact={true}>
                   <ProtectedRoute
                     permission="commission-bundles-list"
@@ -228,18 +235,25 @@ const SecuredRoutes = withLogin(
                     <AddEditCommissionBundlePage />
                   </ProtectedRoute>
                 </Route>
+                <Route path={routes.COMMISSION_BUNDLES_ACTIVATE} exact={true}>
+                  <ProtectedRoute
+                    permission="commission-bundles-activate"
+                    flagValue="commission-bundles-public"
+                  >
+                    <CommissionBundleDetailActivationPage />
+                  </ProtectedRoute>
+                </Route>
+
                 <Route path={routes.OPERATION_TABLE_ADDEDIT} exact={true}>
                   <ProtectedRoute permission="operation-table-read-write">
                     <AddEditOperationTablePage />
                   </ProtectedRoute>
                 </Route>
-
                 <Route path={routes.OPERATION_TABLE_DETAILS} exact={true}>
                   <ProtectedRoute permission="operation-table-list">
                     <OperationTableDetailPage />
                   </ProtectedRoute>
                 </Route>
-
                 <Route path={routes.OPERATION_TABLE_LIST} exact={true}>
                   <ProtectedRoute permission="operation-table-list">
                     <OperationTableListPage />
@@ -250,11 +264,13 @@ const SecuredRoutes = withLogin(
                     <DelegationsPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.DELEGATIONS_DETAIL} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationDetailPage />
                   </ProtectedRoute>
                 </Route>
+
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                     <PaymentsReceiptsPage />

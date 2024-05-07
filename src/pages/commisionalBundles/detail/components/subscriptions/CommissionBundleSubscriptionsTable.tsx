@@ -166,14 +166,18 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     if (actionType === 'reject') {
       promise = rejectPublicBundleSubscription(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? ''
+        selectedSubscriptionRequest?.bundle_request_id ?? '',
+        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
     }
     if (actionType === 'accept') {
       promise = acceptBundleSubscriptionRequest(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? ''
+        selectedSubscriptionRequest?.bundle_request_id ?? '',
+        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }

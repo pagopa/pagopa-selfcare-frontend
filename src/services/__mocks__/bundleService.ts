@@ -125,7 +125,7 @@ const baseCommissionBundlePspDetail: BundleResource = {
   idBrokerPsp: 'idBrokerPsp',
   name: 'Commission Bundle Name',
   description: 'Commission bundle description',
-  paymentAmount: 5556,
+  paymentAmount: 5500,
   minPaymentAmount: 4000,
   maxPaymentAmount: 150100,
   paymentType: 'MYBK',

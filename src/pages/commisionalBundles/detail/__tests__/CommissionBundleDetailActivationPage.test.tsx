@@ -9,7 +9,7 @@ import { store } from '../../../../redux/store.ts';
 import { Provider } from 'react-redux';
 import * as BundleService from '../../../../services/bundleService';
 
-const spyOnCreateRequest = jest.spyOn(BundleService, "createCIBundleRequest");
+const spyOnCreateRequest = jest.spyOn(BundleService, 'createCIBundleRequest');
 
 const ComponentToRender = () => {
   const dispatcher = useAppDispatch();
@@ -26,7 +26,8 @@ const ComponentToRender = () => {
 
 describe('<CommissionBundleDetailActivationPage />', () => {
   test('Render component', async () => {
-    spyOnCreateRequest.mockReturnValueOnce(Promise.resolve())
+    const amount = (mockedCommissionBundlePspDetailPublic.paymentAmount ?? 0) / 100;
+    spyOnCreateRequest.mockReturnValueOnce(Promise.resolve());
     render(
       <Provider store={store}>
         <ComponentToRender />
@@ -43,47 +44,48 @@ describe('<CommissionBundleDetailActivationPage />', () => {
     expect(confirmButton).toBeEnabled();
 
     const inputCommission = screen.queryAllByTestId('payment-amount-test')[0];
+
+    fireEvent.change(inputCommission, {
+      target: { value: `${amount + 1}` },
+    });
+    expect(confirmButton).toBeDisabled();
+
     fireEvent.change(inputCommission, { target: { value: '' } });
-    expect(confirmButton).toBeDisabled();
-
-    fireEvent.change(inputCommission, { target: { value: `${mockedCommissionBundlePspDetailPublic.minPaymentAmount!/100}` } });
     expect(confirmButton).toBeEnabled();
 
     fireEvent.change(inputCommission, {
-      target: { value: `${(mockedCommissionBundlePspDetailPublic.minPaymentAmount!/100) - 1}` },
+      target: { value: `${amount + 1}` },
     });
     expect(confirmButton).toBeDisabled();
 
-    fireEvent.change(inputCommission, {
-      target: { value: `${mockedCommissionBundlePspDetailPublic.maxPaymentAmount!/100}` },
-    });
+    fireEvent.change(inputCommission, { target: { value: `${amount}` } });
     expect(confirmButton).toBeEnabled();
 
     fireEvent.change(inputCommission, {
-      target: { value: `${(mockedCommissionBundlePspDetailPublic.maxPaymentAmount!/100) + 1}` },
+      target: { value: `${amount + 1}` },
     });
     expect(confirmButton).toBeDisabled();
 
     fireEvent.change(inputCommission, {
-      target: { value: `${mockedCommissionBundlePspDetailPublic.maxPaymentAmount!/100}` },
+      target: { value: `${amount}` },
     });
     expect(confirmButton).toBeEnabled();
 
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
-        expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
-    })
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    });
 
-    const confirmModal = screen.getByTestId("confirm-button-test");
+    const confirmModal = screen.getByTestId('confirm-button-test');
     fireEvent.click(confirmModal);
 
     await waitFor(() => {
-        expect(spyOnCreateRequest).toBeCalled();
-    })
+      expect(spyOnCreateRequest).toBeCalled();
+    });
   });
   test('Test createCIBundleRequest API error', async () => {
-    spyOnCreateRequest.mockRejectedValueOnce("")
+    spyOnCreateRequest.mockRejectedValueOnce('');
     render(
       <Provider store={store}>
         <ComponentToRender />
@@ -102,14 +104,14 @@ describe('<CommissionBundleDetailActivationPage />', () => {
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
-        expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
-    })
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+    });
 
-    const confirmModal = screen.getByTestId("confirm-button-test");
+    const confirmModal = screen.getByTestId('confirm-button-test');
     fireEvent.click(confirmModal);
 
     await waitFor(() => {
-        expect(spyOnCreateRequest).toBeCalled();
-    })
+      expect(spyOnCreateRequest).toBeCalled();
+    });
   });
 });

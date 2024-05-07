@@ -26,7 +26,7 @@ const initBundleRequest = (
   ciFiscalCode: ciTaxCode ?? '',
   idBundle: bundleDetails?.idBundle ?? '',
   attributes: bundleDetails?.transferCategoryList?.map((el) => ({
-    maxPaymentAmount: bundleDetails?.minPaymentAmount,
+    maxPaymentAmount: 0,
     transferCategory: el.specific_built_in_data,
     transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
     transferCategoryType: el.service_type,
@@ -81,11 +81,9 @@ export default function CommissionBundleDetailActivationPage() {
   }
 
   function handleChangeCommissions(value: string, index: number) {
-    const numericValue = parseFloat(value.replace(',', '.')) * 100;
-    if ((bundleDetails?.minPaymentAmount && numericValue < bundleDetails?.minPaymentAmount) || !value) {
-      setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorMinCommission`) }));
-    } else if (bundleDetails?.maxPaymentAmount && numericValue > bundleDetails?.maxPaymentAmount) {
-      setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorMaxCommission`) }));
+    const numericValue = value ? (parseFloat(value.replace(',', '.')) * 100) : 0;
+    if (bundleDetails?.paymentAmount && numericValue > bundleDetails?.paymentAmount) {
+      setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorCommission`) }));
     } else {
       setInputErrors((prev) => {
         const newObj = { ...prev };

@@ -906,8 +906,7 @@
         "amountRange": "Fascia importo",
         "commissions": "Commissioni",
         "commissionInput": "Importo a tuo carico",
-        "errorMinCommission": "L'importo non può essere minore dell'importo minimo",
-        "errorMaxCommission": "L'importo non può essere maggiore dell'importo massimo",
+        "errorCommission": "Non può superare l’importo applicato dal PSP",
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
       "subscriptionsTable": {

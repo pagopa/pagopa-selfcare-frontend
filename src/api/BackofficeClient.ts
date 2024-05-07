@@ -1191,22 +1191,30 @@ export const BackofficeApi = {
 
   acceptBundleSubscriptionRequest: async (
     pspTaxCode: string,
-    idBundleRequest: string
+    idBundleRequest: string,
+    ciTaxCode: string,
+    bundleName: string
   ): Promise<void> => {
     const result = await backofficeClient.acceptPublicBundleSubscriptions({
       'psp-tax-code': pspTaxCode,
       'bundle-request-id': idBundleRequest,
+      ciTaxCode,
+      bundleName
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   rejectPublicBundleSubscription: async (
     pspTaxCode: string,
-    bundleRequestId: string
+    bundleRequestId: string,
+    ciTaxCode: string,
+    bundleName: string
   ): Promise<void> => {
     const result = await backofficeClient.rejectPublicBundleSubscription({
       'psp-tax-code': pspTaxCode,
       'bundle-request-id': bundleRequestId,
+      ciTaxCode,
+      bundleName
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

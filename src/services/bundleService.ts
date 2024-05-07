@@ -1,7 +1,7 @@
 import { BackofficeApi } from '../api/BackofficeClient';
-import { BundleResource } from '../api/generated/portal/BundleResource';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
+import { BundleResource } from '../api/generated/portal/BundleResource';
 import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
@@ -11,13 +11,13 @@ import {
 import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import {
   createCommissionBundle,
+  deletePSPBundle as deletePSPBundleMock,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
-  getTouchpoints as getTouchpointsMock,
-  deletePSPBundle as deletePSPBundleMock,
-  updatePSPBundle as updatePSPBundleMock,
-  getPublicBundleCISubscriptionsMock,
   getPublicBundleCISubscriptionsDetailMock,
+  getPublicBundleCISubscriptionsMock,
+  getTouchpoints as getTouchpointsMock,
+  updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';
 
 // /bundles endpoint
@@ -102,23 +102,37 @@ export const getCisBundles = (
 
 export const acceptBundleSubscriptionRequest = (
   pspTaxCode: string,
-  idBundleRequest: string
+  idBundleRequest: string,
+  ciTaxCode: string,
+  bundleName: string
 ): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.acceptBundleSubscriptionRequest(pspTaxCode, idBundleRequest);
+    return BackofficeApi.acceptBundleSubscriptionRequest(
+      pspTaxCode,
+      idBundleRequest,
+      ciTaxCode,
+      bundleName
+    );
   }
 };
 
 export const rejectPublicBundleSubscription = (
   pspTaxCode: string,
-  bundleRequestId: string
+  bundleRequestId: string,
+  ciTaxCode: string,
+  bundleName: string
 ): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.rejectPublicBundleSubscription(pspTaxCode, bundleRequestId);
+    return BackofficeApi.rejectPublicBundleSubscription(
+      pspTaxCode,
+      bundleRequestId,
+      ciTaxCode,
+      bundleName
+    );
   }
 };
 

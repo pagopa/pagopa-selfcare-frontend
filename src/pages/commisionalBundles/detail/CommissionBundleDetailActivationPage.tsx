@@ -117,8 +117,8 @@ export default function CommissionBundleDetailActivationPage() {
             {t('general.exit')}
           </ButtonNaked>
           <Breadcrumbs>
-            <Typography variant="body2">{bundleDetails?.name}</Typography>
-            <Typography variant="body2" fontWeight={'medium'}>
+            <Typography>{bundleDetails?.name}</Typography>
+            <Typography color="action.active">
               {t(`${componentPath}.title`)}
             </Typography>
           </Breadcrumbs>

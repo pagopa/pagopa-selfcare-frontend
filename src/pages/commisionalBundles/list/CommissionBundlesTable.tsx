@@ -90,38 +90,36 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         newPage ?? page,
         mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
       );
-    } else {
-      promise = new Promise<BundlesResource>((resolve, reject) =>
-        reject({ cause: 'wrong organisation type' })
-      );
     }
-    promise
-      .then((res) => {
-        if (res?.bundles) {
-          const formattedBundles = res?.bundles?.map((el, ind) => ({
-            ...el,
-            id: `bundle-${ind}`,
-            touchpoint: el.touchpoint ?? 'ANY',
-            paymentType: el.paymentType ?? 'ANY',
-          }));
-          setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
-        } else {
-          setListFiltered([]);
-        }
-      })
-      .catch((reason) =>
-        addError({
-          id: 'COMMISSION_BUNDLES_RETRIEVE_BUNDLES',
-          blocking: false,
-          error: reason as Error,
-          techDescription: `An error occurred while retrieving bundles`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(`${componentPath}.error.retrieveCommissionBundlesErrorMessage`),
-          component: 'Toast',
+    if(promise){
+        promise
+        .then((res) => {
+          if (res?.bundles) {
+            const formattedBundles = res?.bundles?.map((el, ind) => ({
+              ...el,
+              id: `bundle-${ind}`,
+              touchpoint: el.touchpoint ?? 'ANY',
+              paymentType: el.paymentType ?? 'ANY',
+            }));
+            setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+          } else {
+            setListFiltered([]);
+          }
         })
-      )
-      .finally(() => setLoadingStatus(false));
+        .catch((reason) =>
+          addError({
+            id: 'COMMISSION_BUNDLES_RETRIEVE_BUNDLES',
+            blocking: false,
+            error: reason as Error,
+            techDescription: `An error occurred while retrieving bundles`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(`${componentPath}.error.retrieveCommissionBundlesErrorMessage`),
+            component: 'Toast',
+          })
+        )
+        .finally(() => setLoadingStatus(false));
+    }
   };
 
   useEffect(() => {

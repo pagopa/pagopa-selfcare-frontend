@@ -28,7 +28,6 @@ beforeEach(() => {
 const mock = jest.spyOn(BundleService, "getBundleListByPSP");
 
 afterEach(cleanup);
-jest.setTimeout(20000);
 
 describe('<CommissionBundlesTable />', () => {
   test('render component CommissionBundlesTable with bundle list', async () => {
@@ -71,8 +70,8 @@ describe('<CommissionBundlesTable />', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId("data-grid")).toBeInTheDocument();
-      expect(screen.queryByTestId("empty-bundles")).not.toBeInTheDocument();
-    }, {timeout: 10000})
+      expect(screen.queryByTestId("empty-state-table")).not.toBeInTheDocument();
+    })
   });
 
   test('render component CommissionBundlesTable without bundle list', async () => {
@@ -113,7 +112,7 @@ describe('<CommissionBundlesTable />', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId("data-grid")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("empty-bundles")).toBeInTheDocument();
-    }, {timeout: 10000})
+      expect(screen.queryByTestId("empty-state-table")).toBeInTheDocument();
+    })
   });
 });

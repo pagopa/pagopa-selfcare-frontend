@@ -135,7 +135,7 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspDirect: false,
       orgIsPspSigned: false,
     });
-    mock.mockReturnValueOnce(new Promise((resolve) => resolve({})));
+    mock.mockRejectedValueOnce("");
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-bundles`]}>

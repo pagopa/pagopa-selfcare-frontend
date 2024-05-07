@@ -119,8 +119,8 @@ const BundleActionButtons = ({
               </Button>
             )}
             <Button
-              // component={Link}
-              // to={ROUTES.COMMISSION_BUNDLES_EDIT} TODO re-direct to activation page VAS-958
+              component={Link}
+              to={ROUTES.COMMISSION_BUNDLES_ACTIVATE}
               variant="contained"
               data-testid="activate-button"
             >

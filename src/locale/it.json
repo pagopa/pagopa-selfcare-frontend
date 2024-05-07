@@ -894,6 +894,21 @@
           "acceptOfferEc": "Conferma l’attivazione del pacchetto."
         }
       },
+      "activationPage": {
+        "title": "Attiva pacchetto",
+        "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
+        "modal": {
+          "title": "Richiesta attivazione pacchetto",
+          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail." 
+        },
+        "titleFirstSection": "Commissioni applicate dal PSP",
+        "titleSecondSection": "Commissioni a tuo carico",
+        "amountRange": "Fascia importo",
+        "commissions": "Commissioni",
+        "commissionInput": "Importo a tuo carico",
+        "errorCommission": "Non può superare l’importo applicato dal PSP",
+        "errorMessage": "Non è stato possibile attivare il pacchetto"
+      },
       "subscriptionsTable": {
         "title": "Richieste di adesione",
         "search": {
@@ -1294,6 +1309,8 @@
     "yes": "Sì",
     "no": "No",
     "gotIt": "Ho capito",
+    "min": "Minimo",
+    "max": "Massimo",
     "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
     "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
   },

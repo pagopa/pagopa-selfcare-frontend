@@ -211,7 +211,7 @@ export const createCIBundleRequest = ({
   bundleName,
 }: {
   ciTaxCode: string;
-  bundleRequest: PublicBundleRequest;
+  bundleRequest: Partial<PublicBundleRequest>;
   bundleName: string;
 }) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {

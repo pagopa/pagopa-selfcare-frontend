@@ -68,6 +68,11 @@ export const permissions = {
         ROLE.PSP_ADMIN,
         ROLE.PAGOPA_OPERATOR,
     ],
+    'commission-bundles-activate': [
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.EC_ADMIN,
+        ROLE.PAGOPA_OPERATOR,
+    ],
     'operation-table-read-write': [
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,

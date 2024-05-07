@@ -1252,12 +1252,12 @@ export const BackofficeApi = {
     bundleName,
   }: {
     ciTaxCode: string;
-    bundleRequest: PublicBundleRequest;
+    bundleRequest: Partial<PublicBundleRequest>;
     bundleName: string;
   }): Promise<void> => {
     const result = await backofficeClient.createCIBundleRequest({
       'ci-tax-code': ciTaxCode,
-      body: bundleRequest,
+      body: bundleRequest as PublicBundleRequest,
       bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);

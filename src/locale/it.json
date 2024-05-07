@@ -827,7 +827,9 @@
     "list": {
       "searchByName": "Cerca per Nome",
       "createBundle": "Crea pacchetto",
-      "noCommBundles": "Non sono ancora presenti pacchetti commissioni {{name}}. <1><0> Crea Pacchetto </0></1>",
+      "table": {
+        "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}."
+      },
       "headerFields": {
         "bundleName": "Nome pacchetto",
         "startDate": "Inizio validità",

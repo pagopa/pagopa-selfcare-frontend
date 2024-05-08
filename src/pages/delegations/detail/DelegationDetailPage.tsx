@@ -18,6 +18,7 @@ import { getCreditorInstitutionContacts } from '../../../services/creditorInstit
 import { LOADING_TASK_CI_DELEGATION_CONTACTS_LIST } from '../../../utils/constants';
 import DelegationDetailOperativeTable from './DelegationDetailOperativeTable';
 import DelegationStationsTable from './list/DelegationStationsTable';
+import DelegationDetailPaymentContacts from './DelegationDetailPaymentContacts';
 
 const DelegationDetailPage = () => {
   const { t } = useTranslation();
@@ -75,10 +76,10 @@ const DelegationDetailPage = () => {
       <TitleBox title={delegationDetail.institution_name ?? ''} variantTitle="h3" mtTitle={3} />
 
       <Grid container mt={1} spacing={1}>
-        {/* <Grid item xs={6} mb={1} data-testid="payment-contacts">
+        <Grid item xs={6} mb={1} data-testid="payment-contacts">
           <DelegationDetailPaymentContacts paymentContacts={contacts?.ci_payment_contacts} />
-        </Grid> */}
-        <Grid item xs={12} data-testid="operative-table">
+        </Grid>
+        <Grid item xs={6} data-testid="operative-table">
           <DelegationDetailOperativeTable operativeTable={contacts?.operative_table} />
         </Grid>
       </Grid>

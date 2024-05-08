@@ -270,6 +270,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         openDrawer={openDrawer}
         setOpenDrawer={setOpenDrawer}
         addAction={handleAddFromDrawer}
+        addedTaxonomies={taxonomies.map((el) => el.specific_built_in_data)}
       />
 
       <GenericModal

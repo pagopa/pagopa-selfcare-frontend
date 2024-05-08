@@ -12,6 +12,7 @@ export interface BundleTaxonomiesCheckboxButtonProps {
   subtitle?: string;
   action?: React.Dispatch<React.ChangeEvent<HTMLInputElement>>;
   checked?: boolean;
+  disabled?: boolean;
 }
 
 export const BundleTaxonomiesCheckboxButton = ({
@@ -19,6 +20,7 @@ export const BundleTaxonomiesCheckboxButton = ({
   subtitle,
   action,
   checked,
+  disabled
 }: BundleTaxonomiesCheckboxButtonProps) => (
   <Box
     py={1}
@@ -34,7 +36,7 @@ export const BundleTaxonomiesCheckboxButton = ({
     alignItems={'center'}
   >
     <FormControlLabel
-      control={<Checkbox checked={checked} onChange={action} />}
+      control={<Checkbox checked={checked} onChange={action} disabled={disabled} />}
       label={''}
       data-testid="checkbox-taxonomy"
     />

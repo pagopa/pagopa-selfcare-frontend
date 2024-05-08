@@ -16,6 +16,7 @@ export interface BundleTaxonomiesDrawerProps {
   openDrawer: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
   addAction: (taxonomies: Array<Taxonomy>) => void;
+  addedTaxonomies: Array<string>;
 }
 
 const SkeletonGroup = () => {
@@ -46,6 +47,7 @@ export const BundleTaxonomiesDrawer = ({
   openDrawer,
   setOpenDrawer,
   addAction,
+  addedTaxonomies,
 }: BundleTaxonomiesDrawerProps) => {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
@@ -129,10 +131,9 @@ export const BundleTaxonomiesDrawer = ({
 
   const selectAll = () => {
     setCheckedTaxonomies(
-      taxonomies.reduce(
-        (map, item) => new Map(map.set(item.specific_built_in_data, true)),
-        new Map()
-      )
+      taxonomies
+        .filter((el) => !addedTaxonomies.includes(el.specific_built_in_data))
+        .reduce((map, item) => new Map(map.set(item.specific_built_in_data, true)), new Map())
     );
   };
 
@@ -275,15 +276,19 @@ export const BundleTaxonomiesDrawer = ({
                 )}
               </ButtonNaked>
             </div>
-            {taxonomies?.map((item) => (
-              <BundleTaxonomiesCheckboxButton
-                key={item.specific_built_in_data}
-                title={item.specific_built_in_data}
-                subtitle={item.service_type}
-                checked={checkedTaxonomies?.get(item.specific_built_in_data)}
-                action={() => handleTaxonomyCheck(item)}
-              />
-            ))}
+            {taxonomies?.map((item) => {
+              const isAlreadyPresent = addedTaxonomies.includes(item.specific_built_in_data);
+              return (
+                <BundleTaxonomiesCheckboxButton
+                  key={item.specific_built_in_data}
+                  title={item.specific_built_in_data}
+                  subtitle={item.service_type}
+                  checked={checkedTaxonomies?.get(item.specific_built_in_data) || isAlreadyPresent}
+                  disabled={isAlreadyPresent}
+                  action={() => handleTaxonomyCheck(item)}
+                />
+              );
+            })}
           </>
         );
       }

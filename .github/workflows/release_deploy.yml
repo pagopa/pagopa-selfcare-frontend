@@ -95,6 +95,7 @@ jobs:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
+          prerelease: ${{ inputs.environment != 'prod' }}
 
   deploy:
     runs-on: ubuntu-latest

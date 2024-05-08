@@ -12,7 +12,7 @@ export const getPaymentTypes = (): Promise<PaymentTypes> => {
       return BackofficeApi.getPaymentTypes().then((results: PaymentTypes) => {
         if (results) {
             return { "payment_types": results.payment_types?.filter(
-                (item) => !DISALLOWED_PAYMENT_TYPES.includes(item.payment_type as string))};
+                (item) => !DISALLOWED_PAYMENT_TYPES.includes(item.payment_type))};
         }
         return results;
       });

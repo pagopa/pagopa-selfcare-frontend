@@ -39,6 +39,7 @@ describe('<BundleTaxonomiesDrawer />', () => {
           openDrawer={true}
           setOpenDrawer={() => jest.fn()}
           addAction={spyOnAddAction}
+          addedTaxonomies={[mockedTaxonomy.taxonomies[1].specific_built_in_data]}
         />
       </Provider>
     );
@@ -47,6 +48,11 @@ describe('<BundleTaxonomiesDrawer />', () => {
 
     const acceptButton = screen.getByTestId("taxonomies-add-button-test");
     expect(acceptButton).toBeDisabled();
+
+    const checkboxItems = screen.queryAllByTestId("checkbox-item");
+    expect(checkboxItems[0]).not.toHaveClass("Mui-disabled");
+    expect(checkboxItems[1]).toHaveClass("Mui-disabled");
+
     const checkboxTaxonomy = screen.queryAllByTestId("checkbox-taxonomy");
 
     fireEvent.click(checkboxTaxonomy[0]);

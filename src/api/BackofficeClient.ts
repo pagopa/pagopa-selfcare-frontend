@@ -70,7 +70,6 @@ import { Iban } from './generated/portal/Iban';
 import { Ibans } from './generated/portal/Ibans';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Product } from './generated/portal/Product';
-import { PaymentType } from './generated/portal/PaymentType';
 import { Delegation } from './generated/portal/Delegation';
 import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
@@ -91,6 +90,7 @@ import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { TestStationResource } from './generated/portal/TestStationResource';
 import { TestStationTypeEnum } from './generated/portal/StationTestDto';
 import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
+import { PaymentTypes } from './generated/portal/PaymentTypes';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -498,7 +498,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getPaymentTypes: async (): Promise<PaymentType> => {
+  getPaymentTypes: async (): Promise<PaymentTypes> => {
     const result = await backofficeClient.getPaymentTypes({});
     return extractResponse(result, 200, onRedirectToLogin);
   },

@@ -28,6 +28,7 @@ export const BundleTaxonomiesGroupButton = ({
       display="flex"
       flexDirection={'row'}
       alignItems={'center'}
+      data-testid="taxonomy-group-item"
     >
       <Typography variant="subtitle1">{title}</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto', pl: 1.25 }}>

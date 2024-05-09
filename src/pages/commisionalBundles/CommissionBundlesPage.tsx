@@ -4,6 +4,9 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { BundleResource, TypeEnum } from '../../api/generated/portal/BundleResource';
+import { bundleDetailsSelectors } from '../../redux/slices/bundleDetailsSlice';
+import { useAppSelector } from '../../redux/hooks';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
@@ -35,12 +38,25 @@ const CustomTabPanel = (props: Props) => {
   );
 };
 
+function getTabValue(bundle: BundleResource) {
+  if (bundle?.type === TypeEnum.PRIVATE) {
+    return 0;
+  } else if (bundle?.type === TypeEnum.PUBLIC) {
+    return 1;
+  }
+
+  return 2;
+}
+
 const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const isPrivateEnabled = useFlagValue('commission-bundles-private');
   const isPublicEnabled = useFlagValue('commission-bundles-public');
-  const [value, setValue] = useState(2);
+
+  const commissionBundleDetail: BundleResource =
+    useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
+  const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
   useEffect(() => {
@@ -60,7 +76,7 @@ const CommissionBundlesPage = () => {
   });
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   return (
@@ -83,7 +99,7 @@ const CommissionBundlesPage = () => {
       />
       <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
         <Tabs
-          value={value}
+          value={tabValue}
           onChange={handleChange}
           sx={{ width: '100%' }}
           centered
@@ -108,19 +124,19 @@ const CommissionBundlesPage = () => {
           />
         </Tabs>
       </Box>
-      <CustomTabPanel valueTab={value} index={0}>
+      <CustomTabPanel valueTab={tabValue} index={0}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.privateBundles'}
           bundleNameFilter={bundleNameInput}
         />
       </CustomTabPanel>
-      <CustomTabPanel valueTab={value} index={1}>
+      <CustomTabPanel valueTab={tabValue} index={1}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.publicBundles'}
           bundleNameFilter={bundleNameInput}
         />
       </CustomTabPanel>
-      <CustomTabPanel valueTab={value} index={2}>
+      <CustomTabPanel valueTab={tabValue} index={2}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.globalBundles'}
           bundleNameFilter={bundleNameInput}

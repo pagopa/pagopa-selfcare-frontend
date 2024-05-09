@@ -60,6 +60,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const [page, setPage] = useState(0);
   const brokerCode = selectedParty?.fiscalCode ?? '';
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const mappedBundleType = mapBundle(bundleType);
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
@@ -71,7 +72,6 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     if (isFirstRender) {
       setIsFirstRender(false);
     }
-    const mappedBundleType = mapBundle(bundleType);
     // eslint-disable-next-line functional/no-let
     let promise;
     if (orgInfo.types.isPsp) {
@@ -143,6 +143,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   return (
     <Box
       id="commissionBundlesTable"
+      data-testid={`table-${mappedBundleType}`}
       sx={{
         position: 'relative',
         width: '100% !important',

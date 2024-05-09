@@ -10,7 +10,7 @@ import { CreditorInstitutionContactsResource } from '../../../api/generated/port
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import TableSearchBar from '../../../components/Table/TableSearchBar';
 import { Party } from '../../../model/Party';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { delegationDetailSelectors } from '../../../redux/slices/delegationDetailSlice';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
@@ -31,7 +31,10 @@ const DelegationDetailPage = () => {
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATION_CONTACTS_LIST);
 
   const delegationDetail: CIBrokerDelegationResource =
-    useAppSelector(delegationDetailSelectors.selectDelegationDetail) ?? {};
+    useAppSelectorWithRedirect(
+      delegationDetailSelectors.selectDelegationDetail,
+      ROUTES.DELEGATIONS_LIST
+    ) ?? {};
 
   useEffect(() => {
     setLoading(true);

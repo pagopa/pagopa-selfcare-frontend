@@ -12,7 +12,7 @@ import {
   CiBundleStatusEnum,
   TypeEnum,
 } from '../../../api/generated/portal/BundleResource';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { BundleDetailsActionTypes, FormAction } from '../../../model/CommissionBundle';
@@ -162,8 +162,10 @@ const CommissionBundleDetailPage = () => {
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
 
-  const commissionBundleDetail: BundleResource =
-    useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
+  const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect(
+    bundleDetailsSelectors.selectBundleDetails,
+    ROUTES.COMMISSION_BUNDLES
+  );
   const bundleId = commissionBundleDetail.idBundle ?? '';
   const [showConfirmModal, setShowConfirmModal] = useState<BundleDetailsActionTypes | null>(null);
 

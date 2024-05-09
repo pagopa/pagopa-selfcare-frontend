@@ -101,7 +101,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
                   {el.specific_built_in_data}
                 </Typography>
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                  {el.payment_amount ? formatCurrencyEur(el.payment_amount) : '-'}
+                  {formatCurrencyEur(el.payment_amount)}
                 </Typography>
               </Box>
             </Box>

@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
@@ -150,11 +150,12 @@ const AddEditCommissionBundlePage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
-  const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
+  const { actionId } = useParams<{ actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const isEdit = actionId === FormAction.Edit;
-  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
+  const isEdit: boolean = actionId === FormAction.Edit;
+  const bundleDetails: BundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, isEdit ? ROUTES.COMMISSION_BUNDLES : undefined) ?? {};
+  const bundleId: string = bundleDetails?.idBundle ?? "";
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),

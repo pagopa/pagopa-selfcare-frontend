@@ -9,7 +9,7 @@ import { NumericFormat } from 'react-number-format';
 import EuroIcon from '@mui/icons-material/Euro';
 import ROUTES from '../../../routes';
 import GenericModal from '../../../components/Form/GenericModal';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import { LOADING_TASK_COMMISSION_BUNDLE_ACTIVATION } from '../../../utils/constants';
 import { createCIBundleRequest } from '../../../services/bundleService';
@@ -42,7 +42,7 @@ export default function CommissionBundleDetailActivationPage() {
   const addError = useErrorDispatcher();
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
+  const bundleDetails: BundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, ROUTES.COMMISSION_BUNDLES) ?? {};
 
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bundleRequest, setBundleRequest] = useState<Partial<PublicBundleRequest>>(

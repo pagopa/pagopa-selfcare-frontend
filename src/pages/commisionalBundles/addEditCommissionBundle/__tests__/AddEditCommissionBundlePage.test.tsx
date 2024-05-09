@@ -139,7 +139,7 @@ describe('<AddEditCommissionBundlePage />', () => {
     requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
     requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {
-      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', mockedCommissionBundlePspDetailGlobal.idBundle, requestBundle);
     });
   });
 
@@ -376,7 +376,7 @@ describe('<AddEditCommissionBundlePage />', () => {
     requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
     requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {
-      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', name, requestBundle);
+      expect(spyOnUpdateBundle).toHaveBeenCalledWith('', mockedCommissionBundlePspDetailGlobal.idBundle, requestBundle);
     });
   });
 });

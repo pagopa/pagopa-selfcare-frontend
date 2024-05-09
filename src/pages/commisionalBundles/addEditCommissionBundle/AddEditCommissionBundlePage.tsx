@@ -150,11 +150,12 @@ const AddEditCommissionBundlePage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
-  const { bundleId, actionId } = useParams<{ bundleId: string; actionId: string }>();
+  const { actionId } = useParams<{ actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit = actionId === FormAction.Edit;
   const bundleDetails = useAppSelector(bundleDetailsSelectors.selectBundleDetails);
+  const bundleId = bundleDetails?.idBundle ?? "";
 
   const formik = useFormik<Partial<BundleRequest>>({
     initialValues: toNewFormData(selectedParty, {}),

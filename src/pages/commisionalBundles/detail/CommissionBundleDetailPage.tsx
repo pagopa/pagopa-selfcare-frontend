@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +36,7 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
 
   if (bundleDetail?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
     return (
-      <Alert severity={'error'} data-testid="alert-error-test" variant='outlined'>
+      <Alert severity={'error'} data-testid="alert-error-test" variant="outlined">
         {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
       </Alert>
     );
@@ -58,7 +51,7 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
   });
   if (expiredFound) {
     return (
-      <Alert severity={'warning'} data-testid="alert-warning-test" variant='outlined'>
+      <Alert severity={'warning'} data-testid="alert-warning-test" variant="outlined">
         {t('commissionBundlesPage.commissionBundleDetail.alert.expiredTaxonomies')}
       </Alert>
     );
@@ -69,14 +62,15 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
 const BundleActionButtons = ({
   setShowConfirmModal,
   bundleDetail,
+  bundleId,
 }: {
   setShowConfirmModal: (arg: BundleDetailsActionTypes | null) => void;
   bundleDetail: BundleResource;
+  bundleId: string;
 }) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
   const { userIsAdmin } = useUserRole();
-  const { bundleId } = useParams<{ bundleId: string }>();
 
   if (userIsAdmin) {
     if (orgInfo.types.isPsp) {
@@ -167,10 +161,10 @@ const CommissionBundleDetailPage = () => {
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
-  const { bundleId } = useParams<{ bundleId: string }>();
 
   const commissionBundleDetail: BundleResource =
     useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
+  const bundleId = commissionBundleDetail.idBundle ?? '';
   const [showConfirmModal, setShowConfirmModal] = useState<BundleDetailsActionTypes | null>(null);
 
   function handleModalAction() {
@@ -254,6 +248,7 @@ const CommissionBundleDetailPage = () => {
               <BundleActionButtons
                 setShowConfirmModal={setShowConfirmModal}
                 bundleDetail={commissionBundleDetail}
+                bundleId={bundleId}
               />
             </Stack>
           </Grid>
@@ -291,18 +286,20 @@ const CommissionBundleDetailPage = () => {
             )}
         </Grid>
       </SideMenuLayout>
-      {showConfirmModal && <GenericModal
-        title={t(`commissionBundlesPage.commissionBundleDetail.modal.title.${showConfirmModal}`)}
-        message={t(
-          `commissionBundlesPage.commissionBundleDetail.modal.message.${showConfirmModal}`
-        )}
-        openModal={showConfirmModal !== null}
-        onConfirmLabel={t('general.confirm')}
-        onCloseLabel={t('general.turnBack')}
-        handleCloseModal={() => setShowConfirmModal(null)}
-        handleConfirm={() => handleModalAction()}
-        data-testid="delete-modal"
-      />}
+      {showConfirmModal && (
+        <GenericModal
+          title={t(`commissionBundlesPage.commissionBundleDetail.modal.title.${showConfirmModal}`)}
+          message={t(
+            `commissionBundlesPage.commissionBundleDetail.modal.message.${showConfirmModal}`
+          )}
+          openModal={showConfirmModal !== null}
+          onConfirmLabel={t('general.confirm')}
+          onCloseLabel={t('general.turnBack')}
+          handleCloseModal={() => setShowConfirmModal(null)}
+          handleConfirm={() => handleModalAction()}
+          data-testid="delete-modal"
+        />
+      )}
     </>
   );
 };

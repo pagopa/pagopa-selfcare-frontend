@@ -48,8 +48,8 @@ function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }
   }
   // eslint-disable-next-line functional/no-let
   let expiredFound = false;
-  bundleDetail?.bundleTaxonomies?.forEach((el: PSPBundleTaxonomy) => {
-    if(el.endDate){
+  (bundleDetail?.bundleTaxonomies as Array<PSPBundleTaxonomy>)?.forEach((el: PSPBundleTaxonomy) => {
+    if (el.endDate) {
       const endDate = new Date(el.endDate);
       if (endDate <= new Date()) {
         expiredFound = true;

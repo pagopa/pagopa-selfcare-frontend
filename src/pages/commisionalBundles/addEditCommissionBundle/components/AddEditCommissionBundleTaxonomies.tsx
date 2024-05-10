@@ -121,7 +121,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
     addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specific_built_in_data));
   };
 
-  const updateTableData = (taxonomies: Array<Taxonomy>) => {
+  const updateTableData = (taxonomies: Array<PSPBundleTaxonomy>) => {
     setTaxonomyTableData(reduceTaxonomies(taxonomies));
   };
 

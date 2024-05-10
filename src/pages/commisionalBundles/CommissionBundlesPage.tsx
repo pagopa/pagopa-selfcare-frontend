@@ -39,7 +39,7 @@ const CustomTabPanel = (props: Props) => {
   );
 };
 
-function getTabValue(bundle: BundleResource) {
+function getTabValue(bundle: BundleResource | Record<any, any>) {
   if (bundle?.type === TypeEnum.PRIVATE) {
     return 0;
   } else if (bundle?.type === TypeEnum.PUBLIC) {
@@ -55,8 +55,8 @@ const CommissionBundlesPage = () => {
   const isPrivateEnabled = useFlagValue('commission-bundles-private');
   const isPublicEnabled = useFlagValue('commission-bundles-public');
 
-  const commissionBundleDetail: BundleResource =
-    useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
+  const commissionBundleDetail: BundleResource | Record<any, any> =
+    useAppSelector(bundleDetailsSelectors.selectBundleDetails);
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 

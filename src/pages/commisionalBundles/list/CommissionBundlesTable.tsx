@@ -66,6 +66,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   };
 
   const pageLimit = 5;
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const getBundleList = (newPage?: number) => {
     setLoadingStatus(true);
     if (isFirstRender) {
@@ -90,16 +91,19 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
       );
     }
-    if(promise){
-        promise
+    if (promise) {
+      promise
         .then((res) => {
           if (res?.bundles) {
-            const formattedBundles = res?.bundles?.map((el: BundleResource) => ({
+            const formattedBundles = res.bundles?.map((el: BundleResource) => ({
               ...el,
               touchpoint: el.touchpoint ?? 'ANY',
               paymentType: el.paymentType ?? 'ANY',
             }));
-            setListFiltered({ bundles: formattedBundles, pageInfo: res.pageInfo });
+            setListFiltered({
+              bundles: formattedBundles,
+              pageInfo: res.pageInfo,
+            });
           } else {
             setListFiltered([]);
           }
@@ -112,7 +116,9 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
             techDescription: `An error occurred while retrieving bundles`,
             toNotify: true,
             displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(`${componentPath}.error.retrieveCommissionBundlesErrorMessage`),
+            displayableDescription: t(
+              `${componentPath}.error.retrieveCommissionBundlesErrorMessage`
+            ),
             component: 'Toast',
           })
         )

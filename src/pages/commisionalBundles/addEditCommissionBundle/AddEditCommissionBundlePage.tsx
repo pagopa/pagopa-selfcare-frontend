@@ -158,7 +158,7 @@ const AddEditCommissionBundlePage = () => {
   const bundleId: string = bundleDetails?.idBundle ?? "";
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, {}),
+    initialValues: toNewFormData(selectedParty, bundleDetails),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
@@ -217,16 +217,6 @@ const AddEditCommissionBundlePage = () => {
       setActiveStep(0);
     }
   };
-
-  useEffect(() => {
-    if (bundleId && isEdit) {
-      setLoading(true);
-      const setForm = async () => {
-        await formik.setValues(toNewFormData(selectedParty, bundleDetails));
-      };
-      setForm().finally(() => setLoading(false));
-    }
-  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>

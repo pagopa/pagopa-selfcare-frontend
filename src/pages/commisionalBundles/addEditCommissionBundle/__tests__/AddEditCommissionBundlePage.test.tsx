@@ -14,8 +14,8 @@ import {
   mockedCommissionBundlePspDetailPrivate,
   mockedCommissionBundlePspDetailPublic,
 } from '../../../../services/__mocks__/bundleService';
-import {BundleResource} from '../../../../api/generated/portal/BundleResource';
 import {removeDateZoneInfo} from '../../../../utils/common-utils';
+import { PSPBundleResource } from '../../../../api/generated/portal/PSPBundleResource';
 
 let spyOnUpdateBundle: jest.SpyInstance<any, unknown[]>;
 
@@ -43,7 +43,7 @@ const RenderComponent = ({
 }: {
   initialEntries: string;
   path: string;
-  bundle: BundleResource;
+  bundle: PSPBundleResource;
 }) => {
   const dispatcher = useAppDispatch();
   dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
@@ -129,13 +129,14 @@ describe('<AddEditCommissionBundlePage />', () => {
       ...mockedCommissionBundlePspDetailGlobal,
       abi: '',
       pspBusinessName: '',
-      transferCategoryList: mockedCommissionBundlePspDetailGlobal!.transferCategoryList!.map(
-        (el) => el.specific_built_in_data
+      transferCategoryList: mockedCommissionBundlePspDetailGlobal!.bundleTaxonomies!.map(
+        (el) => el.specificBuiltInData
       ),
     };
     delete requestBundle.idBundle;
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
+    delete requestBundle.bundleTaxonomies;
     requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
     requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {
@@ -318,7 +319,7 @@ describe('<AddEditCommissionBundlePage />', () => {
       ...mockedCommissionBundlePspDetailGlobal,
       touchpoint: 'ANY',
       paymentType: 'ANY',
-      transferCategoryList: [],
+      bundleTaxonomies: [],
     };
     render(
       <Provider store={store}>
@@ -373,6 +374,7 @@ describe('<AddEditCommissionBundlePage />', () => {
     delete requestBundle.idBundle;
     delete requestBundle.lastUpdatedDate;
     delete requestBundle.insertedDate;
+    delete requestBundle.bundleTaxonomies;
     requestBundle.validityDateFrom = removeDateZoneInfo(requestBundle.validityDateFrom);
     requestBundle.validityDateTo = removeDateZoneInfo(requestBundle.validityDateTo);
     await waitFor(() => {

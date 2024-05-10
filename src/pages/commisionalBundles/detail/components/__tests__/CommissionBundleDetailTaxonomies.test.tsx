@@ -29,7 +29,7 @@ describe('<CommissionBundleDetailTaxonomies />', () => {
     fireEvent.click(drawerButton);
 
     expect(screen.queryByTestId("padded-drawer")).toBeInTheDocument();
-    expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(mockedCommissionBundlePspDetailGlobal?.transferCategoryList?.length);
+    expect(screen.queryAllByTestId('taxonomy-drawer-column').length).toBe(mockedCommissionBundlePspDetailGlobal?.bundleTaxonomies?.length);
 
     const closeDrawerButton = screen.getByTestId("close-drawer-button");
     fireEvent.click(closeDrawerButton)
@@ -41,7 +41,7 @@ describe('<CommissionBundleDetailTaxonomies />', () => {
 
   test('render component CommissionBundleDetailTaxonomies without taxonomies', async () => {
     const bundleDetailWithoutTaxonomies = mockedCommissionBundlePspDetailGlobal;
-    bundleDetailWithoutTaxonomies.transferCategoryList = [];
+    bundleDetailWithoutTaxonomies.bundleTaxonomies = [];
     render(
       <Provider store={store}>
         <CommissionBundleDetailTaxonomies bundleDetail={bundleDetailWithoutTaxonomies} />

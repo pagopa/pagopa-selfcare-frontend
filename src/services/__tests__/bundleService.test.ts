@@ -7,6 +7,8 @@ import {
   mockedCIBundleRequest,
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
+  mockedCommissionBundleCiDetailGlobal,
+  mockedCommissionBundleCiList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
   mockedTouchpoints,
@@ -53,13 +55,13 @@ describe('BundleService test mocked', () => {
   });
   test('Test getCisBundles', async () => {
     const response = await getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode');
-    expect(response).toMatchObject(mockedCommissionBundlePspList);
+    expect(response).toMatchObject(mockedCommissionBundleCiList);
   });
   test('Test acceptBundleSubscriptionRequest', async () => {
-    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId', "ciTaxCode", "bundleName")).resolves.not.toThrow();
   });
   test('Test rejectPublicBundleSubscription', async () => {
-    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId', "ciTaxCode", "bundleName")).resolves.not.toThrow();
   });
   test('Test getPublicBundleCISubscriptions', async () => {
     const response = await getPublicBundleCISubscriptions({
@@ -164,14 +166,14 @@ describe('BundleService test client', () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'acceptBundleSubscriptionRequest')
       .mockReturnValue(new Promise((resolve) => resolve()));
-    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+    expect(acceptBundleSubscriptionRequest('pspTaxCode', 'bundleRequestId', "ciTaxCode", "bundleName")).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test rejectPublicBundleSubscription', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'rejectPublicBundleSubscription')
       .mockReturnValue(new Promise((resolve) => resolve()));
-    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId')).resolves.not.toThrow();
+    expect(rejectPublicBundleSubscription('pspTaxCode', 'bundleRequestId', "ciTaxCode", "bundleName")).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getPublicBundleCISubscriptions', async () => {

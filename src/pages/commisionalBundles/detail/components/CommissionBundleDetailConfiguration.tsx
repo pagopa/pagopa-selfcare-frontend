@@ -11,6 +11,7 @@ import {
   formatDateToDDMMYYYY,
 } from '../../../../utils/common-utils';
 import { BundleResource } from '../../../../model/CommissionBundle';
+import { CIBundleResource, CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 
 const bundleConfigurationFields = {
   col1: [
@@ -83,7 +84,11 @@ export default function CommissionBundleDetailConfiguration({
       sx={{
         borderRadius: 2,
         padding: 3,
-        minHeight: '310px',
+        minHeight:
+          (bundleDetail as CIBundleResource)?.ciBundleStatus !== undefined &&
+          (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE
+            ? '370px'
+            : '310px',
         display: 'flex',
         flexDirection: 'column',
       }}

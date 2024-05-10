@@ -1,17 +1,19 @@
 import { BackofficeApi } from '../api/BackofficeClient';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
-import { BundleResource } from '../api/generated/portal/BundleResource';
-import { BundlesResource } from '../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   PublicBundleCiSubscriptionsDetailMethodParams,
   PublicBundleCISubscriptionsMethodParams,
 } from '../model/CommissionBundle';
 import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
+import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
+import { CIBundlesResource } from '../api/generated/portal/CIBundlesResource';
+import { PSPBundlesResource } from '../api/generated/portal/PSPBundlesResource';
 import {
   createCommissionBundle,
   deletePSPBundle as deletePSPBundleMock,
+  getCommissionBundleCi,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
   getPublicBundleCISubscriptionsDetailMock,
@@ -28,7 +30,7 @@ export const getBundleListByPSP = (
   bundleName: string,
   page: number,
   pspCode: string
-): Promise<BundlesResource> => {
+): Promise<PSPBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundlePsp(bundleName);
   } else {
@@ -58,7 +60,7 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
 export const getBundleDetailByPSP = (
   pspTaxCode: string,
   bundleId: string
-): Promise<BundleResource> => {
+): Promise<PSPBundleResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleDetails();
   } else {
@@ -92,9 +94,9 @@ export const getCisBundles = (
   bundleName: string,
   page: number,
   cisTaxCode: string | undefined
-): Promise<BundlesResource> => {
+): Promise<CIBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCommissionBundlePsp(bundleName);
+    return getCommissionBundleCi(bundleName);
   } else {
     return BackofficeApi.getCisBundles(bundleType, pageLimit, bundleName, page, cisTaxCode);
   }

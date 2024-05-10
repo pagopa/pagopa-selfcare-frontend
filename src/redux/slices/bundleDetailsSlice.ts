@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
-import { BundleResource } from '../../api/generated/portal/BundleResource';
+import { BundleResource } from '../../model/CommissionBundle';
 
-const initialState: BundleResource = {};
+const initialState = {};
 
 /* eslint-disable functional/immutable-data */
 export const bundleDetailsSlice = createSlice({
@@ -17,5 +17,5 @@ export const bundleDetailsActions = bundleDetailsSlice.actions;
 export const bundleDetailsReducer = bundleDetailsSlice.reducer;
 
 export const bundleDetailsSelectors = {
-  selectBundleDetails: (state: RootState): BundleResource | undefined => state.bundleDetails,
+  selectBundleDetails: (state: RootState): BundleResource | Record<any, any> => state.bundleDetails,
 };

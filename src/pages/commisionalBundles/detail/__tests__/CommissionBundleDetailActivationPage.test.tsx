@@ -36,7 +36,7 @@ describe('<CommissionBundleDetailActivationPage />', () => {
 
     await waitFor(() => {
       expect(screen.queryAllByTestId('payment-amount-test').length).toBe(
-        mockedCommissionBundlePspDetailPublic.transferCategoryList?.length
+        mockedCommissionBundlePspDetailPublic.bundleTaxonomies?.length
       );
     });
 
@@ -94,7 +94,7 @@ describe('<CommissionBundleDetailActivationPage />', () => {
 
     await waitFor(() => {
       expect(screen.queryAllByTestId('payment-amount-test').length).toBe(
-        mockedCommissionBundlePspDetailPublic.transferCategoryList?.length
+        mockedCommissionBundlePspDetailPublic.bundleTaxonomies?.length
       );
     });
 

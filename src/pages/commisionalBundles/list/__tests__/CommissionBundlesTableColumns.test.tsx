@@ -1,8 +1,4 @@
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridStateColDef,
-} from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
 import { cleanup, render, screen } from '@testing-library/react';
 import {
   GridLinkActionBundleDetails,
@@ -11,14 +7,21 @@ import {
 } from '../CommissionBundlesTableColumns';
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { mockedCommissionBundlePspDetailGlobal, mockedCommissionBundlePspDetailPrivate, mockedCommissionBundlePspDetailPublic } from '../../../../services/__mocks__/bundleService';
+import {
+  mockedCommissionBundleCiDetailGlobal,
+  mockedCommissionBundleCiDetailPrivate,
+  mockedCommissionBundleCiDetailPublic,
+  mockedCommissionBundlePspDetailGlobal,
+  mockedCommissionBundlePspDetailPrivate,
+} from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BundleResource, CiBundleStatusEnum } from '../../../../api/generated/portal/BundleResource';
 import add from 'date-fns/add';
 import { showCustomHeader } from '../../../../components/Table/TableUtils';
+import { BundleResource } from '../../../../model/CommissionBundle';
+import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -66,9 +69,7 @@ const AllCells = ({ isPsp, isEc }: { isPsp: boolean; isEc: boolean }) => {
   const { t } = useTranslation('translation');
 
   return (
-    <>
       <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />
-    </>
   );
 };
 
@@ -398,12 +399,12 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     expect(realColumns).toEqual(ArrayBuildColumnDefs);
   });
 
-  describe("GLOBAL bundles",() => {
+  describe('GLOBAL bundles', () => {
     test('Test state chip cell with active bundle for GLOBAL', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailGlobal };
+      let bundle = { ...mockedCommissionBundleCiDetailGlobal };
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = add(new Date(), { days: 8 });
-  
+
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -411,18 +412,18 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-  
+
     test('Test state chip cell with to be activated bundle for GLOBAL', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailGlobal };
+      let bundle = { ...mockedCommissionBundleCiDetailGlobal };
       bundle.validityDateFrom = add(new Date(), { days: 8 });
       bundle.validityDateTo = add(new Date(), { days: 8 });
-  
+
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -430,17 +431,17 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
     });
-  })
+  });
 
-  describe("PUBLIC bundles", () => {
+  describe('PUBLIC bundles', () => {
     test('Bundle AVAILABLE', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      let bundle = { ...mockedCommissionBundleCiDetailPublic };
       bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
       render(
         <Provider store={store}>
@@ -449,14 +450,14 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
     });
     test('Bundle ON_REMOVAL', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      let bundle = { ...mockedCommissionBundleCiDetailPublic };
       bundle.ciBundleStatus = CiBundleStatusEnum.ON_REMOVAL;
       render(
         <Provider store={store}>
@@ -465,14 +466,14 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle REQUESTED', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      let bundle = { ...mockedCommissionBundleCiDetailPublic };
       bundle.ciBundleStatus = CiBundleStatusEnum.REQUESTED;
       render(
         <Provider store={store}>
@@ -481,14 +482,14 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ENABLED', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPublic };
+      let bundle = { ...mockedCommissionBundleCiDetailPublic };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
       render(
         <Provider store={store}>
@@ -497,17 +498,17 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-  })
+  });
 
-  describe("PRIVATE bundles", () => {
+  describe('PRIVATE bundles', () => {
     test('Test state chip cell with expiring bundle for PRIVATE', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+      let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = add(new Date(), { days: 7 });
       render(
@@ -517,15 +518,15 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-  
+
     test('Test state chip cell with expired bundle for PRIVATE', () => {
-      let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+      let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = new Date();
       render(
@@ -535,16 +536,16 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-  
+
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-  })
+  });
 
   test('Test state chip cell bundle with no dates', () => {
-    let bundle = { ...mockedCommissionBundlePspDetailPrivate };
+    let bundle = { ...mockedCommissionBundleCiDetailPrivate };
     bundle.validityDateFrom = undefined;
     bundle.validityDateTo = undefined;
     render(

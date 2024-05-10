@@ -32,7 +32,7 @@ import {
   LOADING_TASK_CREATING_COMMISSION_BUNDLE,
 } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
+import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
@@ -42,7 +42,7 @@ const minDateTomorrow = () => {
   return add(dateToday, { days: 1 });
 };
 
-const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource): BundleRequest => ({
+const toNewFormData = (selectedParty: Party | undefined, data?: PSPBundleResource): BundleRequest => ({
   abi: selectedParty?.pspData?.abi_code ?? '',
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
@@ -55,8 +55,8 @@ const toNewFormData = (selectedParty: Party | undefined, data?: BundleResource):
   paymentAmount: data?.paymentAmount ?? 0,
   paymentType: data?.paymentType ?? 'ANY',
   touchpoint: data?.touchpoint ?? 'ANY',
-  transferCategoryList: data?.transferCategoryList
-    ? data.transferCategoryList.map((item) => item.specific_built_in_data)
+  transferCategoryList: data?.bundleTaxonomies
+    ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? "")
     : [],
   type: data?.type ?? undefined,
   validityDateFrom: data?.validityDateFrom ?? minDateTomorrow(),
@@ -154,11 +154,11 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit: boolean = actionId === FormAction.Edit;
-  const bundleDetails: BundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, isEdit ? ROUTES.COMMISSION_BUNDLES : undefined) ?? {};
+  const bundleDetails: PSPBundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, isEdit ? ROUTES.COMMISSION_BUNDLES : undefined) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? "";
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, {}),
+    initialValues: toNewFormData(selectedParty, bundleDetails),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
@@ -217,16 +217,6 @@ const AddEditCommissionBundlePage = () => {
       setActiveStep(0);
     }
   };
-
-  useEffect(() => {
-    if (bundleId && isEdit) {
-      setLoading(true);
-      const setForm = async () => {
-        await formik.setValues(toNewFormData(selectedParty, bundleDetails));
-      };
-      setForm().finally(() => setLoading(false));
-    }
-  }, [selectedParty]);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -294,9 +284,9 @@ const AddEditCommissionBundlePage = () => {
             formik={formik}
             bundleTaxonomies={
               isEdit &&
-              bundleDetails?.transferCategoryList &&
-              bundleDetails.transferCategoryList.length > 0
-                ? [...bundleDetails.transferCategoryList]
+              bundleDetails?.bundleTaxonomies &&
+              bundleDetails.bundleTaxonomies.length > 0
+                ? [...bundleDetails.bundleTaxonomies]
                 : []
             }
           />

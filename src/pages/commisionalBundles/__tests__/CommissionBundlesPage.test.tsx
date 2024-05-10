@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import CommissionBundlesPage from '../CommissionBundlesPage';
 import * as useFeatureFlags from '../../../hooks/useFeatureFlags';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import {
@@ -15,6 +14,7 @@ import {
   mockedCommissionBundlePspDetailPrivate,
   mockedCommissionBundlePspDetailPublic,
 } from '../../../services/__mocks__/bundleService';
+import { BundleResource } from '../../../model/CommissionBundle';
 
 let spyOnUseFlagValue: jest.SpyInstance<boolean, string[]>;
 

@@ -15,21 +15,21 @@ import { LOADING_TASK_COMMISSION_BUNDLE_ACTIVATION } from '../../../utils/consta
 import { createCIBundleRequest } from '../../../services/bundleService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { PublicBundleRequest } from '../../../api/generated/portal/PublicBundleRequest';
-import { BundleResource } from '../../../api/generated/portal/BundleResource';
-import { TransferCategoryRelationEnum } from '../../../api/generated/portal/PspCiBundleAttribute';
 import { formatCurrencyEur } from '../../../utils/common-utils';
+import { CIBundleResource } from '../../../api/generated/portal/CIBundleResource';
+import { TransferCategoryRelationEnum } from '../../../api/generated/portal/CIBundleAttribute';
 
 const initBundleRequest = (
-  bundleDetails: BundleResource | undefined,
+  bundleDetails: CIBundleResource | undefined,
   ciTaxCode: string | undefined
 ): Partial<PublicBundleRequest> => ({
   ciFiscalCode: ciTaxCode ?? '',
   idBundle: bundleDetails?.idBundle ?? '',
-  attributes: bundleDetails?.transferCategoryList?.map((el) => ({
+  attributes: bundleDetails?.bundleTaxonomies?.map((el) => ({
     maxPaymentAmount: 0,
-    transferCategory: el.specific_built_in_data,
+    transferCategory: el.specificBuiltInData,
     transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
-    transferCategoryType: el.service_type,
+    transferCategoryType: el.serviceType,
   })),
   idPsp: bundleDetails?.idBrokerPsp,
 });
@@ -42,7 +42,7 @@ export default function CommissionBundleDetailActivationPage() {
   const addError = useErrorDispatcher();
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const bundleDetails: BundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, ROUTES.COMMISSION_BUNDLES) ?? {};
+  const bundleDetails: CIBundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, ROUTES.COMMISSION_BUNDLES) ?? {};
 
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bundleRequest, setBundleRequest] = useState<Partial<PublicBundleRequest>>(

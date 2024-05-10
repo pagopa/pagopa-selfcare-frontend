@@ -44,10 +44,10 @@ import {getPaymentTypes} from '../../../../services/configurationService';
 import {getTouchpoints} from '../../../../services/bundleService';
 import {getBrokerDelegation} from '../../../../services/institutionService';
 import {Delegation} from '../../../../api/generated/portal/Delegation';
-import {TypeEnum} from '../../../../api/generated/portal/BundleResource';
 import {addCurrentPSP} from '../../../../utils/channel-utils';
 import {useFlagValue} from '../../../../hooks/useFeatureFlags';
 import {useUserRole} from "../../../../hooks/useUserRole";
+import { TypeEnum } from '../../../../api/generated/portal/PSPBundleResource';
 
 type Props = {
     formik: FormikProps<BundleRequest>;

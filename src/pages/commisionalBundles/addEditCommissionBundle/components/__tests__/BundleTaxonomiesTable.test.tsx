@@ -3,8 +3,8 @@ import React from 'react';
 import { store } from '../../../../../redux/store';
 import BundleTaxonomiesTable from '../BundleTaxonomiesTable';
 import { Provider } from 'react-redux';
-import { mockedTaxonomyList } from '../../../../../services/__mocks__/bundleService';
-import { Taxonomy } from '../../../../../api/generated/portal/Taxonomy';
+import { mockedPSPTaxonomyList } from '../../../../../services/__mocks__/bundleService';
+import { PSPBundleTaxonomy } from '../../../../../api/generated/portal/PSPBundleTaxonomy';
 
 const spyOnActionDeleteTaxonomy = jest.fn();
 const spyOnActionDeleteArea = jest.fn();
@@ -16,7 +16,7 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const reduceTaxonomies = (taxonomies: Array<Taxonomy>) =>
+const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomy>) =>
   taxonomies.reduce((result: any, taxonomy: any) => {
     const macro_area_name = taxonomy.macro_area_name;
     const newResult: any = {
@@ -29,7 +29,7 @@ const reduceTaxonomies = (taxonomies: Array<Taxonomy>) =>
 
 describe('<BundleTaxonomiesTable />', () => {
   test('render component BundleTaxonomiesTable', () => {
-    const taxonomyTableData = reduceTaxonomies(mockedTaxonomyList);
+    const taxonomyTableData = reduceTaxonomies(mockedPSPTaxonomyList);
 
     render(
       <Provider store={store}>
@@ -44,7 +44,7 @@ describe('<BundleTaxonomiesTable />', () => {
     expect(screen.queryAllByTestId('box-macroarea').length).toBe(
       Object.values(taxonomyTableData).length
     );
-    expect(screen.queryAllByTestId('grid-taxonomy').length).toBe(mockedTaxonomyList.length);
+    expect(screen.queryAllByTestId('grid-taxonomy').length).toBe(mockedPSPTaxonomyList.length);
 
     const buttonDeleteTaxonomy = screen.getAllByTestId('delete-taxonomy-button')[0];
     fireEvent.click(buttonDeleteTaxonomy);

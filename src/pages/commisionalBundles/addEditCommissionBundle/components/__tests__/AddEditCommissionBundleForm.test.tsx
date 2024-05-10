@@ -8,7 +8,6 @@ import React from 'react';
 import {mockedBundleRequest, mockedChannelsIdList,} from '../../../../../services/__mocks__/bundleService';
 import {partiesActions} from '../../../../../redux/slices/partiesSlice';
 import {pspOperatorSignedDirect} from '../../../../../services/__mocks__/partyService';
-import {TypeEnum} from '../../../../../api/generated/portal/BundleResource';
 import AddEditCommissionBundleForm from '../AddEditCommissionBundleForm';
 import {useFormik} from 'formik';
 import {BundleRequest} from '../../../../../api/generated/portal/BundleRequest';
@@ -19,6 +18,7 @@ import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
 import * as useFeatureFlags from "../../../../../hooks/useFeatureFlags";
 import * as useUserRole from "../../../../../hooks/useUserRole";
 import {ROLE} from "../../../../../model/RolePermission";
+import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
 
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;

@@ -8,17 +8,15 @@ import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
-import {
-  BundleResource,
-  CiBundleStatusEnum,
-  TypeEnum,
-} from '../../../api/generated/portal/BundleResource';
 import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
 import {
   renderCell,
   renderStatusChip,
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
+import { BundleResource } from '../../../model/CommissionBundle';
+import { CIBundleResource, CiBundleStatusEnum } from '../../../api/generated/portal/CIBundleResource';
+import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -171,7 +169,7 @@ export const getStateChip = (
       validityDateTo,
       validityDateFrom,
       bundleDetails.type,
-      bundleDetails.ciBundleStatus
+      (bundleDetails as CIBundleResource).ciBundleStatus
     );
   }
 
@@ -235,7 +233,7 @@ const getCIStatusChip = (
     if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
       return (
         <Chip
-          color={'error'}
+          color={'warning'}
           label={t('commissionBundlesPage.list.states.deactivated')}
           data-testid="error-state-chip"
         />
@@ -245,7 +243,7 @@ const getCIStatusChip = (
     if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
       return (
         <Chip
-          color={'primary'}
+          sx={{backgroundColor: "#7ED5FC"}}
           label={t('commissionBundlesPage.list.states.requestInProgress')}
           data-testid="primary-state-chip"
         />

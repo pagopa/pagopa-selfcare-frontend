@@ -4,10 +4,11 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { BundleResource, TypeEnum } from '../../api/generated/portal/BundleResource';
 import { bundleDetailsSelectors } from '../../redux/slices/bundleDetailsSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
+import { BundleResource } from '../../model/CommissionBundle';
+import { TypeEnum } from '../../api/generated/portal/PSPBundleResource';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
 import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
@@ -38,7 +39,7 @@ const CustomTabPanel = (props: Props) => {
   );
 };
 
-function getTabValue(bundle: BundleResource) {
+function getTabValue(bundle: BundleResource | Record<any, any>) {
   if (bundle?.type === TypeEnum.PRIVATE) {
     return 0;
   } else if (bundle?.type === TypeEnum.PUBLIC) {
@@ -54,8 +55,8 @@ const CommissionBundlesPage = () => {
   const isPrivateEnabled = useFlagValue('commission-bundles-private');
   const isPublicEnabled = useFlagValue('commission-bundles-public');
 
-  const commissionBundleDetail: BundleResource =
-    useAppSelector(bundleDetailsSelectors.selectBundleDetails) ?? {};
+  const commissionBundleDetail: BundleResource | Record<any, any> =
+    useAppSelector(bundleDetailsSelectors.selectBundleDetails);
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 

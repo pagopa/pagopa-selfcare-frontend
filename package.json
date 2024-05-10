@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.20.29",
+  "version": "1.21.0",
   "homepage": "ui",
   "private": true,
   "scripts": {

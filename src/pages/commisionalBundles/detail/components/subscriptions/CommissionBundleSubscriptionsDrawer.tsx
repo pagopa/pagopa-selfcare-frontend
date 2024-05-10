@@ -92,16 +92,16 @@ export const CommissionBundleSubscriptionsDrawer = ({
           </Box>
 
           {selectedSubscriptionRequest?.ci_bundle_fee_list?.map((el: CIBundleFee) => (
-            <Box mb={1} key={`taxonomies-list-${el.specific_built_in_data}`}>
+            <Box mb={1} key={`taxonomies-list-${el.specificBuiltInData}`}>
               <Typography variant="body1" color="action.active">
-                {el.service_type}
+                {el.serviceType}
               </Typography>
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                  {el.specific_built_in_data}
+                  {el.specificBuiltInData}
                 </Typography>
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                  {formatCurrencyEur(el.payment_amount)}
+                  {formatCurrencyEur(el.paymentAmount)}
                 </Typography>
               </Box>
             </Box>

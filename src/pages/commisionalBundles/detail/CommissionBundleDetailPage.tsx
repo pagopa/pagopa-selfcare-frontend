@@ -1,21 +1,20 @@
 import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
+import { generatePath, Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { ArrowBack } from '@mui/icons-material';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import ROUTES from '../../../routes';
-import {
-  BundleResource,
-  CiBundleStatusEnum,
-  TypeEnum,
-} from '../../../api/generated/portal/BundleResource';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { BundleDetailsActionTypes, FormAction } from '../../../model/CommissionBundle';
+import {
+  BundleDetailsActionTypes,
+  BundleResource,
+  FormAction,
+} from '../../../model/CommissionBundle';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import {
@@ -27,14 +26,20 @@ import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
 import { useUserRole } from '../../../hooks/useUserRole';
+import {
+  CIBundleResource,
+  CiBundleStatusEnum,
+} from '../../../api/generated/portal/CIBundleResource';
+import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
+import { PSPBundleTaxonomy } from '../../../api/generated/portal/PSPBundleTaxonomy';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
 
-function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
+function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
 
-  if (bundleDetail?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
     return (
       <Alert severity={'error'} data-testid="alert-error-test" variant="outlined">
         {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
@@ -43,10 +48,12 @@ function RenderAlert({ bundleDetail }: { bundleDetail: BundleResource }) {
   }
   // eslint-disable-next-line functional/no-let
   let expiredFound = false;
-  bundleDetail?.transferCategoryList?.forEach((el) => {
-    const endDate = new Date(el.end_date);
-    if (endDate <= new Date()) {
-      expiredFound = true;
+  bundleDetail?.bundleTaxonomies?.forEach((el: PSPBundleTaxonomy) => {
+    if(el.endDate){
+      const endDate = new Date(el.endDate);
+      if (endDate <= new Date()) {
+        expiredFound = true;
+      }
     }
   });
   if (expiredFound) {
@@ -99,7 +106,7 @@ const BundleActionButtons = ({
       );
     }
     if (orgInfo.types.isEc) {
-      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.AVAILABLE) {
+      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE) {
         return (
           <>
             {bundleDetail.type === TypeEnum.PRIVATE && (
@@ -123,7 +130,7 @@ const BundleActionButtons = ({
           </>
         );
       }
-      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.ENABLED) {
+      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.ENABLED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_EC)}
@@ -135,7 +142,7 @@ const BundleActionButtons = ({
           </Button>
         );
       }
-      if (bundleDetail.ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
+      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_REQUEST_EC)}
@@ -180,13 +187,13 @@ const CommissionBundleDetailPage = () => {
         promise = deletePSPBundle(pspTaxCode, bundleId);
       } else if (showConfirmModal === BundleDetailsActionTypes.DELETE_BUNDLE_EC) {
         promise = deleteCIBundleSubscription(
-          commissionBundleDetail?.ciBundleId ?? '',
+          (commissionBundleDetail as CIBundleResource)?.ciBundleId ?? '',
           selectedParty?.fiscalCode ?? '',
           commissionBundleDetail?.name ?? ''
         );
       } else if (showConfirmModal === BundleDetailsActionTypes.DELETE_REQUEST_EC) {
         promise = deleteCIBundleRequest({
-          idBundleRequest: commissionBundleDetail?.ciRequestId ?? '',
+          idBundleRequest: (commissionBundleDetail as CIBundleResource)?.ciRequestId ?? '',
           ciTaxCode: selectedParty?.fiscalCode ?? '',
         });
       }

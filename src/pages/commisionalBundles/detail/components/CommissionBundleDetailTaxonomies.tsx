@@ -5,8 +5,8 @@ import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useState } from 'react';
-import { BundleResource } from '../../../../api/generated/portal/BundleResource';
 import { PaddedDrawer } from '../../../../components/PaddedDrawer';
+import { BundleResource, BundleTaxonomy } from '../../../../model/CommissionBundle';
 
 export default function CommissionBundleDetailTaxonomies({
   bundleDetail,
@@ -16,7 +16,7 @@ export default function CommissionBundleDetailTaxonomies({
   const { t } = useTranslation();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  const bundleTaxonomies = bundleDetail?.transferCategoryList ?? [];
+  const bundleTaxonomies = bundleDetail?.bundleTaxonomies ?? [];
 
   return (
     <Paper
@@ -34,22 +34,18 @@ export default function CommissionBundleDetailTaxonomies({
       </Typography>
 
       {bundleTaxonomies.length > 0 ? (
-        bundleTaxonomies
-          ?.filter((_, i) => i < 3)
-          ?.map((el, i) =>
-            i < 4 ? (
-              <Box
-                key={`taxonomy-${el.specific_built_in_data}`}
-                mt={1}
-                data-testid="taxonomy-column"
-              >
-                <Typography variant="body1" color="action.active">
-                  {el.service_type}
-                </Typography>
-                <Typography variant="body1" fontWeight={'fontWeightMedium'}>{el.specific_built_in_data}</Typography>
-              </Box>
-            ) : null
-          )
+        bundleTaxonomies?.slice(0, 3)?.map((el: BundleTaxonomy, i: number) =>
+          i < 4 ? (
+            <Box key={`taxonomy-${el.specificBuiltInData}`} mt={1} data-testid="taxonomy-column">
+              <Typography variant="body1" color="action.active">
+                {el.serviceType}
+              </Typography>
+              <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+                {el.specificBuiltInData}
+              </Typography>
+            </Box>
+          ) : null
+        )
       ) : (
         <Alert severity="info" data-testid="alert-test" sx={{ mt: 2 }}>
           {t('commissionBundlesPage.commissionBundleDetail.noTaxonomiesAlert')}
@@ -72,14 +68,16 @@ export default function CommissionBundleDetailTaxonomies({
               title={t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
               variantTitle="h5"
             />
-            {bundleTaxonomies.map((el, index) => (
-              <React.Fragment key={`taxonomies-list-${el.specific_built_in_data}`}>
+            {bundleTaxonomies.map((el: BundleTaxonomy, index: number) => (
+              <React.Fragment key={`taxonomies-list-${el.specificBuiltInData}`}>
                 {index !== 0 && <Divider />}
                 <Box mb={1} data-testid="taxonomy-drawer-column">
                   <Typography variant="body1" color="action.active">
-                    {el.service_type}
+                    {el.serviceType}
                   </Typography>
-                  <Typography variant="body1" fontWeight={'fontWeightMedium'}>{el.specific_built_in_data}</Typography>
+                  <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+                    {el.specificBuiltInData}
+                  </Typography>
                 </Box>
               </React.Fragment>
             ))}

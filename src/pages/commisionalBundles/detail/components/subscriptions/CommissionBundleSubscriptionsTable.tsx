@@ -26,8 +26,8 @@ import {
 import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
-import { BundleResource } from '../../../../../api/generated/portal/BundleResource';
 import {
+  BundleResource,
   PublicBundleCiSubscriptionDetailModel,
   SubscriptionStateType,
 } from '../../../../../model/CommissionBundle';

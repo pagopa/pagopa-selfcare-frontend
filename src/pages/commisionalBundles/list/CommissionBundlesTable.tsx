@@ -8,13 +8,12 @@ import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import ROUTES from '../../../routes';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { TypeEnum } from '../../../api/generated/portal/BundleResource';
 import TableEmptyState from '../../../components/Table/TableEmptyState';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
-import { BundlesResource } from '../../../api/generated/portal/BundlesResource';
 import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
-import { useUserRole } from '../../../hooks/useUserRole';
+import { BundleResource, BundlesResource } from '../../../model/CommissionBundle';
+import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 
 type Props = {
@@ -95,9 +94,8 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         promise
         .then((res) => {
           if (res?.bundles) {
-            const formattedBundles = res?.bundles?.map((el, ind) => ({
+            const formattedBundles = res?.bundles?.map((el: BundleResource) => ({
               ...el,
-              id: `bundle-${ind}`,
               touchpoint: el.touchpoint ?? 'ANY',
               paymentType: el.paymentType ?? 'ANY',
             }));
@@ -209,6 +207,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
             rowHeight={rowHeight}
             rows={listFiltered?.bundles ?? []}
             sortingMode="client"
+            getRowId={(el) => el.idBundle}
             // onSortModelChange={handleSortModelChange}
           />
         </div>

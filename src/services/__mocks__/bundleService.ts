@@ -1,7 +1,5 @@
-import { BundleResource } from '../../api/generated/portal/BundleResource';
 import { BundleCreateResponse } from '../../api/generated/portal/BundleCreateResponse';
 import { BundleRequest, TypeEnum } from '../../api/generated/portal/BundleRequest';
-import { BundlesResource } from '../../api/generated/portal/BundlesResource';
 import { Touchpoints } from '../../api/generated/portal/Touchpoints';
 import { mockedChannelsMerged } from './channelService';
 import { PublicBundleCISubscriptionsResource } from '../../api/generated/portal/PublicBundleCISubscriptionsResource';
@@ -10,7 +8,12 @@ import { PublicBundleCISubscriptionsDetail } from '../../api/generated/portal/Pu
 import { PublicBundleCiSubscriptionDetailModel } from '../../model/CommissionBundle';
 import { CIBundleFee } from '../../api/generated/portal/CIBundleFee';
 import { PublicBundleRequest } from '../../api/generated/portal/PublicBundleRequest';
-import { TransferCategoryRelationEnum } from '../../api/generated/portal/PspCiBundleAttribute';
+import { PSPBundleResource } from '../../api/generated/portal/PSPBundleResource';
+import { PSPBundleTaxonomy } from '../../api/generated/portal/PSPBundleTaxonomy';
+import { PSPBundlesResource } from '../../api/generated/portal/PSPBundlesResource';
+import { TransferCategoryRelationEnum } from '../../api/generated/portal/CIBundleAttribute';
+import { CIBundleResource, CiBundleStatusEnum } from '../../api/generated/portal/CIBundleResource';
+import { CIBundlesResource } from '../../api/generated/portal/CIBundlesResource';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -20,104 +23,79 @@ export const mockedTouchpoints: Touchpoints = {
   ],
 };
 
-export const mockedTaxonomyList = [
+export const mockedPSPTaxonomyList: Array<PSPBundleTaxonomy> = [
   {
-    ci_type_code: '07',
-    ci_type: 'PUBBLICHE AMMINISTRAZIONI CENTRALI',
-    macro_area_ci_progressive: '05',
-    macro_area_name: 'MINISTERO DEGLI ESTERI',
-    macro_area_description: 'Entrate a supporto del settore esteri',
-    service_type_code: '103',
-    service_type: 'Carta di Identità Elettronica',
-    legal_reason_collection: 'TS',
-    service_type_description: 'costo per il rilascio della CIE',
-    taxonomy_version: '36',
-    specific_built_in_data: '9/0705103TS/',
-    start_date: '2021-02-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: 'MINISTERO DEGLI ESTERI',
+    serviceType: 'Carta di Identità Elettronica',
+    specificBuiltInData: '9/0705103TS/',
+    endDate: '2080-01-01T23:59:59Z',
   },
   {
-    ci_type_code: '07',
-    ci_type: 'PUBBLICHE AMMINISTRAZIONI CENTRALI',
-    macro_area_ci_progressive: '05',
-    macro_area_name: 'MINISTERO DEGLI ESTERI',
-    macro_area_description: 'Entrate a supporto del settore esteri',
-    service_type_code: '102',
-    service_type: 'Documento di viaggio provvisorio',
-    legal_reason_collection: 'TS',
-    service_type_description: 'costo per il rilascio del documento di viaggio provvisorio',
-    taxonomy_version: '36',
-    specific_built_in_data: '9/0705102TS/',
-    start_date: '2021-02-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: 'MINISTERO DEGLI ESTERI',
+    serviceType: 'Documento di viaggio provvisorio',
+    specificBuiltInData: '9/0705102TS/',
+    endDate: '2080-01-01T23:59:59Z',
   },
   {
-    ci_type_code: '07',
-    ci_type: 'PUBBLICHE AMMINISTRAZIONI CENTRALI',
-    macro_area_ci_progressive: '12',
-    macro_area_name: 'MINISTERO DELLO SVULUPPO ECONOMICO',
-    macro_area_description:
-      'Entrate a supporto del settore politica industriale, di commercio e di comunicazioni.',
-    service_type_code: '103',
-    service_type: 'Autorizzazioni satellitari',
-    legal_reason_collection: 'SP',
-    service_type_description: 'Autorizzazioni  per collegamenti satellitari',
-    taxonomy_version: '36',
-    specific_built_in_data: '9/0712103SP/',
-    start_date: '2021-06-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: 'MINISTERO DELLO SVULUPPO ECONOMICO',
+    serviceType: 'Autorizzazioni satellitari',
+    specificBuiltInData: '9/0712103SP/',
+    endDate: '2080-01-01T23:59:59Z',
   },
   {
-    ci_type_code: '10',
-    ci_type: "AUTORITA' AMMINISTRATIVE INDIPENDENTI",
-    macro_area_ci_progressive: '01',
-    macro_area_name: "AUTORITA' NAZIONALE ANTICORRUZIONE (ANAC)",
-    macro_area_description: 'Contratti pubblici Anticorruzione e Trasparenza',
-    service_type_code: '100',
-    service_type: 'Contribuzione gara OE',
-    legal_reason_collection: 'TS',
-    service_type_description:
-      "Contributo da versare da parte di operatore economico (OE) che intende partecipare a procedure di scelta del contraente per l'affidamento di lavori, servizi e forniture",
-    taxonomy_version: '36',
-    specific_built_in_data: '9/1001100TS/',
-    start_date: '2021-03-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: "AUTORITA' NAZIONALE ANTICORRUZIONE (ANAC)",
+    serviceType: 'Contribuzione gara OE',
+    specificBuiltInData: '9/1001100TS/',
+    endDate: '2080-01-01T23:59:59Z',
   },
   {
-    ci_type_code: '12',
-    ci_type: 'AGENZIE FISCALI',
-    macro_area_ci_progressive: '01',
-    macro_area_name: 'AGENZIA DELLE ENTRATE (AdE)',
-    macro_area_description:
-      "Agenzia fiscale della Pubblica Amministrazione Italiana, dipendente dal Ministero dell'Economia e delle Finanze, che svolge le funzioni relative ad accertamenti e controlli fiscali e alla gestione dei tributi",
-    service_type_code: '106',
-    service_type: 'Registrazione Atti',
-    legal_reason_collection: 'IM',
-    service_type_description: 'Spese per registrazione atti',
-    taxonomy_version: '36',
-    specific_built_in_data: '9/1201106IM/',
-    start_date: '2022-01-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: 'AGENZIA DELLE ENTRATE (AdE)',
+    serviceType: 'Registrazione Atti',
+    specificBuiltInData: '9/1201106IM/',
+    endDate: '2080-01-01T23:59:59Z',
   },
   {
-    ci_type_code: '07',
-    ci_type: 'PUBBLICHE AMMINISTRAZIONI CENTRALI',
-    macro_area_ci_progressive: '02',
-    macro_area_name: 'MINISTERO DELLA GIUSTIZIA',
-    macro_area_description: 'Entrate a supporto del settore giustizia',
-    service_type_code: '155',
-    service_type: 'CONTRIBUTO DI SEGRETERIA TENUTA ALBO DEGLI AMMINISTRATORI GIUDIZIARI',
-    legal_reason_collection: 'TS',
-    service_type_description:
-      'CONTRIBUTO DI SEGRETERIA TENUTA ALBO DEGLI AMMINISTRATORI GIUDIZIARI',
-    taxonomy_version: '36',
-    specific_built_in_data: '9/0702155TS/',
-    start_date: '2024-02-01T00:00:00Z',
-    end_date: '2080-01-01T23:59:59Z',
+    macroAreaName: 'MINISTERO DELLA GIUSTIZIA',
+    serviceType: 'CONTRIBUTO DI SEGRETERIA TENUTA ALBO DEGLI AMMINISTRATORI GIUDIZIARI',
+    specificBuiltInData: '9/0702155TS/',
+    endDate: '2080-01-01T23:59:59Z',
   },
 ];
 
-const baseCommissionBundlePspDetail: BundleResource = {
+export const mockedCIBundleFeeList: Array<CIBundleFee> = [
+  {
+    paymentAmount: 0,
+    serviceType: 'Carta di Identità Elettronica',
+    specificBuiltInData: '9/0705103TS/',
+  },
+  {
+    paymentAmount: 0,
+    serviceType: 'Documento di viaggio provvisorio',
+    specificBuiltInData: '9/0705102TS/',
+  },
+  {
+    paymentAmount: 0,
+    serviceType: 'Autorizzazioni satellitari',
+    specificBuiltInData: '9/0712103SP/',
+  },
+  {
+    paymentAmount: 0,
+    serviceType: 'Contribuzione gara OE',
+    specificBuiltInData: '9/1001100TS/',
+  },
+  {
+    paymentAmount: 0,
+    serviceType: 'Registrazione Atti',
+    specificBuiltInData: '9/1201106IM/',
+  },
+  {
+    paymentAmount: 0,
+    serviceType: 'CONTRIBUTO DI SEGRETERIA TENUTA ALBO DEGLI AMMINISTRATORI GIUDIZIARI',
+    specificBuiltInData: '9/0702155TS/',
+  },
+];
+
+const baseCommissionBundlePspDetail: PSPBundleResource = {
   idBundle: 'idBundle',
   digitalStamp: false,
   digitalStampRestriction: true,
@@ -130,11 +108,64 @@ const baseCommissionBundlePspDetail: BundleResource = {
   maxPaymentAmount: 150100,
   paymentType: 'MYBK',
   touchpoint: 'PSP',
-  transferCategoryList: mockedTaxonomyList,
+  bundleTaxonomies: mockedPSPTaxonomyList,
   validityDateFrom: new Date('2025-02-17'),
   validityDateTo: new Date('2028-02-22'),
   insertedDate: new Date('2024-02-15T09:36:04.792731104'),
   lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
+};
+
+export const mockedCommissionBundlePspDetailGlobal: PSPBundleResource = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.GLOBAL,
+};
+
+export const mockedCommissionBundlePspDetailPrivate: PSPBundleResource = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.PRIVATE,
+};
+
+export const mockedCommissionBundlePspDetailPublic: PSPBundleResource = {
+  ...baseCommissionBundlePspDetail,
+  type: TypeEnum.PUBLIC,
+};
+
+const baseCommissionBundleCIDetail: CIBundleResource = {
+  idBundle: 'idBundle',
+  digitalStamp: false,
+  digitalStampRestriction: true,
+  idChannel: 'idChannel',
+  idBrokerPsp: 'idBrokerPsp',
+  name: 'Commission Bundle Name',
+  description: 'Commission bundle description',
+  paymentAmount: 5500,
+  minPaymentAmount: 4000,
+  maxPaymentAmount: 150100,
+  paymentType: 'MYBK',
+  touchpoint: 'PSP',
+  bundleTaxonomies: mockedCIBundleFeeList,
+  validityDateFrom: new Date('2025-02-17'),
+  validityDateTo: new Date('2028-02-22'),
+  insertedDate: new Date('2024-02-15T09:36:04.792731104'),
+  lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
+  ciBundleId: "ciBundleId",
+  ciBundleStatus: CiBundleStatusEnum.AVAILABLE,
+  ciRequestId: "ciRequestId"
+};
+
+export const mockedCommissionBundleCiDetailGlobal: CIBundleResource = {
+  ...baseCommissionBundleCIDetail,
+  type: TypeEnum.GLOBAL,
+};
+
+export const mockedCommissionBundleCiDetailPrivate: CIBundleResource = {
+  ...baseCommissionBundleCIDetail,
+  type: TypeEnum.PRIVATE,
+};
+
+export const mockedCommissionBundleCiDetailPublic: CIBundleResource = {
+  ...baseCommissionBundleCIDetail,
+  type: TypeEnum.PUBLIC,
 };
 
 export const mockedBundleRequest: BundleRequest = {
@@ -149,29 +180,24 @@ export const mockedBundleRequest: BundleRequest = {
   maxPaymentAmount: 150100,
   paymentType: 'Bonifico - SEPA',
   touchpoint: 'ANY',
-  transferCategoryList: mockedTaxonomyList.map((el) => el.specific_built_in_data),
+  transferCategoryList: mockedPSPTaxonomyList.map((el) => el.specificBuiltInData!),
   type: TypeEnum.GLOBAL,
   validityDateFrom: new Date('2024-02-17'),
   validityDateTo: new Date('2024-02-22'),
 };
 
-export const mockedCommissionBundlePspDetailGlobal: BundleResource = {
-  ...baseCommissionBundlePspDetail,
-  type: TypeEnum.GLOBAL,
-};
-
-export const mockedCommissionBundlePspDetailPrivate: BundleResource = {
-  ...baseCommissionBundlePspDetail,
-  type: TypeEnum.PRIVATE,
-};
-
-export const mockedCommissionBundlePspDetailPublic: BundleResource = {
-  ...baseCommissionBundlePspDetail,
-  type: TypeEnum.PUBLIC,
-};
-
-export const mockedCommissionBundlePspList: BundlesResource = {
+export const mockedCommissionBundlePspList: PSPBundlesResource = {
   bundles: [mockedCommissionBundlePspDetailGlobal],
+  pageInfo: {
+    items_found: 1,
+    limit: 10,
+    page: 0,
+    total_pages: 1,
+  },
+};
+
+export const mockedCommissionBundleCiList: CIBundlesResource = {
+  bundles: [mockedCommissionBundleCiDetailGlobal],
   pageInfo: {
     items_found: 1,
     limit: 10,
@@ -200,9 +226,9 @@ export const mockedCiSubscriptionList: PublicBundleCISubscriptionsResource = {
 };
 
 export const mockedCiBundleFee: CIBundleFee = {
-  service_type: 'service type',
-  specific_built_in_data: 'specific_build_in_data',
-  payment_amount: 50,
+  serviceType: 'service type',
+  specificBuiltInData: 'specific_build_in_data',
+  paymentAmount: 50,
 };
 
 export const mockedCiSubscriptionDetail: PublicBundleCISubscriptionsDetail = {
@@ -216,26 +242,29 @@ export const mockedCiSubscriptionIntersectDetail: PublicBundleCiSubscriptionDeta
 };
 
 export const mockedCIBundleRequest: PublicBundleRequest = {
-  idBundleRequest: "bundleRequestId",
-  idBundle: "idBundle",
-  idPsp: "idPsp",
-  ciFiscalCode: "ciFiscalCode",
+  idBundleRequest: 'bundleRequestId',
+  idBundle: 'idBundle',
+  idPsp: 'idPsp',
+  ciFiscalCode: 'ciFiscalCode',
   attributes: [
     {
       maxPaymentAmount: 500,
-      transferCategory: mockedTaxonomyList[0].specific_built_in_data,
-      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL
-    }
-  ]
+      transferCategory: mockedPSPTaxonomyList[0].specificBuiltInData,
+      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
+    },
+  ],
 };
 
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
   Promise.resolve(mockedChannelsIdList);
 
-export const getCommissionBundlePsp = (_brokerCode: string): Promise<BundlesResource> =>
+export const getCommissionBundlePsp = (_brokerCode: string): Promise<PSPBundlesResource> =>
   Promise.resolve(mockedCommissionBundlePspList);
 
-export const getCommissionBundleDetails = (type?: string): Promise<BundleResource> =>
+export const getCommissionBundleCi = (_brokerCode: string): Promise<CIBundlesResource> =>
+  Promise.resolve(mockedCommissionBundleCiList);
+
+export const getCommissionBundleDetails = (type?: string): Promise<PSPBundleResource> =>
   Promise.resolve(
     !type || type === TypeEnum.GLOBAL
       ? mockedCommissionBundlePspDetailGlobal
@@ -251,7 +280,7 @@ export const createCommissionBundle = (_body: BundleRequest): Promise<BundleCrea
 export const updateCommissionBundle = (
   _name: string,
   _commissionBundle: BundleRequest
-): Promise<BundleResource> => Promise.resolve(mockedCommissionBundlePspDetailGlobal);
+): Promise<PSPBundleResource> => Promise.resolve(mockedCommissionBundlePspDetailGlobal);
 
 export const getTouchpoints = (): Promise<Touchpoints> => Promise.resolve(mockedTouchpoints);
 

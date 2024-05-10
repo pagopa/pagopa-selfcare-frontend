@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
-import { BundleResource } from '../../api/generated/portal/BundleResource';
+import { BundleResource } from '../../model/CommissionBundle';
 
 const initialState: BundleResource = {};
 

@@ -1,4 +1,10 @@
+import { CIBundleFee } from "../api/generated/portal/CIBundleFee";
+import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
+import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
 import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
+import { PSPBundleResource } from "../api/generated/portal/PSPBundleResource";
+import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
+import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
 import { PublicBundleCISubscriptionsDetail } from "../api/generated/portal/PublicBundleCISubscriptionsDetail";
 
 export enum FormAction {
@@ -45,3 +51,7 @@ export enum BundleDetailsActionTypes {
   DELETE_REQUEST_EC = "deleteRequestEc",
   CREATE_REQUEST_EC = "createRequestEc"
 }
+
+export type BundlesResource = PSPBundlesResource | CIBundlesResource;
+export type BundleResource =  PSPBundleResource | CIBundleResource;
+export type BundleTaxonomy = PSPBundleTaxonomy | CIBundleFee;

@@ -74,14 +74,12 @@ import { Delegation } from './generated/portal/Delegation';
 import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
 import { ProblemJson } from './generated/portal/ProblemJson';
-import { BundlesResource } from './generated/portal/BundlesResource';
 import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
 import { TaxonomyGroups } from './generated/portal/TaxonomyGroups';
 import { createClient, WithDefaultsT } from './generated/portal/client';
 import { BundleRequest } from './generated/portal/BundleRequest';
 import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
-import { BundleResource } from './generated/portal/BundleResource';
 import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
@@ -91,6 +89,9 @@ import { TestStationResource } from './generated/portal/TestStationResource';
 import { TestStationTypeEnum } from './generated/portal/StationTestDto';
 import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
 import { PaymentTypes } from './generated/portal/PaymentTypes';
+import { PSPBundleResource } from './generated/portal/PSPBundleResource';
+import { CIBundlesResource } from './generated/portal/CIBundlesResource';
+import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -923,7 +924,7 @@ export const BackofficeApi = {
     bundleName: string,
     page: number,
     pspCode: string
-  ): Promise<BundlesResource> => {
+  ): Promise<PSPBundlesResource> => {
     const result = await backofficeClient.getBundlesByPSP({
       'bundle-type': [bundleType],
       limit: pageLimit,
@@ -970,7 +971,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getBundleDetailByPSP: async (pspTaxCode: string, bundleId: string): Promise<BundleResource> => {
+  getBundleDetailByPSP: async (pspTaxCode: string, bundleId: string): Promise<PSPBundleResource> => {
     const result = await backofficeClient.getBundleDetailByPSP({
       'psp-tax-code': pspTaxCode,
       'id-bundle': bundleId,
@@ -1010,7 +1011,7 @@ export const BackofficeApi = {
     bundleName: string,
     page: number,
     ciTaxCode: string | undefined
-  ): Promise<BundlesResource> => {
+  ): Promise<CIBundlesResource> => {
     const result = await backofficeClient.getCisBundles({
       bundleType,
       limit: pageLimit,

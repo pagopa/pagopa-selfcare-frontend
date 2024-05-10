@@ -9,6 +9,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Taxonomy } from '../../../../api/generated/portal/Taxonomy';
 import GenericModal from '../../../../components/Form/GenericModal';
+import { PSPBundleTaxonomy } from '../../../../api/generated/portal/PSPBundleTaxonomy';
 import { BundleTaxonomiesTable } from './BundleTaxonomiesTable';
 import { BundleTaxonomiesDrawer } from './drawer/BundleTaxonomiesDrawer';
 
@@ -19,10 +20,10 @@ export interface TaxonomyToRemove {
 
 type Props = {
   formik: FormikProps<BundleRequest>;
-  bundleTaxonomies: Array<Taxonomy>;
+  bundleTaxonomies: Array<PSPBundleTaxonomy>;
 };
 
-const reduceTaxonomies = (taxonomies: Array<Taxonomy>) =>
+const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomy>) =>
   taxonomies.reduce((result: any, taxonomy: any) => {
     const macro_area_name = taxonomy.macro_area_name;
     const newResult: any = {

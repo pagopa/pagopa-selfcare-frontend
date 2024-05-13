@@ -1,11 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import EngineeringOutlinedIcon from '@mui/icons-material/EngineeringOutlined';
 
-export default function MaintenancePage() {
-  const { t } = useTranslation();
-
+export default function MaintenancePage({ message }: Readonly<{ message: string }>) {
   return (
     <Box
       width="100%"
@@ -14,10 +11,11 @@ export default function MaintenancePage() {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
+      px={10}
     >
       <EngineeringOutlinedIcon sx={{ fill: 'rgb(0, 197, 202)', width: 140, height: 140 }} />
       <Typography variant="body1">
-         <div dangerouslySetInnerHTML={{ __html: t(`general.maintenancePageText`) }} />
+        <div dangerouslySetInnerHTML={{ __html: message }} />
       </Typography>
     </Box>
   );

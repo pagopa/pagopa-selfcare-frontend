@@ -97,7 +97,7 @@ const ConnectionRadioLabel = ({ type }: { type: ConnectionType }) => {
 };
 
 const getDefaultConnectionType = (isEdit: boolean, stationDetail?: StationOnCreation) => {
-  if (!isEdit || stationDetail?.service?.includes('gpd')) {
+  if (!isEdit || stationDetail?.service === undefined || stationDetail.service.includes('gpd')) {
     return ConnectionType.ASYNC;
   }
   return ConnectionType.SYNC;
@@ -329,7 +329,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       values.brokerCode !== '' &&
       values.primitiveVersion.toString() !== '' &&
       (connectionType === ConnectionType.SYNC
-        ? (values.targetConcat && values.targetPofConcat) || values.redirectConcat // TODO VERIFY CONDITION
+        ? values.targetConcat || values.redirectConcat
+          ? values.targetConcat && values.redirectConcat
+          : values.targetPofConcat
         : true);
     const operatorConditions = values.version?.toString() !== '' && values.password !== '';
 

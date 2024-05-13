@@ -1,12 +1,13 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import { Box, Pagination } from '@mui/material';
+import { GridColDef, GridSortModel } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory } from 'react-router';
 import { generatePath } from 'react-router-dom';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import TableEmptyState from '../../../components/Table/TableEmptyState';
+import { useUserRole } from '../../../hooks/useUserRole';
 import { LOADING_TASK_CHANNELS_LIST } from '../../../utils/constants';
 import ROUTES from '../../../routes';
 import { getChannelsMerged } from '../../../services/channelService';
@@ -15,7 +16,6 @@ import { WrapperChannelsResource } from '../../../api/generated/portal/WrapperCh
 import { useAppSelector } from '../../../redux/hooks';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './ChannelsTableColumns';
-import ChannelTableEmpty from './ChannelTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -24,11 +24,11 @@ const emptyChannelsResource: WrapperChannelsResource = {
   channels: [],
   page_info: {},
 };
-
+const componentPath = 'channelsPage';
 export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter: string }) {
   const { t } = useTranslation();
   const history = useHistory();
-
+  const { userIsPagopaOperator } = useUserRole();
   const partySelected = useAppSelector(partiesSelectors.selectPartySelected);
 
   const onRowClick = (channelIdRow: string) => {
@@ -99,94 +99,65 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
   };
 
   return (
-    <React.Fragment>
-      <Box
-        id="ChannelsSearchTableBox"
-        sx={{
-          position: 'relative',
-          width: '100% !important',
-          border: 'none',
-        }}
-        justifyContent="start"
-      >
-        {error && !loading ? (
-          <>{error}</>
-        ) : !error && !loading && channels?.channels?.length === 0 ? (
-          <>
-            <ChannelTableEmpty></ChannelTableEmpty>
-          </>
-        ) : (
-          <CustomDataGrid
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableSelectionOnClick
-            autoHeight={true}
-            className="CustomDataGrid"
-            columnBuffer={5}
-            columns={columns}
-            components={{
-              Pagination: () => (
-                <>
-                  <Pagination
-                    color="primary"
-                    count={channels?.page_info?.total_pages ?? 1}
-                    page={pagePaginator + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) => {
-                      setPage(value - 1);
-                      setPagePaginator(value - 1);
-                    }}
-                  />
-                </>
-              ),
-              Toolbar: () => <></>,
-              NoRowsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
-              NoResultsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      <Trans i18nKey="channelsPage.table.noResults">Nessun risultato</Trans>
-                    </Typography>
-                  </Box>
-                </>
-              ),
-            }}
-            componentsProps={{
-              toolbar: {
-                quickFilterProps: { debounceMs: 500 },
-              },
-              basePopper: {
-                sx: {
-                  '& .MuiDataGrid-menuList': {
-                    boxShadow: `0px 0px 45px rgba(0, 0, 0, 0.1)`,
-                  },
+    <Box
+      id="ChannelsSearchTableBox"
+      sx={{
+        position: 'relative',
+        width: '100% !important',
+        border: 'none',
+      }}
+      justifyContent="start"
+    >
+      {error && !loading ? (
+        <>{error}</>
+      ) : !error && !loading && channels?.channels?.length === 0 ? (
+        <TableEmptyState
+          componentName={componentPath}
+          linkToRedirect={!userIsPagopaOperator ? ROUTES.CHANNEL_ADD : undefined}
+        />
+      ) : (
+        <CustomDataGrid
+          disableColumnFilter
+          disableColumnSelector
+          disableDensitySelector
+          disableSelectionOnClick
+          autoHeight={true}
+          className="CustomDataGrid"
+          columnBuffer={5}
+          columns={columns}
+          components={{
+            Pagination: () => (
+              <Pagination
+                color="primary"
+                count={channels?.page_info?.total_pages ?? 1}
+                page={pagePaginator + 1}
+                onChange={(_event: ChangeEvent<unknown>, value: number) => {
+                  setPage(value - 1);
+                  setPagePaginator(value - 1);
+                }}
+              />
+            ),
+          }}
+          componentsProps={{
+            basePopper: {
+              sx: {
+                '& .MuiDataGrid-menuList': {
+                  boxShadow: `0px 0px 45px rgba(0, 0, 0, 0.1)`,
                 },
               },
-            }}
-            getRowId={(r) => r.channel_code}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            paginationMode="server"
-            rowCount={channels.channels!.length}
-            rowHeight={rowHeight}
-            rows={channels.channels as any}
-            sortingMode="server"
-            onSortModelChange={handleSortModelChange}
-          />
-        )}
-      </Box>
-    </React.Fragment>
+            },
+          }}
+          getRowId={(r) => r.channel_code}
+          headerHeight={headerHeight}
+          hideFooterSelectedRowCount={true}
+          paginationMode="server"
+          rowCount={channels.channels!.length}
+          rowHeight={rowHeight}
+          rows={channels.channels as any}
+          sortingMode="server"
+          onSortModelChange={handleSortModelChange}
+        />
+      )}
+    </Box>
   );
 }

@@ -728,8 +728,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       <ConfirmModal
         title={
           userIsPagopaOperator
-            ? t('addEditChannelPage.confirmModal.channelConfiguration')
-            : t('addEditStationPage.confirmModal.title')
+            ? t('addEditChannelPage.addForm.confirmModal.channelConfiguration')
+            : t('addEditChannelPage.addForm.confirmModal.title')
         }
         message={
           userIsPagopaOperator ? (
@@ -743,12 +743,8 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           )
         }
         openConfirmModal={showConfirmModal}
-        onConfirmLabel={
-          userIsPagopaOperator
-            ? t('addEditChannelPage.confirmModal.confirmButtonOpe')
-            : t('addEditChannelPage.confirmModal.confirmButton')
-        }
-        onCloseLabel={t('addEditChannelPage.confirmModal.cancelButton')}
+        onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
+        onCloseLabel={t('general.turnBack')}
         handleCloseConfirmModal={() => setShowConfirmModal(false)}
         handleConfrimSubmit={async () => {
           await submit(formik.values);

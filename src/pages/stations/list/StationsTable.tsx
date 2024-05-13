@@ -1,17 +1,19 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
+import { Box, Link, Pagination, Typography } from '@mui/material';
+import { GridColDef, GridSortModel } from '@mui/x-data-grid';
+import { generatePath, Link as RouterLink } from 'react-router-dom';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { WrapperStationsResource } from '../../../api/generated/portal/WrapperStationsResource';
 import { getStationsMerged } from '../../../services/stationService';
 import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import TableEmptyState from '../../../components/Table/TableEmptyState';
+import { useUserRole } from '../../../hooks/useUserRole';
+import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
 import { buildColumnDefs } from './StationsTableColumns';
-import StationTableEmpty from './StationTableEmpty';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -21,9 +23,10 @@ const emptyStationsResource: WrapperStationsResource = {
   pageInfo: {},
 };
 
-export default function StationsTable({ stationCode }: { stationCode: string }) {
+const componentPath = 'stationsPage';
+export default function StationsTable({ stationCode }: Readonly<{ stationCode: string }>) {
   const { t } = useTranslation();
-
+  const { userIsPagopaOperator } = useUserRole();
   const columns: Array<GridColDef> = buildColumnDefs(t);
   const [loading, setLoadingTable] = useState(false);
   const [error, setError] = useState(false);
@@ -77,86 +80,53 @@ export default function StationsTable({ stationCode }: { stationCode: string }) 
   };
 
   return (
-    <React.Fragment>
-      <Box
-        id="StationsSearchTableBox"
-        sx={{
-          position: 'relative',
-          width: '100% !important',
-          border: 'none',
-        }}
-        justifyContent="start"
-      >
-        {error && !loading ? (
-          <>{error}</>
-        ) : !error && !loading && stations.stationsList.length === 0 ? (
-          <StationTableEmpty />
-        ) : (
-          <CustomDataGrid
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableSelectionOnClick
-            autoHeight={true}
-            className="CustomDataGrid"
-            columnBuffer={5}
-            columns={columns}
-            components={{
-              Pagination: () => (
-                <>
-                  <Pagination
-                    color="primary"
-                    count={stations?.pageInfo?.total_pages ?? 1}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
-                  />
-                </>
-              ),
-              NoRowsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="channelsPage.table.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="channelsPage.table.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
-              // eslint-disable-next-line sonarjs/no-identical-functions
-              NoResultsOverlay: () => (
-                <>
-                  <Box p={2} sx={{ textAlign: 'center', backgroundColor: '#FFFFFF' }}>
-                    <Typography variant="body2">
-                      {loading ? (
-                        <Trans i18nKey="stationsPage.loading">Loading...</Trans>
-                      ) : (
-                        <Trans i18nKey="stationsPage.noResults">No results</Trans>
-                      )}
-                    </Typography>
-                  </Box>
-                </>
-              ),
-            }}
-            componentsProps={{
-              toolbar: {
-                quickFilterProps: { debounceMs: 500 },
-              },
-            }}
-            getRowId={(r) => r.stationCode}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            paginationMode="server"
-            rowCount={stations.stationsList.length}
-            rowHeight={rowHeight}
-            rows={stations.stationsList}
-            sortingMode="server"
-            onSortModelChange={handleSortModelChange}
-          />
-        )}
-      </Box>
-    </React.Fragment>
+    <Box
+      id="StationsSearchTableBox"
+      sx={{
+        position: 'relative',
+        width: '100% !important',
+        border: 'none',
+      }}
+      justifyContent="start"
+    >
+      {error && !loading ? (
+        <>{error}</>
+      ) : !error && !loading && stations.stationsList.length === 0 ? (
+        <TableEmptyState
+          componentName={componentPath}
+          linkToRedirect={!userIsPagopaOperator ? ROUTES.STATION_ADD : undefined}
+        />
+      ) : (
+        <CustomDataGrid
+          disableColumnFilter
+          disableColumnSelector
+          disableDensitySelector
+          disableSelectionOnClick
+          autoHeight={true}
+          className="CustomDataGrid"
+          columnBuffer={5}
+          columns={columns}
+          components={{
+            Pagination: () => (
+              <Pagination
+                color="primary"
+                count={stations?.pageInfo?.total_pages ?? 1}
+                page={page + 1}
+                onChange={(_event: ChangeEvent<unknown>, value: number) => setPage(value - 1)}
+              />
+            ),
+          }}
+          getRowId={(r) => r.stationCode}
+          headerHeight={headerHeight}
+          hideFooterSelectedRowCount={true}
+          paginationMode="server"
+          rowCount={stations.stationsList.length}
+          rowHeight={rowHeight}
+          rows={stations.stationsList}
+          sortingMode="server"
+          onSortModelChange={handleSortModelChange}
+        />
+      )}
+    </Box>
   );
 }

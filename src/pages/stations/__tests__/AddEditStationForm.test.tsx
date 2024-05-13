@@ -125,7 +125,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
-    const targetConcat = screen.getByTestId('targetConcat-test') as HTMLInputElement;
+    const targetPofConcat = screen.getByTestId('targetPofConcat-test') as HTMLInputElement;
 
     expect(stationCode.value).toBe(mockedStationCode.stationCode);
     fireEvent.change(stationCode, { target: { value: 'station Code' } });
@@ -133,18 +133,18 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     expect(primitiveVersion.value).toBe('2');
 
-    expect(targetConcat.value).toBe('');
+    expect(targetPofConcat.value).toBe('');
 
     await waitFor(
       () =>
         userEvent.type(
-          screen.getByTestId('targetConcat-test'),
+          targetPofConcat,
           'https:www.pagopa.it:8080/pathTest'
         ),
       { timeout: 5000 }
     );
 
-    await waitFor(() => expect(targetConcat.value).toBe('https:www.pagopa.it:8080/pathTest'));
+    await waitFor(() => expect(targetPofConcat.value).toBe('https:www.pagopa.it:8080/pathTest'));
 
     const continueBtn = screen.getByText('general.confirm');
     fireEvent.click(continueBtn);
@@ -154,11 +154,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.click(continueBtn);
 
-    const confirmBtn = screen.getByText('general.confirm');
-    fireEvent.click(confirmBtn);
-
-    //const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButton');
-    //fireEvent.click(confirmModalBtn);
+    const confirmModalBtn = screen.getByTestId("confirm-button-modal-test");
+    fireEvent.click(confirmModalBtn);
 
     //expect(createWrapperStation).toBeCalledTimes(1);
   });
@@ -251,8 +248,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const confirmBtn = screen.getByText('general.confirm');
     fireEvent.click(confirmBtn);
 
-//    const confirmModalBtn = screen.getByText('addEditStationPage.confirmModal.confirmButton');
-//    fireEvent.click(confirmModalBtn);
+    const confirmModalBtn = screen.getByTestId("confirm-button-modal-test");
+    fireEvent.click(confirmModalBtn);
 
 //    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
   });

@@ -28,8 +28,6 @@ export default function StationsTable({ stationCode }: Readonly<{ stationCode: s
   const { t } = useTranslation();
   const { userIsPagopaOperator } = useUserRole();
   const columns: Array<GridColDef> = buildColumnDefs(t);
-  const [loading, setLoadingTable] = useState(false);
-  const [error, setError] = useState(false);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
@@ -39,14 +37,9 @@ export default function StationsTable({ stationCode }: Readonly<{ stationCode: s
 
   const brokerCode = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
 
-  const setLoadingStatus = (status: boolean) => {
-    setLoading(status);
-    setLoadingTable(status);
-  };
-
   useEffect(() => {
     if (brokerCode) {
-      setLoadingStatus(true);
+      setLoading(true);
       getStationsMerged(
         page,
         brokerCode,
@@ -56,7 +49,6 @@ export default function StationsTable({ stationCode }: Readonly<{ stationCode: s
       )
         .then((res) => {
           setStations(res);
-          setError(false);
         })
         .catch((reason) => {
           addError({
@@ -66,10 +58,9 @@ export default function StationsTable({ stationCode }: Readonly<{ stationCode: s
             techDescription: `An error occurred while retrieving stations`,
             toNotify: true,
           });
-          setError(true);
           setStations(emptyStationsResource);
         })
-        .finally(() => setLoadingStatus(false));
+        .finally(() => setLoading(false));
     }
   }, [page, stationCode, brokerCode, stationCodeSort]);
 
@@ -89,9 +80,7 @@ export default function StationsTable({ stationCode }: Readonly<{ stationCode: s
       }}
       justifyContent="start"
     >
-      {error && !loading ? (
-        <>{error}</>
-      ) : !error && !loading && stations.stationsList.length === 0 ? (
+      {stations?.stationsList?.length === 0 ? (
         <TableEmptyState
           componentName={componentPath}
           linkToRedirect={!userIsPagopaOperator ? ROUTES.STATION_ADD : undefined}

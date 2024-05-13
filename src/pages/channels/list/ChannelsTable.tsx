@@ -36,14 +36,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
   };
 
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
-  const [loading, setLoading] = useState(false);
   const setLoadingOverlay = useLoading(LOADING_TASK_CHANNELS_LIST);
-  const [error, setError] = useState(false);
-
-  const setLoadingStatus = (status: boolean) => {
-    setLoading(status);
-    setLoadingOverlay(status);
-  };
 
   const [channels, setChannels] = useState<WrapperChannelsResource>(emptyChannelsResource);
   const [page, setPage] = useState(0);
@@ -63,7 +56,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
 
   const fetchChannels = (pageParam: number) => {
     if (brokerCode) {
-      setLoadingStatus(true);
+      setLoadingOverlay(true);
       getChannelsMerged(
         pageParam,
         brokerCode,
@@ -73,7 +66,6 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
       )
         .then((r) => {
           setChannels(r);
-          setError(false);
         })
         .catch((reason) => {
           handleErrors([
@@ -85,10 +77,9 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
               toNotify: true,
             },
           ]);
-          setError(true);
           setChannels(emptyChannelsResource);
         })
-        .finally(() => setLoadingStatus(false));
+        .finally(() => setLoadingOverlay(false));
     }
   };
 
@@ -108,9 +99,7 @@ export default function ChannelsTable({ channelCodeFilter }: { channelCodeFilter
       }}
       justifyContent="start"
     >
-      {error && !loading ? (
-        <>{error}</>
-      ) : !error && !loading && channels?.channels?.length === 0 ? (
+      {channels?.channels?.length === 0 ? (
         <TableEmptyState
           componentName={componentPath}
           linkToRedirect={!userIsPagopaOperator ? ROUTES.CHANNEL_ADD : undefined}

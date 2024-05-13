@@ -96,12 +96,11 @@ const ConnectionRadioLabel = ({ type }: { type: ConnectionType }) => {
   );
 };
 
-const getDefaultConnectionType = (stationDetail?: StationOnCreation) => {
-  if (stationDetail?.service?.includes('gpd')) {
-    // TODO VERIFY IF GPD IS TO BE CHECKED ONLY IN SERVICE PROPERTY
-    return ConnectionType.SYNC;
+const getDefaultConnectionType = (isEdit: boolean, stationDetail?: StationOnCreation) => {
+  if (!isEdit || stationDetail?.service?.includes('gpd')) {
+    return ConnectionType.ASYNC;
   }
-  return ConnectionType.ASYNC;
+  return ConnectionType.SYNC;
 };
 
 const componentPath = 'addEditStationPage.addForm';
@@ -132,7 +131,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const [validatingPof, setValidatingPof] = useState<boolean>(false);
 
   const [connectionType, setConnectionType] = useState<ConnectionType>(
-    getDefaultConnectionType(stationDetail)
+    getDefaultConnectionType(formAction === StationFormAction.Edit, stationDetail)
   );
 
   const isTesting = useFlagValue('test-stations');
@@ -330,7 +329,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       values.brokerCode !== '' &&
       values.primitiveVersion.toString() !== '' &&
       (connectionType === ConnectionType.SYNC
-        ? values.targetConcat || values.targetPofConcat || values.redirectConcat // TODO VERIFY CONDITION
+        ? (values.targetConcat && values.targetPofConcat) || values.redirectConcat // TODO VERIFY CONDITION
         : true);
     const operatorConditions = values.version?.toString() !== '' && values.password !== '';
 
@@ -573,7 +572,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   useEffect(() => {
     if (stationDetail) {
-      setConnectionType(getDefaultConnectionType(stationDetail));
+      setConnectionType(
+        getDefaultConnectionType(formAction === StationFormAction.Edit, stationDetail)
+      );
       const category = getStationCategoryFromDetail(stationDetail, env);
       if (category === StationCategory.AsyncGPD) {
         setGDP(true);
@@ -1028,11 +1029,9 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
                       endAdornment: (
                         <InputAdornment position="end">
                           {testPofResult !== undefined &&
-                          testPofResult.testResult === TestResultEnum.SUCCESS ? (
-                            <CheckIcon sx={{ color: 'success.main' }} />
-                          ) : (
-                            ''
-                          )}
+                            testPofResult.testResult === TestResultEnum.SUCCESS && (
+                              <CheckIcon sx={{ color: 'success.main' }} />
+                            )}
                         </InputAdornment>
                       ),
                     }}

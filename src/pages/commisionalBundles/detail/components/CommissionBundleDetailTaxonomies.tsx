@@ -24,7 +24,7 @@ const TaxonomyBox = ({ taxonomy }: { taxonomy: BundleTaxonomy }) => {
         {taxonomy.serviceType}
       </Typography>
       <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-        {getSpecificBuiltInData(t, taxonomy)}
+        {getSpecificBuiltInData(t, taxonomy.specificBuiltInData)}
       </Typography>
       {(taxonomy as CIBundleFee).paymentAmount !== undefined && (
         <Box display="flex" justifyContent={'space-between'} mt={0.5} data-testid="ci-bundle-fee">

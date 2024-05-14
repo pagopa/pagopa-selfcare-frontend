@@ -1,14 +1,12 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { SubscriptionStateType } from '../../model/CommissionBundle';
-import { mockedTaxonomy } from '../__mocks__/taxonomyService';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
   mockedCIBundleRequest,
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
-  mockedCommissionBundleCiDetailGlobal,
   mockedCommissionBundleCiList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
@@ -242,10 +240,10 @@ describe("Test BundleService utils", () => {
   const mockTFunc = (path: string) => ("mockTFunc");
   let taxonomy = mockedPSPTaxonomyList[0];
   test("getSpecificBuiltInData taxonomy id present", () => {
-    expect(getSpecificBuiltInData(mockTFunc, taxonomy)).toBe(taxonomy.specificBuiltInData);
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy.specificBuiltInData)).toBe(taxonomy.specificBuiltInData);
   });
   test("getSpecificBuiltInData taxonomy id null", () => {
     taxonomy.specificBuiltInData = undefined;
-    expect(getSpecificBuiltInData(mockTFunc, taxonomy)).toBe(mockTFunc(""));
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy.specificBuiltInData)).toBe(mockTFunc(""));
   });
 })

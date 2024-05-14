@@ -100,7 +100,7 @@ export const CommissionBundleSubscriptionsDrawer = ({
               </Typography>
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                  {getSpecificBuiltInData(t, el)}
+                  {getSpecificBuiltInData(t, el.specificBuiltInData)}
                 </Typography>
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
                   {formatCurrencyEur(el.paymentAmount)}

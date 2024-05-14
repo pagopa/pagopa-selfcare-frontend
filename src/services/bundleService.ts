@@ -229,7 +229,7 @@ export const createCIBundleRequest = ({
   }
 };
 
-export const getSpecificBuiltInData = (t: TFunction, taxonomy?: BundleTaxonomy) =>
-  taxonomy?.specificBuiltInData
-    ? taxonomy?.specificBuiltInData
+export const getSpecificBuiltInData = (t: TFunction, specificBuiltInData?: string) =>
+  specificBuiltInData
+    ? specificBuiltInData
     : t('commissionBundlesPage.allTaxonomies');

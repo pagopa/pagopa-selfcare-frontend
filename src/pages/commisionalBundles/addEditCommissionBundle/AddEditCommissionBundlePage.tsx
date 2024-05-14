@@ -165,7 +165,7 @@ const AddEditCommissionBundlePage = () => {
   const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, isEdit ? undefined : bundleDetails),
+    initialValues: toNewFormData(selectedParty, isEdit ? bundleDetails : undefined),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);

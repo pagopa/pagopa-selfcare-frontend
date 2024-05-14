@@ -8,7 +8,7 @@ import {
   UnloadEventHandler,
   UserNotifyHandle,
 } from '@pagopa/selfcare-common-frontend';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
@@ -50,6 +50,8 @@ import StationECListPage from './pages/stations/stationECList/StationECPage';
 import { TOS } from './pages/tos/TOS';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
+import { getMaintenanceMessage } from './services/maintenanceService';
+import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -61,11 +63,23 @@ const SecuredRoutes = withLogin(
         useFlagValue('maintenance-banner')
       );
       const maintenanceMode = useFlagValue('maintenance');
+      const [maintenanceText, setMaintenanceText] = useState<MaintenanceMessage>({
+        pageMessage: t(`general.maintenancePageText`),
+        bannerMessage: t(`general.maintenanceAlert`),
+      });
+
+      useEffect(() => {
+        if (maintenanceMode || showMaintenanceAlert) {
+          getMaintenanceMessage()
+            .then((el) => setMaintenanceText(el))
+            .catch((_) => {});
+        }
+      }, []);
 
       if (maintenanceMode) {
         return (
           <Layout>
-            <MaintenancePage />
+            <MaintenancePage message={maintenanceText.pageMessage} />
           </Layout>
         );
       }
@@ -93,7 +107,7 @@ const SecuredRoutes = withLogin(
                 </IconButton>
               }
             >
-              <div dangerouslySetInnerHTML={{ __html: t(`general.maintenanceAlert`) }} />
+              <div dangerouslySetInnerHTML={{ __html: maintenanceText.bannerMessage }} />
             </Alert>
           )}
           <Layout>
@@ -115,9 +129,9 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.APIKEYS_CREATE} exact={true}>
-                    <ProtectedRoute permission="apikey">
-                      <AddApiKeyPage />
-                    </ProtectedRoute>
+                  <ProtectedRoute permission="apikey">
+                    <AddApiKeyPage />
+                  </ProtectedRoute>
                 </Route>
 
                 <Route path={routes.CHANNELS} exact={true}>

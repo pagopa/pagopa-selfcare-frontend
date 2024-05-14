@@ -226,21 +226,21 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                         <FormControlLabel
                             value={TypeEnum.GLOBAL}
                             control={<Radio/>}
-                            label={t('commissionBundlesPage.addEditCommissionBundle.form.globalBundle')}
+                            label={t('commissionBundlesPage.globalBundles')}
                             sx={{pr: 8}}
                             disabled={isEdit}
                         />
                         <FormControlLabel
                             value={TypeEnum.PUBLIC}
                             control={<Radio/>}
-                            label={t('commissionBundlesPage.addEditCommissionBundle.form.publicBundle')}
+                            label={t('commissionBundlesPage.publicBundles')}
                             sx={{pr: 8}}
                             disabled={isEdit || !isPublicEnabled}
                         />
                         <FormControlLabel
                             value={TypeEnum.PRIVATE}
                             control={<Radio/>}
-                            label={t('commissionBundlesPage.addEditCommissionBundle.form.privateBundle')}
+                            label={t('commissionBundlesPage.privateBundles')}
                             disabled={isEdit || !isPrivateEnabled}
                         />
                     </RadioGroup>

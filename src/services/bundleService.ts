@@ -1,8 +1,10 @@
+import { TFunction } from 'react-i18next';
 import { BackofficeApi } from '../api/BackofficeClient';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
+  BundleTaxonomy,
   PublicBundleCiSubscriptionsDetailMethodParams,
   PublicBundleCISubscriptionsMethodParams,
 } from '../model/CommissionBundle';
@@ -226,3 +228,8 @@ export const createCIBundleRequest = ({
     });
   }
 };
+
+export const getSpecificBuiltInData = (t: TFunction, taxonomy?: BundleTaxonomy) =>
+  taxonomy?.specificBuiltInData
+    ? taxonomy?.specificBuiltInData
+    : t('commissionBundlesPage.allTaxonomies');

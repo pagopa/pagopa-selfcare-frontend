@@ -1,6 +1,7 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { SubscriptionStateType } from '../../model/CommissionBundle';
+import { mockedTaxonomy } from '../__mocks__/taxonomyService';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
@@ -11,6 +12,7 @@ import {
   mockedCommissionBundleCiList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
+  mockedPSPTaxonomyList,
   mockedTouchpoints,
 } from '../__mocks__/bundleService';
 import {
@@ -25,6 +27,7 @@ import {
   getCisBundles,
   getPublicBundleCISubscriptions,
   getPublicBundleCISubscriptionsDetail,
+  getSpecificBuiltInData,
   getTouchpoints,
   rejectPublicBundleSubscription,
   updatePSPBundle,
@@ -234,3 +237,15 @@ describe('BundleService test client', () => {
     expect(spyOn).toBeCalledTimes(1);
   });
 });
+
+describe("Test BundleService utils", () => {
+  const mockTFunc = (path: string) => ("mockTFunc");
+  let taxonomy = mockedPSPTaxonomyList[0];
+  test("getSpecificBuiltInData taxonomy id present", () => {
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy)).toBe(taxonomy.specificBuiltInData);
+  });
+  test("getSpecificBuiltInData taxonomy id null", () => {
+    taxonomy.specificBuiltInData = undefined;
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy)).toBe(mockTFunc(""));
+  });
+})

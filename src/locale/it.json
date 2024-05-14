@@ -1062,7 +1062,8 @@
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti",
         "errorMessageNoBroker": "Non sono presenti intermediari"
       }
-    }
+    },
+    "allTaxonomies": "Tutti i servizi di incasso"
   },
   "addEditOperationTableForm": {
     "title": "Tavolo Operativo",

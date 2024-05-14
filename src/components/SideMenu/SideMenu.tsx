@@ -77,7 +77,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {userHasPermission('apikey') && (orgIsEcBrokerSigned || orgIsPspBrokerSigned) && (
+                    {userHasPermission('apikey') && orgIsBrokerSigned && (
                         <SidenavItem
                             title={t('sideMenu.apikeys.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}

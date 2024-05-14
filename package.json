@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.21.6-1-hotfix-roles",
+  "version": "1.21.6-2-hotfix-roles",
   "homepage": "ui",
   "private": true,
   "scripts": {

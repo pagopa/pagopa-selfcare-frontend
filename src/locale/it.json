@@ -829,9 +829,9 @@
     "title": "Pacchetti commissioni",
     "subtitle": "Gestisci i pacchetti commissionali.",
     "deleteRequest": "Annulla richiesta",
-    "privateBundles": "Privati",
-    "publicBundles": "Pubblici",
-    "globalBundles": "Globali",
+    "privateBundles": "Su invito",
+    "publicBundles": "Su richiesta",
+    "globalBundles": "Per tutti",
     "list": {
       "searchByName": "Cerca per Nome",
       "createBundle": "Crea pacchetto",
@@ -988,9 +988,6 @@
       "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
       "form": {
         "bundleType": "Tipologia pacchetto",
-        "privateBundle": "Privato",
-        "publicBundle": "Pubblico",
-        "globalBundle": "Globale",
         "bundleConfiguration": "Configurazione pacchetto",
         "bundleStructure": "Struttura del pacchetto",
         "bundleName": "Nome pacchetto",

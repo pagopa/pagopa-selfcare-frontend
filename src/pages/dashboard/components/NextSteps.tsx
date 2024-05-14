@@ -23,7 +23,7 @@ const NextSteps = ({ selectedParty, signinData }: Props) => {
   const setLoading = useLoading(LOADING_TASK_DASHBOARD);
   const {orgInfo}= useOrganizationType();
   const isSignedIn = signinData ? orgInfo.isSigned : false;
-  const isPSP = selectedParty?.institutionType === 'PSP' ? true : false;
+  const isPSP = selectedParty?.institutionType === 'PSP';
   const { userHasPermission } = usePermissions();
   const [hasApiKey, setApiKey] = useState(false);
 

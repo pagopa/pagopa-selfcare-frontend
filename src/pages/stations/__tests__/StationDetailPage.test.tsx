@@ -66,7 +66,7 @@ describe('<StationDetailPage />', () => {
           isPspBroker: false,
         }
       },
-      orgIsBroker: true,
+      orgIsBrokerSigned: true,
       orgIsEcBrokerSigned: false,
       orgIsEcDirect: true,
       orgIsEcSigned: true,

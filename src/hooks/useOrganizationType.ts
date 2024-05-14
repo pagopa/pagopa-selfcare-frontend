@@ -37,9 +37,9 @@ export const useOrganizationType = () => {
         // pagopa types
         types: {
             isPsp: INSTITUTIONS_PSP_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsPsp,
-            isPspBroker: INSTITUTIONS_PT_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsPspAndBroker,
+            isPspBroker: INSTITUTIONS_PT_TYPES.includes(selectedParty?.institutionType ?? '') && orgIsPspAndBroker,
             isEc: INSTITUTIONS_EC_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsEc,
-            isEcBroker: INSTITUTIONS_PT_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsEcAndBroker,
+            isEcBroker: INSTITUTIONS_PT_TYPES.includes(selectedParty?.institutionType ?? '') && orgIsEcAndBroker,
         },
         // signed on pagopa
         isSigned: orgIsPspAndBroker || orgIsPsp || orgIsEcAndBroker || orgIsEc,
@@ -49,8 +49,8 @@ export const useOrganizationType = () => {
 
         orgIsPspDirect: info.types.isPsp && info.types.isPspBroker,
         orgIsEcDirect: info.types.isEc && info.types.isEcBroker,
-        orgIsBroker: info.types.isPspBroker || info.types.isEcBroker,
 
+        orgIsBrokerSigned: orgIsPspAndBroker || orgIsEcAndBroker,
         orgIsPspSigned: info.isSigned && info.types.isPsp,
         orgIsPspBrokerSigned: info.isSigned && info.types.isPspBroker,
         orgIsEcSigned: info.isSigned && info.types.isEc,

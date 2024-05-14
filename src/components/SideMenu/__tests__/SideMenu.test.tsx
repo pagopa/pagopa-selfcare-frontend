@@ -33,7 +33,7 @@ beforeEach(() => {
     },
     orgIsPspDirect: true,
     orgIsEcDirect: true,
-    orgIsBroker: true,
+    orgIsBrokerSigned: true,
     orgIsPspSigned: true,
     orgIsPspBrokerSigned: true,
     orgIsEcSigned: true,

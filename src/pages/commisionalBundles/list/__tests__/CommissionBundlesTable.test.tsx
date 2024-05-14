@@ -1,14 +1,14 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
-import { Provider } from 'react-redux';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, render, screen, waitFor} from '@testing-library/react';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../../redux/store';
+import {Provider} from 'react-redux';
 import React from 'react';
 import CommissionBundlesTable from '../CommissionBundlesTable';
 import * as BundleService from '../../../../services/bundleService';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
-import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
+import {mockedCommissionBundlePspList} from '../../../../services/__mocks__/bundleService';
 
 let getCommissionBundlePspSpy: jest.SpyInstance;
 
@@ -43,7 +43,7 @@ describe('<CommissionBundlesTable />', () => {
           isEcBroker: false,
         },
       },
-      orgIsBroker: false,
+      orgIsBrokerSigned: false,
       orgIsEcBrokerSigned: false,
       orgIsEcDirect: false,
       orgIsEcSigned: false,
@@ -85,7 +85,7 @@ describe('<CommissionBundlesTable />', () => {
           isEcBroker: true,
         },
       },
-      orgIsBroker: false,
+      orgIsBrokerSigned: false,
       orgIsEcBrokerSigned: false,
       orgIsEcDirect: false,
       orgIsEcSigned: false,
@@ -127,7 +127,7 @@ describe('<CommissionBundlesTable />', () => {
           isEcBroker: false,
         },
       },
-      orgIsBroker: false,
+      orgIsBrokerSigned: false,
       orgIsEcBrokerSigned: false,
       orgIsEcDirect: false,
       orgIsEcSigned: false,

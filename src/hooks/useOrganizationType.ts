@@ -50,8 +50,7 @@ export const useOrganizationType = () => {
         orgIsPspDirect: info.types.isPsp && info.types.isPspBroker,
         orgIsEcDirect: info.types.isEc && info.types.isEcBroker,
 
-        orgIsBroker: INSTITUTIONS_PT_TYPES.includes(selectedParty?.institutionType ?? ''),
-
+        orgIsBrokerSigned: orgIsPspAndBroker || orgIsEcAndBroker,
         orgIsPspSigned: info.isSigned && info.types.isPsp,
         orgIsPspBrokerSigned: info.isSigned && info.types.isPspBroker,
         orgIsEcSigned: info.isSigned && info.types.isEc,

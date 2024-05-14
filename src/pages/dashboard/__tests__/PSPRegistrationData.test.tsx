@@ -77,7 +77,7 @@ test('Test rendering ', async () => {
 
         orgIsPspDirect: true,
         orgIsEcDirect: false,
-        orgIsBroker: false,
+        orgIsBrokerSigned: false,
 
         orgIsPspSigned: true,
         orgIsPspBrokerSigned: false,
@@ -119,7 +119,7 @@ test('Test rendering digitalStamp false, bic undefined ', async () => {
 
         orgIsPspDirect: true,
         orgIsEcDirect: false,
-        orgIsBroker: false,
+        orgIsBrokerSigned: false,
 
         orgIsPspSigned: true,
         orgIsPspBrokerSigned: false,
@@ -172,7 +172,7 @@ test('Test rendering digitalStamp undefined ', async () => {
 
         orgIsPspDirect: true,
         orgIsEcDirect: false,
-        orgIsBroker: false,
+        orgIsBrokerSigned: false,
 
         orgIsPspSigned: true,
         orgIsPspBrokerSigned: false,
@@ -223,7 +223,7 @@ test('Test onClick modify button', async () => {
 
         orgIsPspDirect: true,
         orgIsEcDirect: false,
-        orgIsBroker: false,
+        orgIsBrokerSigned: false,
 
         orgIsPspSigned: true,
         orgIsPspBrokerSigned: false,

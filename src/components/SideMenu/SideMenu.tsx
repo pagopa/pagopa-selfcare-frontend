@@ -32,7 +32,7 @@ export default function SideMenu() {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const signinData = useAppSelector(partiesSelectors.selectSigninData);
     const {userHasPermission} = usePermissions();
-    const {orgInfo, orgIsBroker} = useOrganizationType();
+    const {orgInfo, orgIsBrokerSigned} = useOrganizationType();
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [pathname, setPathName] = useState(() => {
         /*
@@ -54,7 +54,7 @@ export default function SideMenu() {
         <Box display="grid" mt={1}>
             <Box gridColumn="auto">
                 <List>
-                    {useFlagValue('delegations-list') && orgIsBroker && userHasPermission('delegations-list') && (
+                    {useFlagValue('delegations-list') && orgIsBrokerSigned && userHasPermission('delegations-list') && (
                         <>
                             <SidenavItem
                                 title={t('sideMenu.delegations.title')}
@@ -77,7 +77,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {userHasPermission('apikey') && orgIsBroker && (
+                    {userHasPermission('apikey') && (orgIsEcBrokerSigned || orgIsPspBrokerSigned) && (
                         <SidenavItem
                             title={t('sideMenu.apikeys.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.APIKEYS))}

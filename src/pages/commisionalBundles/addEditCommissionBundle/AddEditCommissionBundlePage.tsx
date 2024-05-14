@@ -42,7 +42,10 @@ const minDateTomorrow = () => {
   return add(dateToday, { days: 1 });
 };
 
-const toNewFormData = (selectedParty: Party | undefined, data?: PSPBundleResource): BundleRequest => ({
+const toNewFormData = (
+  selectedParty: Party | undefined,
+  data?: PSPBundleResource
+): BundleRequest => ({
   abi: selectedParty?.pspData?.abi_code ?? '',
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
@@ -56,7 +59,7 @@ const toNewFormData = (selectedParty: Party | undefined, data?: PSPBundleResourc
   paymentType: data?.paymentType ?? 'ANY',
   touchpoint: data?.touchpoint ?? 'ANY',
   transferCategoryList: data?.bundleTaxonomies
-    ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? "")
+    ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? '')
     : [],
   type: data?.type ?? undefined,
   validityDateFrom: data?.validityDateFrom ?? minDateTomorrow(),
@@ -154,11 +157,15 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit: boolean = actionId === FormAction.Edit;
-  const bundleDetails: PSPBundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, isEdit ? ROUTES.COMMISSION_BUNDLES : undefined) ?? {};
-  const bundleId: string = bundleDetails?.idBundle ?? "";
+  const bundleDetails: PSPBundleResource =
+    useAppSelectorWithRedirect(
+      bundleDetailsSelectors.selectBundleDetails,
+      isEdit ? ROUTES.COMMISSION_BUNDLES : undefined
+    ) ?? {};
+  const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, bundleDetails),
+    initialValues: toNewFormData(selectedParty, isEdit ? undefined : bundleDetails),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);
@@ -283,9 +290,7 @@ const AddEditCommissionBundlePage = () => {
           <AddEditCommissionBundleTaxonomies
             formik={formik}
             bundleTaxonomies={
-              isEdit &&
-              bundleDetails?.bundleTaxonomies &&
-              bundleDetails.bundleTaxonomies.length > 0
+              isEdit && bundleDetails?.bundleTaxonomies && bundleDetails.bundleTaxonomies.length > 0
                 ? [...bundleDetails.bundleTaxonomies]
                 : []
             }

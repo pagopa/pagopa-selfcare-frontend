@@ -12,6 +12,7 @@ import {
   CIBundleResource,
   CiBundleStatusEnum,
 } from '../../../../api/generated/portal/CIBundleResource';
+import { getSpecificBuiltInData } from '../../../../services/bundleService';
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail';
 
@@ -23,7 +24,7 @@ const TaxonomyBox = ({ taxonomy }: { taxonomy: BundleTaxonomy }) => {
         {taxonomy.serviceType}
       </Typography>
       <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-        {taxonomy.specificBuiltInData}
+        {getSpecificBuiltInData(t, taxonomy.specificBuiltInData)}
       </Typography>
       {(taxonomy as CIBundleFee).paymentAmount !== undefined && (
         <Box display="flex" justifyContent={'space-between'} mt={0.5} data-testid="ci-bundle-fee">
@@ -69,7 +70,7 @@ export default function CommissionBundleDetailTaxonomies({
       {bundleTaxonomies.length > 0 ? (
         bundleTaxonomies?.slice(0, 3)?.map((el: BundleTaxonomy, i: number) =>
           i < 4 ? (
-            <Box key={`taxonomy-${el.specificBuiltInData}`} mt={1} data-testid="taxonomy-column">
+            <Box key={`taxonomy-${el.specificBuiltInData ?? "all"}`} mt={1} data-testid="taxonomy-column">
               <TaxonomyBox taxonomy={el} />
             </Box>
           ) : null

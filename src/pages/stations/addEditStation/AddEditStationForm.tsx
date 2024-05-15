@@ -864,7 +864,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           </Grid>
         </Box>
 
-        {(connectionType === ConnectionType.SYNC || userIsPagopaOperator) && (
+        {connectionType === ConnectionType.SYNC && (
           <>
             <Box sx={inputGroupStyle} data-testid="model-1-box">
               <AddEditStationFormSectionTitle
@@ -1120,6 +1120,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           setNewConn={setNewConn}
           gdp={gdp}
           setGDP={setGDP}
+          connectionType={connectionType}
         />
       ) : (
         <></>

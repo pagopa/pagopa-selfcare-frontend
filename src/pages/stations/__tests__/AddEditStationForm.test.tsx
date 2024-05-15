@@ -296,19 +296,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect(syncRadio.disabled).toBeTruthy();
     expect(asyncRadio.disabled).toBeTruthy();
 
-    const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
-    const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
-    const targetConcat = screen.getByTestId('targetConcat-test') as HTMLInputElement;
-    const proxyConcat = screen.getByTestId('proxy-proxyConcat-test') as HTMLInputElement;
-    const password = screen.getByTestId('password-test') as HTMLInputElement;
-
-    fireEvent.change(password, { target: { value: 123 } });
-
-    fireEvent.change(targetConcat, { target: { value: 'https://www.pagopa.it:8080/pathTest' } });
-    expect(targetConcat.value).toBe('https://www.pagopa.it:8080/pathTest');
-
-    fireEvent.change(proxyConcat, { target: { value: 'http://10.79.20.33:80' } });
-    expect(proxyConcat.value).toBe('http://10.79.20.33:80');
+    expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
 
     const continueBtn = screen.getByText('general.confirm');
     await waitFor(() => fireEvent.click(continueBtn));
@@ -320,7 +308,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect(createStation).toBeCalledTimes(1);
   });
 
-  test('Test rendering AddEditStationForm with operator true', async () => {
+  test('Test rendering AddEditStationForm with sync connection and operator true', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PAGOPA_OPERATOR,
       userIsPspAdmin: false,
@@ -335,13 +323,16 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               goBack={jest.fn()}
-              stationDetail={stationDetail}
+              stationDetail={{...stationDetail, service:"otherService"}}
               formAction={StationFormAction.Edit}
             />
           </Router>
         </ThemeProvider>
       </Provider>
     );
+
+    expect(screen.queryByTestId("radio-button-newConn")).toBeInTheDocument();
+    expect(screen.queryByTestId("radio-button-gdp")).not.toBeInTheDocument();
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
@@ -379,7 +370,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.click(confirmBtn);
   });
 
-  test('Test rendering AddEditStationForm with sync connection and operator true', async () => {
+  test('Test rendering AddEditStationForm with async connection (service GPD) and operator true', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PAGOPA_OPERATOR,
       userIsPspAdmin: false,
@@ -409,6 +400,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       </Provider>
     );
 
+    expect(screen.queryByTestId("radio-button-newConn")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("radio-button-gdp")).toBeInTheDocument();
+
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
@@ -416,7 +410,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
     const gdpConcatSelect = screen.getByTestId('gdpConcat-select') as HTMLInputElement;
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
-    const newConnRadio = screen.getByTestId('radio-button-newConn') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
     const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
@@ -426,10 +419,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
       'https://api.uat.platform.pagopa.it/gpd-payments/api/v1'
     );
-//  expect(gdpRadio.checked).toBeTruthy();
   });
 
-  test('Test gdpConcat select handleChange with sync connection and operator true', async () => {
+  test('Test gdpConcat select handleChange with async connection (no service) and operator true', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PAGOPA_OPERATOR,
       userIsPspAdmin: false,
@@ -458,10 +450,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const timeoutA = screen.getByTestId('timeoutA-test') as HTMLInputElement;
     const timeoutB = screen.getByTestId('timeoutB-test') as HTMLInputElement;
     const timeoutC = screen.getByTestId('timeoutC-test') as HTMLInputElement;
-    const targetConcat = screen.getByTestId('targetConcat-test') as HTMLInputElement;
     const gdpConcatSelect = screen.getByTestId('gdpConcat-select') as HTMLInputElement;
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
-    const newConnRadio = screen.getByTestId('radio-button-newConn') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
     const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
@@ -471,9 +461,5 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe(
       'https://api.uat.platform.pagopa.it/gpd-payments/api/v1'
     );
-
-    await waitFor(() => userEvent.click(newConnRadio));
-
-    expect((screen.getByTestId('gdpConcat-test') as HTMLInputElement).value).toBe('');
   });
 });

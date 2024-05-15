@@ -3,20 +3,30 @@ import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 import { GridSearchIcon } from '@mui/x-data-grid';
 import React, { useState } from 'react';
+import { ButtonNaked } from '@pagopa/mui-italia';
 
 type Props = {
   handleSearchTrigger: (name: string) => void;
   componentName?: string;
   children?: React.ReactNode;
+  resetFilters?: () => void;
 };
 
 export default function TableSearchBar({
   handleSearchTrigger,
   componentName,
   children,
+  resetFilters,
 }: Readonly<Props>) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
+
+  function handleResetFilter() {
+    setInternalSearchValue('');
+    if (resetFilters) {
+      resetFilters();
+    }
+  }
 
   return (
     <Box width={children ? '100%' : '50%'} display="flex" sx={{ mt: 1 }}>
@@ -47,8 +57,20 @@ export default function TableSearchBar({
         data-testid="button-search"
         sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
       >
-        {t('general.search')}
+        {resetFilters ? t('general.filter') : t('general.search')}
       </Button>
+      {resetFilters && (
+        <ButtonNaked
+          size="medium"
+          component="button"
+          onClick={() => handleResetFilter()}
+          sx={{ color: 'primary.main', ml: 1 }}
+          weight="default"
+          data-testid="reset-filter-button"
+        >
+          {t('general.removeFilter')}
+        </ButtonNaked>
+      )}
     </Box>
   );
 }

@@ -150,8 +150,7 @@ Props) => {
             title={t('addEditStationPage.addFormValidation.sections.configuration')}
             icon={<BadgeIcon />}
           />
-          <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
+          <Box mt={1} width="50%" pr={1}>
               <FormControl fullWidth>
                 <RadioGroup
                   sx={{ display: 'block' }}
@@ -162,7 +161,6 @@ Props) => {
                 >
                   {connectionType === ConnectionType.SYNC ? (
                     <>
-                      <Grid container item xs={12}>
                         <FormControlLabel
                           value="newConn"
                           checked={newConn}
@@ -170,8 +168,7 @@ Props) => {
                           control={<Radio />}
                           label={t('addEditStationPage.addFormValidation.fields.newConnLabel')}
                         />
-                      </Grid>
-                      <Grid container item xs={12} pt={1}>
+                      <Box pt={1}>
                         <FormControl fullWidth>
                           <InputLabel size="small">
                             {t('addEditStationPage.addFormValidation.fields.select')}
@@ -216,11 +213,11 @@ Props) => {
                             </FormHelperText>
                           ) : null}
                         </FormControl>
-                      </Grid>
+                      </Box>
                     </>
                   ) : (
                     <>
-                      <Grid container item xs={12} pt={2}>
+                      <Grid container item xs={12} >
                         <FormControlLabel
                           value="GPD"
                           data-testid="radio-button-gdp"
@@ -269,8 +266,7 @@ Props) => {
                   )}
                 </RadioGroup>
               </FormControl>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
 
         <Box sx={inputGroupStyle}>

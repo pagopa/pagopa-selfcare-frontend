@@ -9,10 +9,10 @@ import { NumericFormat } from 'react-number-format';
 import EuroIcon from '@mui/icons-material/Euro';
 import ROUTES from '../../../routes';
 import GenericModal from '../../../components/Form/GenericModal';
-import { useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import { LOADING_TASK_COMMISSION_BUNDLE_ACTIVATION } from '../../../utils/constants';
-import { createCIBundleRequest } from '../../../services/bundleService';
+import { createCIBundleRequest, getSpecificBuiltInData } from '../../../services/bundleService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { PublicBundleRequest } from '../../../api/generated/portal/PublicBundleRequest';
 import { formatCurrencyEur } from '../../../utils/common-utils';
@@ -25,12 +25,19 @@ const initBundleRequest = (
 ): Partial<PublicBundleRequest> => ({
   ciFiscalCode: ciTaxCode ?? '',
   idBundle: bundleDetails?.idBundle ?? '',
-  attributes: bundleDetails?.bundleTaxonomies?.map((el) => ({
-    maxPaymentAmount: 0,
-    transferCategory: el.specificBuiltInData,
-    transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
-    transferCategoryType: el.serviceType,
-  })),
+  attributes: bundleDetails?.bundleTaxonomies?.length
+    ? bundleDetails?.bundleTaxonomies?.map((el) => ({
+        maxPaymentAmount: 0,
+        transferCategory: el.specificBuiltInData,
+        transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
+        transferCategoryType: el.serviceType,
+      }))
+    : [
+        {
+          maxPaymentAmount: 0,
+          transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
+        },
+      ],
   idPsp: bundleDetails?.idBrokerPsp,
 });
 
@@ -42,7 +49,11 @@ export default function CommissionBundleDetailActivationPage() {
   const addError = useErrorDispatcher();
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const bundleDetails: CIBundleResource = useAppSelectorWithRedirect(bundleDetailsSelectors.selectBundleDetails, ROUTES.COMMISSION_BUNDLES) ?? {};
+  const bundleDetails: CIBundleResource =
+    useAppSelectorWithRedirect(
+      bundleDetailsSelectors.selectBundleDetails,
+      ROUTES.COMMISSION_BUNDLES
+    ) ?? {};
 
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bundleRequest, setBundleRequest] = useState<Partial<PublicBundleRequest>>(
@@ -81,7 +92,7 @@ export default function CommissionBundleDetailActivationPage() {
   }
 
   function handleChangeCommissions(value: string, index: number) {
-    const numericValue = value ? (parseFloat(value.replace(',', '.')) * 100) : 0;
+    const numericValue = value ? parseFloat(value.replace(',', '.')) * 100 : 0;
     if (bundleDetails?.paymentAmount && numericValue > bundleDetails?.paymentAmount) {
       setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorCommission`) }));
     } else {
@@ -116,9 +127,7 @@ export default function CommissionBundleDetailActivationPage() {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography>{bundleDetails?.name}</Typography>
-            <Typography color="action.active">
-              {t(`${componentPath}.title`)}
-            </Typography>
+            <Typography color="action.active">{t(`${componentPath}.title`)}</Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
@@ -172,14 +181,14 @@ export default function CommissionBundleDetailActivationPage() {
           {bundleRequest?.attributes?.map((el: any, index) => (
             <Box
               sx={{ border: '1px solid #E3E7EB', p: 3, my: 2 }}
-              key={`attribute-${el.transferCategory}`}
+              key={`attribute-${el.transferCategory ?? 'all'}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
             >
               <Box>
                 <Typography variant="body1" fontWeight={'fontWeightMedium'} sx={{ mb: 1 }}>
-                  {el.transferCategory}
+                  {getSpecificBuiltInData(t, el.transferCategory)}
                 </Typography>
                 <Typography variant="body2" color={'action.active'} fontWeight={'fontWeightMedium'}>
                   {el.transferCategoryType}

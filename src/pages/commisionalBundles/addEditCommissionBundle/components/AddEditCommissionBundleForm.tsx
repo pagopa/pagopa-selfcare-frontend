@@ -47,7 +47,8 @@ import {Delegation} from '../../../../api/generated/portal/Delegation';
 import {addCurrentPSP} from '../../../../utils/channel-utils';
 import {useFlagValue} from '../../../../hooks/useFeatureFlags';
 import {useUserRole} from "../../../../hooks/useUserRole";
-import { TypeEnum } from '../../../../api/generated/portal/PSPBundleResource';
+import {TypeEnum} from '../../../../api/generated/portal/PSPBundleResource';
+import {useOrganizationType} from "../../../../hooks/useOrganizationType";
 
 type Props = {
     formik: FormikProps<BundleRequest>;
@@ -58,6 +59,7 @@ type Props = {
 const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
     const {t} = useTranslation();
     const {userIsPspDirectAdmin} = useUserRole();
+    const {orgInfo, orgIsPspDirect} = useOrganizationType();
     const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
     const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
     const addError = useErrorDispatcher();
@@ -133,7 +135,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                     setTouchpointList(touchpoints);
                 }
                 let listBroker = brokerDelegation ?? [];
-                if (userIsPspDirectAdmin) {
+                if (orgIsPspDirect) {
                     listBroker = addCurrentPSP(listBroker, selectedParty as Party);
                 }
                 if (listBroker.length > 0) {

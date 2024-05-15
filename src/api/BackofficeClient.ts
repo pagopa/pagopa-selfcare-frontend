@@ -92,6 +92,7 @@ import { PaymentTypes } from './generated/portal/PaymentTypes';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
 import { CIBundlesResource } from './generated/portal/CIBundlesResource';
 import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
+import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1263,4 +1264,9 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
+    const result = await backofficeClient.getMaintenanceMessage({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  }
 };

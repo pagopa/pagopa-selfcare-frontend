@@ -100,7 +100,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -140,7 +140,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: true
             },
-            orgIsBroker: true,
+            orgIsBrokerSigned: true,
             orgIsEcBrokerSigned: true,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -181,7 +181,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: true
             },
-            orgIsBroker: true,
+            orgIsBrokerSigned: true,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -242,7 +242,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: true
             },
-            orgIsBroker: true,
+            orgIsBrokerSigned: true,
             orgIsEcBrokerSigned: true,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -303,7 +303,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -360,7 +360,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -417,7 +417,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -478,7 +478,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -522,7 +522,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -555,7 +555,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -590,7 +590,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -626,7 +626,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
@@ -662,7 +662,7 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: false
             },
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
             orgIsEcDirect: false,
             orgIsEcSigned: false,

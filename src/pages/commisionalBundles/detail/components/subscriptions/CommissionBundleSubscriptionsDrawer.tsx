@@ -6,6 +6,7 @@ import { TFunction } from 'react-i18next';
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
 import { CIBundleFee } from '../../../../../api/generated/portal/CIBundleFee';
 import { formatCurrencyEur } from '../../../../../utils/common-utils';
+import { getSpecificBuiltInData } from '../../../../../services/bundleService';
 import {
   PublicBundleCiSubscriptionDetailModel,
   SubscriptionStateType,
@@ -51,7 +52,8 @@ export const CommissionBundleSubscriptionsDrawer = ({
       t,
       stateType,
       setOpenMenageSubscriptionModal,
-      selectedSubscriptionRequest.ci_bundle_fee_list !== undefined && !selectedSubscriptionRequest.on_removal
+      selectedSubscriptionRequest.ci_bundle_fee_list !== undefined &&
+        !selectedSubscriptionRequest.on_removal
     )}
   >
     <TitleBox title={t(`${componentPath}.title`)} variantTitle="h5" />
@@ -92,13 +94,13 @@ export const CommissionBundleSubscriptionsDrawer = ({
           </Box>
 
           {selectedSubscriptionRequest?.ci_bundle_fee_list?.map((el: CIBundleFee) => (
-            <Box mb={1} key={`taxonomies-list-${el.specificBuiltInData}`}>
+            <Box mb={1} key={`taxonomies-list-${el.specificBuiltInData ?? 'all'}`}>
               <Typography variant="body1" color="action.active">
                 {el.serviceType}
               </Typography>
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                  {el.specificBuiltInData}
+                  {getSpecificBuiltInData(t, el.specificBuiltInData)}
                 </Typography>
                 <Typography variant="body1" fontWeight={'fontWeightMedium'}>
                   {formatCurrencyEur(el.paymentAmount)}

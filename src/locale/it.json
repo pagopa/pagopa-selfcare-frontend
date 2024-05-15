@@ -1071,7 +1071,8 @@
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti",
         "errorMessageNoBroker": "Non sono presenti intermediari"
       }
-    }
+    },
+    "allTaxonomies": "Tutti i servizi di incasso"
   },
   "addEditOperationTableForm": {
     "title": "Tavolo Operativo",
@@ -1322,8 +1323,8 @@
     "gotIt": "Ho capito",
     "min": "Minimo",
     "max": "Massimo",
-    "maintenanceAlert": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>",
-    "maintenancePageText": "La presente per comunicare che nei giorni <b>lunedì 11</b> e <b>martedì 12 Marzo p.v.</b> le modifiche alle configurazioni di UAT saranno momentaneamente sospese per attività di manutenzione bloccanti.<br>Le attività relative alle nuove configurazioni e/o alle modifiche di quelle in essere riprenderanno regolarmente mercoledì <b>13 Marzo p.v.</b>"
+    "maintenanceAlert": "Il portale andrà in manutenzione nei giorni successivi",
+    "maintenancePageText": "Il portale è in manutenzione"
   },
   "ANY": "Tutti"
 }

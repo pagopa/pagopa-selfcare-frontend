@@ -3,7 +3,6 @@ import React from 'react';
 import CommissionBundleDetailPage from '../CommissionBundleDetailPage';
 import * as BundleService from '../../../../services/bundleService';
 import {
-    mockedCommissionBundleCiDetailPrivate,
     mockedCommissionBundleCiDetailPublic,
     mockedCommissionBundlePspDetailGlobal,
     mockedCommissionBundlePspDetailPrivate,
@@ -18,8 +17,8 @@ import * as usePermissions from '../../../../hooks/usePermissions';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
 import {ROLE} from "../../../../model/RolePermission";
-import { BundleResource } from '../../../../model/CommissionBundle';
-import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
+import {BundleResource} from '../../../../model/CommissionBundle';
+import {CiBundleStatusEnum} from '../../../../api/generated/portal/CIBundleResource';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -79,7 +78,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
 
             orgIsPspDirect: true,
             orgIsEcDirect: false,
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
 
             orgIsPspSigned: true,
             orgIsPspBrokerSigned: false,
@@ -200,7 +199,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
 
             orgIsPspDirect: false,
             orgIsEcDirect: true,
-            orgIsBroker: false,
+            orgIsBrokerSigned: false,
 
             orgIsPspSigned: false,
             orgIsPspBrokerSigned: false,

@@ -7,10 +7,10 @@ import {
   mockedCIBundleRequest,
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
-  mockedCommissionBundleCiDetailGlobal,
   mockedCommissionBundleCiList,
   mockedCommissionBundlePspDetailGlobal,
   mockedCommissionBundlePspList,
+  mockedPSPTaxonomyList,
   mockedTouchpoints,
 } from '../__mocks__/bundleService';
 import {
@@ -25,6 +25,7 @@ import {
   getCisBundles,
   getPublicBundleCISubscriptions,
   getPublicBundleCISubscriptionsDetail,
+  getSpecificBuiltInData,
   getTouchpoints,
   rejectPublicBundleSubscription,
   updatePSPBundle,
@@ -234,3 +235,15 @@ describe('BundleService test client', () => {
     expect(spyOn).toBeCalledTimes(1);
   });
 });
+
+describe("Test BundleService utils", () => {
+  const mockTFunc = (path: string) => ("mockTFunc");
+  let taxonomy = mockedPSPTaxonomyList[0];
+  test("getSpecificBuiltInData taxonomy id present", () => {
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy.specificBuiltInData)).toBe(taxonomy.specificBuiltInData);
+  });
+  test("getSpecificBuiltInData taxonomy id null", () => {
+    taxonomy.specificBuiltInData = undefined;
+    expect(getSpecificBuiltInData(mockTFunc, taxonomy.specificBuiltInData)).toBe(mockTFunc(""));
+  });
+})

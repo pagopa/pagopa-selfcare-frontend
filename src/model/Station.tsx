@@ -180,3 +180,8 @@ export const GPDConfigs = {
   uat: { gdp01: 'https://api.uat.platform.pagopa.it/gpd-payments/api/v1' },
   prod: { gdp01: 'https://api.platform.pagopa.it/gpd-payments/api/v1' },
 };
+
+export enum ConnectionType {
+  ASYNC = 'async',
+  SYNC = 'sync',
+}

@@ -159,23 +159,8 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         <TableEmptyState
           componentName={componentPath}
           translationArgs={{ bundleType: t(bundleType) }}
-        >
-          {orgInfo.types.isPsp && (
-            <Link
-              component={RouterLink}
-              sx={{
-                color: 'primary.main',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                whiteSpace: 'pre',
-                ml: 1,
-              }}
-              to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}
-            >
-              <strong>{t(`${componentPath}.createBundle`)}</strong>
-            </Link>
-          )}
-        </TableEmptyState>
+          linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
+        />
       ) : (
         <div data-testid="data-grid">
           <CustomDataGrid
@@ -189,22 +174,15 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
             columns={columns}
             components={{
               Pagination: () => (
-                <>
-                  <Pagination
-                    color="primary"
-                    count={listFiltered?.pageInfo?.total_pages ?? 1}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                      handleChangePage(value)
-                    }
-                  />
-                </>
+                <Pagination
+                  color="primary"
+                  count={listFiltered?.pageInfo?.total_pages ?? 1}
+                  page={page + 1}
+                  onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                    handleChangePage(value)
+                  }
+                />
               ),
-            }}
-            componentsProps={{
-              toolbar: {
-                quickFilterProps: { debounceMs: 500 },
-              },
             }}
             headerHeight={headerHeight}
             hideFooterSelectedRowCount={true}

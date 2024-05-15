@@ -32,6 +32,7 @@ import {
 import AddEditStationFormSectionTitle from '../AddEditStationFormSectionTitle';
 import { Protocol4ModEnum, ProtocolEnum } from '../../../../api/generated/portal/StationDetailsDto';
 import { ENV } from '../../../../utils/env';
+import { ConnectionType } from '../../../../model/Station';
 
 type Props = {
   formik: FormikProps<StationOnCreation>;
@@ -45,6 +46,7 @@ type Props = {
   setNewConn: React.Dispatch<React.SetStateAction<boolean>>;
   gdp: boolean;
   setGDP: React.Dispatch<React.SetStateAction<boolean>>;
+  connectionType: ConnectionType;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
@@ -56,6 +58,7 @@ const AddEditStationFormValidation = ({
   setNewConn,
   gdp,
   setGDP,
+  connectionType,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
 Props) => {
   const { t } = useTranslation();
@@ -147,8 +150,7 @@ Props) => {
             title={t('addEditStationPage.addFormValidation.sections.configuration')}
             icon={<BadgeIcon />}
           />
-          <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
+          <Box mt={1} width="50%" pr={1}>
               <FormControl fullWidth>
                 <RadioGroup
                   sx={{ display: 'block' }}
@@ -157,109 +159,114 @@ Props) => {
                   onChange={handleChange}
                   name="radio-buttons-group"
                 >
-                  <Grid container item xs={12}>
-                    <FormControlLabel
-                      value="newConn"
-                      checked={newConn}
-                      data-testid="radio-button-newConn"
-                      control={<Radio />}
-                      label={t('addEditStationPage.addFormValidation.fields.newConnLabel')}
-                    />
-                  </Grid>
-
-                  <Grid container item xs={12} pt={1}>
-                    <FormControl fullWidth>
-                      <InputLabel size="small">
-                        {t('addEditStationPage.addFormValidation.fields.select')}
-                      </InputLabel>
-                      <Select
-                        fullWidth
-                        id="newConnConcat"
-                        name="newConnConcat"
-                        data-testid="newConnConcat"
-                        label={'newConnConcat'}
-                        placeholder={'newConnConcat'}
-                        size="small"
-                        disabled={!newConn}
-                        defaultValue=""
-                        value={formik.values.newConnConcat}
-                        onChange={formik.handleChange}
-                        error={formik.touched.newConnConcat && Boolean(formik.errors.newConnConcat)}
-                        inputProps={{
-                          'data-testid': 'newConnConcat-test',
-                        }}
-                      >
-                        {Object.entries(forwarderAddresses).map(([key, value]) => (
-                          <MenuItem
-                            key={key}
-                            selected={
-                              formik.values.pofService && value.includes(formik.values.pofService)
-                                ? true
-                                : false
+                  {connectionType === ConnectionType.SYNC ? (
+                    <>
+                        <FormControlLabel
+                          value="newConn"
+                          checked={newConn}
+                          data-testid="radio-button-newConn"
+                          control={<Radio />}
+                          label={t('addEditStationPage.addFormValidation.fields.newConnLabel')}
+                        />
+                      <Box pt={1}>
+                        <FormControl fullWidth>
+                          <InputLabel size="small">
+                            {t('addEditStationPage.addFormValidation.fields.select')}
+                          </InputLabel>
+                          <Select
+                            fullWidth
+                            id="newConnConcat"
+                            name="newConnConcat"
+                            data-testid="newConnConcat"
+                            label={'newConnConcat'}
+                            placeholder={'newConnConcat'}
+                            size="small"
+                            disabled={!newConn}
+                            defaultValue=""
+                            value={formik.values.newConnConcat}
+                            onChange={formik.handleChange}
+                            error={
+                              formik.touched.newConnConcat && Boolean(formik.errors.newConnConcat)
                             }
-                            value={value}
+                            inputProps={{
+                              'data-testid': 'newConnConcat-test',
+                            }}
                           >
-                            {`${key.toUpperCase()} - ${value}`}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {formik.touched.newConnConcat && formik.errors.newConnConcat ? (
-                        <FormHelperText sx={{ color: '#bf3333' }}>
-                          {formik.touched.newConnConcat && formik.errors.newConnConcat}
-                        </FormHelperText>
-                      ) : null}
-                    </FormControl>
-                  </Grid>
+                            {Object.entries(forwarderAddresses).map(([key, value]) => (
+                              <MenuItem
+                                key={key}
+                                selected={
+                                  formik.values.pofService &&
+                                  value.includes(formik.values.pofService)
+                                    ? true
+                                    : false
+                                }
+                                value={value}
+                              >
+                                {`${key.toUpperCase()} - ${value}`}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {formik.touched.newConnConcat && formik.errors.newConnConcat ? (
+                            <FormHelperText sx={{ color: '#bf3333' }}>
+                              {formik.touched.newConnConcat && formik.errors.newConnConcat}
+                            </FormHelperText>
+                          ) : null}
+                        </FormControl>
+                      </Box>
+                    </>
+                  ) : (
+                    <>
+                      <Grid container item xs={12} >
+                        <FormControlLabel
+                          value="GPD"
+                          data-testid="radio-button-gdp"
+                          control={<Radio />}
+                          checked={gdp}
+                          label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
+                        />
+                      </Grid>
 
-                  <Grid container item xs={12} pt={2}>
-                    <FormControlLabel
-                      value="GPD"
-                      data-testid="radio-button-gdp"
-                      control={<Radio />}
-                      checked={gdp}
-                      label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
-                    />
-                  </Grid>
-
-                  <Grid container item xs={12} pt={1}>
-                    <FormControl fullWidth>
-                      <InputLabel size="small">
-                        {t('addEditStationPage.addFormValidation.fields.select')}
-                      </InputLabel>
-                      <Select
-                        fullWidth
-                        id="gdpConcat"
-                        name="gdpConcat"
-                        data-testid="gdpConcat-select"
-                        label={'gdpConcat'}
-                        placeholder={'gdpConcat'}
-                        size="small"
-                        defaultValue={''}
-                        disabled={!gdp}
-                        value={formik.values.gdpConcat}
-                        onChange={formik.handleChange}
-                        error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
-                        inputProps={{
-                          'data-testid': 'gdpConcat-test',
-                        }}
-                      >
-                        {Object.entries(gpdAddresses).map(([key, value]) => (
-                          <MenuItem key={key} selected={true} value={value}>
-                            {`${key.toUpperCase()} - ${value}`}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
-                        <FormHelperText sx={{ color: '#bf3333' }}>
-                          {formik.touched.gdpConcat && formik.errors.gdpConcat}
-                        </FormHelperText>
-                      ) : null}
-                    </FormControl>
-                  </Grid>
+                      <Grid container item xs={12} pt={1}>
+                        <FormControl fullWidth>
+                          <InputLabel size="small">
+                            {t('addEditStationPage.addFormValidation.fields.select')}
+                          </InputLabel>
+                          <Select
+                            fullWidth
+                            id="gdpConcat"
+                            name="gdpConcat"
+                            data-testid="gdpConcat-select"
+                            label={'gdpConcat'}
+                            placeholder={'gdpConcat'}
+                            size="small"
+                            defaultValue={''}
+                            disabled={!gdp}
+                            value={formik.values.gdpConcat}
+                            onChange={formik.handleChange}
+                            error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
+                            inputProps={{
+                              'data-testid': 'gdpConcat-test',
+                            }}
+                          >
+                            {Object.entries(gpdAddresses).map(([key, value]) => (
+                              <MenuItem key={key} selected={true} value={value}>
+                                {`${key.toUpperCase()} - ${value}`}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
+                            <FormHelperText sx={{ color: '#bf3333' }}>
+                              {formik.touched.gdpConcat && formik.errors.gdpConcat}
+                            </FormHelperText>
+                          ) : null}
+                        </FormControl>
+                      </Grid>
+                    </>
+                  )}
                 </RadioGroup>
               </FormControl>
-            </Grid>
-          </Grid>
+          </Box>
         </Box>
 
         <Box sx={inputGroupStyle}>

@@ -29,36 +29,42 @@ export const mockedPSPTaxonomyList: Array<PSPBundleTaxonomy> = [
     serviceType: 'Carta di Identità Elettronica',
     specificBuiltInData: '9/0705103TS/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "PUBBLICHE AMMINISTRAZIONI CENTRALI"
   },
   {
     macroAreaName: 'MINISTERO DEGLI ESTERI',
     serviceType: 'Documento di viaggio provvisorio',
     specificBuiltInData: '9/0705102TS/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "PUBBLICHE AMMINISTRAZIONI CENTRALI"
   },
   {
     macroAreaName: 'MINISTERO DELLO SVULUPPO ECONOMICO',
     serviceType: 'Autorizzazioni satellitari',
     specificBuiltInData: '9/0712103SP/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "PUBBLICHE AMMINISTRAZIONI CENTRALI"
   },
   {
     macroAreaName: "AUTORITA' NAZIONALE ANTICORRUZIONE (ANAC)",
     serviceType: 'Contribuzione gara OE',
     specificBuiltInData: '9/1001100TS/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "AUTORITA' AMMINISTRATIVE INDIPENDENTI"
   },
   {
     macroAreaName: 'AGENZIA DELLE ENTRATE (AdE)',
     serviceType: 'Registrazione Atti',
     specificBuiltInData: '9/1201106IM/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "AGENZIE FISCALI"
   },
   {
     macroAreaName: 'MINISTERO DELLA GIUSTIZIA',
     serviceType: 'CONTRIBUTO DI SEGRETERIA TENUTA ALBO DEGLI AMMINISTRATORI GIUDIZIARI',
     specificBuiltInData: '9/0702155TS/',
     endDate: '2080-01-01T23:59:59Z',
+    ecType: "PUBBLICHE AMMINISTRAZIONI CENTRALI"
   },
 ];
 

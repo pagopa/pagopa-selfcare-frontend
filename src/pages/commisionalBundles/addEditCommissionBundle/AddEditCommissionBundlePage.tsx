@@ -36,6 +36,8 @@ import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResour
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
+const componentPath = 'commissionBundlesPage.addEditCommissionBundle';
+
 const minDateTomorrow = () => {
   const dateToday = new Date();
   dateToday.setHours(0, 0, 0, 0);
@@ -77,53 +79,43 @@ const validate = (
     Object.entries({
       ...{
         description: !values.description
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : undefined,
         idChannel: !values.idChannel
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : undefined,
         maxPaymentAmount: !values.maxPaymentAmount
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : values.minPaymentAmount && values.minPaymentAmount > values.maxPaymentAmount
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.lessThanMinPayment')
+          ? t(`${componentPath}.validationMessage.lessThanMinPayment`)
           : undefined,
         minPaymentAmount:
           !values.minPaymentAmount && values.minPaymentAmount !== 0
-            ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+            ? t(`${componentPath}.validationMessage.requiredField`)
             : values.maxPaymentAmount && values.maxPaymentAmount < values.minPaymentAmount
-            ? t(
-                'commissionBundlesPage.addEditCommissionBundle.validationMessage.moreThanMaxPayment'
-              )
+            ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
             : undefined,
-        name: !values.name
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : undefined,
+        name: !values.name ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
         paymentAmount: !values.paymentAmount
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : undefined,
-        type: !values.type
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
-          : undefined,
+        type: !values.type ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
         validityDateFrom: !values.validityDateFrom
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : (edit === undefined || !edit) &&
             values.validityDateFrom.getTime() < minDateTomorrow().getTime()
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
+          ? t(`${componentPath}.validationMessage.dateNotValid`)
           : values.validityDateTo &&
             values.validityDateFrom.getTime() > values.validityDateTo.getTime()
-          ? t(
-              'commissionBundlesPage.addEditCommissionBundle.validationMessage.startDateOverEndDate'
-            )
+          ? t(`${componentPath}.validationMessage.startDateOverEndDate`)
           : undefined,
         validityDateTo: !values.validityDateTo
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.requiredField')
+          ? t(`${componentPath}.validationMessage.requiredField`)
           : values.validityDateTo.getTime() <= new Date().getTime()
-          ? t('commissionBundlesPage.addEditCommissionBundle.validationMessage.dateNotValid')
+          ? t(`${componentPath}.validationMessage.dateNotValid`)
           : values.validityDateFrom &&
             values.validityDateTo.getTime() < values.validityDateFrom.getTime()
-          ? t(
-              'commissionBundlesPage.addEditCommissionBundle.validationMessage.endDateUnderStartDate'
-            )
+          ? t(`${componentPath}.validationMessage.endDateUnderStartDate`)
           : undefined,
       },
     }).filter(([_key, value]) => value)
@@ -157,6 +149,7 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit: boolean = actionId === FormAction.Edit;
+  const textType = isEdit ? "Edit" : "Create";
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect(
       bundleDetailsSelectors.selectBundleDetails,
@@ -205,9 +198,7 @@ const AddEditCommissionBundlePage = () => {
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
-            `commissionBundlesPage.addEditCommissionBundle.error.errorMessage${
-              isEdit ? 'Updating' : 'Creating'
-            }Bundle`
+            `${componentPath}.error.errorMessage${textType}Bundle`
           ),
           component: 'Toast',
         });
@@ -241,16 +232,16 @@ const AddEditCommissionBundlePage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography variant="body2">
-              {t('commissionBundlesPage.addEditCommissionBundle.breadcrumb.first')}
+              {t(`${componentPath}.breadcrumb.first`)}
             </Typography>
             <Typography variant="body2" fontWeight={'medium'}>
-              {t('commissionBundlesPage.addEditCommissionBundle.breadcrumb.second')}
+              {t(`${componentPath}.breadcrumb.second${textType}`)}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t('commissionBundlesPage.addEditCommissionBundle.title')}
-          subTitle={t('commissionBundlesPage.addEditCommissionBundle.subtitle')}
+          title={t(`${componentPath}.title${textType}`)}
+          subTitle={t(`${componentPath}.subtitle`)}
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
@@ -261,9 +252,7 @@ const AddEditCommissionBundlePage = () => {
           <div style={{ width: '40%' }}>
             <Stepper activeStep={activeStep} alternativeLabel>
               <Step key={'step-config'} completed={activeStep === 1} data-testid="step-config">
-                <StepLabel>
-                  {t('commissionBundlesPage.addEditCommissionBundle.form.bundleConfiguration')}
-                </StepLabel>
+                <StepLabel>{t(`${componentPath}.form.bundleConfiguration`)}</StepLabel>
               </Step>
               <Step key={'step-taxonomies'} data-testid="step-taxonomies">
                 <StepLabel>
@@ -330,10 +319,8 @@ const AddEditCommissionBundlePage = () => {
           </Stack>
         </Stack>
         <GenericModal
-          title={t('commissionBundlesPage.addEditCommissionBundle.modal.title')}
-          message={t(
-            `commissionBundlesPage.addEditCommissionBundle.modal.message${formik.values.type}`
-          )}
+          title={t(`${componentPath}.modal.title${textType}`)}
+          message={t(`${componentPath}.modal.message${isEdit ? 'Edit' : formik.values.type}`)}
           openModal={showConfirmModal}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.cancel')}

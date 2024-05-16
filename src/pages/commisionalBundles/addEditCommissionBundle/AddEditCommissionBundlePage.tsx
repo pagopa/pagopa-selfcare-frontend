@@ -198,7 +198,7 @@ const AddEditCommissionBundlePage = () => {
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
-            `${componentPath}.error.errorMessage${isEdit ? 'Updating' : 'Creating'}Bundle`
+            `${componentPath}.error.errorMessage${textType}Bundle`
           ),
           component: 'Toast',
         });

@@ -149,6 +149,7 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit: boolean = actionId === FormAction.Edit;
+  const textType = isEdit ? "Edit" : "Create";
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect(
       bundleDetailsSelectors.selectBundleDetails,
@@ -231,16 +232,16 @@ const AddEditCommissionBundlePage = () => {
           </ButtonNaked>
           <Breadcrumbs>
             <Typography variant="body2">
-              {t(`${componentPath}.breadcrumb.first${actionId}`)}
+              {t(`${componentPath}.breadcrumb.first`)}
             </Typography>
             <Typography variant="body2" fontWeight={'medium'}>
-              {t(`${componentPath}.breadcrumb.second${actionId}`)}
+              {t(`${componentPath}.breadcrumb.second${textType}`)}
             </Typography>
           </Breadcrumbs>
         </Stack>
         <TitleBox
-          title={t(`${componentPath}.title${actionId}`)}
-          subTitle={t(`${componentPath}.subtitle${actionId}`)}
+          title={t(`${componentPath}.title${textType}`)}
+          subTitle={t(`${componentPath}.subtitle`)}
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}
@@ -318,8 +319,8 @@ const AddEditCommissionBundlePage = () => {
           </Stack>
         </Stack>
         <GenericModal
-          title={t(`${componentPath}.modal.title${actionId}`)}
-          message={t(`${componentPath}.modal.message${isEdit ? 'Update' : formik.values.type}`)}
+          title={t(`${componentPath}.modal.title${textType}`)}
+          message={t(`${componentPath}.modal.message${isEdit ? 'Edit' : formik.values.type}`)}
           openModal={showConfirmModal}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.cancel')}

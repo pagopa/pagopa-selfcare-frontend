@@ -982,9 +982,11 @@
     "addEditCommissionBundle": {
       "breadcrumb": {
         "first": "Pacchetti commissioni",
-        "second": "Crea pacchetto"
+        "secondcreate": "Crea pacchetto",
+        "secondedit": "Modifica pacchetto"
       },
-      "title": "Crea un nuovo pacchetto commissioni",
+      "titlecreate": "Crea un nuovo pacchetto commissioni",
+      "titleedit": "Modifica il pacchetto commissioni",
       "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
       "form": {
         "bundleType": "Tipologia pacchetto",
@@ -1058,10 +1060,12 @@
         "moreThanMaxPayment": "L'importo minimo non può essere maggiore dell'importo massimo"
       },
       "modal": {
-        "title": "Creazione nuovo pacchetto commissioni",
-        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
-        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale pubblico. Potrai gestire le adesioni in seguito.",
-        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale globale."
+        "titlecreate": "Creazione nuovo pacchetto commissioni",
+        "titleupdate": "Modifica pacchetto commissioni",
+        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire i destinatari in seguito.",
+        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire le adesioni in seguito.",
+        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale.",
+        "messageUpdate": "Confermi di voler aggiornare il pacchetto commissionale?"
       },
       "error": {
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",

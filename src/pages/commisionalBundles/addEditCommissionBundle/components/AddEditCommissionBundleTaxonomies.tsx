@@ -47,6 +47,7 @@ const mapTaxonomyToPspBundleTaxonomy = (
   endDate: taxonomy.end_date,
   serviceType: taxonomy.service_type,
   fromFile: taxonomy.fromFile,
+  ecType: taxonomy.ci_type
 });
 
 const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) => {

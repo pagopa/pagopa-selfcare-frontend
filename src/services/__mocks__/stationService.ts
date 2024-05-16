@@ -52,13 +52,13 @@ export const mockedWrapperStation: WrapperStationDetailsDto = {
   targetPort: 3001,
 };
 
-// @ts-ignore
 export const mockedFullStation: StationDetailResource = {
   wrapperStatus: WrapperStatusEnum.TO_CHECK,
   stationCode: '81001870922_04',
   enabled: true,
   brokerDescription: '',
   version: 1,
+  password: "password",
   associatedCreditorInstitutions: 0,
   activationDate: new Date(),
   createdAt: new Date(),

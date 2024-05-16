@@ -16,7 +16,7 @@ export interface BundleTaxonomiesDrawerProps {
   openDrawer: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
   addAction: (taxonomies: Array<Taxonomy>) => void;
-  addedTaxonomies: Array<string>;
+  addedTaxonomies: Array<string | undefined>;
 }
 
 const SkeletonGroup = () => {

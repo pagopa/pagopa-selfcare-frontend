@@ -100,10 +100,10 @@ const ConnectionRadioLabel = ({ type }: { type: ConnectionType }) => {
 };
 
 const getDefaultConnectionType = (stationDetail?: StationDetailResource) => {
-  if (!stationDetail?.isConnectionSync) {
-    return ConnectionType.ASYNC;
+  if (stationDetail?.isConnectionSync) {
+    return ConnectionType.SYNC;
   }
-  return ConnectionType.SYNC;
+  return ConnectionType.ASYNC;
 };
 
 const componentPath = 'addEditStationPage.addForm';

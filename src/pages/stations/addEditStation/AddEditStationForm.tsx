@@ -224,7 +224,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         ? `${detail.redirectProtocol.toLowerCase()}://${detail.redirectIp}${
             detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''
           }${detail.redirectPath ?? ''}${
-            detail.redirectQueryString ? '?' + detail.redirectQueryString.toString() : ''
+            detail.redirectQueryString ? '?' + String(detail.redirectQueryString) : ''
           }`
         : '',
 
@@ -741,7 +741,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       formik
         .setValues({
           ...formik.values,
-          proxyHost: `${protocolSplit ? protocolSplit.toString() + '://' : ''}${hostSplit}`,
+          proxyHost: `${protocolSplit ? String(protocolSplit) + '://' : ''}${hostSplit}`,
           proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https' ? 443 : 80,
           proxyEnabled: true,
         })

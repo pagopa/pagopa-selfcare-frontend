@@ -5,7 +5,7 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Pagination } from '@mui/material';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_PAYMENTS_RECEIPTS } from '../../../utils/constants';

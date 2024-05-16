@@ -8,7 +8,7 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import { LOADING_TASK_CHANNEL_PSP_TABLE } from '../../../utils/constants';
 import { dissociatePSPfromChannel, getChannelPSPs } from '../../../services/channelService';
 import { ChannelPspListResource } from '../../../api/generated/portal/ChannelPspListResource';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './ChannelPSPTableColumns';
 import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 

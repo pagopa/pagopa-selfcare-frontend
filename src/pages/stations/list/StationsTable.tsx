@@ -12,7 +12,7 @@ import { useUserRole } from '../../../hooks/useUserRole';
 import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './StationsTableColumns';
 
 const rowHeight = 64;

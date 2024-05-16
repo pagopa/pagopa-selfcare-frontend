@@ -1,6 +1,16 @@
+import { TextField, InputAdornment, Button, Pagination } from '@mui/material';
+import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
+import { GridColumns, GridSearchIcon, GridValidRowModel } from '@mui/x-data-grid';
+import React, { ChangeEvent, useState } from 'react';
+import { ButtonNaked } from '@pagopa/mui-italia';
+
 import { styled } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { theme } from '@pagopa/mui-italia';
+
+const rowHeight = 64;
+const headerHeight = 56;
 
 export const CustomDataGrid = styled(DataGrid)({
   border: 'none !important',
@@ -56,3 +66,54 @@ export const CustomDataGrid = styled(DataGrid)({
     },
   },
 });
+
+type Props = {
+  rows: Array<any>;
+  columns: GridColumns<GridValidRowModel>;
+  totalPages?: number;
+  page?: number;
+  handleChangePage?: (value: number) => void;
+  getRowId?: (item: any) => any;
+};
+
+export default function TableDataGrid({
+  rows,
+  columns,
+  totalPages,
+  page,
+  handleChangePage,
+  getRowId,
+}: Readonly<Props>) {
+  return (
+    <div data-testid="data-grid">
+      <CustomDataGrid
+        disableColumnFilter
+        disableColumnSelector
+        disableDensitySelector
+        disableSelectionOnClick
+        hideFooterSelectedRowCount
+        autoHeight
+        className="CustomDataGrid"
+        columnBuffer={5}
+        columns={columns}
+        components={{
+          Pagination: () =>
+            handleChangePage ? (
+              <Pagination
+                color="primary"
+                count={totalPages ?? 1}
+                page={(page ?? 0) + 1}
+                onChange={(_event: ChangeEvent<unknown>, value: number) => handleChangePage(value)}
+              />
+            ) : null,
+        }}
+        getRowId={(r: any) => (getRowId ? getRowId(r) : r.id)}
+        headerHeight={headerHeight}
+        paginationMode="client"
+        rowCount={rows.length}
+        rowHeight={rowHeight}
+        rows={rows ?? []}
+      />
+    </div>
+  );
+}

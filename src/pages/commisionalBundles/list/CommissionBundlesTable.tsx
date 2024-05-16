@@ -9,7 +9,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import ROUTES from '../../../routes';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import TableEmptyState from '../../../components/Table/TableEmptyState';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
 import { BundleResource, BundlesResource } from '../../../model/CommissionBundle';

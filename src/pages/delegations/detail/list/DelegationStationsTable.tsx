@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { CIBrokerStationPage } from '../../../../api/generated/portal/CIBrokerStationPage';
 import { CIBrokerStationResource } from '../../../../api/generated/portal/CIBrokerStationResource';
 import GenericModal from '../../../../components/Form/GenericModal';
-import { CustomDataGrid } from '../../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../../components/Table/TableDataGrid';
 import TableEmptyState from '../../../../components/Table/TableEmptyState';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';

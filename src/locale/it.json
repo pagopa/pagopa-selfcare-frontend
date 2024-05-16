@@ -982,11 +982,11 @@
     "addEditCommissionBundle": {
       "breadcrumb": {
         "first": "Pacchetti commissioni",
-        "secondcreate": "Crea pacchetto",
-        "secondedit": "Modifica pacchetto"
+        "secondCreate": "Crea pacchetto",
+        "secondEdit": "Modifica pacchetto"
       },
-      "titlecreate": "Crea un nuovo pacchetto commissioni",
-      "titleedit": "Modifica il pacchetto commissioni",
+      "titleCreate": "Crea un nuovo pacchetto commissioni",
+      "titleEdit": "Modifica il pacchetto commissioni",
       "subtitle": "L’attivazione di un pacchetto commissioni può richiedere dai 2 ai 5 giorni.",
       "form": {
         "bundleType": "Tipologia pacchetto",
@@ -1060,12 +1060,12 @@
         "moreThanMaxPayment": "L'importo minimo non può essere maggiore dell'importo massimo"
       },
       "modal": {
-        "titlecreate": "Creazione nuovo pacchetto commissioni",
-        "titleupdate": "Modifica pacchetto commissioni",
+        "titleCreate": "Creazione nuovo pacchetto commissioni",
+        "titleEdit": "Modifica pacchetto commissioni",
         "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire i destinatari in seguito.",
         "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire le adesioni in seguito.",
         "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale.",
-        "messageUpdate": "Confermi di voler aggiornare il pacchetto commissionale?"
+        "messageEdit": "Confermi di voler aggiornare il pacchetto commissionale?"
       },
       "error": {
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",
@@ -1073,7 +1073,8 @@
         "errorMessageCreatingBundle": "Errore durante la creazione del pacchetto commissioni",
         "errorMessageUpdatingBundle": "Errore durante l'aggiornamento del pacchetto commissioni",
         "errorMessageNoBrokerDelegations": "L’intermediario non ha ancora effettuato la registrazione al Nodo dei Pagamenti",
-        "errorMessageNoBroker": "Non sono presenti intermediari"
+        "errorMessageNoBroker": "Non sono presenti intermediari",
+        "errorMessageDuplicatedBundle": "E' gia presente un pacchetto commissionale con questa configurazione"
       }
     },
     "allTaxonomies": "Tutti i servizi di incasso"

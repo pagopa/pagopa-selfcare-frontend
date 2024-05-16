@@ -1059,9 +1059,9 @@
       },
       "modal": {
         "title": "Creazione nuovo pacchetto commissioni",
-        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale privato. Potrai gestire i destinatari in seguito.",
-        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale pubblico. Potrai gestire le adesioni in seguito.",
-        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale globale."
+        "messagePRIVATE": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire i destinatari in seguito.",
+        "messagePUBLIC": "Se confermi, verrà generato un nuovo pacchetto commissionale. Potrai gestire le adesioni in seguito.",
+        "messageGLOBAL": "Se confermi, verrò generato un nuovo pacchetto commissionale."
       },
       "error": {
         "errorMessageAllDataDesc": "Errore durante la ricezione dei dati",

@@ -8,6 +8,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 type TabFilter = {
   label: string;
   disabled?: boolean;
+  'data-testid'?: string;
 };
 
 type Props = {
@@ -18,8 +19,8 @@ type Props = {
   setExternalSearchInput?: (value: string) => void;
   resetFilters?: () => void;
   listTabFilter?: Array<TabFilter>;
-  setTabFilter?: (index: number) => void;
-  activeTabFilter?: number;
+  setActiveTab?: (index: number) => void;
+  activeTab?: number;
 };
 
 const a11yProps = (index: number) => ({
@@ -28,15 +29,22 @@ const a11yProps = (index: number) => ({
 });
 
 export default function TableSearchBar({
+  // Function triggered when user clicks on the search/filter button
   handleSearchTrigger,
   componentName,
+  // React node to render custom elements between the search input and button
   children,
+  // React node to render a custom button at the end of the box instead of the search/filter buttons
   customEndButton,
+  // Function to set external search input variable
   setExternalSearchInput,
   resetFilters,
+  // List of tabs of type TabFilter
   listTabFilter,
-  setTabFilter,
-  activeTabFilter,
+  // Function to set external active tab value
+  setActiveTab,
+  // Controlled active tab value
+  activeTab,
 }: Readonly<Props>) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
@@ -70,7 +78,7 @@ export default function TableSearchBar({
                 <GridSearchIcon color="disabled" />
               </InputAdornment>
             ),
-            sx: { height: 48,backgroundColor: '#FFFFFF' },
+            sx: { height: 48, backgroundColor: '#FFFFFF' },
           }}
           value={internalSearchValue}
           inputProps={{
@@ -86,7 +94,7 @@ export default function TableSearchBar({
         ) : (
           <>
             <Button
-              onClick={() => handleSearchTrigger && handleSearchTrigger(internalSearchValue)}
+              onClick={() => handleSearchTrigger !== undefined && handleSearchTrigger(internalSearchValue)}
               variant="contained"
               data-testid="button-search"
               sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
@@ -112,9 +120,9 @@ export default function TableSearchBar({
       {listTabFilter && (
         <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
           <Tabs
-            value={activeTabFilter}
+            value={activeTab}
             onChange={(_event: React.SyntheticEvent, newValue: number) =>
-              setTabFilter && setTabFilter(newValue)
+              setActiveTab !== undefined && setActiveTab(newValue)
             }
             sx={{ width: '100%' }}
             centered
@@ -126,7 +134,7 @@ export default function TableSearchBar({
                 label={tab.label}
                 {...a11yProps(index)}
                 disabled={tab.disabled}
-                data-testid="tab-private"
+                data-testid={`tab-${tab['data-testid'] ?? index}`}
               />
             ))}
           </Tabs>

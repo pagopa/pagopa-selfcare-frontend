@@ -74,13 +74,16 @@ import {
 } from '../../../utils/station-utils';
 import { ENV } from '../../../utils/env';
 import { useUserRole } from '../../../hooks/useUserRole';
-import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import {
+  StationDetailResource,
+  WrapperStatusEnum,
+} from '../../../api/generated/portal/StationDetailResource';
 import { TestStationTypeEnum } from '../../../api/generated/portal/StationTestDto';
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
   goBack: () => void;
-  stationDetail?: StationOnCreation;
+  stationDetail?: StationDetailResource;
   formAction: string;
 };
 
@@ -96,11 +99,11 @@ const ConnectionRadioLabel = ({ type }: { type: ConnectionType }) => {
   );
 };
 
-const getDefaultConnectionType = (isEdit: boolean, stationDetail?: StationOnCreation) => {
-  if (!isEdit || stationDetail?.service === undefined || stationDetail.service.includes('gpd')) {
-    return ConnectionType.ASYNC;
+const getDefaultConnectionType = (stationDetail?: StationDetailResource) => {
+  if (stationDetail?.isConnectionSync) {
+    return ConnectionType.SYNC;
   }
-  return ConnectionType.SYNC;
+  return ConnectionType.ASYNC;
 };
 
 const componentPath = 'addEditStationPage.addForm';
@@ -131,12 +134,12 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   const [validatingPof, setValidatingPof] = useState<boolean>(false);
 
   const [connectionType, setConnectionType] = useState<ConnectionType>(
-    getDefaultConnectionType(formAction === StationFormAction.Edit, stationDetail)
+    getDefaultConnectionType(stationDetail)
   );
 
   const isTesting = useFlagValue('test-stations');
 
-  const emptyStationData = (detail?: StationOnCreation) => ({
+  const emptyStationData = (detail?: StationDetailResource) => ({
     brokerCode: brokerCodeCleaner,
     ip: '',
     password: '',
@@ -169,7 +172,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     gdpConcat: '',
     threadNumber: 1,
   });
-  const mapStationDetailToCreation = (detail: StationOnCreation) => ({
+  const mapStationDetailToCreation = (detail: StationDetailResource) => ({
     brokerCode: detail.brokerCode ?? '',
     enabled: detail.enabled,
     ip: detail.ip ?? '',
@@ -216,13 +219,14 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
     redirectPort: detail.redirectPort ?? undefined,
     redirectPath: detail.redirectPath ?? '',
     redirectQueryString: detail.redirectQueryString ?? '',
-    redirectConcat: detail.redirectPath
-      ? `${detail.redirectProtocol.toLowerCase()}://${detail.redirectIp}${
-          detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''
-        }${detail.redirectPath ?? ''}${
-          detail.redirectQueryString ? '?' + detail.redirectQueryString : ''
-        }`
-      : '',
+    redirectConcat:
+      detail.redirectPath && detail.redirectProtocol
+        ? `${detail.redirectProtocol.toLowerCase()}://${detail.redirectIp}${
+            detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''
+          }${detail.redirectPath ?? ''}${
+            detail.redirectQueryString ? '?' + String(detail.redirectQueryString) : ''
+          }`
+        : '',
 
     // fields for RT endpoint
     targetHost: detail.targetHost ?? '',
@@ -244,7 +248,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
         }${detail.targetPathPof ?? ''}`
       : '',
   });
-  const initialFormData = (detail?: StationOnCreation) =>
+  const initialFormData = (detail?: StationDetailResource) =>
     detail ? mapStationDetailToCreation(detail) : emptyStationData();
 
   const inputGroupStyle = {
@@ -575,7 +579,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
   useEffect(() => {
     if (stationDetail) {
       setConnectionType(
-        getDefaultConnectionType(formAction === StationFormAction.Edit, stationDetail)
+        getDefaultConnectionType(stationDetail)
       );
       const category = getStationCategoryFromDetail(stationDetail, env);
       if (category === StationCategory.AsyncGPD) {
@@ -737,7 +741,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
       formik
         .setValues({
           ...formik.values,
-          proxyHost: `${protocolSplit ? protocolSplit + '://' : ''}${hostSplit}`,
+          proxyHost: `${protocolSplit ? String(protocolSplit) + '://' : ''}${hostSplit}`,
           proxyPort: portSplit !== 0 ? portSplit : protocolSplit === 'https' ? 443 : 80,
           proxyEnabled: true,
         })

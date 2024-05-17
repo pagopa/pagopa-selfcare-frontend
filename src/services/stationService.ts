@@ -89,7 +89,7 @@ export const getStationCodeV2 = (code: string): Promise<StationCodeResource> => 
 
 export const getECListByStationCode = (
   stationcode: string,
-  ciName: string,
+  ciName: string | undefined,
   page: number,
   limit?: number
 ): Promise<CreditorInstitutionsResource> => {

@@ -3,18 +3,18 @@ import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../redux/store';
+import {store} from '../../../../../redux/store';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {
   RedirectProtocolEnum,
   StationDetailResource,
   WrapperStatusEnum,
-} from '../../../api/generated/portal/StationDetailResource';
-import {Protocol4ModEnum, ProtocolEnum} from '../../../api/generated/portal/StationDetailsDto';
-import StationDetailsValidation from '../detail/components/StationDetailsValidation';
-import * as useUserRole from "../../../hooks/useUserRole";
-import {ROLE} from "../../../model/RolePermission";
+} from '../../../../../api/generated/portal/StationDetailResource';
+import {Protocol4ModEnum, ProtocolEnum} from '../../../../../api/generated/portal/StationDetailsDto';
+import StationDetailsValidation from '../StationDetailsValidation';
+import * as useUserRole from "../../../../../hooks/useUserRole";
+import {ROLE} from "../../../../../model/RolePermission";
 
 const nodeCrypto = require('crypto');
 // @ts-ignore
@@ -25,8 +25,8 @@ window.crypto = {
 };
 const genPassword = crypto.getRandomValues(new Uint32Array(1)).toString();
 
-jest.mock('../../components/commonFunctions');
-jest.mock("../../../hooks/useUserRole");
+jest.mock('../../../../components/commonFunctions');
+jest.mock("../../../../../hooks/useUserRole");
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

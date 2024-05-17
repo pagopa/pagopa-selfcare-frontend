@@ -6,21 +6,21 @@ import userEvent from '@testing-library/user-event';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
-import {store} from '../../../redux/store';
-import AddEditStationForm from '../addEditStation/AddEditStationForm';
-import {ConnectionType, StationFormAction, StationOnCreation} from '../../../model/Station';
-import {WrapperStatusEnum} from '../../../api/generated/portal/StationDetailResource';
-import {ProtocolEnum, RedirectProtocolEnum,} from '../../../api/generated/portal/StationDetailsDto';
-import {partiesActions} from '../../../redux/slices/partiesSlice';
-import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
-import * as stationService from '../../../services/stationService';
-import * as useUserRole from '../../../hooks/useUserRole';
-import {featureFlagsActions} from "../../../redux/slices/featureFlagsSlice";
-import {ROLE} from "../../../model/RolePermission";
-import { mockedStationCode } from '../../../services/__mocks__/stationService';
+import {store} from '../../../../redux/store';
+import AddEditStationForm from '../AddEditStationForm';
+import {ConnectionType, StationFormAction, StationOnCreation} from '../../../../model/Station';
+import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
+import {ProtocolEnum, RedirectProtocolEnum,} from '../../../../api/generated/portal/StationDetailsDto';
+import {partiesActions} from '../../../../redux/slices/partiesSlice';
+import {ecAdminSignedDirect} from '../../../../services/__mocks__/partyService';
+import * as stationService from '../../../../services/stationService';
+import * as useUserRole from '../../../../hooks/useUserRole';
+import {featureFlagsActions} from "../../../../redux/slices/featureFlagsSlice";
+import {ROLE} from "../../../../model/RolePermission";
+import { mockedStationCode } from '../../../../services/__mocks__/stationService';
 
 
-jest.mock('../../components/commonFunctions');
+jest.mock('../../../components/commonFunctions');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

@@ -65,6 +65,7 @@ export default function PaymentsReceiptsPage() {
                 type="date"
                 size="small"
                 sx={{
+                  backgroundColor: '#FFFFFF',
                   ml: 1,
                   '.MuiOutlinedInput-root': {
                     height: '48px',

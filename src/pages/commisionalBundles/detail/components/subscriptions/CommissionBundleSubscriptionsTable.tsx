@@ -252,7 +252,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
             value={filterState}
             onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
             data-testid="subscription-state"
-            sx={{ height: '48px' }}
+            sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
           >
             <MenuItem value={SubscriptionStateType.Waiting}>
               {t(`${componentPath}.stateChip.${SubscriptionStateType.Waiting}`)}

@@ -206,8 +206,9 @@
     "searchPlaceholder": "Cerca per codice",
     "table": {
       "noResults": "Nessun risultato",
-      "noChannels": "Non sono ancora presenti canali in questo ambiente.<1><0> Crea Canale</0></1>",
-      "loading": "Caricamento..."
+      "emptyState": "Non sono ancora presenti canali in questo ambiente.",
+      "loading": "Caricamento...",
+      "link": "Crea canale"
     },
     "channelsTableColumns": {
       "headerFields": {
@@ -299,17 +300,13 @@
           "IMMEDIATE": "Immediato",
           "DEFERRED": "Differito"
         }
+      },
+      "confirmModal": {
+        "title": "Invio per la revisione",
+        "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
+        "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
+        "channelConfiguration": "Configurazione canale"
       }
-    },
-    "confirmModal": {
-      "title": "Invio per la revisione",
-      "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
-      "messageStation": "Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>",
-      "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
-      "confirmButton": "Invia",
-      "confirmButtonOpe": "Conferma",
-      "cancelButton": "Torna indietro",
-      "channelConfiguration": "Configurazione canale"
     },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",
@@ -431,11 +428,22 @@
       "continueButton": "Continua",
       "confirmButton": "Conferma",
       "sections": {
+        "connectionType": "Tipo di connessione",
         "registry": "Anagrafica",
         "modello1": "Modello 1",
         "modelloUnico": "Modello Unico"
       },
       "fields": {
+        "connectionRadio": {
+          "async": {
+            "label": "Asincrona",
+            "sublabel": "Gestito da PagoPA"
+          },
+          "sync": {
+            "label": "Sincrona",
+            "sublabel": "Gestito da EC/PT"
+          }
+        },
         "stationCode": "Codice stazione",
         "brokerCode": "Codice intermediario",
         "endpointMUConcat": "Endpoint",
@@ -443,7 +451,14 @@
         "endpointRedirectConcat": "Endpoint Redirect",
         "primitiveVersion": "Versione primitive"
       },
-      "testStation": "Verifica URL"
+      "testStation": "Verifica URL",
+      "confirmModal": {
+        "title": "Invio per la revisione",
+        "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
+        "titleOperator": "Configurazione stazione",
+        "messageStationOperator": "L’ente riceverà una notifica di conferma attivazione della stazione.<br/>",
+        "messageStation": "Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>"
+      }
     },
     "addFormValidation": {
       "title": "Informazione da completare",
@@ -504,7 +519,10 @@
     "subtitle": "Cerca e visualizza lo stato delle stazioni.",
     "searchPlaceholder": "Cerca per codice stazione",
     "createStationButtonLabel": "Crea stazione",
-    "notFoundStations": "Non sono ancora presenti stazioni in ambiente di collaudo. <1> Crea Stazione</1>",
+    "table": {
+      "emptyState": "Non sono ancora presenti stazioni.",
+      "link": "Crea stazione"
+    },
     "noResults": "Nessun risultato",
     "loading": "Caricamento...",
     "stationsTableColumns": {
@@ -828,7 +846,8 @@
       "searchByName": "Cerca per Nome",
       "createBundle": "Crea pacchetto",
       "table": {
-        "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}."
+        "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}.",
+        "link": "Crea pacchetto"
       },
       "headerFields": {
         "bundleName": "Nome pacchetto",
@@ -1275,10 +1294,12 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "showMore": "Mostra di più",
+    "discoverMore" : "Scopri di più",
     "search": "Cerca",
     "add": "Aggiungi",
     "back": "Indietro",
     "turnBack": "Torna indietro",
+    "send": "Invia",
     "modify": "Modifica",
     "delete": "Elimina",
     "remove": "Rimuovi",

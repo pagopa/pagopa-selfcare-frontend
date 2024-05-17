@@ -4,6 +4,7 @@ import { Typography, Box, IconButton, Grid, Stack } from '@mui/material';
 import { RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
+import { PSPBundleTaxonomy } from '../../../../api/generated/portal/PSPBundleTaxonomy';
 
 export interface BundleTaxonomiesTableProps {
   tableData?: any;
@@ -55,10 +56,10 @@ export const BundleTaxonomiesTable = ({
               </Box>
             </Stack>
             <Typography variant="body2" mb={1}>
-              {taxonomyArea[0].ci_type}
+              {taxonomyArea[0].ecType}
             </Typography>
-            {taxonomyArea.map((taxonomy: any) => (
-              <Grid container key={taxonomy.specific_built_in_data} my={1} data-testid="grid-taxonomy">
+            {taxonomyArea.map((taxonomy: PSPBundleTaxonomy) => (
+              <Grid container key={taxonomy.specificBuiltInData} my={1} data-testid="grid-taxonomy">
                 <Grid item xs={1} display="flex" alignItems={'center'}>
                   <IconButton
                     sx={{
@@ -68,7 +69,7 @@ export const BundleTaxonomiesTable = ({
                     }}
                     onClick={(e) =>
                       deleteTaxonomyAction({
-                        taxonomy: taxonomy.specific_built_in_data,
+                        taxonomy: taxonomy.specificBuiltInData,
                         area: item,
                       })
                     }
@@ -85,7 +86,7 @@ export const BundleTaxonomiesTable = ({
                   sx={{ borderRadius: 1, border: 1, borderColor: theme.palette.divider, p: 1, px: 2 }}
                 >
                   <Typography variant="body1">
-                    {taxonomy.specific_built_in_data} - {taxonomy.service_type}
+                    {taxonomy.specificBuiltInData} - {taxonomy.serviceType}
                   </Typography>
                 </Grid>
               </Grid>

@@ -63,6 +63,7 @@ type Props = {
     formAction: string;
 };
 
+const componentPath = 'addEditStationPage.addForm';
 const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -701,8 +702,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     fullWidth
                                     id="stationCode"
                                     name="stationCode"
-                                    label={t('addEditStationPage.addForm.fields.stationCode')}
-                                    placeholder={t('addEditStationPage.addForm.fields.stationCode')}
+                label={t(`${componentPath}.fields.stationCode`)}
+                placeholder={t(`${componentPath}.fields.stationCode`)}
                                     size="small"
                                     value={formik.values.stationCode}
                                     disabled
@@ -721,8 +722,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         fullWidth
                                         id="brokerCode"
                                         name="brokerCode"
-                                        label={t('addEditStationPage.addForm.fields.brokerCode')}
-                                        placeholder={t('addEditStationPage.addForm.fields.brokerCode')}
+                  label={t(`${componentPath}.fields.brokerCode`)}
+                  placeholder={t(`${componentPath}.fields.brokerCode`)}
                                         size="small"
                                         value={formik.values.brokerCode}
                                         disabled
@@ -739,9 +740,9 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         </Grid>
                     </Box>
 
-                    <Box sx={inputGroupStyle}>
+                    <Box sx={inputGroupStyle} data-testid="model-1-box">
                         <AddEditStationFormSectionTitle
-                            title={t('addEditStationPage.addForm.sections.modello1')}
+                title={t(`${componentPath}.sections.modello1`)}
                             icon={<MenuBook/>}
                         />
                         <Grid container item spacing={2} mt={1} justifyContent={'center'}>
@@ -750,8 +751,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     fullWidth
                                     id="targetConcat"
                                     name="targetConcat"
-                                    label={t('addEditStationPage.addForm.fields.endpointRTConcat')}
-                                    placeholder={t('addEditStationPage.addForm.fields.endpointRTConcat')}
+                    label={t(`${componentPath}.fields.endpointRTConcat`)}
+                    placeholder={t(`${componentPath}.fields.endpointRTConcat`)}
                                     size="small"
                                     value={formik.values.targetConcat}
                                     onChange={formik.handleChange}
@@ -765,20 +766,22 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         endAdornment: (
                                             <InputAdornment position="end">
                                                 {testRtResult !== undefined &&
-                                                testRtResult.testResult === TestResultEnum.SUCCESS ?
-                                                    (<CheckIcon sx={{color: 'success.main'}}/>) :
-                                                    ""
-                                                }
+                          testRtResult.testResult === TestResultEnum.SUCCESS ? (
+                            <CheckIcon sx={{ color: 'success.main' }} />
+                          ) : (
+                            ''
+                          )}
                                             </InputAdornment>
                                         ),
                                     }}
                                 />
                             </Grid>
                             <Grid container item xs={2}>
-                                {
-                                    validatingRt ? (<CircularProgressIcon sx={{color: 'primary.main',}}/>) :
-                                        isTesting ?
-                                            (<ButtonNaked
+                  {validatingRt ? (
+                    <CircularProgressIcon sx={{ color: 'primary.main' }} />
+                  ) : (
+                    isTesting && (
+                      <ButtonNaked
                                                 size="large"
                                                 component="button"
                                                 disabled={
@@ -792,9 +795,10 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                                 data-testid="test-rt-endpoint-test"
                                                 endIcon={<NorthEastIcon/>}
                                             >
-                                                {t('addEditStationPage.addForm.testStation')}
-                                            </ButtonNaked>) : ""
-                                }
+                        {t(`${componentPath}.testStation`)}
+                      </ButtonNaked>
+                    )
+                  )}
                             </Grid>
                         </Grid>
                         <Grid container item spacing={2} mt={1} justifyContent={'center'}>
@@ -803,8 +807,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     fullWidth
                                     id="redirectConcat"
                                     name="redirectConcat"
-                                    label={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
-                                    placeholder={t('addEditStationPage.addForm.fields.endpointRedirectConcat')}
+                    label={t(`${componentPath}.fields.endpointRedirectConcat`)}
+                    placeholder={t(`${componentPath}.fields.endpointRedirectConcat`)}
                                     size="small"
                                     value={formik.values.redirectConcat}
                                     onChange={formik.handleChange}
@@ -818,20 +822,22 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         endAdornment: (
                                             <InputAdornment position="end">
                                                 {testRedirectResult !== undefined &&
-                                                testRedirectResult.testResult === TestResultEnum.SUCCESS ?
-                                                    (<CheckIcon sx={{color: 'success.main'}}/>) :
-                                                    ""
-                                                }
+                          testRedirectResult.testResult === TestResultEnum.SUCCESS ? (
+                            <CheckIcon sx={{ color: 'success.main' }} />
+                          ) : (
+                            ''
+                          )}
                                             </InputAdornment>
                                         ),
                                     }}
                                 />
                             </Grid>
                             <Grid container item xs={2}>
-                                {
-                                    validatingRedirect ? (<CircularProgressIcon sx={{color: 'primary.main',}}/>) :
-                                        isTesting ?
-                                            (<ButtonNaked
+                  {validatingRedirect ? (
+                    <CircularProgressIcon sx={{ color: 'primary.main' }} />
+                  ) : (
+                    isTesting && (
+                      <ButtonNaked
                                                 size="large"
                                                 component="button"
                                                 hidden={!isTesting}
@@ -846,16 +852,17 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                                 data-testid="test-redirect-endpoint-test"
                                                 endIcon={<NorthEastIcon/>}
                                             >
-                                                {t('addEditStationPage.addForm.testStation')}
-                                            </ButtonNaked>) : ""
-                                }
+                        {t(`${componentPath}.testStation`)}
+                      </ButtonNaked>
+                    )
+                  )}
                             </Grid>
                         </Grid>
                     </Box>
 
-                    <Box sx={inputGroupStyle}>
+            <Box sx={inputGroupStyle} data-testid="model-unique-box">
                         <AddEditStationFormSectionTitle
-                            title={t('addEditStationPage.addForm.sections.modelloUnico')}
+                title={t(`${componentPath}.sections.modelloUnico`)}
                             icon={<MenuBook/>}
                         />
                         <Grid container spacing={2} mt={1}>
@@ -864,8 +871,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                     fullWidth
                                     id="targetPofConcat"
                                     name="targetPofConcat"
-                                    label={t('addEditStationPage.addForm.fields.endpointMUConcat')}
-                                    placeholder={t('addEditStationPage.addForm.fields.endpointMUConcat')}
+                    label={t(`${componentPath}.fields.endpointMUConcat`)}
+                    placeholder={t(`${componentPath}.fields.endpointMUConcat`)}
                                     size="small"
                                     value={formik.values.targetPofConcat}
                                     onChange={formik.handleChange}
@@ -879,20 +886,20 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                         endAdornment: (
                                             <InputAdornment position="end">
                                                 {testPofResult !== undefined &&
-                                                testPofResult.testResult === TestResultEnum.SUCCESS ?
-                                                    (<CheckIcon sx={{color: 'success.main'}}/>) :
-                                                    ""
-                                                }
+                            testPofResult.testResult === TestResultEnum.SUCCESS && (
+                              <CheckIcon sx={{ color: 'success.main' }} />
+                            )}
                                             </InputAdornment>
                                         ),
                                     }}
                                 />
                             </Grid>
                             <Grid container item xs={2}>
-                                {
-                                    validatingPof ? (<CircularProgressIcon sx={{color: 'primary.main',}}/>) :
-                                        isTesting ?
-                                            (<ButtonNaked
+                  {validatingPof ? (
+                    <CircularProgressIcon sx={{ color: 'primary.main' }} />
+                  ) : (
+                    isTesting && (
+                      <ButtonNaked
                                                 size="large"
                                                 component="button"
                                                 disabled={
@@ -906,9 +913,10 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                                 data-testid="test-pof-endpoint-test"
                                                 endIcon={<NorthEastIcon/>}
                                             >
-                                                {t('addEditStationPage.addForm.testStation')}
-                                            </ButtonNaked>) : ""
-                                }
+                        {t(`${componentPath}.testStation`)}
+                      </ButtonNaked>
+                    )
+                  )}
                             </Grid>
 
                         </Grid>
@@ -916,15 +924,15 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                             <Grid container item xs={6}>
                                 <FormControl fullWidth>
                                     <InputLabel size="small">
-                                        {t('addEditStationPage.addForm.fields.primitiveVersion')}
+                      {t(`${componentPath}.fields.primitiveVersion`)}
                                     </InputLabel>
                                     <Select
                                         fullWidth
                                         type="number"
                                         id="primitiveVersion"
                                         name="primitiveVersion"
-                                        label={t('addEditStationPage.addForm.fields.primitiveVersion')}
-                                        placeholder={t('addEditStationPage.addForm.fields.primitiveVersion')}
+                      label={t(`${componentPath}.fields.primitiveVersion`)}
+                      placeholder={t(`${componentPath}.fields.primitiveVersion`)}
                                         size="small"
                                         value={formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion}
                                         onChange={formik.handleChange}
@@ -938,8 +946,6 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                                                 key={key}
                                                 selected={
                                                     formik.values.primitiveVersion && value === formik.values.primitiveVersion
-                                                        ? true
-                                                        : false
                                                 }
                                                 value={value}
                                             >
@@ -975,7 +981,7 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         onClick={goBack}
                         data-testid="cancel-button-test"
                     >
-                        {t('addEditStationPage.addForm.backButton')}
+            {t('general.back')}
                     </Button>
                 </Stack>
                 <Stack display="flex" justifyContent="flex-end">
@@ -990,26 +996,24 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                         type="submit"
                         data-testid="confirm-button-test"
                     >
-                        {userIsPagopaOperator
-                            ? t('addEditStationPage.addForm.continueButton')
-                            : t('addEditStationPage.addForm.confirmButton')}
+            {t('general.confirm')}
                     </Button>
                 </Stack>
             </Stack>
             <ConfirmModal
                 title={
                     userIsPagopaOperator
-                        ? t('addEditStationPage.confirmModal.titleOperator')
-                        : t('addEditStationPage.confirmModal.title')
+            ? t(`${componentPath}.confirmModal.titleOperator`)
+            : t(`${componentPath}.confirmModal.title`)
                 }
                 message={
                     userIsPagopaOperator ? (
-                        <Trans i18nKey="addEditStationPage.confirmModal.messageStationOperator">
+            <Trans i18nKey={`${componentPath}.confirmModal.messageStationOperator`}>
                             L’ente riceverà una notifica di conferma attivazione della stazione.
                             <br/>
                         </Trans>
                     ) : (
-                        <Trans i18nKey="addEditStationPage.confirmModal.messageStation">
+            <Trans i18nKey={`${componentPath}.confirmModal.messageStation`}>
                             Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
                             approvare. Riceverai una notifica a revisione completata.
                             <br/>
@@ -1017,12 +1021,8 @@ const AddEditStationForm = ({goBack, stationDetail, formAction}: Props) => {
                     )
                 }
                 openConfirmModal={showConfirmModal}
-                onConfirmLabel={
-                    userIsPagopaOperator
-                        ? t('addEditStationPage.confirmModal.confirmButtonOpe')
-                        : t('addEditStationPage.confirmModal.confirmButton')
-                }
-                onCloseLabel={t('addEditStationPage.confirmModal.cancelButton')}
+        onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
+        onCloseLabel={t('general.turnBack')}
                 handleCloseConfirmModal={() => setShowConfirmModal(false)}
                 handleConfrimSubmit={async () => {
                     await submit(formik.values);

@@ -499,7 +499,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntities => ({
   ],
 });
 
-const mockedStationCode = { stationCode: '1122334455_01' };
+export const mockedStationCode = { stationCode: '1122334455_01' };
 
 export const mockedStationAvailableEC: Array<any> = [
   {

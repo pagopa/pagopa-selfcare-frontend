@@ -18,21 +18,37 @@ export interface TaxonomyToRemove {
   area: string;
 }
 
+type TaxonomyWithFromFile = Taxonomy & { fromFile?: boolean };
+type PSPBundleTaxonomyWithFromFile = PSPBundleTaxonomy & { fromFile?: boolean };
+
+type TaxonomyTableData = Record<string, Array<PSPBundleTaxonomyWithFromFile>>;
+
 type Props = {
   formik: FormikProps<BundleRequest>;
   bundleTaxonomies: Array<PSPBundleTaxonomy>;
 };
 
-const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomy>) =>
-  taxonomies.reduce((result: any, taxonomy: any) => {
-    const macro_area_name = taxonomy.macro_area_name;
+const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
+  taxonomies.reduce((result: any, taxonomy: PSPBundleTaxonomyWithFromFile) => {
+    const macroAreaName = taxonomy.macroAreaName;
     const newResult: any = {
       ...result,
-      ...{ [macro_area_name]: result[macro_area_name] ? result[macro_area_name] : [] },
+      ...{ [macroAreaName]: result[macroAreaName] ? result[macroAreaName] : [] },
     };
-    newResult[macro_area_name].push(taxonomy);
+    newResult[macroAreaName].push(taxonomy);
     return newResult;
   }, {});
+
+const mapTaxonomyToPspBundleTaxonomy = (
+  taxonomy: TaxonomyWithFromFile
+): PSPBundleTaxonomyWithFromFile => ({
+  specificBuiltInData: taxonomy.specific_built_in_data,
+  macroAreaName: taxonomy.macro_area_name,
+  endDate: taxonomy.end_date,
+  serviceType: taxonomy.service_type,
+  fromFile: taxonomy.fromFile,
+  ecType: taxonomy.ci_type
+});
 
 const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) => {
   const { t } = useTranslation();
@@ -40,10 +56,10 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [areaToRemove, setAreaToRemove] = useState<string>();
   const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
-  const [taxonomies, setTaxonomies] = useState<Array<any>>(
+  const [taxonomies, setTaxonomies] = useState<Array<PSPBundleTaxonomyWithFromFile>>(
     bundleTaxonomies && bundleTaxonomies.length > 0 ? bundleTaxonomies : []
   );
-  const [taxonomyTableData, setTaxonomyTableData] = useState<any>(
+  const [taxonomyTableData, setTaxonomyTableData] = useState<TaxonomyTableData>(
     bundleTaxonomies && bundleTaxonomies.length > 0 ? reduceTaxonomies(bundleTaxonomies) : undefined
   );
   const [alertData, setAlertData] = useState<any>();
@@ -104,24 +120,28 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
     setFile(null);
     const taxonomyToRemove = taxonomies
       .filter((item) => item.fromFile)
-      .map((item) => item.specific_built_in_data);
+      .map((item) => item.specificBuiltInData);
     const filteredTaxonomies = taxonomies.filter((item) => item.fromFile === undefined);
     setTaxonomies(filteredTaxonomies);
     updateTableData(filteredTaxonomies);
     deleteTransferCategoryItem(taxonomyToRemove);
   };
 
-  const handleAddFromDrawer = async (taxonomiesToAdd: Array<any>) => {
+  const handleAddFromDrawer = async (taxonomiesToAdd: Array<TaxonomyWithFromFile>) => {
     const filteredTaxonomies = taxonomiesToAdd.filter(
-      (taxonomy) => !taxonomies.includes(taxonomy.specific_built_in_data)
+      (taxonomy) =>
+        !taxonomies.find((el) => el.specificBuiltInData === taxonomy.specific_built_in_data)
     );
-    const newTaxonomyList = [...taxonomies.values(), ...filteredTaxonomies];
+    const newTaxonomyList: Array<PSPBundleTaxonomyWithFromFile> = [
+      ...taxonomies.values(),
+      ...filteredTaxonomies.map((el) => mapTaxonomyToPspBundleTaxonomy(el)),
+    ];
     setTaxonomies(newTaxonomyList);
     updateTableData(newTaxonomyList);
-    addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specific_built_in_data));
+    addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specificBuiltInData ?? ''));
   };
 
-  const updateTableData = (taxonomies: Array<PSPBundleTaxonomy>) => {
+  const updateTableData = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) => {
     setTaxonomyTableData(reduceTaxonomies(taxonomies));
   };
 
@@ -132,7 +152,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
     }
   };
 
-  const deleteTransferCategoryItem = (elementsToFilter: Array<string>) => {
+  const deleteTransferCategoryItem = (elementsToFilter: Array<string | undefined>) => {
     if (formik.values.transferCategoryList && elementsToFilter) {
       const newArr = formik.values.transferCategoryList.filter(
         (item) => !elementsToFilter.includes(item)
@@ -152,12 +172,12 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
   const deleteArea = (area: string | undefined) => {
     if (area !== undefined) {
       const taxonomiesToFilter = taxonomyTableData[area].map(
-        (item: Taxonomy) => item.specific_built_in_data
+        (item: PSPBundleTaxonomyWithFromFile) => item.specificBuiltInData
       );
       const { [area]: _, ...filtered } = taxonomyTableData;
       setTaxonomyTableData({ ...filtered });
       setTaxonomies(
-        taxonomies.filter((item) => !taxonomiesToFilter.includes(item.specific_built_in_data))
+        taxonomies.filter((item) => !taxonomiesToFilter.includes(item.specificBuiltInData))
       );
       deleteTransferCategoryItem(taxonomiesToFilter);
     }
@@ -166,7 +186,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
   const deleteTaxonomy = (data: TaxonomyToRemove | undefined) => {
     if (data !== undefined) {
       const filteredTaxonomies = taxonomies.filter(
-        (item) => item.specific_built_in_data !== data?.taxonomy
+        (item: PSPBundleTaxonomyWithFromFile) => item.specificBuiltInData !== data?.taxonomy
       );
       setTaxonomies(filteredTaxonomies);
       updateTableData(filteredTaxonomies);
@@ -191,7 +211,10 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.subTitle')}
       </Typography>
       <Typography variant="body1" mb={2} sx={{ textDecoration: 'underline', fontWeight: 'medium' }}>
-        <Link href="https://docs.pagopa.it/sanp/ente-creditore/tassonomia-dei-servizi-di-incasso" target="_blank">
+        <Link
+          href="https://docs.pagopa.it/sanp/ente-creditore/tassonomia-dei-servizi-di-incasso"
+          target="_blank"
+        >
           {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.manualHelp')}
         </Link>
       </Typography>
@@ -208,13 +231,15 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
       {alertData && (
         <Alert
           severity={alertData.type}
-          data-testid=            {alertData.type === 'success'
-          ? "alert-success"
-          : alertData.type === 'warning'
-          ? "alert-warning"
-          : alertData.type === 'error'
-          ? "alert-error"
-          : ''}
+          data-testid={
+            alertData.type === 'success'
+              ? 'alert-success'
+              : alertData.type === 'warning'
+              ? 'alert-warning'
+              : alertData.type === 'error'
+              ? 'alert-error'
+              : ''
+          }
           onClose={() => {
             setAlertData(null);
           }}
@@ -271,7 +296,7 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         openDrawer={openDrawer}
         setOpenDrawer={setOpenDrawer}
         addAction={handleAddFromDrawer}
-        addedTaxonomies={taxonomies.map((el) => el.specific_built_in_data)}
+        addedTaxonomies={taxonomies.map((el) => el.specificBuiltInData)}
       />
 
       <GenericModal

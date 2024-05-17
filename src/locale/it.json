@@ -833,8 +833,10 @@
     "publicBundles": "Su richiesta",
     "globalBundles": "Per tutti",
     "list": {
-      "searchByName": "Cerca per Nome",
-      "createBundle": "Crea pacchetto",
+      "search": {
+        "placeholder": "Cerca per Nome",
+        "createButton": "Crea pacchetto"
+      },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}.",
         "link": "Crea pacchetto"

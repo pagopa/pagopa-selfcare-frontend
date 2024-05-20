@@ -525,7 +525,12 @@
         "creationDate": "Creata il",
         "lastEditDate": "Ultima modifica",
         "activationDate": "Attiva dal",
-        "status": "Stato"
+        "status": "Stato",
+        "connection": "Connessione"
+      },
+      "rows": {
+        "async":"Asincrona",
+        "sync": "Sincrona"
       }
     },
     "states": {

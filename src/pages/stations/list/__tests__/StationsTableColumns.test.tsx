@@ -46,6 +46,23 @@ const params: GridRenderCellParams<any, any, any> = {
   getValue: () => jest.fn(),
 };
 
+const mockTFunction = (key: string) => {
+  switch (key) {
+    case 'stationsPage.stationsTableColumns.headerFields.name':
+      return 'Station Name';
+    case 'stationsPage.stationsTableColumns.headerFields.creationDate':
+      return 'Creation Date';
+    case 'stationsPage.stationsTableColumns.headerFields.lastEditDate':
+      return 'Last Edit Date';
+    case 'stationsPage.stationsTableColumns.headerFields.activationDate':
+      return 'Activation Date';
+    case 'stationsPage.stationsTableColumns.headerFields.status':
+      return 'Status';
+    default:
+      return key;
+  }
+};
+
 describe('<StationsTableColumns />', () => {
   test('Test of all the functions inside StationsTableColumns', () => {
     const ArrayBuildColumnDefs = [
@@ -56,6 +73,19 @@ describe('<StationsTableColumns />', () => {
         align: 'left',
         headerAlign: 'left',
         minWidth: 485,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'connectionType',
+        cellClassName: 'justifyContentNormal',
+        headerName: "stationsPage.stationsTableColumns.headerFields.connection",
+        align: 'left',
+        headerAlign: 'left',
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -134,23 +164,6 @@ describe('<StationsTableColumns />', () => {
       },
     ] as Array<GridColDef>;
 
-    const mockTFunction = (key: string) => {
-      switch (key) {
-        case 'stationsPage.stationsTableColumns.headerFields.name':
-          return 'Station Name';
-        case 'stationsPage.stationsTableColumns.headerFields.creationDate':
-          return 'Creation Date';
-        case 'stationsPage.stationsTableColumns.headerFields.lastEditDate':
-          return 'Last Edit Date';
-        case 'stationsPage.stationsTableColumns.headerFields.activationDate':
-          return 'Activation Date';
-        case 'stationsPage.stationsTableColumns.headerFields.status':
-          return 'Status';
-        default:
-          return '';
-      }
-    };
-
     expect(buildColumnDefs(mockTFunction, false)).toEqual(ArrayBuildColumnDefs);
 
     render(<>{showStatus(params, false)}</>);
@@ -165,6 +178,19 @@ describe('<StationsTableColumns />', () => {
         align: 'left',
         headerAlign: 'left',
         minWidth: 900,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 4,
+      },
+      {
+        field: 'connectionType',
+        cellClassName: 'justifyContentNormal',
+        headerName: "stationsPage.stationsTableColumns.headerFields.connection",
+        align: 'left',
+        headerAlign: 'left',
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -214,23 +240,6 @@ describe('<StationsTableColumns />', () => {
         type: 'actions',
       },
     ] as Array<GridColDef>;
-
-    const mockTFunction = (key: string) => {
-      switch (key) {
-        case 'stationsPage.stationsTableColumns.headerFields.name':
-          return 'Station Name';
-        case 'stationsPage.stationsTableColumns.headerFields.creationDate':
-          return 'Creation Date';
-        case 'stationsPage.stationsTableColumns.headerFields.lastEditDate':
-          return 'Last Edit Date';
-        case 'stationsPage.stationsTableColumns.headerFields.activationDate':
-          return 'Activation Date';
-        case 'stationsPage.stationsTableColumns.headerFields.status':
-          return 'Status';
-        default:
-          return '';
-      }
-    };
 
     expect(buildColumnDefs(mockTFunction, true)).toEqual(ArrayBuildColumnDefs);
 

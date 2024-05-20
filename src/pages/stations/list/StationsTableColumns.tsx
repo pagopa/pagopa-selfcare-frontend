@@ -31,6 +31,26 @@ export function buildColumnDefs(
       flex: 4,
     },
     {
+      field: 'connectionType',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationsPage.stationsTableColumns.headerFields.connection'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: t(
+            `stationsPage.stationsTableColumns.rows.${
+              params.row.isConnectionSync ? 'sync' : 'async'
+            }`
+          ),
+        }),
+      sortable: false,
+      flex: 4,
+    },
+    {
       field: 'createdAt',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationsPage.stationsTableColumns.headerFields.creationDate'),

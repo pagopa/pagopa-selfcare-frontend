@@ -864,10 +864,10 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationcodes: async (
+  getCreditorInstitutionSegregationCodes: async (
     ecCode: string
   ): Promise<CreditorInstitutionAssociatedCodeList> => {
-    const result = await backofficeClient.getCreditorInstitutionSegregationcodes({
+    const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);

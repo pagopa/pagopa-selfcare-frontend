@@ -1,13 +1,10 @@
-import { TextField, InputAdornment, Button, Pagination } from '@mui/material';
-import { Box } from '@mui/system';
-import { useTranslation } from 'react-i18next';
-import { GridColumns, GridSearchIcon, GridValidRowModel } from '@mui/x-data-grid';
-import React, { ChangeEvent, useState } from 'react';
-import { ButtonNaked } from '@pagopa/mui-italia';
-
+import { Pagination, Grid, Select, MenuItem } from '@mui/material';
+import { GridColumns, GridValidRowModel } from '@mui/x-data-grid';
+import React, { ChangeEvent } from 'react';
 import { styled } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { theme } from '@pagopa/mui-italia';
+import TableEmptyState from './TableEmptyState';
 
 const rowHeight = 64;
 const headerHeight = 56;
@@ -68,52 +65,94 @@ export const CustomDataGrid = styled(DataGrid)({
 });
 
 type Props = {
+  componentPath: string;
   rows: Array<any>;
   columns: GridColumns<GridValidRowModel>;
   totalPages?: number;
   page?: number;
   handleChangePage?: (value: number) => void;
   getRowId?: (item: any) => any;
+  pageLimit?: number;
+  setPageLimit?: (value: number) => void;
+  linkToRedirect?: string;
 };
 
+const pageLimitOptions = [5, 10, 15, 20];
+
 export default function TableDataGrid({
+  componentPath,
   rows,
   columns,
   totalPages,
   page,
   handleChangePage,
   getRowId,
+  pageLimit,
+  setPageLimit,
+  linkToRedirect,
 }: Readonly<Props>) {
   return (
-    <div data-testid="data-grid">
-      <CustomDataGrid
-        disableColumnFilter
-        disableColumnSelector
-        disableDensitySelector
-        disableSelectionOnClick
-        hideFooterSelectedRowCount
-        autoHeight
-        className="CustomDataGrid"
-        columnBuffer={5}
-        columns={columns}
-        components={{
-          Pagination: () =>
-            handleChangePage ? (
-              <Pagination
-                color="primary"
-                count={totalPages ?? 1}
-                page={(page ?? 0) + 1}
-                onChange={(_event: ChangeEvent<unknown>, value: number) => handleChangePage(value)}
-              />
-            ) : null,
-        }}
-        getRowId={(r: any) => (getRowId ? getRowId(r) : r.id)}
-        headerHeight={headerHeight}
-        paginationMode="client"
-        rowCount={rows.length}
-        rowHeight={rowHeight}
-        rows={rows ?? []}
-      />
-    </div>
+    <>
+      {rows?.length === 0 ? (
+        <TableEmptyState componentName={componentPath} linkToRedirect={linkToRedirect} />
+      ) : (
+        <div data-testid="data-grid">
+          <CustomDataGrid
+            disableColumnFilter
+            disableColumnSelector
+            disableDensitySelector
+            disableSelectionOnClick
+            hideFooterSelectedRowCount
+            autoHeight
+            className="CustomDataGrid"
+            columnBuffer={5}
+            columns={columns}
+            components={{
+              Pagination: () =>
+                handleChangePage ? (
+                  <Grid container>
+                    <Grid item xs={6}>
+                      {pageLimit && (
+                        <Select
+                          id={`pageLimitSelect`}
+                          labelId={`pageLimitSelect`}
+                          name={`pageLimitSelect`}
+                          size="small"
+                          value={pageLimit}
+                          onChange={(e) => setPageLimit && setPageLimit(Number(e?.target.value))}
+                          data-testid="page-limit-select"
+                          disabled={!setPageLimit}
+                        >
+                          {pageLimitOptions.map((option: any) => (
+                            <MenuItem key={'pagelimit-option' + String(option)} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                    </Grid>
+                    <Grid item xs={6} display={'flex'} justifyContent={'flex-end'}>
+                      <Pagination
+                        color="primary"
+                        count={totalPages ?? 1}
+                        page={(page ?? 0) + 1}
+                        onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                          handleChangePage(value - 1)
+                        }
+                      />
+                    </Grid>
+                  </Grid>
+                ) : null,
+            }}
+            getRowId={(r: any) => (getRowId ? getRowId(r) : r.id)}
+            headerHeight={headerHeight}
+            paginationMode="server"
+            rowCount={rows.length}
+            rowHeight={rowHeight}
+            rows={rows ?? []}
+          />
+        </div>
+      )}
+    </>
   );
 }

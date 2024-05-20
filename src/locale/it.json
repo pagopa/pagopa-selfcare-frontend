@@ -507,8 +507,12 @@
   "stationsPage": {
     "title": "Stazioni",
     "subtitle": "Cerca e visualizza lo stato delle stazioni.",
-    "searchPlaceholder": "Cerca per codice stazione",
-    "createStationButtonLabel": "Crea stazione",
+    "search": {
+      "placeholder": "Cerca per codice stazione",
+      "createButton": "Crea stazione",
+      "tabActive": "Attive",
+      "tabToBeValidated": "Da validare"
+    },
     "table": {
       "emptyState": "Non sono ancora presenti stazioni.",
       "link": "Crea stazione"

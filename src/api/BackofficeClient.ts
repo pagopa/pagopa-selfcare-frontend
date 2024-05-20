@@ -642,7 +642,7 @@ export const BackofficeApi = {
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
     const result = await backofficeClient.createCreditorInstitutionAndBroker({
-      'ci-tax-code': '',
+      'ci-tax-code': ec.creditorInstitutionCode,
       body: {
         brokerDto: {
           broker_code: ec.creditorInstitutionCode,

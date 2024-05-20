@@ -81,14 +81,18 @@ const pageLimitOptions = [5, 10, 15, 20];
 
 export default function TableDataGrid({
   componentPath,
+  // Datagrid Props
   rows,
   columns,
+  getRowId,
+  // Pagination props
   totalPages,
   page,
   handleChangePage,
-  getRowId,
+  // Page limit props
   pageLimit,
   setPageLimit,
+  // Table empty state props
   linkToRedirect,
 }: Readonly<Props>) {
   return (

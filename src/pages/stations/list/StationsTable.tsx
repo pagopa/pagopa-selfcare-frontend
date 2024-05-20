@@ -25,7 +25,7 @@ export default function StationsTable({
 }: Readonly<{ stationCode: string; statusFilter: ConfigurationStatus }>) {
   const { t } = useTranslation();
   const { userIsPagopaOperator } = useUserRole();
-  const columns: Array<GridColDef> = buildColumnDefs(t);
+  const columns: Array<GridColDef> = buildColumnDefs(t, userIsPagopaOperator);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);

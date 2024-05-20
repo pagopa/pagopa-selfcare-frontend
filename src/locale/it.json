@@ -522,16 +522,18 @@
     "stationsTableColumns": {
       "headerFields": {
         "name": "Codice stazione",
-        "creationDate": "Data creazione",
+        "creationDate": "Creata il",
         "lastEditDate": "Ultima modifica",
-        "activationDate": "Data attivazione",
+        "activationDate": "Attiva dal",
         "status": "Stato"
       }
     },
     "states": {
       "revision": "In revisione",
       "needCorrection": "Da correggere",
-      "active": "Attiva"
+      "active": "Attiva",
+      "validate": "Da validare",
+      "waitingUpdate": "In attesa di modifiche"
     },
     "stationOptions": {
       "manageStation": "Gestisci stazione",

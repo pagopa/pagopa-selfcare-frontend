@@ -8,7 +8,6 @@ import {
   RedirectProtocolEnum,
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
-import { StationsResource } from '../../api/generated/portal/StationsResource';
 import {
   WrapperStationResource,
   WrapperStatusEnum,
@@ -18,8 +17,8 @@ import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStat
 import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
-import {TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 import { TestResultEnum, TestStationResource } from '../../api/generated/portal/TestStationResource';
+import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 
 // @ts-ignore
 const mockedStation: StationDetailResource = {
@@ -78,7 +77,7 @@ export const mockedFullStation: StationDetailResource = {
   primitiveVersion: 1,
 };
 
-export const mockedStations: StationsResource = {
+export const mockedStations: WrapperStationsResource = {
   pageInfo: {
     page: 0,
     limit: 50,
@@ -609,7 +608,7 @@ export const stationTestMocked: TestStationResource = {
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
-export const getStations = (_page: number): Promise<StationsResource> =>
+export const getStations = (_page: number): Promise<WrapperStationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
 
 export const getStationsMerged = (
@@ -631,7 +630,7 @@ new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
   _station: WrapperStationDetailsDto
-): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<WrapperStationDetailsDto> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
   _stationcode: string,

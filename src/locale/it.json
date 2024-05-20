@@ -640,6 +640,7 @@
     }
   },
   "stationDetailPageValidation": {
+    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
     "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
     "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
     "configuration": {
@@ -649,7 +650,11 @@
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
-      "intermediaryCode": "Codice intermediario",
+      "connectionType": {
+        "label":"Tipo di connessione",
+        "sync": "Sincrona",
+        "async": "Asincrona"
+      },
       "protocol": "Protocollo",
       "port": "Porta",
       "ip": "IP",
@@ -1321,7 +1326,12 @@
       "TO_FIX": "Da correggere",
       "TO_FIX_UPDATE": "Da correggere",
       "TO_CHECK": "In revisione",
-      "TO_CHECK_UPDATE": "In revisione"
+      "TO_CHECK_UPDATE": "In revisione",
+      "APPROVED_OPERATOR": "Attivo",
+      "TO_FIX_OPERATOR": "Da correggere",
+      "TO_FIX_UPDATE_OPERATOR": "Da correggere",
+      "TO_CHECK_OPERATOR": "Da validare",
+      "TO_CHECK_UPDATE_OPERATOR": "Da validare"
     },
     "yes": "Sì",
     "no": "No",

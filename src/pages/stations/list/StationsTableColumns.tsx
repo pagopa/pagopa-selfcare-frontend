@@ -8,6 +8,7 @@ import { FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
 import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
+import { StatusChip } from '../../../components/StatusChip';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
   return [
@@ -80,7 +81,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showStatus(params),
+      renderCell: (params) => (<StatusChip status={params.row.status} />),
       sortable: false,
       flex: 4,
     },
@@ -146,46 +147,4 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       flex: 1,
     },
   ] as Array<GridColDef>;
-}
-
-// TODO check to clean
-export function showStatus(params: GridRenderCellParams) {
-  return renderCell({
-    value: (
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Chip
-          label={
-            params.row.wrapperStatus === 'APPROVED'
-              ? i18n.t('stationsPage.states.active')
-              : params.row.wrapperStatus === 'TO_CHECK' ||
-                params.row.wrapperStatus === 'TO_CHECK_UPDATE'
-              ? i18n.t('stationsPage.states.revision')
-              : i18n.t('stationsPage.states.needCorrection')
-          }
-          aria-label="Status"
-          sx={{
-            fontSize: '10px',
-            fontWeight: 'fontWeightRegular',
-            color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
-            backgroundColor:
-              params.row.wrapperStatus === 'APPROVED'
-                ? 'primary.main'
-                : params.row.wrapperStatus === 'TO_CHECK' ||
-                  params.row.wrapperStatus === 'TO_CHECK_UPDATE'
-                ? '#EEEEEE'
-                : 'warning.light',
-            paddingBottom: '1px',
-            height: '30px',
-            marginY: 2,
-            marginLeft: 2,
-          }}
-        />
-      </Box>
-    ),
-    overrideStyle: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      textAlign: 'left',
-    },
-  });
 }

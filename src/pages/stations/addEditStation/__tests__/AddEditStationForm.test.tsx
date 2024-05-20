@@ -1,24 +1,23 @@
 import * as React from 'react';
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen, waitFor, within,} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import AddEditStationForm from '../AddEditStationForm';
-import {ConnectionType, StationFormAction, StationOnCreation} from '../../../../model/Station';
+import {ConnectionType, StationFormAction} from '../../../../model/Station';
 import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
-import {ProtocolEnum, RedirectProtocolEnum,} from '../../../../api/generated/portal/StationDetailsDto';
+import {ProtocolEnum} from '../../../../api/generated/portal/StationDetailsDto';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
 import {ecAdminSignedDirect} from '../../../../services/__mocks__/partyService';
 import * as stationService from '../../../../services/stationService';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import {featureFlagsActions} from "../../../../redux/slices/featureFlagsSlice";
 import {ROLE} from "../../../../model/RolePermission";
-import { mockedStationCode } from '../../../../services/__mocks__/stationService';
-
+import { mockedFullStation, mockedStationCode } from '../../../../services/__mocks__/stationService';
 
 jest.mock('../../../components/commonFunctions');
 
@@ -31,39 +30,6 @@ afterEach(cleanup);
 
 describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
   const history = injectedHistory ? injectedHistory : createMemoryHistory();
-
-  const stationDetail: StationOnCreation = {
-    redirectConcat: "", targetPofConcat: "",
-    stationCode: '81001870922_06',
-    enabled: true,
-    brokerDescription: '',
-    version: 1,
-    associatedCreditorInstitutions: 0,
-    activationDate: new Date('2023-06-07T16:30:26.384Z'),
-    createdAt: new Date('2023-06-07T16:30:26.384Z'),
-    modifiedAt: new Date('2023-06-07T16:30:26.384Z'),
-    redirectIp: '11.22.44',
-    redirectPath: 'Stazione/path/redirect/prova',
-    redirectPort: 3333,
-    redirectQueryString: 'nessuno',
-    redirectProtocol: RedirectProtocolEnum.HTTPS,
-    brokerCode: '81001870922',
-    timeoutA: 15,
-    timeoutB: 30,
-    timeoutC: 120,
-    targetConcat: 'https:www.test.it:8080/pathTest',
-    targetHost: 'https:www.google.it',
-    targetPort: 0,
-    targetPath: '/path?params=test#hash',
-    primitiveVersion: 1,
-    wrapperStatus: WrapperStatusEnum.APPROVED,
-    password: 'password',
-    proxyConcat: '',
-    proxyHost: 'http://10.79.20.33',
-    proxyPort: 80,
-    gdpConcat: '',
-    newConnConcat: ''
-  };
 
   test('Test rendering AddEditStationForm with Async connection', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
@@ -87,14 +53,14 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     );
 
     const asyncRadio = screen
-    .getByTestId('connection-type-radio-group')
-    .querySelector(`[value=${ConnectionType.ASYNC}]`) as HTMLInputElement
+      .getByTestId('connection-type-radio-group')
+      .querySelector(`[value=${ConnectionType.ASYNC}]`) as HTMLInputElement;
     expect(asyncRadio.checked).toBeTruthy();
-   expect(screen.queryByTestId("model-1-box")).not.toBeInTheDocument();
-   expect(screen.queryByTestId("model-unique-box")).not.toBeInTheDocument();
+    expect(screen.queryByTestId('model-1-box')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('model-unique-box')).not.toBeInTheDocument();
   });
 
-  test('Test rendering AddEditStationForm with sync connection and operator false', async () => {
+  test('Test rendering AddEditStationForm with operator false and change connection to sync', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PSP_ADMIN,
       userIsPspAdmin: false,
@@ -117,11 +83,11 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     );
 
     const syncRadio = screen
-    .getByTestId('connection-type-radio-group')
-    .querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
+      .getByTestId('connection-type-radio-group')
+      .querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
     expect(syncRadio.checked).toBeFalsy();
     fireEvent.click(syncRadio);
-    await waitFor(() => expect(syncRadio.checked).toBeTruthy())
+    await waitFor(() => expect(syncRadio.checked).toBeTruthy());
 
     const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
@@ -135,14 +101,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     expect(targetPofConcat.value).toBe('');
 
-    await waitFor(
-      () =>
-        userEvent.type(
-          targetPofConcat,
-          'https:www.pagopa.it:8080/pathTest'
-        ),
-      { timeout: 5000 }
-    );
+    await waitFor(() => userEvent.type(targetPofConcat, 'https:www.pagopa.it:8080/pathTest'), {
+      timeout: 5000,
+    });
 
     await waitFor(() => expect(targetPofConcat.value).toBe('https:www.pagopa.it:8080/pathTest'));
 
@@ -154,13 +115,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.click(continueBtn);
 
-    const confirmModalBtn = screen.getByTestId("confirm-button-modal-test");
+    const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
     fireEvent.click(confirmModalBtn);
 
     //expect(createWrapperStation).toBeCalledTimes(1);
   });
 
-  test('Test Edit AddEditStationForm with sync connection and  operator false', async () => {
+  test('Test Edit AddEditStationForm with operator false and change connection to sync', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PSP_ADMIN,
       userIsPspAdmin: false,
@@ -170,9 +131,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsAdmin: false,
     });
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
-    
+
     const flags = {
-        flags: {['test-stations']: true}
+      flags: { ['test-stations']: true },
     };
     await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
     const updateWrapperStationToCheckUpdate = jest.spyOn(
@@ -180,10 +141,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       'updateWrapperStationToCheckUpdate'
     );
 
-    const testStation = jest.spyOn(
-      stationService,
-      'testStation'
-    );
+    const testStation = jest.spyOn(stationService, 'testStation');
 
     render(
       <Provider store={store}>
@@ -191,7 +149,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               goBack={jest.fn()}
-              stationDetail={stationDetail}
+              stationDetail={mockedFullStation}
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -200,11 +158,11 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     );
 
     const syncRadio = screen
-    .getByTestId('connection-type-radio-group')
-    .querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
+      .getByTestId('connection-type-radio-group')
+      .querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
     expect(syncRadio.checked).toBeFalsy();
     fireEvent.click(syncRadio);
-    await waitFor(() => expect(syncRadio.checked).toBeTruthy())
+    await waitFor(() => expect(syncRadio.checked).toBeTruthy());
 
     const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
     const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
@@ -248,13 +206,13 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const confirmBtn = screen.getByText('general.confirm');
     fireEvent.click(confirmBtn);
 
-    const confirmModalBtn = screen.getByTestId("confirm-button-modal-test");
+    const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
     fireEvent.click(confirmModalBtn);
 
-//    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
+    //    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
   });
 
-  test('Test rendering AddEditStationForm with operator true, action Edit', async () => {
+  test('Test Edit rendering AddEditStationForm with operator true, with Station in status TO_CHECK', async () => {
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PAGOPA_OPERATOR,
@@ -265,22 +223,18 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       userIsAdmin: true,
     });
     const flags = {
-        flags: {['test-stations']: true}
+      flags: { ['test-stations']: true },
     };
     await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
     const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
     const createStation = jest.spyOn(stationService, 'createStation');
-    const testStation = jest.spyOn(
-      stationService,
-      'testStation'
-    );
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <AddEditStationForm
-              stationDetail={{ ...stationDetail, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
+              stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
               goBack={jest.fn()}
               formAction={StationFormAction.Edit}
             />
@@ -289,23 +243,228 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       </Provider>
     );
 
-    const radioGroup = screen
-    .getByTestId('connection-type-radio-group');
-    const syncRadio = radioGroup.querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
-    const asyncRadio = radioGroup.querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
+    const radioGroup = screen.getByTestId('connection-type-radio-group');
+    const syncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.SYNC}]`
+    ) as HTMLInputElement;
+    const asyncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.ASYNC}]`
+    ) as HTMLInputElement;
     expect(syncRadio.disabled).toBeTruthy();
     expect(asyncRadio.disabled).toBeTruthy();
 
     expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
 
     const continueBtn = screen.getByText('general.confirm');
-    await waitFor(() => fireEvent.click(continueBtn));
+    fireEvent.click(continueBtn);
 
-    const confirmModalBtn = screen.getByTestId("confirm-button-modal-test");
-    await waitFor(() => fireEvent.click(confirmModalBtn));
+    await waitFor(() => {
+      const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
+      fireEvent.click(confirmModalBtn);
+    });
 
     expect(createWrapperStation).toBeCalledTimes(0);
     expect(createStation).toBeCalledTimes(1);
+  });
+
+  test('Test Edit rendering AddEditStationForm with operator false, with Station in status TO_CHECK', async () => {
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: false,
+      userIsAdmin: true,
+    });
+    const flags = {
+      flags: { ['test-stations']: true },
+    };
+    await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+    const updateWrapperStationToCheck = jest.spyOn(stationService, 'updateWrapperStationToCheck');
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
+              goBack={jest.fn()}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
+
+    const continueBtn = screen.getByText('general.confirm');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
+      fireEvent.click(confirmModalBtn);
+    });
+
+    expect(createWrapperStation).toBeCalledTimes(0);
+    expect(updateWrapperStationToCheck).toBeCalledTimes(1);
+  });
+
+  test('Test Edit rendering AddEditStationForm with operator true, with Station in status TO_CHECK_UPDATE', async () => {
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: true,
+      userIsAdmin: true,
+    });
+    const flags = {
+      flags: { ['test-stations']: true },
+    };
+    await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+    const updateStation = jest.spyOn(stationService, 'updateStation');
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE }}
+              goBack={jest.fn()}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const radioGroup = screen.getByTestId('connection-type-radio-group');
+    const syncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.SYNC}]`
+    ) as HTMLInputElement;
+    const asyncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.ASYNC}]`
+    ) as HTMLInputElement;
+    expect(syncRadio.disabled).toBeTruthy();
+    expect(asyncRadio.disabled).toBeTruthy();
+
+    expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
+
+    const continueBtn = screen.getByText('general.confirm');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
+      fireEvent.click(confirmModalBtn);
+    });
+
+    expect(createWrapperStation).toBeCalledTimes(0);
+    expect(updateStation).toBeCalledTimes(1);
+  });
+
+  test('Test Edit rendering AddEditStationForm with operator false, with Station in status TO_CHECK_UPDATE', async () => {
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: false,
+      userIsAdmin: true,
+    });
+    const flags = {
+      flags: { ['test-stations']: true },
+    };
+    await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+    const updateWrapperStationToCheckUpdate = jest.spyOn(stationService, 'updateWrapperStationToCheckUpdate');
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE }}
+              goBack={jest.fn()}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
+
+    const continueBtn = screen.getByText('general.confirm');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
+      fireEvent.click(confirmModalBtn);
+    });
+
+    expect(createWrapperStation).toBeCalledTimes(0);
+    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
+  });
+
+  test('Test Edit rendering AddEditStationForm with operator true, with Station in status TO_FIX', async () => {
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: true,
+      userIsAdmin: true,
+    });
+    const flags = {
+      flags: { ['test-stations']: true },
+    };
+    await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
+    const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+    const updateWrapperStationToCheck = jest.spyOn(stationService, 'updateWrapperStationToCheck');
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <AddEditStationForm
+              stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_FIX }}
+              goBack={jest.fn()}
+              formAction={StationFormAction.Edit}
+            />
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    );
+
+    const radioGroup = screen.getByTestId('connection-type-radio-group');
+    const syncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.SYNC}]`
+    ) as HTMLInputElement;
+    const asyncRadio = radioGroup.querySelector(
+      `[value=${ConnectionType.ASYNC}]`
+    ) as HTMLInputElement;
+    expect(syncRadio.disabled).toBeTruthy();
+    expect(asyncRadio.disabled).toBeTruthy();
+
+    expect(screen.queryByTestId('station-code-test')).toBeInTheDocument();
+
+    const continueBtn = screen.getByText('general.confirm');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
+      fireEvent.click(confirmModalBtn);
+    });
+
+    expect(createWrapperStation).toBeCalledTimes(0);
+    expect(updateWrapperStationToCheck).toBeCalledTimes(1);
   });
 
   test('Test rendering AddEditStationForm with sync connection and operator true', async () => {
@@ -323,7 +482,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               goBack={jest.fn()}
-              stationDetail={{...stationDetail, service:"otherService"}}
+              stationDetail={{ ...mockedFullStation, isConnectionSync: true }}
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -331,8 +490,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       </Provider>
     );
 
-    expect(screen.queryByTestId("radio-button-newConn")).toBeInTheDocument();
-    expect(screen.queryByTestId("radio-button-gdp")).not.toBeInTheDocument();
+    expect(screen.queryByTestId('radio-button-newConn')).toBeInTheDocument();
+    expect(screen.queryByTestId('radio-button-gdp')).not.toBeInTheDocument();
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
@@ -346,15 +505,15 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     fireEvent.change(password, { target: { value: 'password' } });
     expect(password.value).toBe('password');
 
-    expect(timeoutA.value).toBe('15');
+    expect(timeoutA.value).toBe(mockedFullStation.timeoutA?.toString());
     fireEvent.change(timeoutA, { target: { value: 16 } });
     expect(timeoutA.value).toBe('16');
 
-    expect(timeoutB.value).toBe('30');
+    expect(timeoutB.value).toBe(mockedFullStation.timeoutB?.toString());
     fireEvent.change(timeoutB, { target: { value: 31 } });
     expect(timeoutB.value).toBe('31');
 
-    expect(timeoutC.value).toBe('120');
+    expect(timeoutC.value).toBe(mockedFullStation.timeoutC?.toString());
     fireEvent.change(timeoutC, { target: { value: 121 } });
     expect(timeoutC.value).toBe('121');
 
@@ -366,7 +525,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
     fireEvent.click(continueBtn);
 
-    const confirmBtn = screen.getByTestId("confirm-button-modal-test");
+    const confirmBtn = screen.getByTestId('confirm-button-modal-test');
     fireEvent.click(confirmBtn);
   });
 
@@ -386,7 +545,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             <AddEditStationForm
               goBack={jest.fn()}
               stationDetail={{
-                ...stationDetail,
+                ...mockedFullStation,
                 ip: '/api.uat.platform.pagopa.it',
                 protocol: ProtocolEnum.HTTPS,
                 service: '/gpd-payments/api/v1',
@@ -400,8 +559,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       </Provider>
     );
 
-    expect(screen.queryByTestId("radio-button-newConn")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("radio-button-gdp")).toBeInTheDocument();
+    expect(screen.queryByTestId('radio-button-newConn')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('radio-button-gdp')).toBeInTheDocument();
 
     const version = screen.getByTestId('version-test') as HTMLInputElement;
     const password = screen.getByTestId('password-test') as HTMLInputElement;
@@ -437,7 +596,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               goBack={jest.fn()}
-              stationDetail={stationDetail}
+              stationDetail={mockedFullStation}
               formAction={StationFormAction.Edit}
             />
           </Router>

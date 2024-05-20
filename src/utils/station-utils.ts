@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import {ProtocolEnum} from '../api/generated/portal/StationDetailResource';
+import {ProtocolEnum, StationDetailResource} from '../api/generated/portal/StationDetailResource';
 import {
     GPDConfigs,
     IGPDConfig,
@@ -31,7 +31,7 @@ export const splitURL = (targetURL: string) => {
     };
 };
 
-export const getStationCategoryFromDetail = (station: StationOnCreation, env: string) => {
+export const getStationCategoryFromDetail = (station: StationDetailResource, env: string) => {
     /* Stations can be created in three different flavours:
      ** 1. Async GPD -> Creditor Institution doesn't set Target field and Operator set GPD field
      **    a. IP/PORT/SERVICE/PROTOCOL fields will be valorized with GPD values

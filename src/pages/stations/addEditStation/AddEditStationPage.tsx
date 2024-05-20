@@ -6,6 +6,7 @@ import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-
 import {useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import ROUTES from '../../../routes';
+import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import {LOADING_TASK_STATION_ADD_EDIT} from '../../../utils/constants';
 import {getStationDetail} from '../../../services/stationService';
 import {StationFormAction} from '../../../model/Station';
@@ -20,7 +21,7 @@ const AddEditStationPage = () => {
   const { stationId, actionId } = useParams<{ stationId: string; actionId: string }>();
   const formAction = actionId ?? StationFormAction.Create;
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [stationDetail, setStationDetail] = useState<any>();
+  const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
   const addError = useErrorDispatcher();
   const goBack = () => history.push(ROUTES.STATIONS);
 

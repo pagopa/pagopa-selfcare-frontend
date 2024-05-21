@@ -584,8 +584,9 @@
       "duplicateStation": "Duplica",
       "editStation": "Modifica",
       "deleteRequired": "Richiedi eliminazione",
-      "correctionRequired": "Richiedi correzione",
-      "configureStation": "Configura"
+      "configureStation": "Configura",
+      "requestEdit": "Richiedi modifiche",
+      "approveAndValidate": "Approva e valida"
     }
   },
   "stationECList": {
@@ -641,8 +642,11 @@
   },
   "stationDetailPageValidation": {
     "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
-    "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
-    "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Stazione in attesa di correzione da parte dell’ente."
+    },
     "configuration": {
       "status": "Stato",
       "title": "Configurazione della stazione",

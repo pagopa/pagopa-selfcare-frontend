@@ -14,55 +14,10 @@ type Props = {
 
 const DetailButtonsStation = ({ status, stationCode }: Props) => {
   const { t } = useTranslation();
-  const {userIsPagopaOperator} = useUserRole();
 
   return (
     <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-      {userIsPagopaOperator && status === WrapperStatusEnum.APPROVED ? (
-        <>
-          <Button
-            component={Link}
-            to={() =>
-              generatePath(ROUTES.STATION_EDIT, {
-                stationId: stationCode,
-                actionId: StationFormAction.Edit,
-              })
-            }
-            variant="contained"
-            data-testid="edit-btn-ope-sts-approved"
-            // TBD
-          >
-            {t('stationDetailPage.stationOptions.editStation')}
-          </Button>
-        </>
-      ) : userIsPagopaOperator && status !== WrapperStatusEnum.APPROVED ? (
-        <>
-          <Button
-            component={Link}
-            to={''}
-            disabled={true}
-            color="error"
-            variant="outlined"
-            onClick={() => ''}
-          >
-            {t('stationDetailPage.stationOptions.correctionRequired')}
-          </Button>
-          <Button
-            component={Link}
-            to={() =>
-              generatePath(ROUTES.STATION_EDIT, {
-                stationId: stationCode,
-                actionId: StationFormAction.Edit,
-              })
-            }
-            variant="contained"
-            data-testid="edit-btn-ope-sts-chk-fix"
-            // TBD
-          >
-            {t('stationDetailPage.stationOptions.configureStation')}
-          </Button>
-        </>
-      ) : status === WrapperStatusEnum.APPROVED ? (
+      {status === WrapperStatusEnum.APPROVED ? (
         <>
           <Button
             component={Link}

@@ -1,9 +1,9 @@
-import { Alert, Box, Divider, Grid, IconButton } from '@mui/material';
+import { Alert, Box, Button, Divider, Grid, IconButton, Stack } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { useHistory, useParams } from 'react-router-dom';
+import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { ArrowBack, VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -12,14 +12,40 @@ import {
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
 import { StatusChip } from '../../../../components/StatusChip';
-import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
+import { IProxyConfig, ProxyConfigs, StationFormAction } from '../../../../model/Station';
 import ROUTES from '../../../../routes';
 import { ENV } from '../../../../utils/env';
-import { useUserRole } from '../../../../hooks/useUserRole';
-import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
   stationDetail?: StationDetailResource;
+};
+
+const GetAlert = ({ stationDetail }: Props) => {
+  const { t } = useTranslation();
+  if (stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED) {
+    const isToBeValidated =
+      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE;
+    return (
+      <Box my={2}>
+        <Alert severity={isToBeValidated ? "warning" :"info"} variant="outlined" sx={{ py: 2 }}>
+          {!isToBeValidated && (
+            <Typography fontWeight={'fontWeightMedium'}>
+              {t('stationDetailPageValidation.alert.toFixTitle')}
+            </Typography>
+          )}
+          <Typography>
+            {t(
+              `stationDetailPageValidation.alert.${
+                isToBeValidated ? 'toCheckMessage' : 'toFixMessage'
+              }`
+            )}
+          </Typography>
+        </Alert>
+      </Box>
+    );
+  }
+  return null;
 };
 
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
@@ -29,7 +55,6 @@ const StationDetailsValidation = ({
 Props) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { userIsPagopaOperator } = useUserRole();
   const { stationId } = useParams<{ stationId: string }>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
@@ -63,23 +88,8 @@ Props) => {
           <StatusChip status={stationDetail?.wrapperStatus ?? ''} />
         </Box>
         <Typography my={2}>{t('stationDetailPageValidation.subtitle')}</Typography>
-        {userIsPagopaOperator &&
-          (stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX) && (
-            <Box my={2}>
-              <Alert severity="warning" variant="outlined" sx={{ py: 2 }}>
-                <Typography>
-                  {t(
-                    `stationDetailPageValidation.${
-                      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK
-                        ? 'alert'
-                        : 'alertToFix'
-                    }`
-                  )}
-                </Typography>
-              </Alert>
-            </Box>
-          )}
+
+        <GetAlert stationDetail={stationDetail} />
 
         <Paper
           elevation={5}
@@ -390,8 +400,30 @@ Props) => {
             }
           </Typography>
         </Typography>
-
-        <DetailButtonsStation status={stationDetail?.wrapperStatus} stationCode={stationId} />
+        <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+          {stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED && (
+            <Button disabled={true} variant="outlined" onClick={() => ''}>
+              {t('stationDetailPage.stationOptions.requestEdit')}
+            </Button>
+          )}
+          <Button
+            component={Link}
+            to={() =>
+              generatePath(ROUTES.STATION_EDIT, {
+                stationId,
+                actionId: StationFormAction.Edit,
+              })
+            }
+            variant="contained"
+            data-testid="edit-btn-ope-sts-approved"
+          >
+            {t(
+              stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED
+                ? 'stationDetailPage.stationOptions.approveAndValidate'
+                : 'general.modify'
+            )}
+          </Button>
+        </Stack>
       </Grid>
     </Grid>
   );

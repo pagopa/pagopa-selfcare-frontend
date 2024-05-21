@@ -109,7 +109,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => (<StatusChip status={params.row.status} />),
+      renderCell: (params) => (<StatusChip status={params.row.wrapperStatus} />),
       sortable: false,
       flex: 4,
     },

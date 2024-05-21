@@ -647,6 +647,12 @@
       "toFixTitle": "Modifiche richieste",
       "toFixMessage": "Stazione in attesa di correzione da parte dell’ente."
     },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "Il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri"
+    },
     "configuration": {
       "status": "Stato",
       "title": "Configurazione della stazione",
@@ -1313,6 +1319,7 @@
     "manage": "Gestisci",
     "activate": "Attiva",
     "deactivate": "Disattiva",
+    "confirmAndSend": "Conferma e invia",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",

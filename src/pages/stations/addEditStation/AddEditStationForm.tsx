@@ -82,7 +82,6 @@ import { TestStationTypeEnum } from '../../../api/generated/portal/StationTestDt
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
-  goBack: () => void;
   stationDetail?: StationDetailResource;
   formAction: string;
 };
@@ -107,7 +106,7 @@ const getDefaultConnectionType = (stationDetail?: StationDetailResource) => {
 };
 
 const componentPath = 'addEditStationPage.addForm';
-const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
+const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -578,9 +577,7 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
 
   useEffect(() => {
     if (stationDetail) {
-      setConnectionType(
-        getDefaultConnectionType(stationDetail)
-      );
+      setConnectionType(getDefaultConnectionType(stationDetail));
       const category = getStationCategoryFromDetail(stationDetail, env);
       if (category === StationCategory.AsyncGPD) {
         setGDP(true);
@@ -1134,7 +1131,13 @@ const AddEditStationForm = ({ goBack, stationDetail, formAction }: Props) => {
           <Button
             color="primary"
             variant="outlined"
-            onClick={goBack}
+            onClick={() =>
+              history.push(
+                formAction === StationFormAction.Edit
+                  ? generatePath(ROUTES.STATION_DETAIL, { stationId: stationDetail?.stationCode })
+                  : ROUTES.STATIONS
+              )
+            }
             data-testid="cancel-button-test"
           >
             {t('general.back')}

@@ -21,7 +21,7 @@ import { TestResultEnum, TestStationResource } from '../../api/generated/portal/
 import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 
 // @ts-ignore
-const mockedStation: StationDetailResource = {
+export const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
   brokerCode: '97735020584',
   wrapperStatus: WrapperStatusEnum.APPROVED,
@@ -604,6 +604,43 @@ export const stationTestMocked: TestStationResource = {
   testResult: TestResultEnum.SUCCESS
 };
 
+export const mockedCreatedStation: StationOnCreation = {
+  brokerCode: '',
+  proxyConcat: '',
+  stationCode: '',
+  gdpConcat: '',
+  newConnConcat: '',
+  redirectConcat: '',
+  redirectIp: '',
+  redirectPath: '',
+  redirectProtocol: RedirectProtocolEnum.HTTP,
+  redirectQueryString: '',
+  targetConcat: '',
+  targetHost: '',
+  targetPath: '',
+  targetPofConcat: '',
+  primitiveVersion: 0
+};
+
+export const mockedCreditorInstitutionStationDTO: CreditorInstitutionStationDto = {
+  auxDigit: 0,
+  broadcast: false,
+  segregationCode: '',
+  stationCode: ''
+};
+
+export const mockedStationDetailsDTO: StationDetailsDto = {
+  brokerCode: '',
+  primitiveVersion: 2,
+  redirectIp: '',
+  redirectPath: '',
+  redirectPort: 0,
+  redirectProtocol: RedirectProtocolEnum.HTTP,
+  redirectQueryString: '',
+  stationCode: '',
+  validationUrl: '',
+  version: 0
+};
 
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));

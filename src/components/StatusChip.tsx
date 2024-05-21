@@ -10,10 +10,9 @@ type Props = {
 export const StatusChip = ({ status, size = 'regular' }: Props) => {
   const { t } = useTranslation();
   const { userIsPagopaOperator } = useUserRole();
-
   const resolvedChip = resolveWrappedStatusToChipObj(status, userIsPagopaOperator);
 
-  return (
+  return status ? (
     <Chip
       label={t(`general.WrapperStatus.${resolvedChip.label}`)}
       aria-label="Status"
@@ -23,8 +22,8 @@ export const StatusChip = ({ status, size = 'regular' }: Props) => {
         backgroundColor: resolvedChip.backgroundColor,
         ...(size === 'small' && { fontSize: '14px', paddingBottom: '1px', height: '24px' }),
       }}
-    ></Chip>
-  );
+    />
+  ) : null;
 };
 
 const resolveWrappedStatusToChipObj = (status: string, userIsPagopaOperator: boolean) => {

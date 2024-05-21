@@ -59,7 +59,8 @@ const ModalContent = ({
 
   const sendEditRequest = () => {
     // updateWrapperStationByOpt().then();  TODO SEND EDIT REQUEST
-    setStationDetail((prev: StationDetailResource) => { // TODO MAYBE INSTEAD OF SETTING THE STATION IS BETTER TO RE-TRIGGER THE STATION DETAIL API
+    setStationDetail((prev: StationDetailResource) => {
+      // TODO MAYBE INSTEAD OF SETTING THE STATION IS BETTER TO RE-TRIGGER THE STATION DETAIL API
       const detail: StationDetailResource = {
         ...prev,
         wrapperStatus:
@@ -469,12 +470,9 @@ Props) => {
           <Typography color="action.active" sx={{ my: 2 }}>
             {t('channelDetailPage.createdOn')}{' '}
             <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-              {
-                `${stationDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
-                  stationDetail?.createdBy
-                }`
-                // TODO complete the footer with the right informations
-              }
+              {`${stationDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
+                stationDetail?.createdBy
+              }`}
             </Typography>
           </Typography>
           <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>

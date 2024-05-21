@@ -1,4 +1,5 @@
 import { Box, Chip } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { TFunction } from 'react-i18next';
@@ -10,7 +11,10 @@ import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 import { StatusChip } from '../../../components/StatusChip';
 
-export function buildColumnDefs(t: TFunction<'translation', undefined>) {
+export function buildColumnDefs(
+  t: TFunction<'translation', undefined>,
+  userIsPagopaOperator: boolean
+) {
   return [
     {
       field: 'stationCode',
@@ -18,12 +22,32 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       headerName: t('stationsPage.stationsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 485,
+      minWidth: userIsPagopaOperator ? 900 : 485,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.stationCode, mainCell: true }),
-      sortable: true,
+      sortable: false,
+      flex: 4,
+    },
+    {
+      field: 'connectionType',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationsPage.stationsTableColumns.headerFields.connection'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: t(
+            `stationsPage.stationsTableColumns.rows.${
+              params.row.isConnectionSync ? 'sync' : 'async'
+            }`
+          ),
+        }),
+      sortable: false,
       flex: 4,
     },
     {
@@ -41,36 +65,40 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       sortable: false,
       flex: 4,
     },
-    {
-      field: 'modifiedAt',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('stationsPage.stationsTableColumns.headerFields.lastEditDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 200,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell({ value: params.row.modifiedAt?.toLocaleDateString('en-GB') }),
-      sortable: false,
-      flex: 4,
-    },
-    {
-      field: 'activationDate',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('stationsPage.stationsTableColumns.headerFields.activationDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 220,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell({ value: params.row.activationDate?.toLocaleDateString('en-GB') }),
-      sortable: false,
-      flex: 4,
-    },
+    ...(userIsPagopaOperator
+      ? []
+      : [
+          {
+            field: 'modifiedAt',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('stationsPage.stationsTableColumns.headerFields.lastEditDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 200,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({ value: params.row.modifiedAt?.toLocaleDateString('en-GB') }),
+            sortable: false,
+            flex: 4,
+          },
+          {
+            field: 'activationDate',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('stationsPage.stationsTableColumns.headerFields.activationDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 220,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({ value: params.row.activationDate?.toLocaleDateString('en-GB') }),
+            sortable: false,
+            flex: 4,
+          },
+        ]),
     {
       field: 'wrapperStatus',
       cellClassName: 'justifyContentNormal',
@@ -96,6 +124,18 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
 
       getActions: (params: any) => {
+        if (userIsPagopaOperator) {
+          return [
+            <GridLinkAction
+              key="Gestisci stazione"
+              label="Gestisci stazione"
+              to={generatePath(`${ROUTES.STATION_DETAIL}`, {
+                stationId: params.row.stationCode,
+              })}
+              icon={<ChevronRightIcon color="primary" />}
+            />,
+          ];
+        }
         const manageStationAction = (
           <GridLinkAction
             key="Gestisci stazione"

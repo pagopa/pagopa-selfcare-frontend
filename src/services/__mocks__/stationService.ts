@@ -8,7 +8,6 @@ import {
   RedirectProtocolEnum,
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
-import { StationsResource } from '../../api/generated/portal/StationsResource';
 import {
   WrapperStationResource,
   WrapperStatusEnum,
@@ -18,11 +17,11 @@ import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStat
 import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
-import {TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 import { TestResultEnum, TestStationResource } from '../../api/generated/portal/TestStationResource';
+import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 
 // @ts-ignore
-const mockedStation: StationDetailResource = {
+export const mockedStation: StationDetailResource = {
   stationCode: '97735020584_02',
   brokerCode: '97735020584',
   wrapperStatus: WrapperStatusEnum.APPROVED,
@@ -78,7 +77,7 @@ export const mockedFullStation: StationDetailResource = {
   primitiveVersion: 1,
 };
 
-export const mockedStations: StationsResource = {
+export const mockedStations: WrapperStationsResource = {
   pageInfo: {
     page: 0,
     limit: 50,
@@ -605,11 +604,48 @@ export const stationTestMocked: TestStationResource = {
   testResult: TestResultEnum.SUCCESS
 };
 
+export const mockedCreatedStation: StationOnCreation = {
+  brokerCode: '',
+  proxyConcat: '',
+  stationCode: '',
+  gdpConcat: '',
+  newConnConcat: '',
+  redirectConcat: '',
+  redirectIp: '',
+  redirectPath: '',
+  redirectProtocol: RedirectProtocolEnum.HTTP,
+  redirectQueryString: '',
+  targetConcat: '',
+  targetHost: '',
+  targetPath: '',
+  targetPofConcat: '',
+  primitiveVersion: 0
+};
+
+export const mockedCreditorInstitutionStationDTO: CreditorInstitutionStationDto = {
+  auxDigit: 0,
+  broadcast: false,
+  segregationCode: '',
+  stationCode: ''
+};
+
+export const mockedStationDetailsDTO: StationDetailsDto = {
+  brokerCode: '',
+  primitiveVersion: 2,
+  redirectIp: '',
+  redirectPath: '',
+  redirectPort: 0,
+  redirectProtocol: RedirectProtocolEnum.HTTP,
+  redirectQueryString: '',
+  stationCode: '',
+  validationUrl: '',
+  version: 0
+};
 
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>
   new Promise((resolve) => resolve(mockedStation));
 
-export const getStations = (_page: number): Promise<StationsResource> =>
+export const getStations = (_page: number): Promise<WrapperStationsResource> =>
   new Promise((resolve) => resolve(mockedStations));
 
 export const getStationsMerged = (
@@ -631,7 +667,7 @@ new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
   _station: WrapperStationDetailsDto
-): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<WrapperStationDetailsDto> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const getECListByStationCode = (
   _stationcode: string,

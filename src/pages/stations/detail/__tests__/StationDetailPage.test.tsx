@@ -3,18 +3,18 @@ import {theme} from '@pagopa/mui-italia';
 import {cleanup, render, screen, waitFor} from '@testing-library/react';
 import React from 'react';
 import {MemoryRouter, Route} from 'react-router-dom';
-import {createStore} from '../../../redux/store';
+import {createStore} from '../../../../redux/store';
 import {Provider} from 'react-redux';
 import {createMemoryHistory} from 'history';
-import StationDetailPage from '../detail/StationDetailPage';
-import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
-import * as useUserRole from '../../../hooks/useUserRole';
-import * as useOrganizationType from '../../../hooks/useOrganizationType';
-import {ROLE} from "../../../model/RolePermission";
+import StationDetailPage from '../StationDetailPage';
+import {ecAdminSignedDirect} from '../../../../services/__mocks__/partyService';
+import * as useUserRole from '../../../../hooks/useUserRole';
+import * as useOrganizationType from '../../../../hooks/useOrganizationType';
+import {ROLE} from "../../../../model/RolePermission";
 
-jest.mock('../../components/commonFunctions');
-jest.mock('../../../hooks/useUserRole');
-jest.mock('../../../hooks/useOrganizationType');
+jest.mock('../../../components/commonFunctions');
+jest.mock('../../../../hooks/useUserRole');
+jest.mock('../../../../hooks/useOrganizationType');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

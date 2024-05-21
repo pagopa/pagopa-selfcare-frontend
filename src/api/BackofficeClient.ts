@@ -8,7 +8,7 @@ import { ENV } from '../utils/env';
 import { ProductKeys } from '../model/ApiKey';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
-import { StationOnCreation } from '../model/Station';
+import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import {
   PaymentsReceiptsListMethodParams,
   PaymentsReceiptsListRequestBody,
@@ -22,7 +22,6 @@ import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
-import { StationsResource } from './generated/portal/StationsResource';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
@@ -555,19 +554,25 @@ export const BackofficeApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  getStations: async (
-    page: number,
-    creditorInstitutionCode?: string,
-    stationCode?: string,
-    limit?: number,
-    ordering?: string
-  ): Promise<StationsResource> => {
+  getStations: async ({
+    page,
+    brokerCode,
+    status,
+    stationCode,
+    limit,
+  }: {
+    page: number;
+    brokerCode: string;
+    status: ConfigurationStatus;
+    stationCode?: string;
+    limit?: number;
+  }): Promise<WrapperStationsResource> => {
     const result = await backofficeClient.getStations({
       page,
-      creditorInstitutionCode,
+      brokerCode,
       stationCode,
       limit,
-      ordering,
+      status: String(status),
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -972,7 +977,10 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getBundleDetailByPSP: async (pspTaxCode: string, bundleId: string): Promise<PSPBundleResource> => {
+  getBundleDetailByPSP: async (
+    pspTaxCode: string,
+    bundleId: string
+  ): Promise<PSPBundleResource> => {
     const result = await backofficeClient.getBundleDetailByPSP({
       'psp-tax-code': pspTaxCode,
       'id-bundle': bundleId,
@@ -1201,7 +1209,7 @@ export const BackofficeApi = {
       'psp-tax-code': pspTaxCode,
       'bundle-request-id': idBundleRequest,
       ciTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1216,7 +1224,7 @@ export const BackofficeApi = {
       'psp-tax-code': pspTaxCode,
       'bundle-request-id': bundleRequestId,
       ciTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1268,5 +1276,5 @@ export const BackofficeApi = {
   getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
     const result = await backofficeClient.getMaintenanceMessage({});
     return extractResponse(result, 200, onRedirectToLogin);
-  }
+  },
 };

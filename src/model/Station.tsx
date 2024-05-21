@@ -3,7 +3,6 @@ import {
   Protocol4ModEnum,
   ProtocolEnum,
   RedirectProtocolEnum,
-  StationDetailsDto,
 } from '../api/generated/portal/StationDetailsDto';
 
 export enum StationFormAction {
@@ -184,4 +183,9 @@ export const GPDConfigs = {
 export enum ConnectionType {
   ASYNC = 'async',
   SYNC = 'sync',
+}
+
+export enum ConfigurationStatus {
+  ACTIVE = "ACTIVE",
+  TO_BE_VALIDATED = "TO_BE_VALIDATED"
 }

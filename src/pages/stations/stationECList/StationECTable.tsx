@@ -9,7 +9,7 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './StationECTableColumns';
 import StationECTableEmpty from './StationECTableEmpty';
 

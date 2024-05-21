@@ -4,7 +4,7 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CIBrokerDelegationPage } from '../../../api/generated/portal/CIBrokerDelegationPage';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import TableEmptyState from '../../../components/Table/TableEmptyState';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';

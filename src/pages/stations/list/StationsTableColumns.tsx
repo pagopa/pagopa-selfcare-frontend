@@ -1,4 +1,5 @@
 import { Box, Chip } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { TFunction } from 'react-i18next';
@@ -8,8 +9,12 @@ import { FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
 import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
+import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperStationResource';
 
-export function buildColumnDefs(t: TFunction<'translation', undefined>) {
+export function buildColumnDefs(
+  t: TFunction<'translation', undefined>,
+  userIsPagopaOperator: boolean
+) {
   return [
     {
       field: 'stationCode',
@@ -17,12 +22,32 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       headerName: t('stationsPage.stationsTableColumns.headerFields.name'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 485,
+      minWidth: userIsPagopaOperator ? 900 : 485,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.stationCode, mainCell: true }),
-      sortable: true,
+      sortable: false,
+      flex: 4,
+    },
+    {
+      field: 'connectionType',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationsPage.stationsTableColumns.headerFields.connection'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: t(
+            `stationsPage.stationsTableColumns.rows.${
+              params.row.isConnectionSync ? 'sync' : 'async'
+            }`
+          ),
+        }),
+      sortable: false,
       flex: 4,
     },
     {
@@ -40,36 +65,40 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       sortable: false,
       flex: 4,
     },
-    {
-      field: 'modifiedAt',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('stationsPage.stationsTableColumns.headerFields.lastEditDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 200,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell({ value: params.row.modifiedAt?.toLocaleDateString('en-GB') }),
-      sortable: false,
-      flex: 4,
-    },
-    {
-      field: 'activationDate',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('stationsPage.stationsTableColumns.headerFields.activationDate'),
-      align: 'left',
-      headerAlign: 'left',
-      maxWidth: 220,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell({ value: params.row.activationDate?.toLocaleDateString('en-GB') }),
-      sortable: false,
-      flex: 4,
-    },
+    ...(userIsPagopaOperator
+      ? []
+      : [
+          {
+            field: 'modifiedAt',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('stationsPage.stationsTableColumns.headerFields.lastEditDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 200,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({ value: params.row.modifiedAt?.toLocaleDateString('en-GB') }),
+            sortable: false,
+            flex: 4,
+          },
+          {
+            field: 'activationDate',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('stationsPage.stationsTableColumns.headerFields.activationDate'),
+            align: 'left',
+            headerAlign: 'left',
+            maxWidth: 220,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({ value: params.row.activationDate?.toLocaleDateString('en-GB') }),
+            sortable: false,
+            flex: 4,
+          },
+        ]),
     {
       field: 'wrapperStatus',
       cellClassName: 'justifyContentNormal',
@@ -80,7 +109,7 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => showStatus(params),
+      renderCell: (params) => showStatus(params, userIsPagopaOperator),
       sortable: false,
       flex: 4,
     },
@@ -95,6 +124,18 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
       editable: false,
 
       getActions: (params: any) => {
+        if (userIsPagopaOperator) {
+          return [
+            <GridLinkAction
+              key="Gestisci stazione"
+              label="Gestisci stazione"
+              to={generatePath(`${ROUTES.STATION_DETAIL}`, {
+                stationId: params.row.stationCode,
+              })}
+              icon={<ChevronRightIcon color="primary" />}
+            />,
+          ];
+        }
         const manageStationAction = (
           <GridLinkAction
             key="Gestisci stazione"
@@ -149,29 +190,36 @@ export function buildColumnDefs(t: TFunction<'translation', undefined>) {
 }
 
 // TODO check to clean
-export function showStatus(params: GridRenderCellParams) {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+export function showStatus(params: GridRenderCellParams, userIsPagopaOperator: boolean) {
   return renderCell({
     value: (
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Chip
           label={
-            params.row.wrapperStatus === 'APPROVED'
+            params.row.wrapperStatus === WrapperStatusEnum.APPROVED
               ? i18n.t('stationsPage.states.active')
-              : params.row.wrapperStatus === 'TO_CHECK' ||
-                params.row.wrapperStatus === 'TO_CHECK_UPDATE'
-              ? i18n.t('stationsPage.states.revision')
-              : i18n.t('stationsPage.states.needCorrection')
+              : params.row.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                params.row.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
+              ? i18n.t(`stationsPage.states.${userIsPagopaOperator ? 'validate' : 'revision'}`)
+              : i18n.t(
+                  `stationsPage.states.${userIsPagopaOperator ? 'waitingUpdate' : 'needCorrection'}`
+                )
           }
           aria-label="Status"
           sx={{
             fontSize: '10px',
             fontWeight: 'fontWeightRegular',
-            color: params.row.wrapperStatus === 'APPROVED' ? '#FFFFFF' : '#17324D',
+            color: params.row.wrapperStatus === WrapperStatusEnum.APPROVED ? '#FFFFFF' : '#17324D',
             backgroundColor:
-              params.row.wrapperStatus === 'APPROVED'
+              params.row.wrapperStatus === WrapperStatusEnum.APPROVED
                 ? 'primary.main'
-                : params.row.wrapperStatus === 'TO_CHECK' ||
-                  params.row.wrapperStatus === 'TO_CHECK_UPDATE'
+                : params.row.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                  params.row.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
+                ? userIsPagopaOperator
+                  ? 'warning.light'
+                  : '#EEEEEE'
+                : userIsPagopaOperator
                 ? '#EEEEEE'
                 : 'warning.light',
             paddingBottom: '1px',

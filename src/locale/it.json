@@ -507,8 +507,12 @@
   "stationsPage": {
     "title": "Stazioni",
     "subtitle": "Cerca e visualizza lo stato delle stazioni.",
-    "searchPlaceholder": "Cerca per codice stazione",
-    "createStationButtonLabel": "Crea stazione",
+    "search": {
+      "placeholder": "Cerca per codice stazione",
+      "createButton": "Crea stazione",
+      "tabActive": "Attive",
+      "tabToBeValidated": "Da validare"
+    },
     "table": {
       "emptyState": "Non sono ancora presenti stazioni.",
       "link": "Crea stazione"
@@ -518,16 +522,23 @@
     "stationsTableColumns": {
       "headerFields": {
         "name": "Codice stazione",
-        "creationDate": "Data creazione",
+        "creationDate": "Creata il",
         "lastEditDate": "Ultima modifica",
-        "activationDate": "Data attivazione",
-        "status": "Stato"
+        "activationDate": "Attiva dal",
+        "status": "Stato",
+        "connection": "Connessione"
+      },
+      "rows": {
+        "async":"Asincrona",
+        "sync": "Sincrona"
       }
     },
     "states": {
       "revision": "In revisione",
       "needCorrection": "Da correggere",
-      "active": "Attiva"
+      "active": "Attiva",
+      "validate": "Da validare",
+      "waitingUpdate": "In attesa di modifiche"
     },
     "stationOptions": {
       "manageStation": "Gestisci stazione",
@@ -833,8 +844,10 @@
     "publicBundles": "Su richiesta",
     "globalBundles": "Per tutti",
     "list": {
-      "searchByName": "Cerca per Nome",
-      "createBundle": "Crea pacchetto",
+      "search": {
+        "placeholder": "Cerca per Nome",
+        "createButton": "Crea pacchetto"
+      },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}.",
         "link": "Crea pacchetto"
@@ -1291,6 +1304,8 @@
     "showMore": "Mostra di più",
     "discoverMore" : "Scopri di più",
     "search": "Cerca",
+    "filter": "Filtra",
+    "removeFilter": "Rimuovi filtri",
     "add": "Aggiungi",
     "back": "Indietro",
     "turnBack": "Torna indietro",

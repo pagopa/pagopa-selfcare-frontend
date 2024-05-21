@@ -1,17 +1,21 @@
-import { Alert, Grid, Tab, Tabs, Typography } from '@mui/material';
+import { Alert, Button, Grid, Tab, Tabs, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { generatePath, Link as RouterLink } from 'react-router-dom';
+import ROUTES from '../../routes';
 import { bundleDetailsSelectors } from '../../redux/slices/bundleDetailsSlice';
 import { useAppSelector } from '../../redux/hooks';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { BundleResource } from '../../model/CommissionBundle';
 import { TypeEnum } from '../../api/generated/portal/PSPBundleResource';
+import TableSearchBar from '../../components/Table/TableSearchBar';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
+import { useUserRole } from '../../hooks/useUserRole';
+import { useOrganizationType } from '../../hooks/useOrganizationType';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
-import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
 
 type Props = {
   children?: React.ReactNode;
@@ -52,11 +56,15 @@ function getTabValue(bundle: BundleResource | Record<any, any>) {
 const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const { userIsAdmin } = useUserRole();
+  const { orgInfo } = useOrganizationType();
+
   const isPrivateEnabled = useFlagValue('commission-bundles-private');
   const isPublicEnabled = useFlagValue('commission-bundles-public');
 
-  const commissionBundleDetail: BundleResource | Record<any, any> =
-    useAppSelector(bundleDetailsSelectors.selectBundleDetails);
+  const commissionBundleDetail: BundleResource | Record<any, any> = useAppSelector(
+    bundleDetailsSelectors.selectBundleDetails
+  );
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
@@ -69,15 +77,6 @@ const CommissionBundlesPage = () => {
 
   const clearLocationState = () => {
     window.history.replaceState({}, document.title);
-  };
-
-  const a11yProps = (index: number) => ({
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  });
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
   };
 
   return (
@@ -94,37 +93,42 @@ const CommissionBundlesPage = () => {
           {(history.location.state as any).alertSuccessMessage}
         </Alert>
       )}
-      <CommissionBundlesSearchBar
-        bundleNameInput={bundleNameInput}
-        setBundleNameInput={setBundleNameInput}
+      <TableSearchBar
+        componentName="commissionBundlesPage.list"
+        setExternalSearchInput={setBundleNameInput}
+        customEndButton={
+          orgInfo.types.isPsp &&
+          userIsAdmin && (
+            <Button
+              component={RouterLink}
+              to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}
+              variant="contained"
+              sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
+              data-testid={'create-bundle-button'}
+            >
+              {t('commissionBundlesPage.list.search.createButton')}
+            </Button>
+          )
+        }
+        setActiveTab={setTabValue}
+        activeTab={tabValue}
+        listTabFilter={[
+          {
+            label: t('commissionBundlesPage.privateBundles'),
+            disabled: !isPrivateEnabled,
+            'data-testid': 'private',
+          },
+          {
+            label: t('commissionBundlesPage.publicBundles'),
+            disabled: !isPublicEnabled,
+            'data-testid': 'public',
+          },
+          {
+            label: t('commissionBundlesPage.globalBundles'),
+            'data-testid': 'global',
+          },
+        ]}
       />
-      <Box sx={{ borderColor: 'divider', width: '100%', mt: 3 }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleChange}
-          sx={{ width: '100%' }}
-          centered
-          variant="fullWidth"
-        >
-          <Tab
-            label={t('commissionBundlesPage.privateBundles')}
-            {...a11yProps(0)}
-            disabled={!isPrivateEnabled}
-            data-testid="tab-private"
-          />
-          <Tab
-            label={t('commissionBundlesPage.publicBundles')}
-            {...a11yProps(1)}
-            disabled={!isPublicEnabled}
-            data-testid="tab-public"
-          />
-          <Tab
-            label={t('commissionBundlesPage.globalBundles')}
-            {...a11yProps(2)}
-            data-testid="tab-global"
-          />
-        </Tabs>
-      </Box>
       <CustomTabPanel valueTab={tabValue} index={0}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.privateBundles'}

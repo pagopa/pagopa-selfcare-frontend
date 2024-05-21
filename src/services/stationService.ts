@@ -1,5 +1,4 @@
 import { BackofficeApi } from '../api/BackofficeClient';
-import { StationsResource } from '../api/generated/portal/StationsResource';
 import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
 import {
   createStationMocked,
@@ -18,16 +17,16 @@ import {
   getWrapperStation as getStationWrap,
   updateStation as UpdateStationMocked,
   getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
-  testStation as testStationMocked
+  testStation as testStationMocked,
 } from '../services/__mocks__/stationService';
 import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
 import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
-import { StationOnCreation } from '../model/Station';
+import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
-import {Delegation} from "../api/generated/portal/Delegation";
+import { Delegation } from '../api/generated/portal/Delegation';
 import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
 import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
 import { ProblemJson } from '../api/generated/portal/ProblemJson';
@@ -41,14 +40,29 @@ export const createStation = (station: StationOnCreation): Promise<StationDetail
   return BackofficeApi.createStation(station).then((resources) => resources);
 };
 
-export const getStations = (
-  page: number,
-  creditorInstitutionCode?: string
-): Promise<StationsResource> => {
+export const getStations = ({
+  page,
+  brokerCode,
+  status,
+  stationCode,
+  limit,
+}: {
+  page: number;
+  brokerCode: string;
+  status: ConfigurationStatus;
+  stationCode?: string;
+  limit?: number;
+}): Promise<WrapperStationsResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getStationsMocked(0);
   }
-  return BackofficeApi.getStations(page, creditorInstitutionCode).then((resource) => resource);
+  return BackofficeApi.getStations({
+    page,
+    brokerCode,
+    status,
+    stationCode,
+    limit,
+  }).then((resource) => resource);
 };
 
 export const getStationsMerged = (
@@ -108,7 +122,9 @@ export const dissociateECfromStation = (ecCode: string, stationCode: string): Pr
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return dissociateECfromStationMocked(ecCode, stationCode);
   } else {
-    return BackofficeApi.dissociateECfromStation(ecCode, stationCode).then((resources) => resources);
+    return BackofficeApi.dissociateECfromStation(ecCode, stationCode).then(
+      (resources) => resources
+    );
   }
 };
 
@@ -134,7 +150,7 @@ export const getStationAvailableEC = (
 };
 
 export const createWrapperStation = (
-  station: WrapperStationDetailsDto,
+  station: WrapperStationDetailsDto
 ): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createStationWrap(station);
@@ -151,7 +167,7 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> => {
 };
 
 export const updateWrapperStationToCheck = (
-  station: StationDetailsDto,
+  station: StationDetailsDto
 ): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrap(station);
@@ -174,15 +190,11 @@ export const updateWrapperStationToCheckUpdate = (
   }
 };
 
-export const updateWrapperStationByOpt = (
-  station: StationDetailsDto
-): Promise<WrapperEntities> => {
+export const updateWrapperStationByOpt = (station: StationDetailsDto): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrapByOpt(station);
   } else {
-    return BackofficeApi.updateWrapperStationByOpt(station).then(
-      (resources) => resources
-    );
+    return BackofficeApi.updateWrapperStationByOpt(station).then((resources) => resources);
   }
 };
 
@@ -209,16 +221,28 @@ export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionSegregationcodesMocked(ecCode);
   } else {
-    return BackofficeApi.getCreditorInstitutionSegregationcodes(ecCode).then((resource) => resource);
+    return BackofficeApi.getCreditorInstitutionSegregationcodes(ecCode).then(
+      (resource) => resource
+    );
   }
 };
 
-export const testStation = (hostProtocol: string, hostUrl: string, hostPort: number,
- hostPath: string, testStationType: TestStationTypeEnum): Promise<TestStationResource> => {
+export const testStation = (
+  hostProtocol: string,
+  hostUrl: string,
+  hostPort: number,
+  hostPath: string,
+  testStationType: TestStationTypeEnum
+): Promise<TestStationResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return testStationMocked(hostUrl, hostPort, hostPath);
   } else {
-    return BackofficeApi.testStation(hostProtocol, hostUrl, hostPort, hostPath, testStationType)
-    .then((resource) => resource);
+    return BackofficeApi.testStation(
+      hostProtocol,
+      hostUrl,
+      hostPort,
+      hostPath,
+      testStationType
+    ).then((resource) => resource);
   }
 };

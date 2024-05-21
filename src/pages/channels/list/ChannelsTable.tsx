@@ -14,7 +14,7 @@ import { getChannelsMerged } from '../../../services/channelService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { WrapperChannelsResource } from '../../../api/generated/portal/WrapperChannelsResource';
 import { useAppSelector } from '../../../redux/hooks';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './ChannelsTableColumns';
 
 const rowHeight = 64;

@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
 import { Ibans } from '../../../api/generated/portal/Ibans';
 import ROUTES from '../../../routes';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './IbanTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import IbanTableEmpty from './IbanTableEmpty';

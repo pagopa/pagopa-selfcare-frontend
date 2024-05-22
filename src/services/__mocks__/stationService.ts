@@ -1,7 +1,8 @@
+import { AvailableCodes } from '../../api/generated/portal/AvailableCodes';
+import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { CreditorInstitutionStationDto } from '../../api/generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from '../../api/generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from '../../api/generated/portal/CreditorInstitutionsResource';
-import { StatusEnum } from '../../api/generated/portal/ChannelDetailsDto';
 import { StationCodeResource } from '../../api/generated/portal/StationCodeResource';
 import { StationDetailResource } from '../../api/generated/portal/StationDetailResource';
 import {
@@ -9,11 +10,16 @@ import {
   StationDetailsDto,
 } from '../../api/generated/portal/StationDetailsDto';
 import {
+  TestResultEnum,
+  TestStationResource,
+} from '../../api/generated/portal/TestStationResource';
+import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
+import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
+import {
   WrapperStationResource,
   WrapperStatusEnum,
 } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
-import { WrapperStationDetailsDto } from '../../api/generated/portal/WrapperStationDetailsDto';
 import { StationOnCreation } from '../../model/Station';
 import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
 import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
@@ -57,7 +63,7 @@ export const mockedFullStation: StationDetailResource = {
   enabled: true,
   brokerDescription: '',
   version: 1,
-  password: "password",
+  password: 'password',
   associatedCreditorInstitutions: 0,
   activationDate: new Date(),
   createdAt: new Date(),
@@ -288,8 +294,7 @@ const stationList: Array<WrapperStationResource> = [
   },
 ];
 export const mockedStationsMerged2: WrapperStationsResource = {
-  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1,
-    total_items: stationList.length },
+  pageInfo: { page: 0, limit: 10, items_found: 4, total_pages: 1, total_items: stationList.length },
   stationsList: stationList,
 };
 
@@ -580,28 +585,27 @@ export const mockedStationAvailableEC: Array<any> = [
 //   { used: createFormattedArray(), unused: createFormattedArray() },
 // ];
 
-const createFormattedArray = (): CreditorInstitutionAssociatedCode[] => {
-  const segregationCodeArray: CreditorInstitutionAssociatedCode[] = [];
+const createFormattedArray = (): string[] => {
+  const segregationCodeArray: string[] = [];
   for (let i = 0; i <= 48; i++) {
     const n = (i < 10 ? '0' : '') + i;
-    segregationCodeArray.push({ name: n, code: (i + 1).toString() });
+    segregationCodeArray.push((i + 1).toString());
   }
   return segregationCodeArray;
 };
 
-export const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = {
-  used: createFormattedArray(),
-  unused: createFormattedArray(),
+export const mockedSegregationCodeList: AvailableCodes = {
+  availableCodes: createFormattedArray(),
 };
 
 export const stationTestErrorMocked: TestStationResource = {
-  message: "ERROR",
-  testResult: TestResultEnum.ERROR
+  message: 'ERROR',
+  testResult: TestResultEnum.ERROR,
 };
 
 export const stationTestMocked: TestStationResource = {
-  message: "OK",
-  testResult: TestResultEnum.SUCCESS
+  message: 'OK',
+  testResult: TestResultEnum.SUCCESS,
 };
 
 export const mockedCreatedStation: StationOnCreation = {
@@ -663,7 +667,7 @@ export const getStationCodeMocked = (_code: string): Promise<StationCodeResource
   new Promise((resolve) => resolve(mockedStationCode));
 
 export const getStationCodeV2Mocked = (_code: string): Promise<StationCodeResource> =>
-new Promise((resolve) => resolve(mockedStationCode));
+  new Promise((resolve) => resolve(mockedStationCode));
 
 export const createWrapperStation = (
   _station: WrapperStationDetailsDto
@@ -676,13 +680,11 @@ export const getECListByStationCode = (
 ): Promise<CreditorInstitutionsResource> =>
   new Promise((resolve) => resolve(page === 0 ? mockedStationECs : mockedStationECsPage2));
 
-export const updateWrapperStation = (
-  _stations: StationDetailsDto
-): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
+export const updateWrapperStation = (_stations: StationDetailsDto): Promise<WrapperEntities> =>
+  new Promise((resolve) => resolve(mockedWrapperStation));
 
-export const updateWrapperStationByOpt = (
-  _stations: StationDetailsDto
-): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
+export const updateWrapperStationByOpt = (_stations: StationDetailsDto): Promise<WrapperEntities> =>
+  new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateStation = (
   _stations: StationDetailsDto,
@@ -704,10 +706,14 @@ export const associateEcToStation = (
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
-export const getCreditorInstitutionSegregationcodes = (
-  _ecCode: string
-): Promise<CreditorInstitutionAssociatedCodeList> =>
+export const getCreditorInstitutionSegregationcodes = (_ecCode: string): Promise<AvailableCodes> =>
   new Promise((resolve) => resolve(mockedSegregationCodeList));
 
-export const testStation = (hostUrl: string, hostPort: number, hostPath: string) : Promise<TestStationResource> =>
-    new Promise((resolve) => resolve(hostPath === "/error" ? stationTestErrorMocked : stationTestMocked));
+export const testStation = (
+  hostUrl: string,
+  hostPort: number,
+  hostPath: string
+): Promise<TestStationResource> =>
+  new Promise((resolve) =>
+    resolve(hostPath === '/error' ? stationTestErrorMocked : stationTestMocked)
+  );

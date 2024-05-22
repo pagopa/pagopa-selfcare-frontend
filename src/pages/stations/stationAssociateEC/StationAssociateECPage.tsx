@@ -1,35 +1,36 @@
-import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { useEffect, useState } from 'react';
 
+import { FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {Trans, useTranslation} from 'react-i18next';
-import {Box} from '@mui/system';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useFormik} from 'formik';
-import {generatePath, useHistory, useParams} from 'react-router-dom';
-import {theme} from '@pagopa/mui-italia';
-import {FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
+import { Box } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useFormik } from 'formik';
+import { Trans, useTranslation } from 'react-i18next';
+import { generatePath, useHistory, useParams } from 'react-router-dom';
+import { AvailableCodes } from '../../../api/generated/portal/AvailableCodes';
+import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+import { Delegation } from '../../../api/generated/portal/Delegation';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
+import { getBrokerDelegation } from '../../../services/institutionService';
+import {
+  associateEcToStation,
+  getCreditorInstitutionSegregationCodes,
+} from '../../../services/stationService';
+import { extractProblemJson } from '../../../utils/client-utils';
 import {
   INSTITUTIONS_EC_TYPES,
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
-import {checkInstitutionTypes} from '../../../utils/institution-types-utils';
-import {associateEcToStation, getCreditorInstitutionSegregationcodes,} from '../../../services/stationService';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {CreditorInstitutionStationDto} from '../../../api/generated/portal/CreditorInstitutionStationDto';
-import {
-  CreditorInstitutionAssociatedCodeList
-} from '../../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
-import {Delegation} from '../../../api/generated/portal/Delegation';
-import {getBrokerDelegation} from '../../../services/institutionService';
-import {extractProblemJson} from '../../../utils/client-utils';
+import { checkInstitutionTypes } from '../../../utils/institution-types-utils';
 import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
@@ -42,13 +43,9 @@ function StationAssociateECPage() {
   const [selectedEC, setSelectedEC] = useState<Delegation | undefined>();
   const [isECUsable, setIsECUsable] = useState<boolean>();
   const [availableEC, setAvailableEC] = useState<Array<Delegation>>([]);
-  const [segregationCodeList, setSegregationCodeList] =
-    useState<CreditorInstitutionAssociatedCodeList>([
-      {
-        unused: [],
-        used: [],
-      },
-    ]);
+  const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
+    availableCodes: [],
+  });
   const [checked, setChecked] = useState(false);
   const auxDigitOptions = [3];
 
@@ -84,9 +81,9 @@ function StationAssociateECPage() {
   useEffect(() => {
     if (selectedEC && selectedEC.tax_code) {
       setLoadingList(true);
-      getCreditorInstitutionSegregationcodes(selectedEC.tax_code)
+      getCreditorInstitutionSegregationCodes(selectedEC.tax_code)
         .then((data) => {
-          if (data && Array.isArray(data.unused)) {
+          if (data && Array.isArray(data.availablesCodes)) {
             setSegregationCodeList(data);
             setIsECUsable(true);
           }
@@ -330,10 +327,10 @@ function StationAssociateECPage() {
                           },
                         }}
                       >
-                        {segregationCodeList.unused &&
-                          segregationCodeList.unused.map((r, i) => (
-                            <MenuItem key={i} value={r.code}>
-                              {r.code}
+                        {segregationCodeList.availableCodes &&
+                          segregationCodeList.availableCodes.map((code, i) => (
+                            <MenuItem key={i} value={code}>
+                              {code}
                             </MenuItem>
                           ))}
                       </Select>
@@ -368,7 +365,6 @@ function StationAssociateECPage() {
           </Grid>
         </Paper>
       </Box>
-
       <Stack direction="row" justifyContent="space-between" mt={5} mb={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
           <Button color="primary" variant="outlined" onClick={goBack} data-testid="back-btn-test">

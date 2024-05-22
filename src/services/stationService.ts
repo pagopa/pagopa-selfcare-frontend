@@ -1,17 +1,22 @@
 import { BackofficeApi } from '../api/BackofficeClient';
 import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
+import { StationOnCreation } from '../model/Station';
 import {
+  updateStation as UpdateStationMocked,
+  associateEcToStation as associateEcToStationMocked,
   createStationMocked,
+  createWrapperStation as createStationWrap,
+  dissociateECfromStation as dissociateECfromStationMocked,
+  getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
+  getECListByStationCode as getECListByStationCodeMocked,
+  getStationAvailableEC as getStationAvailableECMocked,
   getStationCodeMocked,
   getStationCodeV2Mocked,
   getStationDetail as getStationDetailMock,
-  getStations as getStationsMocked,
+  getWrapperStation as getStationWrap,
   getStationsMerged as getStationsMergedMocked,
-  dissociateECfromStation as dissociateECfromStationMocked,
-  getECListByStationCode as getECListByStationCodeMocked,
-  getStationAvailableEC as getStationAvailableECMocked,
-  associateEcToStation as associateEcToStationMocked,
-  createWrapperStation as createStationWrap,
+  getStations as getStationsMocked,
+  testStation as testStationMocked,
   updateWrapperStation as updateStationWrap,
   updateWrapperStationByOpt as updateStationWrapByOpt,
   getWrapperStation as getStationWrap,
@@ -217,11 +222,11 @@ export const getStationDetail = (stationId: string): Promise<StationDetailResour
   }
 };
 
-export const getCreditorInstitutionSegregationcodes = (ecCode: string) => {
+export const getCreditorInstitutionSegregationCodes = (ecCode: string) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionSegregationcodesMocked(ecCode);
   } else {
-    return BackofficeApi.getCreditorInstitutionSegregationcodes(ecCode).then(
+    return BackofficeApi.getCreditorInstitutionSegregationCodes(ecCode).then(
       (resource) => resource
     );
   }

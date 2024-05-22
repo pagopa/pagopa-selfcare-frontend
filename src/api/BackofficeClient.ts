@@ -647,7 +647,7 @@ export const BackofficeApi = {
     ec: CreditorInstitutionDto
   ): Promise<CreditorInstitutionDetailsResource> => {
     const result = await backofficeClient.createCreditorInstitutionAndBroker({
-      'ci-tax-code': '',
+      'ci-tax-code': ec.creditorInstitutionCode,
       body: {
         brokerDto: {
           broker_code: ec.creditorInstitutionCode,
@@ -864,10 +864,10 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationcodes: async (
+  getCreditorInstitutionSegregationCodes: async (
     ecCode: string
   ): Promise<CreditorInstitutionAssociatedCodeList> => {
-    const result = await backofficeClient.getCreditorInstitutionSegregationcodes({
+    const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);

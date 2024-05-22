@@ -29,6 +29,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: actions/checkout@v3
         with:
@@ -41,6 +42,46 @@ jobs:
 
       - name: Build
         run: |
+          export REACT_APP_ENV='${{ needs.setup.outputs.environment }}'
+          export INLINE_RUNTIME_CHUNK='false'
+
+          export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
+          export REACT_APP_URL_FE_LOGOUT='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
+          export REACT_APP_URL_FE_LANDING='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
+          export REACT_APP_URL_FE_ASSISTANCE='${{ vars.SELFCARE_HOST_FE }}/assistenza'
+          export REACT_APP_URL_FE_SELFCARE='${{ vars.SELFCARE_HOST_FE }}/dashboard/'
+          export REACT_APP_URL_FE_TOKEN_EXCHANGE='${{ vars.SELFCARE_HOST_FE }}/token-exchange'
+
+          export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
+          export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
+          export REACT_APP_PUBLIC_URL='/ui'
+          export REACT_APP_URL_BETA='false'
+          
+          export REACT_APP_API_MOCK_BACKOFFICE='false'
+          export REACT_APP_API_MOCK_TOKEN='false'
+          
+          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
+
+          export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
+          export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
+          export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
+          export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
+
+          export REACT_APP_ANALYTICS_ENABLE='false'
+          export REACT_APP_ANALYTICS_MOCKED='false'
+
+          if [ "${{ needs.setup.outputs.environment }}" = "dev" ]; then
+            export REACT_APP_FEATURES_FDR_ENABLED='true'
+          fi
+
+          if [ "${{ needs.setup.outputs.environment }}" = "uat" ]; then
+            export REACT_APP_FEATURES_FDR_ENABLED='true'
+          fi
+
+          if [ "${{ needs.setup.outputs.environment }}" = "prod" ]; then
+            export REACT_APP_FEATURES_FDR_ENABLED='false'
+          fi
+          
           yarn install
           yarn generate
           yarn build

@@ -31,7 +31,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment: dev
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,34 +45,34 @@ jobs:
         run: |
           export REACT_APP_ENV='dev'
           export INLINE_RUNTIME_CHUNK='false'
-
-          export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
-          export REACT_APP_URL_FE_LOGOUT='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
-          export REACT_APP_URL_FE_LANDING='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
-          export REACT_APP_URL_FE_ASSISTANCE='${{ vars.SELFCARE_HOST_FE }}/assistenza'
-          export REACT_APP_URL_FE_SELFCARE='${{ vars.SELFCARE_HOST_FE }}/dashboard/'
-          export REACT_APP_URL_FE_TOKEN_EXCHANGE='${{ vars.SELFCARE_HOST_FE }}/token-exchange'
-
-          export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
-          export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
+          
+          export REACT_APP_URL_FE_LOGIN='https://dev.selfcare.pagopa.it/auth/login'
+          export REACT_APP_URL_FE_LOGOUT='https://dev.selfcare.pagopa.it/auth/logout'
+          export REACT_APP_URL_FE_LANDING='https://dev.selfcare.pagopa.it/auth/logout'
+          export REACT_APP_URL_FE_ASSISTANCE='https://dev.selfcare.pagopa.it/assistenza'
+          export REACT_APP_URL_FE_SELFCARE='https://dev.selfcare.pagopa.it/dashboard/'
+          export REACT_APP_URL_FE_TOKEN_EXCHANGE='https://dev.selfcare.pagopa.it/token-exchange'
+          
+          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/api/token/token'
+          export REACT_APP_URL_BACKOFFICE='https://api.dev.platform.pagopa.it/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
           export REACT_APP_URL_BETA='false'
           
           export REACT_APP_API_MOCK_BACKOFFICE='false'
           export REACT_APP_API_MOCK_TOKEN='false'
           
-          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
-
+          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='https://pagopadselfcaresa.z6.web.core.windows.net/institutions/'
+          
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
-          export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
-          export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
-          export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
-
+          export REACT_APP_MIXPANEL_TOKEN='DUMMY'
+          export REACT_APP_ONE_TRUST_BASE_URL='https://dev.selfcare.pagopa.it/ot/test'
+          export REACT_APP_ONETRUST_DOMAIN_ID='a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test'
+          
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
-
+          
           export REACT_APP_FEATURES_FDR_ENABLED='true'
-          export REACT_APP_JWT='${{ secrets.APP_JWT }}'
+  
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
           
           

@@ -1,2 +1,0 @@
-yarn start:local &
-

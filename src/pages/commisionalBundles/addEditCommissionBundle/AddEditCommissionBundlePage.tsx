@@ -96,9 +96,10 @@ const validate = (
             ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
             : undefined,
         name: !values.name ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
-        paymentAmount: !values.paymentAmount
-          ? t(`${componentPath}.validationMessage.requiredField`)
-          : undefined,
+        paymentAmount:
+          !values.paymentAmount && values.paymentAmount !== 0
+            ? t(`${componentPath}.validationMessage.requiredField`)
+            : undefined,
         type: !values.type ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
         validityDateFrom: !values.validityDateFrom
           ? t(`${componentPath}.validationMessage.requiredField`)
@@ -128,7 +129,7 @@ const enableSubmit = (values: BundleRequest) =>
   !Number.isNaN(values.minPaymentAmount) &&
   values.maxPaymentAmount !== 0 &&
   !Number.isNaN(values.maxPaymentAmount) &&
-  values.paymentAmount !== 0 &&
+  (values.paymentAmount ?? 0) >= 0 &&
   !Number.isNaN(values.paymentAmount) &&
   values.idChannel !== '' &&
   values.idChannel !== undefined &&
@@ -149,7 +150,7 @@ const AddEditCommissionBundlePage = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const isEdit: boolean = actionId === FormAction.Edit;
-  const textType = isEdit ? "Edit" : "Create";
+  const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect(
       bundleDetailsSelectors.selectBundleDetails,
@@ -197,9 +198,7 @@ const AddEditCommissionBundlePage = () => {
           techDescription: `An error occurred while updating the commission bundle`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            `${componentPath}.error.errorMessage${textType}Bundle`
-          ),
+          displayableDescription: t(`${componentPath}.error.errorMessage${textType}Bundle`),
           component: 'Toast',
         });
       })
@@ -231,9 +230,7 @@ const AddEditCommissionBundlePage = () => {
             {t('general.exit')}
           </ButtonNaked>
           <Breadcrumbs>
-            <Typography variant="body2">
-              {t(`${componentPath}.breadcrumb.first`)}
-            </Typography>
+            <Typography variant="body2">{t(`${componentPath}.breadcrumb.first`)}</Typography>
             <Typography variant="body2" fontWeight={'medium'}>
               {t(`${componentPath}.breadcrumb.second${textType}`)}
             </Typography>

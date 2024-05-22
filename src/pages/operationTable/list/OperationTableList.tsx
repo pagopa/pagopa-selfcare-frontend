@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { TavoloOpResourceList } from '../../../api/generated/portal/TavoloOpResourceList';
-import { CustomDataGrid } from '../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { buildColumnDefs } from './OperationTableColumns';
 import { GridToolbarQuickFilter } from './QuickFilterCustom';
 import OperationTableEmpty from './OperationTableEmpty';

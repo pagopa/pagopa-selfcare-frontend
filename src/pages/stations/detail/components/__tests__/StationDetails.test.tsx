@@ -3,19 +3,19 @@ import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../redux/store';
+import {store} from '../../../../../redux/store';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
-import StationDetails from '../detail/components/StationDetails';
+import StationDetails from '../StationDetails';
 import {
     RedirectProtocolEnum,
     StationDetailResource,
     WrapperStatusEnum,
-} from '../../../api/generated/portal/StationDetailResource';
-import {partiesActions} from '../../../redux/slices/partiesSlice';
-import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
-import {ROLE} from "../../../model/RolePermission";
-import * as useUserRole from "../../../hooks/useUserRole";
+} from '../../../../../api/generated/portal/StationDetailResource';
+import {partiesActions} from '../../../../../redux/slices/partiesSlice';
+import {ecAdminSignedDirect} from '../../../../../services/__mocks__/partyService';
+import {ROLE} from "../../../../../model/RolePermission";
+import * as useUserRole from "../../../../../hooks/useUserRole";
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -24,8 +24,8 @@ beforeEach(() => {
     });
 });
 
-jest.mock('../../components/commonFunctions');
-jest.mock("../../../hooks/useUserRole");
+jest.mock('../../../../components/commonFunctions');
+jest.mock("../../../../../hooks/useUserRole");
 
 afterEach(cleanup);
 

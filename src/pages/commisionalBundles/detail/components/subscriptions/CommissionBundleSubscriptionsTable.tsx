@@ -14,7 +14,7 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useState, ChangeEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
-import { CustomDataGrid } from '../../../../../components/Table/CustomDataGrid';
+import { CustomDataGrid } from '../../../../../components/Table/TableDataGrid';
 import TableEmptyState from '../../../../../components/Table/TableEmptyState';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
@@ -252,7 +252,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
             value={filterState}
             onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
             data-testid="subscription-state"
-            sx={{ height: '48px' }}
+            sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
           >
             <MenuItem value={SubscriptionStateType.Waiting}>
               {t(`${componentPath}.stateChip.${SubscriptionStateType.Waiting}`)}

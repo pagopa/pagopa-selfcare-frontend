@@ -1,5 +1,6 @@
 import { Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { WrapperStatusEnum } from '../api/generated/portal/WrapperStationResource';
 
 type Props = {
   status: string;
@@ -25,13 +26,13 @@ export const StatusChip = ({ status, size = 'regular' }: Props) => {
 
 const resolveWrappedStatusToChipObj = (status: string) => {
   switch (status) {
-    case 'APPROVED':
+    case WrapperStatusEnum.APPROVED:
       return { label: status, color: '#FFFFFF', backgroundColor: 'primary.main' };
-    case 'TO_FIX':
-    case 'TO_FIX_UPDATE':
+    case WrapperStatusEnum.TO_FIX:
+    case WrapperStatusEnum.TO_FIX_UPDATE:
       return { label: status, color: '#17324D', backgroundColor: 'warning.light' };
-    case 'TO_CHECK':
-    case 'TO_CHECK_UPDATE':
+    case WrapperStatusEnum.TO_CHECK:
+    case WrapperStatusEnum.TO_CHECK_UPDATE:
       return { label: status, color: '#17324D', backgroundColor: 'grey.200' };
     default:
       return { label: status, color: '#17324D', backgroundColor: 'grey.200' };

@@ -21,8 +21,9 @@ env:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
   deployments: write
+  issues: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -70,17 +71,8 @@ jobs:
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
 
-          if [ "${{ needs.setup.outputs.environment }}" = "dev" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ needs.setup.outputs.environment }}" = "uat" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ needs.setup.outputs.environment }}" = "prod" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='false'
-          fi
+          export REACT_APP_FEATURES_FDR_ENABLED='true'
+          
           
           yarn install
           yarn generate

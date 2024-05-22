@@ -1,14 +1,15 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
-import StationAssociateECPage from '../StationAssociateECPage';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
-import { pspAdminUnsigned } from '../../../../services/__mocks__/partyService';
+import { store } from '../../../../redux/store';
+import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import { mockedSegregationCodeList } from '../../../../services/__mocks__/stationService';
+import StationAssociateECPage from '../StationAssociateECPage';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 
 let getStationAvailableECSpy: jest.SpyInstance;
 let getCreditorInstitutionSegregationCodesSpy: jest.SpyInstance;
@@ -57,9 +58,10 @@ describe('<StationAssociateECPage />', () => {
         extended_fault_bean: true,
       },
     ]);
+    getBrokerDelegationSpy.mockResolvedValue(mockedDelegatedPSP);
 
     getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
-    store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
       <Provider store={store}>
@@ -83,8 +85,8 @@ describe('<StationAssociateECPage />', () => {
     expect(ecSelectionSearch).toBeInTheDocument();
 
     const newEc = screen.getByTestId('ec-selection-search') as HTMLInputElement;
-    fireEvent.change(newEc, { target: { value: 'Sogei' } });
-    fireEvent.change(newEc, { target: { value: 'Intesa San Paolo S.P.A' } });
+    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 1' } });
+    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 2' } });
 
     const searchSubmit = screen.getByTestId('search-field-test');
     fireEvent.click(searchSubmit);
@@ -123,7 +125,7 @@ describe('<StationAssociateECPage />', () => {
     getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
 
     getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
-    store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
       <Provider store={store}>
@@ -155,7 +157,7 @@ describe('<StationAssociateECPage />', () => {
     ]);
     getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
     getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(new Error('error'));
-    store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
       <Provider store={store}>
@@ -189,7 +191,7 @@ describe('<StationAssociateECPage />', () => {
     getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(
       new Error(JSON.stringify({ status: 404 }))
     );
-    store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
       <Provider store={store}>

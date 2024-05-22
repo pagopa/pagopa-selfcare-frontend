@@ -59,7 +59,7 @@ export const mockedFullStation: StationDetailResource = {
   enabled: true,
   brokerDescription: '',
   version: 1,
-  password: 'password',
+  password: 'xxxxxxxx',
   associatedCreditorInstitutions: 0,
   activationDate: new Date(),
   createdAt: new Date(),
@@ -461,10 +461,10 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
 };
 export const stationWrapperMockedGet = (code: string): WrapperEntities => ({
   brokerCode: 'string',
-  createdAt: new Date(),
+  createdAt: new Date('2024-03-12'),
   createdBy: 'EC S.p.A',
   id: 'string',
-  modifiedAt: new Date(),
+  modifiedAt: new Date('2024-03-12'),
   modifiedBy: 'string',
   modifiedByOpt: 'string',
   note: 'string',
@@ -472,7 +472,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntities => ({
   type: TypeEnum.STATION,
   entities: [
     {
-      createdAt: new Date(),
+      createdAt: new Date('2024-03-12'),
       entity: {
         stationCode: code,
         brokerCode: '97735020584',
@@ -489,7 +489,7 @@ export const stationWrapperMockedGet = (code: string): WrapperEntities => ({
         targetPort: 3001,
       },
       id: 'string',
-      modifiedAt: new Date(),
+      modifiedAt: new Date('2024-03-12'),
       modifiedBy: 'string',
       modifiedByOpt: 'Operatore EC',
       note: 'string',

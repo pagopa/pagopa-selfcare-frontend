@@ -87,6 +87,7 @@ jobs:
           yarn build
           mkdir ./out
           mv ./build ./out/ui
+          touch ./out/index.html
 
       - name: Build And Deploy
         id: build_deploy

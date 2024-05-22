@@ -22,7 +22,6 @@ const CommonRadioGroup = ({ labelTrue, labelFalse, value, setIntermediaryAvailab
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const radioNewValue = (event.target as HTMLInputElement).value === "true";
-    console.log(radioNewValue);
     if (radioNewValue) {
       setShowAlert(true);
     }

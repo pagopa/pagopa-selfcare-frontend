@@ -11,7 +11,7 @@ import { pspAdminUnsigned } from '../../../../services/__mocks__/partyService';
 import { mockedSegregationCodeList } from '../../../../services/__mocks__/stationService';
 
 let getStationAvailableECSpy: jest.SpyInstance;
-let getCreditorInstitutionSegregationcodesSpy: jest.SpyInstance;
+let getCreditorInstitutionSegregationCodesSpy: jest.SpyInstance;
 let getBrokerDelegationSpy: jest.SpyInstance;
 let associateEcToStationSpy: jest.SpyInstance;
 
@@ -20,9 +20,9 @@ beforeEach(() => {
     require('../../../../services/stationService'),
     'getStationAvailableEC'
   );
-  getCreditorInstitutionSegregationcodesSpy = jest.spyOn(
+  getCreditorInstitutionSegregationCodesSpy = jest.spyOn(
     require('../../../../services/stationService'),
-    'getCreditorInstitutionSegregationcodes'
+    'getCreditorInstitutionSegregationCodes'
   );
   getBrokerDelegationSpy = jest.spyOn(
     require('../../../../services/institutionService'),
@@ -58,7 +58,7 @@ describe('<StationAssociateECPage />', () => {
       },
     ]);
 
-    getCreditorInstitutionSegregationcodesSpy.mockResolvedValue(mockedSegregationCodeList);
+    getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
     store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
 
     render(
@@ -73,8 +73,8 @@ describe('<StationAssociateECPage />', () => {
       </Provider>
     );
 
-    const segCodeMocked = mockedSegregationCodeList.unused
-      ? mockedSegregationCodeList.unused[0].code
+    const segCodeMocked = mockedSegregationCodeList.availableCodes
+      ? mockedSegregationCodeList.availableCodes[0]
       : '';
 
     const ecSelectionSearch = screen.getByText(
@@ -122,7 +122,7 @@ describe('<StationAssociateECPage />', () => {
     ]);
     getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
 
-    getCreditorInstitutionSegregationcodesSpy.mockResolvedValue(mockedSegregationCodeList);
+    getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
     store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
 
     render(
@@ -154,7 +154,7 @@ describe('<StationAssociateECPage />', () => {
       },
     ]);
     getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
-    getCreditorInstitutionSegregationcodesSpy.mockRejectedValueOnce(new Error('error'));
+    getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(new Error('error'));
     store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));
 
     render(
@@ -186,7 +186,7 @@ describe('<StationAssociateECPage />', () => {
       },
     ]);
     getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
-    getCreditorInstitutionSegregationcodesSpy.mockRejectedValueOnce(
+    getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(
       new Error(JSON.stringify({ status: 404 }))
     );
     store.dispatch(partiesActions.setPartySelected(pspAdminUnsigned));

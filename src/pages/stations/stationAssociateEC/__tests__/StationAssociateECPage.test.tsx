@@ -9,6 +9,7 @@ import { store } from '../../../../redux/store';
 import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import { mockedSegregationCodeList } from '../../../../services/__mocks__/stationService';
 import StationAssociateECPage from '../StationAssociateECPage';
+import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 
 let getStationAvailableECSpy: jest.SpyInstance;
 let getCreditorInstitutionSegregationCodesSpy: jest.SpyInstance;
@@ -57,6 +58,7 @@ describe('<StationAssociateECPage />', () => {
         extended_fault_bean: true,
       },
     ]);
+    getBrokerDelegationSpy.mockResolvedValue(mockedDelegatedPSP);
 
     getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
@@ -83,8 +85,8 @@ describe('<StationAssociateECPage />', () => {
     expect(ecSelectionSearch).toBeInTheDocument();
 
     const newEc = screen.getByTestId('ec-selection-search') as HTMLInputElement;
-    fireEvent.change(newEc, { target: { value: 'Sogei' } });
-    fireEvent.change(newEc, { target: { value: 'Intesa San Paolo S.P.A' } });
+    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 1' } });
+    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 2' } });
 
     const searchSubmit = screen.getByTestId('search-field-test');
     fireEvent.click(searchSubmit);

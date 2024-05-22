@@ -85,8 +85,8 @@ jobs:
           yarn install
           yarn generate
           yarn build
-          mkdir ./public
-          mv ./build ./public/ui
+          mkdir ./out
+          mv ./build ./out/ui
 
       - name: Build And Deploy
         id: build_deploy
@@ -96,7 +96,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
           deployment_environment: staging
-          app_location: "/public" # App source code path relative to repository root
+          app_location: "/out" # App source code path relative to repository root
           skip_app_build: true
           skip_api_build: true
 

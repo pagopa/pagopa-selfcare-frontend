@@ -1,6 +1,19 @@
 import { BackofficeApi } from '../api/BackofficeClient';
+import { AvailableCodes } from '../api/generated/portal/AvailableCodes';
+import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
+import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
+import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
+import { Delegation } from '../api/generated/portal/Delegation';
+import { ProblemJson } from '../api/generated/portal/ProblemJson';
+import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
+import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
+import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
+import { TestStationTypeEnum } from '../api/generated/portal/StationTestDto';
+import { TestStationResource } from '../api/generated/portal/TestStationResource';
+import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
+import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
-import { StationOnCreation } from '../model/Station';
+import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import {
   updateStation as UpdateStationMocked,
   associateEcToStation as associateEcToStationMocked,
@@ -19,24 +32,7 @@ import {
   testStation as testStationMocked,
   updateWrapperStation as updateStationWrap,
   updateWrapperStationByOpt as updateStationWrapByOpt,
-  getWrapperStation as getStationWrap,
-  updateStation as UpdateStationMocked,
-  getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
-  testStation as testStationMocked,
 } from '../services/__mocks__/stationService';
-import { StationCodeResource } from '../api/generated/portal/StationCodeResource';
-import { CreditorInstitutionStationEditResource } from '../api/generated/portal/CreditorInstitutionStationEditResource';
-import { CreditorInstitutionStationDto } from '../api/generated/portal/CreditorInstitutionStationDto';
-import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
-import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStationDetailsDto';
-import { ConfigurationStatus, StationOnCreation } from '../model/Station';
-import { StationDetailsDto } from '../api/generated/portal/StationDetailsDto';
-import { Delegation } from '../api/generated/portal/Delegation';
-import { WrapperEntities } from '../api/generated/portal/WrapperEntities';
-import { StationDetailResource } from '../api/generated/portal/StationDetailResource';
-import { ProblemJson } from '../api/generated/portal/ProblemJson';
-import { TestStationResource } from '../api/generated/portal/TestStationResource';
-import { TestStationTypeEnum } from '../api/generated/portal/StationTestDto';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
@@ -222,7 +218,7 @@ export const getStationDetail = (stationId: string): Promise<StationDetailResour
   }
 };
 
-export const getCreditorInstitutionSegregationCodes = (ecCode: string) => {
+export const getCreditorInstitutionSegregationCodes = (ecCode: string): Promise<AvailableCodes> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionSegregationcodesMocked(ecCode);
   } else {

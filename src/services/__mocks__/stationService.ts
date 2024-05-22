@@ -21,10 +21,6 @@ import {
 } from '../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../api/generated/portal/WrapperStationsResource';
 import { StationOnCreation } from '../../model/Station';
-import { CreditorInstitutionAssociatedCodeList } from '../../api/generated/portal/CreditorInstitutionAssociatedCodeList';
-import { CreditorInstitutionAssociatedCode } from '../../api/generated/portal/CreditorInstitutionAssociatedCode';
-import { TestResultEnum, TestStationResource } from '../../api/generated/portal/TestStationResource';
-import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 
 // @ts-ignore
 export const mockedStation: StationDetailResource = {

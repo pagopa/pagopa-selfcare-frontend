@@ -1,97 +1,97 @@
-import { ReactNode } from 'react';
-import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
-import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
-import { extractResponse } from '../utils/client-utils';
-import { store } from '../redux/store';
-import { ENV } from '../utils/env';
+import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
+import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
+import { ReactNode } from 'react';
 import { ProductKeys } from '../model/ApiKey';
+import {
+  PublicBundleCISubscriptionsMethodParams,
+  PublicBundleCISubscriptionsRequest,
+  PublicBundleCiSubscriptionsDetailMethodParams,
+} from '../model/CommissionBundle';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
-import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import {
   PaymentsReceiptsListMethodParams,
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
-import {
-  PublicBundleCiSubscriptionsDetailMethodParams,
-  PublicBundleCISubscriptionsMethodParams,
-  PublicBundleCISubscriptionsRequest,
-} from '../model/CommissionBundle';
-import { ChannelsResource } from './generated/portal/ChannelsResource';
-import { PspChannelsResource } from './generated/portal/PspChannelsResource';
-import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
-import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
-import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
-import { StationCodeResource } from './generated/portal/StationCodeResource';
-import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
-import { StationDetailResource } from './generated/portal/StationDetailResource';
-import { InstitutionDetail } from './generated/portal/InstitutionDetail';
-import { Institution } from './generated/portal/Institution';
-import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
+import { ConfigurationStatus, StationOnCreation } from '../model/Station';
+import { store } from '../redux/store';
+import { extractResponse } from '../utils/client-utils';
+import { ENV } from '../utils/env';
+import { AvailableCodes } from './generated/portal/AvailableCodes';
+import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
+import { BrokerDto } from './generated/portal/BrokerDto';
+import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
+import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
+import { BrokerPspDetailsDto } from './generated/portal/BrokerPspDetailsDto';
+import { BrokerPspDetailsResource } from './generated/portal/BrokerPspDetailsResource';
+import { BrokerResource } from './generated/portal/BrokerResource';
+import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
+import { BundleRequest } from './generated/portal/BundleRequest';
+import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
+import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
+import { CIBundlesResource } from './generated/portal/CIBundlesResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
-import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
-import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
-import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
-import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
-import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
-import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
-import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
 import {
   ChannelDetailsDto,
   Payment_modelEnum,
   ProtocolEnum,
 } from './generated/portal/ChannelDetailsDto';
-import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
-import {
-  Redirect_protocolEnum,
-  WrapperChannelDetailsDto,
-} from './generated/portal/WrapperChannelDetailsDto';
-import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
-import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
-import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
-import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
-import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
-import { CreditorInstitutionAssociatedCodeList } from './generated/portal/CreditorInstitutionAssociatedCodeList';
-import { BrokerOrPspDetailsResource } from './generated/portal/BrokerOrPspDetailsResource';
-import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
-import { BrokerPspDetailsResource } from './generated/portal/BrokerPspDetailsResource';
-import { BrokerDto } from './generated/portal/BrokerDto';
-import { BrokerPspDetailsDto } from './generated/portal/BrokerPspDetailsDto';
-import { BrokerResource } from './generated/portal/BrokerResource';
+import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
+import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
+import { ChannelsResource } from './generated/portal/ChannelsResource';
+import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
+import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
+import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
+import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
+import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
+import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
+import { Delegation } from './generated/portal/Delegation';
+import { FeatureFlags } from './generated/portal/FeatureFlags';
+import { Iban } from './generated/portal/Iban';
+import { IbanCreate } from './generated/portal/IbanCreate';
+import { Ibans } from './generated/portal/Ibans';
+import { Institution } from './generated/portal/Institution';
+import { InstitutionDetail } from './generated/portal/InstitutionDetail';
+import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
+import { PSPBundleResource } from './generated/portal/PSPBundleResource';
+import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
 import { PaymentServiceProviderDetailsResource } from './generated/portal/PaymentServiceProviderDetailsResource';
 import { PaymentServiceProvidersResource } from './generated/portal/PaymentServiceProvidersResource';
+import { PaymentTypes } from './generated/portal/PaymentTypes';
+import { PaymentsResult } from './generated/portal/PaymentsResult';
+import { ProblemJson } from './generated/portal/ProblemJson';
+import { Product } from './generated/portal/Product';
+import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
+import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
+import { PspChannelsResource } from './generated/portal/PspChannelsResource';
+import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
+import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
+import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
+import { StationCodeResource } from './generated/portal/StationCodeResource';
+import { StationDetailResource } from './generated/portal/StationDetailResource';
+import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
+import { TestStationTypeEnum } from './generated/portal/StationTestDto';
 import { TavoloOpDto } from './generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from './generated/portal/TavoloOpOperations';
 import { TavoloOpResource } from './generated/portal/TavoloOpResource';
 import { TavoloOpResourceList } from './generated/portal/TavoloOpResourceList';
-import { Iban } from './generated/portal/Iban';
-import { Ibans } from './generated/portal/Ibans';
-import { IbanCreate } from './generated/portal/IbanCreate';
-import { Product } from './generated/portal/Product';
-import { Delegation } from './generated/portal/Delegation';
-import { WrapperEntities } from './generated/portal/WrapperEntities';
-import { BrokerECExportStatus } from './generated/portal/BrokerECExportStatus';
-import { ProblemJson } from './generated/portal/ProblemJson';
-import { Touchpoints } from './generated/portal/Touchpoints';
 import { Taxonomies } from './generated/portal/Taxonomies';
 import { TaxonomyGroups } from './generated/portal/TaxonomyGroups';
-import { createClient, WithDefaultsT } from './generated/portal/client';
-import { BundleRequest } from './generated/portal/BundleRequest';
-import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
-import { FeatureFlags } from './generated/portal/FeatureFlags';
-import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
-import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
-import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
-import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { TestStationResource } from './generated/portal/TestStationResource';
-import { TestStationTypeEnum } from './generated/portal/StationTestDto';
-import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
-import { PaymentTypes } from './generated/portal/PaymentTypes';
-import { PSPBundleResource } from './generated/portal/PSPBundleResource';
-import { CIBundlesResource } from './generated/portal/CIBundlesResource';
-import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
-import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
+import { Touchpoints } from './generated/portal/Touchpoints';
+import { UpdateCreditorInstitutionDto } from './generated/portal/UpdateCreditorInstitutionDto';
+import { WfespPluginConfs } from './generated/portal/WfespPluginConfs';
+import {
+  Redirect_protocolEnum,
+  WrapperChannelDetailsDto,
+} from './generated/portal/WrapperChannelDetailsDto';
+import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
+import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
+import { WrapperEntities } from './generated/portal/WrapperEntities';
+import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
+import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
+import { WithDefaultsT, createClient } from './generated/portal/client';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -864,9 +864,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationCodes: async (
-    ecCode: string
-  ): Promise<CreditorInstitutionAssociatedCodeList> => {
+  getCreditorInstitutionSegregationCodes: async (ecCode: string): Promise<AvailableCodes> => {
     const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
     });

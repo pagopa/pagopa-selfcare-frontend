@@ -83,7 +83,7 @@ function StationAssociateECPage() {
       setLoadingList(true);
       getCreditorInstitutionSegregationCodes(selectedEC.tax_code)
         .then((data) => {
-          if (data && Array.isArray(data.availablesCodes)) {
+          if (data && Array.isArray(data.availableCodes)) {
             setSegregationCodeList(data);
             setIsECUsable(true);
           }
@@ -327,12 +327,11 @@ function StationAssociateECPage() {
                           },
                         }}
                       >
-                        {segregationCodeList.availableCodes &&
-                          segregationCodeList.availableCodes.map((code, i) => (
-                            <MenuItem key={i} value={code}>
-                              {code}
-                            </MenuItem>
-                          ))}
+                        {segregationCodeList?.availableCodes?.map((code, i) => (
+                          <MenuItem key={i} value={code}>
+                            {code}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>

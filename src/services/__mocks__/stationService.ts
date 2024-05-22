@@ -681,8 +681,7 @@ export const updateWrapperStation = (
 ): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
 
 export const updateWrapperStationByOpt = (
-  _stations: StationDetailsDto
-): Promise<WrapperEntities> => new Promise((resolve) => resolve(mockedWrapperStation));
+): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
 
 export const updateStation = (
   _stations: StationDetailsDto,

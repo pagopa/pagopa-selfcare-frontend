@@ -1,4 +1,5 @@
 import { Alert, Box, Button, Divider, Grid, IconButton, Stack, TextField } from '@mui/material';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +17,8 @@ import { IProxyConfig, ProxyConfigs, StationFormAction } from '../../../../model
 import ROUTES from '../../../../routes';
 import { ENV } from '../../../../utils/env';
 import GenericModal from '../../../../components/Form/GenericModal';
+import { updateWrapperStationWithOperatorReview } from '../../../../services/stationService';
+import { LOADING_TASK_STATION_DETAILS_REQUEST_EDIT } from '../../../../utils/constants';
 
 const GetAlert = ({ stationDetail }: { stationDetail?: StationDetailResource }) => {
   const { t } = useTranslation();
@@ -32,8 +35,8 @@ const GetAlert = ({ stationDetail }: { stationDetail?: StationDetailResource }) 
             </Typography>
           )}
           <Typography>
-            {!isToBeValidated // && stationDetails?.notes?.trim() TODO
-              ? 'operatorNotes'
+            {!isToBeValidated && stationDetail?.note?.trim()
+              ? stationDetail.note
               : t(
                   `stationDetailPageValidation.alert.${
                     isToBeValidated ? 'toCheckMessage' : 'toFixMessage'
@@ -55,23 +58,38 @@ const ModalContent = ({
   setShowModal: (value: boolean) => void;
 } & Props) => {
   const { t } = useTranslation();
-  const [input, setInput] = useState<string>(''); // GET NOTES FROM DETAIL
+
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_STATION_DETAILS_REQUEST_EDIT);
+
+  const [input, setInput] = useState<string>(stationDetail?.note ?? '');
 
   const sendEditRequest = () => {
-    // updateWrapperStationByOpt().then();  TODO SEND EDIT REQUEST
-    setStationDetail((prev: StationDetailResource) => {
-      // TODO MAYBE INSTEAD OF SETTING THE STATION IS BETTER TO RE-TRIGGER THE STATION DETAIL API
-      const detail: StationDetailResource = {
-        ...prev,
-        wrapperStatus:
-          stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE
-            ? WrapperStatusEnum.TO_FIX_UPDATE
-            : WrapperStatusEnum.TO_FIX,
-        // TODO SET NOTES
-      };
-      return detail;
-    });
-    setShowModal(false);
+    setLoading(true);
+    updateWrapperStationWithOperatorReview({
+      stationCode: stationDetail?.stationCode ?? '',
+      ciTaxCode: stationDetail?.brokerCode ?? '',
+      note: input,
+    })
+      .then((data: StationDetailResource) => {
+        setStationDetail(data);
+      })
+      .catch((reason) =>
+        addError({
+          id: 'PUT_STATION_DETAILS_REQUEST_EDIT',
+          blocking: false,
+          error: reason as Error,
+          techDescription: `An error occurred while getting updating the station with operator's note`,
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t('stationDetailPageValidation.modal.error'),
+          component: 'Toast',
+        })
+      )
+      .finally(() => {
+        setShowModal(false);
+        setLoading(false);
+      });
   };
   return (
     <>
@@ -476,7 +494,8 @@ Props) => {
             </Typography>
           </Typography>
           <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-            {stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED && (
+            {(stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+              stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) && (
               <Button variant="outlined" onClick={() => setShowModal(true)}>
                 {t('stationDetailPage.stationOptions.requestEdit')}
               </Button>

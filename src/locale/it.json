@@ -662,7 +662,8 @@
       "title": "Cosa c'è che non va?",
       "subtitle": "Il tuo commento sarà condiviso con l'ente",
       "placeholder": "Descrivi l'anomalia",
-      "helperText": "Scrivi massimo 200 caratteri"
+      "helperText": "Scrivi massimo 200 caratteri",
+      "error": "Si è verificato un problema nel salvataggio del commento."
     },
     "configuration": {
       "status": "Stato",

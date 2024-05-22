@@ -74,6 +74,7 @@ jobs:
 
           export REACT_APP_FEATURES_FDR_ENABLED='true'
           export REACT_APP_JWT='${{ secrets.APP_JWT }}'
+          sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
           
           
           yarn install

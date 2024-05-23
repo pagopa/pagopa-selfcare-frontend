@@ -124,18 +124,6 @@ export function buildColumnDefs(
       editable: false,
 
       getActions: (params: any) => {
-        if (userIsPagopaOperator) {
-          return [
-            <GridLinkAction
-              key="Gestisci stazione"
-              label="Gestisci stazione"
-              to={generatePath(`${ROUTES.STATION_DETAIL}`, {
-                stationId: params.row.stationCode,
-              })}
-              icon={<ChevronRightIcon color="primary" />}
-            />,
-          ];
-        }
         const manageStationAction = (
           <GridLinkAction
             key="Gestisci stazione"
@@ -177,7 +165,9 @@ export function buildColumnDefs(
           />
         );
 
-        if (params.row.wrapperStatus === StatusEnum.APPROVED) {
+        if(userIsPagopaOperator){
+          return [manageStationAction, manageStationECAction];
+        } else if (params.row.wrapperStatus === StatusEnum.APPROVED) {
           return [manageStationAction, manageStationECAction, duplicateStationAction];
         } else {
           return [manageStationAction, editStationAction];

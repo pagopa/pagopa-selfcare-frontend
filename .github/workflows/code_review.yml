@@ -21,8 +21,10 @@ env:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
   deployments: write
+  issues: write
+  pull-requests: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -41,9 +43,57 @@ jobs:
 
       - name: Build
         run: |
+          export REACT_APP_ENV='dev'
+          export INLINE_RUNTIME_CHUNK='false'
+          
+          export REACT_APP_URL_FE_LOGIN='https://dev.selfcare.pagopa.it/auth/login'
+          export REACT_APP_URL_FE_LOGOUT='https://dev.selfcare.pagopa.it/auth/logout'
+          export REACT_APP_URL_FE_LANDING='https://dev.selfcare.pagopa.it/auth/logout'
+          export REACT_APP_URL_FE_ASSISTANCE='https://dev.selfcare.pagopa.it/assistenza'
+          export REACT_APP_URL_FE_SELFCARE='https://dev.selfcare.pagopa.it/dashboard/'
+          export REACT_APP_URL_FE_TOKEN_EXCHANGE='https://dev.selfcare.pagopa.it/token-exchange'
+          
+          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/api/token/token'
+          export REACT_APP_URL_BACKOFFICE='https://api.dev.platform.pagopa.it/backoffice/v1'
+          export REACT_APP_PUBLIC_URL='/ui'
+          export REACT_APP_URL_BETA='false'
+          
+          export REACT_APP_API_MOCK_BACKOFFICE='false'
+          export REACT_APP_API_MOCK_TOKEN='false'
+          
+          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='https://pagopadselfcaresa.z6.web.core.windows.net/institutions/'
+          
+          export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
+          export REACT_APP_MIXPANEL_TOKEN='DUMMY'
+          export REACT_APP_ONE_TRUST_BASE_URL='https://dev.selfcare.pagopa.it/ot/test'
+          export REACT_APP_ONETRUST_DOMAIN_ID='a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test'
+          
+          export REACT_APP_ANALYTICS_ENABLE='false'
+          export REACT_APP_ANALYTICS_MOCKED='false'
+          
+          export REACT_APP_FEATURES_FDR_ENABLED='true'
+  
+          sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
+          
+          
           yarn install
           yarn generate
           yarn build
+          mkdir ./out
+          mv ./build ./out/ui
+          mv ./public/redirect.html ./out/index.html
+
+      - name: Build And Deploy
+        id: build_deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          deployment_environment: staging
+          app_location: "/out" # App source code path relative to repository root
+          skip_app_build: true
+          skip_api_build: true
 
   static_analysis:
     name: Static Analysis

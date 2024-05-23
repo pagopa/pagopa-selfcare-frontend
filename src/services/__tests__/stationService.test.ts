@@ -1,9 +1,29 @@
+import { BackofficeApi } from '../../api/BackofficeClient';
+import { TestStationTypeEnum } from '../../api/generated/portal/StationTestDto';
+import { ConfigurationStatus } from '../../model/Station';
+import {
+  mockedCreatedStation,
+  mockedCreditorInstitutionStationDTO,
+  mockedFullStation,
+  mockedSegregationCodeList,
+  mockedStation,
+  mockedStationAvailableEC,
+  mockedStationCode,
+  mockedStationDetailsDTO,
+  mockedStationECs,
+  mockedStations,
+  mockedStationsMerged2,
+  mockedWrapperStation,
+  stationTestErrorMocked,
+  stationTestMocked,
+  stationWrapperMockedGet,
+} from '../__mocks__/stationService';
 import {
   associateEcToStation,
   createStation,
   createWrapperStation,
   dissociateECfromStation,
-  getCreditorInstitutionSegregationcodes,
+  getCreditorInstitutionSegregationCodes,
   getECListByStationCode,
   getStation,
   getStationAvailableEC,
@@ -19,26 +39,6 @@ import {
   updateWrapperStationToCheck,
   updateWrapperStationToCheckUpdate,
 } from '../stationService';
-import {
-  stationTestMocked,
-  stationTestErrorMocked,
-  mockedCreatedStation,
-  mockedStation,
-  mockedStations,
-  mockedStationsMerged2,
-  mockedFullStation,
-  mockedStationCode,
-  mockedStationECs,
-  mockedCreditorInstitutionStationDTO,
-  mockedStationAvailableEC,
-  mockedWrapperStation,
-  stationWrapperMockedGet,
-  mockedStationDetailsDTO,
-  mockedSegregationCodeList,
-} from '../__mocks__/stationService';
-import { BackofficeApi } from '../../api/BackofficeClient';
-import { TestStationTypeEnum } from '../../api/generated/portal/StationTestDto';
-import { ConfigurationStatus } from '../../model/Station';
 
 describe('StationService test mocked', () => {
   test('Test createStation', async () => {
@@ -120,7 +120,7 @@ describe('StationService test mocked', () => {
     expect(response).toMatchObject(mockedFullStation);
   });
   test('Test getCreditorInstitutionSegregationcodes', async () => {
-    const response = await getCreditorInstitutionSegregationcodes('ecCode');
+    const response = await getCreditorInstitutionSegregationCodes('ecCode');
     expect(response).toMatchObject(mockedSegregationCodeList);
   });
   test('Test testStation', async () => {
@@ -293,9 +293,9 @@ describe('StationService test', () => {
   });
   test('Test getCreditorInstitutionSegregationcodes', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getCreditorInstitutionSegregationcodes')
+      .spyOn(BackofficeApi, 'getCreditorInstitutionSegregationCodes')
       .mockReturnValue(new Promise((resolve) => resolve(mockedSegregationCodeList)));
-    expect(getCreditorInstitutionSegregationcodes('ecCode')).resolves.not.toThrow();
+    expect(getCreditorInstitutionSegregationCodes('ecCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test testStation', async () => {

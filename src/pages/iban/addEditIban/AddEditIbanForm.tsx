@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { theme } from '@pagopa/mui-italia';
+import {useTranslation} from 'react-i18next';
+import {theme} from '@pagopa/mui-italia';
 import {
   Button,
   FormControl,
@@ -13,24 +13,24 @@ import {
   TextFieldProps,
   Typography,
 } from '@mui/material';
-import { Box } from '@mui/system';
+import {Box} from '@mui/system';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { useEffect, useState } from 'react';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { add, differenceInCalendarDays } from 'date-fns';
+import {useEffect, useState} from 'react';
+import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {useFormik} from 'formik';
+import {useHistory} from 'react-router-dom';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {add, differenceInCalendarDays} from 'date-fns';
 import ROUTES from '../../../routes';
-import { LOADING_TASK_CREATE_IBAN } from '../../../utils/constants';
-import { IbanFormAction, IbanOnCreation } from '../../../model/Iban';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { extractProblemJson } from '../../../utils/client-utils';
-import { createIban, updateIban } from '../../../services/ibanService';
-import { isIbanValidityDateEditable, isValidIBANNumber } from '../../../utils/common-utils';
+import {LOADING_TASK_CREATE_IBAN} from '../../../utils/constants';
+import {IbanFormAction, IbanOnCreation} from '../../../model/Iban';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {extractProblemJson} from '../../../utils/client-utils';
+import {createIban, updateIban} from '../../../services/ibanService';
+import {isIbanValidityDateEditable, isValidIBANNumber} from '../../../utils/common-utils';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -134,14 +134,8 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     if (uploadType === 'single') {
       if (baseCondition && subject === 'me') {
         return true;
-      } else if (
-        baseCondition &&
-        subject === 'anotherOne' &&
-        values.creditor_institution_code !== ''
-      ) {
-        return true;
       } else {
-        return false;
+        return baseCondition && subject === 'anotherOne' && values.creditor_institution_code !== '';
       }
     } else {
       return true;
@@ -154,7 +148,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       setLoading(true);
       try {
         if (formAction === IbanFormAction.Create) {
-          await createIban(values.creditor_institution_code, {
+          await createIban(ecCode, {
             iban: values.iban,
             description: values.description,
             validity_date: values.validity_date,
@@ -162,7 +156,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
             is_active: true,
           });
         } else {
-          await updateIban(values.creditor_institution_code, {
+          await updateIban(ecCode, {
             iban: values.iban,
             description: values.description,
             validity_date: values.validity_date,

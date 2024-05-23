@@ -1,6 +1,6 @@
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
 import { cleanup, render } from '@testing-library/react';
-import { showStatus, buildColumnDefs } from '../StationsTableColumns';
+import {  buildColumnDefs } from '../StationsTableColumns';
 import React from 'react';
 
 beforeEach(() => {
@@ -165,8 +165,6 @@ describe('<StationsTableColumns />', () => {
     ] as Array<GridColDef>;
 
     expect(buildColumnDefs(mockTFunction, false)).toEqual(ArrayBuildColumnDefs);
-
-    render(<>{showStatus(params, false)}</>);
   });
 
   test('Test of all the functions inside StationsTableColumns as pagopa operator', () => {
@@ -242,7 +240,5 @@ describe('<StationsTableColumns />', () => {
     ] as Array<GridColDef>;
 
     expect(buildColumnDefs(mockTFunction, true)).toEqual(ArrayBuildColumnDefs);
-
-    render(<>{showStatus(params, true)}</>);
   });
 });

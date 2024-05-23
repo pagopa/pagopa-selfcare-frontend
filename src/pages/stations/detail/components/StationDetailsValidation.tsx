@@ -163,7 +163,7 @@ Props) => {
   };
 
   return (
-    <>
+    <div data-testid="station-detail-op">
       <Grid container justifyContent={'center'}>
         <Grid item p={3} xs={8}>
           <ButtonNaked
@@ -532,7 +532,7 @@ Props) => {
           )}
         />
       )}
-    </>
+    </div>
   );
 };
 export default StationDetailsValidation;

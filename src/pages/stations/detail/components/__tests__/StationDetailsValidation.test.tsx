@@ -60,6 +60,7 @@ export const mockedFullStation: StationDetailResource = {
   targetPath: 'Valore',
   targetPort: 1000,
   version: 2,
+  pofService: "pofService"
 };
 
 describe('<StationDetailsValidation.test />', () => {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/ui">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+        localStorage.setItem('token', "$APP_JWT" );
+
+        // JavaScript redirect as a fallback
+        window.location.href = "/ui";
+    </script>
+</head>
+<body>
+<p>If you are not redirected automatically, follow this <a href="/ui">link to /ui</a>.</p>
+</body>
+</html>

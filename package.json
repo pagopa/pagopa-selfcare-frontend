@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.24.3-hotfix-stations-actions-operator",
+  "version": "1.24.4",
   "homepage": "ui",
   "private": true,
   "scripts": {

@@ -84,7 +84,7 @@ describe('<StationDetailPage />', () => {
     );
 
     expect(screen.getByText('stationDetailPage.associates')).toBeInTheDocument();
-    expect(screen.getByTestId('station-detail-op')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('station-detail-op')).not.toBeInTheDocument();
   });
 
   test('Test Render station detail with role operator', async () => {

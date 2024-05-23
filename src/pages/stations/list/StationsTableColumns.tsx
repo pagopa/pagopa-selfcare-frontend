@@ -109,7 +109,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => (<StatusChip status={params.row.wrapperStatus} />),
+      renderCell: (params) => <StatusChip status={params.row.wrapperStatus} />,
       sortable: false,
       flex: 4,
     },
@@ -165,9 +165,10 @@ export function buildColumnDefs(
           />
         );
 
-        if(userIsPagopaOperator){
-          return [manageStationAction, manageStationECAction];
-        } else if (params.row.wrapperStatus === StatusEnum.APPROVED) {
+        if (params.row.wrapperStatus === StatusEnum.APPROVED) {
+          if (userIsPagopaOperator) {
+            return [manageStationAction, manageStationECAction];
+          }
           return [manageStationAction, manageStationECAction, duplicateStationAction];
         } else {
           return [manageStationAction, editStationAction];

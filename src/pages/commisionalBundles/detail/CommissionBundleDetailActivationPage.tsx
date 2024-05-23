@@ -93,7 +93,7 @@ export default function CommissionBundleDetailActivationPage() {
 
   function handleChangeCommissions(value: string, index: number) {
     const numericValue = value ? parseFloat(value.replace(',', '.')) * 100 : 0;
-    if (bundleDetails?.paymentAmount && numericValue > bundleDetails?.paymentAmount) {
+    if (bundleDetails?.paymentAmount !== undefined && numericValue > bundleDetails.paymentAmount) {
       setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorCommission`) }));
     } else {
       setInputErrors((prev) => {

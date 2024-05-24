@@ -1,7 +1,4 @@
-import { Box, Chip } from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
+import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router-dom';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
@@ -123,59 +120,66 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       editable: false,
 
-      getActions: (params: any) => {
-        const manageStationAction = (
-          <GridLinkAction
-            key="Gestisci stazione"
-            label="Gestisci stazione"
-            to={generatePath(`${ROUTES.STATION_DETAIL}`, {
-              stationId: params.row.stationCode,
-            })}
-            showInMenu={true}
-          />
-        );
-        const editStationAction = (
-          <GridLinkAction
-            key="Modifica"
-            label="Modifica"
-            to={generatePath(`${ROUTES.STATION_EDIT}`, {
-              stationId: params.row.stationCode,
-              actionId: FormAction.Edit,
-            })}
-            showInMenu={true}
-          />
-        );
-        const duplicateStationAction = (
-          <GridLinkAction
-            key="Duplica"
-            label="Duplica"
-            to={generatePath(`${ROUTES.STATION_EDIT}`, {
-              stationId: params.row.stationCode,
-              actionId: FormAction.Duplicate,
-            })}
-            showInMenu={true}
-          />
-        );
-        const manageStationECAction = (
-          <GridLinkAction
-            key="Gestisci EC"
-            label="Gestisci EC"
-            to={generatePath(`${ROUTES.STATION_EC_LIST}`, { stationId: params.row.stationCode })}
-            showInMenu={true}
-          />
-        );
-
-        if (params.row.wrapperStatus === StatusEnum.APPROVED) {
-          if (userIsPagopaOperator) {
-            return [manageStationAction, manageStationECAction];
-          }
-          return [manageStationAction, manageStationECAction, duplicateStationAction];
-        } else {
-          return [manageStationAction, editStationAction];
-        }
-      },
+      getActions: (params: any) => getRowActions(params, userIsPagopaOperator),
       sortable: false,
       flex: 1,
     },
   ] as Array<GridColDef>;
 }
+
+export const getRowActions = (params: any, userIsPagopaOperator: boolean) => {
+  const stationCode = params.row.stationCode;
+  if (params.row.wrapperStatus === StatusEnum.APPROVED) {
+    if (userIsPagopaOperator) {
+      return [manageStationAction(stationCode), manageStationECAction(stationCode)];
+    }
+    return [
+      manageStationAction(stationCode),
+      manageStationECAction(stationCode),
+      duplicateStationAction(stationCode),
+    ];
+  } else {
+    return [manageStationAction(stationCode), editStationAction(stationCode)];
+  }
+};
+
+export const manageStationAction = (stationCode: string) => (
+  <GridLinkAction
+    key="Gestisci stazione"
+    label="Gestisci stazione"
+    to={generatePath(`${ROUTES.STATION_DETAIL}`, {
+      stationId: stationCode,
+    })}
+    showInMenu={true}
+  />
+);
+export const editStationAction = (stationCode: string) => (
+  <GridLinkAction
+    key="Modifica"
+    label="Modifica"
+    to={generatePath(`${ROUTES.STATION_EDIT}`, {
+      stationId: stationCode,
+      actionId: FormAction.Edit,
+    })}
+    showInMenu={true}
+  />
+);
+export const duplicateStationAction = (stationCode: string) => (
+  <GridLinkAction
+    key="Duplica"
+    label="Duplica"
+    to={generatePath(`${ROUTES.STATION_EDIT}`, {
+      stationId: stationCode,
+      actionId: FormAction.Duplicate,
+    })}
+    showInMenu={true}
+  />
+);
+export const manageStationECAction = (stationCode: string) => (
+  <GridLinkAction
+    key="Gestisci EC"
+    label="Gestisci EC"
+    to={generatePath(`${ROUTES.STATION_EC_LIST}`, { stationId: stationCode })}
+    showInMenu={true}
+  />
+);

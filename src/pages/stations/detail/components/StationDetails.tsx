@@ -166,7 +166,7 @@ Props) => {
               </Grid>
               {!userIsPagopaOperator && (
                 <>
-                  <Grid item xs={3}>
+                  <Grid item xs={3} data-testid="activation-date">
                     <Typography variant="body2">{t('stationDetailPage.activationDate')}</Typography>
                   </Grid>
                   <Grid item xs={9}>
@@ -180,78 +180,74 @@ Props) => {
 
             {stationDetail?.isConnectionSync && (
               <>
-                <>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('stationDetailPageValidation.endpoints.modello1')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('stationDetailPageValidation.endpoints.endpointRTConcat')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.targetHost}:{stationDetail?.targetPort}
-                      {stationDetail?.targetPath}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('stationDetailPageValidation.endpoints.endpointRedirectConcat')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.redirectProtocol
-                        ? `${stationDetail?.redirectProtocol.toLowerCase()}://`
-                        : ''}
-                      {stationDetail?.redirectIp}
-                      {stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ''}
-                      {stationDetail?.redirectPath}
-                      {stationDetail?.redirectQueryString
-                        ? `?${stationDetail?.redirectQueryString}`
-                        : ''}
-                    </Typography>
-                  </Grid>
-                </>
+                <Grid item xs={12} mt={2} data-testid="connection-sync-section">
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.endpoints.modello1')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.endpoints.endpointRTConcat')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetHost}:{stationDetail?.targetPort}
+                    {stationDetail?.targetPath}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.endpoints.endpointRedirectConcat')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.redirectProtocol
+                      ? `${stationDetail?.redirectProtocol.toLowerCase()}://`
+                      : ''}
+                    {stationDetail?.redirectIp}
+                    {stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ''}
+                    {stationDetail?.redirectPath}
+                    {stationDetail?.redirectQueryString
+                      ? `?${stationDetail?.redirectQueryString}`
+                      : ''}
+                  </Typography>
+                </Grid>
 
-                <>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">
-                      {t('stationDetailPageValidation.endpoints.modelloUnico')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('stationDetailPageValidation.endpoints.endpointMUConcat')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.targetHostPof}
-                      {stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}
-                      {stationDetail?.targetPathPof}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t('stationDetailPageValidation.endpoints.primitiveVersion')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.primitiveVersion}
-                    </Typography>
-                  </Grid>
-                </>
+                <Grid item xs={12} mt={2}>
+                  <Typography variant="sidenav">
+                    {t('stationDetailPageValidation.endpoints.modelloUnico')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.endpoints.endpointMUConcat')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.targetHostPof}
+                    {stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}
+                    {stationDetail?.targetPathPof}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2">
+                    {t('stationDetailPageValidation.endpoints.primitiveVersion')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                    {stationDetail?.primitiveVersion}
+                  </Typography>
+                </Grid>
               </>
             )}
 
             {!userIsPagopaOperator && (
               <>
-                <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Grid item xs={12} mt={2} sx={{ display: 'flex', justifyContent: 'space-between' }} data-testid="associated-ec">
                   <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -275,6 +271,7 @@ Props) => {
               borderRadius: 4,
               p: 4,
             }}
+            data-testid="operator-section"
           >
             <Grid container alignItems={'center'} spacing={2}>
               <Grid item xs={12}>

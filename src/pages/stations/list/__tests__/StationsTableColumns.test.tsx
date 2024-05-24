@@ -1,7 +1,16 @@
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
 import { cleanup, render } from '@testing-library/react';
-import {  buildColumnDefs } from '../StationsTableColumns';
+import {
+  buildColumnDefs,
+  duplicateStationAction,
+  editStationAction,
+  getRowActions,
+  manageStationAction,
+  manageStationECAction,
+} from '../StationsTableColumns';
 import React from 'react';
+import { mockedFullStation } from '../../detail/components/__tests__/StationDetailsValidation.test';
+import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -83,7 +92,7 @@ describe('<StationsTableColumns />', () => {
       {
         field: 'connectionType',
         cellClassName: 'justifyContentNormal',
-        headerName: "stationsPage.stationsTableColumns.headerFields.connection",
+        headerName: 'stationsPage.stationsTableColumns.headerFields.connection',
         align: 'left',
         headerAlign: 'left',
         editable: false,
@@ -186,7 +195,7 @@ describe('<StationsTableColumns />', () => {
       {
         field: 'connectionType',
         cellClassName: 'justifyContentNormal',
-        headerName: "stationsPage.stationsTableColumns.headerFields.connection",
+        headerName: 'stationsPage.stationsTableColumns.headerFields.connection',
         align: 'left',
         headerAlign: 'left',
         editable: false,
@@ -240,5 +249,39 @@ describe('<StationsTableColumns />', () => {
     ] as Array<GridColDef>;
 
     expect(buildColumnDefs(mockTFunction, true)).toEqual(ArrayBuildColumnDefs);
+  });
+
+  test('Test row actions StationsTableColumns as pagopa operator', () => {
+    let paramsApproved = {
+      row: { ...mockedFullStation, wrapperStatus: WrapperStatusEnum.APPROVED },
+    };
+    let paramsToCheck = {
+      row: { ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK },
+    };
+
+    // Station approved, not an operator
+    expect(getRowActions(paramsApproved, false)).toEqual([
+      manageStationAction(mockedFullStation.stationCode),
+      manageStationECAction(mockedFullStation.stationCode),
+      duplicateStationAction(mockedFullStation.stationCode),
+    ]);
+
+    // Station not approved, not an operator
+    expect(getRowActions(paramsToCheck, false)).toEqual([
+      manageStationAction(mockedFullStation.stationCode),
+      editStationAction(mockedFullStation.stationCode),
+    ]);
+
+    // Station approved, as operator
+    expect(getRowActions(paramsApproved, true)).toEqual([
+      manageStationAction(mockedFullStation.stationCode),
+      manageStationECAction(mockedFullStation.stationCode),
+    ]);
+
+    // Station not approved, as operator
+    expect(getRowActions(paramsToCheck, true)).toEqual([
+      manageStationAction(mockedFullStation.stationCode),
+      editStationAction(mockedFullStation.stationCode),
+    ]);
   });
 });

@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { generatePath, Link } from 'react-router-dom';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import {
   ContentCopy,
   Delete,
-  ManageAccounts,
   MiscellaneousServices,
   ModeEdit,
 } from '@mui/icons-material';
@@ -96,7 +95,7 @@ const ModalContent = ({
         <Button
           variant="contained"
           onClick={() => sendEditRequest()}
-          data-testid="confirm-button-test"
+          data-testid="confirm-and-send-button"
         >
           {t('general.confirmAndSend')}
         </Button>
@@ -131,16 +130,15 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
         <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
           {(status === WrapperStatusEnum.TO_CHECK ||
             status === WrapperStatusEnum.TO_CHECK_UPDATE) && (
-            <Button variant="outlined" onClick={() => setShowModal(true)}>
+            <Button
+              variant="outlined"
+              onClick={() => setShowModal(true)}
+              data-testid="request-edit-button"
+            >
               {t('stationDetailPage.stationOptions.requestEdit')}
             </Button>
           )}
-          <Button
-            component={Link}
-            to={editPath}
-            variant="contained"
-            data-testid="edit-btn-ope-sts-approved"
-          >
+          <Button component={Link} to={editPath} variant="contained" data-testid="edit-button">
             {t(
               stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED
                 ? 'stationDetailPage.stationOptions.approveAndValidate'
@@ -176,8 +174,9 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
             disabled={true}
             startIcon={<Delete />}
             // onClick={() => ''}
+            data-testid="delete-button"
           >
-            {t("general.delete")}
+            {t('general.delete')}
           </Button>
           <Button
             component={Link}
@@ -185,6 +184,7 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
             color="primary"
             startIcon={<MiscellaneousServices />}
             variant="outlined"
+            data-testid="manage-ec-button"
           >
             {t('stationDetailPage.manageEC')}
           </Button>
@@ -198,7 +198,7 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
             }
             startIcon={<ContentCopy />}
             variant="outlined"
-            data-testid="duplicate-btn-sts-approved"
+            data-testid="duplicate-button"
           >
             {t('stationDetailPage.stationOptions.duplicateStation')}
           </Button>
@@ -207,7 +207,7 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
             to={editPath}
             variant="contained"
             startIcon={<ModeEdit />}
-            data-testid="edit-btn-sts-approved"
+            data-testid="edit-button"
           >
             {t('stationDetailPage.stationOptions.editStation')}
           </Button>
@@ -218,7 +218,7 @@ const DetailButtonsStation = ({ stationDetail, setStationDetail }: Props) => {
           to={editPath}
           variant="contained"
           startIcon={<ModeEdit />}
-          data-testid="edit-btn-sts-approved"
+          data-testid="edit-button"
         >
           {t(
             `stationDetailPage.stationOptions.${

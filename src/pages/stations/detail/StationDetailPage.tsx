@@ -10,7 +10,6 @@ import { useUserRole } from '../../../hooks/useUserRole';
 import ROUTES from '../../../routes';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import StationDetails from './components/StationDetails';
-import StationDetailsValidation from './components/StationDetailsValidation';
 
 const StationDetailPage = () => {
   const { t } = useTranslation();
@@ -56,12 +55,10 @@ const StationDetailPage = () => {
       .finally(() => setLoadingWrap(false));
   }, [selectedParty]);
 
-  return userIsPagopaOperator ? (
-    <StationDetailsValidation stationDetail={stationDetail} setStationDetail={setStationDetail} />
-  ) : (
+  return (
     <StationDetails
       stationDetail={stationDetail}
-      goBack={goBack}
+      setStationDetail={setStationDetail}
       ecAssociatedNumber={ecAssociatedNumber}
     />
   );

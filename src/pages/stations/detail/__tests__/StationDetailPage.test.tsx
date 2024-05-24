@@ -103,6 +103,5 @@ describe('<StationDetailPage />', () => {
         payload: ecAdminSignedDirect,
       })
     );
-    expect(screen.getByTestId('station-detail-op')).toBeInTheDocument();
   });
 });

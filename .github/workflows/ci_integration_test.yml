@@ -2,18 +2,45 @@ name: Integration Tests
 
 on:
   schedule:
-    - cron: '00 09 * * *'
+    - cron: '00 09 * * 1-5'
 
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: Select the Environment
+      canary:
+        description: 'run the tests on canary version'
+        required: false
+        type: boolean
+        default: false
+  
+  
   workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Select the Environment
+        options:
+          - dev
+          - uat
+      canary:
+        description: 'run the tests on canary version'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
   contents: read
   deployments: write
 
+
 jobs:
   integration_test:
-    name: Test in DEV
+    name: Test ${{(github.event.inputs == null && 'dev') || inputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -52,3 +79,5 @@ jobs:
           footer: 'Linked to <{workflow_url}| workflow file>'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+

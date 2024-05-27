@@ -24,6 +24,7 @@ on:
         type: choice
         description: Select the Environment
         options:
+          - staging
           - dev
           - uat
       canary:
@@ -57,9 +58,24 @@ jobs:
         run: |
           cd ./integration-test
           yarn install
-
-          export KEY_PEM='${{ secrets.KEY_PEM }}'
-
+          
+          
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
+          fi
+          
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
+          fi
+          
+          if [ "${{ inputs.environment }}" = "uat" ]; then
+            export KEY_PEM='${{ secrets.UAT_KEY_PEM }}'
+            export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
+          fi
+          
+          
           yarn run cucumber
 
   notify:

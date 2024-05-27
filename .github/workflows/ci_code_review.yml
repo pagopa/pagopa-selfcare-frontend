@@ -95,6 +95,19 @@ jobs:
           skip_app_build: true
           skip_api_build: true
 
+
+  smoke_test:
+    name: Smoke Test
+    needs: build
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    uses: ./.github/workflows/ci_integration_test.yml
+    with:
+      environment: 'staging'
+    secrets: inherit
+
+
+
+
   static_analysis:
     name: Static Analysis
     runs-on: ubuntu-latest

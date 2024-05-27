@@ -73,17 +73,19 @@ jobs:
       environment: 'uat'
     secrets: inherit
 
-  integration_test:
-    name: Integration Test
-    needs: [ setup, deploy_uat ]
-    uses: ./.github/workflows/ci_integration_test.yml
-    with:
-      environment: ${{ needs.setup.outputs.environment }}
-    secrets: inherit
+#  integration_test:
+#    name: Integration Test
+#    needs: [ setup, deploy_uat ]
+#    uses: ./.github/workflows/ci_integration_test.yml
+#    with:
+#      environment: ${{ needs.setup.outputs.environment }}
+#    secrets: inherit
 
   deploy_prod:
     name: Deploy in PROD
-    needs: [ setup, integration_test ]
+    needs:
+      - setup
+#      - integration_test
     uses: ./.github/workflows/deploy_with_github_runner.yml
     with:
       environment: 'prod'

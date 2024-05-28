@@ -1,0 +1,109 @@
+name: Integration Tests
+
+on:
+  schedule:
+    - cron: '00 09 * * 1-5'
+
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: Select the Environment
+      canary:
+        description: 'run the tests on canary version'
+        required: false
+        type: boolean
+        default: false
+      notify:
+        description: 'notify result with slack message'
+        required: false
+        type: boolean
+        default: false
+  
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Select the Environment
+        options:
+          - staging
+          - dev
+          - uat
+      canary:
+        description: 'run the tests on canary version'
+        required: false
+        type: boolean
+        default: false
+      notify:
+        description: 'notify result with slack message'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  id-token: write
+  contents: read
+  deployments: write
+
+
+jobs:
+  integration_test:
+    name: Test ${{(github.event.inputs == null && 'dev') || inputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
+
+      - name: Set Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+
+      - name: Run Integration Tests
+        shell: bash
+        run: |
+          cd ./integration-test
+          yarn install
+          
+          
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
+          fi
+          
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
+          fi
+          
+          if [ "${{ inputs.environment }}" = "uat" ]; then
+            export KEY_PEM='${{ secrets.UAT_KEY_PEM }}'
+            export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
+          fi
+          
+          
+          yarn run cucumber
+
+  notify:
+    needs: [ integration_test ]
+    runs-on: ubuntu-latest
+    name: Notify
+    if: ${{ always() && (inputs.notify || github.event.inputs == null) }}
+    steps:
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ needs.integration_test.result }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notify_when: 'success,failure,skipped'
+          notification_title: '<{run_url}| Integration Test> has {status_message} in ${{ inputs.environment }}'
+          message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to <{workflow_url}| workflow file>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+

@@ -2,11 +2,6 @@ name: Release And Deploy
 
 # Controls when the workflow will run
 on:
-  merge_group:
-    branches: [ main ]
-  pull_request:
-    types: [ closed ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -18,6 +13,16 @@ on:
           - dev
           - uat
           - prod
+      version:
+        required: false
+        type: choice
+        description: Select the version
+        options:
+          - patch
+          - skip_or_promote
+          - new_release
+          - breaking_change
+
 
 permissions:
   packages: write
@@ -25,6 +30,7 @@ permissions:
   issues: write
   id-token: write
   actions: read
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -56,6 +62,19 @@ jobs:
       - if: ${{ (github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'major')) }}
         run: echo "SEMVER=major" >> $GITHUB_ENV
 
+      # force semver if dev, !=main or skip release
+      - if: ${{ inputs.version == 'new_release' }}
+        run: echo "SEMVER=minor" >> $GITHUB_ENV
+
+      - if: ${{ inputs.version == 'breaking_change' }}
+        run: echo "SEMVER=major" >> $GITHUB_ENV
+
+      - if: ${{ github.ref_name != 'main' }}
+        run: echo "SEMVER=buildNumber" >> $GITHUB_ENV
+
+      - if: ${{ inputs.version == 'skip_or_promote' }}
+        run: echo "SEMVER=skip" >> $GITHUB_ENV
+
       - id: get_semver
         name: Set Output
         run: echo "semver=${{env.SEMVER}}" >> $GITHUB_OUTPUT
@@ -63,7 +82,7 @@ jobs:
       # Set Environment
       - run: echo "ENVIRNOMENT=${{ inputs.environment}}" >> $GITHUB_ENV
 
-      - if: ${{ inputs.environment == null || inputs.environment == '' }}
+      - if: ${{ inputs.environment == null }}
         run: echo "ENVIRNOMENT=dev" >> $GITHUB_ENV
 
       - id: get_env
@@ -86,6 +105,9 @@ jobs:
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
           prerelease: true
+
+      - name: Checkout code
+        uses: actions/checkout@v4 # required to make the script available for next step
 
       - name: Generate Release Notes for Latest
         id: generate_notes
@@ -129,93 +151,15 @@ jobs:
               body: releaseNotes.data.body,
               prerelease: PRERELEASE
             });
+
   deploy:
-    runs-on: ubuntu-latest
+    name: Deploy on CDN
     needs: [ setup, release ]
-    name: Deploy ${{ needs.setup.outputs.environment }}
-    environment: ${{ needs.setup.outputs.environment }}
-    steps:
-      - name: Checkout
-        id: checkout
-        # from https://github.com/actions/checkout/commits/main
-        uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
-        with:
-          persist-credentials: false
-
-      - name: Set Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.10.0
-
-      - name: Build
-        run: |
-          export REACT_APP_ENV='${{ needs.setup.outputs.environment }}'
-          export INLINE_RUNTIME_CHUNK='false'
-
-          export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
-          export REACT_APP_URL_FE_LOGOUT='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
-          export REACT_APP_URL_FE_LANDING='${{ vars.SELFCARE_HOST_FE }}/auth/logout'
-          export REACT_APP_URL_FE_ASSISTANCE='${{ vars.SELFCARE_HOST_FE }}/assistenza'
-          export REACT_APP_URL_FE_SELFCARE='${{ vars.SELFCARE_HOST_FE }}/dashboard/'
-          export REACT_APP_URL_FE_TOKEN_EXCHANGE='${{ vars.SELFCARE_HOST_FE }}/token-exchange'
-
-          export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
-          export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
-          export REACT_APP_PUBLIC_URL='/ui'
-          export REACT_APP_URL_BETA='false'
-          
-          export REACT_APP_API_MOCK_BACKOFFICE='false'
-          export REACT_APP_API_MOCK_TOKEN='false'
-          
-          export REACT_APP_URL_INSTITUTION_LOGO_PREFIX='${{ vars.REACT_APP_URL_STORAGE }}/institutions/'
-
-          export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
-          export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
-          export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
-          export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
-
-          export REACT_APP_ANALYTICS_ENABLE='false'
-          export REACT_APP_ANALYTICS_MOCKED='false'
-
-          if [ "${{ needs.setup.outputs.environment }}" = "dev" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ needs.setup.outputs.environment }}" = "uat" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ needs.setup.outputs.environment }}" = "prod" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='false'
-          fi
-
-          yarn install
-          yarn generate
-          yarn build
-
-      - name: Login
-        id: login
-        # from https://github.com/Azure/login/commits/master
-        uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
-        with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-
-      - name: Deploy ${{ inputs.environment }}
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
-
-
-      - name: Purge
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n ${{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    uses: ./.github/workflows/deploy_on_cdn.yml
+    with:
+      environment: ${{ needs.setup.outputs.environment }}
+    secrets: inherit
 
   notify:
     needs: [ setup, release, deploy ]

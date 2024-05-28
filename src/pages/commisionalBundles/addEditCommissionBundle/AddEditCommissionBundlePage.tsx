@@ -196,7 +196,7 @@ const AddEditCommissionBundlePage = () => {
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
-            `${componentPath}.error.errorMessage${extractProblemJson(reason.message)?.status === 400 ? 'Duplicated' : textType}Bundle`
+            `${componentPath}.error.errorMessage${extractProblemJson(reason)?.status === 400 ? 'Duplicated' : textType}Bundle`
           ),
           component: 'Toast',
         });

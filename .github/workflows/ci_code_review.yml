@@ -2,9 +2,8 @@ name: Code Review
 
 # Controls when the workflow will run
 on:
+  merge_group:
   pull_request:
-    branches:
-      - main
     types:
       - opened
       - synchronize
@@ -12,6 +11,7 @@ on:
   push:
     branches:
       - main
+
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -94,6 +94,20 @@ jobs:
           app_location: "/out" # App source code path relative to repository root
           skip_app_build: true
           skip_api_build: true
+
+
+  smoke_test:
+    name: Smoke Test
+    needs: build
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    uses: ./.github/workflows/ci_integration_test.yml
+    with:
+      environment: 'staging'
+      notify: false
+    secrets: inherit
+
+
+
 
   static_analysis:
     name: Static Analysis

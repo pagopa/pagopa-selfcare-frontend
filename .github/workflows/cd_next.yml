@@ -1,0 +1,24 @@
+name: CD Next Release
+
+on:
+  push:
+    branches:
+      - next
+
+
+permissions:
+  packages: write
+  contents: write
+  issues: write
+  id-token: write
+  actions: read
+
+
+jobs:
+
+  deploy:
+    name: Deploy on CDN
+    uses: ./.github/workflows/deploy_on_cdn.yml
+    with:
+      environment: 'dev'
+    secrets: inherit

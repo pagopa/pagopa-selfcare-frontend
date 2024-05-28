@@ -103,6 +103,7 @@ jobs:
     uses: ./.github/workflows/ci_integration_test.yml
     with:
       environment: 'staging'
+      notify: false
     secrets: inherit
 
 

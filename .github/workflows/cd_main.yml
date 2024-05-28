@@ -79,6 +79,7 @@ jobs:
 #    uses: ./.github/workflows/ci_integration_test.yml
 #    with:
 #      environment: ${{ needs.setup.outputs.environment }}
+#      notify: false
 #    secrets: inherit
 
   deploy_prod:

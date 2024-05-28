@@ -17,7 +17,7 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { TFunction, useTranslation } from 'react-i18next';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
@@ -27,10 +27,8 @@ import { FormAction } from '../../../model/CommissionBundle';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import { createBundle, updatePSPBundle } from '../../../services/bundleService';
 import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
-import {
-  LOADING_TASK_COMMISSION_BUNDLE_DETAIL,
-  LOADING_TASK_CREATING_COMMISSION_BUNDLE,
-} from '../../../utils/constants';
+import { extractProblemJson } from '../../../utils/client-utils';
+import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
@@ -87,14 +85,14 @@ const validate = (
         maxPaymentAmount: !values.maxPaymentAmount
           ? t(`${componentPath}.validationMessage.requiredField`)
           : values.minPaymentAmount && values.minPaymentAmount > values.maxPaymentAmount
-          ? t(`${componentPath}.validationMessage.lessThanMinPayment`)
-          : undefined,
+            ? t(`${componentPath}.validationMessage.lessThanMinPayment`)
+            : undefined,
         minPaymentAmount:
           !values.minPaymentAmount && values.minPaymentAmount !== 0
             ? t(`${componentPath}.validationMessage.requiredField`)
             : values.maxPaymentAmount && values.maxPaymentAmount < values.minPaymentAmount
-            ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
-            : undefined,
+              ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
+              : undefined,
         name: !values.name ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
         paymentAmount:
           !values.paymentAmount && values.paymentAmount !== 0
@@ -104,20 +102,20 @@ const validate = (
         validityDateFrom: !values.validityDateFrom
           ? t(`${componentPath}.validationMessage.requiredField`)
           : (edit === undefined || !edit) &&
-            values.validityDateFrom.getTime() < minDateTomorrow().getTime()
-          ? t(`${componentPath}.validationMessage.dateNotValid`)
-          : values.validityDateTo &&
-            values.validityDateFrom.getTime() > values.validityDateTo.getTime()
-          ? t(`${componentPath}.validationMessage.startDateOverEndDate`)
-          : undefined,
+              values.validityDateFrom.getTime() < minDateTomorrow().getTime()
+            ? t(`${componentPath}.validationMessage.dateNotValid`)
+            : values.validityDateTo &&
+                values.validityDateFrom.getTime() > values.validityDateTo.getTime()
+              ? t(`${componentPath}.validationMessage.startDateOverEndDate`)
+              : undefined,
         validityDateTo: !values.validityDateTo
           ? t(`${componentPath}.validationMessage.requiredField`)
           : values.validityDateTo.getTime() <= new Date().getTime()
-          ? t(`${componentPath}.validationMessage.dateNotValid`)
-          : values.validityDateFrom &&
-            values.validityDateTo.getTime() < values.validityDateFrom.getTime()
-          ? t(`${componentPath}.validationMessage.endDateUnderStartDate`)
-          : undefined,
+            ? t(`${componentPath}.validationMessage.dateNotValid`)
+            : values.validityDateFrom &&
+                values.validityDateTo.getTime() < values.validityDateFrom.getTime()
+              ? t(`${componentPath}.validationMessage.endDateUnderStartDate`)
+              : undefined,
       },
     }).filter(([_key, value]) => value)
   );
@@ -144,7 +142,6 @@ const AddEditCommissionBundlePage = () => {
   const history = useHistory();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_DETAIL);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const { actionId } = useParams<{ actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -195,10 +192,12 @@ const AddEditCommissionBundlePage = () => {
           id: `${isEdit ? 'UPDATE' : 'CREATE'}_COMMISSION_BUNDLE`,
           blocking: false,
           error: reason,
-          techDescription: `An error occurred while updating the commission bundle`,
+          techDescription: `An error occurred while ${isEdit ? 'updating' : 'creating'} the commission bundle`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(`${componentPath}.error.errorMessage${textType}Bundle`),
+          displayableDescription: t(
+            `${componentPath}.error.errorMessage${extractProblemJson(reason.message)?.status === 400 ? 'Duplicated' : textType}Bundle`
+          ),
           component: 'Toast',
         });
       })

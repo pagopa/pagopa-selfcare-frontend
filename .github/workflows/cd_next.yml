@@ -1,9 +1,9 @@
 name: CD Next Release
 
 on:
-  push:
-    branches:
-      - next
+  pull_request:
+    types:
+      - closed
 
 
 permissions:
@@ -59,7 +59,7 @@ jobs:
         with:
           semver: buildNumber
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
-          skip_ci: true
+          skip_ci: false
           prerelease: true
 
   deploy:

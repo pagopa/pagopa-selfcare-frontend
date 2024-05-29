@@ -571,7 +571,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
-    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    const gdpConcatSelectbutton = screen.getByLabelText('addEditStationPage.addFormValidation.fields.select');
     fireEvent.mouseDown(gdpConcatSelectbutton);
     await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
 
@@ -613,7 +613,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
-    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    const gdpConcatSelectbutton = screen.getByLabelText('addEditStationPage.addFormValidation.fields.select');
     fireEvent.mouseDown(gdpConcatSelectbutton);
     await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
 

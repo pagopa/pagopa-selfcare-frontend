@@ -18,11 +18,8 @@ permissions:
 jobs:
   auto_assign:
     name: Auto Assign
-
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Assign Me
         # You may pin to the exact commit or the version.
@@ -47,10 +44,8 @@ jobs:
   
   check_labels:
     name: Check Required Labels
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4 # required to make the script available for next step
@@ -66,6 +61,7 @@ jobs:
   check_size:
     runs-on: ubuntu-latest
     name: Check Size
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v3
         with:

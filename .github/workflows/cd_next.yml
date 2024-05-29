@@ -19,7 +19,6 @@ jobs:
   release:
     name: Create a New Release
     runs-on: ubuntu-latest
-    needs: [ setup ]
     steps:
       - name: Make Release
         id: release

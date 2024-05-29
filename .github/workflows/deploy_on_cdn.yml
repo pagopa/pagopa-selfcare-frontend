@@ -75,7 +75,11 @@ jobs:
           fi
 
           yarn install
-          yarn generate
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            yarn run generate:api-portal-next
+          else
+            yarn run generate:api-portal
+          fi
           yarn build
 
       - name: Login

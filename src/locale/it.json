@@ -681,7 +681,7 @@
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
       "connectionType": {
-        "label": "Tipo di connessione",
+        "label":"Tipo di connessione",
         "sync": "Sincrona",
         "async": "Asincrona"
       },

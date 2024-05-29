@@ -82,8 +82,8 @@ import {TestStationTypeEnum} from '../../../api/generated/portal/StationTestDto'
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
-    stationDetail?: StationDetailResource;
-    formAction: string;
+  stationDetail?: StationDetailResource;
+  formAction: string;
 };
 
 const ConnectionRadioLabel = ({type}: { type: ConnectionType }) => {
@@ -106,25 +106,25 @@ const getDefaultConnectionType = (stationDetail?: StationDetailResource) => {
 };
 
 const componentPath = 'addEditStationPage.addForm';
-const AddEditStationForm = ({stationDetail, formAction}: Props) => {
-    const {t} = useTranslation();
-    const history = useHistory();
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const addError = useErrorDispatcher();
-    const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
-    const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
-    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const [stationCodeGenerated, setStationCodeGenerated] = useState('');
-    const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-    const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-    const {userIsPagopaOperator} = useUserRole();
-    const env: string = ENV.ENV;
-    const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
-    const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
-    const [newConn, setNewConn] = useState<boolean>(false);
-    const [gdp, setGDP] = useState<boolean>(false);
-    const [testRtResult, setTestRtResult] = useState<TestStationResource>();
-    const [validatingRt, setValidatingRt] = useState<boolean>(false);
+const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
+  const { t } = useTranslation();
+  const history = useHistory();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const addError = useErrorDispatcher();
+  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
+  const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [stationCodeGenerated, setStationCodeGenerated] = useState('');
+  const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
+  const { userIsPagopaOperator } = useUserRole();
+  const env: string = ENV.ENV;
+  const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
+  const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
+  const [newConn, setNewConn] = useState<boolean>(false);
+  const [gdp, setGDP] = useState<boolean>(false);
+  const [testRtResult, setTestRtResult] = useState<TestStationResource>();
+  const [validatingRt, setValidatingRt] = useState<boolean>(false);
 
     const [testRedirectResult, setTestRedirectResult] = useState<TestStationResource>();
     const [validatingRedirect, setValidatingRedirect] = useState<boolean>(false);
@@ -575,18 +575,18 @@ const AddEditStationForm = ({stationDetail, formAction}: Props) => {
         }
     }, [stationCodeCleaner]);
 
-    useEffect(() => {
-        if (stationDetail) {
-            setConnectionType(getDefaultConnectionType(stationDetail));
-            const category = getStationCategoryFromDetail(stationDetail, env);
-            if (category === StationCategory.AsyncGPD) {
-                setGDP(true);
-            }
-            if (category === StationCategory.SyncNewConn) {
-                setNewConn(true);
-            }
-        }
-    }, [stationDetail]);
+  useEffect(() => {
+    if (stationDetail) {
+      setConnectionType(getDefaultConnectionType(stationDetail));
+      const category = getStationCategoryFromDetail(stationDetail, env);
+      if (category === StationCategory.AsyncGPD) {
+        setGDP(true);
+      }
+      if (category === StationCategory.SyncNewConn) {
+        setNewConn(true);
+      }
+    }
+  }, [stationDetail]);
 
     useEffect(() => {
         setTestRtResult(undefined);
@@ -1139,58 +1139,143 @@ const AddEditStationForm = ({stationDetail, formAction}: Props) => {
                                     : ROUTES.STATIONS
                             )
                         }
-                        data-testid="cancel-button-test"
-                    >
-                        {t('general.back')}
-                    </Button>
-                </Stack>
-                <Stack display="flex" justifyContent="flex-end">
-                    <Button
-                        onClick={() => {
-                            openConfirmModal();
-                            formik.handleSubmit();
-                        }}
-                        disabled={!enableSubmit(formik.values)}
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                        data-testid="confirm-button-test"
-                    >
-                        {t('general.confirm')}
-                    </Button>
-                </Stack>
-            </Stack>
-            <ConfirmModal
-                title={
-                    userIsPagopaOperator
-                        ? t(`${componentPath}.confirmModal.titleOperator`)
-                        : t(`${componentPath}.confirmModal.title`)
-                }
-                message={
-                    userIsPagopaOperator ? (
-                        <Trans i18nKey={`${componentPath}.confirmModal.messageStationOperator`}>
-                            L’ente riceverà una notifica di conferma attivazione della stazione.
-                            <br/>
-                        </Trans>
-                    ) : (
-                        <Trans i18nKey={`${componentPath}.confirmModal.messageStation`}>
-                            Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
-                            approvare. Riceverai una notifica a revisione completata.
-                            <br/>
-                        </Trans>
+                        onClick={() => validatePofEndpoint()}
+                        sx={{ color: 'primary.main' }}
+                        weight="default"
+                        data-testid="test-pof-endpoint-test"
+                        endIcon={<NorthEastIcon />}
+                      >
+                        {t(`${componentPath}.testStation`)}
+                      </ButtonNaked>
                     )
-                }
-                openConfirmModal={showConfirmModal}
-                onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
-                onCloseLabel={t('general.turnBack')}
-                handleCloseConfirmModal={() => setShowConfirmModal(false)}
-                handleConfrimSubmit={async () => {
-                    await submit(formik.values);
-                    setShowConfirmModal(false);
-                }}
-            />
-        </>
-    );
+                  )}
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} mt={1}>
+                <Grid container item xs={6}>
+                  <FormControl fullWidth>
+                    <InputLabel size="small" id="primitiveVersionLabel">
+                      {t(`${componentPath}.fields.primitiveVersion`)}
+                    </InputLabel>
+                    <Select
+                      fullWidth
+                      type="number"
+                      id="primitiveVersion"
+                      name="primitiveVersion"
+                      labelId='primitiveVersionLabel'
+                      label={t(`${componentPath}.fields.primitiveVersion`)}
+                      placeholder={t(`${componentPath}.fields.primitiveVersion`)}
+                      size="small"
+                      value={
+                        formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion
+                      }
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)
+                      }
+                      inputProps={{
+                        'data-testid': 'primitive-version-test',
+                      }}
+                    >
+                      {Object.entries([1, 2]).map(([key, value]) => (
+                        <MenuItem
+                          key={key}
+                          selected={
+                            formik.values.primitiveVersion &&
+                            value === formik.values.primitiveVersion
+                          }
+                          value={value}
+                        >
+                          {`${value}`}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+          </>
+        )}
+      </Paper>
+
+      {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
+        <AddEditStationFormValidation
+          formik={formik}
+          handleChangeNumberOnly={handleChangeNumberOnly}
+          inputGroupStyle={inputGroupStyle}
+          newConn={newConn}
+          setNewConn={setNewConn}
+          gdp={gdp}
+          setGDP={setGDP}
+          connectionType={connectionType}
+        />
+      ) : (
+        <></>
+      )}
+      <Stack direction="row" justifyContent="space-between" mt={5}>
+        <Stack display="flex" justifyContent="flex-start" mr={2}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() =>
+              history.push(
+                formAction === StationFormAction.Edit
+                  ? generatePath(ROUTES.STATION_DETAIL, { stationId: stationDetail?.stationCode })
+                  : ROUTES.STATIONS
+              )
+            }
+            data-testid="cancel-button-test"
+          >
+            {t('general.back')}
+          </Button>
+        </Stack>
+        <Stack display="flex" justifyContent="flex-end">
+          <Button
+            onClick={() => {
+              openConfirmModal();
+              formik.handleSubmit();
+            }}
+            disabled={!enableSubmit(formik.values)}
+            color="primary"
+            variant="contained"
+            type="submit"
+            data-testid="confirm-button-test"
+          >
+            {t('general.confirm')}
+          </Button>
+        </Stack>
+      </Stack>
+      <ConfirmModal
+        title={
+          userIsPagopaOperator
+            ? t(`${componentPath}.confirmModal.titleOperator`)
+            : t(`${componentPath}.confirmModal.title`)
+        }
+        message={
+          userIsPagopaOperator ? (
+            <Trans i18nKey={`${componentPath}.confirmModal.messageStationOperator`}>
+              L’ente riceverà una notifica di conferma attivazione della stazione.
+              <br />
+            </Trans>
+          ) : (
+            <Trans i18nKey={`${componentPath}.confirmModal.messageStation`}>
+              Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
+              approvare. Riceverai una notifica a revisione completata.
+              <br />
+            </Trans>
+          )
+        }
+        openConfirmModal={showConfirmModal}
+        onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
+        onCloseLabel={t('general.turnBack')}
+        handleCloseConfirmModal={() => setShowConfirmModal(false)}
+        handleConfrimSubmit={async () => {
+          await submit(formik.values);
+          setShowConfirmModal(false);
+        }}
+      />
+    </>
+  );
 };
 
 export default AddEditStationForm;

@@ -20,13 +20,13 @@ const CommonRadioGroup = ({labelTrue, labelFalse, value, setIntermediaryAvailabl
     const {t} = useTranslation();
     const [showAlert, setShowAlert] = useState<boolean>(value);
 
-    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const radioNewValue = (event.target as HTMLInputElement).value === "true";
-        if (radioNewValue) {
-            setShowAlert(true);
-        }
-        setIntermediaryAvailableValue(radioNewValue);
-    };
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const radioNewValue = (event.target as HTMLInputElement).value === "true";
+    if (radioNewValue) {
+      setShowAlert(true);
+    }
+    setIntermediaryAvailableValue(radioNewValue);
+  };
 
     return (
         <>

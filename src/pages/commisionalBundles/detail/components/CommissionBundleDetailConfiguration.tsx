@@ -19,24 +19,12 @@ const bundleConfigurationFields = {
         ['touchpoint', 'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'],
         ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
     ],
-    col2: [
-        ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
-        ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
-        ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],
-    ],
-    col3: [
-        ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
-        ['digitalStamp', 'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'],
-        [
-            'digitalStampRestriction',
-            'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp',
-        ],
-    ],
-    col4: [
-        ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
-        ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
-        ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
-    ]
+  ],
+  col4: [
+    ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
+    ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
+    ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
+  ]
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
     if (typeof value === 'string' && value) {

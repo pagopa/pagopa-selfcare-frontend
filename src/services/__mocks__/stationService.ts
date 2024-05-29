@@ -59,7 +59,7 @@ export const mockedFullStation: StationDetailResource = {
   enabled: true,
   brokerDescription: '',
   version: 1,
-  password: 'xxxxxxxx',
+  password: 'mockPswxxx',
   associatedCreditorInstitutions: 0,
   activationDate: new Date(),
   createdAt: new Date(),

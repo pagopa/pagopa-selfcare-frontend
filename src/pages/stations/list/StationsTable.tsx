@@ -66,9 +66,9 @@ export default function StationsTable({
     }
   }
 
-  useEffect(() => {
-    handleGetStations();
-  }, [page]);
+  function handleChangePage(newPage: number) {
+    handleGetStations(newPage);
+  }
 
   useEffect(() => {
     handleGetStations(0);
@@ -83,7 +83,7 @@ export default function StationsTable({
         columns={columns}
         totalPages={stations?.pageInfo?.total_pages}
         page={page}
-        handleChangePage={setPage}
+        handleChangePage={(newPage: number) => handleChangePage(newPage)}
         pageLimit={pageLimit}
         setPageLimit={setPageLimit}
         getRowId={(r) => r.stationCode}

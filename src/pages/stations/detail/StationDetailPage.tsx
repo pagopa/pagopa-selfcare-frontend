@@ -2,10 +2,7 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  getECListByStationCode,
-  getStationDetail
-} from '../../../services/stationService';
+import { getECListByStationCode, getStationDetail } from '../../../services/stationService';
 import { LOADING_TASK_STATION_DETAILS_WRAPPER } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -60,7 +57,7 @@ const StationDetailPage = () => {
   }, [selectedParty]);
 
   return userIsPagopaOperator ? (
-    <StationDetailsValidation stationDetail={stationDetail} />
+    <StationDetailsValidation stationDetail={stationDetail} setStationDetail={setStationDetail} />
   ) : (
     <StationDetails
       stationDetail={stationDetail}

@@ -36,8 +36,7 @@ const bundleConfigurationFields = {
     ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
     ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
     ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
-  ],
-  // TODO updatedBy/"Modificato da" (API doesn't retrieve this info)
+  ]
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
   if (typeof value === 'string' && value) {

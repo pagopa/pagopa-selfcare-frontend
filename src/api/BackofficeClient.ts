@@ -774,11 +774,20 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperStationByOpt: async (station: StationDetailsDto): Promise<WrapperEntities> => {
-    const result = await backofficeClient.updateWrapperStationDetailsByOpt({
+  updateWrapperStationWithOperatorReview: async ({
+    stationCode,
+    ciTaxCode,
+    note,
+  }: {
+    stationCode: string;
+    ciTaxCode: string;
+    note: string;
+  }): Promise<StationDetailResource> => {
+    const result = await backofficeClient.updateWrapperStationWithOperatorReview({
+      'station-code': stationCode,
+      ciTaxCode,
       body: {
-        ...station,
-        status: StatusEnum.TO_CHECK_UPDATE,
+        note
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

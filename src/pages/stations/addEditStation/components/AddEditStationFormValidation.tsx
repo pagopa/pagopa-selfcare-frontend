@@ -229,13 +229,14 @@ Props) => {
 
                       <Grid container item xs={12} pt={1}>
                         <FormControl fullWidth>
-                          <InputLabel size="small">
+                          <InputLabel size="small" id="gdpConcatLabel">
                             {t('addEditStationPage.addFormValidation.fields.select')}
                           </InputLabel>
                           <Select
                             fullWidth
                             id="gdpConcat"
                             name="gdpConcat"
+                            labelId='gdpConcatLabel'
                             data-testid="gdpConcat-select"
                             label={'gdpConcat'}
                             placeholder={'gdpConcat'}

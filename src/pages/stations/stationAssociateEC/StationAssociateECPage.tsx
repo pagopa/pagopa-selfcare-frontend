@@ -41,13 +41,11 @@ function StationAssociateECPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
   const [selectedEC, setSelectedEC] = useState<Delegation | undefined>();
-  const [isECUsable, setIsECUsable] = useState<boolean>();
   const [availableEC, setAvailableEC] = useState<Array<Delegation>>([]);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
   const [checked, setChecked] = useState(false);
-  const auxDigitOptions = [3];
 
   useEffect(() => {
     setLoading(true);
@@ -85,11 +83,9 @@ function StationAssociateECPage() {
         .then((data) => {
           if (data && Array.isArray(data.availableCodes)) {
             setSegregationCodeList(data);
-            setIsECUsable(true);
           }
         })
         .catch((reason) => {
-          setIsECUsable(false);
           const problemJson = extractProblemJson(reason);
 
           addError({
@@ -121,9 +117,9 @@ function StationAssociateECPage() {
 
   const formik = useFormik<CreditorInstitutionStationDto>({
     initialValues: {
-      auxDigit: 0,
+      auxDigit: 3,
       segregationCode: '',
-      stationCode: '',
+      stationCode: stationId,
       broadcast: false,
     },
     onSubmit: async (values) => {
@@ -157,7 +153,10 @@ function StationAssociateECPage() {
   };
 
   const enableSubmit = (values: CreditorInstitutionStationDto) =>
-    values.stationCode !== '' && values.auxDigit !== 0 && values.segregationCode !== '';
+    values.stationCode !== '' &&
+    values.auxDigit === 3 &&
+    values.segregationCode !== '' &&
+    selectedEC;
 
   const submit = (values: CreditorInstitutionStationDto) => {
     if (selectedEC && selectedEC.broker_id) {
@@ -281,20 +280,13 @@ function StationAssociateECPage() {
                         name="auxDigit"
                         label={t('stationAssociateECPage.associationForm.auxDigit')}
                         size="small"
-                        value={formik.values.auxDigit === 0 ? '' : formik.values.auxDigit}
-                        onChange={(e) => {
-                          formik.handleChange(e);
-                        }}
-                        error={formik.touched.auxDigit && Boolean(formik.errors.auxDigit)}
+                        value={formik.values.auxDigit}
                         inputProps={{
                           'data-testid': 'aux-digit-test',
                         }}
+                        disabled={true}
                       >
-                        {auxDigitOptions.map((r, i) => (
-                          <MenuItem key={i} value={r}>
-                            {r}
-                          </MenuItem>
-                        ))}
+                        <MenuItem value={3}>3</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -373,7 +365,7 @@ function StationAssociateECPage() {
         <Stack display="flex" justifyContent="flex-end">
           <Button
             onClick={() => submit(formik.values)}
-            disabled={(!enableSubmit(formik.values) && !selectedEC) || !isECUsable}
+            disabled={!enableSubmit(formik.values)}
             color="primary"
             variant="contained"
             data-testid="confirm-btn-test"

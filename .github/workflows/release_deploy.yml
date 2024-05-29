@@ -103,7 +103,7 @@ jobs:
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
-          skip_ci: true
+          skip_ci: false
           prerelease: ${{ needs.setup.outputs.environment != 'prod' }}
 
       - name: Checkout code

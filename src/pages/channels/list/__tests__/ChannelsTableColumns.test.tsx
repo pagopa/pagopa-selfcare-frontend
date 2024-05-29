@@ -3,8 +3,8 @@ import {cleanup, render} from '@testing-library/react';
 import {buildColumnDefs, showStatus} from '../ChannelsTableColumns';
 import {showCustomHeader} from '../../../../components/Table/TableUtils';
 import React from 'react';
-import {store} from '../../../../redux/store';
-import {Provider} from 'react-redux';
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -189,6 +189,6 @@ describe('<ChannelsTableColumns />', () => {
         const realColumns = buildColumnDefs(mockTFunction, () => jest.fn()) as Array<any>;
         expect(realColumns).toEqual(ArrayBuildColumnDefs);
 
-        render(<Provider store={store}>{showStatus(params)}</Provider>);
-    });
+    render(<Provider store={store}>{showStatus(params)}</Provider>);
+  });
 });

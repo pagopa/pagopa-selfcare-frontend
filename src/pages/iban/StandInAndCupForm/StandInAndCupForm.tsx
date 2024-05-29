@@ -272,10 +272,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                 </Typography>
               ) : (
                 <FormControl sx={{ minWidth: '55%' }}>
-                  <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                  <InputLabel size="small" id="ibanStandInLabel">{t('ibanPage.selectIban')}</InputLabel>
                   <Select
                     id="ibanStandIn"
                     name="ibanStandIn"
+                    labelId='ibanStandInLabel'
                     label={t('ibanPage.selectIban')}
                     size="small"
                     value={newSelectedIban.standIn.iban}
@@ -325,10 +326,11 @@ const StandInAndCupForm = ({ ibanList, error, loading }: Props) => {
                 </Typography>
               ) : (
                 <FormControl sx={{ minWidth: '55%' }}>
-                  <InputLabel size="small">{t('ibanPage.selectIban')}</InputLabel>
+                  <InputLabel size="small" id="ibanCupLabel">{t('ibanPage.selectIban')}</InputLabel>
                   <Select
                     id="ibanCup"
                     name="ibanCup"
+                    labelId='ibanCupLabel'
                     label={t('ibanPage.selectIban')}
                     size="small"
                     value={newSelectedIban.cup.iban}

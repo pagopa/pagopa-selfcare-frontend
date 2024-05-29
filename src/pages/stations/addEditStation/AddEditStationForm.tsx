@@ -1069,7 +1069,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
               <Grid container spacing={2} mt={1}>
                 <Grid container item xs={6}>
                   <FormControl fullWidth>
-                    <InputLabel size="small">
+                    <InputLabel size="small" id="primitiveVersionLabel">
                       {t(`${componentPath}.fields.primitiveVersion`)}
                     </InputLabel>
                     <Select
@@ -1077,6 +1077,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       type="number"
                       id="primitiveVersion"
                       name="primitiveVersion"
+                      labelId='primitiveVersionLabel'
                       label={t(`${componentPath}.fields.primitiveVersion`)}
                       placeholder={t(`${componentPath}.fields.primitiveVersion`)}
                       size="small"

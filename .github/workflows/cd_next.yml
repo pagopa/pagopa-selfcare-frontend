@@ -2,6 +2,8 @@ name: CD Next Release
 
 on:
   pull_request:
+    branches:
+      - next
     types:
       - closed
 

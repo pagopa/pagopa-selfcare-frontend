@@ -77,7 +77,11 @@ jobs:
           
           
           yarn install
-          yarn generate
+          if [ "${{ github.base_ref }}" = "main" ]; then
+            yarn run generate:api-portal
+          else
+            yarn run generate:api-portal-next
+          fi
           yarn build
           mkdir ./out
           mv ./build ./out/ui
@@ -143,7 +147,11 @@ jobs:
       - name: Unit Tests
         run: |
           yarn install
-          yarn generate
+          if [ "${{ github.base_ref }}" = "main" ]; then
+            yarn run generate:api-portal
+          else
+            yarn run generate:api-portal-next
+          fi
           yarn test:coverage --watchAll=false
 
       - name: SonarCloud Scan

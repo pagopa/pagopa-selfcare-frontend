@@ -230,11 +230,11 @@ export const getStationDetail = (stationId: string): Promise<StationDetailResour
   }
 };
 
-export const getCreditorInstitutionSegregationCodes = (ecCode: string): Promise<AvailableCodes> => {
+export const getCreditorInstitutionSegregationCodes = (ecCode: string, targetCITaxCode: string): Promise<AvailableCodes> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCreditorInstitutionSegregationcodesMocked(ecCode);
+    return getCreditorInstitutionSegregationcodesMocked(ecCode, targetCITaxCode);
   } else {
-    return BackofficeApi.getCreditorInstitutionSegregationCodes(ecCode).then(
+    return BackofficeApi.getCreditorInstitutionSegregationCodes(ecCode, targetCITaxCode).then(
       (resource) => resource
     );
   }

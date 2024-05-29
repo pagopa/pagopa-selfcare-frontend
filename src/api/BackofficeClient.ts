@@ -92,6 +92,8 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
+import { getCreditorInstitutionSegregationcodes } from './../services/__mocks__/stationService';
+import { CreditorInstitutionInfoArray } from './generated/portal/CreditorInstitutionInfoArray';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -873,9 +875,10 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationCodes: async (ecCode: string): Promise<AvailableCodes> => {
+  getCreditorInstitutionSegregationCodes: async (ecCode: string, targetCITaxCode: string): Promise<AvailableCodes> => {
     const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
+      targetCITaxCode
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1282,6 +1285,14 @@ export const BackofficeApi = {
 
   getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
     const result = await backofficeClient.getMaintenanceMessage({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoArray> => {
+    const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
+      'station-code': stationCode,
+      brokerId
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 };

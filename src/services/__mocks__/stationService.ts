@@ -702,7 +702,7 @@ export const associateEcToStation = (
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
-export const getCreditorInstitutionSegregationcodes = (_ecCode: string): Promise<AvailableCodes> =>
+export const getCreditorInstitutionSegregationcodes = (_ecCode: string, _targetCITaxCode: string): Promise<AvailableCodes> =>
   new Promise((resolve) => resolve(mockedSegregationCodeList));
 
 export const testStation = (

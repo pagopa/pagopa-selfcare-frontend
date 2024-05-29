@@ -192,23 +192,23 @@ export const updateWrapperStationToCheckUpdate = (
 };
 
 export const updateWrapperStationWithOperatorReview = ({
-                                                           stationCode,
-                                                           ciTaxCode,
-                                                           note,
-                                                       }: {
-    stationCode: string;
-    ciTaxCode: string;
-    note: string;
+  stationCode,
+  ciTaxCode,
+  note,
+}: {
+  stationCode: string;
+  ciTaxCode: string;
+  note: string;
 }): Promise<StationDetailResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updateStationWrapByOpt();
-    } else {
-        return BackofficeApi.updateWrapperStationWithOperatorReview({
-            stationCode,
-            ciTaxCode,
-            note,
-        }).then((resources) => resources);
-    }
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateStationWrapByOpt();
+  } else {
+    return BackofficeApi.updateWrapperStationWithOperatorReview({
+      stationCode,
+      ciTaxCode,
+      note,
+    }).then((resources) => resources);
+  }
 };
 
 export const updateStation = (

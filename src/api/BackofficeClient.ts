@@ -811,7 +811,7 @@ export const BackofficeApi = {
       'station-code': stationCode,
       ciTaxCode,
       body: {
-        note,
+        note
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

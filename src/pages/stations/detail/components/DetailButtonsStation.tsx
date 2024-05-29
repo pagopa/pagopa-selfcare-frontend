@@ -29,39 +29,64 @@ const ModalContent = ({
 } & Props) => {
     const {t} = useTranslation();
 
-    const addError = useErrorDispatcher();
-    const setLoading = useLoading(LOADING_TASK_STATION_DETAILS_REQUEST_EDIT);
+const DetailButtonsStation = ({ status, stationCode }: Props) => {
+  const { t } = useTranslation();
 
-    const [input, setInput] = useState<string>(stationDetail?.note ?? '');
-
-    const sendEditRequest = () => {
-        setLoading(true);
-        updateWrapperStationWithOperatorReview({
-            stationCode: stationDetail?.stationCode ?? '',
-            ciTaxCode: stationDetail?.brokerCode ?? '',
-            note: input,
-        })
-            .then((data: StationDetailResource) => {
-                setStationDetail(data);
-            })
-            .catch((reason) =>
-                addError({
-                    id: 'PUT_STATION_DETAILS_REQUEST_EDIT',
-                    blocking: false,
-                    error: reason as Error,
-                    techDescription: `An error occurred while getting updating the station with operator's note`,
-                    toNotify: true,
-                    displayableTitle: t('general.errorTitle'),
-                    displayableDescription: t('stationDetailPageValidation.modal.error'),
-                    component: 'Toast',
-                })
-            )
-            .finally(() => {
-                setShowModal(false);
-                setLoading(false);
-            });
-    };
-    return (
+  return (
+    <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+      {status === WrapperStatusEnum.APPROVED ? (
+        <>
+          <Button
+            component={Link}
+            to={''}
+            color="error"
+            variant="outlined"
+            disabled={true}
+            // onClick={() => ''}
+          >
+            {t('stationDetailPage.stationOptions.deleteRequired')}
+          </Button>
+          <Button
+            component={Link}
+            to={() =>
+              generatePath(ROUTES.STATION_EDIT, {
+                stationId: stationCode,
+                actionId: StationFormAction.Duplicate,
+              })
+            }
+            variant="outlined"
+            data-testid="duplicate-btn-sts-approved"
+          >
+            {t('stationDetailPage.stationOptions.duplicateStation')}
+          </Button>
+          <Button
+            component={Link}
+            to={() =>
+              generatePath(ROUTES.STATION_EDIT, {
+                stationId: stationCode,
+                actionId: StationFormAction.Edit,
+              })
+            }
+            variant="contained"
+            data-testid="edit-btn-sts-approved"
+          >
+            {t('stationDetailPage.stationOptions.editStation')}
+          </Button>
+        </>
+      ) : status === WrapperStatusEnum.TO_FIX ? (
+        <>
+          <Button
+            // component={Link}
+            // to={() => ''}
+            variant="contained"
+            // TBD
+            disabled={true}
+            data-testid="edit-btn-sts-fix"
+          >
+            {t('stationDetailPage.stationOptions.correctStation')}
+          </Button>
+        </>
+      ) : (
         <>
             <Typography variant="h6">{t('stationDetailPageValidation.modal.title')}</Typography>
             <Typography variant="body1" sx={{my: 2}}>

@@ -78,23 +78,11 @@ jobs:
           
           
           yarn install
-          
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
-                yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
-                yarn run generate:api-portal-next
-            else
-                yarn run generate:api-portal-pr
-            fi          
-          elif [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
-            yarn run generate:api-portal-next
-          elif [ "${{ github.base_ref }}" = "main" ]; then
+          if [ "${{ github.base_ref }}" = "main" ]; then
             yarn run generate:api-portal
           else
-            yarn run generate:api-portal-pr
-          fi      
-          
+            yarn run generate:api-portal-next
+          fi
           yarn build
           mkdir ./out
           mv ./build ./out/ui
@@ -192,21 +180,11 @@ jobs:
       - name: Unit Tests
         run: |
           yarn install
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
-                yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
-                yarn run generate:api-portal-next
-            else
-                yarn run generate:api-portal-pr
-            fi          
-          elif [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
-            yarn run generate:api-portal-next
-          elif [ "${{ github.base_ref }}" = "main" ]; then
+          if [ "${{ github.base_ref }}" = "main" ]; then
             yarn run generate:api-portal
           else
-            yarn run generate:api-portal-pr
-          fi   
+            yarn run generate:api-portal-next
+          fi
           yarn test:coverage --watchAll=false
 
       - name: SonarCloud Scan

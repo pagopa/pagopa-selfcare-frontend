@@ -2,13 +2,14 @@ import { Modal, Backdrop, Fade, Box, Typography, Button } from '@mui/material';
 import { MouseEventHandler } from 'react';
 
 type Props = {
-  title: string;
-  message: any;
   openModal: boolean;
-  onConfirmLabel: string;
-  onCloseLabel: string;
-  handleCloseModal: MouseEventHandler;
-  handleConfirm: MouseEventHandler;
+  
+  title?: string;
+  message?: any;
+  onConfirmLabel?: string;
+  onCloseLabel?: string;
+  handleCloseModal?: MouseEventHandler;
+  handleConfirm?: MouseEventHandler;
   renderContent?: () => any;
 };
 

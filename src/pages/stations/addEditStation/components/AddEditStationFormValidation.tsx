@@ -170,13 +170,14 @@ Props) => {
                         />
                       <Box pt={1}>
                         <FormControl fullWidth>
-                          <InputLabel size="small">
+                          <InputLabel size="small" id="newConnConcatLabel">
                             {t('addEditStationPage.addFormValidation.fields.select')}
                           </InputLabel>
                           <Select
                             fullWidth
                             id="newConnConcat"
                             name="newConnConcat"
+                            labelId='newConnConcatLabel'
                             data-testid="newConnConcat"
                             label={'newConnConcat'}
                             placeholder={'newConnConcat'}
@@ -229,13 +230,14 @@ Props) => {
 
                       <Grid container item xs={12} pt={1}>
                         <FormControl fullWidth>
-                          <InputLabel size="small">
+                          <InputLabel size="small" id="gdpConcatLabel">
                             {t('addEditStationPage.addFormValidation.fields.select')}
                           </InputLabel>
                           <Select
                             fullWidth
                             id="gdpConcat"
                             name="gdpConcat"
+                            labelId='gdpConcatLabel'
                             data-testid="gdpConcat-select"
                             label={'gdpConcat'}
                             placeholder={'gdpConcat'}
@@ -277,12 +279,13 @@ Props) => {
           <Grid container spacing={2} mt={1}>
             <Grid container item xs={6}>
               <FormControl fullWidth>
-                <InputLabel size="small">
+                <InputLabel size="small" id="proxyConcatLabel">
                   {t('addEditStationPage.addFormValidation.fields.proxy')}
                 </InputLabel>
                 <Select
                   fullWidth
                   id="proxyConcat"
+                  labelId='proxyConcatLabel'
                   name="proxyConcat"
                   label={t('addEditStationPage.addFormValidation.fields.proxy')}
                   placeholder={t('addEditStationPage.addFormValidation.fields.proxy')}

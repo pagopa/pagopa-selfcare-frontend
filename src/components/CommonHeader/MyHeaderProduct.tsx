@@ -66,7 +66,6 @@ const HeaderProduct = ({
 
 
     useEffect(() => {
-        console.log('useEffect');
         getOptions();
     }, [organizations]);
 

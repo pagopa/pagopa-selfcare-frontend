@@ -1,16 +1,16 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render, screen, waitFor} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import {MemoryRouter, Route} from 'react-router-dom';
-import {createStore} from '../../../../redux/store';
-import {Provider} from 'react-redux';
-import {createMemoryHistory} from 'history';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { createStore } from '../../../../redux/store';
+import { Provider } from 'react-redux';
+import { createMemoryHistory } from 'history';
 import StationDetailPage from '../StationDetailPage';
-import {ecAdminSignedDirect} from '../../../../services/__mocks__/partyService';
+import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
-import {ROLE} from "../../../../model/RolePermission";
+import { ROLE } from '../../../../model/RolePermission';
 
 jest.mock('../../../components/commonFunctions');
 jest.mock('../../../../hooks/useUserRole');
@@ -64,7 +64,7 @@ describe('<StationDetailPage />', () => {
           isPsp: false,
           isEcBroker: true,
           isPspBroker: false,
-        }
+        },
       },
       orgIsBrokerSigned: true,
       orgIsEcBrokerSigned: false,
@@ -72,8 +72,7 @@ describe('<StationDetailPage />', () => {
       orgIsEcSigned: true,
       orgIsPspBrokerSigned: false,
       orgIsPspDirect: false,
-      orgIsPspSigned: false
-
+      orgIsPspSigned: false,
     });
     const { store } = renderApp(stationId);
 
@@ -85,6 +84,7 @@ describe('<StationDetailPage />', () => {
     );
 
     expect(screen.getByText('stationDetailPage.associates')).toBeInTheDocument();
+    expect(screen.queryByTestId('station-detail-op')).not.toBeInTheDocument();
   });
 
   test('Test Render station detail with role operator', async () => {
@@ -104,8 +104,6 @@ describe('<StationDetailPage />', () => {
         payload: ecAdminSignedDirect,
       })
     );
-    expect(
-      screen.getByText('stationDetailPageValidation.infoToComplete.timeoutC')
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('station-detail-op')).toBeInTheDocument();
   });
 });

@@ -35,7 +35,7 @@ import {
   getWrapperStation,
   testStation,
   updateStation,
-  updateWrapperStationByOpt,
+  updateWrapperStationWithOperatorReview,
   updateWrapperStationToCheck,
   updateWrapperStationToCheckUpdate,
 } from '../stationService';
@@ -103,9 +103,13 @@ describe('StationService test mocked', () => {
     const response = await updateWrapperStationToCheckUpdate(mockedStationDetailsDTO);
     expect(response).toMatchObject(mockedWrapperStation);
   });
-  test('Test updateWrapperStationByOpt', async () => {
-    const response = await updateWrapperStationByOpt(mockedStationDetailsDTO);
-    expect(response).toMatchObject(mockedWrapperStation);
+  test('Test updateWrapperStationWithOperatorReview', async () => {
+    const response = await updateWrapperStationWithOperatorReview({
+      stationCode: 'stationCode',
+      ciTaxCode: 'ciTaxCode',
+      note: 'note',
+    });
+    expect(response).toMatchObject(mockedFullStation);
   });
   test('Test updateStation', async () => {
     const response = await updateStation(mockedStationDetailsDTO, 'stationCode');
@@ -260,11 +264,17 @@ describe('StationService test', () => {
     expect(updateWrapperStationToCheckUpdate(mockedStationDetailsDTO)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
-  test('Test updateWrapperStationByOpt', async () => {
+  test('Test updateWrapperStationWithOperatorReview', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperStationByOpt')
-      .mockReturnValue(new Promise((resolve) => resolve(mockedWrapperStation)));
-    expect(updateWrapperStationByOpt(mockedStationDetailsDTO)).resolves.not.toThrow();
+      .spyOn(BackofficeApi, 'updateWrapperStationWithOperatorReview')
+      .mockReturnValue(new Promise((resolve) => resolve(mockedFullStation)));
+    expect(
+      updateWrapperStationWithOperatorReview({
+        stationCode: 'stationCode',
+        ciTaxCode: 'ciTaxCode',
+        note: 'note',
+      })
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test updateStation', async () => {

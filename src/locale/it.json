@@ -595,8 +595,9 @@
       "duplicateStation": "Duplica",
       "editStation": "Modifica",
       "deleteRequired": "Richiedi eliminazione",
-      "correctionRequired": "Richiedi correzione",
-      "configureStation": "Configura"
+      "configureStation": "Configura",
+      "requestEdit": "Richiedi modifiche",
+      "approveAndValidate": "Approva e valida"
     }
   },
   "stationECList": {
@@ -651,8 +652,19 @@
     }
   },
   "stationDetailPageValidation": {
-    "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
-    "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
+    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Stazione in attesa di correzione da parte dell’ente."
+    },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "Il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri",
+      "error": "Si è verificato un problema nel salvataggio del commento."
+    },
     "configuration": {
       "status": "Stato",
       "title": "Configurazione della stazione",
@@ -660,7 +672,11 @@
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
-      "intermediaryCode": "Codice intermediario",
+      "connectionType": {
+        "label":"Tipo di connessione",
+        "sync": "Sincrona",
+        "async": "Asincrona"
+      },
       "protocol": "Protocollo",
       "port": "Porta",
       "ip": "IP",
@@ -1319,6 +1335,7 @@
     "manage": "Gestisci",
     "activate": "Attiva",
     "deactivate": "Disattiva",
+    "confirmAndSend": "Conferma e invia",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
@@ -1336,7 +1353,12 @@
       "TO_FIX": "Da correggere",
       "TO_FIX_UPDATE": "Da correggere",
       "TO_CHECK": "In revisione",
-      "TO_CHECK_UPDATE": "In revisione"
+      "TO_CHECK_UPDATE": "In revisione",
+      "APPROVED_OPERATOR": "Attivo",
+      "TO_FIX_OPERATOR": "Da correggere",
+      "TO_FIX_UPDATE_OPERATOR": "Da correggere",
+      "TO_CHECK_OPERATOR": "Da validare",
+      "TO_CHECK_UPDATE_OPERATOR": "Da validare"
     },
     "yes": "Sì",
     "no": "No",

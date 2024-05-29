@@ -23,7 +23,6 @@ const AddEditStationPage = () => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
   const addError = useErrorDispatcher();
-  const goBack = () => history.push(ROUTES.STATIONS);
 
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const AddEditStationPage = () => {
           <ButtonNaked
             size="small"
             component="button"
-            onClick={() => goBack()
+            onClick={() => history.push(ROUTES.STATIONS)
             }
             startIcon={<ArrowBack />}
             sx={{ color: 'primary.main', mr: '20px' }}
@@ -96,7 +95,6 @@ const AddEditStationPage = () => {
 
         {selectedParty && (
           <AddEditStationForm
-            goBack={goBack}
             stationDetail={stationDetail}
             formAction={formAction}
           />

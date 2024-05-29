@@ -46,7 +46,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm goBack={jest.fn()} formAction={StationFormAction.Create} />
+            <AddEditStationForm  formAction={StationFormAction.Create} />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -76,7 +76,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={history}>
-            <AddEditStationForm goBack={jest.fn()} formAction={StationFormAction.Create} />
+            <AddEditStationForm  formAction={StationFormAction.Create} />
           </Router>
         </ThemeProvider>
       </Provider>
@@ -148,7 +148,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <AddEditStationForm
-              goBack={jest.fn()}
+              
               stationDetail={mockedFullStation}
               formAction={StationFormAction.Edit}
             />
@@ -235,7 +235,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
-              goBack={jest.fn()}
+              
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -290,7 +290,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK }}
-              goBack={jest.fn()}
+              
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -335,7 +335,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE }}
-              goBack={jest.fn()}
+              
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -390,7 +390,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK_UPDATE }}
-              goBack={jest.fn()}
+              
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -435,7 +435,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
           <Router history={history}>
             <AddEditStationForm
               stationDetail={{ ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_FIX }}
-              goBack={jest.fn()}
+              
               formAction={StationFormAction.Edit}
             />
           </Router>
@@ -481,7 +481,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <AddEditStationForm
-              goBack={jest.fn()}
+              
               stationDetail={{ ...mockedFullStation, isConnectionSync: true }}
               formAction={StationFormAction.Edit}
             />
@@ -543,7 +543,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <AddEditStationForm
-              goBack={jest.fn()}
               stationDetail={{
                 ...mockedFullStation,
                 ip: '/api.uat.platform.pagopa.it',
@@ -571,7 +570,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
-    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    const gdpConcatSelectbutton = screen.getByLabelText('addEditStationPage.addFormValidation.fields.select');
     fireEvent.mouseDown(gdpConcatSelectbutton);
     await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
 
@@ -595,7 +594,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         <ThemeProvider theme={theme}>
           <Router history={history}>
             <AddEditStationForm
-              goBack={jest.fn()}
               stationDetail={mockedFullStation}
               formAction={StationFormAction.Edit}
             />
@@ -613,7 +611,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
     const gdpRadio = screen.getByTestId('radio-button-gdp') as HTMLInputElement;
 
     await waitFor(() => userEvent.click(gdpRadio));
-    const gdpConcatSelectbutton = within(gdpConcatSelect).getByRole('button');
+    const gdpConcatSelectbutton = screen.getByLabelText('addEditStationPage.addFormValidation.fields.select');
     fireEvent.mouseDown(gdpConcatSelectbutton);
     await waitFor(() => fireEvent.click(screen.getByText(new RegExp('GDP01', 'i'))));
 

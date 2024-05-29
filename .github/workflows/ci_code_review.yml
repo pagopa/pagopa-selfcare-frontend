@@ -77,10 +77,10 @@ jobs:
           
           
           yarn install
-          if [ "${{ github.base_ref }}" = "main" ]; then
-            yarn run generate:api-portal
-          else
+          if [ "${{ github.base_ref }}" = "next" ] || [ "${{ github.head_ref }}" = "next" ]; then
             yarn run generate:api-portal-next
+          else
+            yarn run generate:api-portal
           fi
           yarn build
           mkdir ./out

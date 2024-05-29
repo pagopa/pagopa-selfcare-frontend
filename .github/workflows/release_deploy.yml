@@ -104,7 +104,7 @@ jobs:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
-          prerelease: ${{ needs.setup.outputs.environment == 'prod' }}
+          prerelease: ${{ needs.setup.outputs.environment != 'prod' }}
 
       - name: Checkout code
         uses: actions/checkout@v4 # required to make the script available for next step

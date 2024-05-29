@@ -69,7 +69,7 @@
     "@pagopa/openapi-codegen-ts": "^13.1.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "12.1.5",
-    "@testing-library/user-event": "^14.0.4",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react-test-renderer": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.45.0",

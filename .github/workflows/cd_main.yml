@@ -83,11 +83,12 @@ jobs:
 #    secrets: inherit
 
   deploy_prod:
-    name: Deploy in PROD
     needs:
       - setup
+      - deploy_uat
 #      - integration_test
-    uses: ./.github/workflows/deploy_with_github_runner.yml
+    name: Deploy on CDN
+    uses: ./.github/workflows/deploy_on_cdn.yml
     with:
       environment: 'prod'
     secrets: inherit

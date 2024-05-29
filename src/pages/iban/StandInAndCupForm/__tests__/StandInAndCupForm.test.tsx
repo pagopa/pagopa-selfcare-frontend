@@ -70,18 +70,16 @@ describe('StandInAndCupForm', () => {
     expect(manageChip).toBeInTheDocument();
 
     //Stand in
-    const selectStandInBtn = await within(screen.getByTestId('stand-in-test-ext')).getByRole(
-      'button'
-    );
+    const selectStandInBtn = screen.getAllByLabelText('ibanPage.selectIban')[0];
     await waitFor(() => {
       fireEvent.mouseDown(selectStandInBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanListMocked.ibans_enhanced[0].iban}`, 'i')));
     });
-    expect(selectStandInBtn.textContent).toBe(ibanListMocked.ibans_enhanced[0].iban);
+    expect(selectStandInBtn).toHaveTextContent(ibanListMocked.ibans_enhanced[0].iban);
 
     await new Promise((r) => setTimeout(r, 1000));
     //Cup
-    const selectCupBtn = await within(screen.getByTestId('cup-test-ext')).getByRole('button');
+    const selectCupBtn = screen.getAllByLabelText('ibanPage.selectIban')[1];
     await waitFor(() => {
       fireEvent.mouseDown(selectCupBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanListMocked.ibans_enhanced[1].iban}`, 'i')));
@@ -107,9 +105,7 @@ describe('StandInAndCupForm', () => {
     expect(manageChip).toBeInTheDocument();
 
     //Stand in
-    const selectStandInBtn = await within(screen.getByTestId('stand-in-test-ext')).getByRole(
-      'button'
-    );
+    const selectStandInBtn = screen.getAllByLabelText('ibanPage.selectIban')[0];
     await waitFor(() => {
       fireEvent.mouseDown(selectStandInBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanList.ibans_enhanced[3].iban}`, 'i')));
@@ -118,7 +114,7 @@ describe('StandInAndCupForm', () => {
 
     await new Promise((r) => setTimeout(r, 1000));
     //Cup
-    const selectCupBtn = await within(screen.getByTestId('cup-test-ext')).getByRole('button');
+    const selectCupBtn = screen.getAllByLabelText('ibanPage.selectIban')[1];
     await waitFor(() => {
       fireEvent.mouseDown(selectCupBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanList.ibans_enhanced[2].iban}`, 'i')));
@@ -144,9 +140,7 @@ describe('StandInAndCupForm', () => {
     expect(manageChip).toBeInTheDocument();
 
     //Stand in
-    const selectStandInBtn = await within(screen.getByTestId('stand-in-test-ext')).getByRole(
-      'button'
-    );
+    const selectStandInBtn = screen.getAllByLabelText('ibanPage.selectIban')[0];
     await waitFor(() => {
       fireEvent.mouseDown(selectStandInBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanList.ibans_enhanced[2].iban}`, 'i')));
@@ -155,7 +149,7 @@ describe('StandInAndCupForm', () => {
 
     await new Promise((r) => setTimeout(r, 1000));
     //Cup
-    const selectCupBtn = await within(screen.getByTestId('cup-test-ext')).getByRole('button');
+    const selectCupBtn = screen.getAllByLabelText('ibanPage.selectIban')[1];
     await waitFor(() => {
       fireEvent.mouseDown(selectCupBtn);
       fireEvent.click(
@@ -216,9 +210,7 @@ describe('StandInAndCupForm', () => {
     expect(manageChip).toBeInTheDocument();
 
     //Stand in
-    const selectStandInBtn = await within(screen.getByTestId('stand-in-test-ext')).getByRole(
-      'button'
-    );
+    const selectStandInBtn = screen.getAllByLabelText('ibanPage.selectIban')[0];
     await waitFor(() => {
       fireEvent.mouseDown(selectStandInBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanList.ibans_enhanced[3].iban}`, 'i')));
@@ -227,7 +219,7 @@ describe('StandInAndCupForm', () => {
 
     await new Promise((r) => setTimeout(r, 1000));
     //Cup
-    const selectCupBtn = await within(screen.getByTestId('cup-test-ext')).getByRole('button');
+    const selectCupBtn = screen.getAllByLabelText('ibanPage.selectIban')[1];
     await waitFor(() => {
       fireEvent.mouseDown(selectCupBtn);
       fireEvent.click(screen.getByText(new RegExp(`${ibanList.ibans_enhanced[2].iban}`, 'i')));

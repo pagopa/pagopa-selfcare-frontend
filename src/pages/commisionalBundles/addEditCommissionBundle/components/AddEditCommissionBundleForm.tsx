@@ -307,7 +307,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                             </Grid>
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <InputLabel size="small">
+                                    <InputLabel size="small" id="paymentTypeLabel">
                                         {t('commissionBundlesPage.addEditCommissionBundle.form.paymentType')}
                                     </InputLabel>
                                     <Select
@@ -341,7 +341,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                             </Grid>
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <InputLabel size="small">
+                                    <InputLabel size="small" id="touchpointLabel">
                                         {t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                                     </InputLabel>
                                     <Select

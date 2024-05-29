@@ -67,28 +67,28 @@ export default function StationsTable({
         }
     }
 
-    function handleChangePage(newPage: number) {
-        handleGetStations(newPage);
-    }
+  function handleChangePage(newPage: number) {
+    handleGetStations(newPage);
+  }
 
     useEffect(() => {
         handleGetStations(0);
     }, [stationCode, brokerCode, statusFilter, pageLimit]);
 
-    return (
-        <Box id="StationsSearchTableBox">
-            <TableDataGrid
-                componentPath={componentPath}
-                linkToRedirect={!userIsPagopaOperator ? ROUTES.STATION_ADD : undefined}
-                rows={stations?.stationsList ? [...stations.stationsList] : []}
-                columns={columns}
-                totalPages={stations?.pageInfo?.total_pages}
-                page={page}
-                handleChangePage={(newPage: number) => handleChangePage(newPage)}
-                pageLimit={pageLimit}
-                setPageLimit={setPageLimit}
-                getRowId={(r) => r.stationCode}
-            />
-        </Box>
-    );
+  return (
+    <Box id="StationsSearchTableBox">
+      <TableDataGrid
+        componentPath={componentPath}
+        linkToRedirect={!userIsPagopaOperator ? ROUTES.STATION_ADD : undefined}
+        rows={stations?.stationsList ? [...stations.stationsList] : []}
+        columns={columns}
+        totalPages={stations?.pageInfo?.total_pages}
+        page={page}
+        handleChangePage={(newPage: number) => handleChangePage(newPage)}
+        pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
+        getRowId={(r) => r.stationCode}
+      />
+    </Box>
+  );
 }

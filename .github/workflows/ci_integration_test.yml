@@ -29,7 +29,7 @@ on:
         type: choice
         description: Select the Environment
         options:
-          - staging
+          - local
           - dev
           - uat
       canary:
@@ -70,7 +70,7 @@ jobs:
           yarn install
           
           
-          if [ "${{ inputs.environment }}" = "staging" ]; then
+          if [ "${{ inputs.environment }}" = "local" ]; then
             export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
             export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
           fi
@@ -88,11 +88,19 @@ jobs:
           
           yarn run cucumber
 
+  print_debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
   notify:
     needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
-    if: ${{ always() && (inputs.notify || github.event.inputs == null) }}
+    if: ${{ always() && (inputs.notify == true || github.event.inputs == null) }}
     steps:
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v2

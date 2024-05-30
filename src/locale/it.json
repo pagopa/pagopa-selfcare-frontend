@@ -1006,6 +1006,47 @@
           "accept": "Errore durante l'accettazione della richiesta",
           "delete": "Errore durante l'eliminazione dell'adesione"
         }
+      },
+      "offersTable": {
+        "title": "Destinatari",
+        "inviteButton": "Invita enti",
+        "search": {
+          "placeholder": "Cerca per codice fiscale",
+          "stateFilter": "Stato"
+        },
+        "table": {
+          "emptyState": {
+            "WAITING": "Non sono presenti offerte in attesa",
+            "ACTIVE": "Non sono presenti offerte già accettate"
+          }
+        },
+        "name": "Nome ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
+        "stateChip": {
+          "WAITING": "In attesa",
+          "ACTIVE": "Attivo",
+          "DELETING": "In eliminazione"
+        },
+        "modal": {
+          "delete": {
+            "title": "Rimuovi ente",
+            "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
+          }
+        },
+        "drawer": {
+          "title": "Dettaglio destinatario",
+          "feesTitle": "Commissioni a carico dell'ente",
+          "businessName": "Nome Ente",
+          "taxCode": "Codice Fiscale",
+          "state": "Stato",
+          "deleteButton": "Rimuovi ente"
+        },
+        "error": {
+          "errorGetList": "Errore durante il recupero della lista delle offerte al pacchetto",
+          "errorGetDetail": "Errore durante il recupero del dettaglio dell'offerta",
+          "delete": "Errore durante l'eliminazione dell'adesione"
+        }
       }
     },
     "addEditCommissionBundle": {

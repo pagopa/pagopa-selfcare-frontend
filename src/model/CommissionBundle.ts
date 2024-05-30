@@ -16,6 +16,11 @@ export enum SubscriptionStateType {
   Accepted = 'ACCEPTED',
 }
 
+export enum OfferStateType {
+  Waiting = 'WAITING',
+  Active = 'ACTIVE',
+}
+
 export type PublicBundleCISubscriptionsMethodParams = {
   idBundle: string;
   pspTaxCode: string;

@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@fix-skip-ci
+        uses: pagopa/github-actions-template/node-release@v1.13.3
         with:
           semver: buildNumber
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}

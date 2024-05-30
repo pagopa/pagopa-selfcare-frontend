@@ -11,11 +11,10 @@ import {
 import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
-import { CustomDataGrid } from '../../../../../components/Table/TableDataGrid';
-import TableEmptyState from '../../../../../components/Table/TableEmptyState';
+import TableDataGrid from '../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
@@ -110,7 +109,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     searchTriggered?: boolean
   ) => {
     setLoadingList(true);
-    if(newPage){
+    if (newPage) {
       setPage(newPage);
     }
 
@@ -272,42 +271,20 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         }}
         justifyContent="start"
       >
-        {!subscriptionList?.creditor_institutions_subscriptions ||
-        subscriptionList?.creditor_institutions_subscriptions?.length === 0 ? (
-          <TableEmptyState componentName={componentPath} translationPathSuffix={selectedState} />
-        ) : (
-          <div data-testid="data-grid">
-            <CustomDataGrid
-              disableColumnFilter
-              disableColumnSelector
-              disableDensitySelector
-              disableSelectionOnClick
-              autoHeight={true}
-              className="CustomDataGrid"
-              columnBuffer={5}
-              columns={columns}
-              components={{
-                Pagination: () => (
-                  <Pagination
-                    color="primary"
-                    count={subscriptionList?.page_info?.total_pages ?? 1}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                      handleChangePage(value)
-                    }
-                  />
-                ),
-              }}
-              getRowId={(r) => r.creditor_institution_code}
-              headerHeight={headerHeight}
-              hideFooterSelectedRowCount={true}
-              paginationMode="client"
-              rowCount={subscriptionList?.creditor_institutions_subscriptions?.length}
-              rowHeight={rowHeight}
-              rows={subscriptionList?.creditor_institutions_subscriptions ?? []}
-            />
-          </div>
-        )}
+        <TableDataGrid
+          componentPath={componentPath}
+          translationPathSuffix={selectedState}
+          rows={
+            subscriptionList?.creditor_institutions_subscriptions
+              ? [...subscriptionList.creditor_institutions_subscriptions]
+              : []
+          }
+          columns={columns}
+          totalPages={subscriptionList?.page_info?.total_pages}
+          page={page}
+          handleChangePage={(newPage: number) => handleChangePage(newPage)}
+          getRowId={(r) => r.creditor_institution_code}
+        />
       </Box>
       {successAlert && (
         <Alert

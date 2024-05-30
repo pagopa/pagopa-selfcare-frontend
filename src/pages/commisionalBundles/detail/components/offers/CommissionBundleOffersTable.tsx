@@ -171,7 +171,6 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
           totalPages={offersList?.page_info?.total_pages}
           page={page}
           handleChangePage={(newPage: number) => handleChangePage(newPage)}
-          pageLimit={pageLimit}
           getRowId={(r) => r.stationCode} // TODO get right id
         />
       </Box>

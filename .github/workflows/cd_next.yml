@@ -1,4 +1,4 @@
-name: CD Next Release
+name: CD Develop
 
 on:
   pull_request:

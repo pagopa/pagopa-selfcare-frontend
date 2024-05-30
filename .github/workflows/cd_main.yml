@@ -1,4 +1,4 @@
-name: CD Release
+name: CD UAT/PROD
 
 on:
   pull_request:
@@ -96,7 +96,7 @@ jobs:
   release:
     name: Create a New Release
     runs-on: ubuntu-latest
-    needs: [ setup, deploy_prod ]
+    needs: [ setup, pre_release, deploy_prod ]
     if: ${{ needs.setup.outputs.semver != 'skip' }}
     steps:
       - name: Checkout code
@@ -104,14 +104,33 @@ jobs:
       - name: Make Latest Release
         id: generate_notes
         uses: actions/github-script@v5
+        env:
+          RELEASE_TAG: ${{ needs.pre_release.outputs.version }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const script = require('./.github/workflows/github_scripts/make_latest_release.js')
-            await script({github, context, core})
+            await script({github, context})
 
 
-    
-    
+
+  notify:
+    needs: [ setup, deploy_prod, release ]
+    runs-on: ubuntu-latest
+    name: Notify
+    if: always()
+    steps:
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ needs.deploy_prod.result }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notification_title: 'New Release on Production ${{ needs.release.outputs.version }} has {status_message}'
+          message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to <{workflow_url}| workflow file>'
+          icon_success: ':white_check_mark:'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 
 

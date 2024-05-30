@@ -1,4 +1,4 @@
-name: Release And Deploy
+name: Manual Release And Deploy
 
 # Controls when the workflow will run
 on:

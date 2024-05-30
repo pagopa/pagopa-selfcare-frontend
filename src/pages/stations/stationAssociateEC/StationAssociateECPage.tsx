@@ -51,9 +51,7 @@ function StationAssociateECPage() {
     if (selectedParty?.partyId) {
       getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
         .then((data) => {
-          if (data) {
             setAvailableEC(data);
-          }
         })
         .catch((reason) =>
           addError({

@@ -131,7 +131,7 @@ export default function StationECTable({
         ) : !error && !loading && ecListPage.creditor_institutions?.length === 0 ? (
           <StationECTableEmpty stationId={stationId} />
         ) : (
-          <>
+          <div data-testId='table-data-grid'>
             <CustomDataGrid
               disableColumnFilter
               disableColumnSelector
@@ -199,7 +199,7 @@ export default function StationECTable({
               rowCount={ecListPage!.page_info!.items_found}
               sortingMode="server"
             />
-          </>
+          </div>
         )}
       </Box>
       <SessionModal

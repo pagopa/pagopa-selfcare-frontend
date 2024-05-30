@@ -43,6 +43,7 @@ import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
+import { CreditorInstitutionInfoResource } from './generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
@@ -92,8 +93,7 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
-import { getCreditorInstitutionSegregationcodes } from './../services/__mocks__/stationService';
-import { CreditorInstitutionInfoArray } from './generated/portal/CreditorInstitutionInfoArray';
+import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -102,7 +102,7 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any
   const token = storageTokenOps.read();
   return wrappedOperation({
     ...params,
-    JWT: `Bearer ${token}`,
+    JWT: token,
   });
 };
 
@@ -196,10 +196,13 @@ const channelBody = (channel: ChannelDetailsDto) => ({
 });
 
 export const BackofficeApi = {
-  getInstitutions: async (taxCode: string | undefined): Promise<Array<InstitutionDetail>> => {
+  getInstitutions: async (taxCode: string | undefined): Promise<InstitutionDetailResource> => {
     const result = await backofficeClient.getInstitutions({ 'tax-code': taxCode });
 
-    return extractResponse(result, 200, onRedirectToLogin);
+    const e =  extractResponse(result, 200, onRedirectToLogin) as any;
+    console.log("results", result);
+    console.log("parsed", e);
+    return e;
   },
 
   getInstitution: async (institutionId: string): Promise<Institution> => {
@@ -1288,7 +1291,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoArray> => {
+  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoResource> => {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId

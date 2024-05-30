@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.24.7-67-next",
+  "version": "1.24.7-68-VAS-1059-update-ci-station-association-form",
   "homepage": "ui",
   "private": true,
   "scripts": {

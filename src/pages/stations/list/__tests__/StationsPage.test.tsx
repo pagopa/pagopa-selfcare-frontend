@@ -58,6 +58,14 @@ describe('<StationsPage />', () => {
   });
 
   it('should replace the current state of window history', () => {
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PSP_ADMIN,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: true,
+      userIsAdmin: false
+    });
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>

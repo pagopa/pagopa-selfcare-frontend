@@ -2,7 +2,11 @@ import { BackofficeApi } from '../api/BackofficeClient';
 import { CreditorInstitutionContactsResource } from '../api/generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionInfoArray } from '../api/generated/portal/CreditorInstitutionInfoArray';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
-import { getCreditorInstitutionContactsMock } from './__mocks__/creditorInsitutionService';
+import {
+  getAvailableCreditorInstitutionsForStationMock,
+  getCreditorInstitutionContactsMock,
+  getCreditorInstitutionssMock,
+} from './__mocks__/creditorInstitutionService';
 
 export const getCreditorInstitutionContacts = (
   ciTaxCode: string,
@@ -22,8 +26,7 @@ export const getCreditorInstitutions = (
   limit: number
 ): Promise<CreditorInstitutionsResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    // TODO mock
-    return {} as any;
+    return getCreditorInstitutionssMock();
   } else {
     return BackofficeApi.getCreditorInstitutions(taxCode, name, page, limit);
   }
@@ -34,8 +37,7 @@ export const getAvailableCreditorInstitutionsForStation = (
   brokerId: string
 ): Promise<CreditorInstitutionInfoArray> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    // TODO mock
-    return {} as any;
+    return getAvailableCreditorInstitutionsForStationMock();
   } else {
     return BackofficeApi.getAvailableCreditorInstitutionsForStation(stationCode, brokerId);
   }

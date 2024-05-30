@@ -23,7 +23,8 @@ export default function ECSelection({
     <Grid container item direction="column" display="flex" justifyContent="center" xs={12}>
       {selectedEC === undefined && (
         <Autocomplete
-          id="disabled-options-demo"
+          id="ec-selection"
+          data-testid="ec-selection-id-test"
           disabled={availableEC.length === 0}
           value={selectedEC}
           onChange={(event, newSelecteCI: CreditorInstitutionInfo | null) => {
@@ -74,7 +75,7 @@ export default function ECSelection({
       >
         {selectedEC !== undefined && (
           <Box display="flex" p={2}>
-            <Box width="100%">
+            <Box width="100%" data-testid="selected-ec-item-id-test">
               <PartyAccountItem
                 partyName={selectedEC?.business_name ? selectedEC.business_name : ''}
                 maxCharactersNumberMultiLine={20}
@@ -86,6 +87,7 @@ export default function ECSelection({
                 onClick={() => onECSelectionChange(undefined)}
                 id="clearIcon"
                 aria-label="removeSelectionIcon"
+                data-testid="remove-selected-ec-btn-id-test"
               >
                 <ClearOutlinedIcon />
               </IconButton>

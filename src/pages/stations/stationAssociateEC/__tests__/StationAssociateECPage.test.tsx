@@ -6,33 +6,30 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { store } from '../../../../redux/store';
+import { mockedCreditorInstitutionInfoArray } from '../../../../services/__mocks__/creditorInstitutionService';
 import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService';
 import { mockedSegregationCodeList } from '../../../../services/__mocks__/stationService';
+import * as creditorInsitutionService from '../../../../services/creditorInstitutionService';
 import StationAssociateECPage from '../StationAssociateECPage';
-import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
 
 let getStationAvailableECSpy: jest.SpyInstance;
 let getCreditorInstitutionSegregationCodesSpy: jest.SpyInstance;
-let getBrokerDelegationSpy: jest.SpyInstance;
+let getAvailableCreditorInstitutionsForStationSpy: jest.SpyInstance;
 let associateEcToStationSpy: jest.SpyInstance;
 
 beforeEach(() => {
-  getStationAvailableECSpy = jest.spyOn(
-    require('../../../../services/stationService'),
-    'getStationAvailableEC'
-  );
   getCreditorInstitutionSegregationCodesSpy = jest.spyOn(
     require('../../../../services/stationService'),
     'getCreditorInstitutionSegregationCodes'
   );
-  getBrokerDelegationSpy = jest.spyOn(
-    require('../../../../services/institutionService'),
-    'getBrokerDelegation'
+  getAvailableCreditorInstitutionsForStationSpy = jest.spyOn(
+    creditorInsitutionService,
+    'getAvailableCreditorInstitutionsForStation'
   );
   associateEcToStationSpy = jest.spyOn(
-    require("../../../../services/stationService"),
-    "associateEcToStation"
-  )
+    require('../../../../services/stationService'),
+    'associateEcToStation'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
@@ -42,23 +39,9 @@ afterEach(cleanup);
 describe('<StationAssociateECPage />', () => {
   const stationId = 'XPAY_03_ONUS';
   test('render component StationAssociateECPage', async () => {
-    getStationAvailableECSpy.mockResolvedValue([
-      {
-        broker_psp_code: '0000001',
-        description: 'Intesa San Paolo S.P.A',
-        broker_id: "brokerID1",
-        enabled: true,
-        extended_fault_bean: true,
-      },
-      {
-        broker_psp_code: '0000002',
-        broker_id: "brokerID2",
-        description: 'Sogei',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-    ]);
-    getBrokerDelegationSpy.mockResolvedValue(mockedDelegatedPSP);
+    getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
+      mockedCreditorInstitutionInfoArray
+    );
 
     getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
@@ -79,20 +62,18 @@ describe('<StationAssociateECPage />', () => {
       ? mockedSegregationCodeList.availableCodes[0]
       : '';
 
-    const ecSelectionSearch = screen.getByText(
-      'Digita il nome del nuovo EC da associare alla stazione'
-    );
-    expect(ecSelectionSearch).toBeInTheDocument();
+    const ecSelectionSearch = screen
+      .getByTestId('ec-selection-id-test')
+      .querySelector('input') as HTMLInputElement;
 
-    const newEc = screen.getByTestId('ec-selection-search') as HTMLInputElement;
-    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 1' } });
-    fireEvent.change(newEc, { target: { value: 'Azienda Pubblica di Servizi alla Persona Test 2' } });
+    fireEvent.mouseDown(ecSelectionSearch);
+    fireEvent.select(ecSelectionSearch, {
+      target: { value: mockedCreditorInstitutionInfoArray[0].business_name },
+    });
+    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray[0].business_name);
 
-    const searchSubmit = screen.getByTestId('search-field-test');
-    fireEvent.click(searchSubmit);
-
-    const auxDigit = screen.getByTestId('aux-digit-test');
-    fireEvent.change(auxDigit, { target: { value: 3 } });
+    const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
+    expect(auxDigit.value).toBe('3');
 
     const segCode = screen.getByTestId('segregation-code-test');
     fireEvent.change(segCode, { target: { value: segCodeMocked } });
@@ -107,24 +88,9 @@ describe('<StationAssociateECPage />', () => {
     fireEvent.click(back);
   });
 
-  test('render component StationAssociateECPage getBrokerDelegation error', async () => {
-    getStationAvailableECSpy.mockResolvedValue([
-      {
-        broker_psp_code: '0000001',
-        description: 'Intesa San Paolo S.P.A',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-      {
-        broker_psp_code: '0000002',
-        description: 'Sogei',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-    ]);
-    getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
+  test('render component StationAssociateECPage getAvailableCreditorInstitutionsForStation error', async () => {
+    getAvailableCreditorInstitutionsForStationSpy.mockRejectedValueOnce(new Error('error'));
 
-    getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
@@ -141,21 +107,9 @@ describe('<StationAssociateECPage />', () => {
   });
 
   test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes generic error', async () => {
-    getStationAvailableECSpy.mockResolvedValue([
-      {
-        broker_psp_code: '0000001',
-        description: 'Intesa San Paolo S.P.A',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-      {
-        broker_psp_code: '0000002',
-        description: 'Sogei',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-    ]);
-    getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
+    getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
+      mockedCreditorInstitutionInfoArray
+    );
     getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(new Error('error'));
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
@@ -170,27 +124,21 @@ describe('<StationAssociateECPage />', () => {
         </MemoryRouter>
       </Provider>
     );
+
+    const ecSelectionSearch = screen
+      .getByTestId('ec-selection-id-test')
+      .querySelector('input') as HTMLInputElement;
+
+    fireEvent.mouseDown(ecSelectionSearch);
+    fireEvent.select(ecSelectionSearch, {
+      target: { value: mockedCreditorInstitutionInfoArray[0].business_name },
+    });
+    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray[0].business_name);
   });
 
-  test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes generic error 404', async () => {
-    getStationAvailableECSpy.mockResolvedValue([
-      {
-        broker_psp_code: '0000001',
-        description: 'Intesa San Paolo S.P.A',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-      {
-        broker_psp_code: '0000002',
-        description: 'Sogei',
-        enabled: true,
-        extended_fault_bean: true,
-      },
-    ]);
-    getBrokerDelegationSpy.mockRejectedValueOnce(new Error('error'));
-    getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(
-      new Error(JSON.stringify({ status: 404 }))
-    );
+  test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes empty response', async () => {
+    getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue([]);
+
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
     render(
@@ -204,5 +152,8 @@ describe('<StationAssociateECPage />', () => {
         </MemoryRouter>
       </Provider>
     );
+
+    const alertMessage = screen.getByTestId('alert-warning-test');
+    expect(alertMessage).toBeInTheDocument();
   });
 });

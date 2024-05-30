@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 
-import { FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
+import { Alert, FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
@@ -28,11 +28,9 @@ import {
 } from '../../../services/stationService';
 import { extractProblemJson } from '../../../utils/client-utils';
 import {
-  INSTITUTIONS_EC_TYPES,
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
-import { checkInstitutionTypes } from '../../../utils/institution-types-utils';
 
 function StationAssociateECPage() {
   const { t } = useTranslation();
@@ -54,7 +52,7 @@ function StationAssociateECPage() {
       getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
         .then((data) => {
           if (data) {
-            setAvailableEC(addItselfAsAvaliableEC(data));
+            setAvailableEC(data);
           }
         })
         .catch((reason) =>
@@ -135,23 +133,6 @@ function StationAssociateECPage() {
         stationId,
       })
     );
-  };
-
-  const addItselfAsAvaliableEC = (delegations: CreditorInstitutionInfoArray) => {
-    if (
-      selectedParty &&
-      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_TYPES) &&
-      !delegations.find((ec) => ec.ci_tax_code === selectedParty.fiscalCode)
-    ) {
-      return [
-        ...delegations,
-        {
-          ci_tax_code: selectedParty.fiscalCode,
-          business_name: selectedParty.description,
-        },
-      ];
-    }
-    return delegations;
   };
 
   const enableSubmit = (values: CreditorInstitutionStationDto) =>
@@ -261,6 +242,15 @@ function StationAssociateECPage() {
                         }}
                       />
                     </FormControl>
+                    <Box mt={1}>
+                      <Alert
+                        severity={'warning'}
+                        data-testid="alert-warning-test"
+                        variant="outlined"
+                      >
+                        {t('stationAssociateECPage.alert.noDelegations')}
+                      </Alert>
+                    </Box>
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
                     <Typography variant="sidenav">

@@ -24,6 +24,7 @@ export default function ECSelection({
       {selectedEC === undefined && (
         <Autocomplete
           id="disabled-options-demo"
+          disabled={availableEC.length === 0}
           value={selectedEC}
           onChange={(event, newSelecteCI: CreditorInstitutionInfo | null) => {
             onECSelectionChange(newSelecteCI ?? undefined);

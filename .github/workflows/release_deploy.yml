@@ -1,4 +1,4 @@
-name: Release And Deploy
+name: Manual Release And Deploy
 
 # Controls when the workflow will run
 on:
@@ -99,7 +99,7 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@v1.13.1
+        uses: pagopa/github-actions-template/node-release@v1.13.3
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}

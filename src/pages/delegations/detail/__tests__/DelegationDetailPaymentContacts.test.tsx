@@ -5,7 +5,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
-import { mockedCIContacts } from '../../../../services/__mocks__/creditorInsitutionService';
+import { mockedCIContacts } from '../../../../services/__mocks__/creditorInstitutionService';
 import DelegationDetailPaymentContacts from '../DelegationDetailPaymentContacts';
 
 beforeEach(() => {

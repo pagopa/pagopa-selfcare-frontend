@@ -49,7 +49,7 @@ describe('<ECSelection />', () => {
         <ThemeProvider theme={theme}>
           <ECSelection
             availableEC={[...mockedCreditorInstitutionInfoArray.creditor_institution_info_list!]}
-            selectedEC={mockedCreditorInstitutionInfoArray[0]}
+            selectedEC={mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0]}
             onECSelectionChange={spyOnCISelected}
           />
         </ThemeProvider>

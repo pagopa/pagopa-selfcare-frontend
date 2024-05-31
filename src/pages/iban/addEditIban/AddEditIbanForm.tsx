@@ -149,7 +149,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
       try {
         if (formAction === IbanFormAction.Create) {
           await createIban(ecCode, {
-            iban: values.iban,
+            iban: values.iban.toUpperCase().trim(),
             description: values.description,
             validity_date: values.validity_date,
             due_date: values.due_date,
@@ -157,7 +157,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
           });
         } else {
           await updateIban(ecCode, {
-            iban: values.iban,
+            iban: values.iban.toUpperCase().trim(),
             description: values.description,
             validity_date: values.validity_date,
             due_date: values.due_date,

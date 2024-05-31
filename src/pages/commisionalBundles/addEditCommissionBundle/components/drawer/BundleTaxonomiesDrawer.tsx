@@ -153,7 +153,7 @@ export const BundleTaxonomiesDrawer = ({
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
-            'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+            'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
           ),
           component: 'Toast',
         })
@@ -189,7 +189,7 @@ export const BundleTaxonomiesDrawer = ({
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(
-            'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+            'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
           ),
           component: 'Toast',
         })

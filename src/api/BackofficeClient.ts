@@ -53,7 +53,7 @@ import { Iban } from './generated/portal/Iban';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
 import { Institution } from './generated/portal/Institution';
-import { InstitutionDetail } from './generated/portal/InstitutionDetail';
+import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
 import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
@@ -93,7 +93,8 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
-import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
+import { ProductResource } from './generated/portal/ProductResource';
+import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -199,10 +200,7 @@ export const BackofficeApi = {
   getInstitutions: async (taxCode: string | undefined): Promise<InstitutionDetailResource> => {
     const result = await backofficeClient.getInstitutions({ 'tax-code': taxCode });
 
-    const e =  extractResponse(result, 200, onRedirectToLogin) as any;
-    console.log("results", result);
-    console.log("parsed", e);
-    return e;
+    return extractResponse(result, 200, onRedirectToLogin);
   },
 
   getInstitution: async (institutionId: string): Promise<Institution> => {
@@ -212,7 +210,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getProducts: async (institutionId: string): Promise<Array<Product>> => {
+  getProducts: async (institutionId: string): Promise<ProductResource> => {
     const result = await backofficeClient.getInstitutionProducts({
       'institution-id': institutionId,
     });
@@ -220,7 +218,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getInstitutionApiKeys: async (institutionId: string): Promise<Array<ProductKeys>> => {
+  getInstitutionApiKeys: async (institutionId: string): Promise<InstitutionApiKeysResource> => {
     const result = await backofficeClient.getInstitutionApiKeys({
       'institution-id': institutionId,
     });
@@ -230,7 +228,7 @@ export const BackofficeApi = {
   createInstitutionApiKeys: async (
     institutionId: string,
     subscriptionCode: string
-  ): Promise<Array<ProductKeys>> => {
+  ): Promise<InstitutionApiKeysResource> => {
     const result = await backofficeClient.createInstitutionApiKeys({
       'institution-id': institutionId,
       'subscription-code': subscriptionCode,

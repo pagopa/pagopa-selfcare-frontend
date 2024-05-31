@@ -81,14 +81,14 @@ jobs:
           if [ "${{ github.base_ref }}" = "" ] && [ "${{ github.head_ref }}" = "" ]; then
             if [ "${{ github.ref_name }}" = "main" ]; then
                 yarn run generate:api-portal
-            else if [ "${{ github.ref_name }}" = "next" ]; then
+            elif [ "${{ github.ref_name }}" = "next" ]; then
                 yarn run generate:api-portal-next
             else
                 yarn run generate:api-portal-pr
             fi
-          else if [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next ]; then
+          elif [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next ]; then
             yarn run generate:api-portal-next
-          else if [ "${{ github.base_ref }}" = "main" ]; then
+          elif [ "${{ github.base_ref }}" = "main" ]; then
             yarn run generate:api-portal
           else
             yarn run generate:api-portal-pr

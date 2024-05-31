@@ -27,3 +27,10 @@ regexReplace(
   'src/api/generated/portal/requestTypes.ts',
   { fileContentsOnly: true }
 );
+
+regexReplace(
+  'institutionsData.uri,',
+  '"",',
+  'src/api/generated/portal/client.ts',
+  { fileContentsOnly: true }
+);

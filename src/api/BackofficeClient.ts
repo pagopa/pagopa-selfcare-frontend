@@ -96,6 +96,8 @@ import { WithDefaultsT, createClient } from './generated/portal/client';
 import { ProductResource } from './generated/portal/ProductResource';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 import { DelegationResource } from './generated/portal/DelegationResource';
+import { getCreditorInstitutionSegregationcodes } from './../services/__mocks__/stationService';
+import { CreditorInstitutionInfoArray } from './generated/portal/CreditorInstitutionInfoArray';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1290,7 +1292,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoResource> => {
+  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoArray> => {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId

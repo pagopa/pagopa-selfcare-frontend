@@ -20,9 +20,9 @@ export default function StationsPage() {
     const history = useHistory();
     const {userIsPagopaOperator} = useUserRole();
 
-    const [stationCodeInput, setStationCodeInput] = useState<string>('');
-    const [stationCode, setStationCode] = useState<string>('');
-    const [tabFilter, setTabFilter] = useState<number>(userIsPagopaOperator ? 1 : 0);
+  const [stationCodeInput, setStationCodeInput] = useState<string>('');
+  const [stationCode, setStationCode] = useState<string>('');
+  const [tabFilter, setTabFilter] = useState<number>(userIsPagopaOperator ? 1 : 0);
 
     const tabList = [
         {

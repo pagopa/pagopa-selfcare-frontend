@@ -159,7 +159,7 @@ export const getStateChip = (
   const validityDateTo = bundleDetails.validityDateTo;
   const todayDate = new Date();
 
-  if (isPsp && validityDateFrom && validityDateTo) {
+  if (isPsp && validityDateFrom) {
     return getPSPStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
   if (isCi) {
@@ -179,29 +179,31 @@ export const getStateChip = (
 const getPSPStatusChip = (
   t: TFunction<'translation'>,
   todayDate: Date,
-  validityDateTo: Date,
+  validityDateTo: Date | undefined,
   validityDateFrom: Date
 ) => {
-  if (datesAreOnSameDay(todayDate, validityDateTo)) {
-    return renderStatusChip({
-      chipColor: 'error',
-      chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-      dataTestId: 'error-state-chip',
-    });
-  }
-  if (todayDate.getTime() < validityDateFrom.getTime()) {
-    return renderStatusChip({
-      chipColor: 'default',
-      chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-      dataTestId: 'default-state-chip',
-    });
-  }
-  if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-    return renderStatusChip({
-      chipColor: 'warning',
-      chipLabel: t('commissionBundlesPage.list.states.expiring'),
-      dataTestId: 'warning-state-chip',
-    });
+  if(validityDateTo){
+    if (datesAreOnSameDay(todayDate, validityDateTo)) {
+      return renderStatusChip({
+        chipColor: 'error',
+        chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+        dataTestId: 'error-state-chip',
+      });
+    }
+    if (todayDate.getTime() < validityDateFrom.getTime()) {
+      return renderStatusChip({
+        chipColor: 'default',
+        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+        dataTestId: 'default-state-chip',
+      });
+    }
+    if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+      return renderStatusChip({
+        chipColor: 'warning',
+        chipLabel: t('commissionBundlesPage.list.states.expiring'),
+        dataTestId: 'warning-state-chip',
+      });
+    }
   }
 
   return renderStatusChip({

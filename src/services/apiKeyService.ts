@@ -1,18 +1,17 @@
 import { BackofficeApi } from '../api/BackofficeClient';
 import { InstitutionApiKeysResource } from '../api/generated/portal/InstitutionApiKeysResource';
-import { ENV } from '../utils/env';
 import {
-    createInstitutionApiKeys as createInstitutionApiKeysMocked,
-    getInstitutionApiKeys as getInstitutionApiKeysMocked,
-    regeneratePrimaryKey as regeneratePrimaryKeyMocked,
-    regenerateSecondaryKey as regenerateSecondaryKeyMocked,
+  createInstitutionApiKeys as createInstitutionApiKeysMocked,
+  getInstitutionApiKeys as getInstitutionApiKeysMocked,
+  regeneratePrimaryKey as regeneratePrimaryKeyMocked,
+  regenerateSecondaryKey as regenerateSecondaryKeyMocked,
 } from './__mocks__/apiKeyService';
 
 export const getInstitutionApiKeys = (
   institutionId: string
 ): Promise<InstitutionApiKeysResource> => {
   /* istanbul ignore if */
-  if (ENV.MOCK.SELFCARE) {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getInstitutionApiKeysMocked(institutionId);
   } else {
     return BackofficeApi.getInstitutionApiKeys(institutionId).then((resources) => resources);

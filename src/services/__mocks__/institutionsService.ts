@@ -1,4 +1,6 @@
 import { DelegationResource } from '../../api/generated/portal/DelegationResource';
+import { Institution_typeEnum } from '../../api/generated/portal/InstitutionDetail';
+import { InstitutionDetailResource } from '../../api/generated/portal/InstitutionDetailResource';
 import { StatusEnum } from '../../api/generated/portal/WrapperChannelDetailsDto';
 import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
 import { mockedPaymentTypes } from './configurationService';
@@ -92,5 +94,40 @@ export const mockedDelegatedPSP: DelegationResource = {
   ],
 };
 
-export const getBrokerDelegation = (): Promise<DelegationResource> =>
+export const mockedInstitutionDetailResource: InstitutionDetailResource = {
+  institution_detail_list: [
+    {
+      address: '',
+      external_id: '2e76eb7f-2f55-4ec3-8f41-1743f827f7db2',
+      id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
+      name: 'Azienda Pubblica di Servizi alla Persona Test 2',
+      origin: '',
+      origin_id: 'dccdade9-4ce4-444b-8b4d-ef50be064842',
+      status: '',
+      tax_code: '800011104872',
+      user_product_roles: ['admin'],
+      assistance_contacts: {},
+      company_informations: {},
+      dpo_data: {
+        address: '',
+        email: '',
+        pec: '',
+      },
+      institution_type: Institution_typeEnum.PA,
+      mail_address: '',
+      psp_data: {
+        abi_code: '',
+        business_register_number: '',
+        legal_register_name: '',
+        legal_register_number: '',
+        vat_number_group: false,
+      },
+      recipient_code: '',
+    },
+  ],
+};
+
+export const getBrokerDelegationMock = (): Promise<DelegationResource> =>
   Promise.resolve(mockedDelegatedPSP);
+export const getInstitutionsMock = (): Promise<InstitutionDetailResource> =>
+  Promise.resolve(mockedInstitutionDetailResource);

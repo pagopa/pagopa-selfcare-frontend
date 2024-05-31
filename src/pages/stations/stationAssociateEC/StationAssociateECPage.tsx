@@ -51,7 +51,7 @@ function StationAssociateECPage() {
     if (selectedParty?.partyId) {
       getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
         .then((data) => {
-            setAvailableEC(data);
+          setAvailableEC(data);
         })
         .catch((reason) =>
           addError({
@@ -189,11 +189,11 @@ function StationAssociateECPage() {
     >
       <Box justifyContent="center">
         <Grid item xs={12} mb={1} display="flex" justifyContent="center">
-          <Typography variant="h3">{t('stationAssociateECPage.associationForm.title')}</Typography>
+          <Typography variant="h3">{t('stationAssociateECPage.title')}</Typography>
         </Grid>
         <Grid item xs={12} mb={4} display="flex" justifyContent="center">
           <Typography variant="body1" align="center">
-            {t('stationAssociateECPage.associationForm.subTitle') + ' '}
+            {t('stationAssociateECPage.subTitle') + ' '}
             <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>

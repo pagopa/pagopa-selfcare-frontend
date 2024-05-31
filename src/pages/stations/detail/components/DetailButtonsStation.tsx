@@ -94,6 +94,7 @@ const ModalContent = ({
         </Button>
         <Button
           variant="contained"
+          disabled={!input}
           onClick={() => sendEditRequest()}
           data-testid="confirm-and-send-button"
         >

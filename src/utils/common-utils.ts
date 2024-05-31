@@ -217,7 +217,7 @@ const CODE_LENGTHS_SEPA: any = {
 
 export function isValidIBANNumber(input: string, onlySepa: boolean) {
   const CODE_LENGTHS = onlySepa ? CODE_LENGTHS_SEPA : CODE_LENGTHS_ALL;
-  const iban = String(input).toUpperCase().replace(' ', ''); // replace empty spaces
+  const iban = String(input).toUpperCase().trim(); // replace empty spaces
   const code = iban.match(/^([A-Z]{2})(\d{2})([A-Z\d]+)$/); // match and capture (1) the country code, (2) the check digits, and (3) the rest
   // check syntax and length
   if (!code || iban.length !== CODE_LENGTHS[code[1] as string]) {

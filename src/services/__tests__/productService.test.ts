@@ -20,6 +20,14 @@ describe('ProductService test client', () => {
       expect(fetchProducts('partyId')).resolves.not.toThrow();
       expect(spyOn).toBeCalledTimes(1);
     });
+  
+    test('Test fetchProducts with empty response', async () => {
+      const spyOn = jest
+        .spyOn(BackofficeApi, 'getProducts')
+        .mockReturnValue(new Promise((resolve) => resolve({})));
+      expect(fetchProducts('partyId')).resolves.not.toThrow();
+      expect(spyOn).toBeCalledTimes(1);
+    });
   });
   
   describe('ProductService test mocked', () => {

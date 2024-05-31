@@ -22,6 +22,14 @@ describe('PartyService test client', () => {
       expect(fetchParties()).resolves.not.toThrow();
       expect(spyOn).toBeCalledTimes(1);
     });
+
+    test('Test fetchParties with empty response', async () => {
+      const spyOn = jest
+        .spyOn(BackofficeApi, 'getInstitutions')
+        .mockReturnValue(new Promise((resolve) => resolve({})));
+      expect(fetchParties()).resolves.not.toThrow();
+      expect(spyOn).toBeCalledTimes(1);
+    });
   
     test('Test fetchPartyDetails', async () => {
       const spyOn = jest

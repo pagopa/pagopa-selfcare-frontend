@@ -2,7 +2,6 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
-import { ProductKeys } from '../model/ApiKey';
 import {
   PublicBundleCISubscriptionsMethodParams,
   PublicBundleCISubscriptionsRequest,
@@ -47,12 +46,13 @@ import { CreditorInstitutionInfoResource } from './generated/portal/CreditorInst
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
-import { Delegation } from './generated/portal/Delegation';
+import { DelegationResource } from './generated/portal/DelegationResource';
 import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { Iban } from './generated/portal/Iban';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
 import { Institution } from './generated/portal/Institution';
+import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
@@ -62,7 +62,7 @@ import { PaymentServiceProvidersResource } from './generated/portal/PaymentServi
 import { PaymentTypes } from './generated/portal/PaymentTypes';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { ProblemJson } from './generated/portal/ProblemJson';
-import { Product } from './generated/portal/Product';
+import { ProductResource } from './generated/portal/ProductResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
@@ -93,11 +93,6 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
-import { ProductResource } from './generated/portal/ProductResource';
-import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
-import { DelegationResource } from './generated/portal/DelegationResource';
-import { getCreditorInstitutionSegregationcodes } from './../services/__mocks__/stationService';
-import { CreditorInstitutionInfoArray } from './generated/portal/CreditorInstitutionInfoArray';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -793,7 +788,7 @@ export const BackofficeApi = {
       'station-code': stationCode,
       ciTaxCode,
       body: {
-        note
+        note,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -879,10 +874,13 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationCodes: async (ecCode: string, targetCITaxCode: string): Promise<AvailableCodes> => {
+  getCreditorInstitutionSegregationCodes: async (
+    ecCode: string,
+    targetCITaxCode: string
+  ): Promise<AvailableCodes> => {
     const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
-      targetCITaxCode
+      targetCITaxCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1292,10 +1290,13 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getAvailableCreditorInstitutionsForStation: async (stationCode: string, brokerId: string): Promise<CreditorInstitutionInfoArray> => {
+  getAvailableCreditorInstitutionsForStation: async (
+    stationCode: string,
+    brokerId: string
+  ): Promise<CreditorInstitutionInfoResource> => {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
-      brokerId
+      brokerId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

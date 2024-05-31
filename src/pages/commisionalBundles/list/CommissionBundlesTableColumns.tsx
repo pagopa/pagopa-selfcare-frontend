@@ -15,7 +15,10 @@ import {
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
 import { BundleResource } from '../../../model/CommissionBundle';
-import { CIBundleResource, CiBundleStatusEnum } from '../../../api/generated/portal/CIBundleResource';
+import {
+  CIBundleResource,
+  CiBundleStatusEnum,
+} from '../../../api/generated/portal/CIBundleResource';
 import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 
 export function buildColumnDefs(
@@ -182,28 +185,26 @@ const getPSPStatusChip = (
   validityDateTo: Date | undefined,
   validityDateFrom: Date
 ) => {
-  if(validityDateTo){
-    if (datesAreOnSameDay(todayDate, validityDateTo)) {
-      return renderStatusChip({
-        chipColor: 'error',
-        chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-        dataTestId: 'error-state-chip',
-      });
-    }
-    if (todayDate.getTime() < validityDateFrom.getTime()) {
-      return renderStatusChip({
-        chipColor: 'default',
-        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-        dataTestId: 'default-state-chip',
-      });
-    }
-    if (dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-      return renderStatusChip({
-        chipColor: 'warning',
-        chipLabel: t('commissionBundlesPage.list.states.expiring'),
-        dataTestId: 'warning-state-chip',
-      });
-    }
+  if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
+    return renderStatusChip({
+      chipColor: 'error',
+      chipLabel: t('commissionBundlesPage.list.states.eliminating'),
+      dataTestId: 'error-state-chip',
+    });
+  }
+  if (todayDate.getTime() < validityDateFrom.getTime()) {
+    return renderStatusChip({
+      chipColor: 'default',
+      chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+      dataTestId: 'default-state-chip',
+    });
+  }
+  if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+    return renderStatusChip({
+      chipColor: 'warning',
+      chipLabel: t('commissionBundlesPage.list.states.expiring'),
+      dataTestId: 'warning-state-chip',
+    });
   }
 
   return renderStatusChip({
@@ -245,7 +246,7 @@ const getCIStatusChip = (
     if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
       return (
         <Chip
-          sx={{backgroundColor: "#7ED5FC"}}
+          sx={{ backgroundColor: '#7ED5FC' }}
           label={t('commissionBundlesPage.list.states.requestInProgress')}
           data-testid="primary-state-chip"
         />

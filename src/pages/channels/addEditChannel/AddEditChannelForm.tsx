@@ -706,7 +706,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             }
             data-testid="back-btn-test"
           >
-            {t('addEditChannelPage.addForm.backButton')}
+            {t('general.back')}
           </Button>
         </Stack>
         <Stack display="flex" justifyContent="flex-end">

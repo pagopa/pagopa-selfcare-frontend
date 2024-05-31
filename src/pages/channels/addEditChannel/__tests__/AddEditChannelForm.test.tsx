@@ -234,7 +234,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
       'addEditChannelPage.addForm.continueButton'
     ) as HTMLButtonElement;
     const cancelBtn = screen.getByText(
-      'addEditChannelPage.addForm.backButton'
+      'general.back'
     ) as HTMLButtonElement;
 
     fireEvent.click(cancelBtn);

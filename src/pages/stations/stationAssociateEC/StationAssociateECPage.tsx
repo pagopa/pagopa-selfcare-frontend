@@ -40,7 +40,7 @@ function StationAssociateECPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
   const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
-  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource>([]);
+  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
@@ -236,18 +236,7 @@ function StationAssociateECPage() {
                         }}
                       />
                     </FormControl>
-                    {availableEC.creditor_institution_info_list?.length === 0 && (
-                      <Box mt={1}>
-                        <Alert
-                          severity={'warning'}
-                          data-testid="alert-warning-test"
-                          variant="outlined"
-                        >
-                          {t('stationAssociateECPage.alert.noDelegations')}
-                        </Alert>
-                      </Box>
-                    )}
-                    {availableEC.length === 0 && (
+                    {availableEC?.creditor_institution_info_list?.length === 0 && (
                       <Box mt={1}>
                         <Alert
                           severity={'warning'}

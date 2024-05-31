@@ -111,7 +111,17 @@ describe('Test DetailButtonStation as CI', () => {
       expect(screen.queryByTestId('confirm-and-send-button')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByTestId('confirm-and-send-button'));
+    const confirmButton = screen.getByTestId('confirm-and-send-button');
+
+    expect(confirmButton).toBeDisabled();
+
+    fireEvent.change(screen.getByTestId('requestInput'), { target: { value: 'note' } });
+
+    await waitFor(() => {
+      expect(confirmButton).toBeEnabled();
+    });
+
+    fireEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(spyOnSendEditRequest).toBeCalled();
@@ -152,8 +162,17 @@ describe('Test DetailButtonStation as CI', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('confirm-and-send-button')).toBeInTheDocument();
     });
+    const confirmButton = screen.getByTestId('confirm-and-send-button');
 
-    fireEvent.click(screen.getByTestId('confirm-and-send-button'));
+    expect(confirmButton).toBeDisabled();
+
+    fireEvent.change(screen.getByTestId('requestInput'), { target: { value: 'note' } });
+
+    await waitFor(() => {
+      expect(confirmButton).toBeEnabled();
+    });
+
+    fireEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(spyOnSendEditRequest).toBeCalled();

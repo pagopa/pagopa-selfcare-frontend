@@ -1,16 +1,16 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
 import CommissionBundleSubscriptionsTable from '../CommissionBundleSubscriptionsTable';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../../../redux/store';
+import { store } from '../../../../../../../redux/store';
 import {
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
   mockedCommissionBundlePspDetailGlobal,
-} from '../../../../../../services/__mocks__/bundleService';
-import * as bundleService from '../../../../../../services/bundleService';
-import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
+} from '../../../../../../../services/__mocks__/bundleService';
+import * as bundleService from '../../../../../../../services/bundleService';
+import { SubscriptionStateType } from '../../../../../../../model/CommissionBundle';
 
 const spyOnGetPublicBundleCISubscriptions = jest.spyOn(
   bundleService,
@@ -24,7 +24,8 @@ const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBun
 const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
 const spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
 
-const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
+const generalPath = "commissionBundlesPage.commissionBundleDetail.requestsTable"
+const componentPath = `${generalPath}.subscriptionsTable`;
 
 const idBundle = 'idBundle';
 describe('<CommissionBundleSubscriptionsTable />', () => {
@@ -49,7 +50,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     const selectSubscriptionStateFilter = screen.getByTestId(
       'subscription-state'
     ) as HTMLInputElement;
-    const selectSubscriptionStateFilterBtn = screen.getByLabelText(`${componentPath}.state`);
+    const selectSubscriptionStateFilterBtn = screen.getByLabelText(`${generalPath}.state`);
     expect(selectSubscriptionStateFilter).toHaveTextContent(
       `${componentPath}.stateChip.${SubscriptionStateType.Waiting}`
     );
@@ -105,7 +106,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     });
 
     spyOnGetPublicBundleCISubscriptionsDetail.mockRejectedValueOnce('');
-    const subscriptionDetailButton = screen.getByTestId('subscription-detail-button');
+    const subscriptionDetailButton = screen.getByTestId('request-detail-button');
     fireEvent.click(subscriptionDetailButton);
 
     await act(async () => {
@@ -131,7 +132,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
       </Provider>
     );
 
-    const selectSubscriptionStateFilterBtn = screen.getByLabelText(`${componentPath}.state`);
+    const selectSubscriptionStateFilterBtn = screen.getByLabelText(`${generalPath}.state`);
     await waitFor(() => {
       fireEvent.mouseDown(selectSubscriptionStateFilterBtn);
       fireEvent.click(
@@ -157,7 +158,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
       Promise.resolve(mockedCiSubscriptionDetail)
     );
-    const subscriptionDetailButton = screen.getByTestId('subscription-detail-button');
+    const subscriptionDetailButton = screen.getByTestId('request-detail-button');
     fireEvent.click(subscriptionDetailButton);
 
     await act(async () => {
@@ -209,7 +210,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
       Promise.resolve(mockedCiSubscriptionDetail)
     );
-    const subscriptionDetailButton = screen.getByTestId('subscription-detail-button');
+    const subscriptionDetailButton = screen.getByTestId('request-detail-button');
     fireEvent.click(subscriptionDetailButton);
 
     await act(async () => {
@@ -261,7 +262,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
       Promise.resolve(mockedCiSubscriptionDetail)
     );
-    const subscriptionDetailButton = screen.getByTestId('subscription-detail-button');
+    const subscriptionDetailButton = screen.getByTestId('request-detail-button');
     fireEvent.click(subscriptionDetailButton);
 
     await act(async () => {
@@ -313,7 +314,7 @@ describe('<CommissionBundleSubscriptionsTable />', () => {
     spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
       Promise.resolve(mockedCiSubscriptionDetail)
     );
-    const subscriptionDetailButton = screen.getByTestId('subscription-detail-button');
+    const subscriptionDetailButton = screen.getByTestId('request-detail-button');
     fireEvent.click(subscriptionDetailButton);
 
     await act(async () => {

@@ -2,56 +2,59 @@
 import {
   Select,
   MenuItem,
-  Pagination,
   FormControl,
   InputLabel,
   Typography,
   Alert,
+  Button,
+  Box,
 } from '@mui/material';
-import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import GenericModal from '../../../../../components/Form/GenericModal';
-import TableDataGrid from '../../../../../components/Table/TableDataGrid';
-import TableSearchBar from '../../../../../components/Table/TableSearchBar';
-import { useAppSelector } from '../../../../../redux/hooks';
-import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
+import { useTranslation, TFunction } from 'react-i18next';
+import GenericModal from '../../../../../../components/Form/GenericModal';
+import TableDataGrid from '../../../../../../components/Table/TableDataGrid';
+import TableSearchBar from '../../../../../../components/Table/TableSearchBar';
+import { useAppSelector } from '../../../../../../redux/hooks';
+import { partiesSelectors } from '../../../../../../redux/slices/partiesSlice';
 import {
   LOADING_TASK_SUBSCRIPTION_ACTION,
   LOADING_TASK_SUBSCRIPTION_LIST,
-} from '../../../../../utils/constants';
-import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
-import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
-import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
+} from '../../../../../../utils/constants';
+import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
+import { PublicBundleCISubscriptionsDetail } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
+import { CISubscriptionInfo } from '../../../../../../api/generated/portal/CISubscriptionInfo';
+import { CommissionBundleDetailRequestDrawer } from '../CommissionBundleDetailRequestDrawer';
 import {
   BundleResource,
   PublicBundleCiSubscriptionDetailModel,
   SubscriptionStateType,
-} from '../../../../../model/CommissionBundle';
+} from '../../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
   deleteCIBundleSubscription,
   getPublicBundleCISubscriptions,
   getPublicBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
-} from '../../../../../services/bundleService';
-import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
-import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
+} from '../../../../../../services/bundleService';
+import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
 
-const rowHeight = 64;
-const headerHeight = 56;
 const pageLimit = 5;
 
-const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
+const generalPath = 'commissionBundlesPage.commissionBundleDetail.requestsTable';
+const componentPath = `${generalPath}.subscriptionsTable`;
 
 const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],
 };
 
-const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: BundleResource }) => {
+export default function CommissionBundleSubscriptionsTable({
+  bundleDetail,
+}: {
+  bundleDetail: BundleResource;
+}) {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -101,7 +104,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
       );
   }
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail);
+  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail, componentPath);
 
   const getSubscriptionList = (
     newPage?: number,
@@ -237,16 +240,16 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         <Typography variant="h5">{t(`${componentPath}.title`)}</Typography>
       </Box>
       <TableSearchBar
-        componentName={componentPath}
+        componentName={generalPath}
         handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter, true)}
       >
         <FormControl sx={{ ml: 1, minWidth: '200px' }}>
-          <InputLabel id="state-select-label">{t(`${componentPath}.state`)}</InputLabel>
+          <InputLabel id="state-select-label">{t(`${generalPath}.state`)}</InputLabel>
           <Select
             id={'subscription-state'}
             name={'subscription-state'}
             labelId="state-select-label"
-            label={t(`${componentPath}.state`)}
+            label={t(`${generalPath}.state`)}
             size="small"
             value={filterState}
             onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
@@ -296,17 +299,25 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
           {t(`${componentPath}.alert.${successAlert}`)}
         </Alert>
       )}
-      <CommissionBundleSubscriptionsDrawer
-        t={t}
-        setSelectedSubscriptionRequest={setSelectedSubscriptionRequest}
-        selectedSubscriptionRequest={selectedSubscriptionRequest}
-        setOpenMenageSubscriptionModal={setOpenMenageSubscriptionModal}
+      <CommissionBundleDetailRequestDrawer
+        setSelectedRequest={setSelectedSubscriptionRequest}
+        selectedRequest={selectedSubscriptionRequest}
         stateType={selectedState}
+        componentPath={componentPath}
+        drawerButtons={() =>
+          getDrawerButtons(
+            t,
+            selectedState,
+            setOpenMenageSubscriptionModal,
+            selectedSubscriptionRequest.ci_bundle_fee_list !== undefined &&
+              !selectedSubscriptionRequest.on_removal
+          )
+        }
       />
       {openMenageSubscriptionModal !== undefined && (
         <GenericModal
-          title={t(`${componentPath}.modal.${openMenageSubscriptionModal}.title`)}
-          message={t(`${componentPath}.modal.${openMenageSubscriptionModal}.message`)}
+          title={t(`${generalPath}.modal.${openMenageSubscriptionModal}.title`)}
+          message={t(`${generalPath}.modal.${openMenageSubscriptionModal}.message`)}
           openModal={openMenageSubscriptionModal !== undefined}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.turnBack')}
@@ -317,6 +328,61 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
       )}
     </>
   );
-};
+}
 
-export default CommissionBundleSubscriptionsTable;
+function getDrawerButtons(
+  t: TFunction<'translation', undefined>,
+  stateType: string,
+  setOpenMenageSubscriptionModal: (openModal: string) => void,
+  showButtons?: boolean
+) {
+  const buttonPath = 'commissionBundlesPage.commissionBundleDetail.requestDrawer';
+  if (showButtons) {
+    if (stateType === SubscriptionStateType.Waiting) {
+      return (
+        <>
+          <Button
+            fullWidth
+            onClick={() => {
+              setOpenMenageSubscriptionModal('accept');
+            }}
+            color="primary"
+            variant="contained"
+            data-testid="subscription-accept-button"
+            sx={{ mb: 1 }}
+          >
+            {t(`${buttonPath}.acceptButton`)}
+          </Button>
+          <Button
+            fullWidth
+            onClick={() => {
+              setOpenMenageSubscriptionModal('reject');
+            }}
+            color="error"
+            variant="outlined"
+            data-testid="subscription-reject-button"
+          >
+            {t(`${buttonPath}.rejectButton`)}
+          </Button>
+        </>
+      );
+    }
+    if (stateType === SubscriptionStateType.Accepted) {
+      return (
+        <Button
+          fullWidth
+          onClick={() => {
+            setOpenMenageSubscriptionModal('delete');
+          }}
+          color="error"
+          variant="outlined"
+          data-testid="subscription-delete-button"
+        >
+          {t(`${buttonPath}.deleteButton`)}
+        </Button>
+      );
+    }
+  }
+
+  return <></>;
+}

@@ -2,24 +2,21 @@ import { IconButton } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import {
-  colorType,
-  renderCell,
-  renderStatusChip,
-  showCustomHeader,
-} from '../../../../../components/Table/TableUtils';
-import { OfferStateType } from '../../../../../model/CommissionBundle';
+import { renderCell, showCustomHeader } from '../../../../../components/Table/TableUtils';
+import { OfferStateType, SubscriptionStateType } from '../../../../../model/CommissionBundle';
+import { getRequestStatusChip } from './CommissionBundleDetailRequestDrawer';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  filterState: OfferStateType,
-  setDrawerValue: (bool: boolean) => void
+  filterState: OfferStateType | SubscriptionStateType,
+  setDrawerValue: (bool: boolean) => void,
+  componentPath: string
 ) {
   return [
     {
       field: 'name',
       cellClassName: 'justifyContentBold',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.name'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.businessName'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 300,
@@ -33,7 +30,7 @@ export function buildColumnDefs(
     {
       field: 'taxCode',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.taxCode'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 300,
@@ -47,14 +44,14 @@ export function buildColumnDefs(
     {
       field: 'state',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.state'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.state'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 200,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => getStatusChip(t, filterState, params.row.on_removal),
+      renderCell: (params) => getRequestStatusChip(t, filterState,componentPath, params.row.on_removal ),
       sortable: false,
       flex: 4,
     },
@@ -69,8 +66,8 @@ export function buildColumnDefs(
       editable: false,
       getActions: (params: any) => [
         <IconButton
-          key={`subscription-detail-button-${params.row.creditor_institution_code}`}
-          data-testid="subscription-detail-button"
+          key={`request-detail-button-${params.row.creditor_institution_code}`}
+          data-testid="request-detail-button"
           onClick={() => setDrawerValue(params.row)}
         >
           <ChevronRightIcon color="primary" />
@@ -81,26 +78,3 @@ export function buildColumnDefs(
     },
   ] as Array<GridColDef>;
 }
-
-export const getStatusChip = (
-  t: TFunction<'translation', undefined>,
-  filterState: OfferStateType,
-  onRemoval: boolean | undefined = undefined,
-  size: 'small' | 'medium' | undefined = undefined
-) => {
-  // eslint-disable-next-line functional/no-let
-  let chipColor: colorType = filterState === OfferStateType.Active ? 'success' : 'default';
-  if (onRemoval) {
-    chipColor = 'error';
-  }
-  return renderStatusChip({
-    chipColor,
-    chipLabel: t(
-      `commissionBundlesPage.commissionBundleDetail.subscriptionsTable.stateChip.${
-        onRemoval ? 'DELETING' : filterState
-      }`
-    ),
-    dataTestId: `${onRemoval ? 'DELETING' : filterState}-state-chip`,
-    size,
-  });
-};

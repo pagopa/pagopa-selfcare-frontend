@@ -6,21 +6,22 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import GenericModal from '../../../../../components/Form/GenericModal';
-import TableDataGrid from '../../../../../components/Table/TableDataGrid';
-import TableSearchBar from '../../../../../components/Table/TableSearchBar';
-import { useAppSelector } from '../../../../../redux/hooks';
-import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
-import { LOADING_TASK_OFFER_ACTION, LOADING_TASK_OFFER_LIST } from '../../../../../utils/constants';
-import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
-import { BundleResource, OfferStateType } from '../../../../../model/CommissionBundle';
-import { deleteCIBundleSubscription } from '../../../../../services/bundleService';
-import { buildColumnDefs } from './CommissionBundleOffersColumns';
-import { CommissionBundleOffersDrawer } from './CommissionBundleOffersDrawer';
+import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
+import GenericModal from '../../../../../../components/Form/GenericModal';
+import TableDataGrid from '../../../../../../components/Table/TableDataGrid';
+import TableSearchBar from '../../../../../../components/Table/TableSearchBar';
+import { BundleResource, OfferStateType } from '../../../../../../model/CommissionBundle';
+import { useAppSelector } from '../../../../../../redux/hooks';
+import { partiesSelectors } from '../../../../../../redux/slices/partiesSlice';
+import { deleteCIBundleSubscription } from '../../../../../../services/bundleService';
+import { LOADING_TASK_OFFER_LIST, LOADING_TASK_OFFER_ACTION } from '../../../../../../utils/constants';
+import { CommissionBundleDetailRequestDrawer } from '../CommissionBundleDetailRequestDrawer';
+import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
 
 const pageLimit = 5;
 
-const componentPath = 'commissionBundlesPage.commissionBundleDetail.offersTable';
+const generalPath = "commissionBundlesPage.commissionBundleDetail.requestsTable";
+const componentPath = `${generalPath}.offersTable`;
 
 const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
   // TODO type
@@ -51,7 +52,7 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
     // TODO api get offer detail for drawer
   }
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getOfferDetail);
+  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getOfferDetail, componentPath);
 
   const getOffersList = (newPage?: number, taxCodeFilter?: string, searchTriggered?: boolean) => {
     setLoadingList(true);
@@ -82,11 +83,11 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
         setSelectedOfferRequest({});
         getOffersList(0);
       })
-      .catch((reason) =>
+      .catch((reason: Error) =>
         addError({
           id: 'COMMISSION_BUNDLE_DELETE_OFFER',
           blocking: false,
-          error: reason as Error,
+          error: reason,
           techDescription: `An error occurred while deleting the offer request`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
@@ -125,16 +126,16 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
         </Button>
       </Stack>
       <TableSearchBar
-        componentName={componentPath}
+        componentName={generalPath}
         handleSearchTrigger={(taxCodeFilter: string) => getOffersList(0, taxCodeFilter, true)}
       >
         <FormControl sx={{ ml: 1, minWidth: '200px' }}>
-          <InputLabel id="state-select-label">{t(`${componentPath}.state`)}</InputLabel>
+          <InputLabel id="state-select-label">{t(`${generalPath}.state`)}</InputLabel>
           <Select
             id={'offers-state'}
             name={'offers-state'}
             labelId="state-select-label"
-            label={t(`${componentPath}.state`)}
+            label={t(`${generalPath}.state`)}
             size="small"
             value={filterState}
             onChange={(event) => setFilterState(event.target.value as OfferStateType)}
@@ -171,20 +172,32 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
           totalPages={offersList?.page_info?.total_pages}
           page={page}
           handleChangePage={(newPage: number) => handleChangePage(newPage)}
-          getRowId={(r) => r.stationCode} // TODO get right id
+          getRowId={(r: any) => r.stationCode} // TODO get right id
         />
       </Box>
-      <CommissionBundleOffersDrawer
-        t={t}
-        setSelectedOfferRequest={setSelectedOfferRequest}
-        selectedOfferRequest={selectedOfferRequest}
-        setOpenMenageOfferModal={setOpenMenageOfferModal}
+      <CommissionBundleDetailRequestDrawer
+        setSelectedRequest={setSelectedOfferRequest}
+        selectedRequest={selectedOfferRequest}
         stateType={selectedState}
+        componentPath={componentPath}
+        drawerButtons={() => (
+          <Button
+            fullWidth
+            onClick={() => {
+              setOpenMenageOfferModal(true);
+            }}
+            color="error"
+            variant="outlined"
+            data-testid="offer-delete-button"
+          >
+            {t(`${componentPath}.deleteButton`)}
+          </Button>
+        )}
       />
       {openMenageOfferModal && (
         <GenericModal
-          title={t(`${componentPath}.modal.${openMenageOfferModal}.title`)}
-          message={t(`${componentPath}.modal.${openMenageOfferModal}.message`)}
+          title={t(`${generalPath}.modal.delete.title`)}
+          message={t(`${componentPath}.modal.delete.message`)}
           openModal={openMenageOfferModal}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.turnBack')}

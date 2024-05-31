@@ -34,8 +34,9 @@ import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { PSPBundleTaxonomy } from '../../../api/generated/portal/PSPBundleTaxonomy';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
-import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
-import CommissionBundleOffersTable from './components/offers/CommissionBundleOffersTable';
+import CommissionBundleSubscriptionsTable from './components/request/subscriptions/CommissionBundleSubscriptionsTable';
+import CommissionBundleOffersTable from './components/request/offers/CommissionBundleOffersTable';
+
 
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();

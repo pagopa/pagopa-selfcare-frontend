@@ -126,6 +126,7 @@ const DelegationsTable = ({ filterByName }: Props) => {
             rowHeight={rowHeight}
             rows={delegationsList?.ci_broker_delegations ?? []}
             sortingMode="client"
+            getRowId={(el) => el.institution_tax_code}
             // onSortModelChange={handleSortModelChange}
           />
         </div>

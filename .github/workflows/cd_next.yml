@@ -1,4 +1,4 @@
-name: CD Next Release
+name: CD Develop
 
 on:
   pull_request:
@@ -57,12 +57,13 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@fix-skip-ci
+        uses: pagopa/github-actions-template/node-release@create-tag-only
         with:
           semver: buildNumber
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
           prerelease: true
+          only_tag: true
 
   deploy:
     needs:

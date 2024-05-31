@@ -4,34 +4,33 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 
-import { FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
+import { Alert, FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { AvailableCodes } from '../../../api/generated/portal/AvailableCodes';
+import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorInstitutionInfo';
+import { CreditorInstitutionInfoArray } from '../../../api/generated/portal/CreditorInstitutionInfoArray';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
-import { Delegation } from '../../../api/generated/portal/Delegation';
+import ECSelection from '../../../components/Form/ECSelection';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { getBrokerDelegation } from '../../../services/institutionService';
+import { getAvailableCreditorInstitutionsForStation } from '../../../services/creditorInstitutionService';
 import {
   associateEcToStation,
   getCreditorInstitutionSegregationCodes,
 } from '../../../services/stationService';
 import { extractProblemJson } from '../../../utils/client-utils';
 import {
-  INSTITUTIONS_EC_TYPES,
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
-import { checkInstitutionTypes } from '../../../utils/institution-types-utils';
-import ECSelectionSearch from './ECSelectionSearch';
 
 function StationAssociateECPage() {
   const { t } = useTranslation();
@@ -40,8 +39,8 @@ function StationAssociateECPage() {
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
-  const [selectedEC, setSelectedEC] = useState<Delegation | undefined>();
-  const [availableEC, setAvailableEC] = useState<Array<Delegation>>([]);
+  const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
+  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoArray>([]);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
@@ -49,13 +48,10 @@ function StationAssociateECPage() {
 
   useEffect(() => {
     setLoading(true);
-    if (selectedParty) {
-      getBrokerDelegation(undefined, selectedParty?.partyId, ['CI'])
+    if (selectedParty?.partyId) {
+      getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
         .then((data) => {
-          if (data) {
-            addItselfAsAvaliableEC(data);
-            setAvailableEC(data);
-          }
+          setAvailableEC(data);
         })
         .catch((reason) =>
           addError({
@@ -77,9 +73,9 @@ function StationAssociateECPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedEC && selectedEC.tax_code) {
+    if (selectedEC && selectedEC.ci_tax_code && selectedParty?.fiscalCode) {
       setLoadingList(true);
-      getCreditorInstitutionSegregationCodes(selectedEC.tax_code)
+      getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.ci_tax_code)
         .then((data) => {
           if (data && Array.isArray(data.availableCodes)) {
             setSegregationCodeList(data);
@@ -137,21 +133,6 @@ function StationAssociateECPage() {
     );
   };
 
-  const addItselfAsAvaliableEC = (delegations: Array<Delegation>) => {
-    if (
-      selectedParty &&
-      checkInstitutionTypes(selectedParty.institutionType as string, INSTITUTIONS_EC_TYPES)
-    ) {
-      // eslint-disable-next-line functional/immutable-data
-      delegations.push({
-        institution_id: selectedParty.partyId,
-        broker_id: selectedParty.fiscalCode,
-        tax_code: selectedParty.fiscalCode,
-        institution_name: selectedParty.description,
-      });
-    }
-  };
-
   const enableSubmit = (values: CreditorInstitutionStationDto) =>
     values.stationCode !== '' &&
     values.auxDigit === 3 &&
@@ -159,9 +140,9 @@ function StationAssociateECPage() {
     selectedEC;
 
   const submit = (values: CreditorInstitutionStationDto) => {
-    if (selectedEC && selectedEC.broker_id) {
+    if (selectedEC && selectedEC.ci_tax_code) {
       setLoading(true);
-      associateEcToStation(selectedEC.tax_code!, { ...values, stationCode: stationId })
+      associateEcToStation(selectedEC.ci_tax_code, { ...values, stationCode: stationId })
         .then((_) => {
           history.push(generatePath(ROUTES.STATION_EC_LIST, { stationId }), {
             alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
@@ -208,15 +189,11 @@ function StationAssociateECPage() {
     >
       <Box justifyContent="center">
         <Grid item xs={12} mb={1} display="flex" justifyContent="center">
-          <Typography variant="h3">
-            <Trans i18nKey="stationAssociateECPage.associationForm.title">Associa EC</Trans>
-          </Typography>
+          <Typography variant="h3">{t('stationAssociateECPage.title')}</Typography>
         </Grid>
         <Grid item xs={12} mb={4} display="flex" justifyContent="center">
           <Typography variant="body1" align="center">
-            <Trans i18nKey="stationAssociateECPage.associationForm.subTitle">
-              Digita il nome del nuovo EC da associare alla stazione
-            </Trans>{' '}
+            {t('stationAssociateECPage.subTitle') + ' '}
             <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>
@@ -251,18 +228,25 @@ function StationAssociateECPage() {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl sx={{ width: '100%', minWidth: '100%' }}>
-                      <ECSelectionSearch
-                        iconColor={'#17324D'}
-                        label={t(
-                          'stationAssociateECPage.associationForm.ECSelectionInputPlaceholder'
-                        )}
+                      <ECSelection
                         availableEC={availableEC}
                         selectedEC={selectedEC}
-                        onECSelectionChange={(selectedEC: Delegation | undefined) => {
+                        onECSelectionChange={(selectedEC: CreditorInstitutionInfo | undefined) => {
                           setSelectedEC(selectedEC);
                         }}
                       />
                     </FormControl>
+                    {availableEC.length === 0 && (
+                      <Box mt={1}>
+                        <Alert
+                          severity={'warning'}
+                          data-testid="alert-warning-test"
+                          variant="outlined"
+                        >
+                          {t('stationAssociateECPage.alert.noDelegations')}
+                        </Alert>
+                      </Box>
+                    )}
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
                     <Typography variant="sidenav">
@@ -296,7 +280,7 @@ function StationAssociateECPage() {
                         {t('stationAssociateECPage.associationForm.segregationCode')}
                       </InputLabel>
                       <Select
-                        disabled={selectedEC?.institution_id === undefined}
+                        disabled={selectedEC?.ci_tax_code === undefined}
                         id="segregationCode"
                         name="segregationCode"
                         label={t('stationAssociateECPage.associationForm.segregationCode')}

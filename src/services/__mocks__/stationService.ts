@@ -294,64 +294,6 @@ export const mockedStationsMerged2: WrapperStationsResource = {
   stationsList: stationList,
 };
 
-// const filteredStations = (station: StationsResource) => {
-//   const sortedList = station.stationsList.filter(
-//     (e) => e.stationStatus === StationStatusEnum.ON_REVISION
-//   );
-//   return { ...station, stationsList: sortedList };
-// };
-
-// const mockedStationsDetail: Array<StationDetailResource> = [
-//   {
-//     enabled: true,
-//     stationStatus: StationStatusEnum.ACTIVE,
-//     stationCode: '97735020584_01',
-//     version: 1,
-//     primitiveVersion: 1,
-//     password: 'PASSWORD',
-//     redirectPath: 'esempiolink1.it',
-//     activationDate: new Date('2023-02-23'),
-//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice1',
-//     service: 'lab.link1.it',
-//     port: 80,
-//     associatedCreditorInstitutions: 0,
-//     modifiedAt: new Date('2023-02-19'),
-//     // operatedBy: 'Nome Cognome/Matricola operatore',
-//   },
-//   {
-//     enabled: true,
-//     stationStatus: StationStatusEnum.ON_REVISION,
-//     stationCode: '97735020584_02',
-//     version: 2,
-//     primitiveVersion: 1,
-//     password: 'PASSWORD',
-//     redirectPath: 'esempiolink2.it',
-//     activationDate: new Date('2023-02-24'),
-//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-//     service: 'lab.link2.it',
-//     port: 80,
-//     associatedCreditorInstitutions: 0,
-//     modifiedAt: new Date('2023-02-20'),
-//     // operatedBy: 'Nome Cognome/Matricola operatore',
-//   },
-//   {
-//     enabled: true,
-//     stationStatus: StationStatusEnum.TO_BE_CORRECTED,
-//     stationCode: '97735020584_03',
-//     version: 1,
-//     primitiveVersion: 1,
-//     password: 'XXXXXXXXXXXXXX',
-//     redirectPath: 'esempiolink3.it',
-//     activationDate: new Date('2023-02-25'),
-//     targetPath: '/govpay/api/pagopa/PagamentiTelematiciCCPservice2',
-//     service: 'lab.link3.it',
-//     port: 80,
-//     associatedCreditorInstitutions: 0,
-//     modifiedAt: new Date('2023-03-20'),
-//     // operatedBy: 'Nome Cognome/Matricola operatore',
-//   },
-// ];
-
 export const mockedStationECs: CreditorInstitutionsResource = {
   creditor_institutions: [
     {
@@ -552,35 +494,6 @@ export const mockedStationAvailableEC: Array<any> = [
   },
 ];
 
-// const createFormattedArray = () => {
-//   // const unusedArray: CreditorInstitutionAssociatedCode = [];
-//   // const usedArray: CreditorInstitutionAssociatedCode = [];
-//   // const segregationCodeArray: CreditorInstitutionAssociatedCodeList = [
-//   //   {
-//   //     used: usedArray,
-//   //     unused: unusedArray,
-//   //   },
-//   // ];
-
-//   const segregationCodeArray: CreditorInstitutionAssociatedCodeList = {
-//     used: [],
-//     unused: [],
-//   };
-//   // eslint-disable-next-line functional/no-let
-//   for (let i = 0; i <= 48; i++) {
-//     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-//     const n = (i < 10 ? '0' : '') + i;
-//     // eslint-disable-next-line functional/immutable-data
-//     segregationCodeArray.used?.push({ name: n, code: (i + 1).toString() });
-//   }
-
-//   return segregationCodeArray;
-// };
-
-// const mockedSegregationCodeList: CreditorInstitutionAssociatedCodeList = [
-//   { used: createFormattedArray(), unused: createFormattedArray() },
-// ];
-
 const createFormattedArray = (): string[] => {
   const segregationCodeArray: string[] = [];
   for (let i = 0; i <= 48; i++) {
@@ -702,7 +615,7 @@ export const associateEcToStation = (
 export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
   new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
-export const getCreditorInstitutionSegregationcodes = (_ecCode: string): Promise<AvailableCodes> =>
+export const getCreditorInstitutionSegregationcodes = (_ecCode: string, _targetCITaxCode: string): Promise<AvailableCodes> =>
   new Promise((resolve) => resolve(mockedSegregationCodeList));
 
 export const testStation = (

@@ -5,7 +5,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
-import { mockedCIOperativeTable } from '../../../../services/__mocks__/creditorInsitutionService';
+import { mockedCIOperativeTable } from '../../../../services/__mocks__/creditorInstitutionService';
 import DelegationDetailOperativeTable from '../DelegationDetailOperativeTable';
 
 beforeEach(() => {

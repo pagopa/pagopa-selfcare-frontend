@@ -22,7 +22,7 @@ export default function StationsPage() {
 
   const [stationCodeInput, setStationCodeInput] = useState<string>('');
   const [stationCode, setStationCode] = useState<string>('');
-  const [tabFilter, setTabFilter] = useState<number>(1);
+  const [tabFilter, setTabFilter] = useState<number>(userIsPagopaOperator ? 1 : 0);
 
   const tabList = [
     {

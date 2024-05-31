@@ -95,6 +95,7 @@ import { WrapperStationsResource } from './generated/portal/WrapperStationsResou
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { ProductResource } from './generated/portal/ProductResource';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
+import { DelegationResource } from './generated/portal/DelegationResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -519,7 +520,7 @@ export const BackofficeApi = {
     institutionId?: string | undefined,
     brokerId?: string | undefined,
     roles?: Array<string>
-  ): Promise<Array<Delegation>> => {
+  ): Promise<DelegationResource> => {
     const result = await backofficeClient.getBrokerDelegation({
       'institution-id': institutionId,
       roles,

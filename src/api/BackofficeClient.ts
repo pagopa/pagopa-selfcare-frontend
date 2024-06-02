@@ -2,7 +2,6 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
-import { ProductKeys } from '../model/ApiKey';
 import {
   PublicBundleCISubscriptionsMethodParams,
   PublicBundleCISubscriptionsRequest,
@@ -43,16 +42,18 @@ import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
+import { CreditorInstitutionInfoResource } from './generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionStationDto } from './generated/portal/CreditorInstitutionStationDto';
 import { CreditorInstitutionStationEditResource } from './generated/portal/CreditorInstitutionStationEditResource';
 import { CreditorInstitutionsResource } from './generated/portal/CreditorInstitutionsResource';
-import { Delegation } from './generated/portal/Delegation';
+import { DelegationResource } from './generated/portal/DelegationResource';
 import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { Iban } from './generated/portal/Iban';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
 import { Institution } from './generated/portal/Institution';
-import { InstitutionDetail } from './generated/portal/InstitutionDetail';
+import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
+import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
 import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
@@ -61,7 +62,7 @@ import { PaymentServiceProvidersResource } from './generated/portal/PaymentServi
 import { PaymentTypes } from './generated/portal/PaymentTypes';
 import { PaymentsResult } from './generated/portal/PaymentsResult';
 import { ProblemJson } from './generated/portal/ProblemJson';
-import { Product } from './generated/portal/Product';
+import { ProductResource } from './generated/portal/ProductResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
@@ -100,7 +101,7 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any
   const token = storageTokenOps.read();
   return wrappedOperation({
     ...params,
-    JWT: `Bearer ${token}`,
+    JWT: token,
   });
 };
 
@@ -194,7 +195,7 @@ const channelBody = (channel: ChannelDetailsDto) => ({
 });
 
 export const BackofficeApi = {
-  getInstitutions: async (taxCode: string | undefined): Promise<Array<InstitutionDetail>> => {
+  getInstitutions: async (taxCode: string | undefined): Promise<InstitutionDetailResource> => {
     const result = await backofficeClient.getInstitutions({ 'tax-code': taxCode });
 
     return extractResponse(result, 200, onRedirectToLogin);
@@ -207,7 +208,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getProducts: async (institutionId: string): Promise<Array<Product>> => {
+  getProducts: async (institutionId: string): Promise<ProductResource> => {
     const result = await backofficeClient.getInstitutionProducts({
       'institution-id': institutionId,
     });
@@ -215,7 +216,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getInstitutionApiKeys: async (institutionId: string): Promise<Array<ProductKeys>> => {
+  getInstitutionApiKeys: async (institutionId: string): Promise<InstitutionApiKeysResource> => {
     const result = await backofficeClient.getInstitutionApiKeys({
       'institution-id': institutionId,
     });
@@ -225,7 +226,7 @@ export const BackofficeApi = {
   createInstitutionApiKeys: async (
     institutionId: string,
     subscriptionCode: string
-  ): Promise<Array<ProductKeys>> => {
+  ): Promise<InstitutionApiKeysResource> => {
     const result = await backofficeClient.createInstitutionApiKeys({
       'institution-id': institutionId,
       'subscription-code': subscriptionCode,
@@ -516,7 +517,7 @@ export const BackofficeApi = {
     institutionId?: string | undefined,
     brokerId?: string | undefined,
     roles?: Array<string>
-  ): Promise<Array<Delegation>> => {
+  ): Promise<DelegationResource> => {
     const result = await backofficeClient.getBrokerDelegation({
       'institution-id': institutionId,
       roles,
@@ -787,7 +788,7 @@ export const BackofficeApi = {
       'station-code': stationCode,
       ciTaxCode,
       body: {
-        note
+        note,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -873,9 +874,13 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutionSegregationCodes: async (ecCode: string): Promise<AvailableCodes> => {
+  getCreditorInstitutionSegregationCodes: async (
+    ecCode: string,
+    targetCITaxCode: string
+  ): Promise<AvailableCodes> => {
     const result = await backofficeClient.getCreditorInstitutionSegregationCodes({
       'ci-tax-code': ecCode,
+      targetCITaxCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1282,6 +1287,17 @@ export const BackofficeApi = {
 
   getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
     const result = await backofficeClient.getMaintenanceMessage({});
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getAvailableCreditorInstitutionsForStation: async (
+    stationCode: string,
+    brokerId: string
+  ): Promise<CreditorInstitutionInfoResource> => {
+    const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
+      'station-code': stationCode,
+      brokerId,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

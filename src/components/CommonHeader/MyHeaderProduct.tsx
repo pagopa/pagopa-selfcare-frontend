@@ -21,6 +21,7 @@ import {partiesActions, partiesSelectors} from "../../redux/slices/partiesSlice"
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {useSigninData} from "../../hooks/useSigninData";
 import {PaddedDrawer} from "../PaddedDrawer";
+import { InstitutionDetailResource } from '../../api/generated/portal/InstitutionDetailResource';
 
 type HeaderProductProps = {
     borderBottom?: number;
@@ -100,10 +101,10 @@ const HeaderProduct = ({
 
     const searchCreditorInstitutions = (taxCode: string) => {
         getInstitutions(taxCode)
-            .then((value: Array<InstitutionDetail>) => {
-                if (value && value.length > 0) {
+            .then((value: InstitutionDetailResource) => {
+                if (value?.institution_detail_list && value.institution_detail_list.length > 0) {
                     // @ts-ignore
-                    setOrganizations(value);
+                    setOrganizations(value.institution_detail_list);
                 }
             })
             .catch(error => {

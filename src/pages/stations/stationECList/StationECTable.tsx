@@ -1,15 +1,14 @@
-import { theme } from '@pagopa/mui-italia';
-import { Box, Pagination, styled, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Pagination, Typography } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
-import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
-import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
+import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
+import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
 import { buildColumnDefs } from './StationECTableColumns';
 import StationECTableEmpty from './StationECTableEmpty';
 
@@ -26,14 +25,17 @@ const emptyECList: CreditorInstitutionsResource = {
   },
 };
 
-type StationECTableProps = { 
+type StationECTableProps = {
   setAlertMessage: any;
   ciNameOrFiscalCodeFilter: string;
 };
 
-export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilter }: StationECTableProps) {
+export default function StationECTable({
+  setAlertMessage,
+  ciNameOrFiscalCodeFilter,
+}: StationECTableProps) {
   const { t } = useTranslation();
-  const [showConfirmModal, setShowConfirmModal] = useState({show: false, data: ''});
+  const [showConfirmModal, setShowConfirmModal] = useState({ show: false, data: '' });
   const [error, setError] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -47,33 +49,27 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
 
   const [ecListPage, setECListPage] = useState<CreditorInstitutionsResource>(emptyECList);
   const [page, setPage] = useState<number>(0);
-  const [pagePaginator, setPagePaginator] = useState(0);
-  
   const [selectedECCode, setSelectedECCode] = useState<string>('');
 
   const { stationId } = useParams<{ stationId: string }>();
 
   useEffect(() => {
-    fetchStationECs(page);
-  }, [page, stationId]);
-
-  useEffect(() => {
-    setPagePaginator(0);
     fetchStationECs(0);
   }, [ciNameOrFiscalCodeFilter]);
 
   const onRowClick = (ecIdRow: string) => {
     setSelectedECCode(ecIdRow);
     setShowConfirmModal({
-        show: true,
-        data: ecListPage?.creditor_institutions?.find((item) =>
-        item.creditorInstitutionCode === ecIdRow )?.businessName ?? ''
+      show: true,
+      data:
+        ecListPage?.creditor_institutions?.find((item) => item.creditorInstitutionCode === ecIdRow)
+          ?.businessName ?? '',
     });
   };
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
 
   const dissociateEC = async () => {
-    setShowConfirmModal({show: false, data: ''});
+    setShowConfirmModal({ show: false, data: '' });
     setLoading(true);
 
     try {
@@ -99,6 +95,7 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
 
   const fetchStationECs = (currentPage: number) => {
     setLoadingStatus(true);
+    setPage(currentPage);
 
     getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage)
       .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
@@ -134,7 +131,7 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
         ) : !error && !loading && ecListPage.creditor_institutions?.length === 0 ? (
           <StationECTableEmpty stationId={stationId} />
         ) : (
-          <>
+          <div data-testId='table-data-grid'>
             <CustomDataGrid
               disableColumnFilter
               disableColumnSelector
@@ -194,7 +191,7 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
               hideFooterSelectedRowCount={true}
               paginationMode="server"
               rowsPerPageOptions={[3]}
-              onPageChange={(newPage) => setPage(newPage)}
+              onPageChange={(newPage) => fetchStationECs(newPage)}
               pageSize={3}
               pagination
               rowHeight={rowHeight}
@@ -202,24 +199,24 @@ export default function StationECTable({ setAlertMessage, ciNameOrFiscalCodeFilt
               rowCount={ecListPage!.page_info!.items_found}
               sortingMode="server"
             />
-          </>
+          </div>
         )}
       </Box>
       <SessionModal
         open={showConfirmModal.show}
-        title={
-          t('stationECList.dissociateModal.title')
-        }
+        title={t('stationECList.dissociateModal.title')}
         message={
-          <Trans i18nKey="stationECList.dissociateModal.message"
-          values={{"ecName": showConfirmModal.data}}
-          defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione." />
+          <Trans
+            i18nKey="stationECList.dissociateModal.message"
+            values={{ ecName: showConfirmModal.data }}
+            defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione."
+          />
         }
         onConfirmLabel={t('stationECList.dissociateModal.confirmButton')}
         onCloseLabel={t('stationECList.dissociateModal.cancelButton')}
         onConfirm={dissociateEC}
         handleClose={() => {
-          setShowConfirmModal({show: false, data: ''});
+          setShowConfirmModal({ show: false, data: '' });
         }}
       />
     </>

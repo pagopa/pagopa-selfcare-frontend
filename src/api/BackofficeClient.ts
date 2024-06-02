@@ -1284,4 +1284,47 @@ export const BackofficeApi = {
     const result = await backofficeClient.getMaintenanceMessage({});
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  createCIBundleRequest: async ({
+    ciTaxCode,
+    bundleRequest,
+    bundleName,
+  }: {
+    ciTaxCode: string;
+    bundleRequest: Partial<PublicBundleRequest>;
+    bundleName: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.createCIBundleRequest({
+      'ci-tax-code': ciTaxCode,
+      body: bundleRequest as PublicBundleRequest,
+      bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getInstitutionData: async ({
+    ciTaxCode,
+  }: {
+    ciTaxCode: string;
+  }): Promise<InstitutionUploadData> => {
+    const result = await backofficeClient.getInstitutionData({
+      'taxCode': ciTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  uploadInstitutionData: async ({
+    file,
+    uploadInstitutionData
+  }: {
+    file: File;
+    uploadInstitutionData: InstitutionUploadData
+  }): Promise<void> => {
+    const result = await backofficeClient.getInstitutionData({
+      'file': file,
+      'institutions-data': uploadInstitutionData
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 };

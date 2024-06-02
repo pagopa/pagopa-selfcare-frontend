@@ -47,6 +47,8 @@ import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
+import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
+
 import { TOS } from './pages/tos/TOS';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
@@ -287,6 +289,18 @@ const SecuredRoutes = withLogin(
 
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
+                    <PaymentsReceiptsPage />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.PAYMENT_NOTICES} exact={true}>
+                  <ProtectedRoute permission="payment-notices" flagValue="payment-notices">
+                    <PaymentsReceiptsPage />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.PAYMENT_NOTICES_ADDEDIT} exact={true}>
+                  <ProtectedRoute permission="payment-notices-addedit" flagValue="payment-notices">
                     <PaymentsReceiptsPage />
                   </ProtectedRoute>
                 </Route>

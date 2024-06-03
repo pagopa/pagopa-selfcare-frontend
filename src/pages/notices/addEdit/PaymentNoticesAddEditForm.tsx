@@ -1,22 +1,28 @@
 import {useTranslation} from 'react-i18next';
-import {theme} from '@pagopa/mui-italia';
+import {SingleFileInput, theme} from '@pagopa/mui-italia';
 import {
   Button,
   FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
   Paper,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   TextField,
   TextFieldProps,
   Typography,
 } from '@mui/material';
+import BadgeIcon from '@mui/icons-material/Badge';
+import RoomIcon from '@mui/icons-material/Room';
+import EmailIcon from '@mui/icons-material/Email';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import {Box} from '@mui/system';
 import {useEffect, useState} from 'react';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {useFormik} from 'formik';z
+import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import ROUTES from '../../../routes';
@@ -24,6 +30,10 @@ import {LOADING_TASK_CREATE_IBAN} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {extractProblemJson} from '../../../utils/client-utils';
+import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
+import FormSectionTitle from '../../../components/Form/FormSectionTitle';
+import React from 'react';
+import { uploadInstitutionData } from '../../../services/noticesService';
 
 type Props = {
   goBack: () => void;
@@ -32,37 +42,106 @@ type Props = {
 
 const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   const { t } = useTranslation();
-  const [subject, setSubject] = useState('me');
-  const [uploadType, setUploadType] = useState('single');
+  const [hasPay, setHasPay] = useState(data?.appChannel || data?.webChannel);
+  const [hasPoste, setHasPoste] = useState(data?.posteAuth !== null)
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const [file, setFile] = useState<File | null>(null);
+  const [paymentType, setPaymentType] = useState<string>(
+    data?.webChannel === true && data?.appChannel === false ? 
+      "only_web" : 
+    data?.webChannel === false && data?.appChannel === true ?
+      "only_app" :
+      "both"  
+  );
 
+  const paymentTypes = [
+    {
+      key: "only_web",
+      label: t("addEditInstitutionsData.addForm.paymentType.onlyWeb")
+    },
+    {
+      key: "only_app",
+      label: t("addEditInstitutionsData.addForm.paymentType.onlyApp")
+    },
+    {
+      key: "both",
+      label: t("addEditInstitutionsData.addForm.paymentType.both")
+    },
+  ];
 
-  const changeUploadType = (event: any) => {
-    setUploadType(event.target.value);
+  const handleChangePaymentType = (key: string) => {
+    setPaymentType(key); 
   };
 
-  const initialFormData = (ibanBody?: IbanOnCreation) =>
-    ibanBody
+  useEffect(() => {
+    if (paymentType) {
+      if (paymentType === "only_web" &&
+       (formik.values.appChannel === true || formik.values.webChannel === false)) {
+        formik.setValues({
+          ...formik.values,
+          appChannel: false,
+          webChannel: true
+        })
+       } else if (paymentType === "only_app") {
+        formik.setValues({
+          ...formik.values,
+          appChannel: true,
+          webChannel: false
+        })        
+       } else if (paymentType === "both") {
+        formik.setValues({
+          ...formik.values,
+          appChannel: true,
+          webChannel: true
+        })  
+       }
+    }
+  }, [paymentType]);  
+  
+
+  const handleSelect = (file: File) => {
+    setFile(file);
+  };
+
+  const handleRemove = () => {
+    setFile(null);
+  };
+
+  const initialFormData = (data?: InstitutionUploadData) =>
+    data
       ? {
-          iban: ibanBody.iban,
-          description: ibanBody.description,
-          validity_date: ibanBody.validity_date,
-          due_date: ibanBody.due_date,
-          creditor_institution_code: ibanBody.creditor_institution_code,
-          labels: ibanBody.labels ?? undefined,
-          is_active: ibanBody.is_active,
+          taxCode: data.taxCode,
+          fullName: data.fullName,
+          cbill: data.cbill,
+          appChannel: data.appChannel,
+          webChannel: data.webChannel,
+          info: data.info,
+          organization: data.organization,
+          logo: data.logo,
+          physicalChannel: data.physicalChannel,
+          posteName: data.posteName,
+          posteAuth: data.posteAuth,
+          posteAccountNumber: data.posteAccountNumber
         }
       : {
-          iban: '',
-          description: '',
-          validity_date: defaultValidityDate,
-          due_date: defaultDueDate,
-          creditor_institution_code: ecCode,
-          is_active: true,
+          taxCode: signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode as string,
+          fullName: signinData?.creditorInstitutionDetailsResource?.businessName as string,
+          cbill: signinData?.creditorInstitutionDetailsResource?.cbillCode as string,
+          appChannel: false,
+          webChannel: false,
+          info: '',
+          organization: '',
+          logo: undefined,
+          physicalChannel: '',
+          posteName: undefined,
+          posteAuth: undefined,
+          posteAccountNumber: undefined
         };
+            
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const validate = (values: InstitutionUploadData): { [k: string]: string | undefined } | undefined => {
@@ -70,13 +149,17 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
     return undefined;
   };
 
+  const enableSubmit = (values: InstitutionUploadData) => {
+      return true;
+  }
+
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  const submit = async (values: InstitutionUploadData) => {
+  const submit = async (data: InstitutionUploadData, file: File) => {
       setLoading(true);
       try {
-
-        history.push(PAYMENT_NOTICES.IBAN);
+        await uploadInstitutionData(file, data);
+        history.push(ROUTES.PAYMENT_NOTICES);
       } catch (reason: any) {
         const problemJson = extractProblemJson(reason);
         addError({
@@ -92,14 +175,16 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
       } finally {
         setLoading(false);
       }
-    }
-  };
+    };
+  
 
   const formik = useFormik<InstitutionUploadData>({
     initialValues: initialFormData(data),
     validate,
     onSubmit: async (values) => {
-      await submit(values);
+      if (file != null) {
+        await submit(values, file);
+      };
     },
     enableReinitialize: true,
     validateOnMount: true,
@@ -136,24 +221,25 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
                 title={t('addEditInstitutionsData.addForm.sections.ci')}
-                icon={<MenuBook/>}
+                icon={<BadgeIcon/>}
             />
             <Grid container spacing={2} mt={1}>
               <Grid container item xs={6}>
                 <TextField
-                  disabled={true}
                   fullWidth
                   id="name"
                   name="name"
                   label={t('addEditInstitutionsData.addForm.fields.name')}
                   size="small"
-                  value={formik.values.name}
+                  value={formik.values.fullName}
                   onChange={(e) => formik.handleChange(e)}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
+                  error={formik.touched.fullName && Boolean(formik.errors.fullName)}
+                  helperText={formik.touched.fullName && formik.errors.fullName}
                   inputProps={{
                     'data-testid': 'name-test',
                   }}
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -171,6 +257,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   inputProps={{
                     'data-testid': 'taxCode-test',
                   }}
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -188,6 +276,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   inputProps={{
                     'data-testid': 'cbill-test',
                   }}
+                  required
+                  disabled
                 />
               </Grid>
 
@@ -215,14 +305,14 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
               <Grid container item xs={12}>
                 <SingleFileInput
                   value={file}
-                  accept={['.csv']}
+                  accept={['.png']}
                   onFileSelected={handleSelect}
                   onFileRemoved={handleRemove}
                   dropzoneLabel={t(
-                    'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dropFileText'
+                    'addEditInstitutionsData.addForm.dropFileText'
                   )}
                   rejectedLabel={t(
-                    'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.rejectedFile'
+                    'addEditInstitutionsData.addForm.rejectedFile'
                   )}
                 />
               </Grid>
@@ -233,27 +323,27 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
               title={t('addEditInstitutionsData.addForm.sections.pay')}
-              icon={<MonetizationOnIcon />}
+              icon={<RoomIcon />}
             />
             <Box pl={2} mt={2}>
               <FormControl>
                 <RadioGroup
                   name="hasPay"
                   row
-                  onChange={(e) => handleChangeHasOnlinePay(e?.target?.value)}
+                  onChange={(e) => setHasPay(e?.target?.value == "true")}
                   data-testid="has-pay-radio-group"
                   value={hasPay}
                 >
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
-                    label={<ConnectionRadioLabel type={"general.yes"} />}
+                    label={t("general.yes")}
                     sx={{ pr: 8 }}
                   />
                   <FormControlLabel
                     value={false}
                     control={<Radio />}
-                    label={<ConnectionRadioLabel type={"general.no"} />}
+                    label={t("general.no")}
                   />
                 </RadioGroup>
               </FormControl>
@@ -271,8 +361,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                             labelId='paymentTypeLabel'
                             label={t('addEditInstitutionsData.addForm.fields.paymentType')}
                             size="small"
-                            value={formik.values.paymentType}
-                            onChange={(e) => formik.handleChange(e)}
+                            value={paymentType}
+                            onChange={(e) => handleChangePaymentType(e?.target?.value)}
                             data-testid="paymentType-test"
                             inputProps={{
                               'data-testid': 'paymentType-test',
@@ -293,27 +383,27 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
               title={t('addEditInstitutionsData.addForm.sections.poste')}
-              icon={<MonetizationOnIcon />}
+              icon={<EmailIcon />}
             />
             <Box pl={2} mt={2}>
               <FormControl>
                 <RadioGroup
                   name="connectionType"
                   row
-                  onChange={(e) => handleChangeHasPoste(e?.target?.value)}
+                  onChange={(e) => setHasPoste(e?.target?.value == "true")}
                   data-testid="hss-poste-radio-group"
                   value={hasPoste}
                 >
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
-                    label={<ConnectionRadioLabel type={"general.yes"} />}
+                    label={t("general.yes")}
                     sx={{ pr: 8 }}
                   />
                   <FormControlLabel
                     value={false}
                     control={<Radio />}
-                    label={<ConnectionRadioLabel type={"general.no"} />}
+                    label={t("general.no")}
                   />
                 </RadioGroup>
               </FormControl>
@@ -377,7 +467,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
               title={t('addEditInstitutionsData.addForm.sections.assistance')}
-              icon={<MonetizationOnIcon />}
+              icon={<SupportAgentIcon />}
             />
             <Grid container spacing={2} mt={1}>
                 <Grid container item xs={12}>

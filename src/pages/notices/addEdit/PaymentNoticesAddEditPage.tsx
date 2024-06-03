@@ -10,59 +10,27 @@ import ROUTES from '../../../routes';
 import { LOADING_TASK_GET_IBAN } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { institutionsDataDetailsSelectors } from '../../../redux/slices/institutionsDataDetailsSlice';
 import PaymentNoticesAddEditForm from './PaymentNoticesAddEditForm';
+import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
 
-const AddEditIbanPage = () => {
+const PaymentNoticesAddEditPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const goBack = () => history.push(ROUTES.IBAN);
   const addError = useErrorDispatcher();
-  const { ibanId, actionId } = useParams<{ ibanId: string; actionId: string }>();
-  const formAction = actionId ?? IbanFormAction.Create;
   const setLoading = useLoading(LOADING_TASK_GET_IBAN);
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const creditorInstitutionCode = selectedParty?.fiscalCode ?? '';
+  const institutionUploadData : InstitutionUploadData = useAppSelector(institutionsDataDetailsSelectors
+    .selectInstitutionsDataDetailsDetails);
 
   useEffect(() => {
-    if (formAction !== IbanFormAction.Create) {
-      setLoading(true);
-      getIbanList(creditorInstitutionCode)
-        .then((response) => {
-          const filteredIban = response.ibans_enhanced.filter((e: any) => e.iban === ibanId);
-          setIban({
-            iban: filteredIban[0].iban!,
-            description: filteredIban[0].description,
-            creditor_institution_code: filteredIban[0].ci_owner ?? creditorInstitutionCode,
-            validity_date: new Date(filteredIban[0].validity_date!),
-            due_date: new Date(filteredIban[0].due_date!),
-            labels: filteredIban[0].labels,
-            is_active: filteredIban[0].is_active!,
-          });
-        })
-        .catch((reason) => {
-          handleErrors([
-            {
-              id: `FETCH_STATIONS_ERROR`,
-              blocking: false,
-              error: reason,
-              techDescription: `An error occurred while fetching iban detail`,
-              toNotify: false,
-            },
-          ]);
-          addError({
-            id: 'GET_IBAN_LIST',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while retrieving iban detail`,
-            toNotify: true,
-            displayableTitle: t('ibanPage.error.listErrorTitle'),
-            displayableDescription: t('ibanPage.error.listErrorDesc'),
-            component: 'Toast',
-          });
-          setIban(emptyIban);
-        })
-        .finally(() => setLoading(false));
+    if (institutionUploadData.cbill !== null && (
+      selectedParty?.fiscalCode !== institutionUploadData.taxCode
+    )) {
+
     }
   }, [selectedParty]);
 
@@ -96,7 +64,7 @@ const AddEditIbanPage = () => {
           variantSubTitle="body1"
         />
         {selectedParty && (
-          <PaymentNoticesAddEditForm goBack={goBack} institutionsData={iban} />
+          <PaymentNoticesAddEditForm goBack={goBack} data={institutionUploadData} />
         )}
       </Grid>
     </Grid>

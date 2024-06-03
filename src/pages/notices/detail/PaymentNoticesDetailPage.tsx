@@ -1,16 +1,10 @@
-import { Alert, Box, Button, Divider, Grid, IconButton, Stack, TextField } from '@mui/material';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { Box, Divider, Grid } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { generatePath, Link, useHistory, useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { ArrowBack, ManageAccounts, VisibilityOff } from '@mui/icons-material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import ROUTES from '../../../../routes';
-import { ENV } from '../../../../utils/env';
-import { useUserRole } from '../../../../hooks/useUserRole';
+import { useHistory } from 'react-router-dom';
+import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
+import React from 'react';
 
 type Props = {
   data?: InstitutionUploadData;
@@ -51,7 +45,7 @@ Props) => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  <img src={data.logo}>
+                  <img src={data?.logo} />
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -61,7 +55,7 @@ Props) => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {data.name}
+                  {data?.fullName}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -71,7 +65,7 @@ Props) => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {data.name}
+                  {data?.taxCode}
                 </Typography>
               </Grid>
               <Grid item xs={3}>
@@ -81,7 +75,7 @@ Props) => {
               </Grid>
               <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {data.organization}
+                  {data?.organization}
                 </Typography>
               </Grid>
             </>
@@ -94,12 +88,12 @@ Props) => {
                 </Grid>
                 <Grid item xs={3}>
                   <Typography variant="body2">
-                    {data.info}
+                    {data?.info}
                   </Typography>
                 </Grid>
             </Grid>
           </Grid>
-          {data.webChannel || data.appChannel ?
+          {data?.webChannel || data?.appChannel ?
               (
                 <React.Fragment>
                   <Divider sx={{ mt: 3 }}></Divider>
@@ -119,7 +113,7 @@ Props) => {
                           {t(data.webChannel ?
                             data.appChannel ? 'addEditInstitutionsData.detail.webApp' :
                              'addEditInstitutionsData.detail.onlyWeb'
-                            : 'addEditInstitutionsData.detail.onlyApp'}
+                            : 'addEditInstitutionsData.detail.onlyApp')}
                         </Typography>
                       </Grid>
                   </Grid>
@@ -127,7 +121,7 @@ Props) => {
               ) : (<Box></Box>)
           }
 
-          {data.posteAuth ?
+          {data?.posteAuth ?
               (
                 <React.Fragment>
                   <Divider sx={{ mt: 3 }}></Divider>
@@ -144,7 +138,7 @@ Props) => {
                       </Grid>
                       <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                          {data.posteName}
+                          {data?.posteName}
                         </Typography>
                       </Grid>
                       <Grid item xs={3}>
@@ -154,7 +148,7 @@ Props) => {
                       </Grid>
                       <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                          {data.posteAccountNumber}
+                          {data?.posteAccountNumber}
                         </Typography>
                       </Grid>
                       <Grid item xs={3}>
@@ -164,9 +158,10 @@ Props) => {
                       </Grid>
                       <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                          {data.posteAccountNumber}
+                          {data?.posteAccountNumber}
                         </Typography>
                       </Grid>
+                  </Grid>      
                 </React.Fragment>
               ) : (<Box></Box>)
           }

@@ -1,16 +1,20 @@
-import { Alert, Box, Grid } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Stack, Typography } from '@mui/material';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useTranslation } from 'react-i18next';
-import { generatePath, useHistory } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
+import { generatePath, useHistory, Link as RouterLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CreateIcon from '@mui/icons-material/Create';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getInstitutionUploadData } from '../../services/noticesService';
-
-
-import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
+import { getInstitutionData } from '../../services/noticesService';
+import { InstitutionUploadData } from '../../api/generated/portal/InstitutionUploadData';
+import { theme } from '@pagopa/mui-italia';
+import PaymentNoticesDetailPage from './detail/PaymentNoticesDetailPage';
+import ROUTES from '../../routes';
+import { extractProblemJson } from '../../utils/client-utils';
+import { LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
 
 const PaymentNoticesPage = () => {
   const { t } = useTranslation();
@@ -24,8 +28,7 @@ const PaymentNoticesPage = () => {
   };
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [institutionUploadData, setInstitutionUploadData] = useState<InstitutionUploadData>(null);
-  const [file, setFile] = useState<File>(null);
+  const [institutionUploadData, setInstitutionUploadData] = useState<InstitutionUploadData | null>(null);
 
   const addEditData = () => {
     history.push(ROUTES.PAYMENT_NOTICES_ADDEDIT);
@@ -34,7 +37,7 @@ const PaymentNoticesPage = () => {
   useEffect(() => {
     if (selectedParty && selectedParty.fiscalCode) {
       setLoadingStatus(true);
-      getInstitutionUploadData(selectedParty.fiscalCode)
+      getInstitutionData(selectedParty.fiscalCode)
         .then((r) => (r ? setInstitutionUploadData(r) : setInstitutionUploadData(null)))
         .catch((err) => {
 
@@ -45,7 +48,7 @@ const PaymentNoticesPage = () => {
                 addError({
                   id: 'GET_NOTICE_DATA',
                   blocking: false,
-                  error: reason,
+                  error: err,
                   techDescription: `An error occurred while retrieving notice ci data`,
                   toNotify: true,
                   displayableTitle: t('noticesPage.error.getNoticeTitle'),
@@ -74,7 +77,8 @@ const PaymentNoticesPage = () => {
             <Button
                   variant="contained"
                   onClick={addEditData}
-                  startIcon={<AddIcon />}
+                  startIcon={institutionUploadData === null ? 
+                  <ArrowForwardIcon /> : <CreateIcon />}
                   color="primary"
                   sx={{
                     border: `2px solid ${theme.palette.primary.main}`,
@@ -91,7 +95,7 @@ const PaymentNoticesPage = () => {
                   )}
             </Button>
           </Stack>
-      </Grid>
+        </Stack>  
       {history.location.state && (history.location.state as any).alertWarningMessage && (
         <Alert severity="warning" variant="outlined" data-testid="alert-test">
           {(history.location.state as any).alertWarningMessage}
@@ -122,7 +126,7 @@ const PaymentNoticesPage = () => {
                           textDecoration: 'none',
                           whiteSpace: 'pre',
                         }}
-                        to={generatePath(ROUTES.IBAN_ADD)}
+                        to={generatePath(ROUTES.PAYMENT_NOTICES_ADDEDIT)}
                       >
                         <strong> Configura Modello </strong>
                       </Link>
@@ -133,7 +137,7 @@ const PaymentNoticesPage = () => {
           </Box>
         )
       :
-        (<PaymentNoticesDetail data={institutionUploadData}>)
+        (<PaymentNoticesDetailPage data={institutionUploadData} />)
       }
     </SideMenuLayout>
   );

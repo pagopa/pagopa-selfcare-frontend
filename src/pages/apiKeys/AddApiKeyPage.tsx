@@ -1,15 +1,15 @@
 import {
-    Box,
-    Button,
-    FormControl,
-    Grid,
-    InputLabel,
-    MenuItem,
-    OutlinedInput,
-    Paper,
-    Select,
-    Stack,
-    Typography,
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Paper,
+  Select,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -19,11 +19,11 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
 import {
-    API_KEY_PRODUCTS,
-    API_KEY_PSP_PRODUCTS,
-    AvailableProductKeys,
-    ConfiguredProductKeys,
-    NODOAUTH
+  API_KEY_PRODUCTS,
+  API_KEY_PSP_PRODUCTS,
+  AvailableProductKeys,
+  ConfiguredProductKeys,
+  NODOAUTH,
 } from '../../model/ApiKey';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
@@ -150,6 +150,7 @@ function AddApiKeyPage() {
                   fullWidth
                   aria-label="user"
                   name="products"
+                  data-testid="product-test-id"
                   value={selectedProduct ? t(`addApiKeyPage.products.${selectedProduct}`) : ''}
                   labelId="select-label-products"
                   variant="outlined"
@@ -184,7 +185,12 @@ function AddApiKeyPage() {
       </Box>
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
+            data-testid="api-key-btn-back-test-id"
+          >
             {t('addApiKeyPage.addForm.backButton')}
           </Button>
         </Stack>
@@ -195,6 +201,7 @@ function AddApiKeyPage() {
             disabled={!selectedProduct}
             color="primary"
             variant="contained"
+            data-testid="api-key-btn-test-id"
           >
             {t('addApiKeyPage.addForm.continueButton')}
           </Button>

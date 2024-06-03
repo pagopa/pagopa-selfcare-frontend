@@ -1,6 +1,6 @@
 import { BackofficeApi } from '../api/BackofficeClient';
 import { CreditorInstitutionContactsResource } from '../api/generated/portal/CreditorInstitutionContactsResource';
-import { CreditorInstitutionInfoArray } from '../api/generated/portal/CreditorInstitutionInfoArray';
+import { CreditorInstitutionInfoResource } from '../api/generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import {
   getAvailableCreditorInstitutionsForStationMock,
@@ -35,7 +35,7 @@ export const getCreditorInstitutions = (
 export const getAvailableCreditorInstitutionsForStation = (
   stationCode: string,
   brokerId: string
-): Promise<CreditorInstitutionInfoArray> => {
+): Promise<CreditorInstitutionInfoResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getAvailableCreditorInstitutionsForStationMock();
   } else {

@@ -1,6 +1,6 @@
 import { CIPaymentContact } from '../../api/generated/portal/CIPaymentContact';
 import { CreditorInstitutionContactsResource } from '../../api/generated/portal/CreditorInstitutionContactsResource';
-import { CreditorInstitutionInfoArray } from '../../api/generated/portal/CreditorInstitutionInfoArray';
+import { CreditorInstitutionInfoResource } from '../../api/generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionsResource } from '../../api/generated/portal/CreditorInstitutionsResource';
 import { TavoloOpResource } from '../../api/generated/portal/TavoloOpResource';
 
@@ -73,7 +73,8 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
   },
 };
 
-export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoArray = [
+export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoResource = {
+  creditor_institution_info_list: [
   {
     business_name: 'EC 1',
     ci_tax_code: '012345678912',
@@ -86,7 +87,8 @@ export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoArray = 
     business_name: 'EC 3',
     ci_tax_code: '012345678914',
   },
-];
+  ],
+};
 
 export const getCreditorInstitutionContactsMock =
   (): Promise<CreditorInstitutionContactsResource> =>
@@ -96,4 +98,5 @@ export const getCreditorInstitutionssMock = (): Promise<CreditorInstitutionsReso
   Promise.resolve(mockedCreditorInstitutionsResource);
 
 export const getAvailableCreditorInstitutionsForStationMock =
-  (): Promise<CreditorInstitutionInfoArray> => Promise.resolve(mockedCreditorInstitutionInfoArray);
+  (): Promise<CreditorInstitutionInfoResource> =>
+    Promise.resolve(mockedCreditorInstitutionInfoArray);

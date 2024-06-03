@@ -55,81 +55,79 @@ function ChannelAssociatePSPPage() {
             generatePath(ROUTES.CHANNEL_PSP_LIST, {
                 channelId,
             })
-        );
-    };
+          )
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+  };
 
-    const handleSubmit = async () => {
-        if (selectedPSP && selectedPSP.institution_id) {
-            setLoading(true);
+  useEffect(() => {
+    setLoading(true);
+    if (selectedParty) {
+      getChannelDetail(channelId)
+        .then((channel) => setChannelDetail(channel))
+        .catch((reason) => console.error(reason));
+      getBrokerDelegation( undefined, selectedParty?.partyId, ["PSP"])
+        .then((data) => {
+          if (data?.delegation_list && selectedParty) {
+            // A PSP that is a broker can associate itself to the channel
+            const availablePSPfromService = addCurrentPSP([...data.delegation_list], selectedParty);
 
-            const pspToBeAssociatedDetails = selectedPSP.tax_code ? await getBrokerAndPspDetails(selectedPSP.tax_code) : null;
+            setAvailablePSP(availablePSPfromService);
+          }
+        })
+        .catch((reason) => console.error(reason))
+        .finally(() => setLoading(false));
+    }
 
-            if (pspToBeAssociatedDetails?.paymentServiceProviderDetailsResource?.psp_code) {
-                await associatePSPtoChannel(
-                    channelId,
-                    selectedPSP!.tax_code as string,
-                    (channelDetail?.payment_types ?? []) as any
-                )
-                    .then((_data) => {
-                        history.push(
-                            generatePath(ROUTES.CHANNEL_PSP_LIST, {
-                                channelId,
-                            }),
-                            {
-                                alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
-                            }
-                        );
-                    })
-                    .catch((reason) =>
-                        addError({
-                            id: 'ASSOCIATE_PSP',
-                            blocking: false,
-                            error: reason,
-                            techDescription: `An error occurred while psp association`,
-                            toNotify: true,
-                            displayableTitle: t('general.errorTitle'),
-                            displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
-                            component: 'Toast',
-                        })
-                    )
-                    .finally(() => {
-                        setLoading(false);
-                    });
-            }
-        }
-    };
+    setLoading(false);
+  }, [selectedParty]);
 
-    useEffect(() => {
-        setLoading(true);
-        if (selectedParty) {
-            getChannelDetail(channelId)
-                .then((channel) => setChannelDetail(channel))
-                .catch((reason) => console.error(reason));
-            getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])
-                .then((data) => {
-                    if (data?.delegation_list && selectedParty) {
-                        // A PSP that is a broker can associate itself to the channel
-                        const availablePSPfromService = addCurrentPSP([...data.delegation_list], selectedParty);
-
-                        setAvailablePSP(availablePSPfromService);
-                    }
-                })
-                .catch((reason) => console.error(reason))
-                .finally(() => setLoading(false));
-        }
-
-        setLoading(false);
-    }, [selectedParty]);
-
-    return (
-        <Box
-            justifyContent="center"
-            alignItems="center"
-            display="flex"
-            flexDirection="column"
-            px={3}
-            mt={3}
-            sx={{width: '100%', backgroundColor: 'transparent !important'}}
+  return (
+    <Box
+      justifyContent="center"
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      px={3}
+      mt={3}
+      sx={{ width: '100%', backgroundColor: 'transparent !important' }}
+    >
+      <Box justifyContent="center">
+        <Grid item xs={12} mb={1} display="flex" justifyContent="center">
+          <Typography variant="h3">
+            <Trans i18nKey="channelAssociatePSPPage.associationForm.title">Associa PSP</Trans>
+          </Typography>
+        </Grid>
+        <Grid item xs={12} mb={4} display="flex" justifyContent="center">
+          <Typography variant="body1" align="center">
+            <Trans i18nKey="channelAssociatePSPPage.associationForm.subTitle">
+              Digita il nome del nuovo PSP da associare al canale
+            </Trans>{' '}
+            <Typography component="span" fontWeight={'fontWeightMedium'}>
+              {channelId}
+            </Typography>
+          </Typography>
+        </Grid>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        flexGrow={0}
+        mb={1}
+        sx={{ width: '100%', maxWidth: '684px' }}
+      >
+        <Paper
+          elevation={8}
+          sx={{
+            minWidth: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: theme.spacing(2),
+          }}
         >
             <Box justifyContent="center">
                 <Grid item xs={12} mb={1} display="flex" justifyContent="center">

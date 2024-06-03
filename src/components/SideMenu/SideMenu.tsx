@@ -13,6 +13,7 @@ import StorageIcon from '@mui/icons-material/Storage';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import React, {useEffect, useState} from 'react';
 import {ENV} from '../../utils/env';
 import ROUTES from '../../routes';
@@ -76,6 +77,17 @@ export default function SideMenu() {
                             dataTestId={'home-test'}
                         />
                     )}
+
+                    {userHasPermission('payment-notices') && (
+                        <SidenavItem
+                            title={t('sideMenu.paymentNotices')}
+                            handleClick={() => onExit(() => history.push(ROUTES.PAYMENT_NOTICES))}
+                            isSelected={pathname === ROUTES.PAYMENT_NOTICES}
+                            disabled={isDisabled}
+                            icon={AttachFileIcon}
+                            dataTestId="payment-notices-test"
+                        />
+                    )}  
 
                     {userHasPermission('apikey') && orgIsBrokerSigned && (
                         <SidenavItem

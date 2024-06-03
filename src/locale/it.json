@@ -963,11 +963,18 @@
         "paper": {
           "title": "Enti destinatari",
           "subtitle": "Cerca il nome dell’ente utilizzando la barra di ricerca oppure carica una lista di enti.",
-          "messageDropzone": "Rilascia qui la lista dei destinatari per caricare o",
-          "buttonDropzone": "carica il file",
+          "dropFileText": "oppure lascia qui la lista dei destinatari",
           "dontKnowHow": "Non sai come preparare il file? ",
           "downloadExample": "Scarica l'esempio",
           "addRecipientButton": "Aggiungi ente"
+        },
+        "alert": {
+          "successTitle": "Il file è valido",
+          "warningTitle": "Il file ha riscontrato degli errori",
+          "errorTitle": "Il file non contiene destinatari validi",
+          "successMessage": "Sono stati caricati {{count}} destinatari",
+          "warningMessage": "Non è stato possibile caricare {{count}} destinatari su {{total}}",
+          "errorMessage": "Non è stato caricato nessun destinatario"
         },
         "errorMessage": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati"
       },
@@ -1410,7 +1417,8 @@
     "min": "Minimo",
     "max": "Massimo",
     "maintenanceAlert": "Il portale andrà in manutenzione nei giorni successivi",
-    "maintenancePageText": "Il portale è in manutenzione"
+    "maintenancePageText": "Il portale è in manutenzione",
+    "rejectedFile": "Tipo di file non supportato"
   },
   "ANY": "Tutti"
 }

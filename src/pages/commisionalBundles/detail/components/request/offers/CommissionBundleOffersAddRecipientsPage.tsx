@@ -1,7 +1,17 @@
 import { useState } from 'react';
+import Papa from 'papaparse';
 import { useTranslation } from 'react-i18next';
-import { Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { ButtonNaked, SingleFileInput } from '@pagopa/mui-italia';
 import { Add, ArrowBack } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
@@ -14,7 +24,10 @@ import ECSelection from '../../../../../../components/Form/ECSelection';
 import { CreditorInstitutionInfo } from '../../../../../../api/generated/portal/CreditorInstitutionInfo';
 import { CreditorInstitutionInfoArray } from '../../../../../../api/generated/portal/CreditorInstitutionInfoArray';
 
+type CreditorInstitutionInfoWithFromFile = CreditorInstitutionInfo & { fromFile?: boolean };
+
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.addRecipientsPage';
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export default function CommissionBundleOffersAddRecipientsPage() {
   const history = useHistory();
   const { t } = useTranslation();
@@ -34,26 +47,118 @@ export default function CommissionBundleOffersAddRecipientsPage() {
     { ci_tax_code: 'ci_tax_code7', business_name: 'business_name7' },
     { ci_tax_code: 'ci_tax_code8', business_name: 'business_name8' },
   ]); // TODO retrieve list
-  const [selectedRecipients, setSelectedRecipients] = useState<CreditorInstitutionInfoArray>([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [alertData, setAlertData] = useState<any>();
+  const [selectedRecipients, setSelectedRecipients] = useState<
+    Array<CreditorInstitutionInfoWithFromFile>
+  >([]);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showAddRecipientInput, setShowAddRecipientInput] = useState<boolean>(true);
 
-  function onRecipientSelection(ci: CreditorInstitutionInfo | undefined, index: number) {
+  function onRecipientSelection(
+    ci: CreditorInstitutionInfoWithFromFile | undefined,
+    index: number
+  ) {
     if (ci) {
-      setSelectedRecipients((prev) => [...prev, ci]);
-      setShowAddRecipientInput(false);
+      addRecipientToSelected(ci);
     } else {
-      setSelectedRecipients((prev) => {
-        const newArr = [...prev];
-        // eslint-disable-next-line functional/immutable-data
-        newArr.splice(index, 1);
-        if(newArr.length === 0){
-          setShowAddRecipientInput(true);
-        }
-        return newArr;
-      });
+      removeRecipientFromSelected(index);
     }
   }
+
+  function addRecipientToSelected(ci: CreditorInstitutionInfoWithFromFile) {
+    setSelectedRecipients((prev) => [...prev, ci]);
+    setShowAddRecipientInput(false);
+    setAvailableEc((prev) => {
+      const newArr = [...prev];
+      // eslint-disable-next-line functional/immutable-data
+      newArr.splice(
+        prev.findIndex((el) => el.ci_tax_code === ci.ci_tax_code),
+        1
+      );
+
+      return newArr;
+    });
+  }
+
+  function removeRecipientFromSelected(index: number) {
+    setAvailableEc((prev) => [...prev, selectedRecipients[index]]);
+    setSelectedRecipients((prev) => {
+      const newArr = [...prev];
+      // eslint-disable-next-line functional/immutable-data
+      newArr.splice(index, 1);
+
+      if (!newArr.find((el) => el.fromFile)) {
+        handleRemoveFile();
+      } else if (selectedRecipients[index]?.fromFile) {
+        setAlertData((prev: any) => ({
+          ...prev,
+          message: t(`${componentPath}.alert.successMessage`, {
+            count: newArr.filter((el) => el.fromFile).length,
+          }),
+        }));
+      }
+
+      if (newArr.length === 0) {
+        setShowAddRecipientInput(true);
+      }
+      return newArr;
+    });
+  }
+
+  const handleSelectFile = (file: File) => {
+    setFile(file);
+    const reader = new FileReader();
+    // eslint-disable-next-line
+    reader.onload = async ({ target }: any) => {
+      const csv = Papa.parse(target.result, {
+        header: true,
+        skipEmptyLines: true,
+      });
+      // eslint-disable-next-line functional/no-let
+      let errorParsing = 0;
+      const parsedData = csv?.data
+        ?.filter((el: any) => {
+          if (el.ci_tax_code && availableEc.find((ci) => ci.ci_tax_code === el.ci_tax_code)) {
+            return true;
+          } else {
+            errorParsing += 1;
+            return false;
+          }
+        })
+        ?.map((item: any) => ({ ...item, fromFile: true }));
+      if (parsedData && parsedData.length > 0) {
+        const enrichArr = parsedData.map((el) => ({ ...el, fromFile: true }));
+        enrichArr.forEach((el) => addRecipientToSelected(el));
+      }
+
+      if (csv?.errors?.length === csv?.data?.length || errorParsing === csv?.data?.length) {
+        setAlertData({
+          type: 'error',
+          message: t(`${componentPath}.alert.errorMessage`),
+        });
+      } else if (csv?.errors.length > 0 || errorParsing) {
+        setAlertData({
+          type: 'warning',
+          message: t(`${componentPath}.alert.warningMessage`, {
+            count: csv?.errors.length + errorParsing,
+            total: csv?.errors.length + csv?.data.length,
+          }),
+        });
+      } else {
+        setAlertData({
+          type: 'success',
+          message: t(`${componentPath}.alert.successMessage`, { count: csv?.data.length }),
+        });
+      }
+    };
+    reader.readAsText(file);
+  };
+  const handleRemoveFile = () => {
+    setFile(null);
+    setSelectedRecipients((prev) => prev.filter((el) => !el.fromFile));
+    setAlertData(undefined);
+  };
 
   function handleAddRecipients() {
     // TODO
@@ -107,6 +212,41 @@ export default function CommissionBundleOffersAddRecipientsPage() {
                 selectedEC={selectedRecipients[selectedRecipients.length]}
                 onECSelectionChange={(ci) => onRecipientSelection(ci, selectedRecipients.length)}
               />
+            )}
+          </Box>
+          <Box mt={2}>
+            {alertData && (
+              <Alert
+                severity={alertData.type}
+                data-testid={`alert-${alertData.type}`}
+                onClose={() => {
+                  setAlertData(undefined);
+                }}
+                sx={{ mt: 1 }}
+              >
+                <AlertTitle>{t(`${componentPath}.alert.${alertData.type}Title`)}</AlertTitle>
+                {alertData.message}
+              </Alert>
+            )}
+            <SingleFileInput
+              value={file}
+              accept={['.csv']}
+              onFileSelected={handleSelectFile}
+              onFileRemoved={handleRemoveFile}
+              dropzoneLabel={t(`${componentPath}.paper.dropFileText`)}
+              rejectedLabel={t('general.rejectedFile')}
+            />
+
+            {(file === undefined || file === null) && (
+              <Typography variant="body1" mb={1} mt={1}>
+                {t(`${componentPath}.paper.dontKnowHow`)}
+                <a
+                  href={process.env.PUBLIC_URL + '/file/recipientsExample.csv'}
+                  download="recipientsExample.csv"
+                >
+                  {t(`${componentPath}.paper.downloadExample`)}
+                </a>
+              </Typography>
             )}
           </Box>
 

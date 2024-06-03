@@ -52,6 +52,7 @@ import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
+import CommissionBundleOffersAddRecipientsPage from './pages/commisionalBundles/detail/components/request/offers/CommissionBundleOffersAddRecipientsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -233,6 +234,14 @@ const SecuredRoutes = withLogin(
                     <CommissionBundleDetailPage />
                   </ProtectedRoute>
                 </Route>
+                <Route path={routes.COMMISSION_BUNDLES_ADD_RECIPIENT} exact={true}>
+                  <ProtectedRoute
+                    permission="commission-bundles-add-recipient"
+                    flagValue="commission-bundles-private"
+                  >
+                    <CommissionBundleOffersAddRecipientsPage />
+                  </ProtectedRoute>
+                </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
                   <ProtectedRoute
                     permission="commission-bundles-addedit"
@@ -273,12 +282,12 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
+                
                 <Route path={routes.DELEGATIONS_LIST} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationsPage />
                   </ProtectedRoute>
                 </Route>
-
                 <Route path={routes.DELEGATIONS_DETAIL} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationDetailPage />

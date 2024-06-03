@@ -63,6 +63,11 @@ export const permissions = {
         ROLE.EC_DIRECT_ADMIN,
         ROLE.PAGOPA_OPERATOR,
     ],
+    'commission-bundles-add-recipient': [
+        ROLE.PSP_DIRECT_ADMIN,
+        ROLE.PSP_ADMIN,
+        ROLE.PAGOPA_OPERATOR,
+    ],
     'commission-bundles-addedit': [
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_ADMIN,
@@ -82,7 +87,6 @@ export const permissions = {
         ROLE.PT_PSP_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
         ROLE.PAGOPA_OPERATOR,
-
     ],
     'operation-table-list': [
         ROLE.PAGOPA_OPERATOR

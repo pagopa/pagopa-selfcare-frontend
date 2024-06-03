@@ -952,6 +952,25 @@
         "errorCommission": "Non può superare l’importo applicato dal PSP",
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
+      "addRecipientsPage": {
+        "title": "Aggiungi destinatari",
+        "subtitle": "Cerca gli enti destinatari del pacchetto o carica una lista.",
+        "modal": {
+          "title": "Notifica enti destinatari",
+          "message": "Notificheremo via mail tutti gli enti aggiunti.",
+          "confirmButton": "Conferma e notifica"
+        },
+        "paper": {
+          "title": "Enti destinatari",
+          "subtitle": "Cerca il nome dell’ente utilizzando la barra di ricerca oppure carica una lista di enti.",
+          "messageDropzone": "Rilascia qui la lista dei destinatari per caricare o",
+          "buttonDropzone": "carica il file",
+          "dontKnowHow": "Non sai come preparare il file? ",
+          "downloadExample": "Scarica l'esempio",
+          "addRecipientButton": "Aggiungi ente"
+        },
+        "errorMessage": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati"
+      },
       "requestsTable": {
         "businessName": "Nome ente",
         "taxCode": "Codice Fiscale",

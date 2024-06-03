@@ -5,6 +5,7 @@ import { Box, Stack } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
+import { generatePath, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import GenericModal from '../../../../../../components/Form/GenericModal';
@@ -14,13 +15,17 @@ import { BundleResource, OfferStateType } from '../../../../../../model/Commissi
 import { useAppSelector } from '../../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../../redux/slices/partiesSlice';
 import { deleteCIBundleSubscription } from '../../../../../../services/bundleService';
-import { LOADING_TASK_OFFER_LIST, LOADING_TASK_OFFER_ACTION } from '../../../../../../utils/constants';
+import {
+  LOADING_TASK_OFFER_LIST,
+  LOADING_TASK_OFFER_ACTION,
+} from '../../../../../../utils/constants';
 import { CommissionBundleDetailRequestDrawer } from '../CommissionBundleDetailRequestDrawer';
 import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
+import ROUTES from '../../../../../../routes';
 
 const pageLimit = 5;
 
-const generalPath = "commissionBundlesPage.commissionBundleDetail.requestsTable";
+const generalPath = 'commissionBundlesPage.commissionBundleDetail.requestsTable';
 const componentPath = `${generalPath}.offersTable`;
 
 const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
@@ -52,7 +57,12 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
     // TODO api get offer detail for drawer
   }
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getOfferDetail, componentPath);
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    selectedState,
+    getOfferDetail,
+    componentPath
+  );
 
   const getOffersList = (newPage?: number, taxCodeFilter?: string, searchTriggered?: boolean) => {
     setLoadingList(true);
@@ -118,9 +128,10 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
         <Button
           variant="contained"
           startIcon={<Add />}
-          onChange={() => {
-            /* TODO VAS-807 */
-          }}
+          component={Link}
+          to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD_RECIPIENT, {
+            bundleId: bundleDetail.idBundle,
+          })}
         >
           {t(`${componentPath}.inviteButton`)}
         </Button>

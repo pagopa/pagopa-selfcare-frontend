@@ -74,7 +74,7 @@ export default function ECSelection({
         data-testid="grid-item"
       >
         {selectedEC !== undefined && (
-          <Box display="flex" p={2}>
+          <Box display="flex">
             <Box width="100%" data-testid="selected-ec-item-id-test">
               <PartyAccountItem
                 partyName={selectedEC?.business_name ? selectedEC.business_name : ''}

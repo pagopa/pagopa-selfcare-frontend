@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { AvailableCodes } from '../../../api/generated/portal/AvailableCodes';
 import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorInstitutionInfo';
-import { CreditorInstitutionInfoArray } from '../../../api/generated/portal/CreditorInstitutionInfoArray';
+import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import ECSelection from '../../../components/Form/ECSelection';
 import { useAppSelector } from '../../../redux/hooks';
@@ -40,7 +40,7 @@ function StationAssociateECPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { stationId } = useParams<{ stationId: string }>();
   const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
-  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoArray>([]);
+  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
@@ -51,7 +51,7 @@ function StationAssociateECPage() {
     if (selectedParty?.partyId) {
       getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
         .then((data) => {
-          setAvailableEC(data);
+            setAvailableEC(data);
         })
         .catch((reason) =>
           addError({
@@ -229,14 +229,14 @@ function StationAssociateECPage() {
                   <Grid item xs={12}>
                     <FormControl sx={{ width: '100%', minWidth: '100%' }}>
                       <ECSelection
-                        availableEC={availableEC}
+                        availableEC={availableEC?.creditor_institution_info_list ? [...availableEC.creditor_institution_info_list] : []}
                         selectedEC={selectedEC}
                         onECSelectionChange={(selectedEC: CreditorInstitutionInfo | undefined) => {
                           setSelectedEC(selectedEC);
                         }}
                       />
                     </FormControl>
-                    {availableEC.length === 0 && (
+                    {availableEC?.creditor_institution_info_list?.length === 0 && (
                       <Box mt={1}>
                         <Alert
                           severity={'warning'}

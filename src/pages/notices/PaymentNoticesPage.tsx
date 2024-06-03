@@ -35,14 +35,13 @@ const PaymentNoticesPage = () => {
   };
 
   useEffect(() => {
-    if (selectedParty && selectedParty.fiscalCode) {
+    if (selectedParty && selectedParty.fiscalCode && (institutionUploadData === null ||
+       institutionUploadData?.taxCode !== selectedParty.fiscalCode)) {
       setLoadingStatus(true);
       getInstitutionData(selectedParty.fiscalCode)
         .then((r) => (r ? setInstitutionUploadData(r) : setInstitutionUploadData(null)))
         .catch((err) => {
-
             const problemJson = extractProblemJson(err);
-
             if (problemJson?.status !== 404) {
                 setError(true);
                 addError({
@@ -96,11 +95,11 @@ const PaymentNoticesPage = () => {
             </Button>
           </Stack>
         </Stack>  
-      {history.location.state && (history.location.state as any).alertWarningMessage && (
+      {institutionUploadData === null ? (
         <Alert severity="warning" variant="outlined" data-testid="alert-test">
-          {(history.location.state as any).alertWarningMessage}
+          {t('paymentNoticesPage.toAddWarning')}
         </Alert>
-      )}
+      ) : (<></>)}
 
       {institutionUploadData === null ?
         (

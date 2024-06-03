@@ -122,7 +122,17 @@ export const permissions = {
         ROLE.PT_PSP_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
         ROLE.PAGOPA_OPERATOR,       
-    ]
+    ],
+    "payment-notices-addedit": [
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.EC_DIRECT_OPERATOR,
+        ROLE.PSP_DIRECT_ADMIN,
+        ROLE.PSP_DIRECT_OPERATOR,
+        ROLE.PT_EC_OPERATOR,
+        ROLE.PT_PSP_OPERATOR,
+        ROLE.PT_PSPEC_OPERATOR,
+        ROLE.PAGOPA_OPERATOR,       
+    ],
 };
 
 export type PermissionName = keyof typeof permissions;

@@ -93,6 +93,7 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
+import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -132,6 +133,13 @@ function fetchWithHeader(input: RequestInfo | URL, init?: RequestInit): Promise<
 }
 
 export const backofficeClient = createClient({
+  baseUrl: ENV.URL_API.BACKOFFICE,
+  basePath: '',
+  fetchApi: fetchWithHeader as any,
+  withDefaults: withBearer,
+});
+
+export const customBoClient = createClient({
   baseUrl: ENV.URL_API.BACKOFFICE,
   basePath: '',
   fetchApi: fetchWithHeader as any,
@@ -1301,23 +1309,6 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createCIBundleRequest: async ({
-    ciTaxCode,
-    bundleRequest,
-    bundleName,
-  }: {
-    ciTaxCode: string;
-    bundleRequest: Partial<PublicBundleRequest>;
-    bundleName: string;
-  }): Promise<void> => {
-    const result = await backofficeClient.createCIBundleRequest({
-      'ci-tax-code': ciTaxCode,
-      body: bundleRequest as PublicBundleRequest,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
   getInstitutionData: async ({
     ciTaxCode,
   }: {
@@ -1336,9 +1327,9 @@ export const BackofficeApi = {
     file: File;
     uploadInstitutionData: InstitutionUploadData
   }): Promise<void> => {
-    const result = await backofficeClient.getInstitutionData({
+    const result = await customBoClient.updateInstitutions({
       'file': file,
-      'institutions-data': uploadInstitutionData
+      'body': JSON.stringify(uploadInstitutionData)
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

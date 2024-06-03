@@ -134,14 +134,14 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 if (touchpoints) {
                     setTouchpointList(touchpoints);
                 }
-                let listBroker = brokerDelegation ?? [];
+                let listBroker = brokerDelegation?.delegation_list ? [...brokerDelegation.delegation_list] : [];
                 if (orgIsPspDirect) {
                     listBroker = addCurrentPSP(listBroker, selectedParty as Party);
                 }
                 if (listBroker.length > 0) {
                     setBrokerDelegationList(listBroker);
                     if (isEdit && idBrokerPsp) {
-                        const brokerTaxCode = brokerDelegation?.find(
+                        const brokerTaxCode = brokerDelegation?.delegation_list?.find(
                             (el) => el.broker_id === idBrokerPsp
                         )?.tax_code;
                         if (brokerTaxCode) {

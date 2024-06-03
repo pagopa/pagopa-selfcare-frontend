@@ -244,16 +244,16 @@ describe('<AddEditCommissionBundleForm />', () => {
     // Change broker code list
     expect(input.channelList.disabled).toBe(true);
     fireEvent.change(input.brokerCodeList, {
-      target: { value: mockedDelegatedPSP[1].institution_name },
+      target: { value: mockedDelegatedPSP.delegation_list![1].institution_name },
     });
     input.brokerCodeList.focus();
 
     fireEvent.change(document.activeElement as Element, {
-      target: { value: mockedDelegatedPSP[1].institution_name },
+      target: { value: mockedDelegatedPSP.delegation_list![1].institution_name },
     });
     fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
     fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
-    expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP[1].institution_name);
+    expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP.delegation_list![1].institution_name);
     await waitFor(() => {
       expect(spyOnGetChannelService).toBeCalledTimes(1);
       expect(input.channelList.disabled).toBe(false);
@@ -372,7 +372,7 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     // Check broker code list
     expect(input.brokerCodeList.value).toBe(
-      mockedDelegatedPSP.find((el) => el.broker_id === mockedBundleRequest.idBrokerPsp)
+      mockedDelegatedPSP.delegation_list!.find((el) => el.broker_id === mockedBundleRequest.idBrokerPsp)
         ?.institution_name
     );
 

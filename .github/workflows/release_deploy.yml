@@ -99,7 +99,7 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@v1.13.3
+        uses: pagopa/github-actions-template/node-release@473d7a78d28e15cab46dcaf766087e60604d6a40 # v1.13.3
         with:
           semver: ${{ needs.setup.outputs.semver }}
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
@@ -107,12 +107,12 @@ jobs:
           prerelease: ${{ needs.setup.outputs.environment == 'prod' }}
 
       - name: Checkout code
-        uses: actions/checkout@v4 # required to make the script available for next step
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4 # required to make the script available for next step
 
       - name: Generate Release Notes for Latest
         id: generate_notes
         if: ${{ needs.setup.outputs.environment == 'prod' }}
-        uses: actions/github-script@v5
+        uses: actions/github-script@211cb3fefb35a799baa5156f9321bb774fe56294 # v5
         env:
           TAG: ${{ steps.release.outputs.version }}
           PRERELEASE: false
@@ -169,7 +169,7 @@ jobs:
     steps:
       - name: Report Status
         if: ${{ needs.setup.outputs.environment == 'prod' }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2 # v2
         with:
           status: ${{ needs.deploy.result }}
           token: ${{ secrets.GITHUB_TOKEN }}

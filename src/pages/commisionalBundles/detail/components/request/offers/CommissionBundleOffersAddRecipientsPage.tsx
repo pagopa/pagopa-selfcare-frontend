@@ -1,16 +1,7 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
 import { ButtonNaked, SingleFileInput } from '@pagopa/mui-italia';
 import { Add, ArrowBack } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
@@ -214,6 +205,7 @@ export default function CommissionBundleOffersAddRecipientsPage() {
               />
             )}
           </Box>
+          {/* Commented while waiting for the API to check csv creditor institutions validity
           <Box mt={2}>
             {alertData && (
               <Alert
@@ -248,7 +240,7 @@ export default function CommissionBundleOffersAddRecipientsPage() {
                 </a>
               </Typography>
             )}
-          </Box>
+          </Box> */}
 
           {selectedRecipients.length !== 0 && !showAddRecipientInput && (
             <ButtonNaked

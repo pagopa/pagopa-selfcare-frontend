@@ -650,7 +650,7 @@
       "confirmButton": "Conferma"
     },
     "alert": {
-      "noDelegations": "Nessuna delega disponibile per la stazione selezionata. Visualizzi questo messaggio se non hai deleghe oppure se tutti gli enti che ti hanno delegato sono già associati a questa stazione"
+      "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
     }
   },
   "stationDetailPageValidation": {

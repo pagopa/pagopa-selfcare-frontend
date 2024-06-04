@@ -727,6 +727,83 @@
       "version": "Versione"
     }
   },
+  "noticesPage": {
+    "title": "Avvisi di pagamento",
+    "subtitle": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
+    "toAddWarning": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
+    "addData": "Configura modello"
+  },
+  "addEditInstitutionsDataPage": {
+    "modal": {
+      "title": "Vuoi uscire?",
+      "message": "Tutte le informazioni che hai inserito andranno perse"
+    },
+    "detail": {
+      "ci": "Ente Creditore",
+      "assistance": "Contatti per l'assistenza",
+      "wherePay": "Dove pagare",
+      "poste": "Bollettino Postale PA",
+      "paymentChannel": "Canali di pagamento",
+      "webApp": "Sul sito e in app di {Ente.Nome}",
+      "onlyWeb": "Sul sito di {Ente.Nome}",
+      "onlyApp": "Sulla app di {Ente.Nome}",
+      "none": "Nessun canale di pagamento aggiuntivo di {Ente.Nome} presente"
+    },
+    "title": "Configura modello",
+    "subtitle": "Completa le informazioni necessarie per l'emissione degli avvisi di pagamento",
+    "addForm": {
+      "dialog": {
+        "ok": "Ho capito",
+        "title": "Ecco cosa vedranno gli utenti sull'avviso di pagamento, in base alla tua scelta:",
+        "header": "PAGA CON L'APP IO",
+        "baseText": "oppure dal tuo Home Banking, con la tua app di pagamento o con gli altri canali abilitati"
+      },
+      "logoText": "Si vuole sostituire il logo caricato in precedenza?",
+      "logoLink": "Clicca qui",
+      "breadcrumb": "Configura modello",
+      "title": "Informazioni necessarie",
+      "subtitle": "L'avviso di pagamento (cartaceo o digitiale) permette di effettuare pagamenti attraverso la piattaforma pagoPA",
+      "link": "Dubbi? vai alla documentazione",
+      "sections": {
+        "ci": {
+          "title": "Ente creditore"
+        },
+        "pay": {
+          "title": "Dove pagare",
+          "radioTitle": "È possibile eseguire pagamenti sul tuo sito o app?"
+        },
+        "poste": {
+          "title": "Bollettino Postale PA",
+          "radioTitle": "Disponi di un conto corrente postale per gli incassi?"
+        },
+        "assistance": {
+          "title": "Contatto per l'assistenza"
+        }
+      },
+      "buttons": {
+        "back": "Annulla",
+        "confirm": "Conferma"
+      },
+      "fields": {
+        "name": "Nome",
+        "taxCode": "Codice Fiscale",
+        "cbill": "CBILL",
+        "organization": "Settore",
+        "info": "Inserisci il contatto",
+        "paymentType": "Indica dove",
+        "posteName": "Intestato a",
+        "posteAccountNumber": "Numero c/c postale",
+        "posteAuth": "Codice autorizzazione",
+        "logo": "Logo"
+      },
+      "paymentType": {
+        "onlyApp": "Solo in app",
+        "onlyWeb": "Solo sul sito",
+        "both": "Sul sito e in app"
+      },
+      "dropFileText": "Trascina qui il logo dell'ente per la stampa, o selezionalo dal tuo computer"
+    }
+  },
   "ibanPage": {
     "title": "IBAN",
     "subtitle": "Cerca e gestisci tutti gli IBAN",
@@ -1294,6 +1371,9 @@
     },
     "groups": {
       "title": "Gruppi"
+    },
+    "paymentNotices": {
+      "title": "Avvisi di pagamento"
     }
   },
   "header": {
@@ -1343,6 +1423,7 @@
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
     "Bundles": "Pacchetti commissioni",
+    "PaymentNotices": "Avvisi di pagamento",
     "Iban": "IBAN",
     "errorTitle": "Errore",
     "operationTable": "Tavolo Operativo",

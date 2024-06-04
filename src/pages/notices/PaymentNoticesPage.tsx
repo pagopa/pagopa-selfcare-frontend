@@ -3,25 +3,28 @@ import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-commo
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory, Link as RouterLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { theme } from '@pagopa/mui-italia';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CreateIcon from '@mui/icons-material/Create';
+import { extractProblemJson } from '../../utils/client-utils';
+import { LOADING_TASK_INSTITUTION_DATA_GET } from '../../utils/constants';
+import ROUTES from '../../routes';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { getInstitutionData } from '../../services/noticesService';
 import { InstitutionUploadData } from '../../api/generated/portal/InstitutionUploadData';
-import { theme } from '@pagopa/mui-italia';
+import { institutionsDataDetailsActions } from '../../redux/slices/institutionsDataDetailsSlice';
+import { store } from '../../redux/store';
 import PaymentNoticesDetailPage from './detail/PaymentNoticesDetailPage';
-import ROUTES from '../../routes';
-import { extractProblemJson } from '../../utils/client-utils';
-import { LOADING_TASK_IBAN_TABLE } from '../../utils/constants';
+
 
 const PaymentNoticesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const setLoadingOverlay = useLoading(LOADING_TASK_IBAN_TABLE);
+  const setLoadingOverlay = useLoading(LOADING_TASK_INSTITUTION_DATA_GET);
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
     setLoadingOverlay(status);
@@ -39,7 +42,13 @@ const PaymentNoticesPage = () => {
        institutionUploadData?.taxCode !== selectedParty.fiscalCode)) {
       setLoadingStatus(true);
       getInstitutionData(selectedParty.fiscalCode)
-        .then((r) => (r ? setInstitutionUploadData(r) : setInstitutionUploadData(null)))
+        .then(async (r) => {
+          setInstitutionUploadData(r ? r : null);
+            if (r !== undefined) {
+              store.dispatch(institutionsDataDetailsActions
+                .setInstitutionDataDetailsState(r));
+            }
+        })
         .catch((err) => {
             const problemJson = extractProblemJson(err);
             if (problemJson?.status !== 404) {
@@ -62,7 +71,7 @@ const PaymentNoticesPage = () => {
 
   return (
     <SideMenuLayout>
-        <Stack direction="row" justifyContent="space-between" mt={5}>
+        <Stack direction="row" justifyContent="space-between">
             <Stack display="flex" justifyContent="flex-start" mr={2}>
               <TitleBox
                 title={t('noticesPage.title')}
@@ -72,11 +81,11 @@ const PaymentNoticesPage = () => {
                 variantSubTitle="body1"
               />
           </Stack>
-          <Stack display="flex" justifyContent="flex-end">
+          <Stack display="flex" justifyContent="flex-end" mb={5}>
             <Button
                   variant="contained"
                   onClick={addEditData}
-                  startIcon={institutionUploadData === null ? 
+                  endIcon={institutionUploadData === null ? 
                   <ArrowForwardIcon /> : <CreateIcon />}
                   color="primary"
                   sx={{
@@ -89,15 +98,15 @@ const PaymentNoticesPage = () => {
                   }}
                 >
                   {t(institutionUploadData === null ?
-                    'paymentNoticesPage.addData' :
-                    'paymentNoticesPage.editData'
+                    'noticesPage.addData' :
+                    'noticesPage.editData'
                   )}
             </Button>
           </Stack>
         </Stack>  
       {institutionUploadData === null ? (
         <Alert severity="warning" variant="outlined" data-testid="alert-test">
-          {t('paymentNoticesPage.toAddWarning')}
+          {t('noticesPage.toAddWarning')}
         </Alert>
       ) : (<></>)}
 

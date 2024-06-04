@@ -80,7 +80,7 @@ export default function SideMenu() {
 
                     {userHasPermission('payment-notices') && (
                         <SidenavItem
-                            title={t('sideMenu.paymentNotices')}
+                            title={t('sideMenu.paymentNotices.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.PAYMENT_NOTICES))}
                             isSelected={pathname === ROUTES.PAYMENT_NOTICES}
                             disabled={isDisabled}

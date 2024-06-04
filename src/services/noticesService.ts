@@ -3,17 +3,17 @@ import { InstitutionUploadData } from '../api/generated/portal/InstitutionUpload
 import { getInstitutionData as getInstitutionDataMock, uploadInstitutionData as uploadInstitutionDataMock } from './__mocks__/noticesService';
 
 
-export const getInstitutionData = (taxCode: string): Promise<InstitutionUploadData> => {
+export const getInstitutionData = (taxCode: string): Promise<InstitutionUploadData | undefined> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE_NOTICES === 'true') {
-    return getInstitutionData(taxCode);
+    return getInstitutionDataMock(taxCode);
   } else {
     return BackofficeApi.getInstitutionData({'ciTaxCode': taxCode});
   }
 };
 
-export const uploadInstitutionData = (file: File, institutionsData: InstitutionUploadData): Promise<void> => {
+export const uploadInstitutionData = (file: File | null, institutionsData: InstitutionUploadData): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE_NOTICES === 'true') {
-    return uploadInstitutionData(file, institutionsData);
+    return uploadInstitutionDataMock(file, institutionsData);
   } else {
     return BackofficeApi.uploadInstitutionData({file, 'uploadInstitutionData': institutionsData});
   }

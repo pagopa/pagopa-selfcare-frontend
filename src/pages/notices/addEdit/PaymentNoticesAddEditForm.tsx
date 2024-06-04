@@ -2,10 +2,18 @@ import {useTranslation} from 'react-i18next';
 import {SingleFileInput, theme} from '@pagopa/mui-italia';
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   FormControlLabel,
+  FormLabel,
   Grid,
+  IconButton,
   InputLabel,
+  Link,
   MenuItem,
   Paper,
   Radio,
@@ -19,9 +27,11 @@ import {
 import BadgeIcon from '@mui/icons-material/Badge';
 import RoomIcon from '@mui/icons-material/Room';
 import EmailIcon from '@mui/icons-material/Email';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import {Box} from '@mui/system';
 import {useEffect, useState} from 'react';
+import React from 'react';
 import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
@@ -32,24 +42,25 @@ import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {extractProblemJson} from '../../../utils/client-utils';
 import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import React from 'react';
 import { uploadInstitutionData } from '../../../services/noticesService';
 
 type Props = {
   goBack: () => void;
-  data?: InstitutionUploadData;
+  data?: InstitutionUploadData | null;
 };
 
+// eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   const { t } = useTranslation();
   const [hasPay, setHasPay] = useState(data?.appChannel || data?.webChannel);
-  const [hasPoste, setHasPoste] = useState(data?.posteAuth !== null)
+  const [hasPoste, setHasPoste] = useState(data?.posteAuth !== null);
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
   const [file, setFile] = useState<File | null>(null);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [paymentType, setPaymentType] = useState<string>(
     data?.webChannel === true && data?.appChannel === false ? 
       "only_web" : 
@@ -61,15 +72,15 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   const paymentTypes = [
     {
       key: "only_web",
-      label: t("addEditInstitutionsData.addForm.paymentType.onlyWeb")
+      label: t("addEditInstitutionsDataPage.addForm.paymentType.onlyWeb")
     },
     {
       key: "only_app",
-      label: t("addEditInstitutionsData.addForm.paymentType.onlyApp")
+      label: t("addEditInstitutionsDataPage.addForm.paymentType.onlyApp")
     },
     {
       key: "both",
-      label: t("addEditInstitutionsData.addForm.paymentType.both")
+      label: t("addEditInstitutionsDataPage.addForm.paymentType.both")
     },
   ];
 
@@ -78,26 +89,28 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   };
 
   useEffect(() => {
+    if (!hasPay && (formik.values.appChannel || formik.values.webChannel)) {
+      setFlagValues(formik, false, false);   
+    }
+  }, [hasPay]);
+
+  const setFlagValues = (formik: any, appChannel: boolean, webChannel: boolean) => {
+    formik.setValues({
+      ...formik.values,
+      appChannel: appChannel,
+      webChannel: webChannel
+    });
+  };
+
+  useEffect(() => {
     if (paymentType) {
       if (paymentType === "only_web" &&
        (formik.values.appChannel === true || formik.values.webChannel === false)) {
-        formik.setValues({
-          ...formik.values,
-          appChannel: false,
-          webChannel: true
-        })
+          setFlagValues(formik, false, true);
        } else if (paymentType === "only_app") {
-        formik.setValues({
-          ...formik.values,
-          appChannel: true,
-          webChannel: false
-        })        
+        setFlagValues(formik, true, false);   
        } else if (paymentType === "both") {
-        formik.setValues({
-          ...formik.values,
-          appChannel: true,
-          webChannel: true
-        })  
+        setFlagValues(formik, true, true);
        }
     }
   }, [paymentType]);  
@@ -111,7 +124,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
     setFile(null);
   };
 
-  const initialFormData = (data?: InstitutionUploadData) =>
+  const initialFormData = (data?: InstitutionUploadData | null) =>
     data
       ? {
           taxCode: data.taxCode,
@@ -144,18 +157,56 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
             
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  const validate = (values: InstitutionUploadData): { [k: string]: string | undefined } | undefined => {
-
-    return undefined;
-  };
+  const validate = (values: InstitutionUploadData): { [k: string]: string | undefined } | undefined => 
+    Object.fromEntries(
+      Object.entries({
+        fullName: !values.fullName
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,
+        taxCode: !values.taxCode
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,
+        cbill: !values.cbill
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,
+        info: !values.info
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined, 
+        webChannel: values.webChannel === undefined
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,
+        appChannel: values.appChannel === undefined
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,    
+        posteAccountNumber: !values.posteAccountNumber
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,
+        posteAuth: !values.posteAuth
+          ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
+          : undefined,              
+      }).filter(([_key, value]) => value)
+    ); 
 
   const enableSubmit = (values: InstitutionUploadData) => {
-      return true;
-  }
+
+      const baseCondition =
+      values.fullName !== '' &&
+      values.taxCode !== '' &&
+      values.cbill !== '' && 
+      values.info !== '' &&
+      values.appChannel !== undefined &&
+      values.webChannel !== undefined;
+
+      if (hasPoste) {
+        return baseCondition && 
+          (values.posteAccountNumber !== undefined || values.posteAuth !== undefined);
+      } else {
+        return baseCondition;
+      }
+  };
 
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-  const submit = async (data: InstitutionUploadData, file: File) => {
+  const submit = async (data: InstitutionUploadData, file: File | null) => {
       setLoading(true);
       try {
         await uploadInstitutionData(file, data);
@@ -168,8 +219,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           error: reason as Error,
           techDescription: `An error occurred while adding/editing notice ci data`,
           toNotify: true,
-          displayableTitle: t('addEditInstitutionsData.errors.addEditTitle'),
-          displayableDescription: t('addEditInstitutionsData.errors.addEditMessage'),
+          displayableTitle: t('addEditInstitutionsDataPage.errors.addEditTitle'),
+          displayableDescription: t('addEditInstitutionsDataPage.errors.addEditMessage'),
           component: 'Toast',
         });
       } finally {
@@ -182,9 +233,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
     initialValues: initialFormData(data),
     validate,
     onSubmit: async (values) => {
-      if (file != null) {
         await submit(values, file);
-      };
     },
     enableReinitialize: true,
     validateOnMount: true,
@@ -209,27 +258,36 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           mb: 4,
         }}
       >
-        <Typography variant="h6" fontWeight="fontWeightMedium" mb={3}>
-          {t('addEditInstitutionsDataPage.title')}
+        <Typography variant="h6" fontWeight="fontWeightMedium" mb={1}>
+          {t('addEditInstitutionsDataPage.addForm.title')}
         </Typography>
 
-        <Typography variant="body2" mb={3}>
-          {t('addEditInstitutionsDataPage.subtitle')}
+        <Typography variant="body2" mb={1}>
+          {t('addEditInstitutionsDataPage.addForm.subtitle')}
+        </Typography>
+
+        <Typography variant="body2" mb={3} sx={{ textDecoration: 'underline', fontWeight: 'medium' }}>
+          <Link
+            href="https://docs.pagopa.it/avviso-pagamento/allegato-2/specifiche-tecniche"
+            target="_blank"
+          >
+            {t('addEditInstitutionsDataPage.addForm.link')}
+          </Link>
         </Typography>
 
         <Box>
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-                title={t('addEditInstitutionsData.addForm.sections.ci')}
+                title={t('addEditInstitutionsDataPage.addForm.sections.ci.title')}
                 icon={<BadgeIcon/>}
             />
             <Grid container spacing={2} mt={1}>
-              <Grid container item xs={6}>
+              <Grid container item xs={12}>
                 <TextField
                   fullWidth
                   id="name"
                   name="name"
-                  label={t('addEditInstitutionsData.addForm.fields.name')}
+                  label={t('addEditInstitutionsDataPage.addForm.fields.name')}
                   size="small"
                   value={formik.values.fullName}
                   onChange={(e) => formik.handleChange(e)}
@@ -248,7 +306,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   fullWidth
                   id="taxCode"
                   name="taxCode"
-                  label={t('addEditInstitutionsData.addForm.fields.taxCode')}
+                  label={t('addEditInstitutionsDataPage.addForm.fields.taxCode')}
                   size="small"
                   value={formik.values.taxCode}
                   onChange={(e) => formik.handleChange(e)}
@@ -267,7 +325,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   fullWidth
                   id="cbill"
                   name="cbill"
-                  label={t('addEditInstitutionsData.addForm.fields.cbill')}
+                  label={t('addEditInstitutionsDataPage.addForm.fields.cbill')}
                   size="small"
                   value={formik.values.taxCode}
                   onChange={(e) => formik.handleChange(e)}
@@ -281,16 +339,12 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                 />
               </Grid>
 
-              <Grid container item xs={6}>
-                <Box></Box>
-              </Grid>
-
               <Grid container item xs={12}>
                 <TextField
                   fullWidth
                   id="organization"
                   name="organization"
-                  label={t('addEditInstitutionsData.addForm.fields.organization')}
+                  label={t('addEditInstitutionsDataPage.addForm.fields.organization')}
                   size="small"
                   value={formik.values.organization}
                   onChange={(e) => formik.handleChange(e)}
@@ -303,34 +357,76 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
               </Grid>
 
               <Grid container item xs={12}>
-                <SingleFileInput
-                  value={file}
-                  accept={['.png']}
-                  onFileSelected={handleSelect}
-                  onFileRemoved={handleRemove}
-                  dropzoneLabel={t(
-                    'addEditInstitutionsData.addForm.dropFileText'
-                  )}
-                  rejectedLabel={t(
-                    'addEditInstitutionsData.addForm.rejectedFile'
-                  )}
-                />
+                {(formik.values.logo === undefined || formik.values.logo === null) ?
+                 (                
+                  <SingleFileInput
+                    value={file}
+                    accept={['.png']}
+                    onFileSelected={handleSelect}
+                    onFileRemoved={handleRemove}
+                    dropzoneLabel={t(
+                      'addEditInstitutionsDataPage.addForm.dropFileText'
+                    )}
+                    rejectedLabel={t(
+                      'addEditInstitutionsDataPage.addForm.rejectedFile'
+                    )}
+                  /> 
+                 ) :
+                 (
+                  <React.Fragment>
+                    <Typography variant="body1">
+                      {t('addEditInstitutionsDataPage.addForm.logoText')}
+                      <Link
+                      component="button"
+                      variant="body1"
+                      onClick={() => formik.setFieldValue('logo', null)}
+                      sx={{
+                        verticalAlign: 'baseline',
+                        ml: 1
+                      }}
+                    >
+                      {t('addEditInstitutionsDataPage.addForm.logoLink')}
+                    </Link>
+                    </Typography>
+                  </React.Fragment>
+                )}
               </Grid>
 
             </Grid>
           </Box>
 
           <Box sx={inputGroupStyle}>
-            <FormSectionTitle
-              title={t('addEditInstitutionsData.addForm.sections.pay')}
-              icon={<RoomIcon />}
-            />
-            <Box pl={2} mt={2}>
+            <Stack direction="row" justifyContent="space-between">
+                <Stack display="flex" justifyContent="flex-start" mr={2}>
+                    <FormSectionTitle
+                      title={t('addEditInstitutionsDataPage.addForm.sections.pay.title')}
+                      icon={<RoomIcon />}
+                    />
+                </Stack>
+                <Stack display="flex" justifyContent="flex-end" mb={1}>
+                    <IconButton
+                      sx={{
+                        p: '0',
+                        width: '100%',
+                        '&:hover': { backgroundColor: 'transparent !important' },
+                      }}
+                      data-testid="pay-info-button"
+                      onClick={() => setOpenDialog(true)}
+                    >
+                      <InfoOutlinedIcon sx={{ color: 'primary.main'}} />
+                    </IconButton>
+                </Stack>
+            </Stack>
+
+            <Box pl={1} mt={2}>
               <FormControl>
+                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1}}>
+                  {t('addEditInstitutionsDataPage.addForm.sections.pay.radioTitle')}
+                </FormLabel>
                 <RadioGroup
                   name="hasPay"
                   row
-                  onChange={(e) => setHasPay(e?.target?.value == "true")}
+                  onChange={(e) => setHasPay(e?.target?.value === "true")}
                   data-testid="has-pay-radio-group"
                   value={hasPay}
                 >
@@ -350,16 +446,16 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
             </Box>
 
             {hasPay ? (
-                <Grid container item xs={6} key={`payType`}>
+                <Grid container item xs={6} key={`payType`} sx={{mt: 2}}>
                     <FormControl fullWidth key={`payType`}>
                       <InputLabel size="small" key={`payType_label`}>
-                        {t('addEditInstitutionsData.addForm.fields.paymentType')}
+                        {t('addEditInstitutionsDataPage.addForm.fields.paymentType')}
                       </InputLabel>
                       <Select
                             id="paymentType"
                             name="paymentType"
                             labelId='paymentTypeLabel'
-                            label={t('addEditInstitutionsData.addForm.fields.paymentType')}
+                            label={t('addEditInstitutionsDataPage.addForm.fields.paymentType')}
                             size="small"
                             value={paymentType}
                             onChange={(e) => handleChangePaymentType(e?.target?.value)}
@@ -382,15 +478,18 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
 
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('addEditInstitutionsData.addForm.sections.poste')}
+              title={t('addEditInstitutionsDataPage.addForm.sections.poste.title')}
               icon={<EmailIcon />}
             />
-            <Box pl={2} mt={2}>
+            <Box pl={1} mt={2}>
               <FormControl>
+                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1}}>
+                  {t('addEditInstitutionsDataPage.addForm.sections.poste.radioTitle')}
+                </FormLabel>
                 <RadioGroup
                   name="connectionType"
                   row
-                  onChange={(e) => setHasPoste(e?.target?.value == "true")}
+                  onChange={(e) => setHasPoste(e?.target?.value === "true")}
                   data-testid="hss-poste-radio-group"
                   value={hasPoste}
                 >
@@ -411,53 +510,57 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
 
             {hasPoste ? (
                 <React.Fragment>
-                  <Grid container item xs={12}>
-                    <TextField
-                      fullWidth
-                      id="posteName"
-                      name="posteName"
-                      label={t('addEditInstitutionsData.addForm.fields.poste.name')}
-                      size="small"
-                      value={formik.values.posteName}
-                      onChange={(e) => formik.handleChange(e)}
-                      error={formik.touched.posteName && Boolean(formik.errors.posteName)}
-                      helperText={formik.touched.posteName && formik.errors.posteName}
-                      inputProps={{
-                        'data-testid': 'posteName-test',
-                      }}
-                    />
-                  </Grid>
-                  <Grid container item xs={12}>
-                    <TextField
-                      fullWidth
-                      id="posteAccountNumber"
-                      name="posteAccountNumber"
-                      label={t('addEditInstitutionsData.addForm.fields.poste.accountNumber')}
-                      size="small"
-                      value={formik.values.posteAccountNumber}
-                      onChange={(e) => formik.handleChange(e)}
-                      error={formik.touched.posteAccountNumber && Boolean(formik.errors.posteAccountNumber)}
-                      helperText={formik.touched.posteAccountNumber && formik.errors.posteAccountNumber}
-                      inputProps={{
-                        'data-testid': 'posteAccountNumber-test',
-                      }}
-                    />
-                  </Grid>
-                  <Grid container item xs={12}>
-                    <TextField
-                      fullWidth
-                      id="posteAuth"
-                      name="posteAuth"
-                      label={t('addEditInstitutionsData.addForm.fields.poste.auth')}
-                      size="small"
-                      value={formik.values.posteAuth}
-                      onChange={(e) => formik.handleChange(e)}
-                      error={formik.touched.posteAuth && Boolean(formik.errors.posteAuth)}
-                      helperText={formik.touched.posteAuth && formik.errors.posteAuth}
-                      inputProps={{
-                        'data-testid': 'posteAuth-test',
-                      }}
-                    />
+                  <Grid container spacing={2} mt={0}>
+                    <Grid container item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="posteName"
+                        name="posteName"
+                        label={t('addEditInstitutionsDataPage.addForm.fields.posteName')}
+                        size="small"
+                        value={formik.values.posteName}
+                        onChange={(e) => formik.handleChange(e)}
+                        error={formik.touched.posteName && Boolean(formik.errors.posteName)}
+                        helperText={formik.touched.posteName && formik.errors.posteName}
+                        inputProps={{
+                          'data-testid': 'posteName-test',
+                        }}
+                      />
+                    </Grid>
+                    <Grid container item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="posteAccountNumber"
+                        name="posteAccountNumber"
+                        label={t('addEditInstitutionsDataPage.addForm.fields.posteAccountNumber')}
+                        size="small"
+                        value={formik.values.posteAccountNumber}
+                        onChange={(e) => formik.handleChange(e)}
+                        error={formik.touched.posteAccountNumber && Boolean(formik.errors.posteAccountNumber)}
+                        helperText={formik.touched.posteAccountNumber && formik.errors.posteAccountNumber}
+                        inputProps={{
+                          'data-testid': 'posteAccountNumber-test',
+                        }}
+                        required = {hasPoste}
+                      />
+                    </Grid>
+                    <Grid container item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="posteAuth"
+                        name="posteAuth"
+                        label={t('addEditInstitutionsDataPage.addForm.fields.posteAuth')}
+                        size="small"
+                        value={formik.values.posteAuth}
+                        onChange={(e) => formik.handleChange(e)}
+                        error={formik.touched.posteAuth && Boolean(formik.errors.posteAuth)}
+                        helperText={formik.touched.posteAuth && formik.errors.posteAuth}
+                        inputProps={{
+                          'data-testid': 'posteAuth-test',
+                        }}
+                        required = {hasPoste}
+                      />
+                    </Grid>
                   </Grid>
                 </React.Fragment>
             ): (<Box></Box>)}
@@ -466,7 +569,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
 
           <Box sx={inputGroupStyle}>
             <FormSectionTitle
-              title={t('addEditInstitutionsData.addForm.sections.assistance')}
+              title={t('addEditInstitutionsDataPage.addForm.sections.assistance.title')}
               icon={<SupportAgentIcon />}
             />
             <Grid container spacing={2} mt={1}>
@@ -475,7 +578,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                       fullWidth
                       id="posteInfo"
                       name="posteInfo"
-                      label={t('addEditInstitutionsData.addForm.fields.poste.info')}
+                      label={t('addEditInstitutionsDataPage.addForm.fields.info')}
                       size="small"
                       value={formik.values.info}
                       onChange={(e) => formik.handleChange(e)}
@@ -500,7 +603,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
             onClick={goBack}
             data-testid="back-button-test"
           >
-            {t('addEditIbanPage.addForm.buttons.back')}
+            {t('addEditInstitutionsDataPage.addForm.buttons.back')}
           </Button>
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
@@ -511,10 +614,55 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
             type="submit"
             data-testid="submit-button-test"
           >
-            {t('addEditIbanPage.addForm.buttons.confirm')}
+            {t('addEditInstitutionsDataPage.addForm.buttons.confirm')}
           </Button>
         </Stack>
       </Stack>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {t('addEditInstitutionsDataPage.addForm.dialog.title')}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Box>
+              <Typography variant="sidenav">
+                {t('addEditInstitutionsDataPage.addForm.dialog.header')}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                  {hasPay ? t(formik.values.webChannel ?
+                            formik.values.appChannel ? 'addEditInstitutionsDataPage.detail.webApp' :
+                             'addEditInstitutionsDataPage.detail.onlyWeb'
+                            : 'addEditInstitutionsDataPage.detail.onlyApp')+', ' : ''} 
+                  {t('addEditInstitutionsDataPage.addForm.dialog.baseText')}
+              </Typography>
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            variant="contained"
+            sx={{
+              border: `2px solid ${theme.palette.primary.main}`,
+              borderRadius: theme.spacing(0.5),
+              px: 2,
+              py: 1.5,
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            onClick={() => setOpenDialog(false)} autoFocus>
+          {t('addEditInstitutionsDataPage.addForm.dialog.ok')}
+          </Button>
+        </DialogActions>
+      </Dialog>                    
+
     </form>
   );
 };

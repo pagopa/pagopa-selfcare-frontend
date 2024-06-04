@@ -94,10 +94,13 @@ import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetai
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
+import { createClient as createCustomClient} from './custom/client';
+import { WithDefaultsT as WithCustomDefaultsT } from './custom/client';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
+// eslint-disable-next-line sonarjs/no-identical-functions
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any) => {
   const token = storageTokenOps.read();
   return wrappedOperation({
@@ -105,6 +108,16 @@ const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any
     JWT: token,
   });
 };
+
+// eslint-disable-next-line sonarjs/no-identical-functions
+const withBearerCustom: WithCustomDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any) => {
+  const token = storageTokenOps.read();
+  return wrappedOperation({
+    ...params,
+    JWT: token,
+  });
+};
+
 
 // const abortableFetch = AbortableFetch(agent.getHttpFetch(process.env));
 // const timeout = ENV.API_TIMEOUT_MS.BACKOFFICE;
@@ -139,11 +152,11 @@ export const backofficeClient = createClient({
   withDefaults: withBearer,
 });
 
-export const customBoClient = createClient({
+export const customBoClient = createCustomClient({
   baseUrl: ENV.URL_API.BACKOFFICE,
   basePath: '',
   fetchApi: fetchWithHeader as any,
-  withDefaults: withBearer,
+  withDefaults: withBearerCustom,
 });
 
 const onRedirectToLogin = () =>
@@ -1324,8 +1337,8 @@ export const BackofficeApi = {
     file,
     uploadInstitutionData
   }: {
-    file: File;
-    uploadInstitutionData: InstitutionUploadData
+    file: File | null;
+    uploadInstitutionData: InstitutionUploadData;
   }): Promise<void> => {
     const result = await customBoClient.updateInstitutions({
       'file': file,

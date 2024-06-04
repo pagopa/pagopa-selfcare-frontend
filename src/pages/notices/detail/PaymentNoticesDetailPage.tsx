@@ -1,10 +1,11 @@
 import { Box, Divider, Grid } from '@mui/material';
+import React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { theme } from '@pagopa/mui-italia';
 import { InstitutionUploadData } from '../../../api/generated/portal/InstitutionUploadData';
-import React from 'react';
 
 type Props = {
   data?: InstitutionUploadData;
@@ -20,7 +21,7 @@ Props) => {
 
   return (
     <Grid container justifyContent={'center'}>
-      <Grid item p={3} xs={8}>
+      <Grid item xs={12}>
 
         <Paper
           elevation={5}
@@ -30,50 +31,52 @@ Props) => {
             p: 4,
           }}
         >
-          <Grid container item spacing={2}>
+          <Grid container item spacing={2} sx={{ml: 0}}>
            <Grid container xs={6}>
             <>
               <Grid item xs={12}>
                 <Typography variant="sidenav">
-                  {t('addEditInstitutionsData.detail.registry')}
+                  {t('addEditInstitutionsDataPage.detail.ci')}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} pt={2}>
                 <Typography variant="body2">
-                  {t('addEditInstitutionsData.detail.fields.logo')}
+                  {t('addEditInstitutionsDataPage.addForm.fields.logo')}
                 </Typography>
+                <Grid
+                  sx={{
+                    border: `2px solid ${theme.palette.divider}`,
+                    borderRadius: theme.spacing(0.5),
+                    px: 2,
+                    py: 1.5,
+                    width: '25%',
+                    display: 'flex',
+                    justifyContent: 'center', 
+                    mt: 1
+                  }}>
+                  <img src={data?.logo} style={{width: '100px', height:'100px'}}/>
+                </Grid>
               </Grid>
-              <Grid item xs={9}>
-                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  <img src={data?.logo} />
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} pt={2}>
                 <Typography variant="body2">
-                  {t('addEditInstitutionsData.detail.fields.name')}
+                  {t('addEditInstitutionsDataPage.addForm.fields.name')}
                 </Typography>
-              </Grid>
-              <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                   {data?.fullName}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} pt={2}>
                 <Typography variant="body2">
-                  {t('addEditInstitutionsData.detail.fields.taxCode')}
+                  {t('addEditInstitutionsDataPage.addForm.fields.taxCode')}
                 </Typography>
-              </Grid>
-              <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                   {data?.taxCode}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} pt={2}>
                 <Typography variant="body2">
-                  {t('addEditInstitutionsData.detail.fields.organization')}
+                  {t('addEditInstitutionsDataPage.addForm.fields.organization')}
                 </Typography>
-              </Grid>
-              <Grid item xs={9}>
                 <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                   {data?.organization}
                 </Typography>
@@ -83,13 +86,13 @@ Props) => {
             <Grid container xs={6}>
                 <Grid item xs={12}>
                   <Typography variant="sidenav">
-                    {t('addEditInstitutionsData.detail.registry')}
+                    {t('addEditInstitutionsDataPage.detail.assistance')}
                   </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">
-                    {data?.info}
-                  </Typography>
+                  <Grid item xs={12} pt={2}>
+                    <Typography variant="body2">
+                      {data?.info}
+                    </Typography>
+                  </Grid>
                 </Grid>
             </Grid>
           </Grid>
@@ -97,23 +100,22 @@ Props) => {
               (
                 <React.Fragment>
                   <Divider sx={{ mt: 3 }}></Divider>
-                  <Grid container item spacing={2}>
+                  <Grid container item spacing={2} pt={2}>
                       <Grid item xs={12}>
                         <Typography variant="sidenav">
-                          {t('addEditInstitutionsData.detail.wherePay')}
+                          {t('addEditInstitutionsDataPage.detail.wherePay')}
                         </Typography>
                       </Grid>
                       <Grid item xs={3}>
                         <Typography variant="body2">
-                          {t('addEditInstitutionsData.detail.fields.paymentChannel')}
+                          {t('addEditInstitutionsDataPage.detail.paymentChannel')}
                         </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                           {t(data.webChannel ?
-                            data.appChannel ? 'addEditInstitutionsData.detail.webApp' :
-                             'addEditInstitutionsData.detail.onlyWeb'
-                            : 'addEditInstitutionsData.detail.onlyApp')}
+                            data.appChannel ? 'addEditInstitutionsDataPage.detail.webApp' :
+                             'addEditInstitutionsDataPage.detail.onlyWeb'
+                            : data.appChannel ? 'addEditInstitutionsDataPage.detail.onlyApp' :
+                            'addEditInstitutionsDataPage.detail.none')}
                         </Typography>
                       </Grid>
                   </Grid>
@@ -125,38 +127,32 @@ Props) => {
               (
                 <React.Fragment>
                   <Divider sx={{ mt: 3 }}></Divider>
-                  <Grid container item spacing={2}>
+                  <Grid container item spacing={2} pt={2}>
                       <Grid item xs={12}>
                         <Typography variant="sidenav">
-                          {t('addEditInstitutionsData.detail.poste')}
+                          {t('addEditInstitutionsDataPage.detail.poste')}
                         </Typography>
                       </Grid>
                       <Grid item xs={3}>
                         <Typography variant="body2">
-                          {t('addEditInstitutionsData.detail.fields.posteName')}
+                          {t('addEditInstitutionsDataPage.addForm.fields.posteName')}
                         </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                          {data?.posteName}
+                          {data?.posteName ? data.posteName : '-'}
                         </Typography>
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={12} mb={0}>
                         <Typography variant="body2">
-                          {t('addEditInstitutionsData.detail.fields.accountNumber')}
+                          {t('addEditInstitutionsDataPage.addForm.fields.posteAccountNumber')}
                         </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                           {data?.posteAccountNumber}
                         </Typography>
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={12}>
                         <Typography variant="body2">
-                          {t('addEditInstitutionsData.detail.fields.posteAuth')}
+                          {t('addEditInstitutionsDataPage.addForm.fields.posteAuth')}
                         </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                           {data?.posteAccountNumber}
                         </Typography>

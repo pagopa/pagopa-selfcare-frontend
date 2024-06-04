@@ -10,7 +10,7 @@ export const getFlags = (): Promise<FeatureFlags> => {
 };
 
 export const mockFlag = (): Promise<FeatureFlags> => {
-        const ff: FeatureFlags = {flags: {'isOperator': false}};
+        const ff: FeatureFlags = {flags: {'isOperator': false, 'payment-notices': true}};
         return new Promise((resolve) => resolve(ff));
     }
 ;

@@ -54,6 +54,7 @@ import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
+import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -295,13 +296,13 @@ const SecuredRoutes = withLogin(
 
                 <Route path={routes.PAYMENT_NOTICES} exact={true}>
                   <ProtectedRoute permission="payment-notices" flagValue="payment-notices">
-                    <PaymentsReceiptsPage />
+                    <PaymentNoticesPage />
                   </ProtectedRoute>
                 </Route>
 
                 <Route path={routes.PAYMENT_NOTICES_ADDEDIT} exact={true}>
                   <ProtectedRoute permission="payment-notices-addedit" flagValue="payment-notices">
-                    <PaymentsReceiptsPage />
+                    <PaymentNoticesAddEditPage />
                   </ProtectedRoute>
                 </Route>
 

@@ -978,6 +978,12 @@
             "message": "L’ente non avrà più la possibilità di aderire al pacchetto privato."
           }
         },
+        "alert": {
+          "reject": "Richiesta rifiutata",
+          "accept": "Richiesta accettata",
+          "delete": "Ente rimosso",
+          "deleteOffer": "Offerta eliminata"
+        },
         "requestsTable": {
           "title": "Richieste di adesione",
           "table": {
@@ -992,11 +998,6 @@
             "DELETING": "In eliminazione"
           },
           "drawerTitle": "Dettaglio richiedente",
-          "alert": {
-            "reject": "Richiesta rifiutata",
-            "accept": "Richiesta accettata",
-            "delete": "Ente rimosso"
-          },
           "error": {
             "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
             "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",

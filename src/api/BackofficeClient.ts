@@ -1180,7 +1180,7 @@ export const BackofficeApi = {
     limit,
     page,
     status,
-    bundleType
+    bundleType,
   }: BundleCISubscriptionsMethodParams): Promise<CIBundleSubscriptionsResource> => {
     // eslint-disable-next-line functional/no-let
     let params: BundleCISubscriptionsBodyRequest = {
@@ -1189,7 +1189,7 @@ export const BackofficeApi = {
       limit,
       page,
       status,
-      bundleType
+      bundleType,
     };
     if (ciTaxCode) {
       params = { ...params, ciTaxCode };
@@ -1203,7 +1203,7 @@ export const BackofficeApi = {
     pspTaxCode,
     ciTaxCode,
     status,
-    bundleType
+    bundleType,
   }: BundleCiSubscriptionsDetailMethodParams): Promise<CIBundleSubscriptionsDetail> => {
     const result = await backofficeClient.getBundleCISubscriptionsDetail({
       'id-bundle': idBundle,
@@ -1285,6 +1285,23 @@ export const BackofficeApi = {
       'ci-tax-code': ciTaxCode,
       body: bundleRequest as PublicBundleRequest,
       bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  deletePrivateBundleOffer: async ({
+    idBundle,
+    pspTaxCode,
+    bundleOfferId,
+  }: {
+    idBundle: string;
+    pspTaxCode: string;
+    bundleOfferId: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.deletePrivateBundleOffer({
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      'bundle-offer-id': bundleOfferId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

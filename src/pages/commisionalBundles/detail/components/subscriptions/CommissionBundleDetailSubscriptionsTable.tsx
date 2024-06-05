@@ -33,15 +33,14 @@ import {
 import {
   acceptBundleSubscriptionRequest,
   deleteCIBundleSubscription,
+  deletePrivateBundleOffer,
   getBundleCISubscriptions,
   getBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
 } from '../../../../../services/bundleService';
 import { CIBundleSubscriptionsResource } from '../../../../../api/generated/portal/CIBundleSubscriptionsResource';
 import { CIBundleSubscriptionsDetail } from '../../../../../api/generated/portal/CIBundleSubscriptionsDetail';
-import {
-  TypeEnum,
-} from '../../../../../api/generated/portal/PSPBundleResource';
+import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
 import { CommissionBundleDetailSubscriptionDrawer } from './CommissionBundleDetailSubscriptionDrawer';
 import { buildColumnDefs } from './CommissionBundleDetailSubscriptionTableColumns';
 
@@ -204,9 +203,13 @@ export default function CommissionBundleSubscriptionsTable({
       );
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
-    if(actionType === "deleteOffer"){
-      // TODO add API delete offer
-      setLoadingRequestAction(false);
+    if (actionType === 'deleteOffer') {
+      promise = deletePrivateBundleOffer({
+        idBundle: bundleDetail?.idBundle ?? '',
+        pspTaxCode: selectedParty?.fiscalCode ?? '',
+        bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
+      });
+      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
     if (promise) {
       promise
@@ -220,7 +223,7 @@ export default function CommissionBundleSubscriptionsTable({
             id: actionId,
             blocking: false,
             error: reason as Error,
-            techDescription: `An error occurred while managing the subscription request`,
+            techDescription: `An error occurred while managing the subscription ${bundleDetail.type === TypeEnum.PRIVATE ? 'offer' : 'request'}`,
             toNotify: true,
             displayableTitle: t('general.errorTitle'),
             displayableDescription: t(`${componentPath}.error.${actionType}`),
@@ -313,7 +316,7 @@ export default function CommissionBundleSubscriptionsTable({
           style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}
           data-testid="success-alert"
         >
-          {t(`${componentPath}.alert.${successAlert}`)}
+          {t(`${generalPath}.alert.${successAlert}`)}
         </Alert>
       )}
       <CommissionBundleDetailSubscriptionDrawer

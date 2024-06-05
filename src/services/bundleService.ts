@@ -146,7 +146,7 @@ export const getBundleCISubscriptions = ({
   limit,
   page,
   status,
-  bundleType
+  bundleType,
 }: BundleCISubscriptionsMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsMock();
@@ -158,7 +158,7 @@ export const getBundleCISubscriptions = ({
       limit,
       page,
       status,
-      bundleType
+      bundleType,
     });
   }
 };
@@ -168,7 +168,7 @@ export const getBundleCISubscriptionsDetail = ({
   pspTaxCode,
   ciTaxCode,
   status,
-  bundleType
+  bundleType,
 }: BundleCiSubscriptionsDetailMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsDetailMock();
@@ -178,7 +178,7 @@ export const getBundleCISubscriptionsDetail = ({
       pspTaxCode,
       ciTaxCode,
       status,
-      bundleType
+      bundleType,
     });
   }
 };
@@ -232,7 +232,25 @@ export const createCIBundleRequest = ({
   }
 };
 
+export const deletePrivateBundleOffer = ({
+  idBundle,
+  pspTaxCode,
+  bundleOfferId,
+}: {
+  idBundle: string;
+  pspTaxCode: string;
+  bundleOfferId: string;
+}) => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.deletePrivateBundleOffer({
+      idBundle,
+      pspTaxCode,
+      bundleOfferId,
+    });
+  }
+};
+
 export const getSpecificBuiltInData = (t: TFunction, specificBuiltInData?: string) =>
-  specificBuiltInData
-    ? specificBuiltInData
-    : t('commissionBundlesPage.allTaxonomies');
+  specificBuiltInData ? specificBuiltInData : t('commissionBundlesPage.allTaxonomies');

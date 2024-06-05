@@ -650,7 +650,7 @@
       "confirmButton": "Conferma"
     },
     "alert": {
-      "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
+      "noDelegations": "Nessuna delega disponibile per la stazione selezionata. Visualizzi questo messaggio se non hai deleghe oppure se tutti gli enti che ti hanno delegato sono già associati a questa stazione"
     }
   },
   "stationDetailPageValidation": {
@@ -760,6 +760,9 @@
     "title": "Configura modello",
     "subtitle": "Completa le informazioni necessarie per l'emissione degli avvisi di pagamento",
     "addForm": {
+      "successMessage": "Modello configurato con successo",
+      "organizationHelperText": "Campo opzionale, massimo 50 caratteri",
+      "fileHelper": "Carica un file PNG o JPEG di 1000x1000 pixel. (Se disponibile, ti consigliamo di caricare un formato vettoriale SVG o EPS)",
       "dialog": {
         "ok": "Ho capito",
         "title": "Ecco cosa vedranno gli utenti sull'avviso di pagamento, in base alla tua scelta:",
@@ -767,7 +770,8 @@
         "baseText": "oppure dal tuo Home Banking, con la tua app di pagamento o con gli altri canali abilitati"
       },
       "logoText": "Si vuole sostituire il logo caricato in precedenza?",
-      "logoLink": "Clicca qui",
+      "logoLink": "Logo già caricato.",
+      "logoCancel": "Clicca qui",
       "breadcrumb": "Configura modello",
       "title": "Informazioni necessarie",
       "subtitle": "L'avviso di pagamento (cartaceo o digitiale) permette di effettuare pagamenti attraverso la piattaforma pagoPA",
@@ -1038,12 +1042,24 @@
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
       "subscriptionsTable": {
-        "businessName": "Nome Ente",
-        "taxCode": "Codice Fiscale",
-        "state": "Stato",
+        "title": "Richieste di adesione",
         "search": {
           "placeholder": "Cerca per codice fiscale",
           "stateFilter": "Stato"
+        },
+        "table": {
+          "emptyState": {
+            "WAITING": "Non sono presenti richieste d'adesione in attesa",
+            "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
+          }
+        },
+        "name": "Nome ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
+        "stateChip": {
+          "WAITING": "In attesa",
+          "ACCEPTED": "Accettata",
+          "DELETING": "In eliminazione"
         },
         "modal": {
           "reject": {
@@ -1057,70 +1073,30 @@
           "delete": {
             "title": "Rimuovi ente",
             "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
-          },
-          "deleteOffer": {
-            "title": "Revoca invito di adesione",
-            "message": "L’ente non avrà più la possibilità di aderire al pacchetto privato."
           }
+        },
+        "drawer": {
+          "title": "Dettaglio richiedente",
+          "feesTitle": "Commissioni a carico dell'ente",
+          "businessName": "Nome Ente",
+          "taxCode": "Codice Fiscale",
+          "state": "Stato",
+          "rejectButton": "Rifiuta richiesta",
+          "acceptButton": "Accetta richiesta",
+          "deleteButton": "Rimuovi ente"
         },
         "alert": {
           "reject": "Richiesta rifiutata",
           "accept": "Richiesta accettata",
-          "delete": "Ente rimosso",
-          "deleteOffer": "Offerta eliminata"
+          "delete": "Ente rimosso"
         },
-        "requestsTable": {
-          "title": "Richieste di adesione",
-          "table": {
-            "emptyState": {
-              "WAITING": "Non sono presenti richieste d'adesione in attesa",
-              "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
-            }
-          },
-          "stateChip": {
-            "WAITING": "In attesa",
-            "ACCEPTED": "Accettata",
-            "DELETING": "In eliminazione"
-          },
-          "drawerTitle": "Dettaglio richiedente",
-          "error": {
-            "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
-            "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
-            "reject": "Errore durante il rifiuto della richiesta",
-            "accept": "Errore durante l'accettazione della richiesta",
-            "delete": "Errore durante l'eliminazione dell'adesione"
-          }
-        },
-        "offersTable": {
-          "title": "Destinatari",
-          "inviteButton": "Invita enti",
-          "table": {
-            "emptyState": {
-              "WAITING": "Non sono presenti offerte in attesa",
-              "ACTIVE": "Non sono presenti offerte già accettate"
-            }
-          },
-          "stateChip": {
-            "WAITING": "In attesa",
-            "ACCEPTED": "Attivo",
-            "DELETING": "In eliminazione"
-          },
-          "drawerTitle": "Dettaglio destinatario",
-          "error": {
-            "errorGetList": "Errore durante il recupero della lista delle offerte al pacchetto",
-            "errorGetDetail": "Errore durante il recupero del dettaglio dell'offerta",
-            "delete": "Errore durante l'eliminazione dell'adesione"
-          }
+        "error": {
+          "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
+          "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
+          "reject": "Errore durante il rifiuto della richiesta",
+          "accept": "Errore durante l'accettazione della richiesta",
+          "delete": "Errore durante l'eliminazione dell'adesione"
         }
-      },
-      "requestDrawer":  {
-        "businessName": "Nome Ente",
-        "taxCode": "Codice Fiscale",
-        "state": "Stato",
-        "rejectButton": "Rifiuta richiesta",
-        "acceptButton": "Accetta richiesta",
-        "deleteButton": "Rimuovi ente",
-        "feesTitle": "Commissioni a carico dell'ente"
       }
     },
     "addEditCommissionBundle": {

@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { partiesActions, partiesSelectors } from '../../redux/slices/partiesSlice';
 import { getInstitutions } from '../../services/institutionService';
 import { PaddedDrawer } from '../PaddedDrawer';
-import { InstitutionDetailResource } from '../../api/generated/portal/InstitutionDetailResource';
 
 type HeaderProductProps = {
   borderBottom?: number;

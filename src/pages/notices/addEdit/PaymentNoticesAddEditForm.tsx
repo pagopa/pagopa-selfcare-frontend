@@ -9,6 +9,7 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Grid,
   IconButton,
@@ -34,7 +35,7 @@ import {useEffect, useState} from 'react';
 import React from 'react';
 import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useErrorDispatcher, useLoading, useUserNotify} from '@pagopa/selfcare-common-frontend';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_CREATE_IBAN} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
@@ -55,6 +56,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   const [hasPay, setHasPay] = useState(data?.appChannel || data?.webChannel);
   const [hasPoste, setHasPoste] = useState(data?.posteAuth !== undefined && data?.posteAuth !== null);
   const history = useHistory();
+  const addNotify = useUserNotify();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -213,10 +215,16 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
       try {
         await uploadInstitutionData(file, data);
         history.push(ROUTES.PAYMENT_NOTICES);
+        addNotify({
+          id: 'ADDEDIT_INSTITUTION_DATA_SAVE',
+          title: '',
+          message: t('addEditInstitutionsDataPage.addForm.successMessage'),
+          component: 'Toast',
+        });
       } catch (reason: any) {
         const problemJson = extractProblemJson(reason);
         addError({
-          id: 'ADDEDIT_INSTITUTION:DATA',
+          id: 'ADDEDIT_INSTITUTION_DATA',
           blocking: false,
           error: reason as Error,
           techDescription: `An error occurred while adding/editing notice ci data`,
@@ -351,32 +359,49 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   value={formik.values.organization}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.organization && Boolean(formik.errors.organization)}
-                  helperText={formik.touched.organization && formik.errors.organization}
+                  helperText={(formik.touched.organization && formik.errors.organization) ||
+                              t('addEditInstitutionsDataPage.addForm.organizationHelperText')}
                   inputProps={{
                     'data-testid': 'organization-test',
+                     maxLength: 50,
                   }}
                 />
               </Grid>
 
               <Grid container item xs={12}>
                 {(formik.values.logo === undefined || formik.values.logo === null) ?
-                 (                
-                  <SingleFileInput
-                    value={file}
-                    accept={['.png']}
-                    onFileSelected={handleSelect}
-                    onFileRemoved={handleRemove}
-                    dropzoneLabel={t(
-                      'addEditInstitutionsDataPage.addForm.dropFileText'
-                    )}
-                    rejectedLabel={t(
-                      'addEditInstitutionsDataPage.addForm.rejectedFile'
-                    )}
-                  /> 
+                 (    
+                  <React.Fragment>
+                    <SingleFileInput
+                      value={file}
+                      accept={['.png','.jpg','jpeg','.svg','.ebs']}
+                      onFileSelected={handleSelect}
+                      onFileRemoved={handleRemove}
+                      dropzoneLabel={t(
+                        'addEditInstitutionsDataPage.addForm.dropFileText'
+                      )}
+                      rejectedLabel={t(
+                        'addEditInstitutionsDataPage.addForm.rejectedFile'
+                      )}
+                    />
+                    <FormHelperText sx={{ml: 2}}>
+                      {t('addEditInstitutionsDataPage.addForm.fileHelper')}
+                    </FormHelperText>
+                  </React.Fragment>            
                  ) :
                  (
                   <React.Fragment>
                     <Typography variant="body1">
+                      <Link
+                        href={data?.logo}
+                        target="_blank"
+                        sx={{
+                          verticalAlign: 'baseline',
+                          mr: 1
+                        }}
+                      >
+                        {t('addEditInstitutionsDataPage.addForm.logoLink')}
+                      </Link>
                       {t('addEditInstitutionsDataPage.addForm.logoText')}
                       <Link
                       component="button"
@@ -387,7 +412,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                         ml: 1
                       }}
                     >
-                      {t('addEditInstitutionsDataPage.addForm.logoLink')}
+                      {t('addEditInstitutionsDataPage.addForm.logoCancel')}
                     </Link>
                     </Typography>
                   </React.Fragment>
@@ -590,6 +615,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                       helperText={formik.touched.info && formik.errors.info}
                       inputProps={{
                         'data-testid': 'info-test',
+                         maxLength: 100,
                       }}
                       required
                     />

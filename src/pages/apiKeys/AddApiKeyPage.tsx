@@ -150,7 +150,8 @@ function AddApiKeyPage() {
                   fullWidth
                   aria-label="user"
                   name="products"
-                  data-testid="product-test-id"value={selectedProduct ? t(`addApiKeyPage.products.${selectedProduct}`) : ''}
+                  data-testid="product-test-id"
+                  value={selectedProduct ? t(`addApiKeyPage.products.${selectedProduct}`) : ''}
                   labelId="select-label-products"
                   variant="outlined"
                   renderValue={(selectedProduct) => (
@@ -184,9 +185,13 @@ function AddApiKeyPage() {
       </Box>
       <Stack direction="row" justifyContent="space-between" mt={5}>
         <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button color="primary" variant="outlined" onClick={goBack}
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={goBack}
             data-testid="api-key-btn-back-test-id"
-          >{t('addApiKeyPage.addForm.backButton')}
+          >
+            {t('addApiKeyPage.addForm.backButton')}
           </Button>
         </Stack>
         <Stack display="flex" justifyContent="flex-end">
@@ -195,7 +200,8 @@ function AddApiKeyPage() {
             // disabled={!formik.dirty || !formik.isValid}
             disabled={!selectedProduct}
             color="primary"
-            variant="contained"data-testid="api-key-btn-test-id"
+            variant="contained"
+            data-testid="api-key-btn-test-id"
           >
             {t('addApiKeyPage.addForm.continueButton')}
           </Button>

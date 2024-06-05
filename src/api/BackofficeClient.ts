@@ -3,9 +3,9 @@ import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/a
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
 import {
-  PublicBundleCISubscriptionsMethodParams,
-  PublicBundleCISubscriptionsRequest,
-  PublicBundleCiSubscriptionsDetailMethodParams,
+  BundleCISubscriptionsMethodParams,
+  BundleCISubscriptionsBodyRequest,
+  BundleCiSubscriptionsDetailMethodParams,
 } from '../model/CommissionBundle';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
@@ -66,8 +66,8 @@ import { ProductResource } from './generated/portal/ProductResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
-import { PublicBundleCISubscriptionsDetail } from './generated/portal/PublicBundleCISubscriptionsDetail';
-import { PublicBundleCISubscriptionsResource } from './generated/portal/PublicBundleCISubscriptionsResource';
+import { CIBundleSubscriptionsDetail } from './generated/portal/CIBundleSubscriptionsDetail';
+import { CIBundleSubscriptionsResource } from './generated/portal/CIBundleSubscriptionsResource';
 import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
@@ -1173,39 +1173,43 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getPublicBundleCISubscriptions: async ({
+  getBundleCISubscriptions: async ({
     idBundle,
     pspTaxCode,
     ciTaxCode,
     limit,
     page,
     status,
-  }: PublicBundleCISubscriptionsMethodParams): Promise<PublicBundleCISubscriptionsResource> => {
+    bundleType,
+  }: BundleCISubscriptionsMethodParams): Promise<CIBundleSubscriptionsResource> => {
     // eslint-disable-next-line functional/no-let
-    let params: PublicBundleCISubscriptionsRequest = {
+    let params: BundleCISubscriptionsBodyRequest = {
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       limit,
       page,
       status,
+      bundleType,
     };
     if (ciTaxCode) {
       params = { ...params, ciTaxCode };
     }
-    const result = await backofficeClient.getPublicBundleCISubscriptions(params);
+    const result = await backofficeClient.getBundleCISubscriptions(params);
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getPublicBundleCISubscriptionsDetail: async ({
+  getBundleCISubscriptionsDetail: async ({
     idBundle,
     pspTaxCode,
     ciTaxCode,
     status,
-  }: PublicBundleCiSubscriptionsDetailMethodParams): Promise<PublicBundleCISubscriptionsDetail> => {
-    const result = await backofficeClient.getPublicBundleCISubscriptionsDetail({
+    bundleType,
+  }: BundleCiSubscriptionsDetailMethodParams): Promise<CIBundleSubscriptionsDetail> => {
+    const result = await backofficeClient.getBundleCISubscriptionsDetail({
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       'ci-tax-code': ciTaxCode,
+      bundleType,
       status,
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -1281,6 +1285,23 @@ export const BackofficeApi = {
       'ci-tax-code': ciTaxCode,
       body: bundleRequest as PublicBundleRequest,
       bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  deletePrivateBundleOffer: async ({
+    idBundle,
+    pspTaxCode,
+    bundleOfferId,
+  }: {
+    idBundle: string;
+    pspTaxCode: string;
+    bundleOfferId: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.deletePrivateBundleOffer({
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      'bundle-offer-id': bundleOfferId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

@@ -34,7 +34,8 @@ import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { PSPBundleTaxonomy } from '../../../api/generated/portal/PSPBundleTaxonomy';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
-import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
+import CommissionBundleDetailSubscriptionsTable from './components/subscriptions/CommissionBundleDetailSubscriptionsTable';
+
 
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
@@ -286,11 +287,19 @@ const CommissionBundleDetailPage = () => {
             <CommissionBundleDetailTaxonomies bundleDetail={commissionBundleDetail} />
           </Grid>
 
-          {commissionBundleDetail.type === TypeEnum.PUBLIC &&
-            orgInfo.types.isPsp &&
-            userIsAdmin && (
-              <Grid item xs={12} data-testid="subscription-table">
-                <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail} />
+          {orgInfo.types.isPsp &&
+            userIsAdmin &&
+            commissionBundleDetail.type !== TypeEnum.GLOBAL && (
+              <Grid
+                item
+                xs={12}
+                data-testid={
+                  commissionBundleDetail.type === TypeEnum.PUBLIC
+                    ? 'subscription-table'
+                    : 'offer-table'
+                }
+              >
+                  <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
               </Grid>
             )}
         </Grid>

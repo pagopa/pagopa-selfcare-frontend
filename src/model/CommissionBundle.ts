@@ -1,11 +1,11 @@
 import { CIBundleFee } from "../api/generated/portal/CIBundleFee";
 import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
 import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
+import { CIBundleSubscriptionsDetail } from "../api/generated/portal/CIBundleSubscriptionsDetail";
 import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
-import { PSPBundleResource } from "../api/generated/portal/PSPBundleResource";
+import { PSPBundleResource, TypeEnum } from "../api/generated/portal/PSPBundleResource";
 import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
 import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
-import { PublicBundleCISubscriptionsDetail } from "../api/generated/portal/PublicBundleCISubscriptionsDetail";
 
 export enum FormAction {
   Create = 'create',
@@ -16,32 +16,35 @@ export enum SubscriptionStateType {
   Accepted = 'ACCEPTED',
 }
 
-export type PublicBundleCISubscriptionsMethodParams = {
+export type BundleCISubscriptionsMethodParams = {
   idBundle: string;
   pspTaxCode: string;
   limit: number;
   page: number;
   status: SubscriptionStateType;
   ciTaxCode?: string;
+  bundleType: TypeEnum;
 };
 
-export type PublicBundleCISubscriptionsRequest = {
+export type BundleCISubscriptionsBodyRequest = {
   'id-bundle': string;
   'psp-tax-code': string;
   limit: number;
   page: number;
   status: SubscriptionStateType;
   ciTaxCode?: string;
+  bundleType: TypeEnum;
 };
 
-export type PublicBundleCiSubscriptionsDetailMethodParams = {
+export type BundleCiSubscriptionsDetailMethodParams = {
   idBundle: string;
   pspTaxCode: string;
   ciTaxCode: string;
   status: string;
+  bundleType: TypeEnum;
 };
 
-export type PublicBundleCiSubscriptionDetailModel = CISubscriptionInfo & PublicBundleCISubscriptionsDetail;
+export type BundleCiSubscriptionDetailModel = CISubscriptionInfo & CIBundleSubscriptionsDetail;
 
 export enum BundleDetailsActionTypes {
   DELETE_BUNDLE_PSP = "deleteBundlePsp",

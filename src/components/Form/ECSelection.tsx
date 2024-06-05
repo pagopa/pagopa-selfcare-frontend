@@ -4,10 +4,9 @@ import { GridSearchIcon } from '@mui/x-data-grid';
 import { PartyAccountItem } from '@pagopa/mui-italia';
 import { useTranslation } from 'react-i18next';
 import { CreditorInstitutionInfo } from '../../api/generated/portal/CreditorInstitutionInfo';
-import { CreditorInstitutionInfoArray } from '../../api/generated/portal/CreditorInstitutionInfoArray';
 
 type Props = {
-  availableEC: CreditorInstitutionInfoArray;
+  availableEC: Array<CreditorInstitutionInfo>;
   selectedEC: CreditorInstitutionInfo | undefined;
   onECSelectionChange: (selectedEC: CreditorInstitutionInfo | undefined) => void;
 };

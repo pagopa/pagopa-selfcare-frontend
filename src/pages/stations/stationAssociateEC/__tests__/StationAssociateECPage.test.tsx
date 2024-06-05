@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -68,9 +68,9 @@ describe('<StationAssociateECPage />', () => {
 
     fireEvent.mouseDown(ecSelectionSearch);
     fireEvent.select(ecSelectionSearch, {
-      target: { value: mockedCreditorInstitutionInfoArray[0].business_name },
+      target: { value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name },
     });
-    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray[0].business_name);
+    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name);
 
     const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
     expect(auxDigit.value).toBe('3');
@@ -131,13 +131,13 @@ describe('<StationAssociateECPage />', () => {
 
     fireEvent.mouseDown(ecSelectionSearch);
     fireEvent.select(ecSelectionSearch, {
-      target: { value: mockedCreditorInstitutionInfoArray[0].business_name },
+      target: { value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name },
     });
-    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray[0].business_name);
+    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name);
   });
 
-  test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes empty response', async () => {
-    getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue([]);
+  test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes empty object array', async () => {
+    getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue({ creditor_institution_info_list: []});
 
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
@@ -153,7 +153,9 @@ describe('<StationAssociateECPage />', () => {
       </Provider>
     );
 
-    const alertMessage = screen.getByTestId('alert-warning-test');
-    expect(alertMessage).toBeInTheDocument();
+    await waitFor(() => {
+      const alertMessage = screen.getByTestId('alert-warning-test');
+      expect(alertMessage).toBeInTheDocument();
+    });
   });
 });

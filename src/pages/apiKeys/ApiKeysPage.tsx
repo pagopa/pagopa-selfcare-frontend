@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Alert, Box, Button, Grid, Link, Typography, useTheme } from '@mui/material';
-import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { Trans, useTranslation } from 'react-i18next';
-import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
 import AddIcon from '@mui/icons-material/Add';
+import { Alert, Box, Button, Link, Typography, useTheme } from '@mui/material';
+import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import useLoading from '@pagopa/selfcare-common-frontend/hooks/useLoading';
+import { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useAppSelector } from '../../redux/hooks';
-import { partiesSelectors } from '../../redux/slices/partiesSlice';
-import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
-import { getInstitutionApiKeys } from '../../services/apiKeyService';
+import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import { ProductKeys } from '../../model/ApiKey';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
+import { getInstitutionApiKeys } from '../../services/apiKeyService';
+import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
 import ApiKeysCard from './ApiKeysCard';
 
 const ApiKeysPage = () => {
@@ -19,7 +20,7 @@ const ApiKeysPage = () => {
   const theme = useTheme();
   const history = useHistory();
 
-  const [apiKeys, setApiKey] = useState<Array<ProductKeys>>([]);
+  const [apiKeys, setApiKeys] = useState<InstitutionApiKeysResource>([]);
 
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
 
@@ -41,9 +42,7 @@ const ApiKeysPage = () => {
       setLoading(true);
       void getInstitutionApiKeys(selectedParty.partyId)
         .then((data) => {
-          if (data) {
-            setApiKey(data);
-          }
+          setApiKeys(data);
         })
         .finally(() => setLoading(false));
     }
@@ -70,7 +69,7 @@ const ApiKeysPage = () => {
         <Box>
           <Typography variant="h6">{t('apiKeysPage.decription')}</Typography>
         </Box>
-        {apiKeys && (
+        {apiKeys?.institution_api_key_list && (
           <Box>
             <Button
               variant="contained"
@@ -91,7 +90,7 @@ const ApiKeysPage = () => {
           </Box>
         )}
       </Box>
-      {apiKeys.length <= 0 ? (
+      {!apiKeys?.institution_api_key_list || apiKeys.institution_api_key_list.length === 0 ? (
         <Box
           p={2}
           display="flex"
@@ -114,7 +113,7 @@ const ApiKeysPage = () => {
           </Trans>
         </Box>
       ) : (
-        apiKeys.map((ak: ProductKeys) => (
+        apiKeys.institution_api_key_list.map((ak: ProductKeys) => (
           <ApiKeysCard selectedParty={selectedParty} apiKey={ak} key={ak.id}></ApiKeysCard>
         ))
       )}

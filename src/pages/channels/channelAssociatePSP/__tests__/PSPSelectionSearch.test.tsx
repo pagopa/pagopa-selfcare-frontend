@@ -1,12 +1,12 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import {MemoryRouter, Route} from 'react-router-dom';
-import {store} from '../../../../redux/store';
-import {Provider} from 'react-redux';
-import PSPSelectionSearch from '../PSPSelectionSearch';
+import { Provider } from 'react-redux';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { store } from '../../../../redux/store';
 import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
+import PSPSelectionSearch from '../PSPSelectionSearch';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -18,7 +18,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 const channelId = 'XPAY_03_ONUS';
-const availablePSP = mockedDelegatedPSP;
+const availablePSP = [...mockedDelegatedPSP.delegation_list!];
 const psp = {
     broker_psp_code: 'string',
     description: 'string',

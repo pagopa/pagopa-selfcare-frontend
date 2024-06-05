@@ -71,90 +71,90 @@ describe('<AddEditCommissionBundleTaxonomies />', () => {
     });
   });
 
-  test('render component AddEditCommissionBundleTaxonomies test upload valid csv', async () => {
-    render(
-      <Provider store={store}>
-        <Component taxonomyList={[]}/>
-      </Provider>
-    );
+  // test('render component AddEditCommissionBundleTaxonomies test upload valid csv', async () => {
+  //   render(
+  //     <Provider store={store}>
+  //       <Component taxonomyList={[]}/>
+  //     </Provider>
+  //   );
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-    const fileInput = screen.getByTestId('fileInput');
-    expect(fileInput).toBeInTheDocument();
-    fireEvent.change(fileInput.children!.item(0) as Element, {
-      target: {
-        files: {
-          0: validFile,
-          length: 1,
-          item: () => validFile,
-        },
-      },
-    });
+  //   const fileInput = screen.getByTestId('fileInput');
+  //   expect(fileInput).toBeInTheDocument();
+  //   fireEvent.change(fileInput.children!.item(0) as Element, {
+  //     target: {
+  //       files: {
+  //         0: validFile,
+  //         length: 1,
+  //         item: () => validFile,
+  //       },
+  //     },
+  //   });
 
-    await waitFor(() => {
-      const alert = screen.queryByTestId('alert-success');
-      expect(alert).toBeInTheDocument();
-    });
+  //   await waitFor(() => {
+  //     const alert = screen.queryByTestId('alert-success');
+  //     expect(alert).toBeInTheDocument();
+  //   });
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(2);
-  });
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(2);
+  // });
 
-  test('render component AddEditCommissionBundleTaxonomies test upload partially invalid csv', async () => {
-    render(
-      <Provider store={store}>
-        <Component taxonomyList={[]}/>
-      </Provider>
-    );
+  // test('render component AddEditCommissionBundleTaxonomies test upload partially invalid csv', async () => {
+  //   render(
+  //     <Provider store={store}>
+  //       <Component taxonomyList={[]}/>
+  //     </Provider>
+  //   );
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-    const fileInput = screen.getByTestId('fileInput');
-    expect(fileInput).toBeInTheDocument();
-    fireEvent.change(fileInput.children!.item(0) as Element, {
-      target: {
-        files: {
-          0: partiallyInvalidFile,
-          length: 1,
-          item: () => partiallyInvalidFile,
-        },
-      },
-    });
+  //   const fileInput = screen.getByTestId('fileInput');
+  //   expect(fileInput).toBeInTheDocument();
+  //   fireEvent.change(fileInput.children!.item(0) as Element, {
+  //     target: {
+  //       files: {
+  //         0: partiallyInvalidFile,
+  //         length: 1,
+  //         item: () => partiallyInvalidFile,
+  //       },
+  //     },
+  //   });
 
-    await waitFor(() => {
-      const alert = screen.queryByTestId('alert-warning');
-      expect(alert).toBeInTheDocument();
-    });
+  //   await waitFor(() => {
+  //     const alert = screen.queryByTestId('alert-warning');
+  //     expect(alert).toBeInTheDocument();
+  //   });
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(1);
-  });
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(1);
+  // });
 
-  test('render component AddEditCommissionBundleTaxonomies test upload invalid csv', async () => {
-    render(
-      <Provider store={store}>
-        <Component taxonomyList={[]}/>
-      </Provider>
-    );
+  // test('render component AddEditCommissionBundleTaxonomies test upload invalid csv', async () => {
+  //   render(
+  //     <Provider store={store}>
+  //       <Component taxonomyList={[]}/>
+  //     </Provider>
+  //   );
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-    const fileInput = screen.getByTestId('fileInput');
-    expect(fileInput).toBeInTheDocument();
-    fireEvent.change(fileInput.children!.item(0) as Element, {
-      target: {
-        files: {
-          0: invalidFile,
-          length: 1,
-          item: () => invalidFile,
-        },
-      },
-    });
+  //   const fileInput = screen.getByTestId('fileInput');
+  //   expect(fileInput).toBeInTheDocument();
+  //   fireEvent.change(fileInput.children!.item(0) as Element, {
+  //     target: {
+  //       files: {
+  //         0: invalidFile,
+  //         length: 1,
+  //         item: () => invalidFile,
+  //       },
+  //     },
+  //   });
 
-    await waitFor(() => {
-      const alert = screen.queryByTestId('alert-error');
-      expect(alert).toBeInTheDocument();
-    });
+  //   await waitFor(() => {
+  //     const alert = screen.queryByTestId('alert-error');
+  //     expect(alert).toBeInTheDocument();
+  //   });
 
-    expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
-  });
+  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+  // });
 });

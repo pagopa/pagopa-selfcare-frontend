@@ -1,4 +1,5 @@
 # Selfcare Backoffice Frontend
+[![Integration Tests](https://github.com/pagopa/pagopa-selfcare-frontend/actions/workflows/ci_integration_test.yml/badge.svg?branch=main)](https://github.com/pagopa/pagopa-selfcare-frontend/actions/workflows/ci_integration_test.yml)
 
 - https://selfcare.dev.platform.pagopa.it/ui
 - https://selfcare.uat.platform.pagopa.it/ui

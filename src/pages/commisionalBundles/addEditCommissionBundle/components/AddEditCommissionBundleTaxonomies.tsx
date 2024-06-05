@@ -228,7 +228,9 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
       </Button>
-      {alertData && (
+      {
+        /* Commented while waiting for the API to check csv taxonomies validity
+                {alertData && (
         <Alert
           severity={alertData.type}
           data-testid={
@@ -281,6 +283,9 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
           </a>
         </Typography>
       )}
+        */
+      }
+
 
       {taxonomyTableData && Object.keys(taxonomyTableData).length > 0 && (
         <BundleTaxonomiesTable

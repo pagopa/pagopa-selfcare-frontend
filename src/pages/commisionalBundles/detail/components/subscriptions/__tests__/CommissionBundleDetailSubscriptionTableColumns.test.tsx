@@ -1,9 +1,8 @@
-import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
-import { cleanup, render, screen } from '@testing-library/react';
-import React from 'react';
-import { buildColumnDefs, getStatusChip } from '../CommissionBundleSubscriptionsColumns';
+import { GridColDef } from '@mui/x-data-grid';
+import { cleanup} from '@testing-library/react';
 import { showCustomHeader } from '../../../../../../components/Table/TableUtils';
-import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
+import {  SubscriptionStateType } from '../../../../../../model/CommissionBundle';
+import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -12,44 +11,9 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const colDefMocked: GridStateColDef<any, any, any> = {
-  computedWidth: 0,
-  field: 'name',
-  type: '',
-  hasBeenResized: undefined,
-  groupPath: undefined,
-  headerName: 'name',
-};
-const rowNode = [
-  {
-    id: '',
-    parent: '',
-    depth: 0,
-    groupingKey: '',
-    groupingField: '',
-  },
-];
-
-const params: GridRenderCellParams<any, any, any> = {
-  value: 'some value',
-  row: {
-    stationCode: 'Lorem ipsum',
-  },
-  api: undefined,
-  id: '',
-  field: '',
-  rowNode: rowNode[0],
-  // @ts-ignore
-  colDef: colDefMocked[0],
-  cellMode: 'edit',
-  hasFocus: false,
-  tabIndex: 0,
-  getValue: () => jest.fn(),
-};
-
 const mockTFunction = (key: string) => {
   switch (key) {
-    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.name':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.businessName':
       return 'Business Name';
     case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode':
       return 'Tax Code';
@@ -60,14 +24,14 @@ const mockTFunction = (key: string) => {
   }
 };
 
-describe('<CommissionBundleSubscriptionsColumns />', () => {
+describe('<CommissionBundleDetailSubscriptionTableColumns />', () => {
   test('Test of all the functions inside the component', () => {
     const ArrayBuildColumnDefs = [
       {
         field: 'name',
         cellClassName: 'justifyContentBold',
         headerName: mockTFunction(
-          'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.name'
+          'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.businessName'
         ),
         align: 'left',
         headerAlign: 'left',
@@ -127,32 +91,9 @@ describe('<CommissionBundleSubscriptionsColumns />', () => {
     const realColumns = buildColumnDefs(
       mockTFunction,
       SubscriptionStateType.Waiting,
-      jest.fn()
+      jest.fn(),
+      ""
     ) as Array<any>;
     expect(realColumns).toEqual(ArrayBuildColumnDefs);
-  });
-
-  test('Test status chip cell with waiting request', () => {
-    render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Waiting)}</>);
-
-    expect(screen.queryByTestId('WAITING-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('WARNING-state-chip')).not.toBeInTheDocument();
-  });
-
-  test('Test status chip cell with accepted request', () => {
-    render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Accepted)}</>);
-
-    expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('ACCEPTED-state-chip')).toBeInTheDocument();
-    expect(screen.queryByTestId('WARNING-state-chip')).not.toBeInTheDocument();
-  });
-
-  test('Test status chip cell with on removal request', () => {
-    render(<>{getStatusChip(mockTFunction, SubscriptionStateType.Accepted, true)}</>);
-
-    expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('DELETING-state-chip')).toBeInTheDocument();
   });
 });

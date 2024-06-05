@@ -47,7 +47,7 @@ const mapTaxonomyToPspBundleTaxonomy = (
   endDate: taxonomy.end_date,
   serviceType: taxonomy.service_type,
   fromFile: taxonomy.fromFile,
-  ecType: taxonomy.ci_type
+  ecType: taxonomy.ci_type,
 });
 
 const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) => {
@@ -228,17 +228,19 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         <ListAltIcon sx={{ pr: 1 }} />
         {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
       </Button>
-      {alertData && (
+      {
+        /* Commented while waiting for the API to check csv taxonomies validity
+                {alertData && (
         <Alert
           severity={alertData.type}
           data-testid={
             alertData.type === 'success'
               ? 'alert-success'
               : alertData.type === 'warning'
-              ? 'alert-warning'
-              : alertData.type === 'error'
-              ? 'alert-error'
-              : ''
+                ? 'alert-warning'
+                : alertData.type === 'error'
+                  ? 'alert-error'
+                  : ''
           }
           onClose={() => {
             setAlertData(null);
@@ -249,10 +251,12 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
             {alertData.type === 'success'
               ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle')
               : alertData.type === 'warning'
-              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle')
-              : alertData.type === 'error'
-              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle')
-              : ''}
+                ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle')
+                : alertData.type === 'error'
+                  ? t(
+                      'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle'
+                    )
+                  : ''}
           </AlertTitle>
           {alertData.message}
         </Alert>
@@ -265,24 +269,23 @@ const AddEditCommissionBundleTaxonomies = ({ bundleTaxonomies, formik }: Props) 
         dropzoneLabel={t(
           'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dropFileText'
         )}
-        rejectedLabel={t(
-          'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.rejectedFile'
-        )}
+        rejectedLabel={t('general.rejectedFile')}
       />
 
       {(file === undefined || file === null) && (
-        <React.Fragment>
-          <Typography variant="body1" mb={1} mt={1}>
-            {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
-            <a
-              href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
-              download="taxonomiesExample.csv"
-            >
-              {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}
-            </a>
-          </Typography>
-        </React.Fragment>
+        <Typography variant="body1" mb={1} mt={1}>
+          {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
+          <a
+            href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
+            download="taxonomiesExample.csv"
+          >
+            {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}
+          </a>
+        </Typography>
       )}
+        */
+      }
+
 
       {taxonomyTableData && Object.keys(taxonomyTableData).length > 0 && (
         <BundleTaxonomiesTable

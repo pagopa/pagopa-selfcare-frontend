@@ -1,21 +1,21 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import {
   Select,
   MenuItem,
-  Pagination,
   FormControl,
   InputLabel,
   Typography,
   Alert,
+  Button,
+  Box,
 } from '@mui/material';
-import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useState, ChangeEvent, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { useTranslation, TFunction } from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
-import { CustomDataGrid } from '../../../../../components/Table/TableDataGrid';
-import TableEmptyState from '../../../../../components/Table/TableEmptyState';
+import TableDataGrid from '../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
@@ -23,36 +23,42 @@ import {
   LOADING_TASK_SUBSCRIPTION_ACTION,
   LOADING_TASK_SUBSCRIPTION_LIST,
 } from '../../../../../utils/constants';
-import { PublicBundleCISubscriptionsResource } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
-import { PublicBundleCISubscriptionsDetail } from '../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
+
 import {
   BundleResource,
-  PublicBundleCiSubscriptionDetailModel,
+  BundleCiSubscriptionDetailModel,
   SubscriptionStateType,
 } from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
   deleteCIBundleSubscription,
-  getPublicBundleCISubscriptions,
-  getPublicBundleCISubscriptionsDetail,
+  deletePrivateBundleOffer,
+  getBundleCISubscriptions,
+  getBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
 } from '../../../../../services/bundleService';
-import { buildColumnDefs } from './CommissionBundleSubscriptionsColumns';
-import { CommissionBundleSubscriptionsDrawer } from './CommissionBundleSubscriptionsDrawer';
+import { CIBundleSubscriptionsResource } from '../../../../../api/generated/portal/CIBundleSubscriptionsResource';
+import { CIBundleSubscriptionsDetail } from '../../../../../api/generated/portal/CIBundleSubscriptionsDetail';
+import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
+import { CommissionBundleDetailSubscriptionDrawer } from './CommissionBundleDetailSubscriptionDrawer';
+import { buildColumnDefs } from './CommissionBundleDetailSubscriptionTableColumns';
 
-const rowHeight = 64;
-const headerHeight = 56;
 const pageLimit = 5;
 
-const componentPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
+const generalPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
 
-const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
+const emptySubscriptionList: CIBundleSubscriptionsResource = {
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],
 };
 
-const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: BundleResource }) => {
+export default function CommissionBundleSubscriptionsTable({
+  bundleDetail,
+}: {
+  bundleDetail: BundleResource;
+}) {
+  const componentPath = `${generalPath}.${bundleDetail?.type === TypeEnum.PRIVATE ? 'offersTable' : 'requestsTable'}`;
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -64,8 +70,9 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
   );
   const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
-  const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
-    useState<PublicBundleCiSubscriptionDetailModel>({});
+  const [selectedSubscription, setSelectedSubscription] = useState<BundleCiSubscriptionDetailModel>(
+    {}
+  );
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
@@ -74,19 +81,20 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
   const [successAlert, setSuccessAlert] = useState<string>();
 
   const [subscriptionList, setSubscriptionList] =
-    useState<PublicBundleCISubscriptionsResource>(emptySubscriptionList);
+    useState<CIBundleSubscriptionsResource>(emptySubscriptionList);
 
   function getSubscriptionDetail(selectedRequest: CISubscriptionInfo) {
-    setSelectedSubscriptionRequest(selectedRequest);
+    setSelectedSubscription(selectedRequest);
 
-    getPublicBundleCISubscriptionsDetail({
+    getBundleCISubscriptionsDetail({
       idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: selectedRequest.creditor_institution_code ?? '',
       status: selectedState,
+      bundleType: bundleDetail.type!,
     })
-      .then((res: PublicBundleCISubscriptionsDetail) => {
-        setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
+      .then((res: CIBundleSubscriptionsDetail) => {
+        setSelectedSubscription({ ...res, ...selectedRequest });
       })
       .catch((reason) =>
         addError({
@@ -102,7 +110,12 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
       );
   }
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail);
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    selectedState,
+    getSubscriptionDetail,
+    componentPath
+  );
 
   const getSubscriptionList = (
     newPage?: number,
@@ -110,19 +123,20 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     searchTriggered?: boolean
   ) => {
     setLoadingList(true);
-    if(newPage){
+    if (newPage) {
       setPage(newPage);
     }
 
-    getPublicBundleCISubscriptions({
+    getBundleCISubscriptions({
       idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: taxCodeFilter ?? selectedTaxCode,
       limit: pageLimit,
       page: newPage ?? 0,
       status: searchTriggered ? filterState : selectedState,
+      bundleType: bundleDetail.type!,
     })
-      .then((res: PublicBundleCISubscriptionsResource) => {
+      .then((res: CIBundleSubscriptionsResource) => {
         if (
           res?.creditor_institutions_subscriptions &&
           res.creditor_institutions_subscriptions.length > 0
@@ -137,7 +151,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
           id: 'COMMISSION_BUNDLE_GET_SUBSCRIPTION',
           blocking: false,
           error: reason as Error,
-          techDescription: `An error occurred while retrieving bundle's subscriptions requests`,
+          techDescription: `An error occurred while retrieving bundle's subscriptions ${bundleDetail.type === TypeEnum.PRIVATE ? 'offers' : 'requests'}`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(`${componentPath}.error.errorGetList`),
@@ -166,8 +180,8 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     if (actionType === 'reject') {
       promise = rejectPublicBundleSubscription(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
@@ -175,24 +189,32 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
     if (actionType === 'accept') {
       promise = acceptBundleSubscriptionRequest(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }
     if (actionType === 'delete') {
       promise = deleteCIBundleSubscription(
-        selectedSubscriptionRequest?.ci_bundle_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.ci_bundle_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
+      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
+    }
+    if (actionType === 'deleteOffer') {
+      promise = deletePrivateBundleOffer({
+        idBundle: bundleDetail?.idBundle ?? '',
+        pspTaxCode: selectedParty?.fiscalCode ?? '',
+        bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
+      });
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
     if (promise) {
       promise
         .then(() => {
-          setSelectedSubscriptionRequest({});
+          setSelectedSubscription({});
           getSubscriptionList(0);
           setSuccessAlert(actionType);
         })
@@ -201,7 +223,7 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
             id: actionId,
             blocking: false,
             error: reason as Error,
-            techDescription: `An error occurred while managing the subscription request`,
+            techDescription: `An error occurred while managing the subscription ${bundleDetail.type === TypeEnum.PRIVATE ? 'offer' : 'request'}`,
             toNotify: true,
             displayableTitle: t('general.errorTitle'),
             displayableDescription: t(`${componentPath}.error.${actionType}`),
@@ -238,16 +260,16 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         <Typography variant="h5">{t(`${componentPath}.title`)}</Typography>
       </Box>
       <TableSearchBar
-        componentName={componentPath}
+        componentName={generalPath}
         handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter, true)}
       >
         <FormControl sx={{ ml: 1, minWidth: '200px' }}>
-          <InputLabel id="state-select-label">{t(`${componentPath}.state`)}</InputLabel>
+          <InputLabel id="state-select-label">{t(`${generalPath}.state`)}</InputLabel>
           <Select
             id={'subscription-state'}
             name={'subscription-state'}
             labelId="state-select-label"
-            label={t(`${componentPath}.state`)}
+            label={t(`${generalPath}.state`)}
             size="small"
             value={filterState}
             onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
@@ -272,42 +294,20 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
         }}
         justifyContent="start"
       >
-        {!subscriptionList?.creditor_institutions_subscriptions ||
-        subscriptionList?.creditor_institutions_subscriptions?.length === 0 ? (
-          <TableEmptyState componentName={componentPath} translationPathSuffix={selectedState} />
-        ) : (
-          <div data-testid="data-grid">
-            <CustomDataGrid
-              disableColumnFilter
-              disableColumnSelector
-              disableDensitySelector
-              disableSelectionOnClick
-              autoHeight={true}
-              className="CustomDataGrid"
-              columnBuffer={5}
-              columns={columns}
-              components={{
-                Pagination: () => (
-                  <Pagination
-                    color="primary"
-                    count={subscriptionList?.page_info?.total_pages ?? 1}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                      handleChangePage(value)
-                    }
-                  />
-                ),
-              }}
-              getRowId={(r) => r.creditor_institution_code}
-              headerHeight={headerHeight}
-              hideFooterSelectedRowCount={true}
-              paginationMode="client"
-              rowCount={subscriptionList?.creditor_institutions_subscriptions?.length}
-              rowHeight={rowHeight}
-              rows={subscriptionList?.creditor_institutions_subscriptions ?? []}
-            />
-          </div>
-        )}
+        <TableDataGrid
+          componentPath={componentPath}
+          translationPathSuffix={selectedState}
+          rows={
+            subscriptionList?.creditor_institutions_subscriptions
+              ? [...subscriptionList.creditor_institutions_subscriptions]
+              : []
+          }
+          columns={columns}
+          totalPages={subscriptionList?.page_info?.total_pages}
+          page={page}
+          handleChangePage={(newPage: number) => handleChangePage(newPage)}
+          getRowId={(r) => r.creditor_institution_code}
+        />
       </Box>
       {successAlert && (
         <Alert
@@ -316,20 +316,29 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
           style={{ position: 'fixed', right: 23, bottom: 50, zIndex: 999 }}
           data-testid="success-alert"
         >
-          {t(`${componentPath}.alert.${successAlert}`)}
+          {t(`${generalPath}.alert.${successAlert}`)}
         </Alert>
       )}
-      <CommissionBundleSubscriptionsDrawer
-        t={t}
-        setSelectedSubscriptionRequest={setSelectedSubscriptionRequest}
-        selectedSubscriptionRequest={selectedSubscriptionRequest}
-        setOpenMenageSubscriptionModal={setOpenMenageSubscriptionModal}
+      <CommissionBundleDetailSubscriptionDrawer
+        setSelectedSubscription={setSelectedSubscription}
+        selectedSubscription={selectedSubscription}
         stateType={selectedState}
+        componentPath={componentPath}
+        drawerButtons={() =>
+          getDrawerButtons(
+            t,
+            selectedState,
+            setOpenMenageSubscriptionModal,
+            bundleDetail,
+            selectedSubscription.ci_bundle_fee_list !== undefined &&
+              !selectedSubscription.on_removal
+          )
+        }
       />
       {openMenageSubscriptionModal !== undefined && (
         <GenericModal
-          title={t(`${componentPath}.modal.${openMenageSubscriptionModal}.title`)}
-          message={t(`${componentPath}.modal.${openMenageSubscriptionModal}.message`)}
+          title={t(`${generalPath}.modal.${openMenageSubscriptionModal}.title`)}
+          message={t(`${generalPath}.modal.${openMenageSubscriptionModal}.message`)}
           openModal={openMenageSubscriptionModal !== undefined}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.turnBack')}
@@ -340,6 +349,78 @@ const CommissionBundleSubscriptionsTable = ({ bundleDetail }: { bundleDetail: Bu
       )}
     </>
   );
-};
+}
 
-export default CommissionBundleSubscriptionsTable;
+function getDrawerButtons(
+  t: TFunction<'translation', undefined>,
+  stateType: string,
+  setOpenMenageSubscriptionModal: (openModal: string) => void,
+  bundleDetail: BundleResource,
+  showButtons?: boolean
+) {
+  const buttonPath = 'commissionBundlesPage.commissionBundleDetail.requestDrawer';
+  if (showButtons) {
+    if (stateType === SubscriptionStateType.Waiting) {
+      if (bundleDetail.type === TypeEnum.PRIVATE) {
+        return (
+          <Button
+            fullWidth
+            onClick={() => {
+              setOpenMenageSubscriptionModal('deleteOffer');
+            }}
+            color="error"
+            variant="outlined"
+            data-testid="offer-delete-button"
+          >
+            {t(`${buttonPath}.deleteButton`)}
+          </Button>
+        );
+      } else {
+        return (
+          <>
+            <Button
+              fullWidth
+              onClick={() => {
+                setOpenMenageSubscriptionModal('accept');
+              }}
+              color="primary"
+              variant="contained"
+              data-testid="request-accept-button"
+              sx={{ mb: 1 }}
+            >
+              {t(`${buttonPath}.acceptButton`)}
+            </Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                setOpenMenageSubscriptionModal('reject');
+              }}
+              color="error"
+              variant="outlined"
+              data-testid="request-reject-button"
+            >
+              {t(`${buttonPath}.rejectButton`)}
+            </Button>
+          </>
+        );
+      }
+    }
+    if (stateType === SubscriptionStateType.Accepted) {
+      return (
+        <Button
+          fullWidth
+          onClick={() => {
+            setOpenMenageSubscriptionModal('delete');
+          }}
+          color="error"
+          variant="outlined"
+          data-testid="subscription-delete-button"
+        >
+          {t(`${buttonPath}.deleteButton`)}
+        </Button>
+      );
+    }
+  }
+
+  return <></>;
+}

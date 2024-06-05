@@ -1,11 +1,11 @@
 import { CIBundleFee } from "../api/generated/portal/CIBundleFee";
 import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
 import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
+import { CIBundleSubscriptionsDetail } from "../api/generated/portal/CIBundleSubscriptionsDetail";
 import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
 import { PSPBundleResource } from "../api/generated/portal/PSPBundleResource";
 import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
 import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
-import { PublicBundleCISubscriptionsDetail } from "../api/generated/portal/PublicBundleCISubscriptionsDetail";
 
 export enum FormAction {
   Create = 'create',
@@ -21,7 +21,7 @@ export enum OfferStateType {
   Active = 'ACTIVE',
 }
 
-export type PublicBundleCISubscriptionsMethodParams = {
+export type BundleCISubscriptionsMethodParams = {
   idBundle: string;
   pspTaxCode: string;
   limit: number;
@@ -30,7 +30,7 @@ export type PublicBundleCISubscriptionsMethodParams = {
   ciTaxCode?: string;
 };
 
-export type PublicBundleCISubscriptionsRequest = {
+export type BundleCISubscriptionsBodyRequest = {
   'id-bundle': string;
   'psp-tax-code': string;
   limit: number;
@@ -39,14 +39,14 @@ export type PublicBundleCISubscriptionsRequest = {
   ciTaxCode?: string;
 };
 
-export type PublicBundleCiSubscriptionsDetailMethodParams = {
+export type BundleCiSubscriptionsDetailMethodParams = {
   idBundle: string;
   pspTaxCode: string;
   ciTaxCode: string;
   status: string;
 };
 
-export type PublicBundleCiSubscriptionDetailModel = CISubscriptionInfo & PublicBundleCISubscriptionsDetail;
+export type BundleCiSubscriptionDetailModel = CISubscriptionInfo & CIBundleSubscriptionsDetail;
 
 export enum BundleDetailsActionTypes {
   DELETE_BUNDLE_PSP = "deleteBundlePsp",

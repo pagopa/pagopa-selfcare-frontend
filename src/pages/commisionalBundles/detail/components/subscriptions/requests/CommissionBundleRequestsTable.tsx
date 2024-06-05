@@ -22,30 +22,30 @@ import {
   LOADING_TASK_SUBSCRIPTION_ACTION,
   LOADING_TASK_SUBSCRIPTION_LIST,
 } from '../../../../../../utils/constants';
-import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
-import { PublicBundleCISubscriptionsDetail } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../../api/generated/portal/CISubscriptionInfo';
 import { CommissionBundleDetailSubscriptionDrawer } from '../CommissionBundleDetailSubscriptionDrawer';
 import {
   BundleResource,
-  PublicBundleCiSubscriptionDetailModel,
+  BundleCiSubscriptionDetailModel,
   RequestStateType,
 } from '../../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
   deleteCIBundleSubscription,
-  getPublicBundleCISubscriptions,
-  getPublicBundleCISubscriptionsDetail,
+  getBundleCISubscriptions,
+  getBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
 } from '../../../../../../services/bundleService';
 import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
+import { CIBundleSubscriptionsResource } from '../../../../../../api/generated/portal/CIBundleSubscriptionsResource';
+import { CIBundleSubscriptionsDetail } from '../../../../../../api/generated/portal/CIBundleSubscriptionsDetail';
 
 const pageLimit = 5;
 
 const generalPath = 'commissionBundlesPage.commissionBundleDetail.requestsTable';
 const componentPath = `${generalPath}.subscriptionsTable`;
 
-const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
+const emptySubscriptionList: CIBundleSubscriptionsResource = {
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],
 };
@@ -67,7 +67,7 @@ export default function CommissionBundleRequestsTable({
   const [selectedState, setSelectedState] = useState<RequestStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
   const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
-    useState<PublicBundleCiSubscriptionDetailModel>({});
+    useState<BundleCiSubscriptionDetailModel>({});
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
@@ -76,18 +76,18 @@ export default function CommissionBundleRequestsTable({
   const [successAlert, setSuccessAlert] = useState<string>();
 
   const [subscriptionList, setSubscriptionList] =
-    useState<PublicBundleCISubscriptionsResource>(emptySubscriptionList);
+    useState<CIBundleSubscriptionsResource>(emptySubscriptionList);
 
   function getSubscriptionDetail(selectedRequest: CISubscriptionInfo) {
     setSelectedSubscriptionRequest(selectedRequest);
 
-    getPublicBundleCISubscriptionsDetail({
+    getBundleCISubscriptionsDetail({
       idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: selectedRequest.creditor_institution_code ?? '',
       status: selectedState,
     })
-      .then((res: PublicBundleCISubscriptionsDetail) => {
+      .then((res: CIBundleSubscriptionsDetail) => {
         setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
       })
       .catch((reason) =>
@@ -116,7 +116,7 @@ export default function CommissionBundleRequestsTable({
       setPage(newPage);
     }
 
-    getPublicBundleCISubscriptions({
+    getBundleCISubscriptions({
       idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: taxCodeFilter ?? selectedTaxCode,
@@ -124,7 +124,7 @@ export default function CommissionBundleRequestsTable({
       page: newPage ?? 0,
       status: searchTriggered ? filterState : selectedState,
     })
-      .then((res: PublicBundleCISubscriptionsResource) => {
+      .then((res: CIBundleSubscriptionsResource) => {
         if (
           res?.creditor_institutions_subscriptions &&
           res.creditor_institutions_subscriptions.length > 0

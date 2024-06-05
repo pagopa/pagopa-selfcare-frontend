@@ -14,11 +14,11 @@ import { RequestStateType } from '../../../../../../../model/CommissionBundle';
 
 const spyOnGetPublicBundleCISubscriptions = jest.spyOn(
   bundleService,
-  'getPublicBundleCISubscriptions'
+  'getBundleCISubscriptions'
 );
 const spyOnGetPublicBundleCISubscriptionsDetail = jest.spyOn(
   bundleService,
-  'getPublicBundleCISubscriptionsDetail'
+  'getBundleCISubscriptionsDetail'
 );
 const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
 const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');

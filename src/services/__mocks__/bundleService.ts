@@ -2,10 +2,8 @@ import { BundleCreateResponse } from '../../api/generated/portal/BundleCreateRes
 import { BundleRequest, TypeEnum } from '../../api/generated/portal/BundleRequest';
 import { Touchpoints } from '../../api/generated/portal/Touchpoints';
 import { mockedChannelsMerged } from './channelService';
-import { PublicBundleCISubscriptionsResource } from '../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { CISubscriptionInfo } from '../../api/generated/portal/CISubscriptionInfo';
-import { PublicBundleCISubscriptionsDetail } from '../../api/generated/portal/PublicBundleCISubscriptionsDetail';
-import { PublicBundleCiSubscriptionDetailModel } from '../../model/CommissionBundle';
+import { BundleCiSubscriptionDetailModel } from '../../model/CommissionBundle';
 import { CIBundleFee } from '../../api/generated/portal/CIBundleFee';
 import { PublicBundleRequest } from '../../api/generated/portal/PublicBundleRequest';
 import { PSPBundleResource } from '../../api/generated/portal/PSPBundleResource';
@@ -14,6 +12,8 @@ import { PSPBundlesResource } from '../../api/generated/portal/PSPBundlesResourc
 import { TransferCategoryRelationEnum } from '../../api/generated/portal/CIBundleAttribute';
 import { CIBundleResource, CiBundleStatusEnum } from '../../api/generated/portal/CIBundleResource';
 import { CIBundlesResource } from '../../api/generated/portal/CIBundlesResource';
+import { CIBundleSubscriptionsResource } from '../../api/generated/portal/CIBundleSubscriptionsResource';
+import { CIBundleSubscriptionsDetail } from '../../api/generated/portal/CIBundleSubscriptionsDetail';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -221,7 +221,7 @@ export const mockedCiSubscription: CISubscriptionInfo = {
   creditor_institution_code: 'CI Tax Code',
 };
 
-export const mockedCiSubscriptionList: PublicBundleCISubscriptionsResource = {
+export const mockedCiSubscriptionList: CIBundleSubscriptionsResource = {
   creditor_institutions_subscriptions: [mockedCiSubscription],
   page_info: {
     items_found: 1,
@@ -237,12 +237,12 @@ export const mockedCiBundleFee: CIBundleFee = {
   paymentAmount: 50,
 };
 
-export const mockedCiSubscriptionDetail: PublicBundleCISubscriptionsDetail = {
+export const mockedCiSubscriptionDetail: CIBundleSubscriptionsDetail = {
   ci_bundle_fee_list: [mockedCiBundleFee],
   bundle_request_id: 'bundleRequestId',
 };
 
-export const mockedCiSubscriptionIntersectDetail: PublicBundleCiSubscriptionDetailModel = {
+export const mockedCiSubscriptionIntersectDetail: BundleCiSubscriptionDetailModel = {
   ...mockedCiSubscriptionDetail,
   ...mockedCiSubscription,
 };
@@ -294,8 +294,8 @@ export const deletePSPBundle = (): Promise<void> => new Promise((resolve) => res
 
 export const updatePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());
 
-export const getPublicBundleCISubscriptionsMock =
-  (): Promise<PublicBundleCISubscriptionsResource> => Promise.resolve(mockedCiSubscriptionList);
+export const getBundleCISubscriptionsMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionList);
 
-export const getPublicBundleCISubscriptionsDetailMock =
-  (): Promise<PublicBundleCISubscriptionsDetail> => Promise.resolve(mockedCiSubscriptionDetail);
+export const getBundleCISubscriptionsDetailMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionDetail);

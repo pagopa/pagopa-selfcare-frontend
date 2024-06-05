@@ -6,7 +6,6 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import GenericModal from '../../../../../../components/Form/GenericModal';
 import TableDataGrid from '../../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../../components/Table/TableSearchBar';
@@ -17,13 +16,14 @@ import { deleteCIBundleSubscription } from '../../../../../../services/bundleSer
 import { LOADING_TASK_OFFER_LIST, LOADING_TASK_OFFER_ACTION } from '../../../../../../utils/constants';
 import { CommissionBundleDetailSubscriptionDrawer } from '../CommissionBundleDetailSubscriptionDrawer';
 import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
+import { CIBundleSubscriptionsResource } from '../../../../../../api/generated/portal/CIBundleSubscriptionsResource';
 
 const pageLimit = 5;
 
 const generalPath = "commissionBundlesPage.commissionBundleDetail.requestsTable";
 const componentPath = `${generalPath}.offersTable`;
 
-const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
+const emptySubscriptionList: CIBundleSubscriptionsResource = {
   // TODO type
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],

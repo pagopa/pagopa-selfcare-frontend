@@ -10,7 +10,7 @@ import { formatCurrencyEur } from '../../../../../utils/common-utils';
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
 import {
   OfferStateType,
-  PublicBundleCiSubscriptionDetailModel,
+  BundleCiSubscriptionDetailModel,
   RequestStateType,
 } from '../../../../../model/CommissionBundle';
 import { colorType, renderStatusChip } from '../../../../../components/Table/TableUtils';
@@ -103,8 +103,8 @@ export const CommissionBundleDetailSubscriptionDrawer = ({
   drawerButtons,
   componentPath
 }: {
-  setSelectedSubscription: (openDrawer: PublicBundleCiSubscriptionDetailModel) => void; // TODO double type
-  selectedSubscription: PublicBundleCiSubscriptionDetailModel; // TODO double type
+  setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void; // TODO double type
+  selectedSubscription: BundleCiSubscriptionDetailModel; // TODO double type
   stateType: RequestStateType | OfferStateType;
   drawerButtons: () => any;
   componentPath: string;

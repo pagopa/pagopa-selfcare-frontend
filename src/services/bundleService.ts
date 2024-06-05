@@ -4,9 +4,8 @@ import { BundleCreateResponse } from '../api/generated/portal/BundleCreateRespon
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
-  BundleTaxonomy,
-  PublicBundleCiSubscriptionsDetailMethodParams,
-  PublicBundleCISubscriptionsMethodParams,
+  BundleCiSubscriptionsDetailMethodParams,
+  BundleCISubscriptionsMethodParams,
 } from '../model/CommissionBundle';
 import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
@@ -18,8 +17,8 @@ import {
   getCommissionBundleCi,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
-  getPublicBundleCISubscriptionsDetailMock,
-  getPublicBundleCISubscriptionsMock,
+  getBundleCISubscriptionsDetailMock,
+  getBundleCISubscriptionsMock,
   getTouchpoints as getTouchpointsMock,
   updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';
@@ -140,18 +139,18 @@ export const rejectPublicBundleSubscription = (
   }
 };
 
-export const getPublicBundleCISubscriptions = ({
+export const getBundleCISubscriptions = ({
   idBundle,
   pspTaxCode,
   ciTaxCode,
   limit,
   page,
   status,
-}: PublicBundleCISubscriptionsMethodParams) => {
+}: BundleCISubscriptionsMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getPublicBundleCISubscriptionsMock();
+    return getBundleCISubscriptionsMock();
   } else {
-    return BackofficeApi.getPublicBundleCISubscriptions({
+    return BackofficeApi.getBundleCISubscriptions({
       idBundle,
       pspTaxCode,
       ciTaxCode,
@@ -162,16 +161,16 @@ export const getPublicBundleCISubscriptions = ({
   }
 };
 
-export const getPublicBundleCISubscriptionsDetail = ({
+export const getBundleCISubscriptionsDetail = ({
   idBundle,
   pspTaxCode,
   ciTaxCode,
   status,
-}: PublicBundleCiSubscriptionsDetailMethodParams) => {
+}: BundleCiSubscriptionsDetailMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getPublicBundleCISubscriptionsDetailMock();
+    return getBundleCISubscriptionsDetailMock();
   } else {
-    return BackofficeApi.getPublicBundleCISubscriptionsDetail({
+    return BackofficeApi.getBundleCISubscriptionsDetail({
       idBundle,
       pspTaxCode,
       ciTaxCode,

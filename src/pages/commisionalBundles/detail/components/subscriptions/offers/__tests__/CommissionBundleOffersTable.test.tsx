@@ -10,15 +10,15 @@ import {
   mockedCommissionBundlePspDetailGlobal,
 } from '../../../../../../../services/__mocks__/bundleService';
 import * as bundleService from '../../../../../../../services/bundleService';
-import { SubscriptionStateType } from '../../../../../../../model/CommissionBundle';
+import { RequestStateType } from '../../../../../../../model/CommissionBundle';
 
 const spyOnGetPublicBundleCISubscriptions = jest.spyOn(
   bundleService,
-  'getPublicBundleCISubscriptions'
+  'getBundleCISubscriptions'
 );
 const spyOnGetPublicBundleCISubscriptionsDetail = jest.spyOn(
   bundleService,
-  'getPublicBundleCISubscriptionsDetail'
+  'getBundleCISubscriptionsDetail'
 );
 const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
 const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
@@ -52,7 +52,7 @@ describe('<CommissionBundleOffersTable />', () => {
     ) as HTMLInputElement;
     const selectSubscriptionStateFilterBtn = screen.getByLabelText(`${generalPath}.state`);
     expect(selectSubscriptionStateFilter).toHaveTextContent(
-      `${componentPath}.stateChip.${SubscriptionStateType.Waiting}`
+      `${componentPath}.stateChip.${RequestStateType.Waiting}`
     );
 
     expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(1);
@@ -63,12 +63,12 @@ describe('<CommissionBundleOffersTable />', () => {
       fireEvent.mouseDown(selectSubscriptionStateFilterBtn);
       fireEvent.click(
         screen.getByText(
-          new RegExp(`${componentPath}.stateChip.${SubscriptionStateType.Accepted}`, 'i')
+          new RegExp(`${componentPath}.stateChip.${RequestStateType.Accepted}`, 'i')
         )
       );
     });
     expect(selectSubscriptionStateFilterBtn.textContent).toBe(
-      `${componentPath}.stateChip.${SubscriptionStateType.Accepted}`
+      `${componentPath}.stateChip.${RequestStateType.Accepted}`
     );
 
     spyOnGetPublicBundleCISubscriptions.mockReturnValueOnce(
@@ -137,12 +137,12 @@ describe('<CommissionBundleOffersTable />', () => {
       fireEvent.mouseDown(selectSubscriptionStateFilterBtn);
       fireEvent.click(
         screen.getByText(
-          new RegExp(`${componentPath}.stateChip.${SubscriptionStateType.Accepted}`, 'i')
+          new RegExp(`${componentPath}.stateChip.${RequestStateType.Accepted}`, 'i')
         )
       );
     });
     expect(selectSubscriptionStateFilterBtn.textContent).toBe(
-      `${componentPath}.stateChip.${SubscriptionStateType.Accepted}`
+      `${componentPath}.stateChip.${RequestStateType.Accepted}`
     );
 
     const searchButton = screen.getByTestId('button-search');

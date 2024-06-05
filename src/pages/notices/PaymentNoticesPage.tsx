@@ -38,7 +38,8 @@ const PaymentNoticesPage = () => {
   };
 
   useEffect(() => {
-    if (selectedParty && selectedParty.fiscalCode && (institutionUploadData === null ||
+    if (selectedParty && selectedParty.fiscalCode &&
+      (institutionUploadData === undefined || institutionUploadData === null ||
        institutionUploadData?.taxCode !== selectedParty.fiscalCode)) {
       setLoadingStatus(true);
       getInstitutionData(selectedParty.fiscalCode)

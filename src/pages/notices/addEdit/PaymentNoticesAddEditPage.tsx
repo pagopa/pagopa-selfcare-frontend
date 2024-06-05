@@ -74,6 +74,7 @@ const PaymentNoticesAddEditPage = () => {
       <Grid item p={3} xs={8}>
         <Stack direction="row">
           <ButtonNaked
+            data-testid="go-back-breadcrumb-test"           
             size="small"
             component="button"
             onClick={() => setOpenBackModal(true)}

@@ -431,12 +431,14 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   value={hasPay}
                 >
                   <FormControlLabel
+                    data-testid="pay-radio-yes"
                     value={true}
                     control={<Radio />}
                     label={t("general.yes")}
                     sx={{ pr: 8 }}
                   />
                   <FormControlLabel
+                    data-testid="pay-radio-no"
                     value={false}
                     control={<Radio />}
                     label={t("general.no")}
@@ -490,16 +492,18 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   name="connectionType"
                   row
                   onChange={(e) => setHasPoste(e?.target?.value === "true")}
-                  data-testid="hss-poste-radio-group"
+                  data-testid="has-poste-radio-group"
                   value={hasPoste}
                 >
                   <FormControlLabel
+                    data-testid="poste-radio-yes"
                     value={true}
                     control={<Radio />}
                     label={t("general.yes")}
                     sx={{ pr: 8 }}
                   />
                   <FormControlLabel
+                    data-testid="poste-radio-no"
                     value={false}
                     control={<Radio />}
                     label={t("general.no")}
@@ -624,6 +628,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
         onClose={() => setOpenDialog(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        data-testid="dialog-test"
       >
         <DialogTitle id="alert-dialog-title">
           {t('addEditInstitutionsDataPage.addForm.dialog.title')}
@@ -648,6 +653,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
         </DialogContent>
         <DialogActions>
           <Button 
+            data-testid="dialog-button"
             variant="contained"
             sx={{
               border: `2px solid ${theme.palette.primary.main}`,

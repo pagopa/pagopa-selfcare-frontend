@@ -42,12 +42,12 @@ const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
 const mapTaxonomyToPspBundleTaxonomy = (
     taxonomy: TaxonomyWithFromFile
 ): PSPBundleTaxonomyWithFromFile => ({
-    specificBuiltInData: taxonomy.specific_built_in_data,
-    macroAreaName: taxonomy.macro_area_name,
-    endDate: taxonomy.end_date,
-    serviceType: taxonomy.service_type,
-    fromFile: taxonomy.fromFile,
-    ecType: taxonomy.ci_type,
+  specificBuiltInData: taxonomy.specific_built_in_data,
+  macroAreaName: taxonomy.macro_area_name,
+  endDate: taxonomy.end_date,
+  serviceType: taxonomy.service_type,
+  fromFile: taxonomy.fromFile,
+  ecType: taxonomy.ci_type,
 });
 
 const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) => {
@@ -204,87 +204,77 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
                 mb: 4,
             }}
         >
-            <Typography variant="h6" mb={1}>
-                {t('commissionBundlesPage.commissionBundleDetail.taxonomies')}
-            </Typography>
-            <Typography variant="body1" mb={1}>
-                {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.subTitle')}
-            </Typography>
-            <Typography variant="body1" mb={2} sx={{textDecoration: 'underline', fontWeight: 'medium'}}>
-                <Link
-                    href="https://docs.pagopa.it/sanp/ente-creditore/tassonomia-dei-servizi-di-incasso"
-                    target="_blank"
-                >
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.manualHelp')}
-                </Link>
-            </Typography>
-            <Button
-                color="primary"
-                variant="contained"
-                onClick={() => setOpenDrawer(true)}
-                data-testid="open-taxonomies-drawer"
-                sx={{mb: 2}}
-            >
-                <ListAltIcon sx={{pr: 1}}/>
-                {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
-            </Button>
-            {
-                /* Commented while waiting for the API to check csv taxonomies validity
-                        {alertData && (
-                <Alert
-                  severity={alertData.type}
-                  data-testid={
-                    alertData.type === 'success'
-                      ? 'alert-success'
-                      : alertData.type === 'warning'
-                        ? 'alert-warning'
-                        : alertData.type === 'error'
-                          ? 'alert-error'
-                          : ''
-                  }
-                  onClose={() => {
-                    setAlertData(null);
-                  }}
-                >
-                  <AlertTitle>
-                    {' '}
-                    {alertData.type === 'success'
-                      ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle')
-                      : alertData.type === 'warning'
-                        ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle')
-                        : alertData.type === 'error'
-                          ? t(
-                              'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle'
-                            )
-                          : ''}
-                  </AlertTitle>
-                  {alertData.message}
-                </Alert>
-              )}
-              <SingleFileInput
-                value={file}
-                accept={['.csv']}
-                onFileSelected={handleSelect}
-                onFileRemoved={handleRemove}
-                dropzoneLabel={t(
-                  'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dropFileText'
-                )}
-                rejectedLabel={t('general.rejectedFile')}
-              />
+          {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.manualHelp')}
+        </Link>
+      </Typography>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => setOpenDrawer(true)}
+        data-testid="open-taxonomies-drawer"
+        sx={{ mb: 2 }}
+      >
+        <ListAltIcon sx={{ pr: 1 }} />
+        {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.catalogueButton')}
+      </Button>
+      {
+        /* Commented while waiting for the API to check csv taxonomies validity
+                {alertData && (
+        <Alert
+          severity={alertData.type}
+          data-testid={
+            alertData.type === 'success'
+              ? 'alert-success'
+              : alertData.type === 'warning'
+                ? 'alert-warning'
+                : alertData.type === 'error'
+                  ? 'alert-error'
+                  : ''
+          }
+          onClose={() => {
+            setAlertData(null);
+          }}
+        >
+          <AlertTitle>
+            {' '}
+            {alertData.type === 'success'
+              ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.successTitle')
+              : alertData.type === 'warning'
+                ? t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.warnTitle')
+                : alertData.type === 'error'
+                  ? t(
+                      'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.alert.errorTitle'
+                    )
+                  : ''}
+          </AlertTitle>
+          {alertData.message}
+        </Alert>
+      )}
+      <SingleFileInput
+        value={file}
+        accept={['.csv']}
+        onFileSelected={handleSelect}
+        onFileRemoved={handleRemove}
+        dropzoneLabel={t(
+          'commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dropFileText'
+        )}
+        rejectedLabel={t('general.rejectedFile')}
+      />
 
-              {(file === undefined || file === null) && (
-                <Typography variant="body1" mb={1} mt={1}>
-                  {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
-                  <a
-                    href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
-                    download="taxonomiesExample.csv"
-                  >
-                    {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}
-                  </a>
-                </Typography>
-              )}
-                */
-            }
+      {(file === undefined || file === null) && (
+        <Typography variant="body1" mb={1} mt={1}>
+          {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
+          <a
+            href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
+            download="taxonomiesExample.csv"
+          >
+            {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}
+          </a>
+        </Typography>
+      )}
+        */
+      }
+
 
 
             {taxonomyTableData && Object.keys(taxonomyTableData).length > 0 && (

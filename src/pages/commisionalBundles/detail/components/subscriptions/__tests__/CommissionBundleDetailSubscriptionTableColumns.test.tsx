@@ -1,8 +1,8 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { cleanup} from '@testing-library/react';
 import { showCustomHeader } from '../../../../../../components/Table/TableUtils';
-import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
-import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
+import {  SubscriptionStateType } from '../../../../../../model/CommissionBundle';
+import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -13,25 +13,25 @@ afterEach(cleanup);
 
 const mockTFunction = (key: string) => {
   switch (key) {
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.businessName':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.businessName':
       return 'Business Name';
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.taxCode':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode':
       return 'Tax Code';
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.state':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.state':
       return 'State';
     default:
       return '';
   }
 };
 
-describe('<CommissionBundleRequestsTableColumns />', () => {
+describe('<CommissionBundleDetailSubscriptionTableColumns />', () => {
   test('Test of all the functions inside the component', () => {
     const ArrayBuildColumnDefs = [
       {
         field: 'name',
         cellClassName: 'justifyContentBold',
         headerName: mockTFunction(
-          'commissionBundlesPage.commissionBundleDetail.requestsTable.businessName'
+          'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.businessName'
         ),
         align: 'left',
         headerAlign: 'left',
@@ -47,7 +47,7 @@ describe('<CommissionBundleRequestsTableColumns />', () => {
         field: 'taxCode',
         cellClassName: 'justifyContentNormal',
         headerName: mockTFunction(
-          'commissionBundlesPage.commissionBundleDetail.requestsTable.taxCode'
+          'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode'
         ),
         align: 'left',
         headerAlign: 'left',
@@ -62,7 +62,7 @@ describe('<CommissionBundleRequestsTableColumns />', () => {
       {
         field: 'state',
         cellClassName: 'justifyContentNormal',
-        headerName: mockTFunction('commissionBundlesPage.commissionBundleDetail.requestsTable.state'),
+        headerName: mockTFunction('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.state'),
         align: 'left',
         headerAlign: 'left',
         minWidth: 200,

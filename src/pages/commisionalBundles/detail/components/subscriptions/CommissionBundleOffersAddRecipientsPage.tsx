@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
 import { useTranslation } from 'react-i18next';
-import { Alert, AlertTitle, Box, Button, Grid, Paper, Stack, Typography } from '@mui/material';
-import { ButtonNaked, SingleFileInput } from '@pagopa/mui-italia';
+import { Box, Button, Grid, Paper, Stack } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { Add, ArrowBack } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { BundleResource } from '../../../../../../model/CommissionBundle';
-import { useAppSelectorWithRedirect } from '../../../../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../../../../redux/slices/bundleDetailsSlice';
-import GenericModal from '../../../../../../components/Form/GenericModal';
-import ROUTES from '../../../../../../routes';
-import ECSelection from '../../../../../../components/Form/ECSelection';
-import { CreditorInstitutionInfo } from '../../../../../../api/generated/portal/CreditorInstitutionInfo';
-import { CreditorInstitutionInfoArray } from '../../../../../../api/generated/portal/CreditorInstitutionInfoArray';
+import { CreditorInstitutionInfo } from '../../../../../api/generated/portal/CreditorInstitutionInfo';
+import ECSelection from '../../../../../components/Form/ECSelection';
+import GenericModal from '../../../../../components/Form/GenericModal';
+import { BundleResource } from '../../../../../model/CommissionBundle';
+import { useAppSelectorWithRedirect } from '../../../../../redux/hooks';
+import { bundleDetailsSelectors } from '../../../../../redux/slices/bundleDetailsSlice';
+import ROUTES from '../../../../../routes';
+import { CreditorInstitutionInfoResource } from '../../../../../api/generated/portal/CreditorInstitutionInfoResource';
 
 type CreditorInstitutionInfoWithFromFile = CreditorInstitutionInfo & { fromFile?: boolean };
 
@@ -28,16 +28,18 @@ export default function CommissionBundleOffersAddRecipientsPage() {
     ROUTES.COMMISSION_BUNDLES
   );
 
-  const [availableEc, setAvailableEc] = useState<CreditorInstitutionInfoArray>([
-    { ci_tax_code: 'ci_tax_code', business_name: 'business_name' },
-    { ci_tax_code: 'ci_tax_code2', business_name: 'business_name2' },
-    { ci_tax_code: 'ci_tax_code3', business_name: 'business_name3' },
-    { ci_tax_code: 'ci_tax_code4', business_name: 'business_name4' },
-    { ci_tax_code: 'ci_tax_code5', business_name: 'business_name5' },
-    { ci_tax_code: 'ci_tax_code6', business_name: 'business_name6' },
-    { ci_tax_code: 'ci_tax_code7', business_name: 'business_name7' },
-    { ci_tax_code: 'ci_tax_code8', business_name: 'business_name8' },
-  ]); // TODO retrieve list
+  const [availableEc, setAvailableEc] = useState<CreditorInstitutionInfoResource>({
+    creditor_institution_info_list: [
+      { ci_tax_code: 'ci_tax_code', business_name: 'business_name' },
+      { ci_tax_code: 'ci_tax_code2', business_name: 'business_name2' },
+      { ci_tax_code: 'ci_tax_code3', business_name: 'business_name3' },
+      { ci_tax_code: 'ci_tax_code4', business_name: 'business_name4' },
+      { ci_tax_code: 'ci_tax_code5', business_name: 'business_name5' },
+      { ci_tax_code: 'ci_tax_code6', business_name: 'business_name6' },
+      { ci_tax_code: 'ci_tax_code7', business_name: 'business_name7' },
+      { ci_tax_code: 'ci_tax_code8', business_name: 'business_name8' },
+    ],
+  }); // TODO retrieve list
   const [file, setFile] = useState<File | null>(null);
   const [alertData, setAlertData] = useState<any>();
   const [selectedRecipients, setSelectedRecipients] = useState<
@@ -61,10 +63,12 @@ export default function CommissionBundleOffersAddRecipientsPage() {
     setSelectedRecipients((prev) => [...prev, ci]);
     setShowAddRecipientInput(false);
     setAvailableEc((prev) => {
-      const newArr = [...prev];
+      const newArr = prev.creditor_institution_info_list
+        ? [...prev.creditor_institution_info_list]
+        : [];
       // eslint-disable-next-line functional/immutable-data
       newArr.splice(
-        prev.findIndex((el) => el.ci_tax_code === ci.ci_tax_code),
+        newArr.findIndex((el) => el.ci_tax_code === ci.ci_tax_code),
         1
       );
 
@@ -73,15 +77,19 @@ export default function CommissionBundleOffersAddRecipientsPage() {
   }
 
   function removeRecipientFromSelected(index: number) {
-    setAvailableEc((prev) => [...prev, selectedRecipients[index]]);
+    setAvailableEc((prev) =>
+      prev.creditor_institution_info_list
+        ? [...prev.creditor_institution_info_list, selectedRecipients[index]]
+        : []
+    );
     setSelectedRecipients((prev) => {
       const newArr = [...prev];
       // eslint-disable-next-line functional/immutable-data
       newArr.splice(index, 1);
 
-      if (!newArr.find((el) => el.fromFile)) {
+      /* TODO file dropzone if (!newArr.find((el) => el.fromFile)) {
         handleRemoveFile();
-      } else if (selectedRecipients[index]?.fromFile) {
+      } else */ if (selectedRecipients[index]?.fromFile) {
         setAlertData((prev: any) => ({
           ...prev,
           message: t(`${componentPath}.alert.successMessage`, {
@@ -96,7 +104,7 @@ export default function CommissionBundleOffersAddRecipientsPage() {
       return newArr;
     });
   }
-
+  /* TODO file dropzone
   const handleSelectFile = (file: File) => {
     setFile(file);
     const reader = new FileReader();
@@ -149,7 +157,7 @@ export default function CommissionBundleOffersAddRecipientsPage() {
     setFile(null);
     setSelectedRecipients((prev) => prev.filter((el) => !el.fromFile));
     setAlertData(undefined);
-  };
+  }; */
 
   function handleAddRecipients() {
     // TODO
@@ -191,7 +199,11 @@ export default function CommissionBundleOffersAddRecipientsPage() {
             {selectedRecipients.map((el, index) => (
               <Box key={el.ci_tax_code + String(index)} pb={2}>
                 <ECSelection
-                  availableEC={availableEc}
+                  availableEC={
+                    availableEc.creditor_institution_info_list
+                      ? [...availableEc.creditor_institution_info_list]
+                      : []
+                  }
                   selectedEC={el}
                   onECSelectionChange={(ci) => onRecipientSelection(ci, index)}
                 />
@@ -199,13 +211,17 @@ export default function CommissionBundleOffersAddRecipientsPage() {
             ))}
             {showAddRecipientInput && (
               <ECSelection
-                availableEC={availableEc}
+                availableEC={
+                  availableEc.creditor_institution_info_list
+                    ? [...availableEc.creditor_institution_info_list]
+                    : []
+                }
                 selectedEC={selectedRecipients[selectedRecipients.length]}
                 onECSelectionChange={(ci) => onRecipientSelection(ci, selectedRecipients.length)}
               />
             )}
           </Box>
-          {/* Commented while waiting for the API to check csv creditor institutions validity
+          {/* TODO Commented while waiting for the API to check csv creditor institutions validity
           <Box mt={2}>
             {alertData && (
               <Alert

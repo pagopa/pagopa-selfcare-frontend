@@ -106,9 +106,9 @@ function ChannelAssociatePSPPage() {
         .catch((reason) => console.error(reason));
       getBrokerDelegation( undefined, selectedParty?.partyId, ["PSP"])
         .then((data) => {
-          if (data && selectedParty) {
+          if (data?.delegation_list && selectedParty) {
             // A PSP that is a broker can associate itself to the channel
-            const availablePSPfromService = addCurrentPSP(data, selectedParty);
+            const availablePSPfromService = addCurrentPSP([...data.delegation_list], selectedParty);
 
             setAvailablePSP(availablePSPfromService);
           }

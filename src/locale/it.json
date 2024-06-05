@@ -650,7 +650,7 @@
       "confirmButton": "Conferma"
     },
     "alert": {
-      "noDelegations": "Nessuna delega disponibile per la stazione selezionata. Visualizzi questo messaggio se non hai deleghe oppure se tutti gli enti che ti hanno delegato sono già associati a questa stazione"
+      "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
     }
   },
   "stationDetailPageValidation": {
@@ -979,7 +979,7 @@
         "errorMessage": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati"
       },
       "requestsTable": {
-        "businessName": "Nome ente",
+        "businessName": "Nome Ente",
         "taxCode": "Codice Fiscale",
         "state": "Stato",
         "search": {
@@ -998,9 +998,19 @@
           "delete": {
             "title": "Rimuovi ente",
             "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
+          },
+          "deleteOffer": {
+            "title": "Revoca invito di adesione",
+            "message": "L’ente non avrà più la possibilità di aderire al pacchetto privato."
           }
         },
-        "subscriptionsTable": {
+        "alert": {
+          "reject": "Richiesta rifiutata",
+          "accept": "Richiesta accettata",
+          "delete": "Ente rimosso",
+          "deleteOffer": "Offerta eliminata"
+        },
+        "requestsTable": {
           "title": "Richieste di adesione",
           "table": {
             "emptyState": {
@@ -1014,11 +1024,6 @@
             "DELETING": "In eliminazione"
           },
           "drawerTitle": "Dettaglio richiedente",
-          "alert": {
-            "reject": "Richiesta rifiutata",
-            "accept": "Richiesta accettata",
-            "delete": "Ente rimosso"
-          },
           "error": {
             "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
             "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
@@ -1038,7 +1043,7 @@
           },
           "stateChip": {
             "WAITING": "In attesa",
-            "ACTIVE": "Attivo",
+            "ACCEPTED": "Attivo",
             "DELETING": "In eliminazione"
           },
           "drawerTitle": "Dettaglio destinatario",

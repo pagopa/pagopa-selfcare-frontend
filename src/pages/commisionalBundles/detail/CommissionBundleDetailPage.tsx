@@ -34,8 +34,7 @@ import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { PSPBundleTaxonomy } from '../../../api/generated/portal/PSPBundleTaxonomy';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
-import CommissionBundleRequestsTable from './components/subscriptions/requests/CommissionBundleRequestsTable';
-import CommissionBundleOffersTable from './components/subscriptions/offers/CommissionBundleOffersTable';
+import CommissionBundleSubscriptionsTable from './components/subscriptions/CommissionBundleSubscriptionsTable';
 
 
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
@@ -300,12 +299,7 @@ const CommissionBundleDetailPage = () => {
                     : 'offer-table'
                 }
               >
-                {commissionBundleDetail.type === TypeEnum.PUBLIC && (
-                  <CommissionBundleRequestsTable bundleDetail={commissionBundleDetail} />
-                )}
-                {commissionBundleDetail.type === TypeEnum.PRIVATE && (
-                  <CommissionBundleOffersTable bundleDetail={commissionBundleDetail} />
-                )}
+                  <CommissionBundleSubscriptionsTable bundleDetail={commissionBundleDetail} />
               </Grid>
             )}
         </Grid>

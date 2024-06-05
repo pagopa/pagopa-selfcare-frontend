@@ -3,7 +3,7 @@ import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
 import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
 import { CIBundleSubscriptionsDetail } from "../api/generated/portal/CIBundleSubscriptionsDetail";
 import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
-import { PSPBundleResource } from "../api/generated/portal/PSPBundleResource";
+import { PSPBundleResource, TypeEnum } from "../api/generated/portal/PSPBundleResource";
 import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
 import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
 
@@ -11,14 +11,9 @@ export enum FormAction {
   Create = 'create',
   Edit = 'edit',
 }
-export enum RequestStateType {
+export enum SubscriptionStateType {
   Waiting = 'WAITING',
   Accepted = 'ACCEPTED',
-}
-
-export enum OfferStateType {
-  Waiting = 'WAITING',
-  Active = 'ACTIVE',
 }
 
 export type BundleCISubscriptionsMethodParams = {
@@ -26,8 +21,9 @@ export type BundleCISubscriptionsMethodParams = {
   pspTaxCode: string;
   limit: number;
   page: number;
-  status: RequestStateType;
+  status: SubscriptionStateType;
   ciTaxCode?: string;
+  bundleType: TypeEnum;
 };
 
 export type BundleCISubscriptionsBodyRequest = {
@@ -35,8 +31,9 @@ export type BundleCISubscriptionsBodyRequest = {
   'psp-tax-code': string;
   limit: number;
   page: number;
-  status: RequestStateType;
+  status: SubscriptionStateType;
   ciTaxCode?: string;
+  bundleType: TypeEnum;
 };
 
 export type BundleCiSubscriptionsDetailMethodParams = {
@@ -44,6 +41,7 @@ export type BundleCiSubscriptionsDetailMethodParams = {
   pspTaxCode: string;
   ciTaxCode: string;
   status: string;
+  bundleType: TypeEnum;
 };
 
 export type BundleCiSubscriptionDetailModel = CISubscriptionInfo & CIBundleSubscriptionsDetail;

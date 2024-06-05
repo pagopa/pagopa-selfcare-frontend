@@ -1180,6 +1180,7 @@ export const BackofficeApi = {
     limit,
     page,
     status,
+    bundleType
   }: BundleCISubscriptionsMethodParams): Promise<CIBundleSubscriptionsResource> => {
     // eslint-disable-next-line functional/no-let
     let params: BundleCISubscriptionsBodyRequest = {
@@ -1188,6 +1189,7 @@ export const BackofficeApi = {
       limit,
       page,
       status,
+      bundleType
     };
     if (ciTaxCode) {
       params = { ...params, ciTaxCode };
@@ -1201,11 +1203,13 @@ export const BackofficeApi = {
     pspTaxCode,
     ciTaxCode,
     status,
+    bundleType
   }: BundleCiSubscriptionsDetailMethodParams): Promise<CIBundleSubscriptionsDetail> => {
     const result = await backofficeClient.getBundleCISubscriptionsDetail({
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       'ci-tax-code': ciTaxCode,
+      bundleType,
       status,
     });
     return extractResponse(result, 200, onRedirectToLogin);

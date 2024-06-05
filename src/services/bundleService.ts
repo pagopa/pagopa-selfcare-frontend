@@ -146,6 +146,7 @@ export const getBundleCISubscriptions = ({
   limit,
   page,
   status,
+  bundleType
 }: BundleCISubscriptionsMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsMock();
@@ -157,6 +158,7 @@ export const getBundleCISubscriptions = ({
       limit,
       page,
       status,
+      bundleType
     });
   }
 };
@@ -166,6 +168,7 @@ export const getBundleCISubscriptionsDetail = ({
   pspTaxCode,
   ciTaxCode,
   status,
+  bundleType
 }: BundleCiSubscriptionsDetailMethodParams) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsDetailMock();
@@ -175,6 +178,7 @@ export const getBundleCISubscriptionsDetail = ({
       pspTaxCode,
       ciTaxCode,
       status,
+      bundleType
     });
   }
 };

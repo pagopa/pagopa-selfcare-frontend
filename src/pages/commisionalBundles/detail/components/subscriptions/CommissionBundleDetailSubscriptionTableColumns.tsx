@@ -3,12 +3,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { renderCell, showCustomHeader } from '../../../../../components/Table/TableUtils';
-import { OfferStateType, RequestStateType } from '../../../../../model/CommissionBundle';
+import { SubscriptionStateType } from '../../../../../model/CommissionBundle';
 import { getSubscriptionStatusChip } from './CommissionBundleDetailSubscriptionDrawer';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  filterState: OfferStateType | RequestStateType,
+  filterState: SubscriptionStateType,
   setDrawerValue: (bool: boolean) => void,
   componentPath: string
 ) {
@@ -16,7 +16,7 @@ export function buildColumnDefs(
     {
       field: 'name',
       cellClassName: 'justifyContentBold',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.businessName'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.businessName'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 300,
@@ -30,7 +30,7 @@ export function buildColumnDefs(
     {
       field: 'taxCode',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.taxCode'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 300,
@@ -44,7 +44,7 @@ export function buildColumnDefs(
     {
       field: 'state',
       cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.commissionBundleDetail.requestsTable.state'),
+      headerName: t('commissionBundlesPage.commissionBundleDetail.subscriptionsTable.state'),
       align: 'left',
       headerAlign: 'left',
       minWidth: 200,

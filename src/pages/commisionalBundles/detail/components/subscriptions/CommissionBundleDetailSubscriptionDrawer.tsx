@@ -9,9 +9,8 @@ import { getSpecificBuiltInData } from '../../../../../services/bundleService';
 import { formatCurrencyEur } from '../../../../../utils/common-utils';
 import { PaddedDrawer } from '../../../../../components/PaddedDrawer';
 import {
-  OfferStateType,
   BundleCiSubscriptionDetailModel,
-  RequestStateType,
+  SubscriptionStateType,
 } from '../../../../../model/CommissionBundle';
 import { colorType, renderStatusChip } from '../../../../../components/Table/TableUtils';
 
@@ -71,14 +70,14 @@ export const CommissionBundleDrawerCommissionFeeList = ({
 
 export const getSubscriptionStatusChip = (
   t: TFunction<'translation', undefined>,
-  filterState: RequestStateType | OfferStateType,
+  filterState: SubscriptionStateType,
   componentPath: string,
   onRemoval: boolean | undefined = undefined,
   size: 'small' | 'medium' | undefined = undefined
 ) => {
   // eslint-disable-next-line functional/no-let
   let chipColor: colorType =
-    filterState === RequestStateType.Accepted || filterState === OfferStateType.Active
+    filterState === SubscriptionStateType.Accepted
       ? 'success'
       : 'default';
   if (onRemoval) {
@@ -103,14 +102,14 @@ export const CommissionBundleDetailSubscriptionDrawer = ({
   drawerButtons,
   componentPath
 }: {
-  setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void; // TODO double type
-  selectedSubscription: BundleCiSubscriptionDetailModel; // TODO double type
-  stateType: RequestStateType | OfferStateType;
+  setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void;
+  selectedSubscription: BundleCiSubscriptionDetailModel;
+  stateType: SubscriptionStateType;
   drawerButtons: () => any;
   componentPath: string;
 }) => {
   const { t } = useTranslation();
-  const generalPath = 'commissionBundlesPage.commissionBundleDetail.requestsTable';
+  const generalPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
   return (
     <PaddedDrawer
       openDrawer={selectedSubscription.creditor_institution_code !== undefined}

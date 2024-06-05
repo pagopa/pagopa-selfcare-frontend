@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import {
   Select,
@@ -13,61 +14,66 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
 import { useTranslation, TFunction } from 'react-i18next';
-import GenericModal from '../../../../../../components/Form/GenericModal';
-import TableDataGrid from '../../../../../../components/Table/TableDataGrid';
-import TableSearchBar from '../../../../../../components/Table/TableSearchBar';
-import { useAppSelector } from '../../../../../../redux/hooks';
-import { partiesSelectors } from '../../../../../../redux/slices/partiesSlice';
+import GenericModal from '../../../../../components/Form/GenericModal';
+import TableDataGrid from '../../../../../components/Table/TableDataGrid';
+import TableSearchBar from '../../../../../components/Table/TableSearchBar';
+import { useAppSelector } from '../../../../../redux/hooks';
+import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
 import {
   LOADING_TASK_SUBSCRIPTION_ACTION,
   LOADING_TASK_SUBSCRIPTION_LIST,
-} from '../../../../../../utils/constants';
-import { CISubscriptionInfo } from '../../../../../../api/generated/portal/CISubscriptionInfo';
-import { CommissionBundleDetailSubscriptionDrawer } from '../CommissionBundleDetailSubscriptionDrawer';
+} from '../../../../../utils/constants';
+import { CISubscriptionInfo } from '../../../../../api/generated/portal/CISubscriptionInfo';
+
 import {
   BundleResource,
   BundleCiSubscriptionDetailModel,
-  RequestStateType,
-} from '../../../../../../model/CommissionBundle';
+  SubscriptionStateType,
+} from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
   deleteCIBundleSubscription,
   getBundleCISubscriptions,
   getBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
-} from '../../../../../../services/bundleService';
-import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
-import { CIBundleSubscriptionsResource } from '../../../../../../api/generated/portal/CIBundleSubscriptionsResource';
-import { CIBundleSubscriptionsDetail } from '../../../../../../api/generated/portal/CIBundleSubscriptionsDetail';
+} from '../../../../../services/bundleService';
+import { CIBundleSubscriptionsResource } from '../../../../../api/generated/portal/CIBundleSubscriptionsResource';
+import { CIBundleSubscriptionsDetail } from '../../../../../api/generated/portal/CIBundleSubscriptionsDetail';
+import {
+  TypeEnum,
+} from '../../../../../api/generated/portal/PSPBundleResource';
+import { CommissionBundleDetailSubscriptionDrawer } from './CommissionBundleDetailSubscriptionDrawer';
+import { buildColumnDefs } from './CommissionBundleDetailSubscriptionTableColumns';
 
 const pageLimit = 5;
 
-const generalPath = 'commissionBundlesPage.commissionBundleDetail.requestsTable';
-const componentPath = `${generalPath}.subscriptionsTable`;
+const generalPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
 
 const emptySubscriptionList: CIBundleSubscriptionsResource = {
   page_info: { total_pages: 0 },
   creditor_institutions_subscriptions: [],
 };
 
-export default function CommissionBundleRequestsTable({
+export default function CommissionBundleSubscriptionsTable({
   bundleDetail,
 }: {
   bundleDetail: BundleResource;
 }) {
+  const componentPath = `${generalPath}.${bundleDetail?.type === TypeEnum.PRIVATE ? 'offersTable' : 'requestsTable'}`;
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoadingList = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
   const setLoadingRequestAction = useLoading(LOADING_TASK_SUBSCRIPTION_ACTION);
 
-  const [filterState, setFilterState] = useState<RequestStateType>(
-    RequestStateType.Waiting
+  const [filterState, setFilterState] = useState<SubscriptionStateType>(
+    SubscriptionStateType.Waiting
   );
-  const [selectedState, setSelectedState] = useState<RequestStateType>(filterState);
+  const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
-  const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
-    useState<BundleCiSubscriptionDetailModel>({});
+  const [selectedSubscription, setSelectedSubscription] = useState<BundleCiSubscriptionDetailModel>(
+    {}
+  );
 
   const [page, setPage] = useState<number>(0);
   const [openMenageSubscriptionModal, setOpenMenageSubscriptionModal] = useState<
@@ -79,16 +85,17 @@ export default function CommissionBundleRequestsTable({
     useState<CIBundleSubscriptionsResource>(emptySubscriptionList);
 
   function getSubscriptionDetail(selectedRequest: CISubscriptionInfo) {
-    setSelectedSubscriptionRequest(selectedRequest);
+    setSelectedSubscription(selectedRequest);
 
     getBundleCISubscriptionsDetail({
       idBundle: bundleDetail?.idBundle ?? '',
       pspTaxCode: selectedParty?.fiscalCode ?? '',
       ciTaxCode: selectedRequest.creditor_institution_code ?? '',
       status: selectedState,
+      bundleType: bundleDetail.type!,
     })
       .then((res: CIBundleSubscriptionsDetail) => {
-        setSelectedSubscriptionRequest({ ...res, ...selectedRequest });
+        setSelectedSubscription({ ...res, ...selectedRequest });
       })
       .catch((reason) =>
         addError({
@@ -104,7 +111,12 @@ export default function CommissionBundleRequestsTable({
       );
   }
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, selectedState, getSubscriptionDetail, componentPath);
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    selectedState,
+    getSubscriptionDetail,
+    componentPath
+  );
 
   const getSubscriptionList = (
     newPage?: number,
@@ -123,6 +135,7 @@ export default function CommissionBundleRequestsTable({
       limit: pageLimit,
       page: newPage ?? 0,
       status: searchTriggered ? filterState : selectedState,
+      bundleType: bundleDetail.type!,
     })
       .then((res: CIBundleSubscriptionsResource) => {
         if (
@@ -139,7 +152,7 @@ export default function CommissionBundleRequestsTable({
           id: 'COMMISSION_BUNDLE_GET_SUBSCRIPTION',
           blocking: false,
           error: reason as Error,
-          techDescription: `An error occurred while retrieving bundle's subscriptions requests`,
+          techDescription: `An error occurred while retrieving bundle's subscriptions ${bundleDetail.type === TypeEnum.PRIVATE ? 'offers' : 'requests'}`,
           toNotify: true,
           displayableTitle: t('general.errorTitle'),
           displayableDescription: t(`${componentPath}.error.errorGetList`),
@@ -168,8 +181,8 @@ export default function CommissionBundleRequestsTable({
     if (actionType === 'reject') {
       promise = rejectPublicBundleSubscription(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
@@ -177,24 +190,28 @@ export default function CommissionBundleRequestsTable({
     if (actionType === 'accept') {
       promise = acceptBundleSubscriptionRequest(
         selectedParty?.fiscalCode ?? '',
-        selectedSubscriptionRequest?.bundle_request_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }
     if (actionType === 'delete') {
       promise = deleteCIBundleSubscription(
-        selectedSubscriptionRequest?.ci_bundle_id ?? '',
-        selectedSubscriptionRequest?.creditor_institution_code ?? '',
+        selectedSubscription?.ci_bundle_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
         bundleDetail?.name ?? ''
       );
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
+    if(actionType === "deleteOffer"){
+      // TODO add API delete offer
+      setLoadingRequestAction(false);
+    }
     if (promise) {
       promise
         .then(() => {
-          setSelectedSubscriptionRequest({});
+          setSelectedSubscription({});
           getSubscriptionList(0);
           setSuccessAlert(actionType);
         })
@@ -252,15 +269,15 @@ export default function CommissionBundleRequestsTable({
             label={t(`${generalPath}.state`)}
             size="small"
             value={filterState}
-            onChange={(event) => setFilterState(event.target.value as RequestStateType)}
+            onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
             data-testid="subscription-state"
             sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
           >
-            <MenuItem value={RequestStateType.Waiting}>
-              {t(`${componentPath}.stateChip.${RequestStateType.Waiting}`)}
+            <MenuItem value={SubscriptionStateType.Waiting}>
+              {t(`${componentPath}.stateChip.${SubscriptionStateType.Waiting}`)}
             </MenuItem>
-            <MenuItem value={RequestStateType.Accepted}>
-              {t(`${componentPath}.stateChip.${RequestStateType.Accepted}`)}
+            <MenuItem value={SubscriptionStateType.Accepted}>
+              {t(`${componentPath}.stateChip.${SubscriptionStateType.Accepted}`)}
             </MenuItem>
           </Select>
         </FormControl>
@@ -300,8 +317,8 @@ export default function CommissionBundleRequestsTable({
         </Alert>
       )}
       <CommissionBundleDetailSubscriptionDrawer
-        setSelectedSubscription={setSelectedSubscriptionRequest}
-        selectedSubscription={selectedSubscriptionRequest}
+        setSelectedSubscription={setSelectedSubscription}
+        selectedSubscription={selectedSubscription}
         stateType={selectedState}
         componentPath={componentPath}
         drawerButtons={() =>
@@ -309,8 +326,9 @@ export default function CommissionBundleRequestsTable({
             t,
             selectedState,
             setOpenMenageSubscriptionModal,
-            selectedSubscriptionRequest.ci_bundle_fee_list !== undefined &&
-              !selectedSubscriptionRequest.on_removal
+            bundleDetail,
+            selectedSubscription.ci_bundle_fee_list !== undefined &&
+              !selectedSubscription.on_removal
           )
         }
       />
@@ -334,40 +352,57 @@ function getDrawerButtons(
   t: TFunction<'translation', undefined>,
   stateType: string,
   setOpenMenageSubscriptionModal: (openModal: string) => void,
+  bundleDetail: BundleResource,
   showButtons?: boolean
 ) {
   const buttonPath = 'commissionBundlesPage.commissionBundleDetail.requestDrawer';
   if (showButtons) {
-    if (stateType === RequestStateType.Waiting) {
-      return (
-        <>
+    if (stateType === SubscriptionStateType.Waiting) {
+      if (bundleDetail.type === TypeEnum.PRIVATE) {
+        return (
           <Button
             fullWidth
             onClick={() => {
-              setOpenMenageSubscriptionModal('accept');
-            }}
-            color="primary"
-            variant="contained"
-            data-testid="subscription-accept-button"
-            sx={{ mb: 1 }}
-          >
-            {t(`${buttonPath}.acceptButton`)}
-          </Button>
-          <Button
-            fullWidth
-            onClick={() => {
-              setOpenMenageSubscriptionModal('reject');
+              setOpenMenageSubscriptionModal('deleteOffer');
             }}
             color="error"
             variant="outlined"
-            data-testid="subscription-reject-button"
+            data-testid="offer-delete-button"
           >
-            {t(`${buttonPath}.rejectButton`)}
+            {t(`${buttonPath}.deleteButton`)}
           </Button>
-        </>
-      );
+        );
+      } else {
+        return (
+          <>
+            <Button
+              fullWidth
+              onClick={() => {
+                setOpenMenageSubscriptionModal('accept');
+              }}
+              color="primary"
+              variant="contained"
+              data-testid="request-accept-button"
+              sx={{ mb: 1 }}
+            >
+              {t(`${buttonPath}.acceptButton`)}
+            </Button>
+            <Button
+              fullWidth
+              onClick={() => {
+                setOpenMenageSubscriptionModal('reject');
+              }}
+              color="error"
+              variant="outlined"
+              data-testid="request-reject-button"
+            >
+              {t(`${buttonPath}.rejectButton`)}
+            </Button>
+          </>
+        );
+      }
     }
-    if (stateType === RequestStateType.Accepted) {
+    if (stateType === SubscriptionStateType.Accepted) {
       return (
         <Button
           fullWidth

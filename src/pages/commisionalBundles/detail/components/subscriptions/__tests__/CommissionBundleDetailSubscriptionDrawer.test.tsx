@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { RequestStateType } from '../../../../../../model/CommissionBundle';
+import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
 import { getSubscriptionStatusChip } from '../CommissionBundleDetailSubscriptionDrawer';
 
 const mockTFunction = (key: string) => {
   switch (key) {
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.name':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.name':
       return 'Business Name';
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.taxCode':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.taxCode':
       return 'Tax Code';
-    case 'commissionBundlesPage.commissionBundleDetail.requestsTable.state':
+    case 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable.state':
       return 'State';
     default:
       return '';
@@ -18,7 +18,7 @@ const mockTFunction = (key: string) => {
 
 describe('Test getSubscriptionStatusChip', () => {
   test('Test status chip cell with waiting request', () => {
-    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Waiting, "")}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, SubscriptionStateType.Waiting, "")}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('Test getSubscriptionStatusChip', () => {
   });
 
   test('Test status chip cell with accepted request', () => {
-    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Accepted, "")}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, SubscriptionStateType.Accepted, "")}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Test getSubscriptionStatusChip', () => {
   });
 
   test('Test status chip cell with on removal request', () => {
-    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Accepted, "", true)}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, SubscriptionStateType.Accepted, "", true)}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();

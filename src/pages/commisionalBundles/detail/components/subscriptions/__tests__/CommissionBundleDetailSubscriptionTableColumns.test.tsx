@@ -1,8 +1,8 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { cleanup} from '@testing-library/react';
 import { showCustomHeader } from '../../../../../../components/Table/TableUtils';
-import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
-import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
+import {  RequestStateType } from '../../../../../../model/CommissionBundle';
+import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -24,7 +24,7 @@ const mockTFunction = (key: string) => {
   }
 };
 
-describe('<CommissionBundleRequestsTableColumns />', () => {
+describe('<CommissionBundleDetailSubscriptionTableColumns />', () => {
   test('Test of all the functions inside the component', () => {
     const ArrayBuildColumnDefs = [
       {
@@ -90,7 +90,7 @@ describe('<CommissionBundleRequestsTableColumns />', () => {
 
     const realColumns = buildColumnDefs(
       mockTFunction,
-      SubscriptionStateType.Waiting,
+      RequestStateType.Waiting,
       jest.fn(),
       ""
     ) as Array<any>;

@@ -11,7 +11,7 @@ export enum FormAction {
   Create = 'create',
   Edit = 'edit',
 }
-export enum SubscriptionStateType {
+export enum RequestStateType {
   Waiting = 'WAITING',
   Accepted = 'ACCEPTED',
 }
@@ -26,7 +26,7 @@ export type PublicBundleCISubscriptionsMethodParams = {
   pspTaxCode: string;
   limit: number;
   page: number;
-  status: SubscriptionStateType;
+  status: RequestStateType;
   ciTaxCode?: string;
 };
 
@@ -35,7 +35,7 @@ export type PublicBundleCISubscriptionsRequest = {
   'psp-tax-code': string;
   limit: number;
   page: number;
-  status: SubscriptionStateType;
+  status: RequestStateType;
   ciTaxCode?: string;
 };
 

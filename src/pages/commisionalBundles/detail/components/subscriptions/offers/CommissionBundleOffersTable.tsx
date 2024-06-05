@@ -15,8 +15,8 @@ import { useAppSelector } from '../../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../../redux/slices/partiesSlice';
 import { deleteCIBundleSubscription } from '../../../../../../services/bundleService';
 import { LOADING_TASK_OFFER_LIST, LOADING_TASK_OFFER_ACTION } from '../../../../../../utils/constants';
-import { CommissionBundleDetailRequestDrawer } from '../CommissionBundleDetailRequestDrawer';
-import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
+import { CommissionBundleDetailSubscriptionDrawer } from '../CommissionBundleDetailSubscriptionDrawer';
+import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
 
 const pageLimit = 5;
 
@@ -39,7 +39,7 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
   const [filterState, setFilterState] = useState<OfferStateType>(OfferStateType.Waiting);
   const [selectedState, setSelectedState] = useState<OfferStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
-  const [selectedOfferRequest, setSelectedOfferRequest] = useState({}); // TODO type
+  const [selectedOffer, setSelectedOffer] = useState({}); // TODO type
 
   const [page, setPage] = useState<number>(0);
   const [openMenageOfferModal, setOpenMenageOfferModal] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
   const [offersList, setOffersList] = useState(emptySubscriptionList); // TODO type
 
   function getOfferDetail(selectedRequest: any /* TODO type */) {
-    setSelectedOfferRequest(selectedRequest);
+    setSelectedOffer(selectedRequest);
 
     // TODO api get offer detail for drawer
   }
@@ -80,7 +80,7 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
       bundleDetail?.name ?? ''
     )
       .then(() => {
-        setSelectedOfferRequest({});
+        setSelectedOffer({});
         getOffersList(0);
       })
       .catch((reason: Error) =>
@@ -175,9 +175,9 @@ const CommissionBundleOffersTable = ({ bundleDetail }: { bundleDetail: BundleRes
           getRowId={(r: any) => r.stationCode} // TODO get right id
         />
       </Box>
-      <CommissionBundleDetailRequestDrawer
-        setSelectedRequest={setSelectedOfferRequest}
-        selectedRequest={selectedOfferRequest}
+      <CommissionBundleDetailSubscriptionDrawer
+        setSelectedSubscription={setSelectedOffer}
+        selectedSubscription={selectedOffer}
         stateType={selectedState}
         componentPath={componentPath}
         drawerButtons={() => (

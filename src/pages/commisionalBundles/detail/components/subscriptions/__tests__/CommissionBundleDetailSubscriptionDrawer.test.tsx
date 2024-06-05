@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { SubscriptionStateType } from '../../../../../../model/CommissionBundle';
-import { getRequestStatusChip } from '../CommissionBundleDetailRequestDrawer';
+import { RequestStateType } from '../../../../../../model/CommissionBundle';
+import { getSubscriptionStatusChip } from '../CommissionBundleDetailSubscriptionDrawer';
 
 const mockTFunction = (key: string) => {
   switch (key) {
@@ -16,9 +16,9 @@ const mockTFunction = (key: string) => {
   }
 };
 
-describe('Test getRequestStatusChip', () => {
+describe('Test getSubscriptionStatusChip', () => {
   test('Test status chip cell with waiting request', () => {
-    render(<>{getRequestStatusChip(mockTFunction, SubscriptionStateType.Waiting, "")}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Waiting, "")}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('Test getRequestStatusChip', () => {
   });
 
   test('Test status chip cell with accepted request', () => {
-    render(<>{getRequestStatusChip(mockTFunction, SubscriptionStateType.Accepted, "")}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Accepted, "")}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Test getRequestStatusChip', () => {
   });
 
   test('Test status chip cell with on removal request', () => {
-    render(<>{getRequestStatusChip(mockTFunction, SubscriptionStateType.Accepted, "", true)}</>);
+    render(<>{getSubscriptionStatusChip(mockTFunction, RequestStateType.Accepted, "", true)}</>);
 
     expect(screen.queryByTestId('WAITING-state-chip')).not.toBeInTheDocument();
     expect(screen.queryByTestId('ACCEPTED-state-chip')).not.toBeInTheDocument();

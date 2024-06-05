@@ -25,11 +25,11 @@ import {
 import { PublicBundleCISubscriptionsResource } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsResource';
 import { PublicBundleCISubscriptionsDetail } from '../../../../../../api/generated/portal/PublicBundleCISubscriptionsDetail';
 import { CISubscriptionInfo } from '../../../../../../api/generated/portal/CISubscriptionInfo';
-import { CommissionBundleDetailRequestDrawer } from '../CommissionBundleDetailRequestDrawer';
+import { CommissionBundleDetailSubscriptionDrawer } from '../CommissionBundleDetailSubscriptionDrawer';
 import {
   BundleResource,
   PublicBundleCiSubscriptionDetailModel,
-  SubscriptionStateType,
+  RequestStateType,
 } from '../../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
@@ -38,7 +38,7 @@ import {
   getPublicBundleCISubscriptionsDetail,
   rejectPublicBundleSubscription,
 } from '../../../../../../services/bundleService';
-import { buildColumnDefs } from '../CommissionBundleRequestsTableColumns';
+import { buildColumnDefs } from '../CommissionBundleDetailSubscriptionTableColumns';
 
 const pageLimit = 5;
 
@@ -50,7 +50,7 @@ const emptySubscriptionList: PublicBundleCISubscriptionsResource = {
   creditor_institutions_subscriptions: [],
 };
 
-export default function CommissionBundleSubscriptionsTable({
+export default function CommissionBundleRequestsTable({
   bundleDetail,
 }: {
   bundleDetail: BundleResource;
@@ -61,10 +61,10 @@ export default function CommissionBundleSubscriptionsTable({
   const setLoadingList = useLoading(LOADING_TASK_SUBSCRIPTION_LIST);
   const setLoadingRequestAction = useLoading(LOADING_TASK_SUBSCRIPTION_ACTION);
 
-  const [filterState, setFilterState] = useState<SubscriptionStateType>(
-    SubscriptionStateType.Waiting
+  const [filterState, setFilterState] = useState<RequestStateType>(
+    RequestStateType.Waiting
   );
-  const [selectedState, setSelectedState] = useState<SubscriptionStateType>(filterState);
+  const [selectedState, setSelectedState] = useState<RequestStateType>(filterState);
   const [selectedTaxCode, setSelectedTaxCode] = useState<string>('');
   const [selectedSubscriptionRequest, setSelectedSubscriptionRequest] =
     useState<PublicBundleCiSubscriptionDetailModel>({});
@@ -252,15 +252,15 @@ export default function CommissionBundleSubscriptionsTable({
             label={t(`${generalPath}.state`)}
             size="small"
             value={filterState}
-            onChange={(event) => setFilterState(event.target.value as SubscriptionStateType)}
+            onChange={(event) => setFilterState(event.target.value as RequestStateType)}
             data-testid="subscription-state"
             sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
           >
-            <MenuItem value={SubscriptionStateType.Waiting}>
-              {t(`${componentPath}.stateChip.${SubscriptionStateType.Waiting}`)}
+            <MenuItem value={RequestStateType.Waiting}>
+              {t(`${componentPath}.stateChip.${RequestStateType.Waiting}`)}
             </MenuItem>
-            <MenuItem value={SubscriptionStateType.Accepted}>
-              {t(`${componentPath}.stateChip.${SubscriptionStateType.Accepted}`)}
+            <MenuItem value={RequestStateType.Accepted}>
+              {t(`${componentPath}.stateChip.${RequestStateType.Accepted}`)}
             </MenuItem>
           </Select>
         </FormControl>
@@ -299,9 +299,9 @@ export default function CommissionBundleSubscriptionsTable({
           {t(`${componentPath}.alert.${successAlert}`)}
         </Alert>
       )}
-      <CommissionBundleDetailRequestDrawer
-        setSelectedRequest={setSelectedSubscriptionRequest}
-        selectedRequest={selectedSubscriptionRequest}
+      <CommissionBundleDetailSubscriptionDrawer
+        setSelectedSubscription={setSelectedSubscriptionRequest}
+        selectedSubscription={selectedSubscriptionRequest}
         stateType={selectedState}
         componentPath={componentPath}
         drawerButtons={() =>
@@ -338,7 +338,7 @@ function getDrawerButtons(
 ) {
   const buttonPath = 'commissionBundlesPage.commissionBundleDetail.requestDrawer';
   if (showButtons) {
-    if (stateType === SubscriptionStateType.Waiting) {
+    if (stateType === RequestStateType.Waiting) {
       return (
         <>
           <Button
@@ -367,7 +367,7 @@ function getDrawerButtons(
         </>
       );
     }
-    if (stateType === SubscriptionStateType.Accepted) {
+    if (stateType === RequestStateType.Accepted) {
       return (
         <Button
           fullWidth

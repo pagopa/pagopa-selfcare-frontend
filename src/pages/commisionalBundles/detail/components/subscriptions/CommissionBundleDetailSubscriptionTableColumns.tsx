@@ -3,12 +3,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { renderCell, showCustomHeader } from '../../../../../components/Table/TableUtils';
-import { OfferStateType, SubscriptionStateType } from '../../../../../model/CommissionBundle';
-import { getRequestStatusChip } from './CommissionBundleDetailRequestDrawer';
+import { OfferStateType, RequestStateType } from '../../../../../model/CommissionBundle';
+import { getSubscriptionStatusChip } from './CommissionBundleDetailSubscriptionDrawer';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  filterState: OfferStateType | SubscriptionStateType,
+  filterState: OfferStateType | RequestStateType,
   setDrawerValue: (bool: boolean) => void,
   componentPath: string
 ) {
@@ -51,7 +51,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => getRequestStatusChip(t, filterState,componentPath, params.row.on_removal ),
+      renderCell: (params) => getSubscriptionStatusChip(t, filterState,componentPath, params.row.on_removal ),
       sortable: false,
       flex: 4,
     },

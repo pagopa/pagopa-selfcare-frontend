@@ -78,7 +78,7 @@ export default function SideMenu() {
                         />
                     )}
 
-                    {userHasPermission('payment-notices') && (
+                    {useFlagValue('payment-notices') && userHasPermission('payment-notices') && (
                         <SidenavItem
                             title={t('sideMenu.paymentNotices.title')}
                             handleClick={() => onExit(() => history.push(ROUTES.PAYMENT_NOTICES))}

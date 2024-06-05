@@ -53,7 +53,7 @@ type Props = {
 const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   const { t } = useTranslation();
   const [hasPay, setHasPay] = useState(data?.appChannel || data?.webChannel);
-  const [hasPoste, setHasPoste] = useState(data?.posteAuth !== null);
+  const [hasPoste, setHasPoste] = useState(data?.posteAuth !== undefined && data?.posteAuth !== null);
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
@@ -91,14 +91,16 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   useEffect(() => {
     if (!hasPay && (formik.values.appChannel || formik.values.webChannel)) {
       setFlagValues(formik, false, false);   
+    } else if (hasPay && (!formik.values.appChannel && !formik.values.webChannel)) {
+      handleChangePaymentType('both');
     }
   }, [hasPay]);
 
   const setFlagValues = (formik: any, appChannel: boolean, webChannel: boolean) => {
     formik.setValues({
       ...formik.values,
-      appChannel: appChannel,
-      webChannel: webChannel
+      appChannel,
+      webChannel
     });
   };
 
@@ -125,7 +127,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
   };
 
   const initialFormData = (data?: InstitutionUploadData | null) =>
-    data
+    data !== undefined && data !== null && data.taxCode && data.taxCode !== ''
       ? {
           taxCode: data.taxCode,
           fullName: data.fullName,
@@ -141,8 +143,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
           posteAccountNumber: data.posteAccountNumber
         }
       : {
-          taxCode: signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode as string,
-          fullName: signinData?.creditorInstitutionDetailsResource?.businessName as string,
+          taxCode: selectedParty?.fiscalCode as string,
+          fullName: selectedParty?.description as string,
           cbill: signinData?.creditorInstitutionDetailsResource?.cbillCode as string,
           appChannel: false,
           webChannel: false,
@@ -178,10 +180,10 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
         appChannel: values.appChannel === undefined
           ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
           : undefined,    
-        posteAccountNumber: !values.posteAccountNumber
+        posteAccountNumber: hasPoste && !values.posteAccountNumber
           ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
           : undefined,
-        posteAuth: !values.posteAuth
+        posteAuth: hasPoste && !values.posteAuth
           ? t('addEditInstitutionsDataPage.validationMessage.requiredField')
           : undefined,              
       }).filter(([_key, value]) => value)
@@ -327,7 +329,7 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                   name="cbill"
                   label={t('addEditInstitutionsDataPage.addForm.fields.cbill')}
                   size="small"
-                  value={formik.values.taxCode}
+                  value={formik.values.cbill}
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.cbill && Boolean(formik.errors.cbill)}
                   helperText={formik.touched.cbill && formik.errors.cbill}
@@ -461,13 +463,11 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                             size="small"
                             value={paymentType}
                             onChange={(e) => handleChangePaymentType(e?.target?.value)}
-                            data-testid="paymentType-test"
-                            inputProps={{
-                              'data-testid': 'paymentType-test',
-                            }}
+                            data-testid="paymentType-select-test"
                             >
                             {paymentTypes.map((r: any) => (
-                              <MenuItem key={`paymentType-${r.key}`} value={r.key}>
+                              <MenuItem key={`paymentType-${r.key}`} 
+                                        value={r.key} data-testid={`paymentType-${r.key}-test`}>
                                 {t(r.label)}
                               </MenuItem>
                             ))}
@@ -580,8 +580,8 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                 <Grid container item xs={12}>
                     <TextField
                       fullWidth
-                      id="posteInfo"
-                      name="posteInfo"
+                      id="info"
+                      name="info"
                       label={t('addEditInstitutionsDataPage.addForm.fields.info')}
                       size="small"
                       value={formik.values.info}
@@ -589,8 +589,9 @@ const PaymentNoticesAddEditForm = ({ goBack, data }: Props) => {
                       error={formik.touched.info && Boolean(formik.errors.info)}
                       helperText={formik.touched.info && formik.errors.info}
                       inputProps={{
-                        'data-testid': 'posteInfo-test',
+                        'data-testid': 'info-test',
                       }}
+                      required
                     />
                   </Grid>
             </Grid>

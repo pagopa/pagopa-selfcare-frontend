@@ -731,9 +731,17 @@
     "title": "Avvisi di pagamento",
     "subtitle": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
     "toAddWarning": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
-    "addData": "Configura modello"
+    "addData": "Configura modello",
+    "editData": "Modifica",
+    "error": {
+      "getNoticeTitle": "Errore nel recupero dati stampa avvisi",
+      "getNoticeDesc": "Errore inatteso nel recupero delle informazioni salvate per la stampa avvisi"
+    }  
   },
   "addEditInstitutionsDataPage": {
+    "validationMessage": {
+      "requiredField": "Campo obbligatorio"
+    },
     "modal": {
       "title": "Vuoi uscire?",
       "message": "Tutte le informazioni che hai inserito andranno perse"

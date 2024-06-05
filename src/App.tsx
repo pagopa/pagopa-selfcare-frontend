@@ -52,7 +52,7 @@ import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
-import CommissionBundleOffersAddRecipientsPage from './pages/commisionalBundles/detail/components/request/offers/CommissionBundleOffersAddRecipientsPage';
+import CommissionBundleDetailOffersAddRecipientsPage from './pages/commisionalBundles/detail/CommissionBundleDetailOffersAddRecipientsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -239,7 +239,7 @@ const SecuredRoutes = withLogin(
                     permission="commission-bundles-add-recipient"
                     flagValue="commission-bundles-private"
                   >
-                    <CommissionBundleOffersAddRecipientsPage />
+                    <CommissionBundleDetailOffersAddRecipientsPage />
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>

@@ -978,7 +978,7 @@
         },
         "errorMessage": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati"
       },
-      "requestsTable": {
+      "subscriptionsTable": {
         "businessName": "Nome Ente",
         "taxCode": "Codice Fiscale",
         "state": "Stato",

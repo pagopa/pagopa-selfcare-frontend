@@ -6,20 +6,20 @@ import { ButtonNaked } from '@pagopa/mui-italia';
 import { Add, ArrowBack } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { CreditorInstitutionInfo } from '../../../../../api/generated/portal/CreditorInstitutionInfo';
-import ECSelection from '../../../../../components/Form/ECSelection';
-import GenericModal from '../../../../../components/Form/GenericModal';
-import { BundleResource } from '../../../../../model/CommissionBundle';
-import { useAppSelectorWithRedirect } from '../../../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../../../redux/slices/bundleDetailsSlice';
-import ROUTES from '../../../../../routes';
-import { CreditorInstitutionInfoResource } from '../../../../../api/generated/portal/CreditorInstitutionInfoResource';
+import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorInstitutionInfo';
+import ECSelection from '../../../components/Form/ECSelection';
+import GenericModal from '../../../components/Form/GenericModal';
+import { BundleResource } from '../../../model/CommissionBundle';
+import { useAppSelectorWithRedirect } from '../../../redux/hooks';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import ROUTES from '../../../routes';
+import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
 
 type CreditorInstitutionInfoWithFromFile = CreditorInstitutionInfo & { fromFile?: boolean };
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail.addRecipientsPage';
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export default function CommissionBundleOffersAddRecipientsPage() {
+export default function CommissionBundleDetailOffersAddRecipientsPage() {
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -72,16 +72,16 @@ export default function CommissionBundleOffersAddRecipientsPage() {
         1
       );
 
-      return newArr;
+      return { creditor_institution_info_list: newArr };
     });
   }
 
   function removeRecipientFromSelected(index: number) {
-    setAvailableEc((prev) =>
-      prev.creditor_institution_info_list
+    setAvailableEc((prev) => ({
+      creditor_institution_info_list: prev.creditor_institution_info_list
         ? [...prev.creditor_institution_info_list, selectedRecipients[index]]
-        : []
-    );
+        : [],
+    }));
     setSelectedRecipients((prev) => {
       const newArr = [...prev];
       // eslint-disable-next-line functional/immutable-data

@@ -1016,7 +1016,7 @@
           "table": {
             "emptyState": {
               "WAITING": "Non sono presenti offerte in attesa",
-              "ACTIVE": "Non sono presenti offerte già accettate"
+              "ACCEPTED": "Non sono presenti offerte già accettate"
             }
           },
           "stateChip": {

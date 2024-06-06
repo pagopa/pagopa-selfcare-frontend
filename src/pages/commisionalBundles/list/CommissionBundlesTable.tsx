@@ -63,14 +63,14 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
   const mappedBundleType = mapBundle(bundleType);
 
   const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
+  const [pageLimit, setPageLimit] = useState<number>(5);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
   };
 
-  const pageLimit = 5;
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const getBundleList = (newPage?: number) => {
     setLoadingStatus(true);
@@ -149,7 +149,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
 
   useEffect(() => {
     getBundleList(0);
-  }, [bundleStatus]);
+  }, [bundleStatus, pageLimit]);
 
   return (
     <Box
@@ -172,6 +172,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
         page={page}
         handleChangePage={(newPage: number) => getBundleList(newPage)}
         pageLimit={pageLimit}
+        setPageLimit={setPageLimit}
         getRowId={(el) => el.idBundle}
       />
     </Box>

@@ -77,7 +77,9 @@ const CommissionBundlesPage = () => {
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
   const [bundleStatus, setBundleStatus] = useState<SubscriptionStateType>(
-    SubscriptionStateType.Any
+    commissionBundleDetail.type === TypeEnum.PRIVATE
+      ? SubscriptionStateType.Accepted
+      : SubscriptionStateType.Any
   );
 
   useEffect(() => {

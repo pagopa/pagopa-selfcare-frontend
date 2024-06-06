@@ -268,20 +268,6 @@ const getCIStatusChip = (
     }
 
     if (bundleStatus === CiBundleStatusEnum.ENABLED) {
-      if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
-        return renderStatusChip({
-          chipColor: 'error',
-          chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-          dataTestId: 'error-state-chip',
-        });
-      }
-      if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-        return renderStatusChip({
-          chipColor: 'warning',
-          chipLabel: t('commissionBundlesPage.list.states.expiring'),
-          dataTestId: 'warning-state-chip',
-        });
-      }
       return (
         <Chip
           color={'success'}

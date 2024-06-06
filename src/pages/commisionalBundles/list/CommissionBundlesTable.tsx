@@ -1,4 +1,7 @@
-import { Box, Link, Pagination } from '@mui/material';
+import {
+  Box,
+  Pagination,
+} from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,13 +15,18 @@ import TableEmptyState from '../../../components/Table/TableEmptyState';
 import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
-import { BundleResource, BundlesResource } from '../../../model/CommissionBundle';
+import {
+  BundleResource,
+  BundlesResource,
+  SubscriptionStateType,
+} from '../../../model/CommissionBundle';
 import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 
 type Props = {
-  bundleNameFilter: string;
+  bundleNameFilter?: string;
   bundleType: string;
+  bundleStatus?: SubscriptionStateType;
 };
 
 const rowHeight = 64;
@@ -48,18 +56,20 @@ const mapBundle = (bundleType: string) => {
 };
 
 const componentPath = 'commissionBundlesPage.list';
-const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
+const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: Props) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
   const columns: Array<GridColDef> = buildColumnDefs(t, orgInfo.types.isPsp, orgInfo.types.isEc);
+
+  const brokerCode = selectedParty?.fiscalCode ?? '';
+  const mappedBundleType = mapBundle(bundleType);
+
   const [listFiltered, setListFiltered] = useState<BundlesResource>(emptyCommissionBundleList);
   const [page, setPage] = useState(0);
-  const brokerCode = selectedParty?.fiscalCode ?? '';
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-  const mappedBundleType = mapBundle(bundleType);
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
@@ -72,24 +82,28 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     if (isFirstRender) {
       setIsFirstRender(false);
     }
+    if (newPage !== undefined) {
+      setPage(newPage);
+    }
     // eslint-disable-next-line functional/no-let
     let promise;
     if (orgInfo.types.isPsp) {
-      promise = getBundleListByPSP(
-        mappedBundleType,
+      promise = getBundleListByPSP({
+        bundleType: mappedBundleType,
         pageLimit,
-        bundleNameFilter,
-        newPage ?? page,
-        brokerCode
-      );
+        bundleName: bundleNameFilter ?? undefined,
+        page: newPage ?? page,
+        pspCode: brokerCode,
+      });
     } else if (orgInfo.types.isEc) {
-      promise = getCisBundles(
-        mappedBundleType,
+      promise = getCisBundles({
+        bundleType: mappedBundleType,
         pageLimit,
-        bundleNameFilter,
-        newPage ?? page,
-        mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode
-      );
+        bundleName: bundleNameFilter ?? undefined,
+        page: newPage ?? page,
+        ciTaxCode: mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode,
+        bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? bundleStatus : undefined,
+      });
     }
     if (promise) {
       promise
@@ -127,20 +141,23 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   };
 
   useEffect(() => {
-    const identifier = setTimeout(
-      () => {
-        getBundleList();
-      },
-      isFirstRender ? 0 : 500
-    );
-    return () => {
-      clearTimeout(identifier);
-    };
+    if (!isFirstRender) {
+      const identifier = setTimeout(() => {
+        getBundleList(0);
+      }, 500);
+      return () => {
+        clearTimeout(identifier);
+      };
+    }
+    return () => {};
   }, [bundleNameFilter, brokerCode]);
+
+  useEffect(() => {
+    getBundleList(0);
+  }, [bundleStatus]);
 
   function handleChangePage(value: number) {
     const newPage = value - 1;
-    setPage(newPage);
     getBundleList(newPage);
   }
 

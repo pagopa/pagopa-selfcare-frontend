@@ -1,4 +1,4 @@
-import { Divider, Skeleton, Typography } from '@mui/material';
+import { Alert, Divider, Skeleton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -76,20 +76,13 @@ export const getSubscriptionStatusChip = (
   size: 'small' | 'medium' | undefined = undefined
 ) => {
   // eslint-disable-next-line functional/no-let
-  let chipColor: colorType =
-    filterState === SubscriptionStateType.Accepted
-      ? 'success'
-      : 'default';
+  let chipColor: colorType = filterState === SubscriptionStateType.Accepted ? 'success' : 'default';
   if (onRemoval) {
     chipColor = 'error';
   }
   return renderStatusChip({
     chipColor,
-    chipLabel: t(
-      `${componentPath}.stateChip.${
-        onRemoval ? 'DELETING' : filterState
-      }`
-    ),
+    chipLabel: t(`${componentPath}.stateChip.${onRemoval ? 'DELETING' : filterState}`),
     dataTestId: `${onRemoval ? 'DELETING' : filterState}-state-chip`,
     size,
   });
@@ -100,7 +93,7 @@ export const CommissionBundleDetailSubscriptionDrawer = ({
   selectedSubscription,
   stateType,
   drawerButtons,
-  componentPath
+  componentPath,
 }: {
   setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void;
   selectedSubscription: BundleCiSubscriptionDetailModel;
@@ -117,7 +110,11 @@ export const CommissionBundleDetailSubscriptionDrawer = ({
       drawerButtons={drawerButtons()}
     >
       <TitleBox title={t(`${componentPath}.drawerTitle`)} variantTitle="h5" />
-
+      {selectedSubscription.bundle_offer_id && stateType === SubscriptionStateType.Waiting && (
+        <Box mt={2}>
+          <Alert severity="info">{t(`${generalPath}.alert.waitingMessage`)}</Alert>
+        </Box>
+      )}
       <Box my={1}>
         <Typography variant="body1" color="action.active">
           {t(`${generalPath}.businessName`)}
@@ -140,10 +137,20 @@ export const CommissionBundleDetailSubscriptionDrawer = ({
         <Typography variant="body1" color="action.active">
           {t(`${generalPath}.state`)}
         </Typography>
-        {getSubscriptionStatusChip(t, stateType, componentPath, selectedSubscription.on_removal, 'small')}
+        {getSubscriptionStatusChip(
+          t,
+          stateType,
+          componentPath,
+          selectedSubscription.on_removal,
+          'small'
+        )}
       </Box>
       <CommissionBundleDrawerCommissionFeeList
-        feeList={selectedSubscription?.ci_bundle_fee_list ? [...selectedSubscription.ci_bundle_fee_list] : undefined}
+        feeList={
+          selectedSubscription?.ci_bundle_fee_list
+            ? [...selectedSubscription.ci_bundle_fee_list]
+            : undefined
+        }
       />
     </PaddedDrawer>
   );

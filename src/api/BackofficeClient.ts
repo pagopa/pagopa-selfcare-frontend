@@ -1158,15 +1158,20 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutions: async (
-    taxCode: string,
-    name: string | undefined,
-    page: number,
-    limit: number
-  ): Promise<CreditorInstitutionsResource> => {
+  getCreditorInstitutions: async ({
+    ciTaxCode,
+    ciName,
+    page,
+    limit,
+  }: {
+    ciTaxCode?: string;
+    ciName?: string;
+    page: number;
+    limit: number;
+  }): Promise<CreditorInstitutionsResource> => {
     const result = await backofficeClient.getCreditorInstitutions({
-      'ci-tax-code': taxCode,
-      name,
+      ciTaxCode,
+      ciName,
       page,
       limit,
     });

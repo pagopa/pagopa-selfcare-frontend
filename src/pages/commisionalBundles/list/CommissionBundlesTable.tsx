@@ -1,18 +1,13 @@
-import {
-  Box,
-  Pagination,
-} from '@mui/material';
+import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { generatePath, Link as RouterLink } from 'react-router-dom';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import ROUTES from '../../../routes';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import TableEmptyState from '../../../components/Table/TableEmptyState';
-import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
+import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { getBundleListByPSP, getCisBundles } from '../../../services/bundleService';
 import { useOrganizationType } from '../../../hooks/useOrganizationType';
 import {
@@ -156,11 +151,6 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
     getBundleList(0);
   }, [bundleStatus]);
 
-  function handleChangePage(value: number) {
-    const newPage = value - 1;
-    getBundleList(newPage);
-  }
-
   return (
     <Box
       id="commissionBundlesTable"
@@ -172,47 +162,18 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
       }}
       justifyContent="start"
     >
-      {listFiltered?.bundles?.length === 0 ? (
-        <TableEmptyState
-          componentName={componentPath}
-          translationArgs={{ bundleType: t(bundleType) }}
-          linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
-        />
-      ) : (
-        <div data-testid="data-grid">
-          <CustomDataGrid
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableSelectionOnClick
-            autoHeight={true}
-            className="CustomDataGrid"
-            columnBuffer={5}
-            columns={columns}
-            components={{
-              Pagination: () => (
-                <Pagination
-                  color="primary"
-                  count={listFiltered?.pageInfo?.total_pages ?? 1}
-                  page={page + 1}
-                  onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                    handleChangePage(value)
-                  }
-                />
-              ),
-            }}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            paginationMode="client"
-            rowCount={listFiltered?.bundles?.length}
-            rowHeight={rowHeight}
-            rows={listFiltered?.bundles ?? []}
-            sortingMode="client"
-            getRowId={(el) => el.idBundle}
-            // onSortModelChange={handleSortModelChange}
-          />
-        </div>
-      )}
+      <TableDataGrid
+        componentPath={componentPath}
+        translationArgs={{ bundleType: t(bundleType) }}
+        linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
+        rows={listFiltered?.bundles ? [...listFiltered.bundles] : []}
+        columns={columns}
+        totalPages={listFiltered?.pageInfo?.total_pages}
+        page={page}
+        handleChangePage={(newPage: number) => getBundleList(newPage)}
+        pageLimit={pageLimit}
+        getRowId={(el) => el.idBundle}
+      />
     </Box>
   );
 };

@@ -67,6 +67,7 @@ export const CustomDataGrid = styled(DataGrid)({
 type Props = {
   componentPath: string;
   translationPathSuffix?: string;
+  translationArgs?: any;
   rows: Array<any>;
   columns: GridColumns<GridValidRowModel>;
   totalPages?: number;
@@ -83,6 +84,7 @@ const pageLimitOptions = [5, 10, 15, 20];
 export default function TableDataGrid({
   componentPath,
   translationPathSuffix,
+  translationArgs,
   // Datagrid Props
   rows,
   columns,
@@ -100,7 +102,7 @@ export default function TableDataGrid({
   return (
     <>
       {rows?.length === 0 ? (
-        <TableEmptyState componentName={componentPath} linkToRedirect={linkToRedirect} translationPathSuffix={translationPathSuffix}/>
+        <TableEmptyState componentName={componentPath} linkToRedirect={linkToRedirect} translationPathSuffix={translationPathSuffix} translationArgs={translationArgs}/>
       ) : (
         <div data-testid="data-grid">
           <CustomDataGrid

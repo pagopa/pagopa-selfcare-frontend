@@ -6,6 +6,7 @@ import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   BundleCiSubscriptionsDetailMethodParams,
   BundleCISubscriptionsMethodParams,
+  SubscriptionStateType,
 } from '../model/CommissionBundle';
 import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
@@ -25,17 +26,29 @@ import {
 
 // /bundles endpoint
 
-export const getBundleListByPSP = (
-  bundleType: string,
-  pageLimit: number,
-  bundleName: string,
-  page: number,
-  pspCode: string
-): Promise<PSPBundlesResource> => {
+export const getBundleListByPSP = ({
+  bundleType,
+  pageLimit,
+  page,
+  pspCode,
+  bundleName,
+}: {
+  bundleType: string;
+  pageLimit: number;
+  page: number;
+  pspCode: string;
+  bundleName?: string;
+}): Promise<PSPBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCommissionBundlePsp(bundleName);
+    return getCommissionBundlePsp();
   } else {
-    return BackofficeApi.getBundlesByPsp(bundleType, pageLimit, bundleName, page, pspCode);
+    return BackofficeApi.getBundlesByPsp({
+      bundleType,
+      pageLimit,
+      page,
+      pspCode,
+      bundleName,
+    });
   }
 };
 
@@ -89,17 +102,32 @@ export const updatePSPBundle = (
   }
 };
 
-export const getCisBundles = (
-  bundleType: string,
-  pageLimit: number,
-  bundleName: string,
-  page: number,
-  cisTaxCode: string | undefined
-): Promise<CIBundlesResource> => {
+export const getCisBundles = ({
+  bundleType,
+  pageLimit,
+  bundleName,
+  page,
+  ciTaxCode,
+  bundleStatus,
+}: {
+  bundleType: string;
+  pageLimit: number;
+  bundleName?: string;
+  page: number;
+  ciTaxCode?: string;
+  bundleStatus?: SubscriptionStateType;
+}): Promise<CIBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCommissionBundleCi(bundleName);
+    return getCommissionBundleCi();
   } else {
-    return BackofficeApi.getCisBundles(bundleType, pageLimit, bundleName, page, cisTaxCode);
+    return BackofficeApi.getCisBundles({
+      bundleType,
+      pageLimit,
+      bundleName,
+      page,
+      ciTaxCode,
+      bundleStatus,
+    });
   }
 };
 

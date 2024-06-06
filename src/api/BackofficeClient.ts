@@ -6,6 +6,7 @@ import {
   BundleCISubscriptionsMethodParams,
   BundleCISubscriptionsBodyRequest,
   BundleCiSubscriptionsDetailMethodParams,
+  SubscriptionStateType,
 } from '../model/CommissionBundle';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
@@ -936,17 +937,23 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getBundlesByPsp: async (
-    bundleType: string,
-    pageLimit: number,
-    bundleName: string,
-    page: number,
-    pspCode: string
-  ): Promise<PSPBundlesResource> => {
+  getBundlesByPsp: async ({
+    bundleType,
+    pageLimit,
+    page,
+    pspCode,
+    bundleName,
+  }: {
+    bundleType: string;
+    pageLimit: number;
+    page: number;
+    pspCode: string;
+    bundleName?: string;
+  }): Promise<PSPBundlesResource> => {
     const result = await backofficeClient.getBundlesByPSP({
       'bundle-type': [bundleType],
       limit: pageLimit,
-      name: bundleName,
+      ...(bundleName ? { name: bundleName } : {}),
       page,
       'psp-tax-code': pspCode,
     });
@@ -1026,19 +1033,28 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCisBundles: async (
-    bundleType: string,
-    pageLimit: number,
-    bundleName: string,
-    page: number,
-    ciTaxCode: string | undefined
-  ): Promise<CIBundlesResource> => {
+  getCisBundles: async ({
+    bundleType,
+    pageLimit,
+    page,
+    bundleName,
+    ciTaxCode,
+    bundleStatus,
+  }: {
+    bundleType: string;
+    pageLimit: number;
+    page: number;
+    bundleName?: string;
+    ciTaxCode?: string;
+    bundleStatus?: SubscriptionStateType;
+  }): Promise<CIBundlesResource> => {
     const result = await backofficeClient.getCisBundles({
       bundleType,
       limit: pageLimit,
-      name: bundleName,
+      ...(bundleName ? { name: bundleName } : {}),
       page,
       ciTaxCode,
+      status: bundleStatus,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

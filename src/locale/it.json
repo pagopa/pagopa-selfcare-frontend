@@ -729,13 +729,16 @@
   },
   "noticesPage": {
     "title": "Avvisi di pagamento",
-    "subtitle": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
+    "subtitle": "Qui puoi gestire le informazioni necessarie per generare gli avvisi di pagamento",
     "toAddWarning": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
+    "detailSubtitle": "Ecco il modello utilizzato per generare gli avvisi di pagamento",
     "addData": "Configura modello",
     "editData": "Modifica",
     "error": {
       "getNoticeTitle": "Errore nel recupero dati stampa avvisi",
-      "getNoticeDesc": "Errore inatteso nel recupero delle informazioni salvate per la stampa avvisi"
+      "getNoticeDesc": "Errore inatteso nel recupero delle informazioni salvate per la stampa avvisi",
+      "addEditTitle": "Errore in salvataggio configurazione",
+      "addEditMessage": "Errore inatteso nel corso del salvataggio della configurazione."
     }  
   },
   "addEditInstitutionsDataPage": {
@@ -752,10 +755,10 @@
       "wherePay": "Dove pagare",
       "poste": "Bollettino Postale PA",
       "paymentChannel": "Canali di pagamento",
-      "webApp": "Sul sito e in app di {Ente.Nome}",
-      "onlyWeb": "Sul sito di {Ente.Nome}",
-      "onlyApp": "Sulla app di {Ente.Nome}",
-      "none": "Nessun canale di pagamento aggiuntivo di {Ente.Nome} presente"
+      "webApp": "Sul sito e in app",
+      "onlyWeb": "Sul sito",
+      "onlyApp": "Sulla app",
+      "none": "Nessun canale di pagamento aggiuntivo presente"
     },
     "title": "Configura modello",
     "subtitle": "Completa le informazioni necessarie per l'emissione degli avvisi di pagamento",
@@ -1031,7 +1034,7 @@
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
           "title": "Richiesta attivazione pacchetto",
-          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail." 
+          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",
@@ -1042,24 +1045,12 @@
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
       "subscriptionsTable": {
-        "title": "Richieste di adesione",
+        "businessName": "Nome Ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
         "search": {
           "placeholder": "Cerca per codice fiscale",
           "stateFilter": "Stato"
-        },
-        "table": {
-          "emptyState": {
-            "WAITING": "Non sono presenti richieste d'adesione in attesa",
-            "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
-          }
-        },
-        "name": "Nome ente",
-        "taxCode": "Codice Fiscale",
-        "state": "Stato",
-        "stateChip": {
-          "WAITING": "In attesa",
-          "ACCEPTED": "Accettata",
-          "DELETING": "In eliminazione"
         },
         "modal": {
           "reject": {
@@ -1073,30 +1064,70 @@
           "delete": {
             "title": "Rimuovi ente",
             "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
+          },
+          "deleteOffer": {
+            "title": "Revoca invito di adesione",
+            "message": "L’ente non avrà più la possibilità di aderire al pacchetto privato."
           }
-        },
-        "drawer": {
-          "title": "Dettaglio richiedente",
-          "feesTitle": "Commissioni a carico dell'ente",
-          "businessName": "Nome Ente",
-          "taxCode": "Codice Fiscale",
-          "state": "Stato",
-          "rejectButton": "Rifiuta richiesta",
-          "acceptButton": "Accetta richiesta",
-          "deleteButton": "Rimuovi ente"
         },
         "alert": {
           "reject": "Richiesta rifiutata",
           "accept": "Richiesta accettata",
-          "delete": "Ente rimosso"
+          "delete": "Ente rimosso",
+          "deleteOffer": "Offerta eliminata"
         },
-        "error": {
-          "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
-          "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
-          "reject": "Errore durante il rifiuto della richiesta",
-          "accept": "Errore durante l'accettazione della richiesta",
-          "delete": "Errore durante l'eliminazione dell'adesione"
+        "requestsTable": {
+          "title": "Richieste di adesione",
+          "table": {
+            "emptyState": {
+              "WAITING": "Non sono presenti richieste d'adesione in attesa",
+              "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
+            }
+          },
+          "stateChip": {
+            "WAITING": "In attesa",
+            "ACCEPTED": "Accettata",
+            "DELETING": "In eliminazione"
+          },
+          "drawerTitle": "Dettaglio richiedente",
+          "error": {
+            "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
+            "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
+            "reject": "Errore durante il rifiuto della richiesta",
+            "accept": "Errore durante l'accettazione della richiesta",
+            "delete": "Errore durante l'eliminazione dell'adesione"
+          }
+        },
+        "offersTable": {
+          "title": "Destinatari",
+          "inviteButton": "Invita enti",
+          "table": {
+            "emptyState": {
+              "WAITING": "Non sono presenti offerte in attesa",
+              "ACTIVE": "Non sono presenti offerte già accettate"
+            }
+          },
+          "stateChip": {
+            "WAITING": "In attesa",
+            "ACCEPTED": "Attivo",
+            "DELETING": "In eliminazione"
+          },
+          "drawerTitle": "Dettaglio destinatario",
+          "error": {
+            "errorGetList": "Errore durante il recupero della lista delle offerte al pacchetto",
+            "errorGetDetail": "Errore durante il recupero del dettaglio dell'offerta",
+            "delete": "Errore durante l'eliminazione dell'adesione"
+          }
         }
+      },
+      "requestDrawer":  {
+        "businessName": "Nome Ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
+        "rejectButton": "Rifiuta richiesta",
+        "acceptButton": "Accetta richiesta",
+        "deleteButton": "Rimuovi ente",
+        "feesTitle": "Commissioni a carico dell'ente"
       }
     },
     "addEditCommissionBundle": {

@@ -76,7 +76,10 @@ const PaymentNoticesPage = () => {
             <Stack display="flex" justifyContent="flex-start" mr={2}>
               <TitleBox
                 title={t('noticesPage.title')}
-                subTitle={t('noticesPage.subtitle')}
+                subTitle={t(institutionUploadData === null ?
+                  'noticesPage.subtitle' :
+                  'noticesPage.detailSubtitle'
+                )}
                 mbSubTitle={3}
                 variantTitle="h4"
                 variantSubTitle="body1"

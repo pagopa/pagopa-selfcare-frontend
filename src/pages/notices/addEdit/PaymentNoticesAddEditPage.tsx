@@ -93,6 +93,7 @@ const PaymentNoticesAddEditPage = () => {
         </Stack>
         <TitleBox
           title={t(`addEditInstitutionsDataPage.title`)}
+          subTitle={t('addEditInstitutionsDataPage.subtitle')}
           mbTitle={2}
           mtTitle={4}
           mbSubTitle={3}

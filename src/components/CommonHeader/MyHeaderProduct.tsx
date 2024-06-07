@@ -1,4 +1,4 @@
-import { ArrowDropDownRounded } from '@mui/icons-material';
+import {ArrowDropDownRounded} from '@mui/icons-material';
 import {
     Autocomplete,
     Avatar,
@@ -11,17 +11,17 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { ProductEntity, ProductSwitch, ProductSwitchItem } from '@pagopa/mui-italia';
-import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
-import { InstitutionDetail } from '../../api/generated/portal/InstitutionDetail';
-import { InstitutionDetailResource } from '../../api/generated/portal/InstitutionDetailResource';
-import { useSigninData } from '../../hooks/useSigninData';
-import { Party } from '../../model/Party';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { partiesActions, partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getInstitutions } from '../../services/institutionService';
-import { PaddedDrawer } from '../PaddedDrawer';
+import {ProductEntity, ProductSwitch, ProductSwitchItem} from '@pagopa/mui-italia';
+import {trackEvent} from '@pagopa/selfcare-common-frontend/services/analyticsService';
+import {ReactNode, useEffect, useMemo, useState} from 'react';
+import {InstitutionDetail} from '../../api/generated/portal/InstitutionDetail';
+import {InstitutionDetailResource} from '../../api/generated/portal/InstitutionDetailResource';
+import {useSigninData} from '../../hooks/useSigninData';
+import {Party} from '../../model/Party';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {partiesActions, partiesSelectors} from '../../redux/slices/partiesSlice';
+import {getInstitutions} from '../../services/institutionService';
+import {PaddedDrawer} from '../PaddedDrawer';
 
 type HeaderProductProps = {
   borderBottom?: number;
@@ -202,7 +202,7 @@ const HeaderProduct = ({
                 onChange={(_event, value) => {
                   if (value && value.length > 0 && organizations) {
                     const index = organizations.findIndex((elem) =>
-                      elem.name.includes(value.split('- ')[1])
+                      elem.name  === (value.split('- ')[1])
                     );
                     const organization: InstitutionDetail = organizations.at(index)!;
                     updateState(organization);

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Box, Grid} from '@mui/material';
 import {styled} from '@mui/material/styles';
-import {PSP} from '../../../model/PSP';
 import {Delegation} from '../../../api/generated/portal/Delegation';
 import PSPSelectionSearchInput from './PSPSelectionSearchInput';
 import PSPItemContainer from './PSPSelectionSearchItemContainer';

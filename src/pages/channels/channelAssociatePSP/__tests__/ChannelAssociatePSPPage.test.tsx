@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import {createMemoryHistory} from 'history';
 import {MemoryRouter, Route} from 'react-router-dom';
-import {createStore, store} from '../../../../redux/store';
+import {createStore} from '../../../../redux/store';
 import {Provider} from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
 import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';

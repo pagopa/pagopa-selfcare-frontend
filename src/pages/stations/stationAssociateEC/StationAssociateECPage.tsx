@@ -4,85 +4,85 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from 'react';
 
-import { Alert, FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
+import {Alert, FormControlLabel, InputLabel, MenuItem, Select, Switch} from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import { generatePath, useHistory, useParams } from 'react-router-dom';
-import { AvailableCodes } from '../../../api/generated/portal/AvailableCodes';
-import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorInstitutionInfo';
-import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
-import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
+import {Box} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useFormik} from 'formik';
+import {useTranslation} from 'react-i18next';
+import {generatePath, useHistory, useParams} from 'react-router-dom';
+import {AvailableCodes} from '../../../api/generated/portal/AvailableCodes';
+import {CreditorInstitutionInfo} from '../../../api/generated/portal/CreditorInstitutionInfo';
+import {CreditorInstitutionInfoResource} from '../../../api/generated/portal/CreditorInstitutionInfoResource';
+import {CreditorInstitutionStationDto} from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import ECSelection from '../../../components/Form/ECSelection';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import {useAppSelector} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import { getAvailableCreditorInstitutionsForStation } from '../../../services/creditorInstitutionService';
+import {getAvailableCreditorInstitutionsForStation} from '../../../services/creditorInstitutionService';
 import {
     associateEcToStation,
     getCreditorInstitutionSegregationCodes,
 } from '../../../services/stationService';
 import {extractProblemJson} from '../../../utils/client-utils';
 import {
-  LOADING_TASK_EC_AVAILABLE,
-  LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
+    LOADING_TASK_EC_AVAILABLE,
+    LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
 
 function StationAssociateECPage() {
-  const { t } = useTranslation();
-  const setLoading = useLoading(LOADING_TASK_EC_AVAILABLE);
-  const setLoadingList = useLoading(LOADING_TASK_SEGREGATION_CODES_AVAILABLE);
-  const addError = useErrorDispatcher();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const { stationId } = useParams<{ stationId: string }>();
-  const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
-  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
-  const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
-    availableCodes: [],
-  });
-  const [checked, setChecked] = useState(false);
+    const {t} = useTranslation();
+    const setLoading = useLoading(LOADING_TASK_EC_AVAILABLE);
+    const setLoadingList = useLoading(LOADING_TASK_SEGREGATION_CODES_AVAILABLE);
+    const addError = useErrorDispatcher();
+    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const {stationId} = useParams<{ stationId: string }>();
+    const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
+    const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
+    const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
+        availableCodes: [],
+    });
+    const [checked, setChecked] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    if (selectedParty?.partyId) {
-      getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
-        .then((data) => {
-            setAvailableEC(data);
-        })
-        .catch((reason) =>
-          addError({
-            id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while getting delegated ec list`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-            ),
-            component: 'Toast',
-          })
-        )
-        .finally(() => setLoading(false));
-    }
-    setLoading(false);
-  }, []);
+    useEffect(() => {
+        setLoading(true);
+        if (selectedParty?.partyId) {
+            getAvailableCreditorInstitutionsForStation(stationId, selectedParty.partyId)
+                .then((data) => {
+                    setAvailableEC(data);
+                })
+                .catch((reason) =>
+                    addError({
+                        id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
+                        blocking: false,
+                        error: reason,
+                        techDescription: `An error occurred while getting delegated ec list`,
+                        toNotify: true,
+                        displayableTitle: t('general.errorTitle'),
+                        displayableDescription: t(
+                            'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+                        ),
+                        component: 'Toast',
+                    })
+                )
+                .finally(() => setLoading(false));
+        }
+        setLoading(false);
+    }, []);
 
-  useEffect(() => {
-    if (selectedEC && selectedEC.ci_tax_code && selectedParty?.fiscalCode) {
-      setLoadingList(true);
-      getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.ci_tax_code)
-        .then((data) => {
-          if (data && Array.isArray(data.availableCodes)) {
-            setSegregationCodeList(data);
-          }
-        })
-        .catch((reason) => {
-          const problemJson = extractProblemJson(reason);
+    useEffect(() => {
+        if (selectedEC && selectedEC.ci_tax_code && selectedParty?.fiscalCode) {
+            setLoadingList(true);
+            getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.ci_tax_code)
+                .then((data) => {
+                    if (data && Array.isArray(data.availableCodes)) {
+                        setSegregationCodeList(data);
+                    }
+                })
+                .catch((reason) => {
+                    const problemJson = extractProblemJson(reason);
 
                     addError({
                         id: 'GET_AVAILABLE_SEGREGATION_CODES_LIST',
@@ -125,33 +125,33 @@ function StationAssociateECPage() {
 
     const history = useHistory();
 
-  const goBack = () => {
-    history.push(
-      generatePath(ROUTES.STATION_EC_LIST, {
-        stationId,
-      })
-    );
-  };
+    const goBack = () => {
+        history.push(
+            generatePath(ROUTES.STATION_EC_LIST, {
+                stationId,
+            })
+        );
+    };
 
-  const enableSubmit = (values: CreditorInstitutionStationDto) =>
-    values.stationCode !== '' &&
-    values.auxDigit === 3 &&
-    values.segregationCode !== '' &&
-    selectedEC;
+    const enableSubmit = (values: CreditorInstitutionStationDto) =>
+        values.stationCode !== '' &&
+        values.auxDigit === 3 &&
+        values.segregationCode !== '' &&
+        selectedEC;
 
-  const submit = (values: CreditorInstitutionStationDto) => {
-    if (selectedEC && selectedEC.ci_tax_code) {
-      setLoading(true);
-      associateEcToStation(selectedEC.ci_tax_code, { ...values, stationCode: stationId })
-        .then((_) => {
-          history.push(generatePath(ROUTES.STATION_EC_LIST, { stationId }), {
-            alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
-          });
-        })
-        .catch((err: Error) => {
-          const problemJson = extractProblemJson(err);
-          // eslint-disable-next-line functional/no-let
-          let displayedText = t('stationAssociateECPage.associationForm.errorMessageDesc');
+    const submit = (values: CreditorInstitutionStationDto) => {
+        if (selectedEC && selectedEC.ci_tax_code) {
+            setLoading(true);
+            associateEcToStation(selectedEC.ci_tax_code, {...values, stationCode: stationId})
+                .then((_) => {
+                    history.push(generatePath(ROUTES.STATION_EC_LIST, {stationId}), {
+                        alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
+                    });
+                })
+                .catch((err: Error) => {
+                    const problemJson = extractProblemJson(err);
+                    // eslint-disable-next-line functional/no-let
+                    let displayedText = t('stationAssociateECPage.associationForm.errorMessageDesc');
 
                     if (problemJson?.status === 404) {
                         displayedText = t('stationAssociateECPage.associationForm.errorMessageECNotValid');
@@ -177,143 +177,26 @@ function StationAssociateECPage() {
         }
     };
 
-  return (
-    <Box
-      justifyContent="center"
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      px={3}
-      mt={3}
-      sx={{ width: '100%', backgroundColor: 'transparent !important' }}
-    >
-      <Box justifyContent="center">
-        <Grid item xs={12} mb={1} display="flex" justifyContent="center">
-          <Typography variant="h3">{t('stationAssociateECPage.title')}</Typography>
-        </Grid>
-        <Grid item xs={12} mb={4} display="flex" justifyContent="center">
-          <Typography variant="body1" align="center">
-            {t('stationAssociateECPage.subTitle') + ' '}
-            <Typography component="span" fontWeight={'fontWeightMedium'}>
-              {stationId}
-            </Typography>
-          </Typography>
-        </Grid>
-      </Box>
-      <Box
-        display="flex"
-        justifyContent="center"
-        flexGrow={0}
-        mb={1}
-        sx={{ width: '100%', maxWidth: '684px' }}
-      >
-        <Paper
-          elevation={8}
-          sx={{
-            minWidth: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: theme.spacing(2),
-          }}
+    return (
+        <Box
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            px={3}
+            mt={3}
+            sx={{width: '100%', backgroundColor: 'transparent !important'}}
         >
-          <Grid item xs={12} p={3}>
-            <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid container item alignContent="center" spacing={2} pb={4}>
-                  <Grid item xs={12}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.institutionToAssociate')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl sx={{ width: '100%', minWidth: '100%' }}>
-                      <ECSelection
-                        availableEC={availableEC?.creditor_institution_info_list ? [...availableEC.creditor_institution_info_list] : []}
-                        selectedEC={selectedEC}
-                        onECSelectionChange={(selectedEC: CreditorInstitutionInfo | undefined) => {
-                          setSelectedEC(selectedEC);
-                        }}
-                      />
-                    </FormControl>
-                    {availableEC?.creditor_institution_info_list?.length === 0 && (
-                      <Box mt={1}>
-                        <Alert
-                          severity={'warning'}
-                          data-testid="alert-warning-test"
-                          variant="outlined"
-                        >
-                          {t('stationAssociateECPage.alert.noDelegations')}
-                        </Alert>
-                      </Box>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sx={{ mb: 1 }}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.associationParams')}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <FormControl sx={{ width: '100%' }}>
-                      <InputLabel size="small">
-                        {t('stationAssociateECPage.associationForm.auxDigit')}
-                      </InputLabel>
-                      <Select
-                        id="auxDigit"
-                        name="auxDigit"
-                        label={t('stationAssociateECPage.associationForm.auxDigit')}
-                        size="small"
-                        value={formik.values.auxDigit}
-                        inputProps={{
-                          'data-testid': 'aux-digit-test',
-                        }}
-                        disabled={true}
-                      >
-                        <MenuItem value={3}>3</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ width: '100%' }}>
-                      <InputLabel size="small">
-                        {t('stationAssociateECPage.associationForm.segregationCode')}
-                      </InputLabel>
-                      <Select
-                        disabled={selectedEC?.ci_tax_code === undefined}
-                        id="segregationCode"
-                        name="segregationCode"
-                        label={t('stationAssociateECPage.associationForm.segregationCode')}
-                        size="small"
-                        value={formik.values.segregationCode}
-                        onChange={(e) => {
-                          formik.handleChange(e);
-                        }}
-                        error={
-                          formik.touched.segregationCode && Boolean(formik.errors.segregationCode)
-                        }
-                        inputProps={{
-                          'data-testid': 'segregation-code-test',
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: '200px', // Imposta l'altezza massima del menu
-                            },
-                          },
-                        }}
-                      >
-                        {segregationCodeList?.availableCodes?.map((code, i) => (
-                          <MenuItem key={i} value={code}>
-                            {code}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.broadcast')}
+            <Box justifyContent="center">
+                <Grid item xs={12} mb={1} display="flex" justifyContent="center">
+                    <Typography variant="h3">{t('stationAssociateECPage.title')}</Typography>
+                </Grid>
+                <Grid item xs={12} mb={4} display="flex" justifyContent="center">
+                    <Typography variant="body1" align="center">
+                        {t('stationAssociateECPage.subTitle') + ' '}
+                        <Typography component="span" fontWeight={'fontWeightMedium'}>
+                            {stationId}
+                        </Typography>
                     </Typography>
                 </Grid>
             </Box>
@@ -397,7 +280,7 @@ function StationAssociateECPage() {
                                                 {t('stationAssociateECPage.associationForm.segregationCode')}
                                             </InputLabel>
                                             <Select
-                                                disabled={selectedEC?.creditorInstitutionCode === undefined}
+                                                disabled={selectedEC?.ci_tax_code === undefined}
                                                 id="segregationCode"
                                                 name="segregationCode"
                                                 label={t('stationAssociateECPage.associationForm.segregationCode')}

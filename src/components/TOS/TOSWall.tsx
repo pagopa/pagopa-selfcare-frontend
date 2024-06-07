@@ -1,5 +1,5 @@
 import {Trans, useTranslation} from 'react-i18next';
-import {Box, Typography, Link} from '@mui/material';
+import {Box, Link, Typography} from '@mui/material';
 import {TOSAgreement} from '@pagopa/mui-italia';
 import {Link as RouterLink} from 'react-router-dom';
 

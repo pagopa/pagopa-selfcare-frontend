@@ -87,20 +87,53 @@ const DelegationsTable = ({filterByName}: Props) => {
                 width: '100% !important',
                 border: 'none',
             }}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            paginationMode="client"
-            rowCount={delegationsList?.ci_broker_delegations?.length}
-            rowHeight={rowHeight}
-            rows={delegationsList?.ci_broker_delegations ?? []}
-            sortingMode="client"
-            getRowId={(el) => el.institution_tax_code}
-            // onSortModelChange={handleSortModelChange}
-          />
-        </div>
-      )}
-    </Box>
-  );
+            justifyContent="start"
+        >
+            {!delegationsList?.ci_broker_delegations ||
+            delegationsList.ci_broker_delegations?.length === 0 ? (
+                <TableEmptyState componentName="delegationsPage"/>
+            ) : (
+                <div data-testid="data-grid">
+                    <CustomDataGrid
+                        disableColumnFilter
+                        disableColumnSelector
+                        disableDensitySelector
+                        disableSelectionOnClick
+                        autoHeight={true}
+                        className="CustomDataGrid"
+                        columnBuffer={5}
+                        columns={columns}
+                        components={{
+                            Pagination: () => (
+                                <Pagination
+                                    color="primary"
+                                    count={delegationsList?.page_info?.total_pages ?? 1}
+                                    page={page + 1}
+                                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
+                                        handleChangePage(value)
+                                    }
+                                />
+                            ),
+                        }}
+                        componentsProps={{
+                            toolbar: {
+                                quickFilterProps: {debounceMs: 500},
+                            },
+                        }}
+                        headerHeight={headerHeight}
+                        hideFooterSelectedRowCount={true}
+                        paginationMode="client"
+                        rowCount={delegationsList?.ci_broker_delegations?.length}
+                        rowHeight={rowHeight}
+                        rows={delegationsList?.ci_broker_delegations ?? []}
+                        sortingMode="client"
+                        getRowId={(el) => el.institution_tax_code}
+                        // onSortModelChange={handleSortModelChange}
+                    />
+                </div>
+            )}
+        </Box>
+    );
 };
 
 export default DelegationsTable;

@@ -54,7 +54,7 @@ export default function ECSelection({
           onInputChange={onChangeInput}
           options={availableEC}
           filterOptions={serverSide ? (x) => x : undefined}
-          getOptionLabel={(optionEC: CreditorInstitutionGeneric) => optionEC?.business_name ?? ''}
+          getOptionLabel={(optionEC: CreditorInstitutionGeneric) => optionEC?.businessName ?? ''}
           sx={{ width: '100%' }}
           renderInput={(params) => (
             <TextField
@@ -83,7 +83,7 @@ export default function ECSelection({
               key={(props as any)['data-option-index']}
             >
               <PartyAccountItem
-                partyName={option?.business_name ?? ''}
+                partyName={option?.businessName ?? ''}
                 maxCharactersNumberMultiLine={20}
                 noWrap={false}
               />
@@ -105,7 +105,7 @@ export default function ECSelection({
           <Box display="flex">
             <Box width="100%" data-testid="selected-ec-item-id-test">
               <PartyAccountItem
-                partyName={selectedEC?.business_name ?? ''}
+                partyName={selectedEC?.businessName ?? ''}
                 maxCharactersNumberMultiLine={20}
                 noWrap={false}
               />

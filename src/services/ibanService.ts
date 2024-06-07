@@ -6,13 +6,11 @@ import {BrokerECExportStatus} from '../api/generated/portal/BrokerECExportStatus
 import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,
-    exportIbansToCsv as exportIbansToCsvMocked,
     exportCreditorInstitutionsToCsv as exportCreditorInstitutionsToCsvMocked,
-    getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    exportIbansToCsv as exportIbansToCsvMocked,
     getBrokerExportStatus as getBrokerExportStatusMocked,
-    updateIban as updateIbanMocked,
-    updateIbanCup as updateIbanCupMocked,
-    updateIbanStandIn as updateIbanStandInMocked
+    getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    updateIban as updateIbanMocked
 } from './__mocks__/ibanService';
 
 export const getIbanList = (

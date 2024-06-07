@@ -1,5 +1,4 @@
-import {Add, Search as SearchIcon} from '@mui/icons-material';
-import {Button, InputAdornment, Link, TextField, Typography} from '@mui/material';
+import {Link, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import {Trans, useTranslation} from 'react-i18next';
 import {generatePath, Link as RouterLink} from 'react-router-dom';

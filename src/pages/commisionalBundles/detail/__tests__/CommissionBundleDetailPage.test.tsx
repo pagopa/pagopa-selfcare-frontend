@@ -227,13 +227,13 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 userIsPagopaOperator: true,
                 userIsAdmin: true,
             });
-    
+
             render(
                 <Provider store={store}>
                     <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic}/>
                 </Provider>
             );
-    
+
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -266,7 +266,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                     <ComponentToRender bundle={bundle}/>
                 </Provider>
             );
-    
+
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -296,7 +296,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                     <ComponentToRender bundle={bundle}/>
                 </Provider>
             );
-    
+
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -336,7 +336,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                     <ComponentToRender bundle={bundle}/>
                 </Provider>
             );
-    
+
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -376,7 +376,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                     <ComponentToRender bundle={bundle}/>
                 </Provider>
             );
-    
+
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -408,7 +408,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     //                 <ComponentToRender bundle={mockedCommissionBundleCiDetailPrivate}/>
     //             </Provider>
     //         );
-    
+
     //         await waitFor(() => {
     //             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
     //             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();

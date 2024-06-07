@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -13,23 +12,24 @@ import {
     Typography,
 } from '@mui/material';
 import {theme} from '@pagopa/mui-italia';
-import {Trans, useTranslation} from 'react-i18next';
-import {useFormik} from 'formik';
-import {useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import ROUTES from '../../routes';
-import {LOADING_TASK_API_KEY_GENERATION} from '../../utils/constants';
+import {useFormik} from 'formik';
+import {useEffect, useState} from 'react';
+import {Trans, useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {InstitutionApiKeysResource} from '../../api/generated/portal/InstitutionApiKeysResource';
 import {
     API_KEY_PRODUCTS,
     API_KEY_PSP_PRODUCTS,
     AvailableProductKeys,
     ConfiguredProductKeys,
     NODOAUTH,
-    ProductKeys,
 } from '../../model/ApiKey';
 import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
+import ROUTES from '../../routes';
 import {createInstitutionApiKeys, getInstitutionApiKeys} from '../../services/apiKeyService';
+import {LOADING_TASK_API_KEY_GENERATION} from '../../utils/constants';
 
 function AddApiKeyPage() {
     const {t} = useTranslation();
@@ -85,9 +85,7 @@ function AddApiKeyPage() {
             setLoading(true);
             void getInstitutionApiKeys(selectedParty.partyId)
                 .then((data) => {
-                    if (data) {
-                        buildAvailableProduct(data, products, setAvailableProduct);
-                    }
+                    buildAvailableProduct(data, products, setAvailableProduct);
                 })
                 .finally(() => setLoading(false));
         }
@@ -153,6 +151,7 @@ function AddApiKeyPage() {
                                     fullWidth
                                     aria-label="user"
                                     name="products"
+                                    data-testid="product-test-id"
                                     value={selectedProduct ? t(`addApiKeyPage.products.${selectedProduct}`) : ''}
                                     labelId="select-label-products"
                                     variant="outlined"
@@ -187,7 +186,12 @@ function AddApiKeyPage() {
             </Box>
             <Stack direction="row" justifyContent="space-between" mt={5}>
                 <Stack display="flex" justifyContent="flex-start" mr={2}>
-                    <Button color="primary" variant="outlined" onClick={goBack}>
+                    <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={goBack}
+                        data-testid="api-key-btn-back-test-id"
+                    >
                         {t('addApiKeyPage.addForm.backButton')}
                     </Button>
                 </Stack>
@@ -198,6 +202,7 @@ function AddApiKeyPage() {
                         disabled={!selectedProduct}
                         color="primary"
                         variant="contained"
+                        data-testid="api-key-btn-test-id"
                     >
                         {t('addApiKeyPage.addForm.continueButton')}
                     </Button>
@@ -208,15 +213,15 @@ function AddApiKeyPage() {
 }
 
 const buildAvailableProduct = (
-    data: Array<ProductKeys>,
+    data: InstitutionApiKeysResource,
     products: Array<ConfiguredProductKeys>,
     setAvailableProduct: any
 ) => {
-    if (data.some((el) => el.displayName.includes(NODOAUTH))) {
+    if (data?.institution_api_key_list?.some((el) => el.displayName.includes(NODOAUTH))) {
         // if nodeAuth was created, elements that are present in both lists will be disabled
         setAvailableProduct(
             products.map((p) =>
-                data.some((el) => el.displayName.includes(p.key))
+                data?.institution_api_key_list?.some((el) => el.displayName.includes(p.key))
                     ? {
                         id: p.id,
                         title: p.key,

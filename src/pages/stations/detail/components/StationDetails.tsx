@@ -1,196 +1,255 @@
-/* eslint-disable complexity */
-import {ArrowBack, ManageAccounts} from '@mui/icons-material';
-import {Breadcrumbs, Divider, Grid, Paper, Stack, Typography} from '@mui/material';
-import {Box} from '@mui/system';
+import {Alert, Box, Button, Divider, Grid, IconButton, Stack, TextField} from '@mui/material';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import {useTranslation} from 'react-i18next';
 import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {generatePath, Link, useParams} from 'react-router-dom';
-import {StationDetailResource, WrapperStatusEnum,} from '../../../../api/generated/portal/StationDetailResource';
-import ROUTES from '../../../../routes';
+import {generatePath, Link, useHistory, useParams} from 'react-router-dom';
+import {useState} from 'react';
+import {ArrowBack, ManageAccounts, VisibilityOff} from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+    StationDetailResource,
+    WrapperStatusEnum,
+} from '../../../../api/generated/portal/StationDetailResource';
 import {StatusChip} from '../../../../components/StatusChip';
+import {IProxyConfig, ProxyConfigs} from '../../../../model/Station';
+import ROUTES from '../../../../routes';
+import {ENV} from '../../../../utils/env';
+import {useUserRole} from '../../../../hooks/useUserRole';
 import DetailButtonsStation from './DetailButtonsStation';
 
-type Prop = {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+const GetAlert = ({stationDetail}: { stationDetail?: StationDetailResource }) => {
+    const {t} = useTranslation();
+    const {userIsPagopaOperator} = useUserRole();
+
+    if (stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED) {
+        const isToBeValidated =
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE;
+        const isToBeFixed =
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ||
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE;
+
+        const userHasToTakeAction =
+            (isToBeValidated && userIsPagopaOperator) || (isToBeFixed && !userIsPagopaOperator);
+        return (
+            <>
+                {(userIsPagopaOperator || userHasToTakeAction) && (
+                    <Box my={2}>
+                        <Alert
+                            severity={userHasToTakeAction ? 'warning' : 'info'}
+                            variant="outlined"
+                            sx={{py: 2}}
+                        >
+                            {isToBeFixed && (
+                                <Typography fontWeight={'fontWeightMedium'}>
+                                    {t('stationDetailPageValidation.alert.toFixTitle')}
+                                </Typography>
+                            )}
+                            <Typography>
+                                {isToBeFixed && stationDetail?.note?.trim()
+                                    ? stationDetail.note
+                                    : t(
+                                        `stationDetailPageValidation.alert.${
+                                            isToBeValidated ? 'toCheckMessage' : 'toFixMessage'
+                                        }`
+                                    )}
+                            </Typography>
+                        </Alert>
+                    </Box>
+                )}
+            </>
+        );
+    }
+    return null;
+};
+type Props = {
     stationDetail?: StationDetailResource;
-    goBack: () => void;
+    setStationDetail: (value: any) => void;
     ecAssociatedNumber: number;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
+// eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+const StationDetails = ({
+                            stationDetail,
+                            setStationDetail,
+                            ecAssociatedNumber,
+                        }: // eslint-disable-next-line sonarjs/cognitive-complexity
+                            Props) => {
     const {t} = useTranslation();
+    const history = useHistory();
     const {stationId} = useParams<{ stationId: string }>();
+    const {userIsPagopaOperator} = useUserRole();
 
-    const endpoint =
-        stationDetail?.targetHost === undefined || stationDetail?.targetHost === ''
-            ? '-'
-            : `${stationDetail?.targetHost === undefined ? '-' : stationDetail?.targetHost}${
-                stationDetail?.targetPort && stationDetail?.targetPort > 0
-                    ? `:${stationDetail.targetPort}`
-                    : ''
-            }${stationDetail?.targetPath}`;
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    // eslint-disable-next-line complexity
+    const hidePassword = 'XXXXXXXXXXXXXX';
+    const proxyAddresses = ProxyConfigs[ENV.ENV as keyof IProxyConfig];
+
+    const showOrHidePassword = (password?: string) => {
+        if (showPassword) {
+            return password;
+        }
+        return hidePassword;
+    };
+
     return (
-        <Grid container justifyContent={'center'} mb={5}>
+        <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
-                <Stack direction="row" mt={2}>
-                    <ButtonNaked
-                        size="small"
-                        component="button"
-                        onClick={() => goBack()}
-                        startIcon={<ArrowBack/>}
-                        sx={{color: 'primary.main', mr: '20px'}}
-                        weight="default"
-                        data-testid="exit-btn-test"
-                    >
-                        {t('general.exit')}
-                    </ButtonNaked>
-                    <Breadcrumbs>
-                        <Typography>{t('general.Stations')}</Typography>
-                        <Typography variant="body2" color={'#17324D'} sx={{fontWeight: 'fontWeightMedium'}}>
-                            {t('stationDetailPage.detail', {
-                                code: stationId,
-                            })}
-                        </Typography>
-                    </Breadcrumbs>
-                </Stack>
-                <Grid container mt={3}>
-                    <Grid item xs={6} mb={5}>
-                        <TitleBox
-                            title={stationId ?? ''}
-                            mbTitle={2}
-                            variantTitle="h4"
-                            variantSubTitle="body1"
-                        />
-                        <Typography
-                            mb={5}
-                            component={'span'}
-                            fontWeight={'fontWeightMedium'}
-                            color={'text.secondary'}
-                        >
-                            {
-                                stationDetail?.createdAt ? t('stationDetailPage.createdAt', {
-                                    data: stationDetail?.createdAt?.toLocaleDateString('en-GB'),
-                                }) : ''
-                            }
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailButtonsStation status={stationDetail?.wrapperStatus} stationCode={stationId}/>
-                    </Grid>
-                </Grid>
+                <ButtonNaked
+                    size="small"
+                    component="button"
+                    onClick={() => history.push(ROUTES.STATIONS)}
+                    startIcon={<ArrowBack/>}
+                    sx={{color: 'primary.main', mr: '20px'}}
+                    weight="default"
+                    data-testid="back-btn-test"
+                >
+                    {t('general.back')}
+                </ButtonNaked>
+                <Box display="flex" mt={2} alignItems={'center'}>
+                    <Typography variant="h4" mr={3}>
+                        {stationId}
+                    </Typography>
+                    <StatusChip status={stationDetail?.wrapperStatus ?? ''}/>
+                </Box>
+                <Typography my={2}>{t('stationDetailPageValidation.subtitle')}</Typography>
+
+                <GetAlert stationDetail={stationDetail}/>
 
                 <Paper
-                    elevation={8}
+                    elevation={5}
                     sx={{
+                        mt: 2,
                         borderRadius: 4,
                         p: 4,
                     }}
                 >
-                    <Grid container alignItems={'center'} spacing={0} mb={2}>
-                        <Grid item xs={3}>
-                            <Typography variant="subtitle2">{t('stationDetailPage.state')}</Typography>
+                    <Grid container item spacing={2}>
+                        <Grid item xs={12}>
+                            <Typography variant="h4" mb={2}>
+                                {t('stationDetailPageValidation.configuration.title')}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={9} textAlign="right">
-                            <StatusChip status={stationDetail?.wrapperStatus ?? ''}/>
-                        </Grid>
-                    </Grid>
-                    <Typography variant="h6" mb={1}>
-                        {t('stationDetailPage.stationConfiguration')}
-                    </Typography>
-                    <Typography sx={{fontSize: '14px', fontWeight: 'fontWeightRegular'}} mb={3}>
-                        {t('stationDetailPage.stationConfigurationDescription')}
-                    </Typography>
-                    <Divider/>
 
-                    <Box mt={5}>
-                        <Grid container spacing={2}>
-                            <Grid container item alignContent="center" spacing={2} pb={4}>
-                                <Grid item xs={12}>
-                                    <Typography variant="sidenav">{t('stationDetailPage.anagraphic')}</Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.stationId')}</Typography>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationId}
+                        <>
+                            <Grid item xs={12}>
+                                <Typography variant="sidenav">
+                                    {t('stationDetailPageValidation.configuration.registry')}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Typography variant="body2">
+                                    {t('stationDetailPageValidation.configuration.stationCode')}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                    {stationDetail?.stationCode ?? '-'}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Typography variant="body2">
+                                    {t('stationDetailPageValidation.configuration.connectionType.label')}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                    {t(
+                                        `stationDetailPageValidation.configuration.connectionType.${
+                                            stationDetail?.isConnectionSync ? 'sync' : 'async'
+                                        }`
+                                    )}
+                                </Typography>
+                            </Grid>
+                            {!userIsPagopaOperator && (
+                                <>
+                                    <Grid item xs={3} data-testid="activation-date">
+                                        <Typography variant="body2">{t('stationDetailPage.activationDate')}</Typography>
+                                    </Grid>
+                                    <Grid item xs={9}>
+                                        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                            {stationDetail?.activationDate?.toLocaleDateString('en-GB') ?? '-'}
+                                        </Typography>
+                                    </Grid>
+                                </>
+                            )}
+                        </>
+
+                        {stationDetail?.isConnectionSync && (
+                            <>
+                                <Grid item xs={12} mt={2} data-testid="connection-sync-section">
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.endpoints.modello1')}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
                                     <Typography variant="body2">
-                                        {t('stationDetailPageValidation.configuration.version')}
+                                        {t('stationDetailPageValidation.endpoints.endpointRTConcat')}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.version ?? '-'}
+                                        {stationDetail?.targetHost}:{stationDetail?.targetPort}
+                                        {stationDetail?.targetPath}
                                     </Typography>
                                 </Grid>
-
                                 <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.activationDate')}</Typography>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.endpoints.endpointRedirectConcat')}
+                                    </Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.activationDate?.toLocaleDateString('en-GB') ?? '-'}
+                                        {stationDetail?.redirectProtocol
+                                            ? `${stationDetail?.redirectProtocol.toLowerCase()}://`
+                                            : ''}
+                                        {stationDetail?.redirectIp}
+                                        {stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ''}
+                                        {stationDetail?.redirectPath}
+                                        {stationDetail?.redirectQueryString
+                                            ? `?${stationDetail?.redirectQueryString}`
+                                            : ''}
                                     </Typography>
                                 </Grid>
 
                                 <Grid item xs={12} mt={2}>
-                                    <Typography variant="sidenav">{t('stationDetailPage.modello1')}</Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.endpointRT')}</Typography>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail && stationDetail.targetHost ? `${stationDetail.targetHost ?? ''}${stationDetail.targetPort ? ':'.concat(stationDetail.targetPort.toString()) : ''}${stationDetail.targetPath ?? ''}` : ''}
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.endpoints.modelloUnico')}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.endpointRedirect')}</Typography>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.endpoints.endpointMUConcat')}
+                                    </Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail && stationDetail.redirectPath ? `${stationDetail.redirectProtocol?.toString().toLowerCase()}://${stationDetail.redirectIp}${stationDetail.redirectPort ? ':'.concat(stationDetail.redirectPort.toString()) : ''}${stationDetail.redirectPath ?? ''}${stationDetail.redirectQueryString ? '?'.concat(stationDetail.redirectQueryString ?? '') : ''}` : ''}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} mt={2}>
-                                    <Typography variant="sidenav">{t('stationDetailPage.modelloUnico')}</Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.endpoint')}</Typography>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail && stationDetail.targetHostPof ? `${stationDetail.targetHostPof ?? ''}${stationDetail.targetPortPof ? ':'.concat(stationDetail.targetPortPof.toString()) : ''}${stationDetail.targetPathPof ?? ''}` : ''}
+                                        {stationDetail?.targetHostPof}
+                                        {stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}
+                                        {stationDetail?.targetPathPof}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.primitiveVersion')}</Typography>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.endpoints.primitiveVersion')}
+                                    </Typography>
                                 </Grid>
                                 <Grid item xs={9}>
                                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
                                         {stationDetail?.primitiveVersion}
                                     </Typography>
                                 </Grid>
+                            </>
+                        )}
 
-                                <Grid item xs={12} mt={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        {!userIsPagopaOperator && (
+                            <>
+                                <Grid item xs={12} mt={2} sx={{display: 'flex', justifyContent: 'space-between'}}
+                                      data-testid="associated-ec">
                                     <Typography variant="sidenav">{t('stationDetailPage.associatesEC')}</Typography>
-                                    <ButtonNaked
-                                        component={Link}
-                                        to={generatePath(ROUTES.STATION_EC_LIST, {stationId})}
-                                        disabled={stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED}
-                                        color="primary"
-                                        endIcon={<ManageAccounts/>}
-                                        size="medium"
-                                        sx={{alignItems: 'end'}}
-                                    >
-                                        {t('stationDetailPage.manageEC')}
-                                    </ButtonNaked>
                                 </Grid>
                                 <Grid item xs={3}>
                                     <Typography variant="body2">{t('stationDetailPage.associates')}</Typography>
@@ -200,32 +259,203 @@ const StationDetails = ({stationDetail, goBack, ecAssociatedNumber}: Prop) => {
                                         {ecAssociatedNumber}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} mt={2}>
-                                    <Typography variant="sidenav">{t('stationDetailPage.changes')}</Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography variant="body2">{t('stationDetailPage.lastChanges')}</Typography>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.modifiedAt?.toLocaleDateString('en-GB') ?? '-'}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <Typography variant="body2">{t('channelDetailPage.operatedBy')}</Typography>
-                                </Grid>
-                                <Grid item xs={9}>
-                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                        {stationDetail?.modifiedBy}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Box>
+                            </>
+                        )}
+                    </Grid>
                 </Paper>
+
+                {userIsPagopaOperator && stationDetail?.pofService && (
+                    <Paper
+                        elevation={5}
+                        sx={{
+                            mt: 2,
+                            borderRadius: 4,
+                            p: 4,
+                        }}
+                        data-testid="operator-section"
+                    >
+                        <Grid container alignItems={'center'} spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant="h6">
+                                    {t('stationDetailPageValidation.infoToComplete.title')}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body2" mb={3}>
+                                    {t('stationDetailPageValidation.infoToComplete.subtitle')}
+                                </Typography>
+                                <Divider> </Divider>
+                            </Grid>
+
+                            <>
+                                <Grid item xs={12}>
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.infoToComplete.registry')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.version')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.version ?? '-'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.password')}
+                                    </Typography>
+                                </Grid>
+                                {stationDetail?.password && (
+                                    <Grid
+                                        item
+                                        xs={9}
+                                        sx={{
+                                            display: 'flex',
+                                            height: '38px',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                            {showOrHidePassword(stationDetail?.password)}
+                                        </Typography>
+                                        <IconButton
+                                            style={{
+                                                border: 'none !important',
+                                                marginLeft: '42px',
+                                            }}
+                                            onClick={() => {
+                                                setShowPassword(!showPassword);
+                                            }}
+                                            data-testid="show-pwd-validation-test"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityIcon color="primary" sx={{width: '80%'}}/>
+                                            ) : (
+                                                <VisibilityOff color="primary" sx={{width: '80%'}}/>
+                                            )}
+                                        </IconButton>
+                                    </Grid>
+                                )}
+                            </>
+
+                            <>
+                                <Grid item xs={12} mt={2}>
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.infoToComplete.configuration')}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t(
+                                            `stationDetailPageValidation.infoToComplete.${
+                                                stationDetail?.isConnectionSync ? 'newConn' : 'GPD'
+                                            }`
+                                        )}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2">
+                                        {t(
+                                            `stationDetailPageValidation.infoToComplete.${
+                                                stationDetail?.isConnectionSync ? 'forwarderNewConn' : 'gdpDetail'
+                                            }`
+                                        )}{' '}
+                                        - {stationDetail.ip}
+                                        {stationDetail.pofService}
+                                    </Typography>
+                                </Grid>
+                            </>
+
+                            <>
+                                <Grid item xs={12} mt={2}>
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.infoToComplete.proxy')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.proxyAddress')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.proxyHost && stationDetail?.proxyPort
+                                            ? `${stationDetail.proxyHost}:${stationDetail.proxyPort}`
+                                            : '-'}
+
+                                        {stationDetail?.proxyHost !== '' &&
+                                            Object.entries(proxyAddresses).map(([key, value]) =>
+                                                value.includes(
+                                                    stationDetail?.proxyHost && stationDetail.proxyHost.toString()
+                                                )
+                                                    ? ` (${t(
+                                                        'stationDetailPageValidation.infoToComplete.proxyLabels.' + key
+                                                    )})`
+                                                    : ''
+                                            )}
+                                    </Typography>
+                                </Grid>
+                            </>
+
+                            <>
+                                <Grid item xs={12} mt={2}>
+                                    <Typography variant="sidenav">
+                                        {t('stationDetailPageValidation.infoToComplete.otherInfo')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.timeoutA')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.timeoutA ?? '-'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.timeoutB')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.timeoutB ?? '-'}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="body2">
+                                        {t('stationDetailPageValidation.infoToComplete.timeoutC')}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={9}>
+                                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                                        {stationDetail?.timeoutC ?? '-'}
+                                    </Typography>
+                                </Grid>
+                            </>
+                        </Grid>
+                    </Paper>
+                )}
+
+                <Typography color="action.active" sx={{my: 2}}>
+                    {t('channelDetailPage.createdOn')}{' '}
+                    <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                        {`${stationDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
+                            stationDetail?.createdBy
+                        }`}
+                    </Typography>
+                </Typography>
+                {stationDetail && (
+                    <DetailButtonsStation stationDetail={stationDetail} setStationDetail={setStationDetail}/>
+                )}
             </Grid>
         </Grid>
     );
 };
-
 export default StationDetails;

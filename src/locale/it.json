@@ -424,7 +424,6 @@
       "breadcrumb": "Configura stazione"
     },
     "addForm": {
-      "backButton": "Indietro",
       "continueButton": "Continua",
       "confirmButton": "Conferma",
       "sections": {
@@ -529,7 +528,7 @@
         "connection": "Connessione"
       },
       "rows": {
-        "async":"Asincrona",
+        "async": "Asincrona",
         "sync": "Sincrona"
       }
     },
@@ -595,8 +594,9 @@
       "duplicateStation": "Duplica",
       "editStation": "Modifica",
       "deleteRequired": "Richiedi eliminazione",
-      "correctionRequired": "Richiedi correzione",
-      "configureStation": "Configura"
+      "configureStation": "Configura",
+      "requestEdit": "Richiedi modifiche",
+      "approveAndValidate": "Approva e valida"
     }
   },
   "stationECList": {
@@ -648,11 +648,25 @@
       "errorMessageDelegatedEd": "Errore durante la ricezione della lista degli EC disponibili per l'associazione",
       "backButton": "Annulla",
       "confirmButton": "Conferma"
+    },
+    "alert": {
+      "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
     }
   },
   "stationDetailPageValidation": {
-    "alert": "Stazione in attesa di revisione da parte di un operatore PagoPA.",
-    "alertToFix": "Stazione in attesa di correzione da parte dell’ente.",
+    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Stazione in attesa di correzione da parte dell’ente."
+    },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "Il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri",
+      "error": "Si è verificato un problema nel salvataggio del commento."
+    },
     "configuration": {
       "status": "Stato",
       "title": "Configurazione della stazione",
@@ -660,7 +674,11 @@
       "registry": "Anagrafica",
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
-      "intermediaryCode": "Codice intermediario",
+      "connectionType": {
+        "label": "Tipo di connessione",
+        "sync": "Sincrona",
+        "async": "Asincrona"
+      },
       "protocol": "Protocollo",
       "port": "Porta",
       "ip": "IP",
@@ -707,6 +725,98 @@
       "timeoutC": "Timeout C",
       "title": "Informazioni da completare",
       "version": "Versione"
+    }
+  },
+  "noticesPage": {
+    "title": "Avvisi di pagamento",
+    "subtitle": "Qui puoi gestire le informazioni necessarie per generare gli avvisi di pagamento",
+    "toAddWarning": "Configura il modello con le informazioni necessarie per generare gli avvisi di pagamento",
+    "detailSubtitle": "Ecco il modello utilizzato per generare gli avvisi di pagamento",
+    "addData": "Configura modello",
+    "editData": "Modifica",
+    "error": {
+      "getNoticeTitle": "Errore nel recupero dati stampa avvisi",
+      "getNoticeDesc": "Errore inatteso nel recupero delle informazioni salvate per la stampa avvisi",
+      "addEditTitle": "Errore in salvataggio configurazione",
+      "addEditMessage": "Errore inatteso nel corso del salvataggio della configurazione."
+    }
+  },
+  "addEditInstitutionsDataPage": {
+    "validationMessage": {
+      "requiredField": "Campo obbligatorio"
+    },
+    "modal": {
+      "title": "Vuoi uscire?",
+      "message": "Tutte le informazioni che hai inserito andranno perse"
+    },
+    "detail": {
+      "ci": "Ente Creditore",
+      "assistance": "Contatti per l'assistenza",
+      "wherePay": "Dove pagare",
+      "poste": "Bollettino Postale PA",
+      "paymentChannel": "Canali di pagamento",
+      "webApp": "Sul sito e in app",
+      "onlyWeb": "Sul sito",
+      "onlyApp": "Sulla app",
+      "none": "Nessun canale di pagamento aggiuntivo presente"
+    },
+    "title": "Configura modello",
+    "subtitle": "Completa le informazioni necessarie per l'emissione degli avvisi di pagamento",
+    "addForm": {
+      "successMessage": "Modello configurato con successo",
+      "organizationHelperText": "Campo opzionale, massimo 50 caratteri",
+      "fileHelper": "Carica un file PNG o JPEG di 1000x1000 pixel. (Se disponibile, ti consigliamo di caricare un formato vettoriale SVG o EPS)",
+      "dialog": {
+        "ok": "Ho capito",
+        "title": "Ecco cosa vedranno gli utenti sull'avviso di pagamento, in base alla tua scelta:",
+        "header": "PAGA CON L'APP IO",
+        "baseText": "oppure dal tuo Home Banking, con la tua app di pagamento o con gli altri canali abilitati"
+      },
+      "logoText": "Si vuole sostituire il logo caricato in precedenza?",
+      "logoLink": "Logo già caricato.",
+      "logoCancel": "Clicca qui",
+      "breadcrumb": "Configura modello",
+      "title": "Informazioni necessarie",
+      "subtitle": "L'avviso di pagamento (cartaceo o digitiale) permette di effettuare pagamenti attraverso la piattaforma pagoPA",
+      "link": "Dubbi? vai alla documentazione",
+      "sections": {
+        "ci": {
+          "title": "Ente creditore"
+        },
+        "pay": {
+          "title": "Dove pagare",
+          "radioTitle": "È possibile eseguire pagamenti sul tuo sito o app?"
+        },
+        "poste": {
+          "title": "Bollettino Postale PA",
+          "radioTitle": "Disponi di un conto corrente postale per gli incassi?"
+        },
+        "assistance": {
+          "title": "Contatto per l'assistenza"
+        }
+      },
+      "buttons": {
+        "back": "Annulla",
+        "confirm": "Conferma"
+      },
+      "fields": {
+        "name": "Nome",
+        "taxCode": "Codice Fiscale",
+        "cbill": "CBILL",
+        "organization": "Settore",
+        "info": "Inserisci il contatto",
+        "paymentType": "Indica dove",
+        "posteName": "Intestato a",
+        "posteAccountNumber": "Numero c/c postale",
+        "posteAuth": "Codice autorizzazione",
+        "logo": "Logo"
+      },
+      "paymentType": {
+        "onlyApp": "Solo in app",
+        "onlyWeb": "Solo sul sito",
+        "both": "Sul sito e in app"
+      },
+      "dropFileText": "Trascina qui il logo dell'ente per la stampa, o selezionalo dal tuo computer"
     }
   },
   "ibanPage": {
@@ -924,7 +1034,7 @@
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
           "title": "Richiesta attivazione pacchetto",
-          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail." 
+          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",
@@ -935,24 +1045,12 @@
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
       "subscriptionsTable": {
-        "title": "Richieste di adesione",
+        "businessName": "Nome Ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
         "search": {
           "placeholder": "Cerca per codice fiscale",
           "stateFilter": "Stato"
-        },
-        "table": {
-          "emptyState": {
-            "WAITING": "Non sono presenti richieste d'adesione in attesa",
-            "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
-          }
-        },
-        "name": "Nome ente",
-        "taxCode": "Codice Fiscale",
-        "state": "Stato",
-        "stateChip": {
-          "WAITING": "In attesa",
-          "ACCEPTED": "Accettata",
-          "DELETING": "In eliminazione"
         },
         "modal": {
           "reject": {
@@ -966,30 +1064,70 @@
           "delete": {
             "title": "Rimuovi ente",
             "message": "L'ente riceverà una mail di notifica di rimozione dal pacchetto."
+          },
+          "deleteOffer": {
+            "title": "Revoca invito di adesione",
+            "message": "L’ente non avrà più la possibilità di aderire al pacchetto privato."
           }
-        },
-        "drawer": {
-          "title": "Dettaglio richiedente",
-          "feesTitle": "Commissioni a carico dell'ente",
-          "businessName": "Nome Ente",
-          "taxCode": "Codice Fiscale",
-          "state": "Stato",
-          "rejectButton": "Rifiuta richiesta",
-          "acceptButton": "Accetta richiesta",
-          "deleteButton": "Rimuovi ente"
         },
         "alert": {
           "reject": "Richiesta rifiutata",
           "accept": "Richiesta accettata",
-          "delete": "Ente rimosso"
+          "delete": "Ente rimosso",
+          "deleteOffer": "Offerta eliminata"
         },
-        "error": {
-          "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
-          "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
-          "reject": "Errore durante il rifiuto della richiesta",
-          "accept": "Errore durante l'accettazione della richiesta",
-          "delete": "Errore durante l'eliminazione dell'adesione"
+        "requestsTable": {
+          "title": "Richieste di adesione",
+          "table": {
+            "emptyState": {
+              "WAITING": "Non sono presenti richieste d'adesione in attesa",
+              "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
+            }
+          },
+          "stateChip": {
+            "WAITING": "In attesa",
+            "ACCEPTED": "Accettata",
+            "DELETING": "In eliminazione"
+          },
+          "drawerTitle": "Dettaglio richiedente",
+          "error": {
+            "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
+            "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
+            "reject": "Errore durante il rifiuto della richiesta",
+            "accept": "Errore durante l'accettazione della richiesta",
+            "delete": "Errore durante l'eliminazione dell'adesione"
+          }
+        },
+        "offersTable": {
+          "title": "Destinatari",
+          "inviteButton": "Invita enti",
+          "table": {
+            "emptyState": {
+              "WAITING": "Non sono presenti offerte in attesa",
+              "ACTIVE": "Non sono presenti offerte già accettate"
+            }
+          },
+          "stateChip": {
+            "WAITING": "In attesa",
+            "ACCEPTED": "Attivo",
+            "DELETING": "In eliminazione"
+          },
+          "drawerTitle": "Dettaglio destinatario",
+          "error": {
+            "errorGetList": "Errore durante il recupero della lista delle offerte al pacchetto",
+            "errorGetDetail": "Errore durante il recupero del dettaglio dell'offerta",
+            "delete": "Errore durante l'eliminazione dell'adesione"
+          }
         }
+      },
+      "requestDrawer": {
+        "businessName": "Nome Ente",
+        "taxCode": "Codice Fiscale",
+        "state": "Stato",
+        "rejectButton": "Rifiuta richiesta",
+        "acceptButton": "Accetta richiesta",
+        "deleteButton": "Rimuovi ente",
+        "feesTitle": "Commissioni a carico dell'ente"
       }
     },
     "addEditCommissionBundle": {
@@ -1276,6 +1414,9 @@
     },
     "groups": {
       "title": "Gruppi"
+    },
+    "paymentNotices": {
+      "title": "Avvisi di pagamento"
     }
   },
   "header": {
@@ -1302,7 +1443,7 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "showMore": "Mostra di più",
-    "discoverMore" : "Scopri di più",
+    "discoverMore": "Scopri di più",
     "search": "Cerca",
     "filter": "Filtra",
     "removeFilter": "Rimuovi filtri",
@@ -1319,11 +1460,13 @@
     "manage": "Gestisci",
     "activate": "Attiva",
     "deactivate": "Disattiva",
+    "confirmAndSend": "Conferma e invia",
     "channels": "canali",
     "Channels": "Canali",
     "dashboard": "Panoramica",
     "Stations": "Stazioni",
     "Bundles": "Pacchetti commissioni",
+    "PaymentNotices": "Avvisi di pagamento",
     "Iban": "IBAN",
     "errorTitle": "Errore",
     "operationTable": "Tavolo Operativo",
@@ -1336,7 +1479,12 @@
       "TO_FIX": "Da correggere",
       "TO_FIX_UPDATE": "Da correggere",
       "TO_CHECK": "In revisione",
-      "TO_CHECK_UPDATE": "In revisione"
+      "TO_CHECK_UPDATE": "In revisione",
+      "APPROVED_OPERATOR": "Attivo",
+      "TO_FIX_OPERATOR": "Da correggere",
+      "TO_FIX_UPDATE_OPERATOR": "Da correggere",
+      "TO_CHECK_OPERATOR": "Da validare",
+      "TO_CHECK_UPDATE_OPERATOR": "Da validare"
     },
     "yes": "Sì",
     "no": "No",

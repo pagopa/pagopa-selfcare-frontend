@@ -1,12 +1,21 @@
-import {useState} from 'react';
-import {Box, Button, Card, Stack, ToggleButton, Typography, useTheme} from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import {VisibilityOff} from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {Box, Button, Card, Stack, ToggleButton, Typography, useTheme} from '@mui/material';
+import {
+    SessionModal,
+    useErrorDispatcher,
+    useLoading,
+    useUserNotify,
+} from '@pagopa/selfcare-common-frontend';
+import {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
-import {SessionModal, useErrorDispatcher, useLoading, useUserNotify,} from '@pagopa/selfcare-common-frontend';
-import {Party} from '../../model/Party';
 import {ProductKeys} from '../../model/ApiKey';
-import {getInstitutionApiKeys, regeneratePrimaryKey, regenerateSecondaryKey,} from '../../services/apiKeyService';
+import {Party} from '../../model/Party';
+import {
+    getInstitutionApiKeys,
+    regeneratePrimaryKey,
+    regenerateSecondaryKey,
+} from '../../services/apiKeyService';
 
 type Props = {
     selectedParty?: Party;
@@ -85,7 +94,10 @@ export default function ApiKeysCard({selectedParty, apiKey}: Props) {
                 .then(
                     () => {
                         void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
-                            setPrimaryKey((data.find((d) => d.id === apiKey.id) as ProductKeys).primaryKey)
+                            setPrimaryKey(
+                                (data.institution_api_key_list?.find((d) => d.id === apiKey.id) as ProductKeys)
+                                    .primaryKey
+                            )
                         );
                         addNotify({
                             id: 'ACTION_ON_REGENERATE_PRIMARY_KEY',
@@ -118,7 +130,10 @@ export default function ApiKeysCard({selectedParty, apiKey}: Props) {
                 .then(
                     () => {
                         void getInstitutionApiKeys(selectedParty.partyId).then((data) =>
-                            setSecondaryKey((data.find((d) => d.id === apiKey.id) as ProductKeys).secondaryKey)
+                            setSecondaryKey(
+                                (data.institution_api_key_list?.find((d) => d.id === apiKey.id) as ProductKeys)
+                                    .secondaryKey
+                            )
                         );
                         addNotify({
                             id: 'ACTION_ON_REGENERATE_SECONDARY_KEY',
@@ -153,8 +168,9 @@ export default function ApiKeysCard({selectedParty, apiKey}: Props) {
         <>
             <Card variant="outlined" sx={{p: 3, mb: 1}}>
                 <Box mb={2}>
-                    <Typography
-                        variant="h6">{apiKey.displayName.replace(selectedParty?.description ?? "", "")}</Typography>
+                    <Typography variant="h6">
+                        {apiKey.displayName.replace(selectedParty?.description ?? '', '')}
+                    </Typography>
                 </Box>
                 <Box mb={2}>
                     <Typography sx={{fontWeight: 'fontWeightMedium', fontSize: 'fontSize'}}>

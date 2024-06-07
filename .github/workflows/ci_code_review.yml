@@ -40,7 +40,7 @@ jobs:
       - name: Set Node.js 16
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
-          node-version: 16.10.0
+          node-version: 16.14.0
 
       - name: Build
         run: |
@@ -78,11 +78,23 @@ jobs:
           
           
           yarn install
-          if [ "${{ github.base_ref }}" = "next" ] || [ "${{ github.head_ref }}" = "next" ]; then
+          
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ github.ref_name }}" = "main" ]; then
+                yarn run generate:api-portal
+            elif [ "${{ github.ref_name }}" = "next" ]; then
+                yarn run generate:api-portal-next
+            else
+                yarn run generate:api-portal-pr
+            fi          
+          elif [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
             yarn run generate:api-portal-next
-          else
+          elif [ "${{ github.base_ref }}" = "main" ]; then
             yarn run generate:api-portal
-          fi
+          else
+            yarn run generate:api-portal-pr
+          fi      
+          
           yarn build
           mkdir ./out
           mv ./build ./out/ui
@@ -112,7 +124,38 @@ jobs:
 #    secrets: inherit
 
 
+  print_debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump Inputs
+        env:
+          JSON_INPUTS: ${{ toJson(inputs) }}
+        run: echo "$JSON_INPUTS"
 
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
 
   static_analysis:
     name: Static Analysis
@@ -125,7 +168,7 @@ jobs:
       - name: Set Node.js 16
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
-          node-version: 16.10.0
+          node-version: 16.14.0
 
       - name: Lint
         run: |
@@ -143,16 +186,26 @@ jobs:
       - name: Set Node.js 16
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
-          node-version: 16.10.0
+          node-version: 16.14.0
 
       - name: Unit Tests
         run: |
           yarn install
-          if [ "${{ github.base_ref }}" = "main" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ github.ref_name }}" = "main" ]; then
+                yarn run generate:api-portal
+            elif [ "${{ github.ref_name }}" = "next" ]; then
+                yarn run generate:api-portal-next
+            else
+                yarn run generate:api-portal-pr
+            fi          
+          elif [ "${{ github.base_ref }}" = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
+            yarn run generate:api-portal-next
+          elif [ "${{ github.base_ref }}" = "main" ]; then
             yarn run generate:api-portal
           else
-            yarn run generate:api-portal-next
-          fi
+            yarn run generate:api-portal-pr
+          fi   
           yarn test:coverage --watchAll=false
 
       - name: SonarCloud Scan

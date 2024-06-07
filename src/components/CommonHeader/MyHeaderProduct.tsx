@@ -1,4 +1,4 @@
-import {ProductEntity, ProductSwitch, ProductSwitchItem,} from '@pagopa/mui-italia';
+import {ArrowDropDownRounded} from '@mui/icons-material';
 import {
     Autocomplete,
     Avatar,
@@ -11,46 +11,43 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import React, {ReactNode, useEffect, useMemo, useState} from "react";
-import {trackEvent} from "@pagopa/selfcare-common-frontend/services/analyticsService";
-import {ArrowDropDownRounded} from "@mui/icons-material";
-import {getInstitutions} from "../../services/institutionService";
-import {InstitutionDetail} from "../../api/generated/portal/InstitutionDetail";
-import {Party} from "../../model/Party";
-import {partiesActions, partiesSelectors} from "../../redux/slices/partiesSlice";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {useSigninData} from "../../hooks/useSigninData";
-import {PaddedDrawer} from "../PaddedDrawer";
+import {ProductEntity, ProductSwitch, ProductSwitchItem} from '@pagopa/mui-italia';
+import {trackEvent} from '@pagopa/selfcare-common-frontend/services/analyticsService';
+import {ReactNode, useEffect, useMemo, useState} from 'react';
+import {InstitutionDetail} from '../../api/generated/portal/InstitutionDetail';
+import {InstitutionDetailResource} from '../../api/generated/portal/InstitutionDetailResource';
+import {useSigninData} from '../../hooks/useSigninData';
+import {Party} from '../../model/Party';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {partiesActions, partiesSelectors} from '../../redux/slices/partiesSlice';
+import {getInstitutions} from '../../services/institutionService';
+import {PaddedDrawer} from '../PaddedDrawer';
 
 type HeaderProductProps = {
     borderBottom?: number;
     borderColor?: string;
     chipColor?: any;
     chipLabel?: string;
-    chipSize?: "small" | "medium";
+    chipSize?: 'small' | 'medium';
     productId?: string;
     productsList: Array<ProductEntity>;
     onSelectedProduct?: (product: ProductSwitchItem) => void;
 };
 
-
 /** SelfCare Header component */
 const HeaderProduct = ({
                            borderBottom,
                            borderColor,
-                           chipColor = "primary",
+                           chipColor = 'primary',
                            chipLabel,
-                           chipSize = "small",
+                           chipSize = 'small',
                            productId,
                            productsList,
                            onSelectedProduct = () => {
                            },
                        }: HeaderProductProps) => {
     const selectedProduct = useMemo(
-        () =>
-            productId
-                ? productsList.find((p) => p.id === productId)
-                : productsList[0],
+        () => (productId ? productsList.find((p) => p.id === productId) : productsList[0]),
         [productId, productsList]
     ) as ProductSwitchItem;
     const [iconSelected, setIconSelected] = useState<ReactNode | null | undefined>(null);
@@ -63,10 +60,7 @@ const HeaderProduct = ({
     const updateSigninData = useSigninData();
     const signinData = useAppSelector(partiesSelectors.selectSigninData);
 
-
-
     useEffect(() => {
-        console.log('useEffect');
         getOptions();
     }, [organizations]);
 
@@ -86,10 +80,12 @@ const HeaderProduct = ({
             registeredOffice: orgDetails.address!,
             institutionType: orgDetails.institution_type,
             status: 'ACTIVE',
-            roles: [{
-                partyRole: 'OPERATOR',
-                roleKey: 'admin'
-            }]
+            roles: [
+                {
+                    partyRole: 'OPERATOR',
+                    roleKey: 'admin',
+                },
+            ],
         };
         if (orgDetails.psp_data) {
             // eslint-disable-next-line functional/immutable-data
@@ -101,23 +97,22 @@ const HeaderProduct = ({
 
     const searchCreditorInstitutions = (taxCode: string) => {
         getInstitutions(taxCode)
-            .then((value: Array<InstitutionDetail>) => {
-                if (value && value.length > 0) {
+            .then((value: InstitutionDetailResource) => {
+                if (value?.institution_detail_list && value.institution_detail_list.length > 0) {
                     // @ts-ignore
-                    setOrganizations(value);
+                    setOrganizations(value.institution_detail_list);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
             });
     };
-
 
     const ChipComponent = (
         <Chip
             sx={{
                 py: 0,
-                "& .MuiChip-labelSmall": {
-                    py: "2px",
+                '& .MuiChip-labelSmall': {
+                    py: '2px',
                 },
             }}
             color={chipColor}
@@ -133,7 +128,7 @@ const HeaderProduct = ({
 
     function getOptions(): Array<string> {
         if (organizations) {
-            return organizations.map(elem => `${elem.tax_code} - ${elem.name}`);
+            return organizations.map((elem) => `${elem.tax_code} - ${elem.name}`);
         } else {
             return [];
         }
@@ -145,11 +140,11 @@ const HeaderProduct = ({
             display="flex"
             alignItems="center"
             sx={{
-                backgroundColor: "background.paper",
+                backgroundColor: 'background.paper',
                 borderBottom: borderBottom ?? 1,
-                borderColor: borderColor ?? "divider",
-                boxSizing: "border-box",
-                minHeight: {xs: "auto", md: "80px"},
+                borderColor: borderColor ?? 'divider',
+                boxSizing: 'border-box',
+                minHeight: {xs: 'auto', md: '80px'},
             }}
         >
             <Container maxWidth={false}>
@@ -171,35 +166,31 @@ const HeaderProduct = ({
                                     products={productsList}
                                     onExit={onSelectedProductChangeIcon}
                                 ></ProductSwitch>
-                                {chipLabel && chipLabel !== "" && ChipComponent}
+                                {chipLabel && chipLabel !== '' && ChipComponent}
                             </Stack>
                         )}
                         {selectedProduct && productsList.length === 1 && (
                             <Stack spacing={2} direction="row" alignItems="center">
-                                <Typography
-                                    sx={{fontSize: {xs: 20, sm: 28}, fontWeight: "bold"}}
-                                >
+                                <Typography sx={{fontSize: {xs: 20, sm: 28}, fontWeight: 'bold'}}>
                                     {selectedProduct?.title}
                                 </Typography>
-                                {chipLabel && chipLabel !== "" && ChipComponent}
+                                {chipLabel && chipLabel !== '' && ChipComponent}
                             </Stack>
                         )}
                     </Stack>
-
 
                     <Container onClick={() => setDrawerIsOpened(true)} sx={{cursor: 'pointer'}}>
                         <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
                             <Avatar></Avatar>
                             <Stack direction="column" flexWrap={'wrap'} justifyContent={'flex-start'}>
-                                <Typography fontWeight={"bolder"}>
-                                    {signinData?.brokerDetailsResource?.broker_code
-                                    ?? signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode
-                                        ?? signinData?.paymentServiceProviderDetailsResource?.tax_code
-                                    ?? signinData?.brokerPspDetailsResource?.broker_psp_code ?? 'No Data'}
+                                <Typography fontWeight={'bolder'}>
+                                    {signinData?.brokerDetailsResource?.broker_code ??
+                                        signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode ??
+                                        signinData?.paymentServiceProviderDetailsResource?.tax_code ??
+                                        signinData?.brokerPspDetailsResource?.broker_psp_code ??
+                                        'No Data'}
                                 </Typography>
-                                <Typography color={"disabled"}>
-                                    { 'Operatore PagoPA' }
-                                </Typography>
+                                <Typography color={'disabled'}>{'Operatore PagoPA'}</Typography>
                             </Stack>
                             <ArrowDropDownRounded></ArrowDropDownRounded>
                         </Stack>
@@ -212,7 +203,9 @@ const HeaderProduct = ({
                                 options={getOptions()}
                                 onChange={(_event, value) => {
                                     if (value && value.length > 0 && organizations) {
-                                        const index = organizations.findIndex(elem => elem.name.includes(value.split('- ')[1]));
+                                        const index = organizations.findIndex((elem) =>
+                                            elem.name === (value.split('- ')[1])
+                                        );
                                         const organization: InstitutionDetail = organizations.at(index)!;
                                         updateState(organization);
                                         setAutocompleteValue(organization.tax_code);
@@ -224,7 +217,7 @@ const HeaderProduct = ({
                                         searchCreditorInstitutions(value);
                                     }
                                 }}
-                                value={autocompleteValue ?? ""}
+                                value={autocompleteValue ?? ''}
                                 fullWidth
                                 renderInput={(params) => (
                                     <TextField
@@ -239,7 +232,6 @@ const HeaderProduct = ({
                                 noOptionsText={'nessuna organizzazione trovata'}
                                 data-testid="org-search"
                             />
-
                         </Box>
                     </PaddedDrawer>
                 </Stack>
@@ -249,4 +241,3 @@ const HeaderProduct = ({
 };
 
 export default HeaderProduct;
-

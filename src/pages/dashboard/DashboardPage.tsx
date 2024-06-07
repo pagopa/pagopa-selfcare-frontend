@@ -14,56 +14,56 @@ import PSPRegistrationData from './components/PSPRegistrationData';
 import PTRegistrationData from './components/PTRegistrationData';
 
 const DashboardPage = () => {
-  const { t } = useTranslation();
-  const history = useHistory();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const signinData = useAppSelector(partiesSelectors.selectSigninData);
-  const { userHasPermission } = usePermissions();
+    const {t} = useTranslation();
+    const history = useHistory();
+    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const signinData = useAppSelector(partiesSelectors.selectSigninData);
+    const {userHasPermission} = usePermissions();
 
-  return (
-    <SideMenuLayout>
-      <TitleBox
-        title={t('dashboardPage.title')}
-        subTitle={t('dashboardPage.subtitle')}
-        mbSubTitle={3}
-        variantTitle="h4"
-        variantSubTitle="body1"
-      />
-      {history.location.state && (history.location.state as any).alertSuccessMessage && (
-        <Alert severity="success" variant="outlined" sx={{ mb: 4 }}>
-          {(history.location.state as any).alertSuccessMessage}
-        </Alert>
-      )}
+    return (
+        <SideMenuLayout>
+            <TitleBox
+                title={t('dashboardPage.title')}
+                subTitle={t('dashboardPage.subtitle')}
+                mbSubTitle={3}
+                variantTitle="h4"
+                variantSubTitle="body1"
+            />
+            {history.location.state && (history.location.state as any).alertSuccessMessage && (
+                <Alert severity="success" variant="outlined" sx={{mb: 4}}>
+                    {(history.location.state as any).alertSuccessMessage}
+                </Alert>
+            )}
 
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 1 }}>
-            <Box mb={3}>
-              <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
-            </Box>
-            <Grid container spacing={3} pb={4}>
-              {selectedParty?.institutionType === 'PSP' ? (
-                <PSPRegistrationData />
-              ) : selectedParty?.institutionType === 'PT' ? (
-                <PTRegistrationData />
-              ) : (
-                <ECRegistrationData />
-              )}
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <Card variant="outlined" sx={{border: 0, borderRadius: 0, p: 3, mb: 1}}>
+                        <Box mb={3}>
+                            <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
+                        </Box>
+                        <Grid container spacing={3} pb={4}>
+                            {selectedParty?.institutionType === 'PSP' ? (
+                                <PSPRegistrationData/>
+                            ) : selectedParty?.institutionType === 'PT' ? (
+                                <PTRegistrationData/>
+                            ) : (
+                                <ECRegistrationData/>
+                            )}
+                        </Grid>
+                    </Card>
+                </Grid>
+                <Grid item xs={6}>
+                    <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
+                    <DownloadSection selectedParty={selectedParty}></DownloadSection>
+                </Grid>
+
+                {selectedParty &&
+                    userHasPermission('operation-table-read-write') && (
+                        <OperationTable ecCode={selectedParty.fiscalCode}/>
+                    )}
             </Grid>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <NextSteps selectedParty={selectedParty} signinData={signinData}></NextSteps>
-          <DownloadSection selectedParty={selectedParty}></DownloadSection>
-        </Grid>
-
-        {selectedParty &&
-          userHasPermission('operation-table-read-write')  && (
-            <OperationTable ecCode={selectedParty.fiscalCode} />
-          )}
-      </Grid>
-    </SideMenuLayout>
-  );
+        </SideMenuLayout>
+    );
 };
 
 export default DashboardPage;

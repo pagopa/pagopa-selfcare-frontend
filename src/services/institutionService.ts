@@ -1,24 +1,29 @@
 import {BackofficeApi} from '../api/BackofficeClient';
-import {Delegation} from "../api/generated/portal/Delegation";
-import {ENV} from "../utils/env";
-import {InstitutionDetail} from "../api/generated/portal/InstitutionDetail";
-import {getBrokerDelegation as getBrokerDelegationMocked} from './__mocks__/institutionsService';
+import {DelegationResource} from '../api/generated/portal/DelegationResource';
+import {InstitutionDetailResource} from '../api/generated/portal/InstitutionDetailResource';
+import {getBrokerDelegationMock, getInstitutionsMock} from './__mocks__/institutionsService';
 
-
-export const getBrokerDelegation = (institutionId?: string | undefined, brokerId?: string | undefined, roles?: Array<string>): Promise<Array<Delegation>> => {
+export const getBrokerDelegation = (
+    institutionId?: string | undefined,
+    brokerId?: string | undefined,
+    roles?: Array<string>
+): Promise<DelegationResource> => {
     /* istanbul ignore if */
-    if (ENV.MOCK.SELFCARE) {
-        return getBrokerDelegationMocked();
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return getBrokerDelegationMock();
     } else {
-        return BackofficeApi.getBrokerDelegation(institutionId, brokerId, roles).then((resources) => resources);
+        return BackofficeApi.getBrokerDelegation(institutionId, brokerId, roles).then(
+            (resources) => resources
+        );
     }
 };
 
-
-export const getInstitutions = (taxCode: string | undefined): Promise<Array<InstitutionDetail>> => {
+export const getInstitutions = (
+    taxCode: string | undefined
+): Promise<InstitutionDetailResource> => {
     /* istanbul ignore if */
-    if (ENV.MOCK.SELFCARE) {
-        return {} as any;
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return getInstitutionsMock();
     } else {
         return BackofficeApi.getInstitutions(taxCode).then((resources) => resources);
     }

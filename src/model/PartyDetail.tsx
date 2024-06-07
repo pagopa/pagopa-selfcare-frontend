@@ -1,16 +1,14 @@
-import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
-
 export type PartyDetail = {
-  partyId: string;
-  externalId: string;
-  originId: string;
-  origin: string;
-  description: string;
-  digitalAddress: string;
-  address: string;
-  zipCode: string;
-  fiscalCode: string;
-  institutionType?: string;
+    partyId: string;
+    externalId: string;
+    originId: string;
+    origin: string;
+    description: string;
+    digitalAddress: string;
+    address: string;
+    zipCode: string;
+    fiscalCode: string;
+    institutionType?: string;
 };
 
 // export const institutionDetailResource2PartyDetail = (

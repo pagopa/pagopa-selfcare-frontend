@@ -1,10 +1,10 @@
 import withRetrievedValue from '@pagopa/selfcare-common-frontend/decorators/withRetrievedValue';
-import { useSelectedPartyProducts } from '../hooks/useSelectedPartyProducts';
-import { ProductModel } from '../model/Product';
-import withSelectedParty, { WithSelectedPartyProps } from './withSelectedParty';
+import {useSelectedPartyProducts} from '../hooks/useSelectedPartyProducts';
+import {ProductModel} from '../model/Product';
+import withSelectedParty, {WithSelectedPartyProps} from './withSelectedParty';
 
 export type WithSelectedPartyProductsProps = {
-  products: Array<ProductModel>;
+    products: Array<ProductModel>;
 } & WithSelectedPartyProps;
 
 /**
@@ -12,9 +12,9 @@ export type WithSelectedPartyProductsProps = {
  * Finally it will serve the prop "products" to the wrapped component
  */
 export default function withSelectedPartyProducts<T extends WithSelectedPartyProductsProps>(
-  WrappedComponent: React.ComponentType<T>
+    WrappedComponent: React.ComponentType<T>
 ): React.ComponentType<Omit<Omit<T, 'products' | 'reload'>, 'party' | 'reload'>> {
-  return withSelectedParty(
-    withRetrievedValue('products', useSelectedPartyProducts, WrappedComponent)
-  );
+    return withSelectedParty(
+        withRetrievedValue('products', useSelectedPartyProducts, WrappedComponent)
+    );
 }

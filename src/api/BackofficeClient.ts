@@ -3,16 +3,13 @@ import {appStateActions} from '@pagopa/selfcare-common-frontend/redux/slices/app
 import {storageTokenOps} from '@pagopa/selfcare-common-frontend/utils/storage';
 import {ReactNode} from 'react';
 import {
-    BundleCISubscriptionsMethodParams,
     BundleCISubscriptionsBodyRequest,
     BundleCiSubscriptionsDetailMethodParams,
+    BundleCISubscriptionsMethodParams,
 } from '../model/CommissionBundle';
 import {NodeOnSignInPSP} from '../model/Node';
 import {PSPDirectDTO} from '../model/PSP';
-import {
-    PaymentsReceiptsListMethodParams,
-    PaymentsReceiptsListRequestBody,
-} from '../model/PaymentsReceipts';
+import {PaymentsReceiptsListMethodParams, PaymentsReceiptsListRequestBody,} from '../model/PaymentsReceipts';
 import {ConfigurationStatus, StationOnCreation} from '../model/Station';
 import {store} from '../redux/store';
 import {extractResponse} from '../utils/client-utils';
@@ -31,11 +28,7 @@ import {CIBrokerDelegationPage} from './generated/portal/CIBrokerDelegationPage'
 import {CIBrokerStationPage} from './generated/portal/CIBrokerStationPage';
 import {CIBundlesResource} from './generated/portal/CIBundlesResource';
 import {ChannelCodeResource} from './generated/portal/ChannelCodeResource';
-import {
-    ChannelDetailsDto,
-    Payment_modelEnum,
-    ProtocolEnum,
-} from './generated/portal/ChannelDetailsDto';
+import {ChannelDetailsDto, Payment_modelEnum, ProtocolEnum,} from './generated/portal/ChannelDetailsDto';
 import {ChannelDetailsResource} from './generated/portal/ChannelDetailsResource';
 import {ChannelPspListResource} from './generated/portal/ChannelPspListResource';
 import {ChannelsResource} from './generated/portal/ChannelsResource';
@@ -83,16 +76,13 @@ import {TestStationResource} from './generated/portal/TestStationResource';
 import {Touchpoints} from './generated/portal/Touchpoints';
 import {UpdateCreditorInstitutionDto} from './generated/portal/UpdateCreditorInstitutionDto';
 import {WfespPluginConfs} from './generated/portal/WfespPluginConfs';
-import {
-    Redirect_protocolEnum,
-    WrapperChannelDetailsDto,
-} from './generated/portal/WrapperChannelDetailsDto';
+import {Redirect_protocolEnum, WrapperChannelDetailsDto,} from './generated/portal/WrapperChannelDetailsDto';
 import {WrapperChannelDetailsResource} from './generated/portal/WrapperChannelDetailsResource';
 import {WrapperChannelsResource} from './generated/portal/WrapperChannelsResource';
 import {WrapperEntities} from './generated/portal/WrapperEntities';
 import {WrapperStationDetailsDto} from './generated/portal/WrapperStationDetailsDto';
 import {WrapperStationsResource} from './generated/portal/WrapperStationsResource';
-import {WithDefaultsT, createClient} from './generated/portal/client';
+import {createClient, WithDefaultsT} from './generated/portal/client';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;

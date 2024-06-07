@@ -1,31 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import logger from 'redux-logger';
-import { appStateReducer } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
-import { userReducer } from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
-import { LOG_REDUX_ACTIONS } from '../utils/constants';
-import { partiesReducer } from './slices/partiesSlice';
-import { featureFlagsReducer } from './slices/featureFlagsSlice';
-import { bundleDetailsReducer } from './slices/bundleDetailsSlice';
-import { delegationDetailReducer } from './slices/delegationDetailSlice';
+import {appStateReducer} from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
+import {userReducer} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
+import {LOG_REDUX_ACTIONS} from '../utils/constants';
+import {partiesReducer} from './slices/partiesSlice';
+import {featureFlagsReducer} from './slices/featureFlagsSlice';
+import {bundleDetailsReducer} from './slices/bundleDetailsSlice';
+import {delegationDetailReducer} from './slices/delegationDetailSlice';
 
 const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
 
 export const createStore = () =>
-  configureStore({
-    reducer: {
-      parties: partiesReducer,
-      user: userReducer,
-      appState: appStateReducer,
-      featureFlags: featureFlagsReducer,
-      bundleDetails: bundleDetailsReducer,
-      delegationDetail: delegationDetailReducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-      additionalMiddlewares.reduce(
-        (array, middleware) => (middleware ? array.concat(middleware) : array),
-        getDefaultMiddleware({ serializableCheck: false })
-      ),
-  });
+    configureStore({
+        reducer: {
+            parties: partiesReducer,
+            user: userReducer,
+            appState: appStateReducer,
+            featureFlags: featureFlagsReducer,
+            bundleDetails: bundleDetailsReducer,
+            delegationDetail: delegationDetailReducer,
+        },
+        middleware: (getDefaultMiddleware) =>
+            additionalMiddlewares.reduce(
+                (array, middleware) => (middleware ? array.concat(middleware) : array),
+                getDefaultMiddleware({serializableCheck: false})
+            ),
+    });
 
 export const store = createStore();
 

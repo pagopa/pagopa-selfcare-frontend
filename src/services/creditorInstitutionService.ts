@@ -1,22 +1,22 @@
-import {BackofficeApi} from '../api/BackofficeClient';
-import {CreditorInstitutionContactsResource} from '../api/generated/portal/CreditorInstitutionContactsResource';
-import {CreditorInstitutionInfoResource} from '../api/generated/portal/CreditorInstitutionInfoResource';
-import {CreditorInstitutionsResource} from '../api/generated/portal/CreditorInstitutionsResource';
+import { BackofficeApi } from '../api/BackofficeClient';
+import { CreditorInstitutionContactsResource } from '../api/generated/portal/CreditorInstitutionContactsResource';
+import { CreditorInstitutionInfoResource } from '../api/generated/portal/CreditorInstitutionInfoResource';
+import { CreditorInstitutionsResource } from '../api/generated/portal/CreditorInstitutionsResource';
 import {
-    getAvailableCreditorInstitutionsForStationMock,
-    getCreditorInstitutionContactsMock,
-    getCreditorInstitutionssMock,
+  getAvailableCreditorInstitutionsForStationMock,
+  getCreditorInstitutionContactsMock,
+  getCreditorInstitutionssMock,
 } from './__mocks__/creditorInstitutionService';
 
 export const getCreditorInstitutionContacts = (
-    ciTaxCode: string,
-    institutionId: string
+  ciTaxCode: string,
+  institutionId: string
 ): Promise<CreditorInstitutionContactsResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getCreditorInstitutionContactsMock();
-    } else {
-        return BackofficeApi.getCreditorInstitutionContacts(ciTaxCode, institutionId);
-    }
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCreditorInstitutionContactsMock();
+  } else {
+    return BackofficeApi.getCreditorInstitutionContacts(ciTaxCode, institutionId);
+  }
 };
 
 export const getCreditorInstitutions = ({
@@ -43,12 +43,12 @@ export const getCreditorInstitutions = ({
 };
 
 export const getAvailableCreditorInstitutionsForStation = (
-    stationCode: string,
-    brokerId: string
+  stationCode: string,
+  brokerId: string
 ): Promise<CreditorInstitutionInfoResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getAvailableCreditorInstitutionsForStationMock();
-    } else {
-        return BackofficeApi.getAvailableCreditorInstitutionsForStation(stationCode, brokerId);
-    }
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getAvailableCreditorInstitutionsForStationMock();
+  } else {
+    return BackofficeApi.getAvailableCreditorInstitutionsForStation(stationCode, brokerId);
+  }
 };

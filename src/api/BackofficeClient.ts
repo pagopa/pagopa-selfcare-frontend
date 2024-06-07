@@ -1183,18 +1183,24 @@ export const BackofficeApi = {
     ciName,
     page,
     limit,
+    sorting = 'DESC',
+    orderBy = 'NAME',
   }: {
     ciTaxCode?: string;
     ciName?: string;
     page: number;
     limit: number;
+    sorting?: 'DESC' | 'ASC';
+    orderBy?: 'CODE' | 'NAME';
   }): Promise<CreditorInstitutionsResource> => {
     const result = await backofficeClient.getCreditorInstitutions({
       ciTaxCode,
       ciName,
       page,
       limit,
-      sorting: 'ASC',
+      enabled: true,
+      sorting,
+      orderBy,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

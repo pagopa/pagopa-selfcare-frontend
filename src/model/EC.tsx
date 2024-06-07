@@ -3,7 +3,6 @@ export type EC = {
     description: string;
     enabled: boolean;
     extended_fault_bean: boolean;
-  };
+};
   
 
-  

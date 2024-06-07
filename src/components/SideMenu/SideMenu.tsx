@@ -87,7 +87,7 @@ export default function SideMenu() {
                             icon={AttachFileIcon}
                             dataTestId="payment-notices-test"
                         />
-                    )}  
+                    )}
 
                     {userHasPermission('apikey') && orgIsBrokerSigned && (
                         <SidenavItem

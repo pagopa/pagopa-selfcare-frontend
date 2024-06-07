@@ -8,38 +8,38 @@ import {useTranslation} from 'react-i18next';
 import tosJson from '../../data/tos.json';
 
 export function TOS() {
-  const { t } = useTranslation();
-  const [htmlString, setHtmlString] = useState('');
+    const {t} = useTranslation();
+    const [htmlString, setHtmlString] = useState('');
 
-  useEffect(() => {
-    /* async function asyncFetchData() {
-      const resp = await axios.get(`${ENV.PUBLIC_URL}/data/it/tos.json`);
-      const html = getReplacedAssetsPaths(resp?.data.html as string);
-      setHtmlString(html);
-    }
+    useEffect(() => {
+        /* async function asyncFetchData() {
+          const resp = await axios.get(`${ENV.PUBLIC_URL}/data/it/tos.json`);
+          const html = getReplacedAssetsPaths(resp?.data.html as string);
+          setHtmlString(html);
+        }
 
-    asyncFetchData(); */
+        asyncFetchData(); */
 
-    setHtmlString(tosJson.html);
-  }, []);
+        setHtmlString(tosJson.html);
+    }, []);
 
-  return (
-    <React.Fragment>
-      <Grid container>
-        <Grid item xs={8} sx={{ px: 3, py: 3 }}>
-          <TitleBox
-            title={t('tos.title')}
-            mbTitle={2}
-            mtTitle={4}
-            mbSubTitle={6}
-            variantTitle="h4"
-            variantSubTitle="body1"
-          />
+    return (
+        <React.Fragment>
+            <Grid container>
+                <Grid item xs={8} sx={{px: 3, py: 3}}>
+                    <TitleBox
+                        title={t('tos.title')}
+                        mbTitle={2}
+                        mtTitle={4}
+                        mbSubTitle={6}
+                        variantTitle="h4"
+                        variantSubTitle="body1"
+                    />
 
-{/*           <div dangerouslySetInnerHTML={{ __html: htmlString }} /> */}
-         <div dangerouslySetInnerHTML={{ __html: t(`general.maintenancePageText`) }} />
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
+                    {/*           <div dangerouslySetInnerHTML={{ __html: htmlString }} /> */}
+                    <div dangerouslySetInnerHTML={{__html: t(`general.maintenancePageText`)}}/>
+                </Grid>
+            </Grid>
+        </React.Fragment>
+    );
 }

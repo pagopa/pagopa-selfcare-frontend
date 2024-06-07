@@ -8,15 +8,15 @@ import {MemoryRouter, Route} from 'react-router-dom';
 import {createStore} from '../../../../redux/store';
 import NodeSignInPSPForm from '../NodeSignInPSPForm';
 import {
-  brokerOrPspDetailsResource_PSPAndBroker,
-  brokerOrPspDetailsResource_PSPOnly
+    brokerOrPspDetailsResource_PSPAndBroker,
+    brokerOrPspDetailsResource_PSPOnly
 } from '../../../../services/__mocks__/nodeService';
 import {
-  pspAdminSignedDirect,
-  pspAdminSignedUndirect,
-  pspAdminUnsigned,
+    pspAdminSignedDirect,
+    pspAdminSignedUndirect,
+    pspAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
-import { BrokerOrPspDetailsResource } from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
+import {BrokerOrPspDetailsResource} from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;

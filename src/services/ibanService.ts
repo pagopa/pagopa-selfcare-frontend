@@ -2,7 +2,7 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {Ibans} from "../api/generated/portal/Ibans";
 import {Iban} from "../api/generated/portal/Iban";
 import {IbanCreate} from "../api/generated/portal/IbanCreate";
-import { BrokerECExportStatus } from '../api/generated/portal/BrokerECExportStatus';
+import {BrokerECExportStatus} from '../api/generated/portal/BrokerECExportStatus';
 import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,

@@ -118,14 +118,14 @@ export const permissions = {
         ROLE.EC_DIRECT_OPERATOR,
         ROLE.PT_EC_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
-        ROLE.PAGOPA_OPERATOR,       
+        ROLE.PAGOPA_OPERATOR,
     ],
     "payment-notices-addedit": [
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,
         ROLE.PT_EC_OPERATOR,
         ROLE.PT_PSPEC_OPERATOR,
-        ROLE.PAGOPA_OPERATOR,       
+        ROLE.PAGOPA_OPERATOR,
     ],
 };
 

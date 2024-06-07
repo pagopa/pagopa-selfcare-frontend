@@ -4,19 +4,17 @@
  */
 /* eslint-disable  */
 
-import { withoutUndefinedValues } from "@pagopa/ts-commons/lib/types";
+import {withoutUndefinedValues} from "@pagopa/ts-commons/lib/types";
 import {
+  createFetchRequestForApi,
+  ReplaceRequestParams,
   RequestParams,
   TypeofApiCall,
-  TypeofApiParams,
-  createFetchRequestForApi,
-  ReplaceRequestParams
+  TypeofApiParams
 } from "@pagopa/ts-commons/lib/requests";
-import { identity } from "fp-ts/lib/function";
+import {identity} from "fp-ts/lib/function";
 
-import {
-  UpdateInstitutionsT,
-  updateInstitutionsDefaultDecoder} from "./requestTypes";
+import {updateInstitutionsDefaultDecoder, UpdateInstitutionsT} from "./requestTypes";
 
 // This is a placeholder for undefined when dealing with object keys
 // Typescript doesn't perform well when narrowing a union type which includes string and undefined
@@ -24,12 +22,12 @@ import {
 // We use this as a placeholder for type parameters indicating "no key"
 type __UNDEFINED_KEY = "_____";
 
-export type ApiOperation = 
-  TypeofApiCall<UpdateInstitutionsT>;
+export type ApiOperation =
+    TypeofApiCall<UpdateInstitutionsT>;
 
 export type ParamKeys = keyof (
-  TypeofApiParams<UpdateInstitutionsT>
-);
+    TypeofApiParams<UpdateInstitutionsT>
+    );
 
 /**
  * Defines an adapter for TypeofApiCall which omit one or more parameters in the signature
@@ -37,13 +35,13 @@ export type ParamKeys = keyof (
  * @param K the parameter to omit. undefined means no parameters will be omitted
  */
 export type OmitApiCallParams<
-  ApiT,
-  K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
+    ApiT,
+    K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
 > = (
-  op: TypeofApiCall<ApiT>
+    op: TypeofApiCall<ApiT>
 ) => K extends __UNDEFINED_KEY
-  ? TypeofApiCall<ApiT>
-  : TypeofApiCall<ReplaceRequestParams<ApiT, Omit<RequestParams<ApiT>, K>>>;
+    ? TypeofApiCall<ApiT>
+    : TypeofApiCall<ReplaceRequestParams<ApiT, Omit<RequestParams<ApiT>, K>>>;
 
 /**
  * Defines an adapter for TypeofApiCall which omit one or more parameters in the signature
@@ -51,10 +49,10 @@ export type OmitApiCallParams<
  * @param K the parameter to omit. undefined means no parameters will be omitted
  */
 export type WithDefaultsT<
-  K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
+    K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
 > = OmitApiCallParams<
-  | UpdateInstitutionsT,
-  K
+    | UpdateInstitutionsT,
+    K
 >;
 
 /**
@@ -62,16 +60,16 @@ export type WithDefaultsT<
  * @param K name of the parameters that the Clients masks from the operations
  */
 export type Client<
-  K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
+    K extends ParamKeys | __UNDEFINED_KEY = __UNDEFINED_KEY
 > = K extends __UNDEFINED_KEY
-  ? {
+    ? {
         readonly updateInstitutions: TypeofApiCall<UpdateInstitutionsT>;
     }
-  : {
+    : {
         readonly updateInstitutions: TypeofApiCall<
             ReplaceRequestParams<
-            UpdateInstitutionsT,
-            Omit<RequestParams<UpdateInstitutionsT>, K>
+                UpdateInstitutionsT,
+                Omit<RequestParams<UpdateInstitutionsT>, K>
             >
         >;
     };
@@ -86,75 +84,75 @@ export type Client<
  * @returns a collection of api operations
  */
 export function createClient<K extends ParamKeys>(params: {
-  baseUrl: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchApi: typeof fetch;
-  withDefaults: WithDefaultsT<K>;
-  basePath?: string;
+    baseUrl: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchApi: typeof fetch;
+    withDefaults: WithDefaultsT<K>;
+    basePath?: string;
 }): Client<K>;
 export function createClient(params: {
-  baseUrl: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchApi: typeof fetch;
-  withDefaults?: undefined;
-  basePath?: string;
+    baseUrl: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchApi: typeof fetch;
+    withDefaults?: undefined;
+    basePath?: string;
 }): Client;
 export function createClient<K extends ParamKeys>({
-  baseUrl,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchApi,
-  withDefaults,
-  basePath = "/"
-}: {
-  baseUrl: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchApi: typeof fetch;
-  withDefaults?: WithDefaultsT<K>;
-  basePath?: string;
+                                                      baseUrl,
+                                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                      fetchApi,
+                                                      withDefaults,
+                                                      basePath = "/"
+                                                  }: {
+    baseUrl: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fetchApi: typeof fetch;
+    withDefaults?: WithDefaultsT<K>;
+    basePath?: string;
 }) {
-  const options = {
-    baseUrl,
-    fetchApi
-  };
+    const options = {
+        baseUrl,
+        fetchApi
+    };
 
-  const updateInstitutionsT: ReplaceRequestParams<
-    UpdateInstitutionsT,
-    RequestParams<UpdateInstitutionsT>
-  > = {
-    method: "post",
+    const updateInstitutionsT: ReplaceRequestParams<
+        UpdateInstitutionsT,
+        RequestParams<UpdateInstitutionsT>
+    > = {
+        method: "post",
 
-    // There is a well-known issue about fetch and Content-Type header when it comes to add multipart/form-data files.
-    //  reference: https://github.com/github/fetch/issues/505#issuecomment-293064470
-    // The solution is to skip the Content-Type header and let fetch add it for us.
-    // @ts-ignore as IRequestType would require something
-    headers: ({ ["JWT"]: JWT }) => ({
-      Authorization: `Bearer ${JWT}`
-    }),
-    response_decoder: updateInstitutionsDefaultDecoder(),
-    url: ({}) => `${basePath}/notice/institutions/data`,
+        // There is a well-known issue about fetch and Content-Type header when it comes to add multipart/form-data files.
+        //  reference: https://github.com/github/fetch/issues/505#issuecomment-293064470
+        // The solution is to skip the Content-Type header and let fetch add it for us.
+        // @ts-ignore as IRequestType would require something
+        headers: ({["JWT"]: JWT}) => ({
+            Authorization: `Bearer ${JWT}`
+        }),
+        response_decoder: updateInstitutionsDefaultDecoder(),
+        url: ({}) => `${basePath}/notice/institutions/data`,
 
-    body: ({ ["body"]: body, ["file"]: file }) => {
-      if (typeof window === "undefined")
-        throw new Error(
-          "File upload is only support inside a browser runtime envoronment"
-        );
-      const formData = new FormData();
-      formData.append("institutions-data", body);
-      if (file) {
-        formData.append("file", file);
-      }
-      return formData;
-    },
+        body: ({["body"]: body, ["file"]: file}) => {
+            if (typeof window === "undefined")
+                throw new Error(
+                    "File upload is only support inside a browser runtime envoronment"
+                );
+            const formData = new FormData();
+            formData.append("institutions-data", body);
+            if (file) {
+                formData.append("file", file);
+            }
+            return formData;
+        },
 
-    query: () => withoutUndefinedValues({})
-  };
-  const updateInstitutions: TypeofApiCall<UpdateInstitutionsT> = createFetchRequestForApi(
-    updateInstitutionsT,
-    options
-  );
+        query: () => withoutUndefinedValues({})
+    };
+    const updateInstitutions: TypeofApiCall<UpdateInstitutionsT> = createFetchRequestForApi(
+        updateInstitutionsT,
+        options
+    );
 
-  return {
-    updateInstitutions: (withDefaults || identity)(updateInstitutions)
-  };
-  
+    return {
+        updateInstitutions: (withDefaults || identity)(updateInstitutions)
+    };
+
 }

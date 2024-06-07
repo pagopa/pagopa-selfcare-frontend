@@ -1174,7 +1174,7 @@ export const BackofficeApi = {
       ciName,
       page,
       limit,
-      sorting: "ASC"
+      sorting: 'ASC',
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1324,6 +1324,26 @@ export const BackofficeApi = {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createCIBundleOffers: async ({
+    idBundle,
+    pspTaxCode,
+    bundleName,
+    ciTaxCodeList,
+  }: {
+    idBundle: string;
+    pspTaxCode: string;
+    bundleName: string;
+    ciTaxCodeList: Array<string>;
+  }): Promise<void> => {
+    const result = await backofficeClient.createCIBundleOffers({
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      bundleName,
+      body: { ciFiscalCodeList: ciTaxCodeList },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

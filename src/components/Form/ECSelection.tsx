@@ -1,20 +1,37 @@
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { Autocomplete, Box, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  CircularProgress,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { GridSearchIcon } from '@mui/x-data-grid';
 import { PartyAccountItem } from '@pagopa/mui-italia';
 import { useTranslation } from 'react-i18next';
 import { CreditorInstitutionInfo } from '../../api/generated/portal/CreditorInstitutionInfo';
+import { CreditorInstitutionResource } from '../../api/generated/portal/CreditorInstitutionResource';
+
+type CreditorInstitutionGeneric = CreditorInstitutionInfo | CreditorInstitutionResource;
 
 type Props = {
-  availableEC: Array<CreditorInstitutionInfo>;
-  selectedEC: CreditorInstitutionInfo | undefined;
-  onECSelectionChange: (selectedEC: CreditorInstitutionInfo | undefined) => void;
+  availableEC: Array<CreditorInstitutionGeneric>;
+  selectedEC: CreditorInstitutionGeneric | undefined;
+  onECSelectionChange: (selectedEC: CreditorInstitutionGeneric | undefined) => void;
+  loading?: boolean;
+  onChangeInput?: (event: any) => void;
+  serverSide?: boolean;
 };
 
 export default function ECSelection({
   availableEC,
   selectedEC,
   onECSelectionChange,
+  loading,
+  onChangeInput,
+  serverSide,
 }: Readonly<Props>) {
   const { t } = useTranslation();
 
@@ -22,15 +39,20 @@ export default function ECSelection({
     <Grid container item direction="column" display="flex" justifyContent="center" xs={12}>
       {selectedEC === undefined && (
         <Autocomplete
+          noOptionsText={t('general.noOptions')}
+          loadingText={t('general.loading')}
           id="ec-selection"
           data-testid="ec-selection-id-test"
-          disabled={availableEC.length === 0}
+          disabled={serverSide ? false : availableEC.length === 0}
           value={selectedEC}
-          onChange={(event, newSelecteCI: CreditorInstitutionInfo | null) => {
+          loading={loading}
+          onChange={(event, newSelecteCI: CreditorInstitutionGeneric | null) => {
             onECSelectionChange(newSelecteCI ?? undefined);
           }}
+          onInputChange={onChangeInput}
           options={availableEC}
-          getOptionLabel={(optionEC: CreditorInstitutionInfo) => optionEC?.business_name ?? ''}
+          filterOptions={serverSide ? (x) => x : undefined}
+          getOptionLabel={(optionEC: CreditorInstitutionGeneric) => optionEC?.business_name ?? ''}
           sx={{ width: '100%' }}
           renderInput={(params) => (
             <TextField
@@ -43,6 +65,9 @@ export default function ECSelection({
                     <GridSearchIcon />
                   </InputAdornment>
                 ),
+                endAdornment: (
+                  <>{loading ? <CircularProgress color="inherit" size={20} /> : null}</>
+                ),
               }}
             />
           )}
@@ -54,7 +79,7 @@ export default function ECSelection({
               key={(props as any)['data-option-index']}
             >
               <PartyAccountItem
-                partyName={option?.business_name ? option.business_name : ''}
+                partyName={option?.business_name ?? ''}
                 maxCharactersNumberMultiLine={20}
                 noWrap={false}
               />
@@ -76,7 +101,7 @@ export default function ECSelection({
           <Box display="flex">
             <Box width="100%" data-testid="selected-ec-item-id-test">
               <PartyAccountItem
-                partyName={selectedEC?.business_name ? selectedEC.business_name : ''}
+                partyName={selectedEC?.business_name ?? ''}
                 maxCharactersNumberMultiLine={20}
                 noWrap={false}
               />

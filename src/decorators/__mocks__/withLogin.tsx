@@ -1,6 +1,9 @@
 import {useEffect} from 'react';
 import {User} from '@pagopa/selfcare-common-frontend/model/User';
-import {userActions, userSelectors,} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
+import {
+    userActions,
+    userSelectors,
+} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 import {useAppDispatch} from '../../redux/hooks';
 import {RootState} from '../../redux/store';

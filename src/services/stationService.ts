@@ -15,6 +15,7 @@ import {WrapperStationDetailsDto} from '../api/generated/portal/WrapperStationDe
 import {WrapperStationsResource} from '../api/generated/portal/WrapperStationsResource';
 import {ConfigurationStatus, StationOnCreation} from '../model/Station';
 import {
+    updateStation as UpdateStationMocked,
     associateEcToStation as associateEcToStationMocked,
     createStationMocked,
     createWrapperStation as createStationWrap,
@@ -25,11 +26,10 @@ import {
     getStationCodeMocked,
     getStationCodeV2Mocked,
     getStationDetail as getStationDetailMock,
-    getStations as getStationsMocked,
-    getStationsMerged as getStationsMergedMocked,
     getWrapperStation as getStationWrap,
+    getStationsMerged as getStationsMergedMocked,
+    getStations as getStationsMocked,
     testStation as testStationMocked,
-    updateStation as UpdateStationMocked,
     updateWrapperStation as updateStationWrap,
     updateWrapperStationByOpt as updateStationWrapByOpt,
 } from '../services/__mocks__/stationService';

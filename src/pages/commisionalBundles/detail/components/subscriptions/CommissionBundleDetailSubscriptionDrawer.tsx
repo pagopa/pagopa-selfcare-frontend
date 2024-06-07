@@ -1,13 +1,17 @@
 import {Divider, Skeleton, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import React from 'react';
-import {TFunction, useTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {TFunction} from 'react-i18next';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {CIBundleFee} from '../../../../../api/generated/portal/CIBundleFee';
 import {getSpecificBuiltInData} from '../../../../../services/bundleService';
 import {formatCurrencyEur} from '../../../../../utils/common-utils';
 import {PaddedDrawer} from '../../../../../components/PaddedDrawer';
-import {BundleCiSubscriptionDetailModel, SubscriptionStateType,} from '../../../../../model/CommissionBundle';
+import {
+    BundleCiSubscriptionDetailModel,
+    SubscriptionStateType,
+} from '../../../../../model/CommissionBundle';
 import {colorType, renderStatusChip} from '../../../../../components/Table/TableUtils';
 
 export const CommissionBundleDrawerSkeletonComponent = () => (

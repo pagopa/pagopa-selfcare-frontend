@@ -1,6 +1,6 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
-import {cleanup, render, screen, waitFor} from '@testing-library/react';
+import {cleanup, render, waitFor, screen} from '@testing-library/react';
 import React from 'react';
 import {Router} from 'react-router-dom';
 import {store} from '../../../../redux/store';

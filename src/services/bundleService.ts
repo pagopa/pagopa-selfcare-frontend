@@ -3,7 +3,10 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {BundleCreateResponse} from '../api/generated/portal/BundleCreateResponse';
 import {BundleRequest} from '../api/generated/portal/BundleRequest';
 import {Touchpoints} from '../api/generated/portal/Touchpoints';
-import {BundleCiSubscriptionsDetailMethodParams, BundleCISubscriptionsMethodParams,} from '../model/CommissionBundle';
+import {
+    BundleCiSubscriptionsDetailMethodParams,
+    BundleCISubscriptionsMethodParams,
+} from '../model/CommissionBundle';
 import {PublicBundleRequest} from '../api/generated/portal/PublicBundleRequest';
 import {PSPBundleResource} from '../api/generated/portal/PSPBundleResource';
 import {CIBundlesResource} from '../api/generated/portal/CIBundlesResource';
@@ -11,11 +14,11 @@ import {PSPBundlesResource} from '../api/generated/portal/PSPBundlesResource';
 import {
     createCommissionBundle,
     deletePSPBundle as deletePSPBundleMock,
-    getBundleCISubscriptionsDetailMock,
-    getBundleCISubscriptionsMock,
     getCommissionBundleCi,
     getCommissionBundleDetails,
     getCommissionBundlePsp,
+    getBundleCISubscriptionsDetailMock,
+    getBundleCISubscriptionsMock,
     getTouchpoints as getTouchpointsMock,
     updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';

@@ -1,5 +1,9 @@
 import {WrapperStatusEnum} from '../api/generated/portal/StationDetailResource';
-import {Protocol4ModEnum, ProtocolEnum, RedirectProtocolEnum,} from '../api/generated/portal/StationDetailsDto';
+import {
+    Protocol4ModEnum,
+    ProtocolEnum,
+    RedirectProtocolEnum,
+} from '../api/generated/portal/StationDetailsDto';
 
 export enum StationFormAction {
     Create = 'create',

@@ -2,11 +2,14 @@ import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, render} from '@testing-library/react';
 import React from 'react';
-import {MemoryRouter, Route} from 'react-router-dom';
+import {generatePath, MemoryRouter, Route, Router} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import AddEditChannelPage from '../AddEditChannelPage';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
+import ROUTES from '../../../../routes';
+import {FormAction} from '../../../../model/Channel';
+import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import {mockedChannel} from '../../../../services/__mocks__/channelService';
 
 let getChannelDetailMocked: jest.SpyInstance;

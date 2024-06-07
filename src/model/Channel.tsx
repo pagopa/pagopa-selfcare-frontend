@@ -1,4 +1,10 @@
-import {ChannelDetailsDto,} from '../api/generated/portal/ChannelDetailsDto';
+import {
+    ChannelDetailsDto,
+    Payment_modelEnum,
+    ProtocolEnum,
+    Redirect_protocolEnum,
+} from '../api/generated/portal/ChannelDetailsDto';
+import {StatusEnum} from '../api/generated/portal/WrapperChannelDetailsDto';
 
 export type ChannelStatus = 'ACTIVE' | 'REVISION' | 'NEEDCORRECTION';
 

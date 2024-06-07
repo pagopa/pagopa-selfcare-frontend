@@ -528,7 +528,7 @@
         "connection": "Connessione"
       },
       "rows": {
-        "async":"Asincrona",
+        "async": "Asincrona",
         "sync": "Sincrona"
       }
     },
@@ -675,7 +675,7 @@
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
       "connectionType": {
-        "label":"Tipo di connessione",
+        "label": "Tipo di connessione",
         "sync": "Sincrona",
         "async": "Asincrona"
       },
@@ -942,7 +942,7 @@
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
           "title": "Richiesta attivazione pacchetto",
-          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail." 
+          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",
@@ -1028,7 +1028,7 @@
           }
         }
       },
-      "requestDrawer":  {
+      "requestDrawer": {
         "businessName": "Nome Ente",
         "taxCode": "Codice Fiscale",
         "state": "Stato",
@@ -1348,7 +1348,7 @@
     "noDataLabel": "Nessun risultato",
     "exit": "Esci",
     "showMore": "Mostra di più",
-    "discoverMore" : "Scopri di più",
+    "discoverMore": "Scopri di più",
     "search": "Cerca",
     "filter": "Filtra",
     "removeFilter": "Rimuovi filtri",

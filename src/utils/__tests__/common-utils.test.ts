@@ -1,4 +1,4 @@
-import { isValidArray } from '../common-utils';
+import {isValidArray} from '../common-utils';
 
 test("isValidArray should return true", () => {
     const array = ["element1"];

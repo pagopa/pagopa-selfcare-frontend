@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useTranslation, Trans} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {Box} from '@mui/system';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useFormik} from 'formik';
@@ -15,15 +15,11 @@ import {theme} from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_PSP_AVAILABLE} from '../../../utils/constants';
 import {addCurrentPSP} from '../../../utils/channel-utils';
-import {
-    associatePSPtoChannel,
-    getChannelDetail,
-} from '../../../services/channelService';
+import {associatePSPtoChannel, getChannelDetail,} from '../../../services/channelService';
 import {getBrokerDelegation} from '../../../services/institutionService';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
-import {Party} from '../../../model/Party';
 import {Delegation} from '../../../api/generated/portal/Delegation';
 import {getBrokerAndPspDetails} from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';
@@ -55,79 +51,81 @@ function ChannelAssociatePSPPage() {
             generatePath(ROUTES.CHANNEL_PSP_LIST, {
                 channelId,
             })
-          )
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    }
-  };
+        );
+    };
 
-  useEffect(() => {
-    setLoading(true);
-    if (selectedParty) {
-      getChannelDetail(channelId)
-        .then((channel) => setChannelDetail(channel))
-        .catch((reason) => console.error(reason));
-      getBrokerDelegation( undefined, selectedParty?.partyId, ["PSP"])
-        .then((data) => {
-          if (data?.delegation_list && selectedParty) {
-            // A PSP that is a broker can associate itself to the channel
-            const availablePSPfromService = addCurrentPSP([...data.delegation_list], selectedParty);
+    const handleSubmit = async () => {
+        if (selectedPSP && selectedPSP.institution_id) {
+            setLoading(true);
 
-            setAvailablePSP(availablePSPfromService);
-          }
-        })
-        .catch((reason) => console.error(reason))
-        .finally(() => setLoading(false));
-    }
+            const pspToBeAssociatedDetails = selectedPSP.tax_code ? await getBrokerAndPspDetails(selectedPSP.tax_code) : null;
 
-    setLoading(false);
-  }, [selectedParty]);
+            if (pspToBeAssociatedDetails?.paymentServiceProviderDetailsResource?.psp_code) {
+                await associatePSPtoChannel(
+                    channelId,
+                    selectedPSP!.tax_code as string,
+                    (channelDetail?.payment_types ?? []) as any
+                )
+                    .then((_data) => {
+                        history.push(
+                            generatePath(ROUTES.CHANNEL_PSP_LIST, {
+                                channelId,
+                            }),
+                            {
+                                alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
+                            }
+                        );
+                    })
+                    .catch((reason) =>
+                        addError({
+                            id: 'ASSOCIATE_PSP',
+                            blocking: false,
+                            error: reason,
+                            techDescription: `An error occurred while psp association`,
+                            toNotify: true,
+                            displayableTitle: t('general.errorTitle'),
+                            displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
+                            component: 'Toast',
+                        })
+                    )
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            }
+        }
+    };
 
-  return (
-    <Box
-      justifyContent="center"
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      px={3}
-      mt={3}
-      sx={{ width: '100%', backgroundColor: 'transparent !important' }}
-    >
-      <Box justifyContent="center">
-        <Grid item xs={12} mb={1} display="flex" justifyContent="center">
-          <Typography variant="h3">
-            <Trans i18nKey="channelAssociatePSPPage.associationForm.title">Associa PSP</Trans>
-          </Typography>
-        </Grid>
-        <Grid item xs={12} mb={4} display="flex" justifyContent="center">
-          <Typography variant="body1" align="center">
-            <Trans i18nKey="channelAssociatePSPPage.associationForm.subTitle">
-              Digita il nome del nuovo PSP da associare al canale
-            </Trans>{' '}
-            <Typography component="span" fontWeight={'fontWeightMedium'}>
-              {channelId}
-            </Typography>
-          </Typography>
-        </Grid>
-      </Box>
-      <Box
-        display="flex"
-        justifyContent="center"
-        flexGrow={0}
-        mb={1}
-        sx={{ width: '100%', maxWidth: '684px' }}
-      >
-        <Paper
-          elevation={8}
-          sx={{
-            minWidth: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: theme.spacing(2),
-          }}
+    useEffect(() => {
+        setLoading(true);
+        if (selectedParty) {
+            getChannelDetail(channelId)
+                .then((channel) => setChannelDetail(channel))
+                .catch((reason) => console.error(reason));
+            getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])
+                .then((data) => {
+                    if (data?.delegation_list && selectedParty) {
+                        // A PSP that is a broker can associate itself to the channel
+                        const availablePSPfromService = addCurrentPSP([...data.delegation_list], selectedParty);
+
+                        setAvailablePSP(availablePSPfromService);
+                    }
+                })
+                .catch((reason) => console.error(reason))
+                .finally(() => setLoading(false));
+        }
+
+        setLoading(false);
+    }, [selectedParty]);
+
+    return (
+        <Box
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            flexDirection="column"
+            px={3}
+            mt={3}
+            sx={{width: '100%', backgroundColor: 'transparent !important'}}
         >
             <Box justifyContent="center">
                 <Grid item xs={12} mb={1} display="flex" justifyContent="center">

@@ -161,57 +161,47 @@ export const BundleTaxonomiesDrawer = ({
             .finally(() => setLoading(false));
     }, []);
 
-  useEffect(() => {
-    getTaxonomyGroups()
-      .then((data) => {
-        if (data?.taxonomyGroups) {
-          setTaxonomyGroups([...data.taxonomyGroups]);
-        }
-      })
-      .catch((reason) =>
-        addError({
-          id: 'GET_TAXONOMY_GROUP_LIST',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while retrieving taxonomy groups list`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
-          ),
-          component: 'Toast',
-        })
-      )
-      .finally(() => setLoading(false));
-  }, []);
+    function getTaxonomiesListByGroup() {
+        setLoading(true);
+        setStep(2);
+        deselectAll();
+        getTaxonomies(
+            selectedEC?.ecTypeCode,
+            selectedMacroArea?.macroAreaEcProgressive,
+            searchText,
+            true
+        )
+            .then((data) => {
+                if (data?.taxonomies) {
+                    setTaxonomies([...data.taxonomies]);
+                    const map = new Map<string, boolean>();
+                    data.taxonomies.forEach((item) => map.set(item.specific_built_in_data, false));
+                    setCheckedTaxonomies(map);
+                    setShowSearchError(searchText && data.taxonomies.length === 0 ? true : false);
+                }
+            })
+            .catch((reason) =>
+                addError({
+                    id: 'GET_TAXONOMIES_LIST',
+                    blocking: false,
+                    error: reason,
+                    techDescription: `An error occurred while retrieving taxonomy list`,
+                    toNotify: true,
+                    displayableTitle: t('general.errorTitle'),
+                    displayableDescription: t(
+                        'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
+                    ),
+                    component: 'Toast',
+                })
+            )
+            .finally(() => setLoading(false));
+    }
 
     useEffect(() => {
         if (selectedEC && selectedMacroArea) {
             getTaxonomiesListByGroup();
         }
-      })
-      .catch((reason) =>
-        addError({
-          id: 'GET_TAXONOMIES_LIST',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while retrieving taxonomy list`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(
-            'commissionBundlesPage.list.error.taxonomiesErrorMessageDesc'
-          ),
-          component: 'Toast',
-        })
-      )
-      .finally(() => setLoading(false));
-  }
-
-  useEffect(() => {
-    if (selectedEC && selectedMacroArea) {
-      getTaxonomiesListByGroup();
-    }
-  }, [selectedMacroArea]);
+    }, [selectedMacroArea]);
 
     useEffect(() => {
         if (searchText !== undefined) {

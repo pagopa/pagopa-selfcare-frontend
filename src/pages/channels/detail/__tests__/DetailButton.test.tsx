@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter, Route, Router} from 'react-router-dom';
+import {MemoryRouter, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {mockedPaymentTypes} from '../../../../services/__mocks__/configurationService';
 import {StatusEnum} from '../../../../api/generated/portal/WrapperChannelDetailsDto';

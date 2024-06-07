@@ -15,7 +15,6 @@ import {WrapperStationDetailsDto} from '../api/generated/portal/WrapperStationDe
 import {WrapperStationsResource} from '../api/generated/portal/WrapperStationsResource';
 import {ConfigurationStatus, StationOnCreation} from '../model/Station';
 import {
-    updateStation as UpdateStationMocked,
     associateEcToStation as associateEcToStationMocked,
     createStationMocked,
     createWrapperStation as createStationWrap,
@@ -26,10 +25,11 @@ import {
     getStationCodeMocked,
     getStationCodeV2Mocked,
     getStationDetail as getStationDetailMock,
-    getWrapperStation as getStationWrap,
-    getStationsMerged as getStationsMergedMocked,
     getStations as getStationsMocked,
+    getStationsMerged as getStationsMergedMocked,
+    getWrapperStation as getStationWrap,
     testStation as testStationMocked,
+    updateStation as UpdateStationMocked,
     updateWrapperStation as updateStationWrap,
     updateWrapperStationByOpt as updateStationWrapByOpt,
 } from '../services/__mocks__/stationService';
@@ -192,23 +192,23 @@ export const updateWrapperStationToCheckUpdate = (
 };
 
 export const updateWrapperStationWithOperatorReview = ({
-  stationCode,
-  ciTaxCode,
-  note,
-}: {
-  stationCode: string;
-  ciTaxCode: string;
-  note: string;
+                                                           stationCode,
+                                                           ciTaxCode,
+                                                           note,
+                                                       }: {
+    stationCode: string;
+    ciTaxCode: string;
+    note: string;
 }): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return updateStationWrapByOpt();
-  } else {
-    return BackofficeApi.updateWrapperStationWithOperatorReview({
-      stationCode,
-      ciTaxCode,
-      note,
-    }).then((resources) => resources);
-  }
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return updateStationWrapByOpt();
+    } else {
+        return BackofficeApi.updateWrapperStationWithOperatorReview({
+            stationCode,
+            ciTaxCode,
+            note,
+        }).then((resources) => resources);
+    }
 };
 
 export const updateStation = (
@@ -231,13 +231,13 @@ export const getStationDetail = (stationId: string): Promise<StationDetailResour
 };
 
 export const getCreditorInstitutionSegregationCodes = (ecCode: string, targetCITaxCode: string): Promise<AvailableCodes> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getCreditorInstitutionSegregationcodesMocked(ecCode, targetCITaxCode);
-  } else {
-    return BackofficeApi.getCreditorInstitutionSegregationCodes(ecCode, targetCITaxCode).then(
-      (resource) => resource
-    );
-  }
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return getCreditorInstitutionSegregationcodesMocked(ecCode, targetCITaxCode);
+    } else {
+        return BackofficeApi.getCreditorInstitutionSegregationCodes(ecCode, targetCITaxCode).then(
+            (resource) => resource
+        );
+    }
 };
 
 export const testStation = (

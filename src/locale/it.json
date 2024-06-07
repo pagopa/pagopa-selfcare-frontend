@@ -976,7 +976,9 @@
           "warningMessage": "Non è stato possibile caricare {{count}} destinatari su {{total}}",
           "errorMessage": "Non è stato caricato nessun destinatario"
         },
-        "errorMessage": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati"
+        "errorMessageSendOffer": "Non è stato possibile inviare la richiesta di adesione ai destinatari selezionati",
+        "errorMessageRetrieveList": "Non è stato possibile recuperare la lista degli enti creditori",
+        "errorAutocomplete": "L'ente è gia presente nella lista dei destinatari"
       },
       "subscriptionsTable": {
         "businessName": "Nome Ente",
@@ -1423,7 +1425,9 @@
     "max": "Massimo",
     "maintenanceAlert": "Il portale andrà in manutenzione nei giorni successivi",
     "maintenancePageText": "Il portale è in manutenzione",
-    "rejectedFile": "Tipo di file non supportato"
+    "rejectedFile": "Tipo di file non supportato",
+    "noOptions": "Nessun elemento",
+    "loading": "Caricamento..."
   },
   "ANY": "Tutti"
 }

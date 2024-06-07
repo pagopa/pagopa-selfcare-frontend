@@ -23,6 +23,7 @@ type Props = {
   loading?: boolean;
   onChangeInput?: (event: any) => void;
   serverSide?: boolean;
+  errorMessage?: string;
 };
 
 export default function ECSelection({
@@ -32,6 +33,7 @@ export default function ECSelection({
   loading,
   onChangeInput,
   serverSide,
+  errorMessage,
 }: Readonly<Props>) {
   const { t } = useTranslation();
 
@@ -57,6 +59,8 @@ export default function ECSelection({
           renderInput={(params) => (
             <TextField
               {...params}
+              error={errorMessage ? true : false}
+              helperText={errorMessage}
               label={t('stationAssociateECPage.associationForm.ECSelectionInputPlaceholder')}
               InputProps={{
                 ...params.InputProps,

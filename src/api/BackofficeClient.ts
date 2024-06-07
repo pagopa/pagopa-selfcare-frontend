@@ -1174,6 +1174,7 @@ export const BackofficeApi = {
       ciName,
       page,
       limit,
+      sorting: "ASC"
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

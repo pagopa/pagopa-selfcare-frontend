@@ -1,5 +1,8 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
-import {mockedDelegatedPSP, mockedInstitutionDetailResource,} from '../__mocks__/institutionsService';
+import {
+    mockedDelegatedPSP,
+    mockedInstitutionDetailResource,
+} from '../__mocks__/institutionsService';
 import {getBrokerDelegation, getInstitutions} from '../institutionService';
 
 describe('InstitutionService test mocked', () => {

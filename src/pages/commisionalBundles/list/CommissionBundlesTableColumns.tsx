@@ -9,9 +9,16 @@ import ROUTES from '../../../routes';
 import {bundleDetailsActions} from '../../../redux/slices/bundleDetailsSlice';
 import {useAppDispatch} from '../../../redux/hooks';
 import {dateDifferenceInDays, datesAreOnSameDay} from '../../../utils/common-utils';
-import {renderCell, renderStatusChip, showCustomHeader,} from '../../../components/Table/TableUtils';
+import {
+    renderCell,
+    renderStatusChip,
+    showCustomHeader,
+} from '../../../components/Table/TableUtils';
 import {BundleResource} from '../../../model/CommissionBundle';
-import {CIBundleResource, CiBundleStatusEnum,} from '../../../api/generated/portal/CIBundleResource';
+import {
+    CIBundleResource,
+    CiBundleStatusEnum,
+} from '../../../api/generated/portal/CIBundleResource';
 import {TypeEnum} from '../../../api/generated/portal/PSPBundleResource';
 
 export function buildColumnDefs(

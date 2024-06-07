@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 import {CONFIG} from '@pagopa/selfcare-common-frontend/config/env';
 import {ENV} from './utils/env';
-import '@pagopa/selfcare-common-frontend/consentManagementConfigure';
 
 CONFIG.ANALYTCS.ENABLE = ENV.ANALYTCS.ENABLE;
 CONFIG.ANALYTCS.MOCK = ENV.ANALYTCS.MOCK;
@@ -10,3 +9,4 @@ CONFIG.ANALYTCS.TOKEN = ENV.ANALYTCS.TOKEN;
 CONFIG.ANALYTCS.API_HOST = ENV.ANALYTCS.API_HOST;
 CONFIG.ANALYTCS.ADDITIONAL_PROPERTIES_IMPORTANT = {env: ENV.ENV};
 
+import '@pagopa/selfcare-common-frontend/consentManagementConfigure';

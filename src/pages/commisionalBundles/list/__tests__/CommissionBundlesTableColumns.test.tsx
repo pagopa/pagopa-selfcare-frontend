@@ -1,6 +1,10 @@
 import {GridColDef, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
 import {cleanup, render, screen} from '@testing-library/react';
-import {buildColumnDefs, getStateChip, GridLinkActionBundleDetails,} from '../CommissionBundlesTableColumns';
+import {
+    GridLinkActionBundleDetails,
+    buildColumnDefs,
+    getStateChip,
+} from '../CommissionBundlesTableColumns';
 import {createMemoryHistory} from 'history';
 import React from 'react';
 import {
@@ -8,6 +12,7 @@ import {
     mockedCommissionBundleCiDetailPrivate,
     mockedCommissionBundleCiDetailPublic,
     mockedCommissionBundlePspDetailGlobal,
+    mockedCommissionBundlePspDetailPrivate,
 } from '../../../../services/__mocks__/bundleService';
 import {store} from '../../../../redux/store';
 import {Provider} from 'react-redux';

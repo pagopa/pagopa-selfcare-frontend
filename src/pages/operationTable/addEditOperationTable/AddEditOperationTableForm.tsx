@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import {theme} from '@pagopa/mui-italia';
-import {Button, Grid, Stack, TextField} from '@mui/material';
+import {Grid, TextField, Button, Stack} from '@mui/material';
 import {Box} from '@mui/system';
 import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';

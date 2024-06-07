@@ -1,7 +1,7 @@
-import {Search as SearchIcon} from '@mui/icons-material';
+import {Add, Search as SearchIcon} from '@mui/icons-material';
 import {InputAdornment, TextField, Typography} from '@mui/material';
 import {Box} from '@mui/system';
-import {Trans, useTranslation} from 'react-i18next';
+import {useTranslation, Trans} from 'react-i18next';
 
 const OperationTableEmpty = () => {
     const {t} = useTranslation();

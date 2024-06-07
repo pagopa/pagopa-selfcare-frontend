@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter, Route} from 'react-router-dom';
+import {MemoryRouter, Route, Router} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import ChannelDetailsWrap from '../components/ChannelDetailsWrap';
 import {mockedPaymentTypes} from '../../../../services/__mocks__/configurationService';

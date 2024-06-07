@@ -2,7 +2,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import CloseIcon from '@mui/icons-material/Close';
 import {Alert, IconButton} from '@mui/material';
-import {ErrorBoundary, LoadingOverlay, UnloadEventHandler, UserNotifyHandle,} from '@pagopa/selfcare-common-frontend';
+import {
+    ErrorBoundary,
+    LoadingOverlay,
+    UnloadEventHandler,
+    UserNotifyHandle,
+} from '@pagopa/selfcare-common-frontend';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {BrowserRouter, Redirect, Route, Switch, useLocation} from 'react-router-dom';
@@ -24,7 +29,7 @@ import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
 import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
 import AddEditCommissionBundlePage
-  from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
+    from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
@@ -43,12 +48,15 @@ import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
+import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
+
 import {TOS} from './pages/tos/TOS';
 import routes from './routes';
 import CommissionBundleDetailActivationPage
-  from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
+    from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import {getMaintenanceMessage} from './services/maintenanceService';
 import {MaintenanceMessage} from './api/generated/portal/MaintenanceMessage';
+import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
 
 const SecuredRoutes = withLogin(
     withFeatureFlags(
@@ -286,6 +294,18 @@ const SecuredRoutes = withLogin(
                                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                                     <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                                         <PaymentsReceiptsPage/>
+                                    </ProtectedRoute>
+                                </Route>
+
+                                <Route path={routes.PAYMENT_NOTICES} exact={true}>
+                                    <ProtectedRoute permission="payment-notices" flagValue="payment-notices">
+                                        <PaymentNoticesPage/>
+                                    </ProtectedRoute>
+                                </Route>
+
+                                <Route path={routes.PAYMENT_NOTICES_ADDEDIT} exact={true}>
+                                    <ProtectedRoute permission="payment-notices-addedit" flagValue="payment-notices">
+                                        <PaymentNoticesAddEditPage/>
                                     </ProtectedRoute>
                                 </Route>
 

@@ -1,5 +1,10 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
-import {createMockedKeys, mockedKeys, mockedPrimaryKey, mockedSecondaryKey,} from '../__mocks__/apiKeyService';
+import {
+    createMockedKeys,
+    mockedKeys,
+    mockedPrimaryKey,
+    mockedSecondaryKey,
+} from '../__mocks__/apiKeyService';
 import {
     createInstitutionApiKeys,
     getInstitutionApiKeys,

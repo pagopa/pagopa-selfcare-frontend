@@ -1,4 +1,4 @@
-import {Backdrop, Box, Button, Fade, Modal, Typography} from '@mui/material';
+import {Modal, Backdrop, Fade, Box, Typography, Button} from '@mui/material';
 import {MouseEventHandler} from 'react';
 
 type Props = {

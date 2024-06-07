@@ -6,8 +6,8 @@ import {
     mockedChannelPSPsPage2,
     mockedChannels,
     mockedChannelsMerged,
-    mockedPaymentTypesResource,
     mockedPSPChannels,
+    mockedPaymentTypesResource,
     mockedWfespPlugIn,
     mockedWrapperChannel,
 } from '../__mocks__/channelService.ts';

@@ -30,6 +30,7 @@ import {
   rejectPublicBundleSubscription,
   updatePSPBundle,
   deletePrivateBundleOffer,
+  createCIBundleOffers,
 } from '../bundleService';
 
 describe('BundleService test mocked', () => {
@@ -116,6 +117,16 @@ describe('BundleService test mocked', () => {
         idBundle: 'idBundle',
         pspTaxCode: 'pspTaxCode',
         bundleOfferId: 'ciTaxCode',
+      })
+    ).resolves.not.toThrow();
+  });
+  test('Test createCIBundleOffers', async () => {
+    expect(
+      createCIBundleOffers({
+        idBundle: 'idBundle',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
+        ciTaxCodeList: ['ciTaxCode'],
       })
     ).resolves.not.toThrow();
   });
@@ -273,6 +284,20 @@ describe('BundleService test client', () => {
         idBundle: 'idBundle',
         pspTaxCode: 'pspTaxCode',
         bundleOfferId: 'ciTaxCode',
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test createCIBundleOffers', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'createCIBundleOffers')
+      .mockReturnValue(Promise.resolve());
+    expect(
+      createCIBundleOffers({
+        idBundle: 'idBundle',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
+        ciTaxCodeList: ['ciTaxCode'],
       })
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);

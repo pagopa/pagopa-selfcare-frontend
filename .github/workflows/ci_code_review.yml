@@ -80,9 +80,9 @@ jobs:
           yarn install
           
           targetBanch = "${{ github.ref_name }}${{ github.base_ref }}" # only one is valued
-          if [ targetBanch = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
+          if [ $targetBanch = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
             yarn run generate:api-portal-next
-          elif [ targetBanch = "main" ]; then
+          elif [ $targetBanch = "main" ]; then
             yarn run generate:api-portal
           else
             yarn run generate:api-portal-pr
@@ -186,9 +186,9 @@ jobs:
           yarn install
           
           targetBanch = "${{ github.ref_name }}${{ github.base_ref }}" # only one is valued
-          if [ targetBanch = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
+          if [ $targetBanch = "main" ] && [ "${{ github.head_ref }}" = "next" ]; then
             yarn run generate:api-portal-next
-          elif [ targetBanch = "main" ]; then
+          elif [ $targetBanch = "main" ]; then
             yarn run generate:api-portal
           else
             yarn run generate:api-portal-pr

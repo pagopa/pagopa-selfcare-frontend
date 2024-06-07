@@ -35,9 +35,9 @@ import {
     getWrapperStation,
     testStation,
     updateStation,
+    updateWrapperStationWithOperatorReview,
     updateWrapperStationToCheck,
     updateWrapperStationToCheckUpdate,
-    updateWrapperStationWithOperatorReview,
 } from '../stationService';
 
 describe('StationService test mocked', () => {

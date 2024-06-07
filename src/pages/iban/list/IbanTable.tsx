@@ -1,5 +1,6 @@
-import {Box, Typography} from '@mui/material';
-import {GridColDef} from '@mui/x-data-grid';
+import {theme} from '@pagopa/mui-italia';
+import {Box, styled, Typography} from '@mui/material';
+import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {generatePath, useHistory} from 'react-router-dom';

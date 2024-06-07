@@ -1,11 +1,15 @@
-import {Divider, Grid, Paper, Typography} from '@mui/material';
-import {TFunction, useTranslation} from 'react-i18next';
+import {Divider, Typography, Paper, Grid} from '@mui/material';
+import {useTranslation, TFunction} from 'react-i18next';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useState} from 'react';
 import {PaddedDrawer} from '../../../../components/PaddedDrawer';
-import {formatBooleanValueToYesOrNo, formatCurrencyEur, formatDateToDDMMYYYY,} from '../../../../utils/common-utils';
+import {
+    formatBooleanValueToYesOrNo,
+    formatCurrencyEur,
+    formatDateToDDMMYYYY,
+} from '../../../../utils/common-utils';
 import {BundleResource} from '../../../../model/CommissionBundle';
 import {CIBundleResource, CiBundleStatusEnum} from '../../../../api/generated/portal/CIBundleResource';
 

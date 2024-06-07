@@ -1,3 +1,5 @@
+import {InstitutionDetail} from '../api/generated/portal/InstitutionDetail';
+
 export type PartyDetail = {
     partyId: string;
     externalId: string;

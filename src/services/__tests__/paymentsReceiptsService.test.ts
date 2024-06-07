@@ -1,5 +1,9 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
-import {getPaymentReceiptDetail, getPaymentsReceipts} from '../paymentsReceiptsService';
+import {TypeEnum} from '../../api/generated/portal/BundleRequest';
+import {
+    getPaymentReceiptDetail,
+    getPaymentsReceipts
+} from '../paymentsReceiptsService';
 
 describe('PaymentsReceiptsService test client', () => {
     const OLD_ENV = process.env;

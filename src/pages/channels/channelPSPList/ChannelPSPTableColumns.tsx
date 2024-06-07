@@ -1,8 +1,12 @@
-import {Box, IconButton} from '@mui/material';
+import {Box, Chip, IconButton} from '@mui/material';
 import {GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
 import {TFunction} from 'react-i18next';
 import {RemoveCircle} from '@mui/icons-material';
-import {renderCell, renderStatusChip, showCustomHeader,} from '../../../components/Table/TableUtils';
+import {
+    renderCell,
+    renderStatusChip,
+    showCustomHeader,
+} from '../../../components/Table/TableUtils';
 
 const renderCellWithColor = (params: GridRenderCellParams) =>
     renderCell({

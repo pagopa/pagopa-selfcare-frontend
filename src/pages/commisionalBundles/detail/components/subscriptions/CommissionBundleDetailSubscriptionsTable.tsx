@@ -1,21 +1,33 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
-import {Alert, Box, Button, FormControl, InputLabel, MenuItem, Select, Typography,} from '@mui/material';
+import {
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Typography,
+    Alert,
+    Button,
+    Box,
+} from '@mui/material';
 import {GridColDef} from '@mui/x-data-grid';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {TFunction, useTranslation} from 'react-i18next';
+import {useState, useEffect} from 'react';
+import {useTranslation, TFunction} from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
 import TableDataGrid from '../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import {useAppSelector} from '../../../../../redux/hooks';
 import {partiesSelectors} from '../../../../../redux/slices/partiesSlice';
-import {LOADING_TASK_SUBSCRIPTION_ACTION, LOADING_TASK_SUBSCRIPTION_LIST,} from '../../../../../utils/constants';
+import {
+    LOADING_TASK_SUBSCRIPTION_ACTION,
+    LOADING_TASK_SUBSCRIPTION_LIST,
+} from '../../../../../utils/constants';
 import {CISubscriptionInfo} from '../../../../../api/generated/portal/CISubscriptionInfo';
 
 import {
-    BundleCiSubscriptionDetailModel,
     BundleResource,
+    BundleCiSubscriptionDetailModel,
     SubscriptionStateType,
 } from '../../../../../model/CommissionBundle';
 import {

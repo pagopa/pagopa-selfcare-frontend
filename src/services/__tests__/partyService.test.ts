@@ -1,5 +1,7 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
+import {mockedInstitutionDetailResource} from '../__mocks__/institutionsService';
 import {institutionMock, mockedParties} from '../__mocks__/partyService';
+import {mockedPartyProducts} from '../__mocks__/productService';
 import {fetchParties, fetchPartyDetails} from '../partyService';
 
 describe('PartyService test client', () => {

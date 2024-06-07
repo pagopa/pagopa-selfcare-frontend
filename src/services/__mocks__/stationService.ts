@@ -7,20 +7,11 @@ import {
 import {CreditorInstitutionsResource} from '../../api/generated/portal/CreditorInstitutionsResource';
 import {StationCodeResource} from '../../api/generated/portal/StationCodeResource';
 import {StationDetailResource} from '../../api/generated/portal/StationDetailResource';
-import {
-    RedirectProtocolEnum,
-    StationDetailsDto,
-} from '../../api/generated/portal/StationDetailsDto';
-import {
-    TestResultEnum,
-    TestStationResource,
-} from '../../api/generated/portal/TestStationResource';
+import {RedirectProtocolEnum, StationDetailsDto,} from '../../api/generated/portal/StationDetailsDto';
+import {TestResultEnum, TestStationResource,} from '../../api/generated/portal/TestStationResource';
 import {TypeEnum, WrapperEntities} from '../../api/generated/portal/WrapperEntities';
 import {WrapperStationDetailsDto} from '../../api/generated/portal/WrapperStationDetailsDto';
-import {
-    WrapperStationResource,
-    WrapperStatusEnum,
-} from '../../api/generated/portal/WrapperStationResource';
+import {WrapperStationResource, WrapperStatusEnum,} from '../../api/generated/portal/WrapperStationResource';
 import {WrapperStationsResource} from '../../api/generated/portal/WrapperStationsResource';
 import {StationOnCreation} from '../../model/Station';
 
@@ -56,29 +47,29 @@ export const mockedWrapperStation: WrapperStationDetailsDto = {
 };
 
 export const mockedFullStation: StationDetailResource = {
-  wrapperStatus: WrapperStatusEnum.TO_CHECK,
-  stationCode: '81001870922_04',
-  enabled: true,
-  brokerDescription: '',
-  version: 1,
-  password: 'mockPswxxx',
-  associatedCreditorInstitutions: 0,
-  activationDate: new Date(),
-  createdAt: new Date(),
-  modifiedAt: new Date(),
-  redirectIp: 'ww',
-  redirectPath: 'ww',
-  redirectPort: 111,
-  redirectQueryString: 'www',
-  redirectProtocol: RedirectProtocolEnum.HTTPS,
-  brokerCode: '81001870922',
-  timeoutA: 7,
-  timeoutB: 30,
-  timeoutC: 120,
-  targetHost: '1www',
-  targetPort: 11,
-  targetPath: 'www',
-  primitiveVersion: 1,
+    wrapperStatus: WrapperStatusEnum.TO_CHECK,
+    stationCode: '81001870922_04',
+    enabled: true,
+    brokerDescription: '',
+    version: 1,
+    password: 'mockPswxxx',
+    associatedCreditorInstitutions: 0,
+    activationDate: new Date(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    redirectIp: 'ww',
+    redirectPath: 'ww',
+    redirectPort: 111,
+    redirectQueryString: 'www',
+    redirectProtocol: RedirectProtocolEnum.HTTPS,
+    brokerCode: '81001870922',
+    timeoutA: 7,
+    timeoutB: 30,
+    timeoutC: 120,
+    targetHost: '1www',
+    targetPort: 11,
+    targetPath: 'www',
+    primitiveVersion: 1,
 };
 
 export const mockedStations: WrapperStationsResource = {
@@ -594,8 +585,7 @@ export const getECListByStationCode = (
 export const updateWrapperStation = (_stations: StationDetailsDto): Promise<WrapperEntities> =>
     new Promise((resolve) => resolve(mockedWrapperStation));
 
-export const updateWrapperStationByOpt = (
-): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
+export const updateWrapperStationByOpt = (): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
 
 export const updateStation = (
     _stations: StationDetailsDto,
@@ -618,7 +608,7 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
     new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
 export const getCreditorInstitutionSegregationcodes = (_ecCode: string, _targetCITaxCode: string): Promise<AvailableCodes> =>
-  new Promise((resolve) => resolve(mockedSegregationCodeList));
+    new Promise((resolve) => resolve(mockedSegregationCodeList));
 
 export const testStation = (
     hostUrl: string,

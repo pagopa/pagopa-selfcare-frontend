@@ -445,32 +445,30 @@ const AddEditChannelForm = ({selectedParty, channelCode, channelDetail, formActi
                 }
                 redirect();
             }
-            data-testid="back-btn-test"
-          >
-            {t('general.back')}
-          </Button>
-        </Stack>
-        <Stack display="flex" justifyContent="flex-end">
-          <Button
-            onClick={() => {
-              openConfirmModal();
-              formik.handleSubmit();
-            }}
-            disabled={!enableSubmit(formik.values)}
-            color="primary"
-            variant="contained"
-            type="submit"
-          >
-            {t('addEditChannelPage.addForm.continueButton')}
-          </Button>
-        </Stack>
-      </Stack>
+        } catch (reason) {
+            addError({
+                id: 'ADDEDIT_CHANNEL',
+                blocking: false,
+                error: reason as Error,
+                techDescription: `An error occurred while adding/editing channel`,
+                toNotify: true,
+                displayableTitle: t('general.errorTitle'),
+                displayableDescription: t('addEditChannelPage.addForm.errorMessageDesc'),
+                component: 'Toast',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      <ConfirmModal
-        title={
-          userIsPagopaOperator
-            ? t('addEditChannelPage.addForm.confirmModal.channelConfiguration')
-            : t('addEditChannelPage.addForm.confirmModal.title')
+    const handleChangeNumberOnly = (
+        e: React.ChangeEvent<any>,
+        field: string,
+        formik: FormikProps<ChannelOnCreation>
+    ) => {
+        const regex = /^[0-9\b]+$/;
+        if (e.target.value === '' || regex.test(e.target.value)) {
+            formik.setFieldValue(field, e.target.value);
         }
     };
 

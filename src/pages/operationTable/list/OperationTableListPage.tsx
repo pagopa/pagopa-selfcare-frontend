@@ -1,4 +1,4 @@
-import {Box, Breadcrumbs, Grid, Paper, Stack, Typography} from '@mui/material';
+import {Box, Breadcrumbs, Stack, Typography} from '@mui/material';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory} from 'react-router';

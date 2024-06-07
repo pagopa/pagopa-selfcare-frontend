@@ -1,5 +1,5 @@
-import {Box, Pagination, styled, Typography} from '@mui/material';
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
+import {Box, Pagination, Typography} from '@mui/material';
+import {GridColDef} from '@mui/x-data-grid';
 import {ChangeEvent, useEffect, useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {useParams} from 'react-router';

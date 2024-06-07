@@ -2,17 +2,15 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {Ibans} from "../api/generated/portal/Ibans";
 import {Iban} from "../api/generated/portal/Iban";
 import {IbanCreate} from "../api/generated/portal/IbanCreate";
-import { BrokerECExportStatus } from '../api/generated/portal/BrokerECExportStatus';
+import {BrokerECExportStatus} from '../api/generated/portal/BrokerECExportStatus';
 import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,
-    exportIbansToCsv as exportIbansToCsvMocked,
     exportCreditorInstitutionsToCsv as exportCreditorInstitutionsToCsvMocked,
-    getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    exportIbansToCsv as exportIbansToCsvMocked,
     getBrokerExportStatus as getBrokerExportStatusMocked,
-    updateIban as updateIbanMocked,
-    updateIbanCup as updateIbanCupMocked,
-    updateIbanStandIn as updateIbanStandInMocked
+    getCreditorInstitutionIbans as getCreditorInstitutionIbansMocked,
+    updateIban as updateIbanMocked
 } from './__mocks__/ibanService';
 
 export const getIbanList = (

@@ -38,9 +38,13 @@ describe('<ECSelection />', () => {
 
     fireEvent.mouseDown(ecSelectionSearch);
     fireEvent.select(ecSelectionSearch, {
-      target: { value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName },
+      target: {
+        value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName,
+      },
     });
-    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName);
+    expect(ecSelectionSearch.value).toBe(
+      mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName
+    );
   });
 
   test('render component PartyAccountItem ECSelection', () => {

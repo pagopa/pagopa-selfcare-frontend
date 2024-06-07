@@ -43,16 +43,19 @@ const ROUTES = {
 
   DELEGATIONS_LIST: `${BASE_ROUTE}/delegation-list`,
   DELEGATIONS_DETAIL: `${BASE_ROUTE}/delegation-list/detail`,
-  
-  PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`
+
+  PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`,
+
+  PAYMENT_NOTICES: `${BASE_ROUTE}/payments-notices`,
+  PAYMENT_NOTICES_ADDEDIT: `${BASE_ROUTE}/payments-notices/addedit`,
 
   /* TOS: {
-    PATH: '/terms-of-service',
-    LABEL: { it: 'Termini di servizio', en: 'Terms of service' },
-    COMPONENT: TOS,
-    PUBLIC: true,
-    AUTH_LEVELS: 'any',
-  }, */
+      PATH: '/terms-of-service',
+      LABEL: { it: 'Termini di servizio', en: 'Terms of service' },
+      COMPONENT: TOS,
+      PUBLIC: true,
+      AUTH_LEVELS: 'any',
+    }, */
 };
 
 export default ROUTES;

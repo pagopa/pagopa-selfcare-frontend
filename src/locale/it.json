@@ -956,7 +956,11 @@
     "list": {
       "search": {
         "placeholder": "Cerca per Nome",
-        "createButton": "Crea pacchetto"
+        "createButton": "Crea pacchetto",
+        "stateFilter": "Stato",
+        "stateAll": "Tutti",
+        "stateActive": "Attivi",
+        "stateWaiting": "Disponibili"
       },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}{{status}}.",
@@ -1115,7 +1119,8 @@
           "reject": "Richiesta rifiutata",
           "accept": "Richiesta accettata",
           "delete": "Ente rimosso",
-          "deleteOffer": "Offerta eliminata"
+          "deleteOffer": "Offerta eliminata",
+          "waitingMessage": "Il destinatario è in attesa di attivare il pacchetto."
         },
         "requestsTable": {
           "title": "Richieste di adesione",
@@ -1145,7 +1150,7 @@
           "table": {
             "emptyState": {
               "WAITING": "Non sono presenti offerte in attesa",
-              "ACTIVE": "Non sono presenti offerte già accettate"
+              "ACCEPTED": "Non sono presenti offerte già accettate"
             }
           },
           "stateChip": {

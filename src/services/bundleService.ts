@@ -4,8 +4,9 @@ import {BundleCreateResponse} from '../api/generated/portal/BundleCreateResponse
 import {BundleRequest} from '../api/generated/portal/BundleRequest';
 import {Touchpoints} from '../api/generated/portal/Touchpoints';
 import {
-    BundleCiSubscriptionsDetailMethodParams,
-    BundleCISubscriptionsMethodParams,
+  BundleCiSubscriptionsDetailMethodParams,
+  BundleCISubscriptionsMethodParams,
+  SubscriptionStateType,
 } from '../model/CommissionBundle';
 import {PublicBundleRequest} from '../api/generated/portal/PublicBundleRequest';
 import {PSPBundleResource} from '../api/generated/portal/PSPBundleResource';
@@ -25,18 +26,30 @@ import {
 
 // /bundles endpoint
 
-export const getBundleListByPSP = (
-    bundleType: string,
-    pageLimit: number,
-    bundleName: string,
-    page: number,
-    pspCode: string
-): Promise<PSPBundlesResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getCommissionBundlePsp(bundleName);
-    } else {
-        return BackofficeApi.getBundlesByPsp(bundleType, pageLimit, bundleName, page, pspCode);
-    }
+export const getBundleListByPSP = ({
+  bundleType,
+  pageLimit,
+  page,
+  pspCode,
+  bundleName,
+}: {
+  bundleType: string;
+  pageLimit: number;
+  page: number;
+  pspCode: string;
+  bundleName?: string;
+}): Promise<PSPBundlesResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCommissionBundlePsp();
+  } else {
+    return BackofficeApi.getBundlesByPsp({
+      bundleType,
+      pageLimit,
+      page,
+      pspCode,
+      bundleName,
+    });
+  }
 };
 
 export const createBundle = (
@@ -89,18 +102,33 @@ export const updatePSPBundle = (
     }
 };
 
-export const getCisBundles = (
-    bundleType: string,
-    pageLimit: number,
-    bundleName: string,
-    page: number,
-    cisTaxCode: string | undefined
-): Promise<CIBundlesResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return getCommissionBundleCi(bundleName);
-    } else {
-        return BackofficeApi.getCisBundles(bundleType, pageLimit, bundleName, page, cisTaxCode);
-    }
+export const getCisBundles = ({
+  bundleType,
+  pageLimit,
+  bundleName,
+  page,
+  ciTaxCode,
+  bundleStatus,
+}: {
+  bundleType: string;
+  pageLimit: number;
+  bundleName?: string;
+  page: number;
+  ciTaxCode?: string;
+  bundleStatus?: SubscriptionStateType;
+}): Promise<CIBundlesResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getCommissionBundleCi();
+  } else {
+    return BackofficeApi.getCisBundles({
+      bundleType,
+      pageLimit,
+      bundleName,
+      page,
+      ciTaxCode,
+      bundleStatus,
+    });
+  }
 };
 
 export const acceptBundleSubscriptionRequest = (

@@ -284,11 +284,11 @@ export const mockedCiBundleAttributeResource: CIBundleAttributeResource = {
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
     Promise.resolve(mockedChannelsIdList);
 
-export const getCommissionBundlePsp = (_brokerCode: string): Promise<PSPBundlesResource> =>
-    Promise.resolve(mockedCommissionBundlePspList);
+export const getCommissionBundlePsp = (): Promise<PSPBundlesResource> =>
+  Promise.resolve(mockedCommissionBundlePspList);
 
-export const getCommissionBundleCi = (_brokerCode: string): Promise<CIBundlesResource> =>
-    Promise.resolve(mockedCommissionBundleCiList);
+export const getCommissionBundleCi = (): Promise<CIBundlesResource> =>
+  Promise.resolve(mockedCommissionBundleCiList);
 
 export const getCommissionBundleDetails = (type?: string): Promise<PSPBundleResource> =>
     Promise.resolve(

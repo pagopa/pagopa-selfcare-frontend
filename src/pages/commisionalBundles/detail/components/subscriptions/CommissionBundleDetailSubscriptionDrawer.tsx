@@ -1,5 +1,5 @@
-import {Divider, Skeleton, Typography} from '@mui/material';
-import {Box} from '@mui/system';
+import { Alert, Divider, Skeleton, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {TFunction} from 'react-i18next';
@@ -75,76 +75,83 @@ export const getSubscriptionStatusChip = (
     onRemoval: boolean | undefined = undefined,
     size: 'small' | 'medium' | undefined = undefined
 ) => {
-    // eslint-disable-next-line functional/no-let
-    let chipColor: colorType =
-        filterState === SubscriptionStateType.Accepted
-            ? 'success'
-            : 'default';
-    if (onRemoval) {
-        chipColor = 'error';
-    }
-    return renderStatusChip({
-        chipColor,
-        chipLabel: t(
-            `${componentPath}.stateChip.${
-                onRemoval ? 'DELETING' : filterState
-            }`
-        ),
-        dataTestId: `${onRemoval ? 'DELETING' : filterState}-state-chip`,
-        size,
-    });
+  // eslint-disable-next-line functional/no-let
+  let chipColor: colorType = filterState === SubscriptionStateType.Accepted ? 'success' : 'default';
+  if (onRemoval) {
+    chipColor = 'error';
+  }
+  return renderStatusChip({
+    chipColor,
+    chipLabel: t(`${componentPath}.stateChip.${onRemoval ? 'DELETING' : filterState}`),
+    dataTestId: `${onRemoval ? 'DELETING' : filterState}-state-chip`,
+    size,
+  });
 };
 
 export const CommissionBundleDetailSubscriptionDrawer = ({
-                                                             setSelectedSubscription,
-                                                             selectedSubscription,
-                                                             stateType,
-                                                             drawerButtons,
-                                                             componentPath
-                                                         }: {
-    setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void;
-    selectedSubscription: BundleCiSubscriptionDetailModel;
-    stateType: SubscriptionStateType;
-    drawerButtons: () => any;
-    componentPath: string;
+  setSelectedSubscription,
+  selectedSubscription,
+  stateType,
+  drawerButtons,
+  componentPath,
+}: {
+  setSelectedSubscription: (openDrawer: BundleCiSubscriptionDetailModel) => void;
+  selectedSubscription: BundleCiSubscriptionDetailModel;
+  stateType: SubscriptionStateType;
+  drawerButtons: () => any;
+  componentPath: string;
 }) => {
-    const {t} = useTranslation();
-    const generalPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
-    return (
-        <PaddedDrawer
-            openDrawer={selectedSubscription.creditor_institution_code !== undefined}
-            setOpenDrawer={() => setSelectedSubscription({})}
-            drawerButtons={drawerButtons()}
-        >
-            <TitleBox title={t(`${componentPath}.drawerTitle`)} variantTitle="h5"/>
-
-            <Box my={1}>
-                <Typography variant="body1" color="action.active">
-                    {t(`${generalPath}.businessName`)}
-                </Typography>
-                <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                    {selectedSubscription?.business_name ?? '-'}
-                </Typography>
-            </Box>
-            <Divider/>
-            <Box my={1}>
-                <Typography variant="body1" color="action.active">
-                    {t(`${generalPath}.taxCode`)}
-                </Typography>
-                <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-                    {selectedSubscription?.creditor_institution_code ?? '-'}
-                </Typography>
-            </Box>
-            <Divider/>
-            <Box my={1} display="flex">
-                <Typography variant="body1" color="action.active">
-                    {t(`${generalPath}.state`)}
-                </Typography>
-                {getSubscriptionStatusChip(t, stateType, componentPath, selectedSubscription.on_removal, 'small')}
-            </Box>
-            <CommissionBundleDrawerCommissionFeeList
-                feeList={selectedSubscription?.ci_bundle_fee_list ? [...selectedSubscription.ci_bundle_fee_list] : undefined}
-            />
-        </PaddedDrawer>
-    );
+  const { t } = useTranslation();
+  const generalPath = 'commissionBundlesPage.commissionBundleDetail.subscriptionsTable';
+  return (
+    <PaddedDrawer
+      openDrawer={selectedSubscription.creditor_institution_code !== undefined}
+      setOpenDrawer={() => setSelectedSubscription({})}
+      drawerButtons={drawerButtons()}
+    >
+      <TitleBox title={t(`${componentPath}.drawerTitle`)} variantTitle="h5" />
+      {selectedSubscription.bundle_offer_id && stateType === SubscriptionStateType.Waiting && (
+        <Box mt={2}>
+          <Alert severity="info">{t(`${generalPath}.alert.waitingMessage`)}</Alert>
+        </Box>
+      )}
+      <Box my={1}>
+        <Typography variant="body1" color="action.active">
+          {t(`${generalPath}.businessName`)}
+        </Typography>
+        <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+          {selectedSubscription?.business_name ?? '-'}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box my={1}>
+        <Typography variant="body1" color="action.active">
+          {t(`${generalPath}.taxCode`)}
+        </Typography>
+        <Typography variant="body1" fontWeight={'fontWeightMedium'}>
+          {selectedSubscription?.creditor_institution_code ?? '-'}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box my={1} display="flex">
+        <Typography variant="body1" color="action.active">
+          {t(`${generalPath}.state`)}
+        </Typography>
+        {getSubscriptionStatusChip(
+          t,
+          stateType,
+          componentPath,
+          selectedSubscription.on_removal,
+          'small'
+        )}
+      </Box>
+      <CommissionBundleDrawerCommissionFeeList
+        feeList={
+          selectedSubscription?.ci_bundle_fee_list
+            ? [...selectedSubscription.ci_bundle_fee_list]
+            : undefined
+        }
+      />
+    </PaddedDrawer>
+  );
 };

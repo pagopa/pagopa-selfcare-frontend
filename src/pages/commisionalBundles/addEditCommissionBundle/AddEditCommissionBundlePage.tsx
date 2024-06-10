@@ -149,10 +149,10 @@ const AddEditCommissionBundlePage = () => {
   const isEdit: boolean = actionId === FormAction.Edit;
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
-    useAppSelectorWithRedirect(
-      bundleDetailsSelectors.selectBundleDetails,
-      isEdit ? ROUTES.COMMISSION_BUNDLES : undefined
-    ) ?? {};
+    useAppSelectorWithRedirect({
+      selector: bundleDetailsSelectors.selectBundleDetails,
+      routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
+    }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({

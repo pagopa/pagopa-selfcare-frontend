@@ -9,28 +9,30 @@ import {store} from '../../../../redux/store';
 import ChannelPSPTableEmpty from '../ChannelPSPTableEmpty';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+    });
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+    });
 });
 
 afterEach(cleanup);
 
 describe('<ChannelPSPTableEmpty />', () => {
-  const history = createMemoryHistory();
-  test('render component ChannelPSPTableEmpty', async () => {
-    await waitFor(() => {
-      render(
-        <Provider store={store}>
-          <Router history={history}>
-            <ThemeProvider theme={theme}>
-              <ChannelPSPTableEmpty channelId={'XPAY_03_ONUS'} />
-            </ThemeProvider>
-          </Router>
-        </Provider>
-      );
-    });
+    const history = createMemoryHistory();
+    test('render component ChannelPSPTableEmpty', async () => {
+        await waitFor(() => {
+            render(
+                <Provider store={store}>
+                    <Router history={history}>
+                        <ThemeProvider theme={theme}>
+                            <ChannelPSPTableEmpty channelId={'XPAY_03_ONUS'}/>
+                        </ThemeProvider>
+                    </Router>
+                </Provider>
+            );
+        });
 
-    const associatePsp = screen.getByText("Associa PSP");
-    fireEvent.click(associatePsp);
-  });
+        const associatePsp = screen.getByText("Associa PSP");
+        fireEvent.click(associatePsp);
+    });
 });

@@ -47,11 +47,14 @@ import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
+import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
 import { TOS } from './pages/tos/TOS';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
+import CommissionBundleDetailOffersAddRecipientsPage from './pages/commisionalBundles/detail/CommissionBundleDetailOffersAddRecipientsPage';
+import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -233,6 +236,14 @@ const SecuredRoutes = withLogin(
                     <CommissionBundleDetailPage />
                   </ProtectedRoute>
                 </Route>
+                <Route path={routes.COMMISSION_BUNDLES_ADD_RECIPIENT} exact={true}>
+                  <ProtectedRoute
+                    permission="commission-bundles-add-recipient"
+                    flagValue="commission-bundles-private"
+                  >
+                    <CommissionBundleDetailOffersAddRecipientsPage />
+                  </ProtectedRoute>
+                </Route>
                 <Route path={routes.COMMISSION_BUNDLES_ADD} exact={true}>
                   <ProtectedRoute
                     permission="commission-bundles-addedit"
@@ -273,12 +284,12 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
+                
                 <Route path={routes.DELEGATIONS_LIST} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationsPage />
                   </ProtectedRoute>
                 </Route>
-
                 <Route path={routes.DELEGATIONS_DETAIL} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationDetailPage />
@@ -288,6 +299,18 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                     <PaymentsReceiptsPage />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.PAYMENT_NOTICES} exact={true}>
+                  <ProtectedRoute permission="payment-notices" flagValue="payment-notices">
+                    <PaymentNoticesPage />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.PAYMENT_NOTICES_ADDEDIT} exact={true}>
+                  <ProtectedRoute permission="payment-notices-addedit" flagValue="payment-notices">
+                    <PaymentNoticesAddEditPage />
                   </ProtectedRoute>
                 </Route>
 

@@ -9,47 +9,49 @@ import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+    });
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+    });
 });
 
 afterEach(cleanup);
 
 describe('<ChannelsPage />', () => {
-  const history = createMemoryHistory();
+    const history = createMemoryHistory();
 
-  test('render component ChannelsPage', () => {
-    history.location.state = { alertSuccessMessage: 'Success!' };
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <ChannelsPage />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
+    test('render component ChannelsPage', () => {
+        history.location.state = {alertSuccessMessage: 'Success!'};
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <ChannelsPage/>
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
 
-    expect(screen.getByTestId('alert-test')).toBeInTheDocument();
-  });
+        expect(screen.getByTestId('alert-test')).toBeInTheDocument();
+    });
 
-  it('should replace the current state of window history', () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <ChannelsPage />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
+    it('should replace the current state of window history', () => {
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <ChannelsPage/>
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
 
-    const mockReplaceState = jest.fn();
-    window.history.replaceState = mockReplaceState;
+        const mockReplaceState = jest.fn();
+        window.history.replaceState = mockReplaceState;
 
-    clearLocationState();
+        clearLocationState();
 
-    expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
-  });
+        expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
+    });
 });
 

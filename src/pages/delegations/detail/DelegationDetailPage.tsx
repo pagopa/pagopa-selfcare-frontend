@@ -31,10 +31,10 @@ const DelegationDetailPage = () => {
   const setLoading = useLoading(LOADING_TASK_CI_DELEGATION_CONTACTS_LIST);
 
   const delegationDetail: CIBrokerDelegationResource =
-    useAppSelectorWithRedirect(
-      delegationDetailSelectors.selectDelegationDetail,
-      ROUTES.DELEGATIONS_LIST
-    ) ?? {};
+    useAppSelectorWithRedirect({
+      selector: delegationDetailSelectors.selectDelegationDetail,
+      routeToRedirect: ROUTES.DELEGATIONS_LIST,
+    }) ?? {};
 
   useEffect(() => {
     setLoading(true);

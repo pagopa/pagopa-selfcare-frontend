@@ -10,44 +10,46 @@ import {Provider} from 'react-redux';
 import {MenuBook} from '@mui/icons-material';
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+    });
+    jest.spyOn(console, 'warn').mockImplementation(() => {
+    });
 });
 
 afterEach(cleanup);
 
 describe('<AddEditStationFormSectionTitle />', () => {
-  const history = createMemoryHistory();
+    const history = createMemoryHistory();
 
-  test('render component AddEditStationFormSectionTitle Required', () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <AddEditStationFormSectionTitle
-              icon={<MenuBook />}
-              title="Test Title"
-              isRequired={true}
-            />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
-  });
+    test('render component AddEditStationFormSectionTitle Required', () => {
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <AddEditStationFormSectionTitle
+                            icon={<MenuBook/>}
+                            title="Test Title"
+                            isRequired={true}
+                        />
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
+    });
 
-  test('render component AddEditStationFormSectionTitle not Required', () => {
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <AddEditStationFormSectionTitle
-              icon={<MenuBook />}
-              title="Test Title"
-              isRequired={false}
-            />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
-  });
+    test('render component AddEditStationFormSectionTitle not Required', () => {
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <AddEditStationFormSectionTitle
+                            icon={<MenuBook/>}
+                            title="Test Title"
+                            isRequired={false}
+                        />
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
+    });
 });

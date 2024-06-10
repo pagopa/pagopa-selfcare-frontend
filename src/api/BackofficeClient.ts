@@ -94,11 +94,24 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
+import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
+import { createClient as createCustomClient } from './custom/client';
+import { WithDefaultsT as WithCustomDefaultsT } from './custom/client';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
+// eslint-disable-next-line sonarjs/no-identical-functions
 const withBearer: WithDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any) => {
+  const token = storageTokenOps.read();
+  return wrappedOperation({
+    ...params,
+    JWT: token,
+  });
+};
+
+// eslint-disable-next-line sonarjs/no-identical-functions
+const withBearerCustom: WithCustomDefaultsT<'JWT'> = (wrappedOperation: any) => (params: any) => {
   const token = storageTokenOps.read();
   return wrappedOperation({
     ...params,
@@ -137,6 +150,13 @@ export const backofficeClient = createClient({
   basePath: '',
   fetchApi: fetchWithHeader as any,
   withDefaults: withBearer,
+});
+
+export const customBoClient = createCustomClient({
+  baseUrl: ENV.URL_API.BACKOFFICE,
+  basePath: '',
+  fetchApi: fetchWithHeader as any,
+  withDefaults: withBearerCustom,
 });
 
 const onRedirectToLogin = () =>
@@ -1174,17 +1194,29 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getCreditorInstitutions: async (
-    taxCode: string,
-    name: string | undefined,
-    page: number,
-    limit: number
-  ): Promise<CreditorInstitutionsResource> => {
+  getCreditorInstitutions: async ({
+    ciTaxCode,
+    ciName,
+    page,
+    limit,
+    sorting = 'DESC',
+    orderBy = 'NAME',
+  }: {
+    ciTaxCode?: string;
+    ciName?: string;
+    page: number;
+    limit: number;
+    sorting?: 'DESC' | 'ASC';
+    orderBy?: 'CODE' | 'NAME';
+  }): Promise<CreditorInstitutionsResource> => {
     const result = await backofficeClient.getCreditorInstitutions({
-      'ci-tax-code': taxCode,
-      name,
+      ciTaxCode,
+      ciName,
       page,
       limit,
+      enabled: true,
+      sorting,
+      orderBy,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1334,6 +1366,51 @@ export const BackofficeApi = {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getInstitutionData: async ({
+    ciTaxCode,
+  }: {
+    ciTaxCode: string;
+  }): Promise<InstitutionUploadData> => {
+    const result = await backofficeClient.getInstitutionData({
+      taxCode: ciTaxCode,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  uploadInstitutionData: async ({
+    file,
+    uploadInstitutionData,
+  }: {
+    file: File | null;
+    uploadInstitutionData: InstitutionUploadData;
+  }): Promise<void> => {
+    const result = await customBoClient.updateInstitutions({
+      file,
+      body: JSON.stringify(uploadInstitutionData),
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  createCIBundleOffers: async ({
+    idBundle,
+    pspTaxCode,
+    bundleName,
+    ciTaxCodeList,
+  }: {
+    idBundle: string;
+    pspTaxCode: string;
+    bundleName: string;
+    ciTaxCodeList: Array<string>;
+  }): Promise<void> => {
+    const result = await backofficeClient.createCIBundleOffers({
+      'id-bundle': idBundle,
+      'psp-tax-code': pspTaxCode,
+      bundleName,
+      body: { ciFiscalCodeList: ciTaxCodeList },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

@@ -36,7 +36,6 @@ import CommissionBundleDetailConfiguration from './components/CommissionBundleDe
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleDetailSubscriptionsTable from './components/subscriptions/CommissionBundleDetailSubscriptionsTable';
 
-
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
 
@@ -170,10 +169,10 @@ const CommissionBundleDetailPage = () => {
   const selectedParty: Party | undefined = useAppSelector(partiesSelectors.selectPartySelected);
   const addError = useErrorDispatcher();
 
-  const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect(
-    bundleDetailsSelectors.selectBundleDetails,
-    ROUTES.COMMISSION_BUNDLES
-  );
+  const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
+    selector: bundleDetailsSelectors.selectBundleDetails,
+    routeToRedirect: ROUTES.COMMISSION_BUNDLES,
+  });
   const bundleId = commissionBundleDetail.idBundle ?? '';
   const [showConfirmModal, setShowConfirmModal] = useState<BundleDetailsActionTypes | null>(null);
 
@@ -299,7 +298,7 @@ const CommissionBundleDetailPage = () => {
                     : 'offer-table'
                 }
               >
-                  <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
+                <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
               </Grid>
             )}
         </Grid>

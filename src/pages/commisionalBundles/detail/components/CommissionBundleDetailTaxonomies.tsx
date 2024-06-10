@@ -71,7 +71,11 @@ export default function CommissionBundleDetailTaxonomies({
       {bundleTaxonomies.length > 0 ? (
         bundleTaxonomies?.slice(0, 3)?.map((el: BundleTaxonomy, i: number) =>
           i < 4 ? (
-            <Box key={`taxonomy-${el.specificBuiltInData ?? "all"}`} mt={1} data-testid="taxonomy-column">
+            <Box
+              key={`taxonomy-${el.specificBuiltInData ?? 'all'}`}
+              mt={1}
+              data-testid="taxonomy-column"
+            >
               <TaxonomyBox taxonomy={el} />
             </Box>
           ) : null

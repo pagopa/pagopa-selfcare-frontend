@@ -1,5 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
+import { Add } from '@mui/icons-material';
+import { generatePath, Link } from 'react-router-dom';
 import {
   Select,
   MenuItem,
@@ -9,6 +11,7 @@ import {
   Alert,
   Button,
   Box,
+  Stack,
 } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -19,6 +22,7 @@ import TableDataGrid from '../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';
 import { useAppSelector } from '../../../../../redux/hooks';
 import { partiesSelectors } from '../../../../../redux/slices/partiesSlice';
+import ROUTES from '../../../../../routes';
 import {
   LOADING_TASK_SUBSCRIPTION_ACTION,
   LOADING_TASK_SUBSCRIPTION_LIST,
@@ -256,9 +260,21 @@ export default function CommissionBundleSubscriptionsTable({
 
   return (
     <>
-      <Box my={2}>
+      <Stack my={2} direction="row" justifyContent="space-between">
         <Typography variant="h5">{t(`${componentPath}.title`)}</Typography>
-      </Box>
+        {bundleDetail.type === TypeEnum.PRIVATE && (
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            component={Link}
+            to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD_RECIPIENT, {
+              bundleId: bundleDetail.idBundle,
+            })}
+          >
+            {t(`${componentPath}.inviteButton`)}
+          </Button>
+        )}
+      </Stack>
       <TableSearchBar
         componentName={generalPath}
         handleSearchTrigger={(taxCodeFilter: string) => getSubscriptionList(0, taxCodeFilter, true)}

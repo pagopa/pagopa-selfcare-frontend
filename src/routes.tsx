@@ -32,6 +32,7 @@ const ROUTES = {
 
   COMMISSION_BUNDLES: `${BASE_ROUTE}/comm-bundles`,
   COMMISSION_BUNDLES_DETAIL: `${BASE_ROUTE}/comm-bundles/detail/:bundleId`,
+  COMMISSION_BUNDLES_ADD_RECIPIENT: `${BASE_ROUTE}/comm-bundles/detail/:bundleId/add-recipient`,
   COMMISSION_BUNDLES_ADD: `${BASE_ROUTE}/comm-bundles/add-bundle/`,
   COMMISSION_BUNDLES_EDIT: `${BASE_ROUTE}/comm-bundles/:bundleId/:actionId`,
   COMMISSION_BUNDLES_ACTIVATE: `${BASE_ROUTE}/comm-bundles/activate-bundle/`,
@@ -42,16 +43,19 @@ const ROUTES = {
 
   DELEGATIONS_LIST: `${BASE_ROUTE}/delegation-list`,
   DELEGATIONS_DETAIL: `${BASE_ROUTE}/delegation-list/detail`,
-  
-  PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`
+
+  PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`,
+
+  PAYMENT_NOTICES: `${BASE_ROUTE}/payments-notices`,
+  PAYMENT_NOTICES_ADDEDIT: `${BASE_ROUTE}/payments-notices/addedit`,
 
   /* TOS: {
-    PATH: '/terms-of-service',
-    LABEL: { it: 'Termini di servizio', en: 'Terms of service' },
-    COMPONENT: TOS,
-    PUBLIC: true,
-    AUTH_LEVELS: 'any',
-  }, */
+      PATH: '/terms-of-service',
+      LABEL: { it: 'Termini di servizio', en: 'Terms of service' },
+      COMPONENT: TOS,
+      PUBLIC: true,
+      AUTH_LEVELS: 'any',
+    }, */
 };
 
 export default ROUTES;

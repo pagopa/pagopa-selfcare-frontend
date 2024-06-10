@@ -18,6 +18,8 @@ import { PublicBundleRequest } from '../../../api/generated/portal/PublicBundleR
 import { formatCurrencyEur } from '../../../utils/common-utils';
 import { CIBundleResource } from '../../../api/generated/portal/CIBundleResource';
 import { TransferCategoryRelationEnum } from '../../../api/generated/portal/CIBundleAttribute';
+import { BundleResource } from '../../../model/CommissionBundle';
+import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 
 const initBundleRequest = (
   bundleDetails: CIBundleResource | undefined,
@@ -50,10 +52,11 @@ export default function CommissionBundleDetailActivationPage() {
 
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const bundleDetails: CIBundleResource =
-    useAppSelectorWithRedirect(
-      bundleDetailsSelectors.selectBundleDetails,
-      ROUTES.COMMISSION_BUNDLES
-    ) ?? {};
+    useAppSelectorWithRedirect({
+      selector: bundleDetailsSelectors.selectBundleDetails,
+      routeToRedirect: ROUTES.COMMISSION_BUNDLES,
+      conditionToRedirect: (el: BundleResource) => el.type === TypeEnum.GLOBAL,
+    }) ?? {};
 
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [bundleRequest, setBundleRequest] = useState<Partial<PublicBundleRequest>>(

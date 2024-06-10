@@ -51,7 +51,8 @@ const renderApp = (
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
-    });    render(
+    });
+    render(
         <Provider store={store}>
             <BrowserRouter>
                 <ThemeProvider theme={theme}>

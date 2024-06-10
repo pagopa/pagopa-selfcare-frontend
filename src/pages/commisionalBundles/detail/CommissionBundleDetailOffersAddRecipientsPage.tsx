@@ -16,6 +16,7 @@ import { CreditorInstitutionsResource } from '../../../api/generated/portal/Cred
 import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { LOADING_TASK_ADD_RECIPIENTS } from '../../../utils/constants';
 import { createCIBundleOffers } from '../../../services/bundleService';
+import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
 
 type CreditorInstitutionWithFromFile = CreditorInstitutionResource & { fromFile?: boolean };
 
@@ -37,10 +38,11 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
   const addError = useErrorDispatcher();
   const setLoadingAddRecipients = useLoading(LOADING_TASK_ADD_RECIPIENTS);
 
-  const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect(
-    bundleDetailsSelectors.selectBundleDetails,
-    ROUTES.COMMISSION_BUNDLES
-  );
+  const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
+    selector: bundleDetailsSelectors.selectBundleDetails,
+    routeToRedirect: ROUTES.COMMISSION_BUNDLES,
+    conditionToRedirect: (el: BundleResource) => el.type !== TypeEnum.PRIVATE
+  });
 
   const [availableEc, setAvailableEc] =
     useState<CreditorInstitutionsResource>(availableEcEmptyState);
@@ -64,7 +66,9 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
   }
 
   function addRecipientToSelected(ci: CreditorInstitutionWithFromFile) {
-    if (selectedRecipients.find((el) => el.creditorInstitutionCode === ci.creditorInstitutionCode)) {
+    if (
+      selectedRecipients.find((el) => el.creditorInstitutionCode === ci.creditorInstitutionCode)
+    ) {
       setErrorMessage(t(`${componentPath}.errorAutocomplete`));
     } else {
       setErrorMessage(undefined);
@@ -238,7 +242,11 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
           />
           <Box width="50%">
             {selectedRecipients.map((el: CreditorInstitutionResource, index) => (
-              <Box key={String(el.creditorInstitutionCode) + String(index)} pb={2} data-testid="selected-recipients">
+              <Box
+                key={String(el.creditorInstitutionCode) + String(index)}
+                pb={2}
+                data-testid="selected-recipients"
+              >
                 <ECSelection
                   availableEC={
                     availableEc.creditor_institutions ? [...availableEc.creditor_institutions] : []

@@ -85,7 +85,8 @@ export default function CommissionBundleDetailConfiguration({
                 padding: 3,
                 minHeight:
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== undefined &&
-                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE
+                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE &&
+          bundleDetail?.bundleTaxonomies?.length > 2
                         ? '370px'
                         : '310px',
                 display: 'flex',

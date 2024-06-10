@@ -1,5 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { ArrowBack } from '@mui/icons-material';
+import { useFormik } from 'formik';
+import { add } from 'date-fns';
 import {
   Box,
   Breadcrumbs,
@@ -12,26 +14,23 @@ import {
   Typography,
 } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { add } from 'date-fns';
-import { useFormik } from 'formik';
-import { useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import GenericModal from '../../../components/Form/GenericModal';
+import { Party } from '../../../model/Party';
+import ROUTES from '../../../routes';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { FormAction } from '../../../model/CommissionBundle';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { createBundle, updatePSPBundle } from '../../../services/bundleService';
+import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
+import { extractProblemJson } from '../../../utils/client-utils';
+import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResource';
-import GenericModal from '../../../components/Form/GenericModal';
-import { FormAction } from '../../../model/CommissionBundle';
-import { SigninData } from '../../../model/Node';
-import { Party } from '../../../model/Party';
-import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import ROUTES from '../../../routes';
-import { createBundle, updatePSPBundle } from '../../../services/bundleService';
-import { extractProblemJson } from '../../../utils/client-utils';
-import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
-import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
@@ -45,10 +44,9 @@ const minDateTomorrow = () => {
 
 const toNewFormData = (
   selectedParty: Party | undefined,
-  signinData: SigninData | undefined,
   data?: PSPBundleResource
 ): BundleRequest => ({
-  abi: getABIOrBIC(selectedParty, signinData),
+  abi: selectedParty?.pspData?.abi_code ?? '',
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
   digitalStampRestriction: data?.digitalStampRestriction ?? false,
@@ -157,7 +155,6 @@ const AddEditCommissionBundlePage = () => {
   const history = useHistory();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const singinData = useAppSelector(partiesSelectors.selectSigninData);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const { actionId } = useParams<{ actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -165,14 +162,14 @@ const AddEditCommissionBundlePage = () => {
   const isEdit: boolean = actionId === FormAction.Edit;
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
-    useAppSelectorWithRedirect(
-      bundleDetailsSelectors.selectBundleDetails,
-      isEdit ? ROUTES.COMMISSION_BUNDLES : undefined
-    ) ?? {};
+    useAppSelectorWithRedirect({
+      selector: bundleDetailsSelectors.selectBundleDetails,
+      routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
+    }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, singinData, isEdit ? bundleDetails : undefined),
+    initialValues: toNewFormData(selectedParty, isEdit ? bundleDetails : undefined),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);

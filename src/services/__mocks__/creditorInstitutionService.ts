@@ -74,20 +74,20 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
 };
 
 export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoResource = {
-    creditor_institution_info_list: [
-        {
-            business_name: 'EC 1',
-            ci_tax_code: '012345678912',
-        },
-        {
-            business_name: 'EC 2',
-            ci_tax_code: '012345678913',
-        },
-        {
-            business_name: 'EC 3',
-            ci_tax_code: '012345678914',
-        },
-    ],
+  creditor_institution_info_list: [
+  {
+    businessName: 'EC 1',
+    creditorInstitutionCode: '012345678912',
+  },
+  {
+    businessName: 'EC 2',
+    creditorInstitutionCode: '012345678913',
+  },
+  {
+    businessName: 'EC 3',
+    creditorInstitutionCode: '012345678914',
+  },
+  ],
 };
 
 export const getCreditorInstitutionContactsMock =

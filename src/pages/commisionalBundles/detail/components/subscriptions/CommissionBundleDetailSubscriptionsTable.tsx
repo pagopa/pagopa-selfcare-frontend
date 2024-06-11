@@ -213,7 +213,7 @@ export default function CommissionBundleSubscriptionsTable({
         pspTaxCode: selectedParty?.fiscalCode ?? '',
         bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
       });
-      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
+      actionId = 'COMMISSION_BUNDLE_DELETE_OFFER';
     }
     if (promise) {
       promise

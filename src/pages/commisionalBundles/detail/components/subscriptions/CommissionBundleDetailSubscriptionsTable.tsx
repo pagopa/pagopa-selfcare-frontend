@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import { Add } from '@mui/icons-material';
@@ -212,6 +213,8 @@ export default function CommissionBundleSubscriptionsTable({
         idBundle: bundleDetail?.idBundle ?? '',
         pspTaxCode: selectedParty?.fiscalCode ?? '',
         bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
+        ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
+        bundleName: bundleDetail?.name ?? '',
       });
       actionId = 'COMMISSION_BUNDLE_DELETE_OFFER';
     }

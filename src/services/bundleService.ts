@@ -266,10 +266,14 @@ export const deletePrivateBundleOffer = ({
   idBundle,
   pspTaxCode,
   bundleOfferId,
+  ciTaxCode,
+  bundleName,
 }: {
   idBundle: string;
   pspTaxCode: string;
   bundleOfferId: string;
+  ciTaxCode: string;
+  bundleName: string;
 }) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
@@ -278,6 +282,8 @@ export const deletePrivateBundleOffer = ({
       idBundle,
       pspTaxCode,
       bundleOfferId,
+      ciTaxCode,
+      bundleName,
     });
   }
 };

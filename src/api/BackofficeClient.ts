@@ -1341,15 +1341,21 @@ export const BackofficeApi = {
     idBundle,
     pspTaxCode,
     bundleOfferId,
+    ciTaxCode,
+    bundleName
   }: {
     idBundle: string;
     pspTaxCode: string;
     bundleOfferId: string;
+    ciTaxCode: string;
+    bundleName: string;
   }): Promise<void> => {
     const result = await backofficeClient.deletePrivateBundleOffer({
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       'bundle-offer-id': bundleOfferId,
+      ciTaxCode,
+      bundleName
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

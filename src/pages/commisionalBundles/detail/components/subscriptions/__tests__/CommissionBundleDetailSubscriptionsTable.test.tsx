@@ -324,7 +324,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             await waitFor(() => {
                 deleteOfferButton = screen.getByTestId("offer-delete-button");
                 expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-                expect(screen.queryByTestId('request-accept-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
             });
 
             fireEvent.click(deleteOfferButton);

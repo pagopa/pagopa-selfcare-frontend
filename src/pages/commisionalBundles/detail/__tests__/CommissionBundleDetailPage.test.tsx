@@ -3,6 +3,7 @@ import React from 'react';
 import CommissionBundleDetailPage from '../CommissionBundleDetailPage';
 import * as BundleService from '../../../../services/bundleService';
 import {
+    mockedCommissionBundleCiDetailPrivate,
     mockedCommissionBundleCiDetailPublic,
     mockedCommissionBundlePspDetailGlobal,
     mockedCommissionBundlePspDetailPrivate,
@@ -35,6 +36,7 @@ jest.mock('../../../../hooks/useOrganizationType');
 const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
 const deleteCISubscription = jest.spyOn(BundleService, "deleteCIBundleSubscription");
 const deleteCIRequest = jest.spyOn(BundleService, "deleteCIBundleRequest");
+const rejectCIOffer = jest.spyOn(BundleService, "rejectPrivateBundleOffer");
 
 const idBundle = 'idBundle';
 
@@ -391,35 +393,105 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         });
     })
 
+    describe("Bundle PRIVATE", () => {
+        test('With bundle in state AVAILABLE', async () => {
+            let bundle = {...mockedCommissionBundleCiDetailPrivate};
+            bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+            jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+                userRole: ROLE.PAGOPA_OPERATOR,
+                userIsPspAdmin: false,
+                userIsEcAdmin: false,
+                userIsPspDirectAdmin: false,
+                userIsPagopaOperator: true,
+                userIsAdmin: true,
+            });
+            render(
+                <Provider store={store}>
+                    <ComponentToRender bundle={bundle}/>
+                </Provider>
+            );
 
-    // describe("Bundle PRIVATE", () => {
-    //     test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
-    //         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-    //         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-    //             userRole: ROLE.PAGOPA_OPERATOR,
-    //             userIsPspAdmin: false,
-    //             userIsEcAdmin: false,
-    //             userIsPspDirectAdmin: false,
-    //             userIsPagopaOperator: true,
-    //             userIsAdmin: true,
-    //         });
-    //         render(
-    //             <Provider store={store}>
-    //                 <ComponentToRender bundle={mockedCommissionBundleCiDetailPrivate}/>
-    //             </Provider>
-    //         );
+            await waitFor(() => {
+                expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('reject-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('activate-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+            });
+        });
+        test('With bundle in state ENABLED', async () => {
+            let bundle = {...mockedCommissionBundleCiDetailPrivate};
+            bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+            deleteCISubscription.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+                userRole: ROLE.PAGOPA_OPERATOR,
+                userIsPspAdmin: false,
+                userIsEcAdmin: false,
+                userIsPspDirectAdmin: false,
+                userIsPagopaOperator: true,
+                userIsAdmin: true,
+            });
+            render(
+                <Provider store={store}>
+                    <ComponentToRender bundle={bundle}/>
+                </Provider>
+            );
 
-    //         await waitFor(() => {
-    //             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-    //             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-    //             expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
-    //         });
-    //     });
-    // })
+            await waitFor(() => {
+                expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('deactivate-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+            });
+
+            fireEvent.click(screen.getByTestId('deactivate-button'));
+
+            await waitFor(() => {
+                expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
+            })
+
+            fireEvent.click(screen.getByTestId('confirm-button-test'));
+
+            expect(deleteCISubscription).toBeCalled();
+        });
+        test('With bundle in state ON_REMOVAL', async () => {
+            let bundle = {...mockedCommissionBundleCiDetailPrivate};
+            bundle.ciBundleStatus = CiBundleStatusEnum.ON_REMOVAL;
+            deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+                userRole: ROLE.PAGOPA_OPERATOR,
+                userIsPspAdmin: false,
+                userIsEcAdmin: false,
+                userIsPspDirectAdmin: false,
+                userIsPagopaOperator: true,
+                userIsAdmin: true,
+            });
+            render(
+                <Provider store={store}>
+                    <ComponentToRender bundle={bundle}/>
+                </Provider>
+            );
+
+            await waitFor(() => {
+                expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+            });
+        });
+    })
 });

@@ -654,7 +654,10 @@
     }
   },
   "stationDetailPageValidation": {
-    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
+    "subtitle":{
+      "waiting": "Ecco i dettagli della stazione inviata in revisione.",
+      "approved": "Ecco i dettagli della stazione."
+    },
     "alert": {
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
       "toFixTitle": "Modifiche richieste",

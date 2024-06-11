@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import { Add } from '@mui/icons-material';
@@ -182,19 +183,39 @@ export default function CommissionBundleSubscriptionsTable({
     let actionId: string;
 
     if (actionType === 'reject') {
-      promise = getRejectSubscriptionPromise();
+      promise = rejectPublicBundleSubscription(
+        selectedParty?.fiscalCode ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
+      );
       actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
     }
     if (actionType === 'accept') {
-      promise = getAcceptSubscriptionPromise();
+      promise = acceptBundleSubscriptionRequest(
+        selectedParty?.fiscalCode ?? '',
+        selectedSubscription?.bundle_request_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
+      );
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }
     if (actionType === 'delete') {
-      promise = getDeleteSubscriptionPromise();
+      promise = deleteCIBundleSubscription(
+        selectedSubscription?.ci_bundle_id ?? '',
+        selectedSubscription?.creditor_institution_code ?? '',
+        bundleDetail?.name ?? ''
+      );
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
     if (actionType === 'deleteOffer') {
-      promise = getDeleteOfferSubscriptionPromise();
+      promise = deletePrivateBundleOffer({
+        idBundle: bundleDetail?.idBundle ?? '',
+        pspTaxCode: selectedParty?.fiscalCode ?? '',
+        bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
+        ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
+        bundleName: bundleDetail?.name ?? '',
+      });
       actionId = 'COMMISSION_BUNDLE_DELETE_OFFER_SUBSCRIPTION';
     }
     if (promise) {
@@ -221,42 +242,6 @@ export default function CommissionBundleSubscriptionsTable({
         });
     }
   };
-
-  function getRejectSubscriptionPromise() {
-    return rejectPublicBundleSubscription(
-      selectedParty?.fiscalCode ?? '',
-      selectedSubscription?.bundle_request_id ?? '',
-      selectedSubscription?.creditor_institution_code ?? '',
-      bundleDetail?.name ?? ''
-    );
-  }
-
-  function getAcceptSubscriptionPromise() {
-    return acceptBundleSubscriptionRequest(
-      selectedParty?.fiscalCode ?? '',
-      selectedSubscription?.bundle_request_id ?? '',
-      selectedSubscription?.creditor_institution_code ?? '',
-      bundleDetail?.name ?? ''
-    );
-  }
-
-  function getDeleteSubscriptionPromise() {
-    return deleteCIBundleSubscription(
-      selectedSubscription?.ci_bundle_id ?? '',
-      selectedSubscription?.creditor_institution_code ?? '',
-      bundleDetail?.name ?? ''
-    );
-  }
-
-  function getDeleteOfferSubscriptionPromise() {
-    return deletePrivateBundleOffer({
-      idBundle: bundleDetail?.idBundle ?? '',
-      pspTaxCode: selectedParty?.fiscalCode ?? '',
-      bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
-      ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
-      bundleName: bundleDetail?.name ?? '',
-    });
-  }
 
   function handleChangePage(value: number) {
     const newPage = value - 1;

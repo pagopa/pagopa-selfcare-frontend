@@ -7,22 +7,24 @@ import {store} from '../../../../../../redux/store';
 import {
     mockedCiSubscriptionDetail,
     mockedCiSubscriptionList,
+    mockedCommissionBundlePspDetailPrivate,
     mockedCommissionBundlePspDetailPublic,
 } from '../../../../../../services/__mocks__/bundleService';
 import * as bundleService from '../../../../../../services/bundleService';
 import {SubscriptionStateType} from '../../../../../../model/CommissionBundle';
 
-const spyOnGetPublicBundleCISubscriptions = jest.spyOn(
+const spyOnGetBundleCISubscriptions = jest.spyOn(
     bundleService,
     'getBundleCISubscriptions'
 );
-const spyOnGetPublicBundleCISubscriptionsDetail = jest.spyOn(
+const spyOnGetBundleCISubscriptionsDetail = jest.spyOn(
     bundleService,
     'getBundleCISubscriptionsDetail'
 );
 const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
 const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
 const spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
+const spyOnDeleteOffer = jest.spyOn(bundleService, "deletePrivateBundleOffer");
 
 const generalPath = "commissionBundlesPage.commissionBundleDetail.subscriptionsTable"
 const componentPath = `${generalPath}.requestsTable`;
@@ -34,7 +36,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test empty table, change state filter & render datagrid', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValueOnce(Promise.resolve([]));
+        spyOnGetBundleCISubscriptions.mockReturnValueOnce(Promise.resolve([]));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -55,7 +57,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             `${componentPath}.stateChip.${SubscriptionStateType.Waiting}`
         );
 
-        expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(1);
+        expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
         expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
         expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
 
@@ -71,7 +73,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             `${componentPath}.stateChip.${SubscriptionStateType.Accepted}`
         );
 
-        spyOnGetPublicBundleCISubscriptions.mockReturnValueOnce(
+        spyOnGetBundleCISubscriptions.mockReturnValueOnce(
             Promise.resolve(mockedCiSubscriptionList)
         );
 
@@ -79,7 +81,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
         fireEvent.click(searchButton);
 
         await waitFor(() => {
-            expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(2);
+            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
         });
 
         expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
@@ -87,7 +89,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error retrieving request detail', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -105,7 +107,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
         });
 
-        spyOnGetPublicBundleCISubscriptionsDetail.mockRejectedValueOnce('');
+        spyOnGetBundleCISubscriptionsDetail.mockRejectedValueOnce('');
         const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
@@ -119,7 +121,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test delete accepted subscriptions', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -149,13 +151,13 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
         fireEvent.click(searchButton);
 
         await waitFor(() => {
-            expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(2);
+            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
         });
 
         expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
 
-        spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
+        spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
         const subscriptionDetailButton = screen.getByTestId('request-detail-button');
@@ -181,7 +183,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
             await waitFor(() => {
                 expect(spyOnDeleteSubscription).toBeCalled();
-                expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(3);
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(3);
             });
 
             expect(screen.getByTestId('success-alert')).toBeInTheDocument();
@@ -189,7 +191,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test reject waiting requests', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -207,7 +209,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
         });
 
-        spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
+        spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
         const subscriptionDetailButton = screen.getByTestId('request-detail-button');
@@ -233,7 +235,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
             await waitFor(() => {
                 expect(spyOnRejectSubcriptionRequest).toBeCalled();
-                expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(2);
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
             });
 
             expect(screen.getByTestId('success-alert')).toBeInTheDocument();
@@ -241,7 +243,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test accept waiting requests', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -259,7 +261,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
         });
 
-        spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
+        spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
         const subscriptionDetailButton = screen.getByTestId('request-detail-button');
@@ -285,7 +287,59 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
             await waitFor(() => {
                 expect(spyOnAcceptSubcriptionRequest).toBeCalled();
-                expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(2);
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            });
+
+            expect(screen.getByTestId('success-alert')).toBeInTheDocument();
+        });
+    });
+
+    test('render component CommissionBundleDetailSubscriptionsTable and test reject offers', async () => {
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
+                    <Route path="/comm-bundles/:bundleId/">
+                        <CommissionBundleDetailSubscriptionsTable
+                            bundleDetail={mockedCommissionBundlePspDetailPrivate}
+                        />
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
+        spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
+            Promise.resolve(mockedCiSubscriptionDetail)
+        );
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
+        fireEvent.click(subscriptionDetailButton);
+
+        await act(async () => {
+            let deleteOfferButton;
+            await waitFor(() => {
+                deleteOfferButton = screen.getByTestId("offer-delete-button");
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-accept-button')).toBeInTheDocument();
+            });
+
+            fireEvent.click(deleteOfferButton);
+
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnDeleteOffer.mockReturnValue(Promise.resolve());
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnDeleteOffer).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
             });
 
             expect(screen.getByTestId('success-alert')).toBeInTheDocument();
@@ -293,7 +347,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error action on waiting requests', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
+        spyOnGetBundleCISubscriptions.mockReturnValue(Promise.resolve(mockedCiSubscriptionList));
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -311,7 +365,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
         });
 
-        spyOnGetPublicBundleCISubscriptionsDetail.mockReturnValue(
+        spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
         const subscriptionDetailButton = screen.getByTestId('request-detail-button');
@@ -337,7 +391,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
             await waitFor(() => {
                 expect(spyOnAcceptSubcriptionRequest).toBeCalled();
-                expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(1);
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
             });
 
             expect(screen.queryByTestId('success-alert')).not.toBeInTheDocument();
@@ -345,7 +399,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error on retrieve subscription list', async () => {
-        spyOnGetPublicBundleCISubscriptions.mockRejectedValue('error');
+        spyOnGetBundleCISubscriptions.mockRejectedValue('error');
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -358,7 +412,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
-        expect(spyOnGetPublicBundleCISubscriptions).toBeCalledTimes(1);
+        expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
         expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
         expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
     });

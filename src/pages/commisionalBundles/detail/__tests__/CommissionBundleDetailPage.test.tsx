@@ -422,6 +422,16 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
                 expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
             });
+
+            fireEvent.click(screen.getByTestId("reject-button"));
+
+            await waitFor(() => {
+                expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
+            })
+
+            fireEvent.click(screen.getByTestId('confirm-button-test'));
+
+            expect(rejectCIOffer).toBeCalled();
         });
         test('With bundle in state ENABLED', async () => {
             let bundle = {...mockedCommissionBundleCiDetailPrivate};
@@ -492,6 +502,46 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
                 expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
             });
+        });
+        test('API error', async () => {
+            let bundle = {...mockedCommissionBundleCiDetailPrivate};
+            bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+            rejectCIOffer.mockRejectedValueOnce("");
+            jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+                userRole: ROLE.PAGOPA_OPERATOR,
+                userIsPspAdmin: false,
+                userIsEcAdmin: false,
+                userIsPspDirectAdmin: false,
+                userIsPagopaOperator: true,
+                userIsAdmin: true,
+            });
+            render(
+                <Provider store={store}>
+                    <ComponentToRender bundle={bundle}/>
+                </Provider>
+            );
+
+            await waitFor(() => {
+                expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('reject-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('activate-button')).toBeInTheDocument();
+                expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+            });
+
+            fireEvent.click(screen.getByTestId("reject-button"));
+
+            await waitFor(() => {
+                expect(screen.queryByTestId("fade-test")).toBeInTheDocument();
+            })
+
+            fireEvent.click(screen.getByTestId('confirm-button-test'));
+
+            expect(rejectCIOffer).toBeCalled();
         });
     })
 });

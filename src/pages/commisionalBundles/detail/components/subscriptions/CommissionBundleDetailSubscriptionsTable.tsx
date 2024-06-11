@@ -182,38 +182,20 @@ export default function CommissionBundleSubscriptionsTable({
     let actionId: string;
 
     if (actionType === 'reject') {
-      promise = rejectPublicBundleSubscription(
-        selectedParty?.fiscalCode ?? '',
-        selectedSubscription?.bundle_request_id ?? '',
-        selectedSubscription?.creditor_institution_code ?? '',
-        bundleDetail?.name ?? ''
-      );
+      promise = getRejectSubscriptionPromise();
       actionId = 'COMMISSION_BUNDLE_REJECT_SUBSCRIPTION';
     }
     if (actionType === 'accept') {
-      promise = acceptBundleSubscriptionRequest(
-        selectedParty?.fiscalCode ?? '',
-        selectedSubscription?.bundle_request_id ?? '',
-        selectedSubscription?.creditor_institution_code ?? '',
-        bundleDetail?.name ?? ''
-      );
+      promise = getAcceptSubscriptionPromise();
       actionId = 'COMMISSION_BUNDLE_ACCEPT_SUBSCRIPTION';
     }
     if (actionType === 'delete') {
-      promise = deleteCIBundleSubscription(
-        selectedSubscription?.ci_bundle_id ?? '',
-        selectedSubscription?.creditor_institution_code ?? '',
-        bundleDetail?.name ?? ''
-      );
+      promise = getDeleteSubscriptionPromise();
       actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
     }
     if (actionType === 'deleteOffer') {
-      promise = deletePrivateBundleOffer({
-        idBundle: bundleDetail?.idBundle ?? '',
-        pspTaxCode: selectedParty?.fiscalCode ?? '',
-        bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
-      });
-      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
+      promise = getDeleteOfferSubscriptionPromise();
+      actionId = 'COMMISSION_BUNDLE_DELETE_OFFER_SUBSCRIPTION';
     }
     if (promise) {
       promise
@@ -239,6 +221,42 @@ export default function CommissionBundleSubscriptionsTable({
         });
     }
   };
+
+  function getRejectSubscriptionPromise() {
+    return rejectPublicBundleSubscription(
+      selectedParty?.fiscalCode ?? '',
+      selectedSubscription?.bundle_request_id ?? '',
+      selectedSubscription?.creditor_institution_code ?? '',
+      bundleDetail?.name ?? ''
+    );
+  }
+
+  function getAcceptSubscriptionPromise() {
+    return acceptBundleSubscriptionRequest(
+      selectedParty?.fiscalCode ?? '',
+      selectedSubscription?.bundle_request_id ?? '',
+      selectedSubscription?.creditor_institution_code ?? '',
+      bundleDetail?.name ?? ''
+    );
+  }
+
+  function getDeleteSubscriptionPromise() {
+    return deleteCIBundleSubscription(
+      selectedSubscription?.ci_bundle_id ?? '',
+      selectedSubscription?.creditor_institution_code ?? '',
+      bundleDetail?.name ?? ''
+    );
+  }
+
+  function getDeleteOfferSubscriptionPromise() {
+    return deletePrivateBundleOffer({
+      idBundle: bundleDetail?.idBundle ?? '',
+      pspTaxCode: selectedParty?.fiscalCode ?? '',
+      bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
+      ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
+      bundleName: bundleDetail?.name ?? '',
+    });
+  }
 
   function handleChangePage(value: number) {
     const newPage = value - 1;

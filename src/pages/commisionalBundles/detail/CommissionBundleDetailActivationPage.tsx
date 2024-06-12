@@ -12,7 +12,11 @@ import GenericModal from '../../../components/Form/GenericModal';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
 import { LOADING_TASK_COMMISSION_BUNDLE_ACTIVATION } from '../../../utils/constants';
-import { createCIBundleRequest, getSpecificBuiltInData } from '../../../services/bundleService';
+import {
+  acceptPrivateBundleOffer,
+  createCIBundleRequest,
+  getSpecificBuiltInData,
+} from '../../../services/bundleService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { PublicBundleRequest } from '../../../api/generated/portal/PublicBundleRequest';
 import { formatCurrencyEur } from '../../../utils/common-utils';
@@ -20,6 +24,7 @@ import { CIBundleResource } from '../../../api/generated/portal/CIBundleResource
 import { TransferCategoryRelationEnum } from '../../../api/generated/portal/CIBundleAttribute';
 import { BundleResource } from '../../../model/CommissionBundle';
 import { TypeEnum } from '../../../api/generated/portal/BundleRequest';
+import { CIBundleId } from '../../../api/generated/portal/CIBundleId';
 
 const initBundleRequest = (
   bundleDetails: CIBundleResource | undefined,
@@ -67,31 +72,48 @@ export default function CommissionBundleDetailActivationPage() {
   function handleBundleActivation() {
     setLoading(true);
 
-    createCIBundleRequest({
-      ciTaxCode: selectedParty?.fiscalCode ?? '',
-      bundleName: bundleDetails?.name ?? '',
-      bundleRequest,
-    })
-      .then(() => {
-        setShowConfirmModal(false);
-        history.push(ROUTES.COMMISSION_BUNDLES);
-      })
-      .catch((reason: Error) => {
-        addError({
-          id: 'ACTIVATE_COMMISSION_BUNDLE',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while activating the commission bundle`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t(`${componentPath}.errorMessage`),
-          component: 'Toast',
-        });
-      })
-      .finally(() => {
-        setShowConfirmModal(false);
-        setLoading(false);
+    // eslint-disable-next-line functional/no-let
+    let promise: Promise<CIBundleId | void> | undefined;
+    if (bundleDetails.type === TypeEnum.PRIVATE) {
+      promise = acceptPrivateBundleOffer({
+        ciTaxCode: selectedParty?.fiscalCode ?? '',
+        idBundleOffer: bundleDetails.ciOfferId ?? '',
+        pspTaxCode: bundleDetails.idBrokerPsp ?? '',
+
+        bundleName: bundleDetails?.name ?? '',
+        ciBundleAttributes: { attributes: [...(bundleRequest.attributes ?? [])] },
       });
+    } else if (bundleDetails.type === TypeEnum.PUBLIC) {
+      promise = createCIBundleRequest({
+        ciTaxCode: selectedParty?.fiscalCode ?? '',
+        bundleName: bundleDetails?.name ?? '',
+        bundleRequest,
+      });
+    }
+
+    if (promise) {
+      promise
+        .then(() => {
+          setShowConfirmModal(false);
+          history.push(ROUTES.COMMISSION_BUNDLES);
+        })
+        .catch((reason: Error) => {
+          addError({
+            id: 'ACTIVATE_COMMISSION_BUNDLE',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while activating the commission bundle`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t(`${componentPath}.errorMessage`),
+            component: 'Toast',
+          });
+        })
+        .finally(() => {
+          setShowConfirmModal(false);
+          setLoading(false);
+        });
+    }
   }
 
   function handleChangeCommissions(value: string, index: number) {
@@ -248,8 +270,8 @@ export default function CommissionBundleDetailActivationPage() {
           </Stack>
         </Stack>
         <GenericModal
-          title={t(`${componentPath}.modal.title`)}
-          message={t(`${componentPath}.modal.message`)}
+          title={t(`${componentPath}.modal.${bundleDetails.type}.title`)}
+          message={t(`${componentPath}.modal.${bundleDetails.type}.message`)}
           openModal={showConfirmModal}
           onConfirmLabel={t('general.confirm')}
           onCloseLabel={t('general.turnBack')}

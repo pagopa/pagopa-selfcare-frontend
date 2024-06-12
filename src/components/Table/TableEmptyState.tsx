@@ -5,22 +5,37 @@ import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 
+const EmptyStateWrapper = ({
+  isDataGrid,
+  children,
+}: {
+  isDataGrid?: boolean;
+  children: ReactNode;
+}) => {
+  if (isDataGrid) {
+    return <GridOverlay sx={{ pointerEvents: 'all' }}>{children}</GridOverlay>;
+  }
+  return <>{children}</>;
+};
+
 export default function TableEmptyState({
   componentName,
   translationPathSuffix,
   translationArgs,
   linkToRedirect,
   children,
+  isDataGrid,
 }: Readonly<{
   componentName: string;
   linkToRedirect?: string;
   children?: ReactNode;
   translationPathSuffix?: string;
   translationArgs?: any;
+  isDataGrid?: boolean; // To delete when all tables uses generic data grid component
 }>) {
   const { t } = useTranslation();
   return (
-    <GridOverlay sx={{ pointerEvents: 'all' }}>
+    <EmptyStateWrapper isDataGrid={isDataGrid}>
       <Box
         sx={{ backgroundColor: 'rgb(242, 242, 242)' }}
         data-testid="empty-state-table"
@@ -59,6 +74,6 @@ export default function TableEmptyState({
           {children}
         </Box>
       </Box>
-    </GridOverlay>
+    </EmptyStateWrapper>
   );
 }

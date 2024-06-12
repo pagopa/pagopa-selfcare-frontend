@@ -155,6 +155,7 @@ export default function TableDataGrid({
               linkToRedirect={linkToRedirect}
               translationPathSuffix={translationPathSuffix}
               translationArgs={translationArgs}
+              isDataGrid={true}
             >
               {emptyStateChildren}
             </TableEmptyState>

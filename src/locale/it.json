@@ -1013,7 +1013,12 @@
         "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani."
       },
       "error": {
-        "deleteCommissionBundle": "Errore durante l'eliminazione del pacchetto"
+        "deleteBundlePsp": "Errore durante l'eliminazione del pacchetto",
+        "deleteBundleEc": "Errore durante la disattivazione del pacchetto",
+        "acceptOfferEc": "Errore durante l'accettazione dell'offerta",
+        "rejectOfferEc": "Errore durante il rifiuto dell'offerta",
+        "deleteRequestEc": "Errore durante l'annullamento della richiesta",
+        "createRequestEc": "Errore durante la creazione della richiesta"
       },
       "modal": {
         "title": {
@@ -1037,8 +1042,14 @@
         "title": "Attiva pacchetto",
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
-          "title": "Richiesta attivazione pacchetto",
-          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
+          "PUBLIC": {
+            "title": "Richiesta attivazione pacchetto",
+            "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
+          },
+          "PRIVATE": {
+            "title": "Attivazione pacchetto",
+            "message": "Conferma l’attivazione del pacchetto."
+          }
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",

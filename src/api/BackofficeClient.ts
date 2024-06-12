@@ -97,6 +97,8 @@ import { WithDefaultsT, createClient } from './generated/portal/client';
 import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 import { createClient as createCustomClient } from './custom/client';
 import { WithDefaultsT as WithCustomDefaultsT } from './custom/client';
+import { CIBundleId } from './generated/portal/CIBundleId';
+import { CIBundleAttributeResource } from './generated/portal/CIBundleAttributeResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1420,4 +1422,47 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  acceptPrivateBundleOffer: async ({
+    ciTaxCode,
+    idBundleOffer,
+    pspTaxCode,
+    bundleName,
+    ciBundleAttributes,
+  }: {
+    ciTaxCode: string;
+    idBundleOffer: string;
+    pspTaxCode: string;
+    bundleName: string;
+    ciBundleAttributes: CIBundleAttributeResource;
+  }): Promise<CIBundleId> => {
+    const result = await backofficeClient.acceptPrivateBundleOffer({
+      'ci-tax-code': ciTaxCode,
+      'id-bundle-offer': idBundleOffer,
+      pspTaxCode,
+      bundleName,
+      body: ciBundleAttributes,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  rejectPrivateBundleOffer: async ({
+    ciTaxCode,
+    idBundleOffer,
+    pspTaxCode,
+    bundleName
+  }: {
+    ciTaxCode: string;
+    idBundleOffer: string;
+    pspTaxCode: string;
+    bundleName: string;
+  }): Promise<void> => {
+    const result = await backofficeClient.rejectPrivateBundleOffer({
+      'ci-tax-code': ciTaxCode,
+      'id-bundle-offer': idBundleOffer,
+      pspTaxCode,
+      bundleName
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  }
 };

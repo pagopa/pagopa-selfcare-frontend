@@ -216,7 +216,7 @@ export default function CommissionBundleSubscriptionsTable({
         ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
         bundleName: bundleDetail?.name ?? '',
       });
-      actionId = 'COMMISSION_BUNDLE_DELETE_OFFER_SUBSCRIPTION';
+      actionId = 'COMMISSION_BUNDLE_DELETE_OFFER';
     }
     if (promise) {
       promise

@@ -966,8 +966,8 @@
           "WAITING": "Disponibili"
         },
         "cta": {
-          "ACCEPTED": "Vedi quelli disponibili",
-          "WAITING": "Vedi quelli attivi"
+          "ACCEPTED": "Vedi pacchetti disponibili",
+          "WAITING": "Vedi pacchetti attivi"
         }
       },
       "headerFields": {

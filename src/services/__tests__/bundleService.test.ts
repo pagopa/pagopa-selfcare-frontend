@@ -4,6 +4,7 @@ import { SubscriptionStateType } from '../../model/CommissionBundle';
 import {
   mockedBundleCreateResponse,
   mockedBundleRequest,
+  mockedCiBundleAttributeResource,
   mockedCIBundleRequest,
   mockedCiSubscriptionDetail,
   mockedCiSubscriptionList,
@@ -31,11 +32,19 @@ import {
   updatePSPBundle,
   deletePrivateBundleOffer,
   createCIBundleOffers,
+  acceptPrivateBundleOffer,
+  rejectPrivateBundleOffer,
 } from '../bundleService';
 
 describe('BundleService test mocked', () => {
   test('Test getBundlesByPsp', async () => {
-    const response = await getBundleListByPSP(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'pspTaxCode');
+    const response = await getBundleListByPSP({
+      bundleType: TypeEnum.GLOBAL,
+      pageLimit: 5,
+      bundleName: 'bundleName',
+      page: 0,
+      pspCode: 'pspCode',
+    });
     expect(response).toMatchObject(mockedCommissionBundlePspList);
   });
   test('Test createBundle', async () => {
@@ -57,7 +66,14 @@ describe('BundleService test mocked', () => {
     expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
   });
   test('Test getCisBundles', async () => {
-    const response = await getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode');
+    const response = await getCisBundles({
+      bundleType: TypeEnum.GLOBAL,
+      pageLimit: 5,
+      bundleName: 'bundleName',
+      page: 0,
+      ciTaxCode: 'ciTaxCode',
+      bundleStatus: SubscriptionStateType.Accepted,
+    });
     expect(response).toMatchObject(mockedCommissionBundleCiList);
   });
   test('Test acceptBundleSubscriptionRequest', async () => {
@@ -130,6 +146,27 @@ describe('BundleService test mocked', () => {
       })
     ).resolves.not.toThrow();
   });
+  test('Test acceptPrivateBundleOffer', async () => {
+    expect(
+      acceptPrivateBundleOffer({
+        ciTaxCode: 'ciTaxCode',
+        idBundleOffer: 'idBundleOffer',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
+        ciBundleAttributes: mockedCiBundleAttributeResource,
+      })
+    ).resolves.not.toThrow();
+  });
+  test('Test rejectPrivateBundleOffer', async () => {
+    expect(
+      rejectPrivateBundleOffer({
+        ciTaxCode: 'ciTaxCode',
+        idBundleOffer: 'idBundleOffer',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
+      })
+    ).resolves.not.toThrow();
+  });
 });
 
 describe('BundleService test client', () => {
@@ -148,7 +185,13 @@ describe('BundleService test client', () => {
       .spyOn(BackofficeApi, 'getBundlesByPsp')
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(
-      getBundleListByPSP(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'pspTaxCode')
+      getBundleListByPSP({
+        bundleType: TypeEnum.GLOBAL,
+        pageLimit: 5,
+        bundleName: 'bundleName',
+        page: 0,
+        pspCode: 'pspCode',
+      })
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
@@ -191,7 +234,16 @@ describe('BundleService test client', () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'getCisBundles')
       .mockReturnValue(new Promise((resolve) => resolve({})));
-    expect(getCisBundles(TypeEnum.GLOBAL, 0, 'bundleName', 0, 'cisTaxCode')).resolves.not.toThrow();
+    expect(
+      getCisBundles({
+        bundleType: TypeEnum.GLOBAL,
+        pageLimit: 5,
+        bundleName: 'bundleName',
+        page: 0,
+        ciTaxCode: 'ciTaxCode',
+        bundleStatus: SubscriptionStateType.Accepted,
+      })
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test acceptBundleSubscriptionRequest', async () => {
@@ -298,6 +350,36 @@ describe('BundleService test client', () => {
         pspTaxCode: 'pspTaxCode',
         bundleName: 'bundleName',
         ciTaxCodeList: ['ciTaxCode'],
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+
+  test('Test acceptPrivateBundleOffer', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'acceptPrivateBundleOffer')
+      .mockReturnValue(Promise.resolve({idCiBundle: "idCiBundle"}));
+    expect(
+      acceptPrivateBundleOffer({
+        ciTaxCode: 'ciTaxCode',
+        idBundleOffer: 'idBundleOffer',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
+        ciBundleAttributes: mockedCiBundleAttributeResource,
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test rejectPrivateBundleOffer', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'rejectPrivateBundleOffer')
+      .mockReturnValue(Promise.resolve());
+    expect(
+      rejectPrivateBundleOffer({
+        ciTaxCode: 'ciTaxCode',
+        idBundleOffer: 'idBundleOffer',
+        pspTaxCode: 'pspTaxCode',
+        bundleName: 'bundleName',
       })
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);

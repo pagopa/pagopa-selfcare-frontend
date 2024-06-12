@@ -21,6 +21,7 @@ import {
   deleteCIBundleRequest,
   deleteCIBundleSubscription,
   deletePSPBundle,
+  rejectPrivateBundleOffer,
 } from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import { Party } from '../../../model/Party';
@@ -176,6 +177,7 @@ const CommissionBundleDetailPage = () => {
   const bundleId = commissionBundleDetail.idBundle ?? '';
   const [showConfirmModal, setShowConfirmModal] = useState<BundleDetailsActionTypes | null>(null);
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function handleModalAction() {
     setLoading(true);
     const pspTaxCode = selectedParty?.fiscalCode ?? '';
@@ -196,8 +198,14 @@ const CommissionBundleDetailPage = () => {
           idBundleRequest: (commissionBundleDetail as CIBundleResource)?.ciRequestId ?? '',
           ciTaxCode: selectedParty?.fiscalCode ?? '',
         });
+      } else if (showConfirmModal === BundleDetailsActionTypes.REJECT_OFFER_EC) {
+        promise = rejectPrivateBundleOffer({
+          ciTaxCode: selectedParty?.fiscalCode ?? '',
+          idBundleOffer: (commissionBundleDetail as CIBundleResource)?.ciOfferId ?? '',
+          pspTaxCode: commissionBundleDetail.idBrokerPsp ?? '',
+          bundleName: commissionBundleDetail.name ?? '',
+        });
       }
-      // TODO IMPLEMENT REJECT PRIVATE BUNDLE OFFER API VAS-941
       if (promise) {
         promise
           .then(() => {
@@ -208,16 +216,19 @@ const CommissionBundleDetailPage = () => {
               id: showConfirmModal,
               blocking: false,
               error: reason,
-              techDescription: `An error occurred while deleting a commission bundle`,
+              techDescription: `An error occurred with the commission bundle action`,
               toNotify: true,
               displayableTitle: t('general.errorTitle'),
               displayableDescription: t(
-                'commissionBundlesPage.commissionBundleDetail.error.deleteCommissionBundle'
+                `commissionBundlesPage.commissionBundleDetail.error.${showConfirmModal}`
               ),
               component: 'Toast',
             });
           })
-          .finally(() => setLoading(false));
+          .finally(() => {
+            setShowConfirmModal(null);
+            setLoading(false);
+          });
       }
     }
   }

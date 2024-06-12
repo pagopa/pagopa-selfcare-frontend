@@ -288,7 +288,7 @@ const getCIStatusChip = (
   return '-';
 };
 
-const SelectStatusFilter = ({
+export const SelectStatusFilter = ({
   setBundleStatus,
   bundleStatus,
 }: {

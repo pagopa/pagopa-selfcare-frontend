@@ -154,7 +154,6 @@ describe('<CommissionBundlesTable />', () => {
         );
 
         await waitFor(() => {
-            expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
             expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
         });
     });

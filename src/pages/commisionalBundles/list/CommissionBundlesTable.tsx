@@ -21,43 +21,41 @@ import { buildColumnDefs } from './CommissionBundlesTableColumns';
 type Props = {
   bundleNameFilter?: string;
   bundleType: string;
-  bundleStatus?: SubscriptionStateType;
 };
 
 const rowHeight = 64;
 const headerHeight = 56;
 
 const emptyCommissionBundleList: BundlesResource = {
-    bundles: [],
-    pageInfo: {
-        items_found: 0,
-        limit: 0,
-        page: 0,
-        total_pages: 0,
-    },
+  bundles: [],
+  pageInfo: {
+    items_found: 0,
+    limit: 0,
+    page: 0,
+    total_pages: 0,
+  },
 };
 
 const mapBundle = (bundleType: string) => {
-    switch (bundleType) {
-        case 'commissionBundlesPage.globalBundles':
-            return 'GLOBAL';
-        case 'commissionBundlesPage.publicBundles':
-            return 'PUBLIC';
-        case 'commissionBundlesPage.privateBundles':
-            return 'PRIVATE';
-        default:
-            return '';
-    }
+  switch (bundleType) {
+    case 'commissionBundlesPage.globalBundles':
+      return 'GLOBAL';
+    case 'commissionBundlesPage.publicBundles':
+      return 'PUBLIC';
+    case 'commissionBundlesPage.privateBundles':
+      return 'PRIVATE';
+    default:
+      return '';
+  }
 };
 
 const componentPath = 'commissionBundlesPage.list';
-const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: Props) => {
+const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
-  const columns: Array<GridColDef> = buildColumnDefs(t, orgInfo.types.isPsp, orgInfo.types.isEc);
 
   const brokerCode = selectedParty?.fiscalCode ?? '';
   const mappedBundleType = mapBundle(bundleType);
@@ -66,10 +64,19 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
   const [page, setPage] = useState<number>(0);
   const [pageLimit, setPageLimit] = useState<number>(5);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const [bundleStatus, setBundleStatus] = useState<SubscriptionStateType | undefined>(
+    mappedBundleType === TypeEnum.PRIVATE ? SubscriptionStateType.Accepted : undefined
+  );
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    orgInfo.types.isPsp,
+    orgInfo.types.isEc,
+    bundleStatus ? setBundleStatus : undefined
+  );
 
-    const setLoadingStatus = (status: boolean) => {
-        setLoading(status);
-    };
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+  };
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const getBundleList = (newPage?: number) => {

@@ -19,7 +19,7 @@ export default function TableEmptyState({
 }>) {
     const {t} = useTranslation();
     return (
-        <Box p={3} mt={3} sx={{backgroundColor: 'rgb(242, 242, 242)'}} data-testid="empty-state-table">
+        <Box sx={{backgroundColor: 'rgb(242, 242, 242)'}} data-testid="empty-state-table">
             <Box p={2} sx={{textAlign: 'center', backgroundColor: '#FFFFFF'}}>
                 <Typography variant="body2">
                     {t(

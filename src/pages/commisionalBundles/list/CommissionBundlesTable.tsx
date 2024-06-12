@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { useTranslation } from 'react-i18next';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
@@ -64,14 +65,17 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const [page, setPage] = useState<number>(0);
   const [pageLimit, setPageLimit] = useState<number>(5);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-  const [bundleStatus, setBundleStatus] = useState<SubscriptionStateType | undefined>(
-    mappedBundleType === TypeEnum.PRIVATE ? SubscriptionStateType.Accepted : undefined
+  const [privateBundleStatus, setPrivateBundleStatus] = useState<SubscriptionStateType | undefined>(
+    mappedBundleType === TypeEnum.PRIVATE && orgInfo.types.isEc
+      ? SubscriptionStateType.Accepted
+      : undefined
   );
   const columns: Array<GridColDef> = buildColumnDefs(
     t,
     orgInfo.types.isPsp,
     orgInfo.types.isEc,
-    bundleStatus ? setBundleStatus : undefined
+    setPrivateBundleStatus,
+    privateBundleStatus
   );
 
   const setLoadingStatus = (status: boolean) => {
@@ -104,7 +108,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
         bundleName: bundleNameFilter ?? undefined,
         page: newPage ?? page,
         ciTaxCode: mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode,
-        bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? bundleStatus : undefined,
+        bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? privateBundleStatus : undefined,
       });
     }
     if (promise) {
@@ -156,7 +160,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
 
   useEffect(() => {
     getBundleList(0);
-  }, [bundleStatus, pageLimit]);
+  }, [privateBundleStatus, pageLimit]);
 
   return (
     <Box
@@ -171,8 +175,21 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     >
       <TableDataGrid
         componentPath={componentPath}
-        translationArgs={{ bundleType: t(bundleType) }}
+        translationArgs={{
+          bundleType: t(bundleType).toLowerCase(),
+          status: privateBundleStatus
+            ? ' ' + t(`commissionBundlesPage.list.table.state.${privateBundleStatus}`).toLowerCase()
+            : null,
+        }}
         linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
+        emptyStateChildren={
+          privateBundleStatus && (
+            <PrivateBundleEmptyStateCTA
+              setBundleStatus={setPrivateBundleStatus}
+              bundleStatus={privateBundleStatus}
+            />
+          )
+        }
         rows={listFiltered?.bundles ? [...listFiltered.bundles] : []}
         columns={columns}
         totalPages={listFiltered?.pageInfo?.total_pages}
@@ -187,3 +204,31 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
 };
 
 export default CommissionBundlesTable;
+
+const PrivateBundleEmptyStateCTA = ({
+  setBundleStatus,
+  bundleStatus,
+}: {
+  setBundleStatus: (value: any) => void;
+  bundleStatus: SubscriptionStateType;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <ButtonNaked
+      size="medium"
+      component="button"
+      onClick={() =>
+        setBundleStatus(
+          bundleStatus === SubscriptionStateType.Accepted
+            ? SubscriptionStateType.Waiting
+            : SubscriptionStateType.Accepted
+        )
+      }
+      sx={{ color: 'primary.main', ml: 1 }}
+      weight="default"
+      data-testid="private-bundle-cta"
+    >
+      {t(`${componentPath}.table.cta.${bundleStatus}`)}
+    </ButtonNaked>
+  );
+};

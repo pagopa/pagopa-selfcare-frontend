@@ -1,6 +1,6 @@
 import { Pagination, Grid, Select, MenuItem } from '@mui/material';
 import { GridColumns, GridValidRowModel } from '@mui/x-data-grid';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { theme } from '@pagopa/mui-italia';
@@ -77,6 +77,7 @@ type Props = {
   pageLimit?: number;
   setPageLimit?: (value: number) => void;
   linkToRedirect?: string;
+  emptyStateChildren?: ReactNode;
 };
 
 const pageLimitOptions = [5, 10, 15, 20];
@@ -85,6 +86,7 @@ export default function TableDataGrid({
   componentPath,
   translationPathSuffix,
   translationArgs,
+  emptyStateChildren,
   // Datagrid Props
   rows,
   columns,
@@ -147,13 +149,15 @@ export default function TableDataGrid({
                 </Grid>
               </Grid>
             ) : null,
-            NoRowsOverlay: () => (
+          NoRowsOverlay: () => (
             <TableEmptyState
               componentName={componentPath}
               linkToRedirect={linkToRedirect}
               translationPathSuffix={translationPathSuffix}
               translationArgs={translationArgs}
-            />
+            >
+              {emptyStateChildren}
+            </TableEmptyState>
           ),
         }}
         getRowId={(r: any) => (getRowId ? getRowId(r) : r.id)}

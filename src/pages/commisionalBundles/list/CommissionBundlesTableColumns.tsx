@@ -25,7 +25,8 @@ export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   isPsp: boolean,
   isCi: boolean,
-  setBundleStatus?: (value: SubscriptionStateType) => void
+  setBundleStatus?: (value: SubscriptionStateType) => void,
+  bundleStatus?: SubscriptionStateType
 ) {
   return [
     {
@@ -114,8 +115,8 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: (params) =>
-        setBundleStatus && isCi ? (
-          <SelectStatusFilter setStatusFilter={setBundleStatus} />
+        bundleStatus && setBundleStatus ? (
+          <SelectStatusFilter setBundleStatus={setBundleStatus} bundleStatus={bundleStatus} />
         ) : (
           showCustomHeader(params)
         ),
@@ -288,9 +289,11 @@ const getCIStatusChip = (
 };
 
 const SelectStatusFilter = ({
-  setStatusFilter,
+  setBundleStatus,
+  bundleStatus,
 }: {
-  setStatusFilter: (value: SubscriptionStateType) => void;
+  setBundleStatus: (value: SubscriptionStateType) => void;
+  bundleStatus: SubscriptionStateType;
 }) => {
   const { t } = useTranslation();
 
@@ -300,11 +303,10 @@ const SelectStatusFilter = ({
         id={`bundleStatus`}
         labelId={`bundleStatusLabel`}
         name={`bundleStatus`}
-        label={t('commissionBundlesPage.list.search.stateFilter')}
-        defaultValue={SubscriptionStateType.Accepted}
         size="small"
+        value={bundleStatus}
         onChange={(event) => {
-          setStatusFilter(event.target.value as SubscriptionStateType);
+          setBundleStatus(event.target.value as SubscriptionStateType);
         }}
         data-testid="bundleStatus-type-test"
         disableUnderline
@@ -316,10 +318,10 @@ const SelectStatusFilter = ({
         }}
       >
         <MenuItem value={SubscriptionStateType.Accepted}>
-          {t('commissionBundlesPage.list.search.stateActive')}
+          {t(`commissionBundlesPage.list.table.state.${SubscriptionStateType.Accepted}`)}
         </MenuItem>
         <MenuItem value={SubscriptionStateType.Waiting}>
-          {t('commissionBundlesPage.list.search.stateWaiting')}
+        {t(`commissionBundlesPage.list.table.state.${SubscriptionStateType.Waiting}`)}
         </MenuItem>
       </Select>
     </FormControl>

@@ -1,6 +1,6 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
-import {cleanup, render, screen, waitFor} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import {Provider} from 'react-redux';
@@ -155,6 +155,56 @@ describe('<CommissionBundlesTable />', () => {
 
         await waitFor(() => {
             expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
+        });
+    });
+
+    test('render component CommissionBundlesTable with private bundle list for EC', async () => {
+        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+            orgInfo: {
+                isSigned: true,
+                types: {
+                    isPsp: false,
+                    isPspBroker: false,
+                    isEc: true,
+                    isEcBroker: true,
+                },
+            },
+            orgIsBrokerSigned: false,
+            orgIsEcBrokerSigned: false,
+            orgIsEcDirect: false,
+            orgIsEcSigned: false,
+            orgIsPspBrokerSigned: false,
+            orgIsPspDirect: false,
+            orgIsPspSigned: false,
+        });
+
+        mockEC.mockReturnValueOnce(new Promise((resolve) => resolve([])));
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/comm-bundles`]}>
+                    <Route path="/comm-bundles">
+                        <ThemeProvider theme={theme}>
+                            <CommissionBundlesTable
+                                bundleNameFilter={''}
+                                bundleType={'commissionBundlesPage.privateBundles'}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+            expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
+            expect(screen.queryByTestId("private-bundle-cta")).toBeInTheDocument();
+        });
+
+        mockEC.mockReturnValueOnce(new Promise((resolve) => resolve(mockedCommissionBundlePspList)));
+        fireEvent.click(screen.getByTestId("private-bundle-cta"));
+
+        await waitFor(() => {
+            expect(mockEC).toBeCalledTimes(2);
         });
     });
 });

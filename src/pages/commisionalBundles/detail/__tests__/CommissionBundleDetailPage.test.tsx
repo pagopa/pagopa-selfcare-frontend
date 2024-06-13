@@ -20,6 +20,7 @@ import * as useOrganizationType from '../../../../hooks/useOrganizationType';
 import {ROLE} from "../../../../model/RolePermission";
 import {BundleResource} from '../../../../model/CommissionBundle';
 import {CiBundleStatusEnum} from '../../../../api/generated/portal/CIBundleResource';
+import { add } from 'date-fns';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -102,7 +103,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-
+            expect(screen.queryByTestId('offer-table')).not.toBeInTheDocument();
             expect(screen.queryByTestId('delete-button')).toBeInTheDocument();
             expect(screen.queryByTestId('modify-button')).toBeInTheDocument();
             expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
@@ -149,7 +150,31 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('offer-table')).toBeInTheDocument();
+            expect(screen.queryByTestId('delete-button')).toBeInTheDocument();
+            expect(screen.queryByTestId('modify-button')).toBeInTheDocument();
+            expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+        });
+    });
 
+    test('render component CommissionBundleDetailPage bundle type PRIVATE in activation', async () => {
+        deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+        let bundle = {...mockedCommissionBundlePspDetailPrivate};
+        bundle.validityDateFrom = add(new Date(), { days: 3 });
+        render(
+            <Provider store={store}>
+                <ComponentToRender bundle={bundle}/>
+            </Provider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+            expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('offer-table')).not.toBeInTheDocument();
             expect(screen.queryByTestId('delete-button')).toBeInTheDocument();
             expect(screen.queryByTestId('modify-button')).toBeInTheDocument();
             expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
@@ -172,7 +197,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
             expect(screen.queryByTestId('subscription-table')).toBeInTheDocument();
-
+            expect(screen.queryByTestId('offer-table')).not.toBeInTheDocument();
             expect(screen.queryByTestId('delete-button')).toBeInTheDocument();
             expect(screen.queryByTestId('modify-button')).toBeInTheDocument();
             expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();

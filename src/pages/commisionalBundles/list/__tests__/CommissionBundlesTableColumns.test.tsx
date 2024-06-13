@@ -554,6 +554,25 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
+    test('Bundle ENABLED expiring', () => {
+      let bundle = { ...mockedCommissionBundleCiDetailPrivate };
+      bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = new Date();
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
     test("Bundle state filter", () => {
         render(
             <Provider store={store}>

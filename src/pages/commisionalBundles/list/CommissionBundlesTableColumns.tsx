@@ -275,6 +275,13 @@ const getCIStatusChip = (
     }
 
     if (bundleStatus === CiBundleStatusEnum.ENABLED) {
+      if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
+        return renderStatusChip({
+          chipColor: 'warning',
+          chipLabel: t('commissionBundlesPage.list.states.expiring'),
+          dataTestId: 'warning-state-chip',
+        });
+      }
       return (
         <Chip
           color={'success'}

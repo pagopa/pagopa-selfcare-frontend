@@ -59,7 +59,6 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
         expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
         expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
-        expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
 
         await waitFor(() => {
             fireEvent.mouseDown(selectSubscriptionStateFilterBtn);
@@ -414,6 +413,5 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
         expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
         expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
-        expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
     });
 });

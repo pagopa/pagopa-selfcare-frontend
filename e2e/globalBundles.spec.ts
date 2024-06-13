@@ -123,7 +123,6 @@ async function getToBundleDetail(page: Page) {
   await page.getByTestId('search-input').fill(bundleNameGlobal);
   let isVisible = false;
   const tomorrowDate = getTomorrowDate();
-  console.log("SAMU", tomorrowDate);
   while (true) {
     await page.waitForTimeout(2000);
     isVisible = await page

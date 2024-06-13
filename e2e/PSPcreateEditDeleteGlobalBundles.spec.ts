@@ -1,7 +1,8 @@
 import { test, Page } from '@playwright/test';
+import { getTomorrowDate } from './e2eUtils';
 
 test('PSP creates global bundle, edits it and then deletes it', async ({ page }) => {
-  test.setTimeout(100000)
+  test.setTimeout(100000);
   await page.goto('http://localhost:3000/');
   await page
     .getByLabel('Privacy', { exact: true })
@@ -42,16 +43,39 @@ test('PSP creates global bundle, edits it and then deletes it', async ({ page })
   await page.getByTestId('open-taxonomies-drawer').click();
   await page.getByRole('heading', { name: 'AGENZIE FISCALI' }).click();
   await page.getByRole('heading', { name: 'AGENZIA DELLE ENTRATE (AdE)' }).click();
-  await page.locator('.MuiBox-root > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input').first().check();
-  await page.locator('div:nth-child(7) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input').check();
+  await page
+    .locator(
+      '.MuiBox-root > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input'
+    )
+    .first()
+    .check();
+  await page
+    .locator(
+      'div:nth-child(7) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input'
+    )
+    .check();
   await page.getByTestId('taxonomies-add-button-test').click();
   await page.getByTestId('delete-all-taxonomies-by-group').click();
   await page.getByTestId('confirm-button-test').click();
   await page.getByTestId('open-taxonomies-drawer').click();
-  await page.getByTestId('padded-drawer').locator('div').filter({ hasText: 'AGENZIE FISCALI' }).nth(4).click();
+  await page
+    .getByTestId('padded-drawer')
+    .locator('div')
+    .filter({ hasText: 'AGENZIE FISCALI' })
+    .nth(4)
+    .click();
   await page.getByRole('heading', { name: 'AGENZIA DELLE ENTRATE (AdE)' }).click();
-  await page.locator('.MuiBox-root > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input').first().check();
-  await page.locator('div:nth-child(7) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input').check();
+  await page
+    .locator(
+      '.MuiBox-root > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input'
+    )
+    .first()
+    .check();
+  await page
+    .locator(
+      'div:nth-child(7) > .MuiFormControlLabel-root > .MuiButtonBase-root > .PrivateSwitchBase-input'
+    )
+    .check();
   await page.getByTestId('taxonomies-add-button-test').click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
@@ -79,18 +103,19 @@ async function getToBundleDetail(page: Page) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill('Integration test globali');
   let isVisible = false;
+  const tomorrowDate = getTomorrowDate();
+  console.log("SAMU", tomorrowDate);
   while (true) {
     await page.waitForTimeout(2000);
     isVisible = await page
       .getByRole('row', {
-        name: 'Integration test globali 14/06/2024 14/06/2024 CHECKOUT REMOVEME Status',
+        name: `Integration test globali ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
       })
       .isVisible();
-    console.log('SAMU', isVisible);
     if (isVisible) {
       await page
         .getByRole('row', {
-          name: 'Integration test globali 14/06/2024 14/06/2024 CHECKOUT REMOVEME Status',
+          name: `Integration test globali ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
         })
         .getByLabel('Gestisci pacchetto')
         .click();

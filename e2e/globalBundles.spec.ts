@@ -121,11 +121,11 @@ test('EC goes to global bundle detail', async ({ page }) => {
 async function getToBundleDetail(page: Page) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleNameGlobal);
-  let isVisible = false;
   const tomorrowDate = getTomorrowDate();
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     await page.waitForTimeout(2000);
-    isVisible = await page
+    const isVisible = await page
       .getByRole('row', {
         name: `${bundleNameGlobal} ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
       })

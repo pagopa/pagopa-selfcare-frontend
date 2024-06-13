@@ -1,1 +1,1 @@
-export const bundleNameGlobal = "Integration test globalaasdasdasdadsadsa";
+export const bundleNameGlobal = "Integration test global";

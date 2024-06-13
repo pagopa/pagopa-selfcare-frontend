@@ -222,16 +222,30 @@ const getCIStatusChip = (
     bundleType: TypeEnum | undefined,
     bundleStatus: CiBundleStatusEnum | undefined
 ) => {
-    if (bundleType === TypeEnum.PUBLIC) {
-        if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
-            return (
-                <Chip
-                    color={'default'}
-                    label={t('commissionBundlesPage.list.states.toBeActivated')}
-                    data-testid="default-state-chip"
-                />
-            );
-        }
+  if (bundleType === TypeEnum.GLOBAL) {
+    if (validityDateFrom && todayDate.getTime() < validityDateFrom.getTime()) {
+      return renderStatusChip({
+        chipColor: 'default',
+        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
+        dataTestId: 'default-state-chip',
+      });
+    }
+
+    return renderStatusChip({
+      chipColor: 'success',
+      chipLabel: t('commissionBundlesPage.list.states.active'),
+      dataTestId: 'success-state-chip',
+    });
+  } else {
+    if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
+      return (
+        <Chip
+          color={'default'}
+          label={t('commissionBundlesPage.list.states.toBeActivated')}
+          data-testid="default-state-chip"
+        />
+      );
+    }
 
         if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
             return (
@@ -253,69 +267,16 @@ const getCIStatusChip = (
             );
         }
 
-        if (bundleStatus === CiBundleStatusEnum.ENABLED) {
-            return (
-                <Chip
-                    color={'success'}
-                    label={t('commissionBundlesPage.list.states.active')}
-                    data-testid="success-state-chip"
-                />
-            );
-        }
+    if (bundleStatus === CiBundleStatusEnum.ENABLED) {
+      return (
+        <Chip
+          color={'success'}
+          label={t('commissionBundlesPage.list.states.active')}
+          data-testid="success-state-chip"
+        />
+      );
     }
-
-    if (bundleType === TypeEnum.PRIVATE) {
-        if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
-            return renderStatusChip({
-                chipColor: 'error',
-                chipLabel: t('commissionBundlesPage.list.states.eliminating'),
-                dataTestId: 'error-state-chip',
-            });
-        }
-        if (validityDateTo && dateDifferenceInDays(todayDate, validityDateTo) <= 7) {
-            return renderStatusChip({
-                chipColor: 'warning',
-                chipLabel: t('commissionBundlesPage.list.states.expiring'),
-                dataTestId: 'warning-state-chip',
-            });
-        }
-        /* TODO
-      if(isEc  && bundle not activated by EC ){
-              return (
-          <Chip
-            color={'default'}
-            label={t('commissionBundlesPage.list.states.toBeActivated')}
-            data-testid="default-state-chip"
-          />);
-      }
-    */
-        /* TODO
-      if(isEc  && bundle activated by EC ){
-              return (
-         <Chip
-            color={'success'}
-            label={t('commissionBundlesPage.list.states.active')}
-            data-testid="success-state-chip"
-          />);
-      }
-    */
-    }
-
-    if (bundleType === TypeEnum.GLOBAL) {
-        if (validityDateFrom && todayDate.getTime() < validityDateFrom.getTime()) {
-            return renderStatusChip({
-                chipColor: 'default',
-                chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-                dataTestId: 'default-state-chip',
-            });
-        }
-
-        return renderStatusChip({
-            chipColor: 'success',
-            chipLabel: t('commissionBundlesPage.list.states.active'),
-            dataTestId: 'success-state-chip',
-        });
-    }
+  }
 
     return '-';
 };

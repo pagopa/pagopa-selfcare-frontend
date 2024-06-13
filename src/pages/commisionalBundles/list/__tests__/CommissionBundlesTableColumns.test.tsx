@@ -558,7 +558,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
       bundle.validityDateFrom = new Date('01/01/2020');
-      bundle.validityDateTo = new Date();
+      bundle.validityDateTo = add(new Date(), {days: 6});
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -570,6 +570,25 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('warning-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+    });
+    test('Bundle ENABLED expired', () => {
+      let bundle = { ...mockedCommissionBundleCiDetailPrivate };
+      bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = new Date();
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });

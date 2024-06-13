@@ -1,5 +1,6 @@
 import { test, Page } from '@playwright/test';
 import { getTomorrowDate } from './e2eUtils';
+import { bundleNameGlobal } from './bundleUtils';
 
 test('PSP creates global bundle, edits it and then deletes it', async ({ page }) => {
   test.setTimeout(100000);
@@ -20,7 +21,7 @@ test('PSP creates global bundle, edits it and then deletes it', async ({ page })
   await page.getByTestId('create-bundle-button').click();
   await page.getByLabel('Per tutti').check();
   await page.getByTestId('name-test').click();
-  await page.getByTestId('name-test').fill('Integration test globali');
+  await page.getByTestId('name-test').fill(bundleNameGlobal);
   await page.getByTestId('description-test').click();
   await page.getByTestId('description-test').fill('desc');
   await page.getByLabel('Tipo di pagamento').click();
@@ -99,9 +100,27 @@ test('PSP creates global bundle, edits it and then deletes it', async ({ page })
   await page.getByTestId('confirm-button-test').click();
 });
 
+test('EC goes to global bundle detail', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await page
+    .getByLabel('Privacy', { exact: true })
+    .locator('div')
+    .filter({ hasText: 'Questo sito utilizza cookies' })
+    .nth(1)
+    .click();
+  await page.getByRole('button', { name: 'Chiudi' }).click();
+  await page.getByRole('button', { name: 'Accedi' }).click();
+  await page.getByTestId('commission-bundles-test').click();
+  await page.getByTestId('search-input').click();
+  await page.getByTestId('search-input').fill(bundleNameGlobal);
+  await page.waitForTimeout(2000);
+  await page.getByLabel('Gestisci pacchetto').first().click();
+  await page.getByTestId('exit-btn-test').click();
+});
+
 async function getToBundleDetail(page: Page) {
   await page.getByTestId('search-input').click();
-  await page.getByTestId('search-input').fill('Integration test globali');
+  await page.getByTestId('search-input').fill(bundleNameGlobal);
   let isVisible = false;
   const tomorrowDate = getTomorrowDate();
   console.log("SAMU", tomorrowDate);
@@ -109,13 +128,13 @@ async function getToBundleDetail(page: Page) {
     await page.waitForTimeout(2000);
     isVisible = await page
       .getByRole('row', {
-        name: `Integration test globali ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
+        name: `${bundleNameGlobal} ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
       })
       .isVisible();
     if (isVisible) {
       await page
         .getByRole('row', {
-          name: `Integration test globali ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
+          name: `${bundleNameGlobal} ${tomorrowDate} ${tomorrowDate} CHECKOUT REMOVEME Status`,
         })
         .getByLabel('Gestisci pacchetto')
         .click();

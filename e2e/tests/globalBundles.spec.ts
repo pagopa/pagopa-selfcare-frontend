@@ -71,6 +71,7 @@ test('PSP creates global bundle', async ({ page }) => {
   await page.getByTestId('taxonomies-add-button-test').click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('commission-bundles-test').click();
 });
 
 test('PSP edits global bundle', async ({ page }) => {

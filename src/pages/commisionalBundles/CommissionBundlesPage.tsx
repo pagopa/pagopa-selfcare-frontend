@@ -76,12 +76,6 @@ const CommissionBundlesPage = () => {
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [bundleNameInput, setBundleNameInput] = useState<string>('');
 
-  const [bundleStatus, setBundleStatus] = useState<SubscriptionStateType>(
-    commissionBundleDetail.type === TypeEnum.PRIVATE
-      ? SubscriptionStateType.Accepted
-      : SubscriptionStateType.Any
-  );
-
   useEffect(() => {
     window.addEventListener('beforeunload', clearLocationState);
     return () => {
@@ -125,11 +119,6 @@ const CommissionBundlesPage = () => {
           )
         }
         setActiveTab={(value) => {
-          if (value === 0) {
-            setBundleStatus(SubscriptionStateType.Accepted);
-          } else {
-            setBundleStatus(SubscriptionStateType.Any);
-          }
           setTabValue(value);
         }}
         activeTab={tabValue}
@@ -149,44 +138,11 @@ const CommissionBundlesPage = () => {
             'data-testid': 'global',
           },
         ]}
-      >
-        {!(orgInfo.types.isPsp && userIsAdmin) && (
-          <FormControl sx={{ ml: 1, minWidth: '200px' }}>
-            <InputLabel size="small" id="bundleStatusLabel">
-              {t('commissionBundlesPage.list.search.stateFilter')}
-            </InputLabel>
-            <Select
-              id={`bundleStatus`}
-              labelId={`bundleStatusLabel`}
-              name={`bundleStatus`}
-              label={t('commissionBundlesPage.list.search.stateFilter')}
-              size="small"
-              value={bundleStatus}
-              onChange={(event) => setBundleStatus(event.target.value as SubscriptionStateType)}
-              data-testid="bundleStatus-type-test"
-              disabled={tabValue !== 0}
-              sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
-            >
-              {tabValue !== 0 && (
-                <MenuItem value={SubscriptionStateType.Any}>
-                  {t('commissionBundlesPage.list.search.stateAll')}
-                </MenuItem>
-              )}
-              <MenuItem value={SubscriptionStateType.Accepted}>
-                {t('commissionBundlesPage.list.search.stateActive')}
-              </MenuItem>
-              <MenuItem value={SubscriptionStateType.Waiting}>
-                {t('commissionBundlesPage.list.search.stateWaiting')}
-              </MenuItem>
-            </Select>
-          </FormControl>
-        )}
-      </TableSearchBar>
+      ></TableSearchBar>
       <CustomTabPanel valueTab={tabValue} index={0}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.privateBundles'}
           bundleNameFilter={bundleNameInput}
-          bundleStatus={bundleStatus !== SubscriptionStateType.Any ? bundleStatus : undefined}
         />
       </CustomTabPanel>
       <CustomTabPanel valueTab={tabValue} index={1}>

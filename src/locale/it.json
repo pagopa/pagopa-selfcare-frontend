@@ -956,15 +956,19 @@
     "list": {
       "search": {
         "placeholder": "Cerca per Nome",
-        "createButton": "Crea pacchetto",
-        "stateFilter": "Stato",
-        "stateAll": "Tutti",
-        "stateActive": "Attivi",
-        "stateWaiting": "Disponibili"
+        "createButton": "Crea pacchetto"
       },
       "table": {
-        "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}.",
-        "link": "Crea pacchetto"
+        "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}{{status}}.",
+        "link": "Crea pacchetto",
+        "state": {
+          "ACCEPTED": "Attivi",
+          "WAITING": "Disponibili"
+        },
+        "cta": {
+          "ACCEPTED": "Vedi pacchetti disponibili",
+          "WAITING": "Vedi pacchetti attivi"
+        }
       },
       "headerFields": {
         "bundleName": "Nome pacchetto",

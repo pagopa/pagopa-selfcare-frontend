@@ -1,17 +1,9 @@
 import { test, Page } from '@playwright/test';
-import { getTomorrowDate } from './e2eUtils';
-import { bundleNameGlobal } from './bundleUtils';
+import { bundleNameGlobal } from '../bundleUtils';
+import { getTomorrowDate, DEV_URL, login } from '../e2eUtils';
 
 test('PSP creates global bundle', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page
-    .getByLabel('Privacy', { exact: true })
-    .locator('div')
-    .filter({ hasText: 'Questo sito utilizza cookies' })
-    .nth(1)
-    .click();
-  await page.getByRole('button', { name: 'Chiudi' }).click();
-  await page.getByRole('button', { name: 'Accedi' }).click();
+  await login(page);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');
@@ -82,15 +74,7 @@ test('PSP creates global bundle', async ({ page }) => {
 });
 
 test('PSP edits global bundle', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page
-    .getByLabel('Privacy', { exact: true })
-    .locator('div')
-    .filter({ hasText: 'Questo sito utilizza cookies' })
-    .nth(1)
-    .click();
-  await page.getByRole('button', { name: 'Chiudi' }).click();
-  await page.getByRole('button', { name: 'Accedi' }).click();
+  await login(page);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');
@@ -114,15 +98,7 @@ test('PSP edits global bundle', async ({ page }) => {
 });
 
 test('PSP deletes global bundle', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page
-    .getByLabel('Privacy', { exact: true })
-    .locator('div')
-    .filter({ hasText: 'Questo sito utilizza cookies' })
-    .nth(1)
-    .click();
-  await page.getByRole('button', { name: 'Chiudi' }).click();
-  await page.getByRole('button', { name: 'Accedi' }).click();
+  await login(page);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');
@@ -134,15 +110,7 @@ test('PSP deletes global bundle', async ({ page }) => {
 });
 
 test('EC goes to global bundle detail', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
-  await page
-    .getByLabel('Privacy', { exact: true })
-    .locator('div')
-    .filter({ hasText: 'Questo sito utilizza cookies' })
-    .nth(1)
-    .click();
-  await page.getByRole('button', { name: 'Chiudi' }).click();
-  await page.getByRole('button', { name: 'Accedi' }).click();
+  await login(page);
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleNameGlobal);
@@ -154,6 +122,8 @@ test('EC goes to global bundle detail', async ({ page }) => {
 async function getToBundleDetail(page: Page) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleNameGlobal);
+  await page.getByTestId('page-limit-select').getByLabel('5').click();
+  await page.getByRole('option', { name: '20' }).click();
   const tomorrowDate = getTomorrowDate();
   // eslint-disable-next-line no-constant-condition
   while (true) {

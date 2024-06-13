@@ -36,7 +36,6 @@
     "node_modules",
     "**/__tests__/*",
     "Dangerfile.ts",
-    "e2e",
-    "playwright.config.ts"
+    "e2e"
   ]
 }

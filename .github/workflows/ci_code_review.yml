@@ -114,15 +114,15 @@ jobs:
           skip_api_build: true
 
 
-#  smoke_test:
-#    name: Smoke Test
-#    needs: build
-#    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
-#    uses: ./.github/workflows/ci_integration_test.yml
-#    with:
-#      environment: 'local'
-#      notify: false
-#    secrets: inherit
+  # smoke_test:
+  #   name: Smoke Test
+  #   needs: build
+  #   if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+  #   uses: ./.github/workflows/ci_integration_test.yml
+  #   with:
+  #     environment: 'local'
+  #     notify: false
+  #   secrets: inherit
 
 
   print_debug:
@@ -216,7 +216,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
             args: >
-              -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**
+              -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/e2e/**
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

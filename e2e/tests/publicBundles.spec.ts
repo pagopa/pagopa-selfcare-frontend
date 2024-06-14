@@ -1,9 +1,9 @@
-import { test } from '@playwright/test';
-import { bundleNameGlobal, getToBundleDetail } from '../bundleUtils';
-import { login } from '../e2eUtils';
+import { test, Page } from '@playwright/test';
+import { bundleNamePublic, getToBundleDetail } from "../bundleUtils";
+import { login } from "../e2eUtils";
 
 test.setTimeout(50000);
-test('PSP creates global bundle', async ({ page }) => {
+test('PSP creates public bundle', async ({ page }) => {
   await login(page);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
@@ -11,9 +11,9 @@ test('PSP creates global bundle', async ({ page }) => {
   await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('create-bundle-button').click();
-  await page.getByLabel('Per tutti').check();
+  await page.getByLabel('Su richiesta').check();
   await page.getByTestId('name-test').click();
-  await page.getByTestId('name-test').fill(bundleNameGlobal);
+  await page.getByTestId('name-test').fill(bundleNamePublic);
   await page.getByTestId('description-test').click();
   await page.getByTestId('description-test').fill('desc');
   await page.getByLabel('Tipo di pagamento').click();
@@ -75,50 +75,16 @@ test('PSP creates global bundle', async ({ page }) => {
   await page.getByTestId('commission-bundles-test').click();
 });
 
-test('PSP edits global bundle', async ({ page }) => {
-  await login(page);
-  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
-  await page.getByLabel('Cerca ente').click();
-  await page.getByLabel('Cerca ente').fill('PSP');
-  await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
-  await page.getByTestId('commission-bundles-test').click();
-  await getToBundleDetail(page, bundleNameGlobal);
-  await page.getByTestId('modify-button').click();
-  await page.getByTestId('max-import-test').click();
-  await page.getByTestId('max-import-test').click();
-  await page.getByTestId('max-import-test').fill('55000');
-  await page
-    .locator('div')
-    .filter({
-      hasText: 'EsciPacchetti commissioni/Modifica pacchettoModifica il pacchetto commissioniL’',
-    })
-    .nth(3)
-    .click();
-  await page.getByTestId('open-modal-button-test').click();
-  await page.getByTestId('open-modal-button-test').click();
-  await page.getByTestId('confirm-button-test').click();
-  await page.getByTestId('commission-bundles-test').click();
-});
-
-test('PSP deletes global bundle', async ({ page }) => {
-  await login(page);
-  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
-  await page.getByLabel('Cerca ente').click();
-  await page.getByLabel('Cerca ente').fill('PSP');
-  await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
-  await page.getByTestId('commission-bundles-test').click();
-  await getToBundleDetail(page, bundleNameGlobal);
-  await page.getByTestId('delete-button').click();
-  await page.getByTestId('confirm-button-test').click();
-  await page.getByTestId('commission-bundles-test').click();
-});
-
-test('EC goes to global bundle detail', async ({ page }) => {
-  await login(page);
-  await page.getByTestId('commission-bundles-test').click();
-  await page.getByTestId('search-input').click();
-  await page.getByTestId('search-input').fill(bundleNameGlobal);
-  await page.waitForTimeout(2000);
-  await page.getByLabel('Gestisci pacchetto').first().click();
-  await page.getByTestId('exit-btn-test').click();
-});
+test('PSP deletes public bundle', async ({ page }) => {
+    await login(page);
+    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+    await page.getByLabel('Cerca ente').click();
+    await page.getByLabel('Cerca ente').fill('PSP');
+    await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetail(page, bundleNamePublic);
+    await page.getByTestId('delete-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await page.getByTestId('commission-bundles-test').click();
+  });

@@ -139,10 +139,11 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
 
     test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
+        let bundle = {...mockedCommissionBundlePspDetailPrivate};
+        bundle.validityDateFrom = new Date();
         render(
             <Provider store={store}>
-                <ComponentToRender bundle={mockedCommissionBundlePspDetailPrivate}/>
+                <ComponentToRender bundle={bundle}/>
             </Provider>
         );
 
@@ -186,10 +187,11 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
 
     test('render component CommissionBundleDetailPage bundle type PUBLIC', async () => {
         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-
+        let bundle = {...mockedCommissionBundlePspDetailPublic};
+        bundle.validityDateFrom = new Date();
         render(
             <Provider store={store}>
-                <ComponentToRender bundle={mockedCommissionBundlePspDetailPublic}/>
+                <ComponentToRender bundle={bundle}/>
             </Provider>
         );
 

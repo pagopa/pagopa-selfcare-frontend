@@ -403,6 +403,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       let bundle = { ...mockedCommissionBundleCiDetailGlobal };
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = add(new Date(), { days: 8 });
+      bundle.ciBundleStatus = undefined;
 
       render(
         <Provider store={store}>
@@ -490,6 +491,8 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     test('Bundle ENABLED', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPublic };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = add(new Date(), { days: 8 });
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -541,6 +544,8 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     test('Bundle ENABLED', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = add(new Date(), { days: 8 });
       render(
         <Provider store={store}>
           <Router history={history}>

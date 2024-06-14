@@ -169,7 +169,7 @@ export const getStateChip = (
   const validityDateTo = bundleDetails.validityDateTo;
   const todayDate = new Date();
 
-  if (isPsp) {
+  if (isPsp && validityDateFrom) {
     return getGeneralStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
   if (isCi) {
@@ -258,8 +258,8 @@ const getCIStatusChip = (
       />
     );
   }
+  if ((bundleType === TypeEnum.GLOBAL && validityDateFrom) || bundleStatus === CiBundleStatusEnum.ENABLED) {
 
-  if (bundleType === TypeEnum.GLOBAL || bundleStatus === CiBundleStatusEnum.ENABLED) {
     return getGeneralStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
 

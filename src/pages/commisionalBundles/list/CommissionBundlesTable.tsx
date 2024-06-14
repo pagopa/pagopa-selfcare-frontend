@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { useTranslation } from 'react-i18next';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { LOADING_TASK_COMMISSION_BUNDLE_LIST } from '../../../utils/constants';
@@ -21,43 +22,41 @@ import { buildColumnDefs } from './CommissionBundlesTableColumns';
 type Props = {
   bundleNameFilter?: string;
   bundleType: string;
-  bundleStatus?: SubscriptionStateType;
 };
 
 const rowHeight = 64;
 const headerHeight = 56;
 
 const emptyCommissionBundleList: BundlesResource = {
-    bundles: [],
-    pageInfo: {
-        items_found: 0,
-        limit: 0,
-        page: 0,
-        total_pages: 0,
-    },
+  bundles: [],
+  pageInfo: {
+    items_found: 0,
+    limit: 0,
+    page: 0,
+    total_pages: 0,
+  },
 };
 
 const mapBundle = (bundleType: string) => {
-    switch (bundleType) {
-        case 'commissionBundlesPage.globalBundles':
-            return 'GLOBAL';
-        case 'commissionBundlesPage.publicBundles':
-            return 'PUBLIC';
-        case 'commissionBundlesPage.privateBundles':
-            return 'PRIVATE';
-        default:
-            return '';
-    }
+  switch (bundleType) {
+    case 'commissionBundlesPage.globalBundles':
+      return 'GLOBAL';
+    case 'commissionBundlesPage.publicBundles':
+      return 'PUBLIC';
+    case 'commissionBundlesPage.privateBundles':
+      return 'PRIVATE';
+    default:
+      return '';
+  }
 };
 
 const componentPath = 'commissionBundlesPage.list';
-const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: Props) => {
+const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_LIST);
-  const columns: Array<GridColDef> = buildColumnDefs(t, orgInfo.types.isPsp, orgInfo.types.isEc);
 
   const brokerCode = selectedParty?.fiscalCode ?? '';
   const mappedBundleType = mapBundle(bundleType);
@@ -66,10 +65,22 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
   const [page, setPage] = useState<number>(0);
   const [pageLimit, setPageLimit] = useState<number>(5);
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const [privateBundleStatus, setPrivateBundleStatus] = useState<SubscriptionStateType | undefined>(
+    mappedBundleType === TypeEnum.PRIVATE && orgInfo.types.isEc
+      ? SubscriptionStateType.Accepted
+      : undefined
+  );
+  const columns: Array<GridColDef> = buildColumnDefs(
+    t,
+    orgInfo.types.isPsp,
+    orgInfo.types.isEc,
+    setPrivateBundleStatus,
+    privateBundleStatus
+  );
 
-    const setLoadingStatus = (status: boolean) => {
-        setLoading(status);
-    };
+  const setLoadingStatus = (status: boolean) => {
+    setLoading(status);
+  };
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const getBundleList = (newPage?: number) => {
@@ -97,7 +108,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
         bundleName: bundleNameFilter ?? undefined,
         page: newPage ?? page,
         ciTaxCode: mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode,
-        bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? bundleStatus : undefined,
+        bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? privateBundleStatus : undefined,
       });
     }
     if (promise) {
@@ -149,7 +160,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
 
   useEffect(() => {
     getBundleList(0);
-  }, [bundleStatus, pageLimit]);
+  }, [privateBundleStatus, pageLimit]);
 
   return (
     <Box
@@ -164,8 +175,21 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
     >
       <TableDataGrid
         componentPath={componentPath}
-        translationArgs={{ bundleType: t(bundleType) }}
+        translationArgs={{
+          bundleType: t(bundleType).toLowerCase(),
+          status: privateBundleStatus
+            ? ' ' + t(`commissionBundlesPage.list.table.state.${privateBundleStatus}`).toLowerCase()
+            : null,
+        }}
         linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
+        emptyStateChildren={
+          privateBundleStatus && (
+            <PrivateBundleEmptyStateCTA
+              setBundleStatus={setPrivateBundleStatus}
+              bundleStatus={privateBundleStatus}
+            />
+          )
+        }
         rows={listFiltered?.bundles ? [...listFiltered.bundles] : []}
         columns={columns}
         totalPages={listFiltered?.pageInfo?.total_pages}
@@ -180,3 +204,31 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType, bundleStatus }: 
 };
 
 export default CommissionBundlesTable;
+
+const PrivateBundleEmptyStateCTA = ({
+  setBundleStatus,
+  bundleStatus,
+}: {
+  setBundleStatus: (value: any) => void;
+  bundleStatus: SubscriptionStateType;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <ButtonNaked
+      size="medium"
+      component="button"
+      onClick={() =>
+        setBundleStatus(
+          bundleStatus === SubscriptionStateType.Accepted
+            ? SubscriptionStateType.Waiting
+            : SubscriptionStateType.Accepted
+        )
+      }
+      sx={{ color: 'primary.main', ml: 1 }}
+      weight="default"
+      data-testid="private-bundle-cta"
+    >
+      {t(`${componentPath}.table.cta.${bundleStatus}`)}
+    </ButtonNaked>
+  );
+};

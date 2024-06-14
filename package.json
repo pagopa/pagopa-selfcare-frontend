@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.25.0-4-next",
+  "version": "1.25.0-5-next",
   "homepage": "ui",
   "private": true,
   "scripts": {
@@ -55,7 +55,7 @@
     "papaparse": "^5.4.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-dropzone": "^11.4.2",
+    "react-dropzone": "^14.2.3",
     "react-number-format": "^5.3.1",
     "react-router-dom": "^5.2.0",
     "react-router-hash-link": "^2.4.3",
@@ -66,7 +66,7 @@
   "devDependencies": {
     "@babel/core": "7.24.4",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/preset-env": "^7.23.6",
+    "@babel/preset-env": "^7.24.7",
     "@babel/preset-react": "^7.14.5",
     "@craco/craco": "^7.1.0",
     "@pagopa/openapi-codegen-ts": "^13.2.0",
@@ -80,7 +80,7 @@
     "babel-plugin-macros": "^3.1.0",
     "craco-module-federation": "^1.1.0",
     "dotenv-cli": "^3.1.0",
-    "eslint": "^8.29.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-functional": "^4.2.1",
     "eslint-plugin-import": "^2.29.1",
@@ -89,7 +89,7 @@
     "eslint-plugin-sonarjs": "^0.13.0",
     "italia-ts-commons": "^8.6.0",
     "jest-sonar-reporter": "^2.0.0",
-    "mkdirp": "^1.0.4",
+    "mkdirp": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
     "puppeteer": "^21.1.1",

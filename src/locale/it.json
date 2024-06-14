@@ -8,7 +8,7 @@
   "roles": {
     "admin": "Amministratore",
     "operator": "Referente Tecnico",
-    "pspAdmin": "Responsabile Amministrativo",
+    "pspAdmin": "Amministratore",
     "pspOperator": "Responsabile Tecnico",
     "ecAdmin": "Referente dei Pagamenti",
     "ecOperator": "Referente Tecnico",

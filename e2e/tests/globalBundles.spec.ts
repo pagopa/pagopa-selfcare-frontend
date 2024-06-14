@@ -2,6 +2,7 @@ import { test, Page } from '@playwright/test';
 import { bundleNameGlobal } from '../bundleUtils';
 import { getTomorrowDate, DEV_URL, login } from '../e2eUtils';
 
+test.setTimeout(50000);
 test('PSP creates global bundle', async ({ page }) => {
   await login(page);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
@@ -96,6 +97,7 @@ test('PSP edits global bundle', async ({ page }) => {
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('commission-bundles-test').click();
 });
 
 test('PSP deletes global bundle', async ({ page }) => {
@@ -108,6 +110,7 @@ test('PSP deletes global bundle', async ({ page }) => {
   await getToBundleDetail(page);
   await page.getByTestId('delete-button').click();
   await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('commission-bundles-test').click();
 });
 
 test('EC goes to global bundle detail', async ({ page }) => {

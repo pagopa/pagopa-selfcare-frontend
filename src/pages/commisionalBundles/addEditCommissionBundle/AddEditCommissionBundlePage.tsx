@@ -2,23 +2,14 @@
 import { ArrowBack } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import { add } from 'date-fns';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Stack,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-} from '@mui/material';
+import {Box, Breadcrumbs, Button, Grid, Stack, Step, StepLabel, Stepper, Typography,} from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TFunction, useTranslation } from 'react-i18next';
 import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import GenericModal from '../../../components/Form/GenericModal';
+import {SigninData} from '../../../model/Node';
 import { Party } from '../../../model/Party';
 import ROUTES from '../../../routes';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
@@ -44,9 +35,10 @@ const minDateTomorrow = () => {
 
 const toNewFormData = (
   selectedParty: Party | undefined,
+  signinData: SigninData | undefined,
   data?: PSPBundleResource
 ): BundleRequest => ({
-  abi: selectedParty?.pspData?.abi_code ?? '',
+  abi: getABIOrBIC(selectedParty, signinData),
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
   digitalStampRestriction: data?.digitalStampRestriction ?? false,
@@ -66,6 +58,19 @@ const toNewFormData = (
   validityDateTo: data?.validityDateTo ?? minDateTomorrow(),
   pspBusinessName: selectedParty?.description ?? '',
 });
+
+function getABIOrBIC(
+  selectedParty: Party | undefined,
+  signinData: SigninData | undefined
+): string | undefined {
+  if (
+    selectedParty?.pspData?.abi_code === undefined ||
+    selectedParty?.pspData?.abi_code === 'N/A'
+  ) {
+    return signinData?.paymentServiceProviderDetailsResource?.bic ?? '';
+  }
+  return selectedParty?.pspData?.abi_code ?? '';
+}
 
 // eslint-disable-next-line complexity
 const validate = (
@@ -142,6 +147,7 @@ const AddEditCommissionBundlePage = () => {
   const history = useHistory();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const singinData = useAppSelector(partiesSelectors.selectSigninData);
   const setLoadingCreating = useLoading(LOADING_TASK_CREATING_COMMISSION_BUNDLE);
   const { actionId } = useParams<{ actionId: string }>();
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -156,7 +162,7 @@ const AddEditCommissionBundlePage = () => {
   const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({
-    initialValues: toNewFormData(selectedParty, isEdit ? bundleDetails : undefined),
+    initialValues: toNewFormData(selectedParty, singinData, isEdit ? bundleDetails : undefined),
     validate: (values) => validate(values, isEdit, t),
     onSubmit: async () => {
       setShowConfirmModal(true);

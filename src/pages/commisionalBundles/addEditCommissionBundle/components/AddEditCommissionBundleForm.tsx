@@ -141,7 +141,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 if (listBroker.length > 0) {
                     setBrokerDelegationList(listBroker);
                     if (isEdit && idBrokerPsp) {
-                        const brokerTaxCode = brokerDelegation?.delegation_list?.find(
+                        const brokerTaxCode = listBroker?.find(
                             (el) => el.broker_id === idBrokerPsp
                         )?.tax_code;
                         if (brokerTaxCode) {

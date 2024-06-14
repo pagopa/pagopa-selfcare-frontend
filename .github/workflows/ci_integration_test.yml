@@ -109,7 +109,7 @@ jobs:
             export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
           fi
           
-          FE_URL="https://selfcare.dev.platform.pagopa.it/ui" npx playwright test --workers=1 --project=chromium
+          FE_URL=$FE_URL npx playwright test --workers=1 --project=chromium
 
   print_debug:
     runs-on: ubuntu-latest

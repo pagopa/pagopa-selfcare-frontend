@@ -170,7 +170,7 @@ export const getStateChip = (
   const todayDate = new Date();
 
   if (isPsp && validityDateFrom) {
-    return getPSPStatusChip(t, todayDate, validityDateTo, validityDateFrom);
+    return getGeneralStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
   if (isCi) {
     return getCIStatusChip(
@@ -186,11 +186,11 @@ export const getStateChip = (
   return '-';
 };
 
-const getPSPStatusChip = (
+const getGeneralStatusChip = (
   t: TFunction<'translation'>,
   todayDate: Date,
   validityDateTo: Date | undefined,
-  validityDateFrom: Date
+  validityDateFrom: Date | undefined
 ) => {
   if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
     return renderStatusChip({
@@ -199,7 +199,7 @@ const getPSPStatusChip = (
       dataTestId: 'error-state-chip',
     });
   }
-  if (todayDate.getTime() < validityDateFrom.getTime()) {
+  if (validityDateFrom && todayDate.getTime() < validityDateFrom.getTime()) {
     return renderStatusChip({
       chipColor: 'default',
       chipLabel: t('commissionBundlesPage.list.states.inActivation'),
@@ -229,60 +229,38 @@ const getCIStatusChip = (
   bundleType: TypeEnum | undefined,
   bundleStatus: CiBundleStatusEnum | undefined
 ) => {
-  if (bundleType === TypeEnum.GLOBAL) {
-    if (validityDateFrom && todayDate.getTime() < validityDateFrom.getTime()) {
-      return renderStatusChip({
-        chipColor: 'default',
-        chipLabel: t('commissionBundlesPage.list.states.inActivation'),
-        dataTestId: 'default-state-chip',
-      });
-    }
+  if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
+    return (
+      <Chip
+        color={'default'}
+        label={t('commissionBundlesPage.list.states.toBeActivated')}
+        data-testid="default-state-chip"
+      />
+    );
+  }
 
-    return renderStatusChip({
-      chipColor: 'success',
-      chipLabel: t('commissionBundlesPage.list.states.active'),
-      dataTestId: 'success-state-chip',
-    });
-  } else {
-    if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
-      return (
-        <Chip
-          color={'default'}
-          label={t('commissionBundlesPage.list.states.toBeActivated')}
-          data-testid="default-state-chip"
-        />
-      );
-    }
+  if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+    return (
+      <Chip
+        color={'warning'}
+        label={t('commissionBundlesPage.list.states.deactivated')}
+        data-testid="error-state-chip"
+      />
+    );
+  }
 
-    if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
-      return (
-        <Chip
-          color={'warning'}
-          label={t('commissionBundlesPage.list.states.deactivated')}
-          data-testid="error-state-chip"
-        />
-      );
-    }
+  if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
+    return (
+      <Chip
+        sx={{ backgroundColor: '#7ED5FC' }}
+        label={t('commissionBundlesPage.list.states.requestInProgress')}
+        data-testid="primary-state-chip"
+      />
+    );
+  }
+  if ((bundleType === TypeEnum.GLOBAL && validityDateFrom) || bundleStatus === CiBundleStatusEnum.ENABLED) {
 
-    if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
-      return (
-        <Chip
-          sx={{ backgroundColor: '#7ED5FC' }}
-          label={t('commissionBundlesPage.list.states.requestInProgress')}
-          data-testid="primary-state-chip"
-        />
-      );
-    }
-
-    if (bundleStatus === CiBundleStatusEnum.ENABLED) {
-      return (
-        <Chip
-          color={'success'}
-          label={t('commissionBundlesPage.list.states.active')}
-          data-testid="success-state-chip"
-        />
-      );
-    }
+    return getGeneralStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
 
   return '-';
@@ -321,7 +299,7 @@ export const SelectStatusFilter = ({
           {t(`commissionBundlesPage.list.table.state.${SubscriptionStateType.Accepted}`)}
         </MenuItem>
         <MenuItem value={SubscriptionStateType.Waiting}>
-        {t(`commissionBundlesPage.list.table.state.${SubscriptionStateType.Waiting}`)}
+          {t(`commissionBundlesPage.list.table.state.${SubscriptionStateType.Waiting}`)}
         </MenuItem>
       </Select>
     </FormControl>

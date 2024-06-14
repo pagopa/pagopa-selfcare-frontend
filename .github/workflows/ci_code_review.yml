@@ -114,15 +114,15 @@ jobs:
           skip_api_build: true
 
 
- smoke_test:
-   name: Smoke Test
-   needs: build
-   if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
-   uses: ./.github/workflows/ci_integration_test.yml
-   with:
-     environment: 'local'
-     notify: false
-   secrets: inherit
+  smoke_test:
+    name: Smoke Test
+    needs: build
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    uses: ./.github/workflows/ci_integration_test.yml
+    with:
+      environment: 'local'
+      notify: false
+    secrets: inherit
 
 
   print_debug:

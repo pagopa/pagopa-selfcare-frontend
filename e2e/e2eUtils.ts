@@ -20,7 +20,16 @@ export async function login(page: Page){
     await page.getByText('Ambiente di Collaudo').click();
     await page.getByRole('button', { name: 'Entra' }).click();
     await page.getByRole('button', { name: 'Accedi' }).click();
-    process.env.REACT_APP_JWT = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTI1Nzg3MjIsImF1ZCI6ImFwaS5wbGF0Zm9ybS5wYWdvcGEuaXQiLCJpc3MiOiJodHRwczovL2FwaS5kZXYucGxhdGZvcm0ucGFnb3BhLml0IiwidWlkIjoiNTA5NmU0YzYtMjVhMS00NWQ1LTliZGYtMmZiOTc0YTdjMWM4IiwibmFtZSI6IkFuc2VsbW8iLCJmYW1pbHlfbmFtZSI6IlNhcnRvcmkiLCJlbWFpbCI6ImZ1cmlvdml0YWxlQG1hcnRpbm8uaXQiLCJvcmdfaWQiOiI1YjQ2YjFkNS02M2ZhLTQzZmItYWRjNC0yMTA5M2IxZDZjZDYiLCJvcmdfdmF0IjoiMDAyNjQ1NjA2MDgiLCJvcmdfcGFydHlfcm9sZSI6Ik1BTkFHRVIiLCJvcmdfcm9sZSI6ImFkbWluIiwiZXhwIjoxNzQ0MTM2MzIyfQ.osESy4diTmp0aNixufoct7yRm-kwXY84ofWbdm3NePcwzJBGIEBe7b10I7AymPro0QPF2i6rerTk0y5IIEBoTJzq9DJUDDZlM_9F2GAa3nfi3XkZ3Qam0Mdu9uLRZEJuiAx5zyNgziMED2feHg2nusAGmyKIHP45akSP_hyhfCdyO45_WRp6d9V6iKjPnmvaw3y3tCbY-vBpN2MblhKUp-f1AT-Z9Z9J7V6n4Y9yD0u8DyAqIr_jjW5HJ6OuHT7Wo7l8jtjxBlpuhL69rdU9yS2He3unHTMl7BH2mg3JPU2XwN8_qHjwkkEgh5M60wjPYkpJ6mZxIDaXx0pK17vaEA";
+    if(process.env.FE_URL){
+        await page.goto(process.env.FE_URL);
+        await page.waitForTimeout(3000);
+        if(await page.getByRole('button', { name: 'Chiudi' }).isVisible()){
+            await page.getByRole('button', { name: 'Chiudi' }).click();
+        }
+        if(await page.getByRole('button', { name: 'Accedi' }).isVisible()){
+            await page.getByRole('button', { name: 'Accedi' }).click();
+        }
+    }
 }
 
 

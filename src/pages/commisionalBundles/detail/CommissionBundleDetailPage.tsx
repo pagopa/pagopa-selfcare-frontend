@@ -299,7 +299,7 @@ const CommissionBundleDetailPage = () => {
 
           {orgInfo.types.isPsp &&
             userIsAdmin &&
-            commissionBundleDetail.type !== TypeEnum.GLOBAL && (
+            isValidBundleForSubscriptionTable(commissionBundleDetail) && (
               <Grid
                 item
                 xs={12}
@@ -333,3 +333,11 @@ const CommissionBundleDetailPage = () => {
 };
 
 export default CommissionBundleDetailPage;
+
+function isValidBundleForSubscriptionTable(commissionBundleDetail: BundleResource) {
+  return (
+    commissionBundleDetail.type !== TypeEnum.GLOBAL &&
+    commissionBundleDetail.validityDateFrom &&
+    new Date().getTime() > commissionBundleDetail.validityDateFrom.getTime()
+  );
+}

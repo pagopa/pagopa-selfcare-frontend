@@ -48,10 +48,7 @@ const toNewFormData = (
   signinData: SigninData | undefined,
   data?: PSPBundleResource
 ): BundleRequest => ({
-  abi:
-    selectedParty?.pspData?.abi_code ??
-    signinData?.paymentServiceProviderDetailsResource?.bic ??
-    '',
+  abi: getABIOrBIC(selectedParty, signinData),
   description: data?.description ?? '',
   digitalStamp: data?.digitalStamp ?? false,
   digitalStampRestriction: data?.digitalStampRestriction ?? false,
@@ -71,6 +68,19 @@ const toNewFormData = (
   validityDateTo: data?.validityDateTo ?? minDateTomorrow(),
   pspBusinessName: selectedParty?.description ?? '',
 });
+
+function getABIOrBIC(
+  selectedParty: Party | undefined,
+  signinData: SigninData | undefined
+): string | undefined {
+  if (
+    selectedParty?.pspData?.abi_code === undefined ||
+    selectedParty?.pspData?.abi_code === 'N/A'
+  ) {
+    return signinData?.paymentServiceProviderDetailsResource?.bic ?? '';
+  }
+  return selectedParty?.pspData?.abi_code ?? '';
+}
 
 // eslint-disable-next-line complexity
 const validate = (
@@ -336,5 +346,3 @@ const AddEditCommissionBundlePage = () => {
     </Grid>
   );
 };
-
-export default AddEditCommissionBundlePage;

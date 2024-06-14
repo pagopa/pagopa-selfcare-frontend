@@ -346,3 +346,5 @@ const AddEditCommissionBundlePage = () => {
     </Grid>
   );
 };
+
+export default AddEditCommissionBundlePage;

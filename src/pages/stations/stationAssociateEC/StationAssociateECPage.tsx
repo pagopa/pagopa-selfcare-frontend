@@ -73,9 +73,9 @@ function StationAssociateECPage() {
     }, []);
 
     useEffect(() => {
-        if (selectedEC && selectedEC.creditorInstitutionCode && selectedParty?.fiscalCode) {
+        if (selectedEC && selectedEC.ciTaxCode && selectedParty?.fiscalCode) {
             setLoadingList(true);
-            getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.creditorInstitutionCode)
+            getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.ciTaxCode)
                 .then((data) => {
                     if (data && Array.isArray(data.availableCodes)) {
                         setSegregationCodeList(data);
@@ -140,9 +140,9 @@ function StationAssociateECPage() {
         selectedEC;
 
     const submit = (values: CreditorInstitutionStationDto) => {
-        if (selectedEC && selectedEC.creditorInstitutionCode) {
+        if (selectedEC && selectedEC.ciTaxCode) {
             setLoading(true);
-            associateEcToStation(selectedEC.creditorInstitutionCode, {...values, stationCode: stationId})
+            associateEcToStation(selectedEC.ciTaxCode, {...values, stationCode: stationId})
                 .then((_) => {
                     history.push(generatePath(ROUTES.STATION_EC_LIST, {stationId}), {
                         alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
@@ -280,7 +280,7 @@ function StationAssociateECPage() {
                                                 {t('stationAssociateECPage.associationForm.segregationCode')}
                                             </InputLabel>
                                             <Select
-                                                disabled={selectedEC?.creditorInstitutionCode === undefined}
+                                                disabled={selectedEC?.ciTaxCode === undefined}
                                                 id="segregationCode"
                                                 name="segregationCode"
                                                 label={t('stationAssociateECPage.associationForm.segregationCode')}

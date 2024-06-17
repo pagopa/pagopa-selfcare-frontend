@@ -62,7 +62,7 @@ export default function StationECTable({
         setShowConfirmModal({
             show: true,
             data:
-                ecListPage?.creditor_institutions?.find((item) => item.creditorInstitutionCode === ecIdRow)
+                ecListPage?.creditor_institutions?.find((item) => item.ciTaxCode === ecIdRow)
                     ?.businessName ?? '',
         });
     };

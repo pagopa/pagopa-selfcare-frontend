@@ -42,7 +42,6 @@ function StationAssociateECPage() {
 
   const [loadingCiList, setLoadingCiList] = useState<boolean>(false);
   const [inputCiName, setInputCiName] = useState<string>('');
-
   const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
   const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
@@ -53,30 +52,36 @@ function StationAssociateECPage() {
   useEffect(() => {
     if (selectedParty?.partyId) {
       setLoadingCiList(true);
-      getAvailableCreditorInstitutionsForStation({
-        stationCode: stationId,
-        brokerId: selectedParty.partyId,
-        ciName: inputCiName,
-      })
-        .then((data) => {
-          setAvailableEC(data);
+      const timeout = setTimeout(() => {
+        getAvailableCreditorInstitutionsForStation({
+          stationCode: stationId,
+          brokerId: selectedParty.partyId,
+          ciName: inputCiName,
         })
-        .catch((reason) =>
-          addError({
-            id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while getting delegated ec list`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
-            ),
-            component: 'Toast',
+          .then((data) => {
+            setAvailableEC(data);
           })
-        )
-        .finally(() => setLoadingCiList(false));
+          .catch((reason) =>
+            addError({
+              id: 'GET_AVAILABLE_DELEGATED_EC_LIST',
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while getting delegated ec list`,
+              toNotify: true,
+              displayableTitle: t('general.errorTitle'),
+              displayableDescription: t(
+                'stationAssociateECPage.associationForm.errorMessageDelegatedEd'
+              ),
+              component: 'Toast',
+            })
+          )
+          .finally(() => setLoadingCiList(false));
+      }, 300);
+
+      return () => clearTimeout(timeout);
     }
+
+    return () => {};
   }, [inputCiName]);
 
   useEffect(() => {
@@ -250,17 +255,6 @@ function StationAssociateECPage() {
                         serverSide={true}
                       />
                     </FormControl>
-                    {availableEC?.creditor_institution_info_list?.length === 0 && (
-                      <Box mt={1}>
-                        <Alert
-                          severity={'warning'}
-                          data-testid="alert-warning-test"
-                          variant="outlined"
-                        >
-                          {t('stationAssociateECPage.alert.noDelegations')}
-                        </Alert>
-                      </Box>
-                    )}
                   </Grid>
                   <Grid item xs={12} sx={{ mb: 1 }}>
                     <Typography variant="sidenav">

@@ -187,7 +187,7 @@ export default function StationECTable({
                                     quickFilterProps: {debounceMs: 500},
                                 },
                             }}
-                            getRowId={(r) => r.creditorInstitutionCode}
+                            getRowId={(r) => r.ciTaxCode}
                             headerHeight={headerHeight}
                             hideFooterSelectedRowCount={true}
                             paginationMode="server"

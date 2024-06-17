@@ -42,13 +42,22 @@ export const getCreditorInstitutions = ({
   }
 };
 
-export const getAvailableCreditorInstitutionsForStation = (
-  stationCode: string,
-  brokerId: string
-): Promise<CreditorInstitutionInfoResource> => {
+export const getAvailableCreditorInstitutionsForStation = ({
+  stationCode,
+  brokerId,
+  ciName,
+}: {
+  stationCode: string;
+  brokerId: string;
+  ciName?: string;
+}): Promise<CreditorInstitutionInfoResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getAvailableCreditorInstitutionsForStationMock();
   } else {
-    return BackofficeApi.getAvailableCreditorInstitutionsForStation(stationCode, brokerId);
+    return BackofficeApi.getAvailableCreditorInstitutionsForStation({
+      stationCode,
+      brokerId,
+      ciName,
+    });
   }
 };

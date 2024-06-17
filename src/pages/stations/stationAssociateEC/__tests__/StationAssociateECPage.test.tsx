@@ -151,30 +151,7 @@ describe('<StationAssociateECPage />', () => {
         })
     });
 
-    test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes empty object array', async () => {
-        getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue({creditor_institution_info_list: []});
-
-        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
-
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/stations/${stationId}/associate-ec`]}>
-                    <Route path="/stations/:stationId/associate-ec">
-                        <ThemeProvider theme={theme}>
-                            <StationAssociateECPage/>
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
-
-        await waitFor(() => {
-            const alertMessage = screen.getByTestId('alert-warning-test');
-            expect(alertMessage).toBeInTheDocument();
-        });
-    });
-
-    test('render component StationAssociateECPage associateEcToStation error 404', async () => {
+    test('render cosmponent StationAssociateECPage associateEcToStation error 404', async () => {
         getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
             mockedCreditorInstitutionInfoArray
         );

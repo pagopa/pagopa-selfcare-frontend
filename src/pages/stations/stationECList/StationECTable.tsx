@@ -38,7 +38,6 @@ export default function StationECTable({
 }: StationECTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState({ show: false, data: '' });
-  const [error, setError] = useState(false);
 
   const setLoadingOverlay = useLoading(LOADING_TASK_STATION_EC_TABLE);
 
@@ -101,7 +100,6 @@ export default function StationECTable({
             toNotify: false,
           },
         ]);
-        setError(true);
         setECListPage(emptyECList);
       })
       .finally(() => setLoadingOverlay(false));

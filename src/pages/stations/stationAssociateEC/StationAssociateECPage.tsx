@@ -32,6 +32,10 @@ import {
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
 
+const availableEcEmptyState: CreditorInstitutionInfoResource = {
+    creditor_institution_info_list: []
+  };
+  
 function StationAssociateECPage() {
   const { t } = useTranslation();
   const setLoading = useLoading(LOADING_TASK_EC_AVAILABLE);
@@ -43,7 +47,7 @@ function StationAssociateECPage() {
   const [loadingCiList, setLoadingCiList] = useState<boolean>(false);
   const [inputCiName, setInputCiName] = useState<string>('');
   const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
-  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource | undefined>([]);
+  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource>(availableEcEmptyState);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
@@ -52,6 +56,7 @@ function StationAssociateECPage() {
   useEffect(() => {
     if (selectedParty?.partyId) {
       setLoadingCiList(true);
+      setAvailableEC(availableEcEmptyState);
       const timeout = setTimeout(() => {
         getAvailableCreditorInstitutionsForStation({
           stationCode: stationId,

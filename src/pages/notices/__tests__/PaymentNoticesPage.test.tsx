@@ -9,6 +9,7 @@ import {createStore, store} from '../../../redux/store';
 import {institutionsData} from '../../../services/__mocks__/noticesService';
 import * as noticesService from '../../../services/noticesService';
 import {ecAdminSignedDirect} from '../../../services/__mocks__/partyService';
+import {partiesActions} from '../../../redux/slices/partiesSlice';
 
 let getInstitutionData: jest.SpyInstance;
 let setLoadingSpy: jest.SpyInstance;
@@ -20,13 +21,10 @@ beforeEach(() => {
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
     const store = createStore();
-    store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecAdminSignedDirect,
-    });
 });
 
 describe('PaymentNoticesPage', () => {
+    store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
     it('Test render PaymentNoticesPage', () => {
         render(
             <Provider store={store}>

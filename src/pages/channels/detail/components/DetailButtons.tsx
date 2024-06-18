@@ -1,35 +1,48 @@
-import {Button, Stack} from '@mui/material';
+import {useErrorDispatcher, useLoading, useUserNotify} from '@pagopa/selfcare-common-frontend';
+import {Button, Stack, Typography, TextField} from '@mui/material';
+import {Box} from '@mui/system';
 import {generatePath, Link, useParams} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
+import {useState} from 'react';
 import {FormAction} from '../../../../model/Channel';
 import ROUTES from '../../../../routes';
 import {ChannelDetailsResource, WrapperStatusEnum,} from '../../../../api/generated/portal/ChannelDetailsResource';
 import {useUserRole} from "../../../../hooks/useUserRole";
-import {updateWrapperStationWithOperatorReview} from '../../../../services/channelService';
+import {LOADING_TASK_CHANNEL_DETAIL} from '../../../../utils/constants';
+import {updateWrapperChannelWithOperatorReview} from '../../../../services/channelService';
+import GenericModal from '../../../../components/Form/GenericModal';
 
 const ModalContent = ({
                           setShowModal,
-                          channelDetail,
-                          setChannelDetail,
+                          channelDetails,
+                          setChannelDetails,
+                          goBack
                       }: {
     setShowModal: (value: boolean) => void;
 } & Props) => {
     const {t} = useTranslation();
 
     const addError = useErrorDispatcher();
-    const setLoading = useLoading(LOADING_TASK_STATION_DETAILS_REQUEST_EDIT);
+    const setLoading = useLoading(LOADING_TASK_CHANNEL_DETAIL);
+    const addNotify = useUserNotify();
 
-    const [input, setInput] = useState<string>(stationDetail?.note ?? '');
+    const [input, setInput] = useState<string>(channelDetails?.note ?? '');
 
     const sendEditRequest = () => {
         setLoading(true);
-        updateWrapperStationWithOperatorReview({
-            channelCode: channelDetail?.channel_code ?? '',
-            brokerPspCode: channelDetail?.broker_psp_code ?? '',
+        updateWrapperChannelWithOperatorReview({
+            channelCode: channelDetails?.channel_code ?? '',
+            brokerPspCode: channelDetails?.broker_psp_code ?? '',
             note: input,
         })
             .then((data: ChannelDetailsResource) => {
-                setChannelDetail(data);
+                setChannelDetails(data);
+                addNotify({
+                    id: 'ADDEDIT_INSTITUTION_DATA_SAVE',
+                    title: '',
+                    message: t('channelDetailPageValidation.modal.successMessage'),
+                    component: 'Toast',
+                });
             })
             .catch((reason) =>
                 addError({
@@ -94,119 +107,133 @@ const ModalContent = ({
 
 type Props = {
     channelDetails?: ChannelDetailsResource;
+    setChannelDetails: (value: any) => void;
     goBack: () => void;
 };
 
-const DetailButtons = ({channelDetails, goBack}: Props) => {
+const DetailButtons = ({channelDetails, setChannelDetails, goBack}: Props) => {
     const {channelId} = useParams<{ channelId: string }>();
     const {userIsPagopaOperator} = useUserRole();
     const {t} = useTranslation();
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     return (
-        <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-            {/*
-              <Button
-                color={'error'}
-                style={{ color: theme.palette.error.dark, borderColor: theme.palette.error.dark }}
-                variant="outlined"
-                onClick={goBack}
-              >
-                {t('channelDetailPage.disable')}
-              </Button>
-              */}
+        <>
+            <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+                {/*
+                  <Button
+                    color={'error'}
+                    style={{ color: theme.palette.error.dark, borderColor: theme.palette.error.dark }}
+                    variant="outlined"
+                    onClick={goBack}
+                  >
+                    {t('channelDetailPage.disable')}
+                  </Button>
+                  */}
 
-            {userIsPagopaOperator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
-                <>
-                    <Button
-                        component={Link}
-                        to={generatePath(ROUTES.CHANNEL_EDIT, {
-                            channelId,
-                            actionId: FormAction.Edit,
-                        })}
-                        variant="contained"
-                    >
-                        {t('channelDetailPage.edit')}
-                    </Button>
-                </>
-            ) : userIsPagopaOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
-                <>
-                    <Button
-                        component={Link}
-                        to={''}
-                        color="error"
-                        variant="outlined"
-                        disabled={false}
-                        onClick={() => ''}
-                    >
-                        {t('channelDetailPage.correctionRequired')}
-                    </Button>
-                    <Button
-                        component={Link}
-                        to={generatePath(ROUTES.CHANNEL_EDIT, {
-                            channelId,
-                            actionId: FormAction.Edit,
-                        })}
-                        variant="contained"
-                    >
-                        {t(
-                            `channelDetailPage.${
-                                status === WrapperStatusEnum.TO_FIX || status === WrapperStatusEnum.TO_FIX_UPDATE
-                                    ? 'approveAndValidate'
-                                    : 'configure'
-                            }`
-                        )}
-                    </Button>
-                </>
-            ) : channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
-                <>
-                    <Button
-                        component={Link}
-                        to={''}
-                        color="error"
-                        variant="outlined"
-                        disabled={true}
-                        onClick={() => ''}
-                    >
-                        {t('channelDetailPage.deleteRequired')}
-                    </Button>
-                    <Button
-                        component={Link}
-                        to={generatePath(ROUTES.CHANNEL_EDIT, {
-                            channelId,
-                            actionId: FormAction.Duplicate,
-                        })}
-                        color="primary"
-                        variant="outlined"
-                        onClick={goBack}
-                    >
-                        {t('channelDetailPage.duplicate')}
-                    </Button>
-                    <Button
-                        component={Link}
-                        to={generatePath(ROUTES.CHANNEL_EDIT, {
-                            channelId,
-                            actionId: FormAction.Edit,
-                        })}
-                        variant="contained"
-                    >
-                        {t('channelDetailPage.edit')}
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <Button
-                        component={Link}
-                        to={generatePath(ROUTES.CHANNEL_EDIT, {
-                            channelId,
-                            actionId: FormAction.Edit,
-                        })}
-                        variant="contained"
-                    >
-                        {t('channelDetailPage.edit')}
-                    </Button>
-                </>
+                {userIsPagopaOperator && channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
+                    <>
+                        <Button
+                            component={Link}
+                            to={generatePath(ROUTES.CHANNEL_EDIT, {
+                                channelId,
+                                actionId: FormAction.Edit,
+                            })}
+                            variant="contained"
+                        >
+                            {t('channelDetailPage.edit')}
+                        </Button>
+                    </>
+                ) : userIsPagopaOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
+                    <>
+                         <Button
+                             variant="outlined"
+                             onClick={() => setShowModal(true)}
+                             data-testid="request-edit-button"
+                         >
+                             {t('channelDetailPage.requestEdit')}
+                         </Button>
+                        <Button
+                            component={Link}
+                            to={generatePath(ROUTES.CHANNEL_EDIT, {
+                                channelId,
+                                actionId: FormAction.Edit,
+                            })}
+                            variant="contained"
+                        >
+                            {t(
+                                `channelDetailPage.${
+                                    status === WrapperStatusEnum.TO_FIX || status === WrapperStatusEnum.TO_FIX_UPDATE
+                                        ? 'approveAndValidate'
+                                        : 'configure'
+                                }`
+                            )}
+                        </Button>
+                    </>
+                ) : channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
+                    <>
+                        <Button
+                            component={Link}
+                            to={''}
+                            color="error"
+                            variant="outlined"
+                            disabled={true}
+                            onClick={() => ''}
+                        >
+                            {t('channelDetailPage.deleteRequired')}
+                        </Button>
+                        <Button
+                            component={Link}
+                            to={generatePath(ROUTES.CHANNEL_EDIT, {
+                                channelId,
+                                actionId: FormAction.Duplicate,
+                            })}
+                            color="primary"
+                            variant="outlined"
+                            onClick={goBack}
+                        >
+                            {t('channelDetailPage.duplicate')}
+                        </Button>
+                        <Button
+                            component={Link}
+                            to={generatePath(ROUTES.CHANNEL_EDIT, {
+                                channelId,
+                                actionId: FormAction.Edit,
+                            })}
+                            variant="contained"
+                        >
+                            {t('channelDetailPage.edit')}
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Button
+                            component={Link}
+                            to={generatePath(ROUTES.CHANNEL_EDIT, {
+                                channelId,
+                                actionId: FormAction.Edit,
+                            })}
+                            variant="contained"
+                        >
+                            {t('channelDetailPage.edit')}
+                        </Button>
+                    </>
+                )}
+            </Stack>
+            {showModal && (
+                <GenericModal
+                    openModal={showModal}
+                    renderContent={() => (
+                        <ModalContent
+                            setShowModal={setShowModal}
+                            setChannelDetails={setChannelDetails}
+                            channelDetails={channelDetails}
+                            goBack={goBack}
+                        />
+                    )}
+                />
             )}
-        </Stack>
+        </>
     );
 };
 

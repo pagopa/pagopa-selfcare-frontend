@@ -2,10 +2,15 @@ import {Alert, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import {useTranslation} from 'react-i18next';
 import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDetailsResource';
-import {useUserRole} from "../../../hooks/useUserRole";
+import {WrapperStatusEnum,} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
+import {useUserRole} from "../../../../hooks/useUserRole";
+
+type Props = {
+    channelDetail: ChannelDetailsResource;
+};
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export default function GetChannelAlert = ({ channelDetail }: { channelDetail?: ChannelDetailsResource }) => {
+export default function GetChannelAlert({channelDetail}: Props) {
   const { t } = useTranslation();
   const { userIsPagopaOperator } = useUserRole();
 
@@ -30,14 +35,14 @@ export default function GetChannelAlert = ({ channelDetail }: { channelDetail?: 
             >
               {isToBeFixed && (
                 <Typography fontWeight={'fontWeightMedium'}>
-                  {t('channelDetailPageValidation.alert.toFixTitle')}
+                  {t('channelDetailValidationPage.alert.toFixTitle')}
                 </Typography>
               )}
               <Typography>
                 {isToBeFixed && channelDetail?.note?.trim()
                   ? channelDetail.note
                   : t(
-                      `channelDetailPageValidation.alert.${
+                      `channelDetailValidationPage.alert.${
                         isToBeValidated ? 'toCheckMessage' : 'toFixMessage'
                       }`
                     )}

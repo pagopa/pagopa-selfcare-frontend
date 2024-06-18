@@ -370,7 +370,20 @@
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
     "pspNotify": "PSP Notify Payment",
-    "stamp": "Marca da bollo"
+    "stamp": "Marca da bollo",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche al canale.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Canale in attesa di correzione da parte dell’ente."
+    },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri",
+      "successMessage": "Richiesta di modifiche inviata con successo",
+      "error": "Errore riscontrato in fase di invia richiesta di modifiche"
+    }
   },
   "channelPSPList": {
     "title": "Gestisci PSP",

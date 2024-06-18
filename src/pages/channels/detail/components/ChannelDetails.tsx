@@ -19,13 +19,14 @@ import GetChannelAlert from './GetChannelAlert';
 
 type Props = {
     channelDetail: ChannelDetailsResource;
+    setChannelDetail: (value: any) => void;
     channelId: string;
     goBack: () => void;
     PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
+const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
     const {t} = useTranslation();
     const {userIsPagopaOperator} = useUserRole();
     const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
@@ -53,12 +54,12 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
                 <Grid container mt={3}>
-                    <Grid item xs={6}>
+                    <Box display="flex" mt={2} alignItems={'center'}>
                         <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                    </Grid>
-                    <GetAlert stationDetail={stationDetail} />
+                        <StatusChip status={channelDetail.wrapperStatus ?? ''}/>
+                    </Box>
                 </Grid>
-
+                <GetChannelAlert channelDetail={channelDetail} />
                 <Paper
                     elevation={8}
                     sx={{
@@ -66,14 +67,6 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                         p: 4,
                     }}
                 >
-                    <Grid container alignItems={'center'} spacing={0} mb={2}>
-                        <Grid item xs={3}>
-                            <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
-                        </Grid>
-                        <Grid item xs={9} textAlign="right">
-                            <StatusChip status={channelDetail.wrapperStatus ?? ''}/>
-                        </Grid>
-                    </Grid>
                     <Typography variant="h6" mb={1}>
                         {t('channelDetailPage.channelConfiguration')}
                     </Typography>
@@ -371,15 +364,15 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                         </Grid>
                     </Box>
                 </Paper>
-                <Typography mb={5} color="text.secondary">
-                    {t('channelDetailPage.createdOn')}{' '}
-                    <Typography component={'span'} color="text.secondary">
-                        {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
-                            channelDetail.createdBy
-                        }`}
-                    </Typography>
+                <Typography color="action.active" sx={{ my: 2 }}>
+                  {t('channelDetailPage.createdOn')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {`${channelDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
+                      channelDetail?.createdBy
+                    }`}
+                  </Typography>
                 </Typography>
-                <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
+                <DetailButtons channelDetails={channelDetail} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     );

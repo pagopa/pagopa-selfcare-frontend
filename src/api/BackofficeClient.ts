@@ -1489,7 +1489,7 @@ export const BackofficeApi = {
     channelCode: string;
     brokerPspCode: string;
     note: string;
-  }): Promise<StationDetailResource> => {
+  }): Promise<ChannelDetailsResource> => {
     const result = await backofficeClient.updateWrapperChannelWithOperatorReview({
       channelCode,
       brokerPspCode,

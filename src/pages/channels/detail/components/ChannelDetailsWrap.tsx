@@ -15,13 +15,14 @@ import GetChannelAlert from './GetChannelAlert';
 
 type Props = {
     channelDetWrap?: ChannelDetailsResource;
+    setChannelDetail: (value: any) => void;
     channelId: string;
     goBack: () => void;
     PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNumber}: Props) => {
+const ChannelDetailsWrap = ({channelDetWrap, setChannelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
     const {t} = useTranslation();
 
     return channelDetWrap ? (
@@ -46,12 +47,12 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                     </Breadcrumbs>
                 </Stack>
                 <Grid container mt={3}>
-                    <Grid item xs={6}>
+                    <Box display="flex" mt={2} alignItems={'center'}>
                         <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                    </Grid>
-                    <GetChannelAlert channelDetail={channelDetWrap} />
+                        <StatusChip status={channelDetWrap.wrapperStatus ?? ''}/>
+                    </Box>
                 </Grid>
-
+                <GetChannelAlert channelDetail={channelDetWrap} />
                 <Paper
                     elevation={8}
                     sx={{
@@ -59,14 +60,6 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                         p: 4,
                     }}
                 >
-                    <Grid container alignItems={'center'} spacing={0} mb={2}>
-                        <Grid item xs={3}>
-                            <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
-                        </Grid>
-                        <Grid item xs={9} textAlign="right">
-                            <StatusChip status={channelDetWrap.wrapperStatus ?? ''}/>
-                        </Grid>
-                    </Grid>
                     <Typography variant="h6" mb={3}>
                         {t('channelDetailPage.channelConfiguration')}
                     </Typography>
@@ -181,15 +174,15 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                         </Grid>
                     </Box>
                 </Paper>
-                <Typography mb={5} color="text.secondary">
-                    {t('channelDetailPage.createdOn')}{' '}
-                    <Typography component={'span'} color="text.secondary">
-                        {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
-                            channelDetail.createdBy
-                        }`}
-                    </Typography>
+                <Typography color="action.active" sx={{ my: 2 }}>
+                  {t('channelDetailPage.createdOn')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {`${channelDetWrap?.createdAt?.toLocaleDateString('en-GB')} da ${
+                      channelDetWrap?.createdBy
+                    }`}
+                  </Typography>
                 </Typography>
-                <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
+                <DetailButtons channelDetails={channelDetWrap} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     ) : (

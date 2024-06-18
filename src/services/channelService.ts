@@ -241,7 +241,7 @@ export const updateWrapperChannelWithOperatorReview = ({
     channelCode: string;
     brokerPspCode: string;
     note: string;
-}): Promise<StationDetailResource> => {
+}): Promise<ChannelDetailsResource> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
     } else {

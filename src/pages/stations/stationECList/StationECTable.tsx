@@ -13,9 +13,6 @@ import { dissociateECfromStation, getECListByStationCode } from '../../../servic
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
 import { buildColumnDefs } from './StationECTableColumns';
 
-const rowHeight = 64;
-const headerHeight = 56;
-
 const emptyECList: CreditorInstitutionsResource = {
   creditor_institutions: [],
   page_info: {
@@ -89,7 +86,9 @@ export default function StationECTable({
     setPage(currentPage);
 
     getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage)
-      .then((r) => (r ? setECListPage(r) : setECListPage(emptyECList)))
+      .then((r) => {
+        setECListPage(r);
+      })
       .catch((reason) => {
         handleErrors([
           {
@@ -113,12 +112,6 @@ export default function StationECTable({
     <>
       <Box
         id="StationsSearchTableBox"
-        sx={{
-          position: 'relative',
-          width: '100% !important',
-          border: 'none',
-        }}
-        justifyContent="start"
       >
         <TableDataGrid
           componentPath={componentPath}

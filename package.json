@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.25.2-2-VAS-1112-api-get-delegation-changes",
+  "version": "1.25.2-3-next",
   "homepage": "ui",
   "private": true,
   "scripts": {

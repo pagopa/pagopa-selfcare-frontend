@@ -1,11 +1,23 @@
 /* eslint-disable functional/no-let */
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
+import * as it from '../src/locale/it.json';
 import { BACKOFFICE_BE_URL, getTodayDate, getTomorrowDate, PSP_DEMO_DIRECT } from './e2eUtils';
 
 export const bundleNameGlobal = 'Integration test global';
 export const bundleNamePublic = 'Integration test public';
 
-export async function getToBundleDetail(page: Page, bundleName: string, validityDayToday?: boolean) {
+export const ciBundleStates = {
+  ENABLED: it.commissionBundlesPage.list.states.expiring, // Enabled bundles during the e2e tests are always expiring
+  ON_REMOVAL: it.commissionBundlesPage.list.states.deactivated,
+  REQUESTED: it.commissionBundlesPage.list.states.requestInProgress,
+  AVAILABLE: it.commissionBundlesPage.list.states.toBeActivated,
+};
+
+export async function getToBundleDetailPsp(
+  page: Page,
+  bundleName: string,
+  validityDayToday?: boolean
+) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
   await page.getByTestId('page-limit-select').getByLabel('5').click();
@@ -28,6 +40,27 @@ export async function getToBundleDetail(page: Page, bundleName: string, validity
         })
         .getByLabel('Gestisci pacchetto')
         .click();
+      break;
+    } else {
+      await page.getByLabel('Go to next page').click();
+    }
+  }
+}
+
+export async function getToBundleDetailEc(page: Page, bundleName: string, bundleState: string) {
+  await page.getByTestId('search-input').click();
+  await page.getByTestId('search-input').fill(bundleName);
+  await page.waitForTimeout(2000);
+  await page.getByTestId('page-limit-select').getByLabel('5').click();
+  await page.getByRole('option', { name: '20' }).click();
+  const regex = new RegExp('^'+bundleName+'TouchpointREMOVEME'+bundleState+'$');
+  console.log('SAMU', regex);
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    await page.waitForTimeout(2000);
+    const isVisible = await page.locator('div').filter({ hasText: regex }).isVisible();
+    if (isVisible) {
+      await page.locator('div').filter({ hasText: regex }).getByLabel('Gestisci pacchetto').click();
       break;
     } else {
       await page.getByLabel('Go to next page').click();
@@ -61,8 +94,8 @@ export async function validateBundle(bundleName: string, bundleType: string, jwt
           body: JSON.stringify({
             ...bundle,
             validityDateFrom: new Date(),
-            abi: "50004",
-            pspBusinessName: "PSP DEMO DIRECT"
+            abi: '50004',
+            pspBusinessName: 'PSP DEMO DIRECT',
           }),
         }
       );

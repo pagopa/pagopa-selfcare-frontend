@@ -447,7 +447,7 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
 
                         <Box pl={1} mt={2}>
                             <FormControl>
-                                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1}}>
+                                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1,  "&.Mui-focused": { color: '#17324D'}}}>
                                     {t('addEditInstitutionsDataPage.addForm.sections.pay.radioTitle')}
                                 </FormLabel>
                                 <RadioGroup
@@ -458,17 +458,17 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                                     value={hasPay}
                                 >
                                     <FormControlLabel
+                                        data-testid="pay-radio-no"
+                                        value={false}
+                                        control={<Radio/>}
+                                        label={t("general.no")}
+                                    />
+                                    <FormControlLabel
                                         data-testid="pay-radio-yes"
                                         value={true}
                                         control={<Radio/>}
                                         label={t("general.yes")}
                                         sx={{pr: 8}}
-                                    />
-                                    <FormControlLabel
-                                        data-testid="pay-radio-no"
-                                        value={false}
-                                        control={<Radio/>}
-                                        label={t("general.no")}
                                     />
                                 </RadioGroup>
                             </FormControl>
@@ -510,7 +510,7 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                         />
                         <Box pl={1} mt={2}>
                             <FormControl>
-                                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1}}>
+                                <FormLabel sx={{fontWeight: 'medium', fontSize: '16px', mb: 1,  "&.Mui-focused": {color: '#17324D'}}}>
                                     {t('addEditInstitutionsDataPage.addForm.sections.poste.radioTitle')}
                                 </FormLabel>
                                 <RadioGroup
@@ -521,17 +521,17 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                                     value={hasPoste}
                                 >
                                     <FormControlLabel
+                                        data-testid="poste-radio-no"
+                                        value={false}
+                                        control={<Radio/>}
+                                        label={t("general.no")}
+                                    />
+                                    <FormControlLabel
                                         data-testid="poste-radio-yes"
                                         value={true}
                                         control={<Radio/>}
                                         label={t("general.yes")}
                                         sx={{pr: 8}}
-                                    />
-                                    <FormControlLabel
-                                        data-testid="poste-radio-no"
-                                        value={false}
-                                        control={<Radio/>}
-                                        label={t("general.no")}
                                     />
                                 </RadioGroup>
                             </FormControl>

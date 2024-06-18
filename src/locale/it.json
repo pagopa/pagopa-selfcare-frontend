@@ -602,15 +602,18 @@
   "stationECList": {
     "title": "Gestisci EC",
     "subtitle": "Gestisci e associa nuovi EC.",
-    "searchPlaceholder": "Cerca per nome EC o codice fiscale EC",
+    "search": {
+      "placeholder": "Cerca per nome EC o codice fiscale EC"
+    },
     "csvDownload": "Scarica CSV",
     "associateEcButtonLabel": "Associa EC",
     "dissociateEcSuccessMessage": "EC dissociato con successo",
     "dissociateEcErrorTitle": "Errore",
     "dissociateEcErrorMessage": "Errore durante la dissociazione dell'EC",
-    "noResults": "Non sono ancora presenti EC associati a questo canale.<1><0> Associa EC</0></1>",
     "noSearchResults": "Nessun EC trovato",
     "table": {
+      "emptyState": "Non sono ancora presenti EC associati a questo canale.",
+      "link": "Associa EC",
       "loading": "Caricamento..."
     },
     "stationsTableColumns": {

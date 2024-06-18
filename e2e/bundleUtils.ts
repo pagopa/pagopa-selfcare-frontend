@@ -5,6 +5,7 @@ import { BACKOFFICE_BE_URL, getTodayDate, getTomorrowDate, PSP_DEMO_DIRECT } fro
 
 export const bundleNameGlobal = 'Integration test global';
 export const bundleNamePublic = 'Integration test public';
+export const bundleNamePrivate = 'Integration test private';
 
 export const ciBundleStates = {
   ENABLED: it.commissionBundlesPage.list.states.expiring, // Enabled bundles during the e2e tests are always expiring
@@ -47,24 +48,42 @@ export async function getToBundleDetailPsp(
   }
 }
 
-export async function getToBundleDetailEc(page: Page, bundleName: string, bundleState: string) {
+export async function getToBundleDetailEc(
+  page: Page,
+  bundleName: string,
+  bundleState: string,
+  rowLocator?: boolean
+) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
   await page.waitForTimeout(2000);
   await page.getByTestId('page-limit-select').getByLabel('5').click();
   await page.getByRole('option', { name: '20' }).click();
-  const regex = new RegExp('^'+bundleName+'TouchpointREMOVEME'+bundleState+'$');
-  console.log('SAMU', regex);
+  const regex = new RegExp('^' + bundleName + 'TouchpointREMOVEME' + bundleState + '$');
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await page.waitForTimeout(2000);
-    const isVisible = await page.locator('div').filter({ hasText: regex }).isVisible();
-    if (isVisible) {
-      await page.locator('div').filter({ hasText: regex }).getByLabel('Gestisci pacchetto').click();
-      break;
+    if (rowLocator) {
+      const isVisibleRowLocator = await page.getByLabel('Gestisci pacchetto').isVisible();
+      if (isVisibleRowLocator) {
+        await page.getByLabel('Gestisci pacchetto').click();
+        break;
+      }
     } else {
-      await page.getByLabel('Go to next page').click();
+      const isVisibleRegexLocator = await page
+        .locator('div')
+        .filter({ hasText: regex })
+        .isVisible();
+      if (isVisibleRegexLocator) {
+        await page
+          .locator('div')
+          .filter({ hasText: regex })
+          .getByLabel('Gestisci pacchetto')
+          .click();
+        break;
+      }
     }
+    await page.getByLabel('Go to next page').click();
   }
 }
 

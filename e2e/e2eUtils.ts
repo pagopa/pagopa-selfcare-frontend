@@ -15,8 +15,8 @@ export async function login(page: Page, local?: boolean) {
   await page.getByRole('button', { name: 'Invia' }).click();
   await page.getByRole('button', { name: 'Invia' }).click();
   await page.getByLabel('Cerca ente').click();
-  await page.getByLabel('Cerca ente').fill('Comune di fr');
-  await page.getByRole('button', { name: 'Comune di Frosinone' }).click();
+  await page.getByLabel('Cerca ente').fill('EC DEMO');
+  await page.getByRole('button', { name: 'EC DEMO DIRECT' }).click();
   await page.getByRole('button', { name: 'Accedi' }).click();
   await page.locator('#forward_prod-pagopa').click();
   await page.getByText('Ambiente di Collaudo').click();

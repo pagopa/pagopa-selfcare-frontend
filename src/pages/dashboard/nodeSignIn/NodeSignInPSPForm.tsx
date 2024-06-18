@@ -312,7 +312,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
                                     label={t('nodeSignInPage.form.pspFields.bicCode')}
                                     size="small"
                                     inputProps={{
-                                        maxLength: 5,
+                                        maxLength: 12,
                                         inputMode: 'text',
                                         pattern: '[A-Z0-9]*',
                                         'data-testid': 'bicCode-test',

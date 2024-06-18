@@ -1,6 +1,6 @@
-import { test, Page } from '@playwright/test';
-import { bundleNamePublic, getToBundleDetail } from "../bundleUtils";
-import { login } from "../e2eUtils";
+import { test } from '@playwright/test';
+import { bundleNamePublic, getToBundleDetail, validateBundle } from '../bundleUtils';
+import { login } from '../e2eUtils';
 
 test.setTimeout(50000);
 test('PSP creates public bundle', async ({ page }) => {
@@ -19,7 +19,7 @@ test('PSP creates public bundle', async ({ page }) => {
   await page.getByLabel('Tipo di pagamento').click();
   await page.getByRole('option', { name: 'xiao - REMOVEME' }).click();
   await page.getByLabel('Touchpoint').click();
-  await page.getByRole('option', { name: 'CHECKOUT' }).click();
+  await page.getByRole('option', { name: 'Touchpoint' }).click();
   await page.getByTestId('min-import-test').click();
   await page.getByTestId('min-import-test').fill('50000');
   await page.getByTestId('max-import-test').click();
@@ -75,16 +75,22 @@ test('PSP creates public bundle', async ({ page }) => {
   await page.getByTestId('commission-bundles-test').click();
 });
 
+test('Validate bundle', async ({page}) => {
+  await login(page);
+  const jwt = await page.evaluate(async () =>  localStorage.token);
+  await validateBundle(bundleNamePublic, "PUBLIC", jwt);
+});
+
 test('PSP deletes public bundle', async ({ page }) => {
-    await login(page);
-    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
-    await page.getByLabel('Cerca ente').click();
-    await page.getByLabel('Cerca ente').fill('PSP');
-    await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetail(page, bundleNamePublic);
-    await page.getByTestId('delete-button').click();
-    await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
-  });
+  await login(page);
+  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  await page.getByLabel('Cerca ente').click();
+  await page.getByLabel('Cerca ente').fill('PSP');
+  await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
+  await page.getByTestId('commission-bundles-test').click();
+  await page.getByTestId('tab-public').click();
+  await getToBundleDetail(page, bundleNamePublic, true);
+  await page.getByTestId('delete-button').click();
+  await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('commission-bundles-test').click();
+});

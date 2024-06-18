@@ -19,7 +19,7 @@ test('PSP creates global bundle', async ({ page }) => {
   await page.getByLabel('Tipo di pagamento').click();
   await page.getByRole('option', { name: 'xiao - REMOVEME' }).click();
   await page.getByLabel('Touchpoint').click();
-  await page.getByRole('option', { name: 'CHECKOUT' }).click();
+  await page.getByRole('option', { name: 'Touchpoint' }).click();
   await page.getByTestId('min-import-test').click();
   await page.getByTestId('min-import-test').fill('50000');
   await page.getByTestId('max-import-test').click();
@@ -115,6 +115,10 @@ test('PSP deletes global bundle', async ({ page }) => {
 
 test('EC goes to global bundle detail', async ({ page }) => {
   await login(page);
+  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  await page.getByLabel('Cerca ente').click();
+  await page.getByLabel('Cerca ente').fill('PSP');
+  await page.getByRole('button', { name: 'EC DEMO DIRECT Referente' }).click();
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleNameGlobal);

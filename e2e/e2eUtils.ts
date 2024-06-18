@@ -1,6 +1,8 @@
 import { Page } from "@playwright/test";
 
 export const DEV_URL = 'https://selfcare.dev.platform.pagopa.it/ui';
+export const BACKOFFICE_BE_URL = 'https://api.dev.platform.pagopa.it/backoffice/v1';
+export const PSP_DEMO_DIRECT = "99999000011";
 
 export async function login(page: Page){
     await page.goto('https://dev.selfcare.pagopa.it/dashboard');
@@ -39,14 +41,14 @@ export function getTodayDate() {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
 
-    return (Number(dd) < 10 ? `0${dd}`: dd) + '/' + (Number(mm) < 10 ? `0${mm}`: mm) + '/' + String(yyyy);
+    return dd + '/' + mm + '/' + String(yyyy);
 }
 
 export function getTomorrowDate() {
     const currentDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-    const dd = currentDate.getDate();
-    const mm = currentDate.getMonth() + 1;
+    const dd = String(currentDate.getDate()).padStart(2, '0');
+    const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
     const yyyy = currentDate.getFullYear();
 
-    return (dd < 10 ? `0${dd}`: String(dd)) + '/' + (mm < 10 ? `0${mm}`: String(mm)) + '/' + String(yyyy);
+    return dd + '/' + mm + '/' + String(yyyy);
 }

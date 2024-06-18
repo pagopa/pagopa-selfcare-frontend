@@ -235,14 +235,14 @@ const getCIStatusChip = (
       return renderStatusChip({
         chipColor: 'error',
         chipLabel: t('commissionBundlesPage.list.states.onRemovalInactive'),
-        dataTestId: 'error-state-chip',
+        dataTestId: 'error-removal-state-chip',
       });
     }
 
     return renderStatusChip({
       chipColor: 'default',
       chipLabel: t('commissionBundlesPage.list.states.toBeActivated'),
-      dataTestId: 'default-state-chip',
+      dataTestId: 'default-activate-state-chip',
     });
   }
 
@@ -250,7 +250,7 @@ const getCIStatusChip = (
     return renderStatusChip({
       chipColor: 'warning',
       chipLabel: t('commissionBundlesPage.list.states.deactivated'),
-      dataTestId: 'warning-state-chip',
+      dataTestId: 'warning-removal-state-chip',
     });
   }
 

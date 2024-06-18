@@ -1029,10 +1029,19 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  deletePSPBundle: async (pspTaxCode: string, bundleId: string): Promise<void> => {
+  deletePSPBundle: async (
+    pspTaxCode: string,
+    bundleId: string,
+    bundleName: string,
+    pspName: string,
+    bundleType: string
+  ): Promise<void> => {
     const result = await backofficeClient.deletePSPBundle({
       'psp-tax-code': pspTaxCode,
       'id-bundle': bundleId,
+      bundleName,
+      pspName,
+      bundleType,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1344,7 +1353,7 @@ export const BackofficeApi = {
     pspTaxCode,
     bundleOfferId,
     ciTaxCode,
-    bundleName
+    bundleName,
   }: {
     idBundle: string;
     pspTaxCode: string;
@@ -1357,7 +1366,7 @@ export const BackofficeApi = {
       'psp-tax-code': pspTaxCode,
       'bundle-offer-id': bundleOfferId,
       ciTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1367,13 +1376,19 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getAvailableCreditorInstitutionsForStation: async (
-    stationCode: string,
-    brokerId: string
-  ): Promise<CreditorInstitutionInfoResource> => {
+  getAvailableCreditorInstitutionsForStation: async ({
+    stationCode,
+    brokerId,
+    ciName,
+  }: {
+    stationCode: string;
+    brokerId: string;
+    ciName?: string;
+  }): Promise<CreditorInstitutionInfoResource> => {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId,
+      ...(ciName ? { ciName } : {}),
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1450,7 +1465,7 @@ export const BackofficeApi = {
     ciTaxCode,
     idBundleOffer,
     pspTaxCode,
-    bundleName
+    bundleName,
   }: {
     ciTaxCode: string;
     idBundleOffer: string;
@@ -1461,7 +1476,7 @@ export const BackofficeApi = {
       'ci-tax-code': ciTaxCode,
       'id-bundle-offer': idBundleOffer,
       pspTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

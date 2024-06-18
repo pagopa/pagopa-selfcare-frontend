@@ -60,7 +60,7 @@ describe('BundleService test mocked', () => {
     expect(response).toMatchObject(mockedCommissionBundlePspDetailGlobal);
   });
   test('Test deletePSPBundle', async () => {
-    expect(deletePSPBundle('pspTaxCode', 'bundleId')).resolves.not.toThrow();
+    expect(deletePSPBundle('pspTaxCode', 'bundleId', 'bundleName', 'pspName', 'PUBLIC')).resolves.not.toThrow();
   });
   test('Test updatePSPBundle', async () => {
     expect(updatePSPBundle('pspTaxCode', 'bundleId', mockedBundleRequest)).resolves.not.toThrow();
@@ -220,7 +220,7 @@ describe('BundleService test client', () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'deletePSPBundle')
       .mockReturnValue(new Promise((resolve) => resolve()));
-    expect(deletePSPBundle('pspTaxCode', 'bundleId')).resolves.not.toThrow();
+    expect(deletePSPBundle('pspTaxCode', 'bundleId', 'bundleName', 'pspName', 'PUBLIC')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test updatePSPBundle', async () => {

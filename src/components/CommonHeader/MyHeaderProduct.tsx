@@ -185,7 +185,7 @@ const HeaderProduct = ({
                             <Stack direction="column" flexWrap={'wrap'} justifyContent={'flex-start'}>
                                 <Typography fontWeight={'bolder'}>
                                     {signinData?.brokerDetailsResource?.broker_code ??
-                                        signinData?.creditorInstitutionDetailsResource?.creditorInstitutionCode ??
+                                        signinData?.creditorInstitutionDetailsResource?.ciTaxCode ??
                                         signinData?.paymentServiceProviderDetailsResource?.tax_code ??
                                         signinData?.brokerPspDetailsResource?.broker_psp_code ??
                                         'No Data'}

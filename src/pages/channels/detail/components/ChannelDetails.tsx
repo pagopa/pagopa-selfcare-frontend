@@ -15,6 +15,7 @@ import {StatusChip} from '../../../../components/StatusChip';
 import {ENV} from '../../../../utils/env';
 import {useUserRole} from "../../../../hooks/useUserRole";
 import DetailButtons from './DetailButtons';
+import GetChannelAlert from './GetChannelAlert';
 
 type Props = {
     channelDetail: ChannelDetailsResource;
@@ -54,27 +55,8 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                 <Grid container mt={3}>
                     <Grid item xs={6}>
                         <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <Typography mb={5} color="text.secondary">
-                            {t('channelDetailPage.createdOn')}{' '}
-                            <Typography component={'span'} color="text.secondary">
-                                {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
-                                    channelDetail.createdBy
-                                }`}
-                            </Typography>
-                        </Typography>
                     </Grid>
-                    <Grid item xs={6}>
-                        <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
-                    </Grid>
-                    {userIsPagopaOperator &&
-                    (channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) ? (
-                        <Grid item xs={12} sx={{mb: 5}}>
-                            <Alert severity="warning" variant="outlined">
-                                <Typography sx={{py: 2}}>{t('channelDetailPage.alertWarning')}</Typography>
-                            </Alert>
-                        </Grid>
-                    ) : null}
+                    <GetAlert stationDetail={stationDetail} />
                 </Grid>
 
                 <Paper
@@ -389,6 +371,15 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                         </Grid>
                     </Box>
                 </Paper>
+                <Typography mb={5} color="text.secondary">
+                    {t('channelDetailPage.createdOn')}{' '}
+                    <Typography component={'span'} color="text.secondary">
+                        {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
+                            channelDetail.createdBy
+                        }`}
+                    </Typography>
+                </Typography>
+                <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     );

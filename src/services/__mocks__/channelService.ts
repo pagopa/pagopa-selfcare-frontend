@@ -277,6 +277,45 @@ export const mockedChannelDetail = (channelId: string): ChannelDetailsResource =
     timeout_c: 3000,
 });
 
+export const mockedChannelDetailWithNote = (channelId: string, note: string): ChannelDetailsResource => ({
+    agid: true,
+    broker_description: 'broker_description',
+    broker_psp_code: 'broker_psp_code',
+    card_chart: true,
+    channel_code: channelId,
+    digital_stamp_brand: true,
+    enabled: false,
+    flag_io: true,
+    ip: 'ip',
+    new_fault_code: true,
+    new_password: 'new_password',
+    nmp_service: 'npm_service',
+    on_us: true,
+    password: 'password',
+    payment_model: undefined,
+    payment_types: mockedPaymentTypes?.payment_types?.map((e) => e.payment_type ?? "") ?? [],
+    port: 8080,
+    primitive_version: 1,
+    protocol: ProtocolEnum.HTTPS,
+    proxy_enabled: true,
+    proxy_host: 'proxy_host',
+    proxy_password: 'proxy_password',
+    proxy_port: 8080,
+    proxy_username: 'proxy_username',
+    recovery: true,
+    rt_push: true,
+    serv_plugin: 'serv_plugin',
+    service: 'service',
+    target_host: 'target_host',
+    target_path: 'target_path',
+    target_port: 8080,
+    thread_number: 1,
+    timeout_a: 1000,
+    timeout_b: 2000,
+    timeout_c: 3000,
+    note: note
+});
+
 export const mockedChannelPSPs: ChannelPspListResource = {
     payment_service_providers: [
         {
@@ -423,3 +462,6 @@ export const getWrapperChannel = (pspCode: string): Promise<WrapperEntities> =>
 
 export const getWfespPlugins = (): Promise<WfespPluginConfs> =>
     new Promise((resolve) => resolve(mockedWfespPlugIn));
+
+export const updateWrapperChannelWithOperatorReview = (channelcode: string, note: string): Promise<ChannelDetailsResource> =>
+    new Promise((resolve) => resolve(mockedChannelDetailWithNote(channelcode, note)));

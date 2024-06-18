@@ -28,6 +28,7 @@ import {
     createWrapperChannel,
     updateWrapperChannel,
     getWfespPlugins as mockedGetWfespPlugins,
+    updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked
 } from './__mocks__/channelService';
 
 // /channels endpoint
@@ -229,5 +230,25 @@ export const updateWrapperChannelDetailsByOpt = (
         return BackofficeApi.updateWrapperChannelDetailsByOpt(channel, validationUrl).then(
             (resources) => resources
         );
+    }
+};
+
+export const updateWrapperChannelWithOperatorReview = ({
+                                                           channelCode,
+                                                           brokerPspCode,
+                                                           note,
+                                                       }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+}): Promise<StationDetailResource> => {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
+    } else {
+        return BackofficeApi.updateWrapperChannelWithOperatorReview({
+            channelCode,
+            brokerPspCode,
+            note,
+        }).then((resources) => resources);
     }
 };

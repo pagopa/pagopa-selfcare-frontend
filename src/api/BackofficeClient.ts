@@ -1464,5 +1464,25 @@ export const BackofficeApi = {
       bundleName
     });
     return extractResponse(result, 200, onRedirectToLogin);
-  }
+  },
+
+  updateWrapperChannelWithOperatorReview: async ({
+    channelCode,
+    brokerPspCode,
+    note,
+  }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+  }): Promise<StationDetailResource> => {
+    const result = await backofficeClient.updateWrapperChannelWithOperatorReview({
+      channelCode,
+      brokerPspCode,
+      body: {
+        note,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 };

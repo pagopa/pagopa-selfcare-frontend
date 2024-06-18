@@ -11,6 +11,7 @@ import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDe
 import {WrapperStatusEnum} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import {StatusChip} from '../../../../components/StatusChip';
 import DetailButtons from './DetailButtons';
+import GetChannelAlert from './GetChannelAlert';
 
 type Props = {
     channelDetWrap?: ChannelDetailsResource;
@@ -47,16 +48,8 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                 <Grid container mt={3}>
                     <Grid item xs={6}>
                         <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <Typography mb={5}>
-                            {t('channelDetailPage.createdOn')}{' '}
-                            <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                                {channelDetWrap.createdAt?.toLocaleDateString('en-GB') ?? '-'}
-                            </Typography>
-                        </Typography>
                     </Grid>
-                    <Grid item xs={6}>
-                        <DetailButtons channelDetails={channelDetWrap} goBack={goBack}/>
-                    </Grid>
+                    <GetChannelAlert channelDetail={channelDetWrap} />
                 </Grid>
 
                 <Paper
@@ -188,6 +181,15 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                         </Grid>
                     </Box>
                 </Paper>
+                <Typography mb={5} color="text.secondary">
+                    {t('channelDetailPage.createdOn')}{' '}
+                    <Typography component={'span'} color="text.secondary">
+                        {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
+                            channelDetail.createdBy
+                        }`}
+                    </Typography>
+                </Typography>
+                <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     ) : (

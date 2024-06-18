@@ -43,7 +43,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
     creditor_institutions: [
         {
             businessName: 'Ec 1',
-            creditorInstitutionCode: '12345678912',
+            ciTaxCode: '12345678912',
             enabled: true,
             applicationCode: undefined,
             auxDigit: '3',
@@ -54,7 +54,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
         },
         {
             businessName: 'Ec 2',
-            creditorInstitutionCode: '12345678913',
+            ciTaxCode: '12345678913',
             enabled: true,
             applicationCode: undefined,
             auxDigit: '3',
@@ -77,15 +77,15 @@ export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoResource
   creditor_institution_info_list: [
   {
     businessName: 'EC 1',
-    creditorInstitutionCode: '012345678912',
+    ciTaxCode: '012345678912',
   },
   {
     businessName: 'EC 2',
-    creditorInstitutionCode: '012345678913',
+    ciTaxCode: '012345678913',
   },
   {
     businessName: 'EC 3',
-    creditorInstitutionCode: '012345678914',
+    ciTaxCode: '012345678914',
   },
   ],
 };

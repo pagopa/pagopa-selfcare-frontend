@@ -1376,13 +1376,19 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getAvailableCreditorInstitutionsForStation: async (
-    stationCode: string,
-    brokerId: string
-  ): Promise<CreditorInstitutionInfoResource> => {
+  getAvailableCreditorInstitutionsForStation: async ({
+    stationCode,
+    brokerId,
+    ciName,
+  }: {
+    stationCode: string;
+    brokerId: string;
+    ciName?: string;
+  }): Promise<CreditorInstitutionInfoResource> => {
     const result = await backofficeClient.getAvailableCreditorInstitutionsForStation({
       'station-code': stationCode,
       brokerId,
+      ...(ciName ? { ciName } : {}),
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

@@ -67,7 +67,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
 
   function addRecipientToSelected(ci: CreditorInstitutionWithFromFile) {
     if (
-      selectedRecipients.find((el) => el.creditorInstitutionCode === ci.creditorInstitutionCode)
+      selectedRecipients.find((el) => el.ciTaxCode === ci.ciTaxCode)
     ) {
       setErrorMessage(t(`${componentPath}.errorAutocomplete`));
     } else {
@@ -162,7 +162,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
       idBundle: commissionBundleDetail.idBundle ?? '',
       bundleName: commissionBundleDetail.name ?? '',
       pspTaxCode: commissionBundleDetail.idBrokerPsp ?? '',
-      ciTaxCodeList: selectedRecipients.map((el) => el.creditorInstitutionCode),
+      ciTaxCodeList: selectedRecipients.map((el) => el.ciTaxCode),
     })
       .then(() => history.push(ROUTES.COMMISSION_BUNDLES_DETAIL))
       .catch((reason: Error) =>
@@ -243,7 +243,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
           <Box width="50%">
             {selectedRecipients.map((el: CreditorInstitutionResource, index) => (
               <Box
-                key={String(el.creditorInstitutionCode) + String(index)}
+                key={String(el.ciTaxCode) + String(index)}
                 pb={2}
                 data-testid="selected-recipients"
               >

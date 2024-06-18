@@ -24,7 +24,12 @@ jobs:
         # from https://github.com/actions/checkout/commits/main
         uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
         with:
-          persist-credentials: false
+          persist-credentials: true
+
+      - run: |
+          git pull
+          git status
+          git --no-pager branch -vv 
 
       - name: Set Node.js 16
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3

@@ -1,24 +1,28 @@
 import { Page, test } from '@playwright/test';
-import { bundleNameGlobal, getToBundleDetailPsp } from '../bundleUtils';
+import {
+  bundleNamePublic,
+  ciBundleStates,
+  getToBundleDetailEc,
+  getToBundleDetailPsp,
+  validateBundle,
+} from '../bundleUtils';
 import { changeToEcUser, changeToPspUser, login } from '../e2eUtils';
 
 test.setTimeout(50000);
-test.describe('Global bundles flow', () => {
+test.describe('Public bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  test.beforeAll(async ({ browser }) => {
+  test.beforeEach(async ({ browser }) => {
     page = await browser.newPage();
     await login(page);
   });
-
-  test('PSP creates global bundle', async () => {
-    await login(page);
+  test('PSP creates public bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
-    await page.getByLabel('Per tutti').check();
+    await page.getByLabel('Su richiesta').check();
     await page.getByTestId('name-test').click();
-    await page.getByTestId('name-test').fill(bundleNameGlobal);
+    await page.getByTestId('name-test').fill(bundleNamePublic);
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
     await page.getByLabel('Tipo di pagamento').click();
@@ -80,46 +84,94 @@ test.describe('Global bundles flow', () => {
     await page.getByTestId('commission-bundles-test').click();
   });
 
-  test('PSP edits global bundle', async () => {
-    await login(page);
-    await changeToPspUser(page);
+  test('Validate bundle', async () => {
+    const jwt = await page.evaluate(async () => localStorage.token);
+    await validateBundle(bundleNamePublic, 'PUBLIC', jwt);
+  });
+
+  test('EC activates public bundle', async () => {
+    await activatePublicBundle(page);
+  });
+
+  test('EC delete subscription request', async () => {
+    await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
-    await getToBundleDetailPsp(page, bundleNameGlobal);
-    await page.getByTestId('modify-button').click();
-    await page.getByTestId('max-import-test').click();
-    await page.getByTestId('max-import-test').click();
-    await page.getByTestId('max-import-test').fill('55000');
-    await page
-      .locator('div')
-      .filter({
-        hasText: 'EsciPacchetti commissioni/Modifica pacchettoModifica il pacchetto commissioniL’',
-      })
-      .nth(3)
-      .click();
-    await page.getByTestId('open-modal-button-test').click();
-    await page.getByTestId('open-modal-button-test').click();
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.REQUESTED);
+    await page.getByTestId('delete-request-button').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();
   });
 
-  test('PSP deletes global bundle', async () => {
-    await login(page);
+  test('EC activates public bundle 2nd time', async () => {
+    await activatePublicBundle(page);
+  });
+
+  test('PSP reject EC`s subscription request', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
-    await getToBundleDetailPsp(page, bundleNameGlobal);
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await page.getByTestId('request-detail-button').click();
+    await page.getByTestId('request-reject-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await page.getByTestId('commission-bundles-test').click();
+  });
+
+  test('EC activates public bundle 3th time', async () => {
+    await activatePublicBundle(page);
+  });
+
+  test('PSP accept EC`s subscription request', async () => {
+    await changeToPspUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await page.getByTestId('request-detail-button').click();
+    await page.getByTestId('request-accept-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await page.getByTestId('commission-bundles-test').click();
+  });
+
+  test('EC de-activates public bundle', async () => {
+    await changeToEcUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.ENABLED);
+    await page.getByTestId('deactivate-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await page.getByTestId('commission-bundles-test').click();
+  });
+
+  test('PSP deletes public bundle', async () => {
+    await changeToPspUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-public').click();
+    await getToBundleDetailPsp(page, bundleNamePublic, true);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();
   });
-
-  test('EC goes to global bundle detail', async () => {
-    await login(page);
-    await changeToEcUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('search-input').click();
-    await page.getByTestId('search-input').fill(bundleNameGlobal);
-    await page.waitForTimeout(2000);
-    await page.getByLabel('Gestisci pacchetto').first().click();
-    await page.getByTestId('exit-btn-test').click();
-  });
 });
+
+async function activatePublicBundle(page: Page) {
+  await changeToEcUser(page);
+  await page.getByTestId('commission-bundles-test').click();
+  await page.getByTestId('tab-public').click();
+  await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.AVAILABLE);
+  await page.getByTestId('activate-button').click();
+  await page.getByTestId('payment-amount-test').click();
+  await page.getByTestId('payment-amount-test').fill('40');
+  await page
+    .locator('div')
+    .filter({ hasText: /^Conferma$/ })
+    .click();
+  await page.getByTestId('payment-amount-test').click();
+  await page.getByTestId('payment-amount-test').fill('4');
+  await page
+    .getByText("EsciIntegration test public/Attiva pacchettoAttiva pacchettoIndica l'importo di")
+    .click();
+  await page.getByTestId('open-modal-button-test').click();
+  await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('commission-bundles-test').click();
+}

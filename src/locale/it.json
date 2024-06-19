@@ -999,7 +999,8 @@
         "eliminating": "In eliminazione",
         "toBeActivated": "Da attivare",
         "deactivated": "In disattivazione",
-        "requestInProgress": "Richiesta in corso"
+        "requestInProgress": "Richiesta in corso",
+        "onRemovalInactive": "Eliminato"
       },
       "error": {
         "commissionBundleDetailsErrorMessageDesc": "Errore durante la ricezione dei dettagli del pacchetto commissioni",

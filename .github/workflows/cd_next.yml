@@ -2,6 +2,8 @@ name: CD Develop
 
 on:
   pull_request:
+    branches:
+      - next
     types:
       - closed
 
@@ -55,12 +57,13 @@ jobs:
     steps:
       - name: Make Release
         id: release
-        uses: pagopa/github-actions-template/node-release@v1.14.2
+        uses: pagopa/github-actions-template/node-release@4a4c25ce28feeec9e619b3132b5327f52023d441 # v1.14.2
         with:
           semver: buildNumber
           github_token: ${{ secrets.BOT_TOKEN_GITHUB }}
           skip_ci: false
           prerelease: true
+          only_tag: true
 
   deploy:
     needs:

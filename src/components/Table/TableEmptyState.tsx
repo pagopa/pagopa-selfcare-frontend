@@ -18,19 +18,6 @@ const EmptyStateWrapper = ({
   return <>{children}</>;
 };
 
-const EmptyStateWrapper = ({
-  isDataGrid,
-  children,
-}: {
-  isDataGrid?: boolean;
-  children: ReactNode;
-}) => {
-  if (isDataGrid) {
-    return <GridOverlay sx={{ pointerEvents: 'all' }}>{children}</GridOverlay>;
-  }
-  return <>{children}</>;
-};
-
 export default function TableEmptyState({
   componentName,
   translationPathSuffix,

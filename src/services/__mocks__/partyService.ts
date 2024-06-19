@@ -448,26 +448,6 @@ export const institutionMock: Institution = {
     digital_address: 'pectest@pec.pagopa.it',
 };
 
-export const institutionMock: Institution = {
-    attributes: [
-        {
-            code: '',
-            description: '',
-            origin: '',
-        },
-    ],
-    description: '',
-    external_id: 'pspAdminSigned',
-    id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-    institution_type: 'PSP' as Institution_typeEnum,
-    origin: 'SELC',
-    origin_id: 'PSP_pspAdminSigned',
-    tax_code: 'pspAdminSigned_DIRECT',
-    zip_code: '213454',
-    address: 'VIA DEI pspAdminSigned 20, ROMA',
-    digital_address: 'pectest@pec.pagopa.it',
-};
-
 export const verifyFetchPartiesMockExecution = (parties: Array<Party>) => {
     expect(parties).toStrictEqual(mockedParties);
 };

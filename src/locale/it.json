@@ -202,8 +202,12 @@
   "channelsPage": {
     "title": "Canali",
     "subtitle": "Cerca e visualizza lo stato dei canali presenti.",
-    "createChannelButtonLabel": "Crea canale",
-    "searchPlaceholder": "Cerca per codice",
+    "search": {
+      "placeholder": "Cerca per codice canale",
+      "createButton": "Crea canale",
+      "tabActive": "Attive",
+      "tabToBeValidated": "Da validare"
+    },
     "table": {
       "noResults": "Nessun risultato",
       "emptyState": "Non sono ancora presenti canali in questo ambiente.",

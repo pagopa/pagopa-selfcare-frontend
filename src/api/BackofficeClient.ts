@@ -39,7 +39,6 @@ import {
 } from './generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
-import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
@@ -380,8 +379,26 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getChannels: async (page: number): Promise<ChannelsResource> => {
-    const result = await backofficeClient.getChannels({ page });
+  getChannels: async ({
+    status,
+    channelCode,
+    brokerCode,
+    limit,
+    page,
+  }: {
+    status: ConfigurationStatus;
+    channelCode: string;
+    brokerCode: string;
+    limit?: number;
+    page: number;
+  }): Promise<WrapperChannelsResource> => {
+    const result = await backofficeClient.getChannels({
+      status: String(status),
+      brokerCode,
+      channelCode,
+      limit,
+      page,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

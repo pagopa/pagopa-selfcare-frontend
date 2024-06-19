@@ -2,21 +2,32 @@ import { Page, test } from '@playwright/test';
 import {
   bundleNamePrivate,
   ciBundleStates,
+  deleteAllExpiredBundles,
   getToBundleDetailEc,
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import { changeToEcUser, changeToPspUser, login } from '../e2eUtils';
+import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Private bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  test.beforeEach(async ({ browser }) => {
+    // eslint-disable-next-line functional/no-let
+  let jwt: string;
+  test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await login(page);
+    jwt = await page.evaluate(async () => localStorage.token);
   });
-  test('PSP creates public bundle', async () => {
+  test.beforeEach(async () => {
+    await goToStart(page);
+  });
+  test.afterAll(async () => {
+    await deleteAllExpiredBundles(bundleNamePrivate, BundleTypes.PRIVATE);
+    await page.close();
+  });
+  test('PSP creates private bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
@@ -85,8 +96,7 @@ test.describe('Private bundles flow', () => {
   });
 
   test('Validate bundle', async () => {
-    const jwt = await page.evaluate(async () => localStorage.token);
-    await validateBundle(bundleNamePrivate, 'PRIVATE', jwt);
+    await validateBundle(bundleNamePrivate, BundleTypes.PRIVATE, jwt);
   });
 
   test('PSP sends private bundle offer', async () => {
@@ -97,7 +107,8 @@ test.describe('Private bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await getToBundleDetailPsp(page, bundleNamePrivate);
+    await getToBundleDetailPsp(page, bundleNamePrivate, true);
+    await page.getByTestId('request-detail-button').click();
     await page.getByTestId('offer-delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();
@@ -135,20 +146,20 @@ test.describe('Private bundles flow', () => {
     await page.waitForTimeout(2000);
     await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE, true);
     await page.getByTestId('activate-button').click();
-    await page.getByTestId('payment-amount-test').click();
-    await page.getByTestId('payment-amount-test').fill('40');
+    await page.getByTestId('payment-amount-test').nth(0).click();
+    await page.getByTestId('payment-amount-test').nth(0).fill('40');
     await page
       .locator('div')
       .filter({ hasText: /^Conferma$/ })
       .click();
-    await page.getByTestId('payment-amount-test').click();
-    await page.getByTestId('payment-amount-test').fill('4');
+      await page.getByTestId('payment-amount-test').nth(0).click();
+      await page.getByTestId('payment-amount-test').nth(0).fill('4');
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();
   });
 
-  test('EC de-activates public bundle', async () => {
+  test('EC de-activates private bundle', async () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
@@ -158,7 +169,7 @@ test.describe('Private bundles flow', () => {
     await page.getByTestId('commission-bundles-test').click();
   });
 
-  test('PSP deletes public bundle', async () => {
+  test('PSP deletes private bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
@@ -173,7 +184,7 @@ async function sendPrivateBundleOffer(page: Page) {
   await changeToPspUser(page);
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-private').click();
-  await getToBundleDetailPsp(page, bundleNamePrivate);
+  await getToBundleDetailPsp(page, bundleNamePrivate, true);
   await page.getByRole('link', { name: 'Invita enti' }).click();
   await page.getByLabel('Cerca EC').click();
   await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC DEMO');

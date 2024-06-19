@@ -1,18 +1,26 @@
 import { Page, test } from '@playwright/test';
-import { bundleNameGlobal, getToBundleDetailPsp } from '../bundleUtils';
-import { changeToEcUser, changeToPspUser, login } from '../e2eUtils';
+import { bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetailPsp } from '../bundleUtils';
+import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
+  // eslint-disable-next-line functional/no-let
+  let jwt: string;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await login(page);
+    jwt = await page.evaluate(async () => localStorage.token);
+  });
+  test.beforeEach(async () => {
+    await goToStart(page);
+  });
+  test.afterAll(async () => {
+    await deleteAllExpiredBundles(bundleNameGlobal, BundleTypes.GLOBAL);
   });
 
   test('PSP creates global bundle', async () => {
-    await login(page);
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
@@ -81,7 +89,6 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP edits global bundle', async () => {
-    await login(page);
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToBundleDetailPsp(page, bundleNameGlobal);
@@ -103,7 +110,6 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP deletes global bundle', async () => {
-    await login(page);
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToBundleDetailPsp(page, bundleNameGlobal);
@@ -113,7 +119,6 @@ test.describe('Global bundles flow', () => {
   });
 
   test('EC goes to global bundle detail', async () => {
-    await login(page);
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('search-input').click();

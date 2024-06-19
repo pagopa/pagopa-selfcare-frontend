@@ -2,19 +2,29 @@ import { Page, test } from '@playwright/test';
 import {
   bundleNamePublic,
   ciBundleStates,
+  deleteAllExpiredBundles,
   getToBundleDetailEc,
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import { changeToEcUser, changeToPspUser, login } from '../e2eUtils';
+import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Public bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  test.beforeEach(async ({ browser }) => {
+  // eslint-disable-next-line functional/no-let
+  let jwt: string;
+  test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await login(page);
+    jwt = await page.evaluate(async () => localStorage.token);
+  });
+  test.beforeEach(async () => {
+    await goToStart(page);
+  });
+  test.afterAll(async () => {
+    await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
   });
   test('PSP creates public bundle', async () => {
     await changeToPspUser(page);
@@ -86,7 +96,7 @@ test.describe('Public bundles flow', () => {
 
   test('Validate bundle', async () => {
     const jwt = await page.evaluate(async () => localStorage.token);
-    await validateBundle(bundleNamePublic, 'PUBLIC', jwt);
+    await validateBundle(bundleNamePublic, BundleTypes.PUBLIC, jwt);
   });
 
   test('EC activates public bundle', async () => {

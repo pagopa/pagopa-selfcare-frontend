@@ -1,7 +1,13 @@
 /* eslint-disable functional/no-let */
 import { Page, expect } from '@playwright/test';
 import * as it from '../src/locale/it.json';
-import { BACKOFFICE_BE_URL, getTodayDate, getTomorrowDate, PSP_DEMO_DIRECT } from './e2eUtils';
+import {
+  MARKETPLACE_BE_URL,
+  getTodayDate,
+  getTomorrowDate,
+  PSP_DEMO_DIRECT_CODE,
+  BundleTypes,
+} from './e2eUtils';
 
 export const bundleNameGlobal = 'Integration test global';
 export const bundleNamePublic = 'Integration test public';
@@ -88,38 +94,105 @@ export async function getToBundleDetailEc(
 }
 
 export async function validateBundle(bundleName: string, bundleType: string, jwt: string) {
+  // Retrieve bundle list
   const response = await fetch(
-    `${BACKOFFICE_BE_URL}/bundles/payment-service-providers/${PSP_DEMO_DIRECT}?limit=200&bundle-type=${bundleType}&name=${bundleName}`,
+    `${MARKETPLACE_BE_URL}/bundles?limit=200&types=${bundleType}&name=${bundleName}`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${jwt}`,
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
       },
     }
   );
   const bundleList = await response.json();
+  expect(bundleList?.bundles?.length).toBeTruthy();
+  const dateToday = new Date().getTime();
+
+  // Update bundle
+  const bundle = bundleList.bundles.find(
+    (el: any) =>
+      new Date(el.validityDateFrom).getTime() > dateToday &&
+      new Date(el.validityDateTo).getTime() > dateToday
+  );
+  expect(bundle.validityDateFrom).toBeTruthy();
+  expect(bundle.validityDateTo).toBeTruthy();
+  const responseUpdate = await fetch(
+    `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+      },
+      body: JSON.stringify({
+        ...bundle,
+        validityDateFrom: new Date(),
+        abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
+      }),
+    }
+  );
+  try {
+    console.log('Validate bundle update error', await responseUpdate.text());
+  } finally {
+    expect(responseUpdate.ok).toBeTruthy();
+  }
+}
+
+export async function invalidateAllBundles(bundleName:string, bundleType: BundleTypes) {
+  // Retrieve bundle list
+  const response = await fetch(
+    `${MARKETPLACE_BE_URL}/bundles?limit=200&name=${bundleName}&types=${bundleType}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+      },
+    }
+  );
+  const bundleList = await response.json();
+  expect(bundleList?.bundles?.length).toBeTruthy();
+  // Update bundle
   for (let i = 0; i < bundleList.bundles.length; i++) {
     const bundle = bundleList.bundles[i];
-    if (new Date(bundle.validityDateFrom).getTime() > new Date().getTime()) {
-      const responseUpdate = await fetch(
-        `${BACKOFFICE_BE_URL}/bundles/${bundle.idBundle}/payment-service-providers/${PSP_DEMO_DIRECT}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`,
-          },
-          body: JSON.stringify({
-            ...bundle,
-            validityDateFrom: new Date(),
-            abi: '50004',
-            pspBusinessName: 'PSP DEMO DIRECT',
-          }),
-        }
-      );
+    const responseUpdate = await fetch(
+      `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+        },
+        body: JSON.stringify({
+          ...bundle,
+          validityDateFrom: '2024-01-01',
+          validityDateTo: '2024-01-01',
+          abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
+        }),
+      }
+    );
+    try {
+      console.log('Invalidate bundle update error', await responseUpdate.text());
+    } finally {
       expect(responseUpdate.ok).toBeTruthy();
-      break;
     }
+  }
+}
+
+export async function deleteAllExpiredBundles(bundleName: string, bundleType: BundleTypes) {
+  await invalidateAllBundles(bundleName, bundleType);
+  const response = await fetch(`${MARKETPLACE_BE_URL}/configuration`, {
+    method: 'GET',
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+    },
+  });
+  try {
+    console.log('Delete all expired bundles response', await response.text());
+  } finally {
+    expect(response.ok).toBeTruthy();
   }
 }

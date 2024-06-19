@@ -1,11 +1,21 @@
 import { Page } from '@playwright/test';
 
-export const DEV_URL = 'https://selfcare.dev.platform.pagopa.it/ui';
-export const BACKOFFICE_BE_URL = 'https://api.dev.platform.pagopa.it/backoffice/v1';
-export const PSP_DEMO_DIRECT = '99999000011';
+export enum BundleTypes {
+  'PUBLIC' = 'PUBLIC',
+  'PRIVATE' = 'PRIVATE',
+  'GLOBAL' = 'GLOBAL',
+}
 
-export async function login(page: Page, local?: boolean) {
+export const DEV_URL = 'https://selfcare.dev.platform.pagopa.it/ui';
+export const BASE_BE_URL = 'https://api.dev.platform.pagopa.it';
+export const BACKOFFICE_BE_URL = BASE_BE_URL + '/backoffice/v1';
+export const MARKETPLACE_BE_URL = BASE_BE_URL + '/afm/marketplace-service/v1';
+export const PSP_DEMO_DIRECT = '99999000011';
+export const PSP_DEMO_DIRECT_CODE = 'ABI50004';
+
+export async function login(page: Page) {
   await page.goto('https://dev.selfcare.pagopa.it/dashboard');
+  await page.waitForTimeout(1000);
   if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
     await page.getByRole('button', { name: 'Chiudi' }).click();
   }
@@ -19,22 +29,24 @@ export async function login(page: Page, local?: boolean) {
     await page.getByRole('button', { name: 'Invia' }).click();
   }
   await page.getByLabel('Cerca ente').click();
-  await page.getByLabel('Cerca ente').fill('EC DEMO');
-  await page.getByRole('button', { name: 'EC DEMO DIRECT' }).click();
+  await page.getByLabel('Cerca ente').fill('Comune di Frosinone');
+  await page.getByRole('button', { name: 'Comune di Frosinone' }).click();
   await page.getByRole('button', { name: 'Accedi' }).click();
   await page.locator('#forward_prod-pagopa').click();
   await page.getByText('Ambiente di Collaudo').click();
   await page.getByRole('button', { name: 'Entra' }).click();
   await page.getByRole('button', { name: 'Accedi' }).click();
-  if (process.env.FE_URL) {
-    await page.goto(process.env.FE_URL);
-    await page.waitForTimeout(3000);
-    if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
-      await page.getByRole('button', { name: 'Chiudi' }).click();
-    }
-    if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
-      await page.getByRole('button', { name: 'Accedi' }).click();
-    }
+}
+
+export async function goToStart(page: Page) {
+  const feURL = process.env.FE_URL ?? 'https://selfcare.dev.platform.pagopa.it/ui';
+  await page.goto(feURL);
+  await page.waitForTimeout(3000);
+  if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
+    await page.getByRole('button', { name: 'Chiudi' }).click();
+  }
+  if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
+    await page.getByRole('button', { name: 'Accedi' }).click();
   }
 }
 
@@ -49,7 +61,7 @@ export async function changeToPspUser(page: Page) {
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');
-  await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
+  await page.getByRole('button', { name: 'PSP DEMO DIRECT Amministratore' }).click();
 }
 
 export function getTodayDate() {

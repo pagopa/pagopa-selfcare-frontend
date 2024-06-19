@@ -9,13 +9,15 @@ export async function login(page: Page, local?: boolean) {
   if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
     await page.getByRole('button', { name: 'Chiudi' }).click();
   }
-  await page.getByRole('button', { name: 'Entra con SPID' }).click();
-  await page.getByLabel('test').click();
-  await page.getByLabel('Username').fill('test');
-  await page.getByLabel('Password').click();
-  await page.getByLabel('Password').fill('test');
-  await page.getByRole('button', { name: 'Invia' }).click();
-  await page.getByRole('button', { name: 'Invia' }).click();
+  if (await page.getByRole('button', { name: 'Entra con SPID' }).isVisible()) {
+    await page.getByRole('button', { name: 'Entra con SPID' }).click();
+    await page.getByLabel('test').click();
+    await page.getByLabel('Username').fill('test');
+    await page.getByLabel('Password').click();
+    await page.getByLabel('Password').fill('test');
+    await page.getByRole('button', { name: 'Invia' }).click();
+    await page.getByRole('button', { name: 'Invia' }).click();
+  }
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('EC DEMO');
   await page.getByRole('button', { name: 'EC DEMO DIRECT' }).click();
@@ -36,18 +38,18 @@ export async function login(page: Page, local?: boolean) {
   }
 }
 
-export async function changeToEcUser(page: Page){
-    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
-    await page.getByLabel('Cerca ente').click();
-    await page.getByLabel('Cerca ente').fill('EC demo');
-    await page.getByRole('button', { name: 'EC DEMO DIRECT Referente dei' }).click();
+export async function changeToEcUser(page: Page) {
+  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  await page.getByLabel('Cerca ente').click();
+  await page.getByLabel('Cerca ente').fill('EC demo');
+  await page.getByRole('button', { name: 'EC DEMO DIRECT Referente dei' }).click();
 }
 
-export async function changeToPspUser(page: Page){
-    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
-    await page.getByLabel('Cerca ente').click();
-    await page.getByLabel('Cerca ente').fill('PSP');
-    await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
+export async function changeToPspUser(page: Page) {
+  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  await page.getByLabel('Cerca ente').click();
+  await page.getByLabel('Cerca ente').fill('PSP');
+  await page.getByRole('button', { name: 'PSP DEMO DIRECT Responsabile' }).click();
 }
 
 export function getTodayDate() {

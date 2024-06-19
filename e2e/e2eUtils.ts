@@ -68,6 +68,7 @@ export async function changeToEcUser(page: Page) {
 }
 
 export async function changeToPspUser(page: Page) {
+  await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');

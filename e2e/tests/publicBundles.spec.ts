@@ -95,7 +95,6 @@ test.describe('Public bundles flow', () => {
   });
 
   test('Validate bundle', async () => {
-    const jwt = await page.evaluate(async () => localStorage.token);
     await validateBundle(bundleNamePublic, BundleTypes.PUBLIC, jwt);
   });
 
@@ -170,14 +169,14 @@ async function activatePublicBundle(page: Page) {
   await page.getByTestId('tab-public').click();
   await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.AVAILABLE);
   await page.getByTestId('activate-button').click();
-  await page.getByTestId('payment-amount-test').click();
-  await page.getByTestId('payment-amount-test').fill('40');
+  await page.getByLabel('Importo a tuo carico').click();
+  await page.getByLabel('Importo a tuo carico').fill('40');
   await page
     .locator('div')
     .filter({ hasText: /^Conferma$/ })
     .click();
-  await page.getByTestId('payment-amount-test').click();
-  await page.getByTestId('payment-amount-test').fill('4');
+  await page.getByLabel('Importo a tuo carico').click();
+  await page.getByLabel('Importo a tuo carico').fill('4');
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
   await page.getByTestId('commission-bundles-test').click();

@@ -126,7 +126,7 @@ test.describe('Private bundles flow', () => {
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE, true);
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('reject-button').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();
@@ -144,7 +144,7 @@ test.describe('Private bundles flow', () => {
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE, true);
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('activate-button').click();
     await page.getByTestId('payment-amount-test').nth(0).click();
     await page.getByTestId('payment-amount-test').nth(0).fill('40');
@@ -163,7 +163,7 @@ test.describe('Private bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE, true);
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('commission-bundles-test').click();

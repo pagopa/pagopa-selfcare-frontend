@@ -57,8 +57,7 @@ export async function getToBundleDetailPsp(
 export async function getToBundleDetailEc(
   page: Page,
   bundleName: string,
-  bundleState: string,
-  rowLocator?: boolean
+  bundleState: string
 ) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
@@ -69,25 +68,10 @@ export async function getToBundleDetailEc(
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await page.waitForTimeout(2000);
-    if (rowLocator) {
-      const isVisibleRowLocator = await page.getByLabel('Gestisci pacchetto').isVisible();
-      if (isVisibleRowLocator) {
-        await page.getByLabel('Gestisci pacchetto').click();
-        break;
-      }
-    } else {
-      const isVisibleRegexLocator = await page
-        .locator('div')
-        .filter({ hasText: regex })
-        .isVisible();
-      if (isVisibleRegexLocator) {
-        await page
-          .locator('div')
-          .filter({ hasText: regex })
-          .getByLabel('Gestisci pacchetto')
-          .click();
-        break;
-      }
+    const isVisibleRowLocator = await page.getByLabel('Gestisci pacchetto').isVisible();
+    if (isVisibleRowLocator) {
+      await page.getByLabel('Gestisci pacchetto').click();
+      break;
     }
     await page.getByLabel('Go to next page').click();
   }
@@ -141,7 +125,7 @@ export async function validateBundle(bundleName: string, bundleType: string, jwt
   }
 }
 
-export async function invalidateAllBundles(bundleName:string, bundleType: BundleTypes) {
+export async function invalidateAllBundles(bundleName: string, bundleType: BundleTypes) {
   // Retrieve bundle list
   const response = await fetch(
     `${MARKETPLACE_BE_URL}/bundles?limit=200&name=${bundleName}&types=${bundleType}`,

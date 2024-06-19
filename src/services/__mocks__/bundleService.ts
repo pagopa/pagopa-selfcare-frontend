@@ -282,26 +282,6 @@ export const mockedCiBundleAttributeResource: CIBundleAttributeResource = {
   ],
 };
 
-export const mockedCiBundleAttributeResource: CIBundleAttributeResource = {
-  attributes: [
-    {
-      maxPaymentAmount: 0,
-      transferCategory: 'transferCategory1',
-      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
-    },
-    {
-      maxPaymentAmount: 0,
-      transferCategory: 'transferCategory2',
-      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
-    },
-    {
-      maxPaymentAmount: 0,
-      transferCategory: 'transferCategory2',
-      transferCategoryRelation: TransferCategoryRelationEnum.EQUAL,
-    },
-  ],
-};
-
 export const getChannelsId = (_page: number, _brokerCode: string): Promise<Array<string>> =>
   Promise.resolve(mockedChannelsIdList);
 

@@ -35,7 +35,10 @@ export async function login(page: Page) {
   await page.locator('#forward_prod-pagopa').click();
   await page.getByText('Ambiente di Collaudo').click();
   await page.getByRole('button', { name: 'Entra' }).click();
-  await page.getByRole('button', { name: 'Accedi' }).click();
+  await page.waitForTimeout(1000);
+  if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
+    await page.getByRole('button', { name: 'Accedi' }).click();
+  }
 }
 
 export async function goToStart(page: Page) {

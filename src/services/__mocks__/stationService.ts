@@ -299,7 +299,7 @@ export const mockedStationsMerged2: WrapperStationsResource = {
 export const mockedStationECs: CreditorInstitutionsResource = {
     creditor_institutions: [
         {
-            creditorInstitutionCode: '12345678901',
+            ciTaxCode: '12345678901',
             enabled: true,
             businessName: 'EC1 S.p.A',
             auxDigit: '3',
@@ -308,7 +308,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '02',
         },
         {
-            creditorInstitutionCode: '12345678902',
+            ciTaxCode: '12345678902',
             enabled: true,
             businessName: 'EC2 S.p.A',
             auxDigit: '3',
@@ -317,7 +317,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '03',
         },
         {
-            creditorInstitutionCode: '12345678903',
+            ciTaxCode: '12345678903',
             enabled: false,
             businessName: 'EC3 S.p.A',
             auxDigit: '3',
@@ -326,7 +326,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '04',
         },
         {
-            creditorInstitutionCode: '12345678904',
+            ciTaxCode: '12345678904',
             enabled: true,
             businessName: 'EC4 S.p.A',
             auxDigit: '3',
@@ -335,7 +335,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '05',
         },
         {
-            creditorInstitutionCode: '12345678905',
+            ciTaxCode: '12345678905',
             enabled: true,
             businessName: 'EC5 S.p.A',
             auxDigit: '3',
@@ -344,7 +344,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '06',
         },
         {
-            creditorInstitutionCode: '12345678906',
+            ciTaxCode: '12345678906',
             enabled: true,
             businessName: 'EC6 S.p.A',
             auxDigit: '3',
@@ -353,7 +353,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '07',
         },
         {
-            creditorInstitutionCode: '12345678907',
+            ciTaxCode: '12345678907',
             enabled: true,
             businessName: 'EC7 S.p.A',
             auxDigit: '3',
@@ -362,7 +362,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '08',
         },
         {
-            creditorInstitutionCode: '12345678908',
+            ciTaxCode: '12345678908',
             enabled: true,
             businessName: 'EC8 S.p.A',
             auxDigit: '3',
@@ -371,7 +371,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '09',
         },
         {
-            creditorInstitutionCode: '12345678909',
+            ciTaxCode: '12345678909',
             enabled: true,
             businessName: 'EC9 S.p.A',
             auxDigit: '3',
@@ -380,7 +380,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '10',
         },
         {
-            creditorInstitutionCode: '12345678910',
+            ciTaxCode: '12345678910',
             enabled: true,
             businessName: 'EC10 S.p.A',
             auxDigit: '3',
@@ -395,7 +395,7 @@ export const mockedStationECs: CreditorInstitutionsResource = {
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
     creditor_institutions: [
         {
-            creditorInstitutionCode: '12345678911',
+            ciTaxCode: '12345678911',
             enabled: true,
             businessName: 'EC11 S.p.A',
             broadcast: false,

@@ -31,7 +31,7 @@ import {
   deletePSPBundle,
   rejectPrivateBundleOffer,
 } from '../../../services/bundleService';
-import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { datesAreOnSameDay, formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
@@ -79,6 +79,7 @@ const BundleActionButtons = ({
   setShowConfirmModal: (arg: BundleDetailsActionTypes | null) => void;
   bundleDetail: BundleResource;
   bundleId: string;
+// eslint-disable-next-line sonarjs/cognitive-complexity
 }) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
@@ -111,7 +112,12 @@ const BundleActionButtons = ({
       );
     }
     if (orgInfo.types.isEc) {
-      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE) {
+      if (
+        (bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE &&
+        // TODO remove after VAS-1104
+        !(bundleDetail?.validityDateTo && 
+        datesAreOnSameDay(new Date(), bundleDetail?.validityDateTo))
+      ) {
         return (
           <>
             {bundleDetail.type === TypeEnum.PRIVATE && (

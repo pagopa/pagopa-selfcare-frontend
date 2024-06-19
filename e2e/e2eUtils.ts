@@ -51,6 +51,7 @@ export async function goToStart(page: Page) {
   if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
     await page.getByRole('button', { name: 'Accedi' }).click();
   }
+  await page.waitForTimeout(2000);
 }
 
 export async function changeToEcUser(page: Page) {

@@ -3,8 +3,13 @@ import {cleanup, render} from '@testing-library/react';
 import {buildColumnDefs, showStatus} from '../ChannelsTableColumns';
 import {showCustomHeader} from '../../../../components/Table/TableUtils';
 import React from 'react';
+<<<<<<< HEAD
 import {store} from '../../../../redux/store';
 import {Provider} from 'react-redux';
+=======
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -189,6 +194,11 @@ describe('<ChannelsTableColumns />', () => {
         const realColumns = buildColumnDefs(mockTFunction, () => jest.fn()) as Array<any>;
         expect(realColumns).toEqual(ArrayBuildColumnDefs);
 
+<<<<<<< HEAD
         render(<Provider store={store}>{showStatus(params)}</Provider>);
     });
+=======
+    render(<Provider store={store}>{showStatus(params)}</Provider>);
+  });
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 });

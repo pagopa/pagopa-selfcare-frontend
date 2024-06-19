@@ -654,10 +654,14 @@
     }
   },
   "stationDetailPageValidation": {
+<<<<<<< HEAD
     "subtitle":{
       "waiting": "Ecco i dettagli della stazione inviata in revisione.",
       "approved": "Ecco i dettagli della stazione."
     },
+=======
+    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
     "alert": {
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
       "toFixTitle": "Modifiche richieste",
@@ -678,7 +682,11 @@
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
       "connectionType": {
+<<<<<<< HEAD
         "label": "Tipo di connessione",
+=======
+        "label":"Tipo di connessione",
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
         "sync": "Sincrona",
         "async": "Asincrona"
       },

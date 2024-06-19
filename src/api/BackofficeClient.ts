@@ -811,7 +811,11 @@ export const BackofficeApi = {
       'station-code': stationCode,
       ciTaxCode,
       body: {
+<<<<<<< HEAD
         note,
+=======
+        note
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

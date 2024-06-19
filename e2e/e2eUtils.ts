@@ -15,7 +15,7 @@ export const PSP_DEMO_DIRECT_CODE = 'ABI50004';
 
 export async function login(page: Page) {
   await page.goto('https://dev.selfcare.pagopa.it/dashboard');
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
   if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
     await page.getByRole('button', { name: 'Chiudi' }).click();
   }
@@ -54,6 +54,7 @@ export async function goToStart(page: Page) {
 }
 
 export async function changeToEcUser(page: Page) {
+  await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('EC demo');

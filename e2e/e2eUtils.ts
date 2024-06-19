@@ -6,7 +6,9 @@ export const PSP_DEMO_DIRECT = '99999000011';
 
 export async function login(page: Page, local?: boolean) {
   await page.goto('https://dev.selfcare.pagopa.it/dashboard');
-  await page.getByRole('button', { name: 'Chiudi' }).click();
+  if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
+    await page.getByRole('button', { name: 'Chiudi' }).click();
+  }
   await page.getByRole('button', { name: 'Entra con SPID' }).click();
   await page.getByLabel('test').click();
   await page.getByLabel('Username').fill('test');

@@ -108,7 +108,7 @@ jobs:
             export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
           fi
           
-          SUBKEY=$SUB_KEY FE_URL=$FE_URL npx playwright test --workers=1 --max-failures=1 --project=chromium
+          SUBKEY=$SUBKEY FE_URL=$FE_URL npx playwright test --workers=1 --max-failures=1 --project=chromium
 
   print_debug:
     runs-on: ubuntu-latest

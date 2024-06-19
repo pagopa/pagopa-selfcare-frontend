@@ -230,36 +230,41 @@ const getCIStatusChip = (
   bundleStatus: CiBundleStatusEnum | undefined
 ) => {
   if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
-    return (
-      <Chip
-        color={'default'}
-        label={t('commissionBundlesPage.list.states.toBeActivated')}
-        data-testid="default-state-chip"
-      />
-    );
+    // TODO remove after VAS-1104
+    if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
+      return renderStatusChip({
+        chipColor: 'error',
+        chipLabel: t('commissionBundlesPage.list.states.onRemovalInactive'),
+        dataTestId: 'error-removal-state-chip',
+      });
+    }
+
+    return renderStatusChip({
+      chipColor: 'default',
+      chipLabel: t('commissionBundlesPage.list.states.toBeActivated'),
+      dataTestId: 'default-activate-state-chip',
+    });
   }
 
   if (bundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
-    return (
-      <Chip
-        color={'warning'}
-        label={t('commissionBundlesPage.list.states.deactivated')}
-        data-testid="error-state-chip"
-      />
-    );
+    return renderStatusChip({
+      chipColor: 'warning',
+      chipLabel: t('commissionBundlesPage.list.states.deactivated'),
+      dataTestId: 'warning-removal-state-chip',
+    });
   }
 
   if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
-    return (
-      <Chip
-        sx={{ backgroundColor: '#7ED5FC' }}
-        label={t('commissionBundlesPage.list.states.requestInProgress')}
-        data-testid="primary-state-chip"
-      />
-    );
+    return renderStatusChip({
+      chipStyle: { backgroundColor: '#7ED5FC' },
+      chipLabel: t('commissionBundlesPage.list.states.requestInProgress'),
+      dataTestId: 'primary-state-chip',
+    });
   }
-  if ((bundleType === TypeEnum.GLOBAL && validityDateFrom) || bundleStatus === CiBundleStatusEnum.ENABLED) {
-
+  if (
+    (bundleType === TypeEnum.GLOBAL && validityDateFrom) ||
+    bundleStatus === CiBundleStatusEnum.ENABLED
+  ) {
     return getGeneralStatusChip(t, todayDate, validityDateTo, validityDateFrom);
   }
 

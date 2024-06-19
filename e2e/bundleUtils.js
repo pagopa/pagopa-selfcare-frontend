@@ -1,1 +1,0 @@
-export const bundleNameGlobal = "Integration test global";

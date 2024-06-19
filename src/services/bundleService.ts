@@ -395,5 +395,28 @@ export const createCIBundleOffers = ({
   }
 };
 
+export const createCIBundleOffers = ({
+  idBundle,
+  pspTaxCode,
+  bundleName,
+  ciTaxCodeList,
+}: {
+  idBundle: string;
+  pspTaxCode: string;
+  bundleName: string;
+  ciTaxCodeList: Array<string>;
+}): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve();
+  } else {
+    return BackofficeApi.createCIBundleOffers({
+      idBundle,
+      pspTaxCode,
+      bundleName,
+      ciTaxCodeList
+    });
+  }
+};
+
 export const getSpecificBuiltInData = (t: TFunction, specificBuiltInData?: string) =>
   specificBuiltInData ? specificBuiltInData : t('commissionBundlesPage.allTaxonomies');

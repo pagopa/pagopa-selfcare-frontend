@@ -54,6 +54,11 @@ export async function goToStart(page: Page) {
   await page.waitForTimeout(2000);
 }
 
+export async function checkReturnHomepage(page: Page){
+  await page.waitForTimeout(2000);
+  await page.getByTestId('commission-bundles-test').click();
+}
+
 export async function changeToEcUser(page: Page) {
   await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();

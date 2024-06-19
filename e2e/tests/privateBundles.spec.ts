@@ -7,13 +7,20 @@ import {
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
+import {
+  BundleTypes,
+  changeToEcUser,
+  changeToPspUser,
+  checkReturnHomepage,
+  goToStart,
+  login,
+} from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Private bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-    // eslint-disable-next-line functional/no-let
+  // eslint-disable-next-line functional/no-let
   let jwt: string;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -92,7 +99,7 @@ test.describe('Private bundles flow', () => {
     await page.getByTestId('taxonomies-add-button-test').click();
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('Validate bundle', async () => {
@@ -111,7 +118,7 @@ test.describe('Private bundles flow', () => {
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('offer-delete-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP sends private bundle offer 2nd time', async () => {
@@ -122,14 +129,16 @@ test.describe('Private bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await page.getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu').click();
+    await page
+      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
+      .click();
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
     await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('reject-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP sends private bundle offer 3rd time', async () => {
@@ -140,7 +149,9 @@ test.describe('Private bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await page.getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu').click();
+    await page
+      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
+      .click();
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
@@ -152,11 +163,11 @@ test.describe('Private bundles flow', () => {
       .locator('div')
       .filter({ hasText: /^Conferma$/ })
       .click();
-      await page.getByTestId('payment-amount-test').nth(0).click();
-      await page.getByTestId('payment-amount-test').nth(0).fill('4');
+    await page.getByTestId('payment-amount-test').nth(0).click();
+    await page.getByTestId('payment-amount-test').nth(0).fill('4');
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('EC de-activates private bundle', async () => {
@@ -166,7 +177,7 @@ test.describe('Private bundles flow', () => {
     await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP deletes private bundle', async () => {
@@ -176,7 +187,7 @@ test.describe('Private bundles flow', () => {
     await getToBundleDetailPsp(page, bundleNamePrivate, true);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 });
 
@@ -205,5 +216,5 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByRole('option', { name: 'EC DEMO DIRECT' }).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
-  await page.getByTestId('commission-bundles-test').click();
+  await checkReturnHomepage(page);
 }

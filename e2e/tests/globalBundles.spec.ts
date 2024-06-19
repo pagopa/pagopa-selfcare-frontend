@@ -1,6 +1,13 @@
 import { Page, test } from '@playwright/test';
 import { bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetailPsp } from '../bundleUtils';
-import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
+import {
+  BundleTypes,
+  changeToEcUser,
+  changeToPspUser,
+  checkReturnHomepage,
+  goToStart,
+  login,
+} from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Global bundles flow', () => {
@@ -85,7 +92,7 @@ test.describe('Global bundles flow', () => {
     await page.getByTestId('taxonomies-add-button-test').click();
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP edits global bundle', async () => {
@@ -106,7 +113,7 @@ test.describe('Global bundles flow', () => {
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP deletes global bundle', async () => {
@@ -115,7 +122,7 @@ test.describe('Global bundles flow', () => {
     await getToBundleDetailPsp(page, bundleNameGlobal);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('EC goes to global bundle detail', async () => {

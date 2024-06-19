@@ -7,7 +7,7 @@ import {
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import { BundleTypes, changeToEcUser, changeToPspUser, goToStart, login } from '../e2eUtils';
+import { BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login } from '../e2eUtils';
 
 test.setTimeout(50000);
 test.describe('Public bundles flow', () => {
@@ -91,7 +91,7 @@ test.describe('Public bundles flow', () => {
     await page.getByTestId('taxonomies-add-button-test').click();
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('Validate bundle', async () => {
@@ -109,7 +109,7 @@ test.describe('Public bundles flow', () => {
     await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.REQUESTED);
     await page.getByTestId('delete-request-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('EC activates public bundle 2nd time', async () => {
@@ -124,7 +124,7 @@ test.describe('Public bundles flow', () => {
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('request-reject-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('EC activates public bundle 3rd time', async () => {
@@ -139,7 +139,7 @@ test.describe('Public bundles flow', () => {
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('request-accept-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('EC de-activates public bundle', async () => {
@@ -149,7 +149,7 @@ test.describe('Public bundles flow', () => {
     await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.ENABLED);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 
   test('PSP deletes public bundle', async () => {
@@ -159,7 +159,7 @@ test.describe('Public bundles flow', () => {
     await getToBundleDetailPsp(page, bundleNamePublic, true);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
-    await page.getByTestId('commission-bundles-test').click();
+    await checkReturnHomepage(page);
   });
 });
 
@@ -179,5 +179,5 @@ async function activatePublicBundle(page: Page) {
   await page.getByLabel('Importo a tuo carico').fill('4');
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
-  await page.getByTestId('commission-bundles-test').click();
+  await checkReturnHomepage(page);
 }

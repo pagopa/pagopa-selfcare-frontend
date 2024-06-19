@@ -8,6 +8,8 @@ import AddEditChannelPage from '../AddEditChannelPage';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import ROUTES from '../../../../routes';
+import * as useUserRole from '../../../../hooks/useUserRole';
+import {ROLE} from '../../../../model/RolePermission';
 import {FormAction} from '../../../../model/Channel';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import {mockedChannel} from '../../../../services/__mocks__/channelService';
@@ -88,4 +90,31 @@ describe('<AddEditChannelPage />', () => {
 
         expect(getChannelCodeMocked).toBeCalled();
     });
+
+    test('render component AddEditChannelPage on operator', () => {
+
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsPagopaOperator: true,
+            userIsAdmin: true,
+        });
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${mockedChannel.channel_code}/edit`]}>
+                    <Route path="/channels/:channelId/:actionId">
+                        <ThemeProvider theme={theme}>
+                            <AddEditChannelPage/>
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        expect(getChannelDetailMocked).toBeCalled();
+    });
+
 });

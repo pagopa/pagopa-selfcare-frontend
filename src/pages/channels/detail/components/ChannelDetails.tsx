@@ -16,6 +16,8 @@ import {ENV} from '../../../../utils/env';
 import {useUserRole} from "../../../../hooks/useUserRole";
 import DetailButtons from './DetailButtons';
 import GetChannelAlert from './GetChannelAlert';
+import ChannelDetailHeader from './ChannelDetailHeader';
+
 
 type Props = {
     channelDetail: ChannelDetailsResource;
@@ -53,30 +55,7 @@ const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSP
     return (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
-                <Stack direction="row">
-                    <ButtonNaked
-                        size="small"
-                        component="button"
-                        onClick={goBack}
-                        startIcon={<ArrowBack/>}
-                        sx={{color: 'primary.main', mr: '20px'}}
-                        weight="default"
-                    >
-                        {t('general.exit')}
-                    </ButtonNaked>
-                    <Breadcrumbs>
-                        <Typography>{t('general.Channels')}</Typography>
-                        <Typography color={'text.disaled'}>
-                            {t('channelDetailPage.detail')} {channelId}
-                        </Typography>
-                    </Breadcrumbs>
-                </Stack>
-                <Box display="flex" mt={2} alignItems={'center'}>
-                  <Typography variant="h4" mr={3}>
-                    {channelId}
-                  </Typography>
-                  <StatusChip status={channelDetail?.wrapperStatus ?? ''} />
-                </Box>
+                <ChannelDetailHeader channelId={channelId} channelDetail={channelDetail} goBack={goBack} />
                 <GetChannelAlert channelDetail={channelDetail} />
                 <Paper
                     elevation={8}

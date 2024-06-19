@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {CIBundleFee} from "../api/generated/portal/CIBundleFee";
 import {CIBundleResource} from "../api/generated/portal/CIBundleResource";
 import {CIBundlesResource} from "../api/generated/portal/CIBundlesResource";
@@ -6,6 +7,16 @@ import {CISubscriptionInfo} from "../api/generated/portal/CISubscriptionInfo";
 import {PSPBundleResource, TypeEnum} from "../api/generated/portal/PSPBundleResource";
 import {PSPBundlesResource} from "../api/generated/portal/PSPBundlesResource";
 import {PSPBundleTaxonomy} from "../api/generated/portal/PSPBundleTaxonomy";
+=======
+import { CIBundleFee } from "../api/generated/portal/CIBundleFee";
+import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
+import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
+import { CIBundleSubscriptionsDetail } from "../api/generated/portal/CIBundleSubscriptionsDetail";
+import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
+import { PSPBundleResource, TypeEnum } from "../api/generated/portal/PSPBundleResource";
+import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
+import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 
 export enum FormAction {
     Create = 'create',
@@ -18,6 +29,7 @@ export enum SubscriptionStateType {
 }
 
 export type BundleCISubscriptionsMethodParams = {
+<<<<<<< HEAD
     idBundle: string;
     pspTaxCode: string;
     limit: number;
@@ -43,6 +55,33 @@ export type BundleCiSubscriptionsDetailMethodParams = {
     ciTaxCode: string;
     status: string;
     bundleType: TypeEnum;
+=======
+  idBundle: string;
+  pspTaxCode: string;
+  limit: number;
+  page: number;
+  status: SubscriptionStateType;
+  ciTaxCode?: string;
+  bundleType: TypeEnum;
+};
+
+export type BundleCISubscriptionsBodyRequest = {
+  'id-bundle': string;
+  'psp-tax-code': string;
+  limit: number;
+  page: number;
+  status: SubscriptionStateType;
+  ciTaxCode?: string;
+  bundleType: TypeEnum;
+};
+
+export type BundleCiSubscriptionsDetailMethodParams = {
+  idBundle: string;
+  pspTaxCode: string;
+  ciTaxCode: string;
+  status: string;
+  bundleType: TypeEnum;
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 };
 
 export type BundleCiSubscriptionDetailModel = CISubscriptionInfo & CIBundleSubscriptionsDetail;

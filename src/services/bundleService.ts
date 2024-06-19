@@ -6,7 +6,10 @@ import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   BundleCiSubscriptionsDetailMethodParams,
   BundleCISubscriptionsMethodParams,
+<<<<<<< HEAD
   SubscriptionStateType,
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../model/CommissionBundle';
 import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
@@ -266,14 +269,20 @@ export const deletePrivateBundleOffer = ({
   idBundle,
   pspTaxCode,
   bundleOfferId,
+<<<<<<< HEAD
   ciTaxCode,
   bundleName,
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 }: {
   idBundle: string;
   pspTaxCode: string;
   bundleOfferId: string;
+<<<<<<< HEAD
   ciTaxCode: string;
   bundleName: string;
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 }) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
@@ -282,6 +291,7 @@ export const deletePrivateBundleOffer = ({
       idBundle,
       pspTaxCode,
       bundleOfferId,
+<<<<<<< HEAD
       ciTaxCode,
       bundleName,
     });
@@ -379,6 +389,8 @@ export const createCIBundleOffers = ({
       pspTaxCode,
       bundleName,
       ciTaxCodeList
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
     });
   }
 };

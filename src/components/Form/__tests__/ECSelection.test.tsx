@@ -20,7 +20,7 @@ describe('<ECSelection />', () => {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <ECSelection
-            availableEC={[...mockedCreditorInstitutionInfoArray.creditor_institution_info_list!]}
+            availableEC={mockedCreditorInstitutionInfoArray}
             selectedEC={undefined}
             onECSelectionChange={spyOnCISelected}
           />
@@ -38,13 +38,9 @@ describe('<ECSelection />', () => {
 
     fireEvent.mouseDown(ecSelectionSearch);
     fireEvent.select(ecSelectionSearch, {
-      target: {
-        value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName,
-      },
+      target: { value: mockedCreditorInstitutionInfoArray[0].business_name },
     });
-    expect(ecSelectionSearch.value).toBe(
-      mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName
-    );
+    expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray[0].business_name);
   });
 
   test('render component PartyAccountItem ECSelection', () => {
@@ -52,8 +48,8 @@ describe('<ECSelection />', () => {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <ECSelection
-            availableEC={[...mockedCreditorInstitutionInfoArray.creditor_institution_info_list!]}
-            selectedEC={mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0]}
+            availableEC={mockedCreditorInstitutionInfoArray}
+            selectedEC={mockedCreditorInstitutionInfoArray[0]}
             onECSelectionChange={spyOnCISelected}
           />
         </ThemeProvider>

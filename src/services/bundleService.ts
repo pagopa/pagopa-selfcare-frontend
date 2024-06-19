@@ -2,6 +2,12 @@ import { TFunction } from 'react-i18next';
 import { BackofficeApi } from '../api/BackofficeClient';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest } from '../api/generated/portal/BundleRequest';
+import { CIBundleAttributeResource } from '../api/generated/portal/CIBundleAttributeResource';
+import { CIBundleId } from '../api/generated/portal/CIBundleId';
+import { CIBundlesResource } from '../api/generated/portal/CIBundlesResource';
+import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
+import { PSPBundlesResource } from '../api/generated/portal/PSPBundlesResource';
+import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
 import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   BundleCiSubscriptionsDetailMethodParams,
@@ -11,20 +17,14 @@ import {
 =======
 >>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../model/CommissionBundle';
-import { PublicBundleRequest } from '../api/generated/portal/PublicBundleRequest';
-import { PSPBundleResource } from '../api/generated/portal/PSPBundleResource';
-import { CIBundlesResource } from '../api/generated/portal/CIBundlesResource';
-import { PSPBundlesResource } from '../api/generated/portal/PSPBundlesResource';
-import { CIBundleId } from '../api/generated/portal/CIBundleId';
-import { CIBundleAttributeResource } from '../api/generated/portal/CIBundleAttributeResource';
 import {
   createCommissionBundle,
   deletePSPBundle as deletePSPBundleMock,
+  getBundleCISubscriptionsDetailMock,
+  getBundleCISubscriptionsMock,
   getCommissionBundleCi,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
-  getBundleCISubscriptionsDetailMock,
-  getBundleCISubscriptionsMock,
   getTouchpoints as getTouchpointsMock,
   updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';
@@ -87,11 +87,17 @@ export const getBundleDetailByPSP = (
   }
 };
 
-export const deletePSPBundle = (pspTaxCode: string, bundleId: string): Promise<void> => {
+export const deletePSPBundle = (
+  pspTaxCode: string,
+  bundleId: string,
+  bundleName: string,
+  pspName: string,
+  bundleType: string
+): Promise<void> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return deletePSPBundleMock();
   } else {
-    return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId);
+    return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId, bundleName, pspName, bundleType);
   }
 };
 

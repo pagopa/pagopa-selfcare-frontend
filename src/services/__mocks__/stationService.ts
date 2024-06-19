@@ -594,12 +594,7 @@ export const getECListByStationCode = (
 export const updateWrapperStation = (_stations: StationDetailsDto): Promise<WrapperEntities> =>
     new Promise((resolve) => resolve(mockedWrapperStation));
 
-<<<<<<< HEAD
 export const updateWrapperStationByOpt = (): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
-=======
-export const updateWrapperStationByOpt = (
-): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 
 export const updateStation = (
     _stations: StationDetailsDto,

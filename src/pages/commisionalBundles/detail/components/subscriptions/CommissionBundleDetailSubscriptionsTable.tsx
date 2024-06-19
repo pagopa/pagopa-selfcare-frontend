@@ -1,7 +1,4 @@
-<<<<<<< HEAD:src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleDetailSubscriptionsTable.tsx
 /* eslint-disable complexity */
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526)):src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleSubscriptionsTable.tsx
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import { Add } from '@mui/icons-material';
@@ -15,10 +12,7 @@ import {
   Alert,
   Button,
   Box,
-<<<<<<< HEAD:src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleDetailSubscriptionsTable.tsx
   Stack,
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526)):src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleSubscriptionsTable.tsx
 } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -219,15 +213,10 @@ export default function CommissionBundleSubscriptionsTable({
         idBundle: bundleDetail?.idBundle ?? '',
         pspTaxCode: selectedParty?.fiscalCode ?? '',
         bundleOfferId: selectedSubscription?.bundle_offer_id ?? '',
-<<<<<<< HEAD:src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleDetailSubscriptionsTable.tsx
         ciTaxCode: selectedSubscription?.creditor_institution_code?? '',
         bundleName: bundleDetail?.name ?? '',
       });
       actionId = 'COMMISSION_BUNDLE_DELETE_OFFER';
-=======
-      });
-      actionId = 'COMMISSION_BUNDLE_DELETE_SUBSCRIPTION';
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526)):src/pages/commisionalBundles/detail/components/subscriptions/CommissionBundleSubscriptionsTable.tsx
     }
     if (promise) {
       promise

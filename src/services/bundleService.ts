@@ -12,10 +12,7 @@ import { Touchpoints } from '../api/generated/portal/Touchpoints';
 import {
   BundleCiSubscriptionsDetailMethodParams,
   BundleCISubscriptionsMethodParams,
-<<<<<<< HEAD
   SubscriptionStateType,
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../model/CommissionBundle';
 import {
   createCommissionBundle,
@@ -275,20 +272,14 @@ export const deletePrivateBundleOffer = ({
   idBundle,
   pspTaxCode,
   bundleOfferId,
-<<<<<<< HEAD
   ciTaxCode,
   bundleName,
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 }: {
   idBundle: string;
   pspTaxCode: string;
   bundleOfferId: string;
-<<<<<<< HEAD
   ciTaxCode: string;
   bundleName: string;
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 }) => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
@@ -297,7 +288,6 @@ export const deletePrivateBundleOffer = ({
       idBundle,
       pspTaxCode,
       bundleOfferId,
-<<<<<<< HEAD
       ciTaxCode,
       bundleName,
     });
@@ -372,54 +362,6 @@ export const rejectPrivateBundleOffer = ({
       idBundleOffer,
       pspTaxCode,
       bundleName,
-    });
-  }
-};
-
-export const createCIBundleOffers = ({
-  idBundle,
-  pspTaxCode,
-  bundleName,
-  ciTaxCodeList,
-}: {
-  idBundle: string;
-  pspTaxCode: string;
-  bundleName: string;
-  ciTaxCodeList: Array<string>;
-}): Promise<void> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return Promise.resolve();
-  } else {
-    return BackofficeApi.createCIBundleOffers({
-      idBundle,
-      pspTaxCode,
-      bundleName,
-      ciTaxCodeList
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
-    });
-  }
-};
-
-export const createCIBundleOffers = ({
-  idBundle,
-  pspTaxCode,
-  bundleName,
-  ciTaxCodeList,
-}: {
-  idBundle: string;
-  pspTaxCode: string;
-  bundleName: string;
-  ciTaxCodeList: Array<string>;
-}): Promise<void> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return Promise.resolve();
-  } else {
-    return BackofficeApi.createCIBundleOffers({
-      idBundle,
-      pspTaxCode,
-      bundleName,
-      ciTaxCodeList
     });
   }
 };

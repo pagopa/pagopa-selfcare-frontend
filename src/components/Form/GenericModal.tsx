@@ -2,7 +2,6 @@ import {Modal, Backdrop, Fade, Box, Typography, Button} from '@mui/material';
 import {MouseEventHandler} from 'react';
 
 type Props = {
-<<<<<<< HEAD
     openModal: boolean;
 
     title?: string;
@@ -12,17 +11,6 @@ type Props = {
     handleCloseModal?: MouseEventHandler;
     handleConfirm?: MouseEventHandler;
     renderContent?: () => any;
-=======
-  openModal: boolean;
-  
-  title?: string;
-  message?: any;
-  onConfirmLabel?: string;
-  onCloseLabel?: string;
-  handleCloseModal?: MouseEventHandler;
-  handleConfirm?: MouseEventHandler;
-  renderContent?: () => any;
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 };
 
 const GenericModal = ({

@@ -19,7 +19,6 @@ const bundleConfigurationFields = {
         ['touchpoint', 'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'],
         ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
     ],
-<<<<<<< HEAD
     col2: [
         ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
         ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
@@ -38,14 +37,6 @@ const bundleConfigurationFields = {
         ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
         ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
     ]
-=======
-  ],
-  col4: [
-    ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
-    ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
-    ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
-  ]
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
     if (typeof value === 'string' && value) {

@@ -657,14 +657,10 @@
     }
   },
   "stationDetailPageValidation": {
-<<<<<<< HEAD
     "subtitle":{
       "waiting": "Ecco i dettagli della stazione inviata in revisione.",
       "approved": "Ecco i dettagli della stazione."
     },
-=======
-    "subtitle": "Ecco i dettagli della stazione inviata in revisione.",
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
     "alert": {
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
       "toFixTitle": "Modifiche richieste",
@@ -685,11 +681,7 @@
       "stationCode": "Codice stazione",
       "version": "Versione stazione",
       "connectionType": {
-<<<<<<< HEAD
         "label": "Tipo di connessione",
-=======
-        "label":"Tipo di connessione",
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
         "sync": "Sincrona",
         "async": "Asincrona"
       },
@@ -1078,7 +1070,6 @@
         "errorCommission": "Non può superare l’importo applicato dal PSP",
         "errorMessage": "Non è stato possibile attivare il pacchetto"
       },
-<<<<<<< HEAD
       "addRecipientsPage": {
         "title": "Aggiungi destinatari",
         "subtitle": "Cerca gli enti destinatari del pacchetto o carica una lista.",
@@ -1115,16 +1106,6 @@
           "placeholder": "Cerca per codice fiscale",
           "stateFilter": "Stato"
         },
-=======
-      "subscriptionsTable": {
-        "businessName": "Nome Ente",
-        "taxCode": "Codice Fiscale",
-        "state": "Stato",
-        "search": {
-          "placeholder": "Cerca per codice fiscale",
-          "stateFilter": "Stato"
-        },
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
         "modal": {
           "reject": {
             "title": "Rifiuta richiesta",
@@ -1147,7 +1128,6 @@
           "reject": "Richiesta rifiutata",
           "accept": "Richiesta accettata",
           "delete": "Ente rimosso",
-<<<<<<< HEAD
           "deleteOffer": "Offerta eliminata",
           "waitingMessage": "Il destinatario è in attesa di attivare il pacchetto."
         },
@@ -1173,43 +1153,13 @@
             "delete": "Errore durante l'eliminazione dell'adesione"
           }
         },
-=======
-          "deleteOffer": "Offerta eliminata"
-        },
-        "requestsTable": {
-          "title": "Richieste di adesione",
-          "table": {
-            "emptyState": {
-              "WAITING": "Non sono presenti richieste d'adesione in attesa",
-              "ACCEPTED": "Non sono presenti richieste d'adesione già accettate"
-            }
-          },
-          "stateChip": {
-            "WAITING": "In attesa",
-            "ACCEPTED": "Accettata",
-            "DELETING": "In eliminazione"
-          },
-          "drawerTitle": "Dettaglio richiedente",
-          "error": {
-            "errorGetList": "Errore durante il recupero della lista delle richieste di adesione",
-            "errorGetDetail": "Errore durante il recupero del dettaglio della richiesta",
-            "reject": "Errore durante il rifiuto della richiesta",
-            "accept": "Errore durante l'accettazione della richiesta",
-            "delete": "Errore durante l'eliminazione dell'adesione"
-          }
-        },
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
         "offersTable": {
           "title": "Destinatari",
           "inviteButton": "Invita enti",
           "table": {
             "emptyState": {
               "WAITING": "Non sono presenti offerte in attesa",
-<<<<<<< HEAD
               "ACCEPTED": "Non sono presenti offerte già accettate"
-=======
-              "ACTIVE": "Non sono presenti offerte già accettate"
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
             }
           },
           "stateChip": {
@@ -1225,11 +1175,7 @@
           }
         }
       },
-<<<<<<< HEAD
       "requestDrawer": {
-=======
-      "requestDrawer":  {
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
         "businessName": "Nome Ente",
         "taxCode": "Codice Fiscale",
         "state": "Stato",

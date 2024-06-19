@@ -1,38 +1,38 @@
-import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { generatePath, Link, useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import { ButtonNaked } from '@pagopa/mui-italia';
 import { ArrowBack } from '@mui/icons-material';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
-import ROUTES from '../../../routes';
-import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import {
-  BundleDetailsActionTypes,
-  BundleResource,
-  FormAction,
-} from '../../../model/CommissionBundle';
-import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
-import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
-import {
-  deleteCIBundleRequest,
-  deleteCIBundleSubscription,
-  deletePSPBundle,
-  rejectPrivateBundleOffer,
-} from '../../../services/bundleService';
-import GenericModal from '../../../components/Form/GenericModal';
-import { Party } from '../../../model/Party';
-import { useOrganizationType } from '../../../hooks/useOrganizationType';
-import { useUserRole } from '../../../hooks/useUserRole';
+import { Alert, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, generatePath, useHistory } from 'react-router-dom';
 import {
   CIBundleResource,
   CiBundleStatusEnum,
 } from '../../../api/generated/portal/CIBundleResource';
 import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { PSPBundleTaxonomy } from '../../../api/generated/portal/PSPBundleTaxonomy';
+import GenericModal from '../../../components/Form/GenericModal';
+import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
+import { useOrganizationType } from '../../../hooks/useOrganizationType';
+import { useUserRole } from '../../../hooks/useUserRole';
+import {
+  BundleDetailsActionTypes,
+  BundleResource,
+  FormAction,
+} from '../../../model/CommissionBundle';
+import { Party } from '../../../model/Party';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import ROUTES from '../../../routes';
+import {
+  deleteCIBundleRequest,
+  deleteCIBundleSubscription,
+  deletePSPBundle,
+  rejectPrivateBundleOffer,
+} from '../../../services/bundleService';
+import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants';
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleDetailSubscriptionsTable from './components/subscriptions/CommissionBundleDetailSubscriptionsTable';
@@ -190,7 +190,13 @@ const CommissionBundleDetailPage = () => {
     let promise: Promise<string | void> | undefined;
     if (showConfirmModal) {
       if (showConfirmModal === BundleDetailsActionTypes.DELETE_BUNDLE_PSP) {
-        promise = deletePSPBundle(pspTaxCode, bundleId);
+        promise = deletePSPBundle(
+          pspTaxCode,
+          bundleId,
+          commissionBundleDetail.name ?? '',
+          selectedParty?.description ?? '',
+          commissionBundleDetail.type ?? ''
+        );
       } else if (showConfirmModal === BundleDetailsActionTypes.DELETE_BUNDLE_EC) {
         promise = deleteCIBundleSubscription(
           (commissionBundleDetail as CIBundleResource)?.ciBundleId ?? '',

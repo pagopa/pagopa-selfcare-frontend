@@ -40,7 +40,7 @@ const ModalContent = ({
                 addNotify({
                     id: 'ADDEDIT_INSTITUTION_DATA_SAVE',
                     title: '',
-                    message: t('channelDetailPageValidation.modal.successMessage'),
+                    message: t('channelDetailValidationPage.modal.successMessage'),
                     component: 'Toast',
                 });
             })
@@ -52,7 +52,7 @@ const ModalContent = ({
                     techDescription: `An error occurred while getting updating the channel with operator's note`,
                     toNotify: true,
                     displayableTitle: t('general.errorTitle'),
-                    displayableDescription: t('channelDetailPageValidation.modal.error'),
+                    displayableDescription: t('channelDetailValidationPage.modal.error'),
                     component: 'Toast',
                 })
             )
@@ -63,9 +63,9 @@ const ModalContent = ({
     };
     return (
         <>
-            <Typography variant="h6">{t('channelDetailPageValidation.modal.title')}</Typography>
+            <Typography variant="h6">{t('channelDetailValidationPage.modal.title')}</Typography>
             <Typography variant="body1" sx={{my: 2}}>
-                {t('channelDetailPageValidation.modal.subtitle')}
+                {t('channelDetailValidationPage.modal.subtitle')}
             </Typography>
             <TextField
                 fullWidth
@@ -73,11 +73,11 @@ const ModalContent = ({
                 name="requestInput"
                 required
                 multiline
-                placeholder={t('channelDetailPageValidation.modal.placeholder')}
+                placeholder={t('channelDetailValidationPage.modal.placeholder')}
                 size="small"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                helperText={t('channelDetailPageValidation.modal.helperText')}
+                helperText={t('channelDetailValidationPage.modal.helperText')}
                 inputProps={{
                     'data-testid': 'requestInput',
                     maxLength: 200,
@@ -146,13 +146,16 @@ const DetailButtons = ({channelDetails, setChannelDetails, goBack}: Props) => {
                     </>
                 ) : userIsPagopaOperator && channelDetails?.wrapperStatus !== WrapperStatusEnum.APPROVED ? (
                     <>
-                         <Button
-                             variant="outlined"
-                             onClick={() => setShowModal(true)}
-                             data-testid="request-edit-button"
-                         >
-                             {t('channelDetailPage.requestEdit')}
-                         </Button>
+                         {(channelDetails?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+                          channelDetails?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) &&
+                             (<Button
+                                 variant="outlined"
+                                 onClick={() => setShowModal(true)}
+                                 data-testid="request-edit-button"
+                             >
+                                 {t('channelDetailPage.requestEdit')}
+                             </Button>)
+                         }
                         <Button
                             component={Link}
                             to={generatePath(ROUTES.CHANNEL_EDIT, {
@@ -161,13 +164,7 @@ const DetailButtons = ({channelDetails, setChannelDetails, goBack}: Props) => {
                             })}
                             variant="contained"
                         >
-                            {t(
-                                `channelDetailPage.${
-                                    status === WrapperStatusEnum.TO_FIX || status === WrapperStatusEnum.TO_FIX_UPDATE
-                                        ? 'approveAndValidate'
-                                        : 'configure'
-                                }`
-                            )}
+                            {t('channelDetailPage.approveAndValidate')}
                         </Button>
                     </>
                 ) : channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED ? (
@@ -238,3 +235,4 @@ const DetailButtons = ({channelDetails, setChannelDetails, goBack}: Props) => {
 };
 
 export default DetailButtons;
+

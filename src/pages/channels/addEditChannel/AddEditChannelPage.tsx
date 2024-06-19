@@ -6,6 +6,7 @@ import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory, useParams} from 'react-router';
 import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
+import {WrapperStatusEnum} from '../../../api/generated/portal/WrapperChannelDetailsResource';
 import {FormAction} from '../../../model/Channel';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
@@ -98,7 +99,9 @@ const AddEditChannelPage = () => {
                         )}
                         <Typography color={'text.disaled'}>
                             {userIsPagopaOperator
-                                ? t(`addEditChannelPage.config.titleConfiguration`)
+                                ? channelDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED ?
+                                    t('`addEditChannelPage.config.titleValidate`')
+                                    : t(`addEditChannelPage.config.titleConfiguration`)
                                 : t(`addEditChannelPage.${formAction}.breadcrumb`)}
                         </Typography>
                     </Breadcrumbs>
@@ -106,12 +109,16 @@ const AddEditChannelPage = () => {
                 <TitleBox
                     title={
                         userIsPagopaOperator
-                            ? t(`addEditChannelPage.config.titleConfiguration`)
+                            ? channelDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED ?
+                                t('`addEditChannelPage.config.titleValidate`')
+                                : t(`addEditChannelPage.config.titleConfiguration`)
                             : t(`addEditChannelPage.${formAction}.title`)
                     }
                     subTitle={
                         userIsPagopaOperator
-                            ? t(`addEditChannelPage.config.subtitleConfiguration`)
+                            ? channelDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED ?
+                                t('`addEditChannelPage.config.subtitleValidate`')
+                                : t(`addEditChannelPage.config.subtitleConfiguration`)
                             : t(`addEditChannelPage.${formAction}.subtitle`)
                     }
                     mbTitle={2}

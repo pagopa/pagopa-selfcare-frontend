@@ -67,3 +67,4 @@ const ChannelDetailPage = () => {
 };
 
 export default ChannelDetailPage;
+

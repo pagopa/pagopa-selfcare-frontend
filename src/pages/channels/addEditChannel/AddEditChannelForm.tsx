@@ -39,7 +39,7 @@ import {Party} from '../../../model/Party';
 import {LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE} from '../../../utils/constants';
 import {sortPaymentType} from '../../../model/PaymentType';
 import {isValidURL} from '../../components/commonFunctions';
-import {ChannelDetailsResource, ProtocolEnum,} from '../../../api/generated/portal/ChannelDetailsResource';
+import {ChannelDetailsResource, ProtocolEnum} from '../../../api/generated/portal/ChannelDetailsResource';
 import {WrapperStatusEnum} from '../../../api/generated/portal/WrapperChannelDetailsResource';
 import {ChannelOnCreation, FormAction} from '../../../model/Channel';
 import {ENV} from '../../../utils/env';
@@ -728,11 +728,18 @@ const AddEditChannelForm = ({selectedParty, channelCode, channelDetail, formActi
             <ConfirmModal
                 title={
                     userIsPagopaOperator
-                        ? t('addEditChannelPage.addForm.confirmModal.channelConfiguration')
+                        ? channelDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED ?
+                            t('`addEditChannelPage.addForm.confirmModal.channelValidate`')
+                        : t('addEditChannelPage.addForm.confirmModal.channelConfiguration')
                         : t('addEditChannelPage.addForm.confirmModal.title')
                 }
                 message={
-                    userIsPagopaOperator ? (
+                    userIsPagopaOperator ?
+                        channelDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED ?
+                    (
+                        t('addEditChannelPage.confirmModal.messageChannelOperationValidate')
+                    )
+                    : (
                         t('addEditChannelPage.confirmModal.messageChannelOperation')
                     ) : (
                         <Trans i18nKey="addEditChannelPage.confirmModal.message">

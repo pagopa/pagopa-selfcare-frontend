@@ -46,12 +46,12 @@ const ChannelDetailsWrap = ({channelDetWrap, setChannelDetail, channelId, goBack
                         </Typography>
                     </Breadcrumbs>
                 </Stack>
-                <Grid container mt={3}>
-                    <Box display="flex" mt={2} alignItems={'center'}>
-                        <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <StatusChip status={channelDetWrap.wrapperStatus ?? ''}/>
-                    </Box>
-                </Grid>
+                <Box display="flex" mt={2} alignItems={'center'}>
+                  <Typography variant="h4" mr={3}>
+                    {channelId}
+                  </Typography>
+                  <StatusChip status={channelDetWrap?.wrapperStatus ?? ''} />
+                </Box>
                 <GetChannelAlert channelDetail={channelDetWrap} />
                 <Paper
                     elevation={8}
@@ -177,10 +177,28 @@ const ChannelDetailsWrap = ({channelDetWrap, setChannelDetail, channelId, goBack
                 <Typography color="action.active" sx={{ my: 2 }}>
                   {t('channelDetailPage.createdOn')}{' '}
                   <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                    {`${channelDetWrap?.createdAt?.toLocaleDateString('en-GB')} da ${
-                      channelDetWrap?.createdBy
-                    }`}
+                    {`${channelDetWrap?.createdAt?.toLocaleDateString('en-GB')}`}
                   </Typography>
+                  {' '}{t('general.fromLower')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {channelDetWrap?.createdBy}
+                  </Typography>
+                  {'. '}
+                  {
+                    channelDetWrap?.modifiedBy && (
+                        <>
+                          {t('channelDetailPage.lastModified')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {channelDetWrap?.modifiedBy}
+                          </Typography>
+                          {' '}{t('general.atLower')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {`${channelDetWrap?.modifiedAt?.toLocaleDateString('en-GB')}`}
+                          </Typography>
+                          {'. '}
+                        </>
+                    )
+                  }
                 </Typography>
                 <DetailButtons channelDetails={channelDetWrap} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
@@ -191,3 +209,4 @@ const ChannelDetailsWrap = ({channelDetWrap, setChannelDetail, channelId, goBack
 };
 
 export default ChannelDetailsWrap;
+

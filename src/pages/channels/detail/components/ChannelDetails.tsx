@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
-import {ManageAccounts, VisibilityOff} from '@mui/icons-material';
-import {Alert, Chip, Divider, Grid, IconButton, Paper, Typography} from '@mui/material';
+import {ArrowBack, ManageAccounts, VisibilityOff} from '@mui/icons-material';
+import {Alert, Stack, Breadcrumbs, Chip, Divider, Grid, IconButton, Paper, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
@@ -53,12 +53,30 @@ const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSP
     return (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
-                <Grid container mt={3}>
-                    <Box display="flex" mt={2} alignItems={'center'}>
-                        <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <StatusChip status={channelDetail.wrapperStatus ?? ''}/>
-                    </Box>
-                </Grid>
+                <Stack direction="row">
+                    <ButtonNaked
+                        size="small"
+                        component="button"
+                        onClick={goBack}
+                        startIcon={<ArrowBack/>}
+                        sx={{color: 'primary.main', mr: '20px'}}
+                        weight="default"
+                    >
+                        {t('general.exit')}
+                    </ButtonNaked>
+                    <Breadcrumbs>
+                        <Typography>{t('general.Channels')}</Typography>
+                        <Typography color={'text.disaled'}>
+                            {t('channelDetailPage.detail')} {channelId}
+                        </Typography>
+                    </Breadcrumbs>
+                </Stack>
+                <Box display="flex" mt={2} alignItems={'center'}>
+                  <Typography variant="h4" mr={3}>
+                    {channelId}
+                  </Typography>
+                  <StatusChip status={channelDetail?.wrapperStatus ?? ''} />
+                </Box>
                 <GetChannelAlert channelDetail={channelDetail} />
                 <Paper
                     elevation={8}
@@ -367,10 +385,28 @@ const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSP
                 <Typography color="action.active" sx={{ my: 2 }}>
                   {t('channelDetailPage.createdOn')}{' '}
                   <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                    {`${channelDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
-                      channelDetail?.createdBy
-                    }`}
+                    {`${channelDetail?.createdAt?.toLocaleDateString('en-GB')}`}
                   </Typography>
+                  {' '}{t('general.fromLower')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {channelDetail?.createdBy}
+                  </Typography>
+                  {'. '}
+                  {
+                    channelDetail?.modifiedBy && (
+                        <>
+                          {t('channelDetailPage.lastModified')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {channelDetail?.modifiedBy}
+                          </Typography>
+                          {' '}{t('general.atLower')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {`${channelDetail?.modifiedAt?.toLocaleDateString('en-GB')}`}
+                          </Typography>
+                          {'. '}
+                        </>
+                    )
+                  }
                 </Typography>
                 <DetailButtons channelDetails={channelDetail} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
@@ -379,3 +415,4 @@ const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSP
 };
 
 export default ChannelDetails;
+

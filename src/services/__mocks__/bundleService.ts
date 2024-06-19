@@ -14,7 +14,10 @@ import { CIBundleResource, CiBundleStatusEnum } from '../../api/generated/portal
 import { CIBundlesResource } from '../../api/generated/portal/CIBundlesResource';
 import { CIBundleSubscriptionsResource } from '../../api/generated/portal/CIBundleSubscriptionsResource';
 import { CIBundleSubscriptionsDetail } from '../../api/generated/portal/CIBundleSubscriptionsDetail';
+<<<<<<< HEAD
 import { CIBundleAttributeResource } from '../../api/generated/portal/CIBundleAttributeResource';
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -315,8 +318,16 @@ export const deletePSPBundle = (): Promise<void> => new Promise((resolve) => res
 
 export const updatePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());
 
+<<<<<<< HEAD
 export const getBundleCISubscriptionsMock = (): Promise<CIBundleSubscriptionsResource> =>
   Promise.resolve(mockedCiSubscriptionList);
 
 export const getBundleCISubscriptionsDetailMock = (): Promise<CIBundleSubscriptionsResource> =>
   Promise.resolve(mockedCiSubscriptionDetail);
+=======
+export const getBundleCISubscriptionsMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionList);
+
+export const getBundleCISubscriptionsDetailMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionDetail);
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))

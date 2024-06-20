@@ -133,6 +133,9 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
       },
     }
   );
+  if(!response.ok){
+    console.log("Invalidate bundle get bundle error", await response.text());
+  }
   const bundleList = await response.json();
   expect(bundleList?.bundles?.length).toBeTruthy();
   // Update bundle

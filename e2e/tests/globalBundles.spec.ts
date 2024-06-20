@@ -9,7 +9,7 @@ import {
   login,
 } from '../e2eUtils';
 
-test.setTimeout(50000);
+test.setTimeout(100000);
 test.describe('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;

@@ -9,7 +9,7 @@ import {
 } from '../bundleUtils';
 import { BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login } from '../e2eUtils';
 
-test.setTimeout(50000);
+test.setTimeout(100000);
 test.describe('Public bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;

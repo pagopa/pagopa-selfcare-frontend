@@ -54,11 +54,7 @@ export async function getToBundleDetailPsp(
   }
 }
 
-export async function getToBundleDetailEc(
-  page: Page,
-  bundleName: string,
-  bundleState: string
-) {
+export async function getToBundleDetailEc(page: Page, bundleName: string, bundleState: string) {
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
   await page.waitForTimeout(2000);
@@ -142,6 +138,21 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
   // Update bundle
   for (let i = 0; i < bundleList.bundles.length; i++) {
     const bundle = bundleList.bundles[i];
+    const responseDelete = await fetch(
+      `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+        },
+      }
+    );
+    if (!responseDelete.ok) {
+      console.log('Invalidate bundle delete error', await responseDelete.text());
+    }
+    expect(responseDelete.ok).toBeTruthy();
+
     const responseUpdate = await fetch(
       `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
       {
@@ -158,11 +169,10 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
         }),
       }
     );
-    try {
+    if (!responseUpdate.ok) {
       console.log('Invalidate bundle update error', await responseUpdate.text());
-    } finally {
-      expect(responseUpdate.ok).toBeTruthy();
     }
+    expect(responseUpdate.ok).toBeTruthy();
   }
 }
 

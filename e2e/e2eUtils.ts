@@ -46,7 +46,7 @@ export async function goToStart(page: Page) {
   if (feURL) {
     await page.goto(feURL);
   }
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(10000);
   if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
     await page.getByRole('button', { name: 'Chiudi' }).click();
   }

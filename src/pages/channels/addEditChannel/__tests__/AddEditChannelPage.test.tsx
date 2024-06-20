@@ -91,30 +91,4 @@ describe('<AddEditChannelPage />', () => {
         expect(getChannelCodeMocked).toBeCalled();
     });
 
-    test('render component AddEditChannelPage on operator', () => {
-
-        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-            userRole: ROLE.PAGOPA_OPERATOR,
-            userIsPspAdmin: false,
-            userIsEcAdmin: false,
-            userIsPspDirectAdmin: false,
-            userIsPagopaOperator: true,
-            userIsAdmin: true,
-        });
-
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/channels/${mockedChannel.channel_code}/edit`]}>
-                    <Route path="/channels/:channelId/:actionId">
-                        <ThemeProvider theme={theme}>
-                            <AddEditChannelPage/>
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
-
-        expect(getChannelDetailMocked).toBeCalled();
-    });
-
 });

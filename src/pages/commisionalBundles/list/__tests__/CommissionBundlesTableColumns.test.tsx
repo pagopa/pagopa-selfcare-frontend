@@ -414,9 +414,9 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
     });
 
     test('Test state chip cell with to be activated bundle for GLOBAL', () => {
@@ -433,9 +433,9 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('warning-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).toBeInTheDocument();
     });
   });
 
@@ -450,11 +450,10 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
           </Router>
         </Provider>
       );
-
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).toBeInTheDocument();
     });
     test('Bundle ON_REMOVAL', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPublic };
@@ -468,9 +467,9 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
-      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle REQUESTED', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPublic };
@@ -484,9 +483,10 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ENABLED', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPublic };
@@ -502,9 +502,10 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
   });
 
@@ -521,9 +522,29 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).toBeInTheDocument();
+    });
+    test('Bundle AVAILABLE expired', () => {
+      let bundle = { ...mockedCommissionBundleCiDetailPrivate };
+      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+      bundle.validityDateFrom = new Date('01/01/2020');
+      bundle.validityDateTo = new Date();
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <BundleStateChip bundle={bundle} isPsp={false} isEc={true} />
+          </Router>
+        </Provider>
+      );
+
+      expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ON_REMOVAL', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
@@ -537,9 +558,10 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ENABLED', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
@@ -555,9 +577,10 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).toBeInTheDocument();
-      expect(screen.queryByTestId('error-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ENABLED expiring', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };

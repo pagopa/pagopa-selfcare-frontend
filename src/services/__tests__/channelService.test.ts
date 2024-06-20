@@ -27,13 +27,10 @@ import {
   getChannelDetail,
   getChannelPSPs,
   getChannels,
-  getChannelsIdAssociatedToPSP,
-  getChannelsMerged,
   getPSPChannels,
   getWfespPlugins,
   getWrapperEntities,
   updateChannel,
-  updateWrapperChannelDetailsByOpt,
   updateWrapperChannelDetailsToCheck,
   updateWrapperChannelDetailsToCheckUpdate,
   updateWrapperChannelWithOperatorReview,
@@ -50,10 +47,6 @@ describe('ChannelService test mocked', () => {
     });
     expect(response).toMatchObject(mockedChannels);
   });
-  test('Test getChannelsMerged', async () => {
-    const response = await getChannelsMerged(0, 'brokerCode');
-    expect(response).toMatchObject(mockedChannelsMerged);
-  });
   test('Test getChannelDetail', async () => {
     const response = await getChannelDetail('channelId');
     expect(response).toMatchObject(mockedChannelDetail('channelId'));
@@ -61,10 +54,6 @@ describe('ChannelService test mocked', () => {
   test('Test getPSPChannels', async () => {
     const response = await getPSPChannels('pspTaxCode');
     expect(response).toMatchObject(channelEnabled(mockedPSPChannels));
-  });
-  test('Test getChannelsIdAssociatedToPSP', async () => {
-    const response = await getChannelsIdAssociatedToPSP(0, 'brokerCode');
-    expect(response).toMatchObject(mockedChannelsMerged!.channels!.map((el) => el!.channel_code));
   });
   test('Test getWfespPlugins', async () => {
     const response = await getWfespPlugins();
@@ -164,23 +153,6 @@ describe('ChannelService test mocked', () => {
     );
     expect(response).toMatchObject(mockedWrapperChannel);
   });
-  test('Test updateWrapperChannelDetailsByOpt', async () => {
-    const response = await updateWrapperChannelDetailsByOpt(
-      {
-        broker_description: '',
-        broker_psp_code: '',
-        channel_code: '',
-        payment_types: [],
-        redirect_protocol: Redirect_protocolEnum.HTTPS,
-        target_host: '',
-        target_path: '',
-        target_port: 0,
-        validationUrl: '',
-      },
-      'validationUrl'
-    );
-    expect(response).toMatchObject(mockedWrapperChannel);
-  });
   test('Test updateWrapperChannelWithOperatorReview', async () => {
     const response = await updateWrapperChannelWithOperatorReview({
       channelCode: 'channelCode',
@@ -217,13 +189,6 @@ describe('ChannelService test client', () => {
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
-  test('Test getChannelsMerged', async () => {
-    const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannelsMerged')
-      .mockReturnValue(Promise.resolve(mockedChannelsMerged));
-    expect(getChannelsMerged(0, 'brokerCode')).resolves.not.toThrow();
-    expect(spyOn).toBeCalledTimes(1);
-  });
   test('Test getChannelDetail', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'getChannelDetail')
@@ -236,13 +201,6 @@ describe('ChannelService test client', () => {
       .spyOn(BackofficeApi, 'getPSPChannels')
       .mockReturnValue(new Promise((resolve) => resolve(channelEnabled(mockedPSPChannels))));
     expect(getPSPChannels('pspTaxCode')).resolves.not.toThrow();
-    expect(spyOn).toBeCalledTimes(1);
-  });
-  test('Test getChannelsIdAssociatedToPSP', async () => {
-    const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannelsMerged')
-      .mockReturnValue(new Promise((resolve) => resolve(mockedChannelsMerged)));
-    expect(getChannelsIdAssociatedToPSP(0, 'brokerCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getWfespPlugins', async () => {
@@ -301,7 +259,7 @@ describe('ChannelService test client', () => {
   test('Test associatePSPtoChannel', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'associatePSPtoChannel')
-      .mockReturnValue(new Promise((resolve) => resolve({})));
+      .mockReturnValue(new Promise((resolve) => resolve(mockedPaymentTypesResource)));
     expect(
       associatePSPtoChannel('channelCode', 'taxCode', {
         payment_types: [],
@@ -373,28 +331,6 @@ describe('ChannelService test client', () => {
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(
       updateWrapperChannelDetailsToCheckUpdate(
-        {
-          broker_description: '',
-          broker_psp_code: '',
-          channel_code: '',
-          payment_types: [],
-          redirect_protocol: Redirect_protocolEnum.HTTPS,
-          target_host: '',
-          target_path: '',
-          target_port: 0,
-          validationUrl: '',
-        },
-        'validationUrl'
-      )
-    ).resolves.not.toThrow();
-    expect(spyOn).toBeCalledTimes(1);
-  });
-  test('Test updateWrapperChannelDetailsByOpt', async () => {
-    const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperChannelDetailsByOpt')
-      .mockReturnValue(new Promise((resolve) => resolve({})));
-    expect(
-      updateWrapperChannelDetailsByOpt(
         {
           broker_description: '',
           broker_psp_code: '',

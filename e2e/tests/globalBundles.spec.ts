@@ -13,14 +13,9 @@ test.setTimeout(50000);
 test.describe('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  // eslint-disable-next-line functional/no-let
-  let jwt: string;
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    page = await browser.newPage({ storageState: undefined });
     await login(page);
-    jwt = await page.evaluate(async () => localStorage.token);
-  });
-  test.beforeEach(async () => {
     await goToStart(page);
   });
   test.afterAll(async () => {
@@ -96,7 +91,6 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP edits global bundle', async () => {
-    await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToBundleDetailPsp(page, bundleNameGlobal);
     await page.getByTestId('modify-button').click();
@@ -117,7 +111,6 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP deletes global bundle', async () => {
-    await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToBundleDetailPsp(page, bundleNameGlobal);
     await page.getByTestId('delete-button').click();

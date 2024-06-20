@@ -26,8 +26,6 @@ test.describe('Private bundles flow', () => {
     page = await browser.newPage();
     await login(page);
     jwt = await page.evaluate(async () => localStorage.token);
-  });
-  test.beforeEach(async () => {
     await goToStart(page);
   });
   test.afterAll(async () => {
@@ -111,7 +109,6 @@ test.describe('Private bundles flow', () => {
   });
 
   test('PSP delete private bundle offer', async () => {
-    await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
     await getToBundleDetailPsp(page, bundleNamePrivate, true);
@@ -142,6 +139,7 @@ test.describe('Private bundles flow', () => {
   });
 
   test('PSP sends private bundle offer 3rd time', async () => {
+    await changeToPspUser(page);
     await sendPrivateBundleOffer(page);
   });
 
@@ -171,7 +169,6 @@ test.describe('Private bundles flow', () => {
   });
 
   test('EC de-activates private bundle', async () => {
-    await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
     await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
@@ -192,7 +189,6 @@ test.describe('Private bundles flow', () => {
 });
 
 async function sendPrivateBundleOffer(page: Page) {
-  await changeToPspUser(page);
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-private').click();
   await getToBundleDetailPsp(page, bundleNamePrivate, true);

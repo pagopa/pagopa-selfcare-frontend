@@ -31,7 +31,6 @@ on:
         options:
           - local
           - dev
-          - uat
       canary:
         description: 'run the tests on canary version'
         required: false
@@ -95,20 +94,8 @@ jobs:
           npx playwright install --with-deps
           
           export SUBKEY='${{ secrets.SUBKEY }}'
-
-          if [ "${{ inputs.environment }}" = "local" ]; then
-            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
-          fi
           
-          if [ "${{ inputs.environment }}" = "dev" ]; then
-            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
-          fi
-          
-          if [ "${{ inputs.environment }}" = "uat" ]; then
-            export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
-          fi
-          
-          SUBKEY=$SUBKEY FE_URL=$FE_URL npx playwright test --workers=1 --max-failures=1 --project=chromium
+          SUBKEY=$SUBKEY npx playwright test --workers=1 --max-failures=1 --project=firefox
 
   print_debug:
     runs-on: ubuntu-latest

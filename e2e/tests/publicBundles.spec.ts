@@ -19,8 +19,6 @@ test.describe('Public bundles flow', () => {
     page = await browser.newPage();
     await login(page);
     jwt = await page.evaluate(async () => localStorage.token);
-  });
-  test.beforeEach(async () => {
     await goToStart(page);
   });
   test.afterAll(async () => {
@@ -99,11 +97,11 @@ test.describe('Public bundles flow', () => {
   });
 
   test('EC activates public bundle', async () => {
+    await changeToEcUser(page);
     await activatePublicBundle(page);
   });
 
   test('EC delete subscription request', async () => {
-    await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
     await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.REQUESTED);
@@ -128,6 +126,7 @@ test.describe('Public bundles flow', () => {
   });
 
   test('EC activates public bundle 3rd time', async () => {
+    await changeToEcUser(page);
     await activatePublicBundle(page);
   });
 
@@ -164,7 +163,6 @@ test.describe('Public bundles flow', () => {
 });
 
 async function activatePublicBundle(page: Page) {
-  await changeToEcUser(page);
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-public').click();
   await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.AVAILABLE);

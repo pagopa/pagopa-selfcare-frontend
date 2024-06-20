@@ -35,33 +35,38 @@ export async function login(page: Page) {
   await page.locator('#forward_prod-pagopa').click();
   await page.getByText('Ambiente di Collaudo').click();
   await page.getByRole('button', { name: 'Entra' }).click();
-  await page.waitForTimeout(2000);
+  await page.waitForURL('https://selfcare.dev.platform.pagopa.it/ui');
   if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
     await page.getByRole('button', { name: 'Accedi' }).click();
   }
 }
 
 export async function goToStart(page: Page) {
-  const feURL = process.env.FE_URL ?? 'https://selfcare.dev.platform.pagopa.it/ui';
-  await page.goto(feURL);
-  await page.waitForTimeout(3000);
+  const feURL = process.env.FE_URL;
+  if (feURL) {
+    await page.goto(feURL);
+  }
+  await page.waitForTimeout(5000);
   if (await page.getByRole('button', { name: 'Chiudi' }).isVisible()) {
     await page.getByRole('button', { name: 'Chiudi' }).click();
   }
   if (await page.getByRole('button', { name: 'Accedi' }).isVisible()) {
     await page.getByRole('button', { name: 'Accedi' }).click();
   }
-  await page.waitForTimeout(2000);
 }
 
-export async function checkReturnHomepage(page: Page){
+export async function checkReturnHomepage(page: Page) {
   await page.waitForTimeout(2000);
   await page.getByTestId('commission-bundles-test').click();
 }
 
 export async function changeToEcUser(page: Page) {
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  if (await page.getByRole('button', { name: 'PSP DEMO DIRECT Amministratore' }).isVisible()) {
+    await page.getByRole('button', { name: 'PSP DEMO DIRECT Amministratore' }).click();
+  } else {
+    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  }
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('EC demo');
   await page.getByRole('button', { name: 'EC DEMO DIRECT Referente dei' }).click();
@@ -69,7 +74,11 @@ export async function changeToEcUser(page: Page) {
 
 export async function changeToPspUser(page: Page) {
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  if (await page.getByRole('button', { name: 'EC DEMO DIRECT Referente dei' }).isVisible()) {
+    await page.getByRole('button', { name: 'EC DEMO DIRECT Referente dei' }).click();
+  } else {
+    await page.getByRole('button', { name: 'Comune di Frosinone Referente' }).click();
+  }
   await page.getByLabel('Cerca ente').click();
   await page.getByLabel('Cerca ente').fill('PSP');
   await page.getByRole('button', { name: 'PSP DEMO DIRECT Amministratore' }).click();

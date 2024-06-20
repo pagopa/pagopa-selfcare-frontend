@@ -11,54 +11,27 @@ import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDe
 import {WrapperStatusEnum} from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import {StatusChip} from '../../../../components/StatusChip';
 import DetailButtons from './DetailButtons';
+import GetChannelAlert from './GetChannelAlert';
+import ChannelDetailHeader from './ChannelDetailHeader';
+
 
 type Props = {
     channelDetWrap?: ChannelDetailsResource;
+    setChannelDetail: (value: any) => void;
     channelId: string;
     goBack: () => void;
     PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNumber}: Props) => {
+const ChannelDetailsWrap = ({channelDetWrap, setChannelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
     const {t} = useTranslation();
 
     return channelDetWrap ? (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
-                <Stack direction="row">
-                    <ButtonNaked
-                        size="small"
-                        component="button"
-                        onClick={goBack}
-                        startIcon={<ArrowBack/>}
-                        sx={{color: 'primary.main', mr: '20px'}}
-                        weight="default"
-                    >
-                        {t('general.exit')}
-                    </ButtonNaked>
-                    <Breadcrumbs>
-                        <Typography>{t('general.Channels')}</Typography>
-                        <Typography color={'text.disaled'}>
-                            {t('channelDetailPage.detail')} {channelId}
-                        </Typography>
-                    </Breadcrumbs>
-                </Stack>
-                <Grid container mt={3}>
-                    <Grid item xs={6}>
-                        <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <Typography mb={5}>
-                            {t('channelDetailPage.createdOn')}{' '}
-                            <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-                                {channelDetWrap.createdAt?.toLocaleDateString('en-GB') ?? '-'}
-                            </Typography>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailButtons channelDetails={channelDetWrap} goBack={goBack}/>
-                    </Grid>
-                </Grid>
-
+                <ChannelDetailHeader channelId={channelId} channelDetail={channelDetWrap} goBack={goBack} />
+                <GetChannelAlert channelDetail={channelDetWrap} />
                 <Paper
                     elevation={8}
                     sx={{
@@ -66,14 +39,6 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                         p: 4,
                     }}
                 >
-                    <Grid container alignItems={'center'} spacing={0} mb={2}>
-                        <Grid item xs={3}>
-                            <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
-                        </Grid>
-                        <Grid item xs={9} textAlign="right">
-                            <StatusChip status={channelDetWrap.wrapperStatus ?? ''}/>
-                        </Grid>
-                    </Grid>
                     <Typography variant="h6" mb={3}>
                         {t('channelDetailPage.channelConfiguration')}
                     </Typography>
@@ -188,6 +153,33 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
                         </Grid>
                     </Box>
                 </Paper>
+                <Typography color="action.active" sx={{ my: 2 }}>
+                  {t('channelDetailPage.createdOn')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {`${channelDetWrap?.createdAt?.toLocaleDateString('en-GB')}`}
+                  </Typography>
+                  {' '}{t('general.fromLower')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {channelDetWrap?.createdBy}
+                  </Typography>
+                  {'. '}
+                  {
+                    channelDetWrap?.modifiedBy && (
+                        <>
+                          {t('channelDetailPage.lastModified')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {channelDetWrap?.modifiedBy}
+                          </Typography>
+                          {' '}{t('general.atLower')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {`${channelDetWrap?.modifiedAt?.toLocaleDateString('en-GB')}`}
+                          </Typography>
+                          {'. '}
+                        </>
+                    )
+                  }
+                </Typography>
+                <DetailButtons channelDetails={channelDetWrap} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     ) : (
@@ -196,3 +188,4 @@ const ChannelDetailsWrap = ({channelDetWrap, channelId, goBack, PSPAssociatedNum
 };
 
 export default ChannelDetailsWrap;
+

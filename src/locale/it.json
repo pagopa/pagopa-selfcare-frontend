@@ -226,7 +226,9 @@
   "addEditChannelPage": {
     "config": {
       "titleConfiguration": "Configura canale",
-      "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione."
+      "titleValidate": "Valida Canale",
+      "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione.",
+      "subtitleValidate": "Verifica che le informazioni sul canale siano corrette, e completa quelle mancanti."
     },
     "create": {
       "title": "Crea un nuovo canale",
@@ -309,7 +311,9 @@
         "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
         "messageStation": "Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>",
         "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
-        "channelConfiguration": "Configurazione canale"
+        "channelConfiguration": "Configurazione canale",
+        "channelValidate": "Conferma validazione canale",
+        "messageChannelOperationValidate": "il canale passerà in stato attivo, e l'ente potrà utilizzarlo per attivare i suoi servizi"
       }
     },
     "validationMessage": {
@@ -327,10 +331,13 @@
     "edit": "Modifica",
     "deleteRequired": "Richiedi eliminazione",
     "correctionRequired": "Richiedi correzione",
+    "requestEdit": "Richiedi modifiche",
+    "approveAndValidate": "Approva e valida",
     "configure": "Configura",
     "duplicate": "Duplica",
     "disable": "Disabilita",
     "createdOn": "Creato il",
+    "lastModified": "Ultima modifica operata da",
     "alertWarning": "Canale in attesa di revisione da parte di un operatore PagoPA.",
     "detail": "dettaglio",
     "state": "Stato",
@@ -374,7 +381,20 @@
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
     "pspNotify": "PSP Notify Payment",
-    "stamp": "Marca da bollo"
+    "stamp": "Marca da bollo",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche al canale.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Canale in attesa di correzione da parte dell’ente."
+    },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri",
+      "successMessage": "Richiesta di modifiche inviata con successo",
+      "error": "Errore riscontrato in fase di invia richiesta di modifiche"
+    }
   },
   "channelPSPList": {
     "title": "Gestisci PSP",
@@ -1554,7 +1574,9 @@
     "maintenancePageText": "Il portale è in manutenzione",
     "rejectedFile": "Tipo di file non supportato",
     "noOptions": "Nessun elemento",
-    "loading": "Caricamento..."
+    "loading": "Caricamento...",
+    "fromLower": "da",
+    "atLower": "il"
   },
   "ANY": "Tutti"
 }

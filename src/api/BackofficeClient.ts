@@ -1497,4 +1497,24 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
+
+  updateWrapperChannelWithOperatorReview: async ({
+    channelCode,
+    brokerPspCode,
+    note,
+  }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+  }): Promise<ChannelDetailsResource> => {
+    const result = await backofficeClient.updateWrapperChannelWithOperatorReview({
+      channelCode,
+      brokerPspCode,
+      body: {
+        note,
+      },
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
 };

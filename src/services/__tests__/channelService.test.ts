@@ -15,6 +15,7 @@ import {
     mockedPaymentTypesResource,
     mockedWfespPlugIn,
     mockedWrapperChannel,
+    mockedChannelDetailWithNote
 } from '../__mocks__/channelService.ts';
 import { channelWrapperMockedGet } from '../__mocks__/institutionsService.ts';
 import {
@@ -35,6 +36,7 @@ import {
     updateWrapperChannelDetailsByOpt,
     updateWrapperChannelDetailsToCheck,
     updateWrapperChannelDetailsToCheckUpdate,
+    updateWrapperChannelWithOperatorReview
 } from '../channelService.ts';
 
 describe('ChannelService test mocked', () => {
@@ -179,6 +181,14 @@ describe('ChannelService test mocked', () => {
     );
     expect(response).toMatchObject(mockedWrapperChannel);
   });
+    test('Test updateWrapperChannelWithOperatorReview', async () => {
+        const response = await updateWrapperChannelWithOperatorReview({
+            channelCode: 'channelCode',
+            brokerPspCode: 'brokerPspCode',
+            note: 'note',
+        });
+        expect(response).toMatchObject(mockedChannelDetailWithNote('channelCode','note'));
+    });
 });
 
 describe('ChannelService test client', () => {
@@ -400,5 +410,19 @@ describe('ChannelService test client', () => {
       )
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
+    });
+    test('Test updateWrapperChannelWithOperatorReview', async () => {
+        const spyOn = jest
+            .spyOn(BackofficeApi, 'updateWrapperChannelWithOperatorReview')
+            .mockReturnValue(new Promise((resolve) =>
+                resolve(mockedChannelDetailWithNote('channelCode','note'))));
+        expect(
+            updateWrapperChannelWithOperatorReview({
+                channelCode: 'channelCode',
+                brokerPspCode: 'brokerPspCode',
+                note: 'note',
+            })
+        ).resolves.not.toThrow();
+        expect(spyOn).toBeCalledTimes(1);
   });
 });

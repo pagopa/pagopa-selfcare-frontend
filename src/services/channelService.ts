@@ -26,6 +26,7 @@ import {
     getPSPChannels as getPSPChannelsMocked,
     getWrapperChannel,
     getWfespPlugins as mockedGetWfespPlugins,
+    updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked
     updateChannel as updateChannelMocked,
     updateWrapperChannel,
 } from './__mocks__/channelService';
@@ -261,3 +262,24 @@ export const updateWrapperChannelDetailsByOpt = (
     );
   }
 };
+
+export const updateWrapperChannelWithOperatorReview = ({
+                                                           channelCode,
+                                                           brokerPspCode,
+                                                           note,
+                                                       }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+}): Promise<ChannelDetailsResource> => {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
+    } else {
+        return BackofficeApi.updateWrapperChannelWithOperatorReview({
+            channelCode,
+            brokerPspCode,
+            note,
+        }).then((resources) => resources);
+    }
+};
+

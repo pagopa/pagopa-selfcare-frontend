@@ -33,6 +33,18 @@ describe('<ChannelDetails />', () => {
         status: StatusEnum.TO_CHECK,
         password: passwordFieldValue,
     };
+    const channelDetailToFix = {
+        broker_psp_code: '97735020584',
+        broker_description: 'AgID - Agenzia per l’Italia Digitale',
+        channel_code: `${channelId}`,
+        target_path: ' /govpay/api/pagopa/PagamentiTelematiciCCPservice',
+        target_port: 8081,
+        target_host: ' lab.link.it',
+        payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
+        status: StatusEnum.TO_FIX,
+        password: passwordFieldValue,
+        note: 'note'
+    };
     test('render component ChannelDetails with channelDetail', async () => {
         render(
             <Provider store={store}>
@@ -41,6 +53,34 @@ describe('<ChannelDetails />', () => {
                         <ThemeProvider theme={theme}>
                             <ChannelDetails
                                 channelDetail={channelDetail}
+                                channelId={channelId}
+                                goBack={jest.fn()}
+                                PSPAssociatedNumber={0}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const passwordField = screen.getByTestId('password-value-test') as HTMLElement;
+        expect(passwordField.innerHTML).toBe('XXXXXXXXXXXXXX');
+
+        const showPasswordButton = screen.getByTestId('show-psw-test') as HTMLElement;
+
+        fireEvent.click(showPasswordButton);
+
+        expect(passwordField.innerHTML).toBe(passwordFieldValue);
+    });
+
+    test('render component ChannelDetails with channelDetail TO_FIX', async () => {
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
+                    <Route path="/channels/:channelId">
+                        <ThemeProvider theme={theme}>
+                            <ChannelDetails
+                                channelDetail={channelDetailToFix}
                                 channelId={channelId}
                                 goBack={jest.fn()}
                                 PSPAssociatedNumber={0}

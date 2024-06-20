@@ -50,6 +50,7 @@ const ChannelDetailPage = () => {
     return userIsPagopaOperator ? (
         <ChannelDetails
             channelDetail={channelDetail}
+            setChannelDetail={setChannelDetail}
             channelId={channelId}
             goBack={goBack}
             PSPAssociatedNumber={PSPAssociatedNumber}
@@ -57,6 +58,7 @@ const ChannelDetailPage = () => {
     ) : (
         <ChannelDetailsWrap
             channelDetWrap={channelDetail}
+            setChannelDetail={setChannelDetail}
             channelId={channelId}
             goBack={goBack}
             PSPAssociatedNumber={PSPAssociatedNumber}
@@ -65,3 +67,4 @@ const ChannelDetailPage = () => {
 };
 
 export default ChannelDetailPage;
+

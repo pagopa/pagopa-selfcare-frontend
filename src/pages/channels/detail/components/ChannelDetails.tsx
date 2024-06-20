@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
-import {ManageAccounts, VisibilityOff} from '@mui/icons-material';
-import {Alert, Chip, Divider, Grid, IconButton, Paper, Typography} from '@mui/material';
+import {ArrowBack, ManageAccounts, VisibilityOff} from '@mui/icons-material';
+import {Alert, Stack, Breadcrumbs, Chip, Divider, Grid, IconButton, Paper, Typography} from '@mui/material';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
@@ -15,16 +15,20 @@ import {StatusChip} from '../../../../components/StatusChip';
 import {ENV} from '../../../../utils/env';
 import {useUserRole} from "../../../../hooks/useUserRole";
 import DetailButtons from './DetailButtons';
+import GetChannelAlert from './GetChannelAlert';
+import ChannelDetailHeader from './ChannelDetailHeader';
+
 
 type Props = {
     channelDetail: ChannelDetailsResource;
+    setChannelDetail: (value: any) => void;
     channelId: string;
     goBack: () => void;
     PSPAssociatedNumber: number;
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
+const ChannelDetails = ({channelDetail, setChannelDetail, channelId, goBack, PSPAssociatedNumber}: Props) => {
     const {t} = useTranslation();
     const {userIsPagopaOperator} = useUserRole();
     const targetPath = (!channelDetail.target_path?.startsWith("/") ? "/" : "").concat(channelDetail.target_path !== undefined ? channelDetail.target_path : "");
@@ -51,32 +55,8 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
     return (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
-                <Grid container mt={3}>
-                    <Grid item xs={6}>
-                        <TitleBox title={channelId} mbTitle={2} variantTitle="h4" variantSubTitle="body1"/>
-                        <Typography mb={5} color="text.secondary">
-                            {t('channelDetailPage.createdOn')}{' '}
-                            <Typography component={'span'} color="text.secondary">
-                                {`${channelDetail.createdAt?.toLocaleDateString('en-GB')} da ${
-                                    channelDetail.createdBy
-                                }`}
-                            </Typography>
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DetailButtons channelDetails={channelDetail} goBack={goBack}/>
-                    </Grid>
-                    {userIsPagopaOperator &&
-                    (channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-                        channelDetail.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE) ? (
-                        <Grid item xs={12} sx={{mb: 5}}>
-                            <Alert severity="warning" variant="outlined">
-                                <Typography sx={{py: 2}}>{t('channelDetailPage.alertWarning')}</Typography>
-                            </Alert>
-                        </Grid>
-                    ) : null}
-                </Grid>
-
+                <ChannelDetailHeader channelId={channelId} channelDetail={channelDetail} goBack={goBack} />
+                <GetChannelAlert channelDetail={channelDetail} />
                 <Paper
                     elevation={8}
                     sx={{
@@ -84,14 +64,6 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                         p: 4,
                     }}
                 >
-                    <Grid container alignItems={'center'} spacing={0} mb={2}>
-                        <Grid item xs={3}>
-                            <Typography variant="subtitle2">{t('channelDetailPage.state')}</Typography>
-                        </Grid>
-                        <Grid item xs={9} textAlign="right">
-                            <StatusChip status={channelDetail.wrapperStatus ?? ''}/>
-                        </Grid>
-                    </Grid>
                     <Typography variant="h6" mb={1}>
                         {t('channelDetailPage.channelConfiguration')}
                     </Typography>
@@ -389,9 +361,37 @@ const ChannelDetails = ({channelDetail, channelId, goBack, PSPAssociatedNumber}:
                         </Grid>
                     </Box>
                 </Paper>
+                <Typography color="action.active" sx={{ my: 2 }}>
+                  {t('channelDetailPage.createdOn')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {`${channelDetail?.createdAt?.toLocaleDateString('en-GB')}`}
+                  </Typography>
+                  {' '}{t('general.fromLower')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {channelDetail?.createdBy}
+                  </Typography>
+                  {'. '}
+                  {
+                    channelDetail?.modifiedBy && (
+                        <>
+                          {t('channelDetailPage.lastModified')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {channelDetail?.modifiedBy}
+                          </Typography>
+                          {' '}{t('general.atLower')}{' '}
+                          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                            {`${channelDetail?.modifiedAt?.toLocaleDateString('en-GB')}`}
+                          </Typography>
+                          {'. '}
+                        </>
+                    )
+                  }
+                </Typography>
+                <DetailButtons channelDetails={channelDetail} setChannelDetails={setChannelDetail} goBack={goBack}/>
             </Grid>
         </Grid>
     );
 };
 
 export default ChannelDetails;
+

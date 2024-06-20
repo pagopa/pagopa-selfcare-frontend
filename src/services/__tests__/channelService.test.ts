@@ -4,39 +4,39 @@ import { WrapperChannelDetailsResource } from '../../api/generated/portal/Wrappe
 import { ConfigurationStatus } from '../../model/Station.tsx';
 import { channelCode } from '../__mocks__/channelService';
 import {
-    channelEnabled,
-    mockedChannel,
-    mockedChannelDetail,
-    mockedChannelPSPs,
-    mockedChannelPSPsPage2,
-    mockedChannels,
-    mockedChannelsMerged,
-    mockedPSPChannels,
-    mockedPaymentTypesResource,
-    mockedWfespPlugIn,
-    mockedWrapperChannel,
-    mockedChannelDetailWithNote
+  channelEnabled,
+  mockedChannel,
+  mockedChannelDetail,
+  mockedChannelDetailWithNote,
+  mockedChannelPSPs,
+  mockedChannelPSPsPage2,
+  mockedChannels,
+  mockedChannelsMerged,
+  mockedPSPChannels,
+  mockedPaymentTypesResource,
+  mockedWfespPlugIn,
+  mockedWrapperChannel,
 } from '../__mocks__/channelService.ts';
 import { channelWrapperMockedGet } from '../__mocks__/institutionsService.ts';
 import {
-    associatePSPtoChannel,
-    createChannel,
-    createWrapperChannelDetails,
-    dissociatePSPfromChannel,
-    getChannelCode,
-    getChannelDetail,
-    getChannelPSPs,
-    getChannels,
-    getChannelsIdAssociatedToPSP,
-    getChannelsMerged,
-    getPSPChannels,
-    getWfespPlugins,
-    getWrapperEntities,
-    updateChannel,
-    updateWrapperChannelDetailsByOpt,
-    updateWrapperChannelDetailsToCheck,
-    updateWrapperChannelDetailsToCheckUpdate,
-    updateWrapperChannelWithOperatorReview
+  associatePSPtoChannel,
+  createChannel,
+  createWrapperChannelDetails,
+  dissociatePSPfromChannel,
+  getChannelCode,
+  getChannelDetail,
+  getChannelPSPs,
+  getChannels,
+  getChannelsIdAssociatedToPSP,
+  getChannelsMerged,
+  getPSPChannels,
+  getWfespPlugins,
+  getWrapperEntities,
+  updateChannel,
+  updateWrapperChannelDetailsByOpt,
+  updateWrapperChannelDetailsToCheck,
+  updateWrapperChannelDetailsToCheckUpdate,
+  updateWrapperChannelWithOperatorReview,
 } from '../channelService.ts';
 
 describe('ChannelService test mocked', () => {
@@ -181,14 +181,14 @@ describe('ChannelService test mocked', () => {
     );
     expect(response).toMatchObject(mockedWrapperChannel);
   });
-    test('Test updateWrapperChannelWithOperatorReview', async () => {
-        const response = await updateWrapperChannelWithOperatorReview({
-            channelCode: 'channelCode',
-            brokerPspCode: 'brokerPspCode',
-            note: 'note',
-        });
-        expect(response).toMatchObject(mockedChannelDetailWithNote('channelCode','note'));
+  test('Test updateWrapperChannelWithOperatorReview', async () => {
+    const response = await updateWrapperChannelWithOperatorReview({
+      channelCode: 'channelCode',
+      brokerPspCode: 'brokerPspCode',
+      note: 'note',
     });
+    expect(response).toMatchObject(mockedChannelDetailWithNote('channelCode', 'note'));
+  });
 });
 
 describe('ChannelService test client', () => {
@@ -410,19 +410,20 @@ describe('ChannelService test client', () => {
       )
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
-    });
-    test('Test updateWrapperChannelWithOperatorReview', async () => {
-        const spyOn = jest
-            .spyOn(BackofficeApi, 'updateWrapperChannelWithOperatorReview')
-            .mockReturnValue(new Promise((resolve) =>
-                resolve(mockedChannelDetailWithNote('channelCode','note'))));
-        expect(
-            updateWrapperChannelWithOperatorReview({
-                channelCode: 'channelCode',
-                brokerPspCode: 'brokerPspCode',
-                note: 'note',
-            })
-        ).resolves.not.toThrow();
-        expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test updateWrapperChannelWithOperatorReview', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'updateWrapperChannelWithOperatorReview')
+      .mockReturnValue(
+        new Promise((resolve) => resolve(mockedChannelDetailWithNote('channelCode', 'note')))
+      );
+    expect(
+      updateWrapperChannelWithOperatorReview({
+        channelCode: 'channelCode',
+        brokerPspCode: 'brokerPspCode',
+        note: 'note',
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
   });
 });

@@ -14,21 +14,21 @@ import { ChannelOnCreation } from '../model/Channel';
 
 import { ConfigurationStatus } from '../model/Station';
 import {
-    associatePSPtoChannel as associatePSPtoChannelMocked,
-    createChannel as createChannelMocked,
-    createWrapperChannel,
-    dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
-    getChannelCode as getChannelCodeMocked,
-    getChannelDetail as getChannelDetailMocked,
-    getChannelPSPs as getChannelPSPsMocked,
-    getChannelsMerged as getChannelsMergedMocked,
-    getChannels as getChannelsMocked,
-    getPSPChannels as getPSPChannelsMocked,
-    getWrapperChannel,
-    getWfespPlugins as mockedGetWfespPlugins,
-    updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked
-    updateChannel as updateChannelMocked,
-    updateWrapperChannel,
+  associatePSPtoChannel as associatePSPtoChannelMocked,
+  createChannel as createChannelMocked,
+  createWrapperChannel,
+  dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
+  getChannelCode as getChannelCodeMocked,
+  getChannelDetail as getChannelDetailMocked,
+  getChannelPSPs as getChannelPSPsMocked,
+  getChannelsMerged as getChannelsMergedMocked,
+  getChannels as getChannelsMocked,
+  getPSPChannels as getPSPChannelsMocked,
+  getWrapperChannel,
+  getWfespPlugins as mockedGetWfespPlugins,
+  updateChannel as updateChannelMocked,
+  updateWrapperChannel,
+  updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked,
 } from './__mocks__/channelService';
 
 // /channels endpoint

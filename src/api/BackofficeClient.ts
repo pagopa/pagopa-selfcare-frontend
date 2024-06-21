@@ -205,7 +205,6 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   rt_push: false,
   serv_plugin: undefined,
   service: channel.service,
-  status: StatusEnum.TO_CHECK_UPDATE,
   target_host: channel.target_host,
   target_path: channel.target_path,
   target_port: channel.target_port,
@@ -454,7 +453,7 @@ export const BackofficeApi = {
   createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.createChannel({
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
@@ -478,7 +477,6 @@ export const BackofficeApi = {
         target_port: channel.target_port,
         payment_types: channel.payment_types,
         validationUrl,
-        status: StatusEnum.TO_CHECK,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -491,27 +489,12 @@ export const BackofficeApi = {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateChannel({
       'channel-code': code,
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
   updateWrapperChannelDetailsToCheck: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
-    const channelBody2Send = channelBody(channel);
-    const result = await backofficeClient.updateWrapperChannelDetails({
-      body: {
-        ...channelBody2Send,
-        status: StatusEnum.APPROVED,
-        validationUrl,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetailsToCheckUpdate: async (
     channel: ChannelDetailsDto,
     validationUrl: string
   ): Promise<WrapperEntities> => {
@@ -1516,5 +1499,4 @@ export const BackofficeApi = {
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
-
 };

@@ -237,19 +237,6 @@ export const updateWrapperChannelDetailsToCheck = (
   }
 };
 
-export const updateWrapperChannelDetailsToCheckUpdate = (
-  channel: ChannelDetailsDto,
-  validationUrl: string
-): Promise<WrapperEntities> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return updateWrapperChannel(channel, validationUrl);
-  } else {
-    return BackofficeApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
-      (resources) => resources
-    );
-  }
-};
-
 export const updateWrapperChannelDetailsByOpt = (
   channel: ChannelDetailsDto,
   validationUrl: string

@@ -33,7 +33,6 @@ import {
   createWrapperChannelDetails,
   updateChannel,
   updateWrapperChannelDetailsToCheck,
-  updateWrapperChannelDetailsToCheckUpdate,
 } from '../../../services/channelService';
 import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
 import { Party } from '../../../model/Party';
@@ -428,27 +427,23 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
       }
 
       if (formAction === FormAction.Edit) {
-        switch (channelDetail?.wrapperStatus) {
-          case WrapperStatusEnum.TO_CHECK:
-            if (userIsPagopaOperator) {
-              await createChannel(values);
-            } else {
-              await updateWrapperChannelDetailsToCheck(values, validationUrl);
-            }
-            break;
-          case WrapperStatusEnum.APPROVED:
-          case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (userIsPagopaOperator) {
-              await updateChannel(channelCode, values);
-            } else {
-              await updateWrapperChannelDetailsToCheckUpdate(values, validationUrl);
-            }
-            break;
-          case WrapperStatusEnum.TO_FIX:
-            await updateWrapperChannelDetailsToCheck(values, validationUrl);
-            break;
-          default:
-            break;
+        if (userIsPagopaOperator) {
+          if (
+            channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+            channelDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX
+          ) {
+            await createChannel(values);
+          } else if (
+            channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED ||
+            channelDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE ||
+            channelDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE
+          ) {
+            await updateChannel(channelCode, values);
+          } else {
+            throw new Error('Wrong channel wrapper status');
+          }
+        } else {
+          await updateWrapperChannelDetailsToCheck(values, validationUrl);
         }
         redirect();
       }

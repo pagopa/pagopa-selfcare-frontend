@@ -618,7 +618,7 @@ export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> =>
     new Promise((resolve) => resolve(stationWrapperMockedGet(ecCode)));
 
 export const getCreditorInstitutionSegregationcodes = (_ecCode: string, _targetCITaxCode: string): Promise<AvailableCodes> =>
-    new Promise((resolve) => resolve(mockedSegregationCodeList));
+  new Promise((resolve) => resolve(mockedSegregationCodeList));
 
 export const testStation = (
     hostUrl: string,

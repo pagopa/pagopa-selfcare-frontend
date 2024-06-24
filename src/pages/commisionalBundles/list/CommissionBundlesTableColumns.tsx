@@ -230,19 +230,18 @@ const getCIStatusChip = (
   bundleStatus: CiBundleStatusEnum | undefined
 ) => {
   if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
-    // TODO remove after VAS-1104
-    if (validityDateTo && datesAreOnSameDay(todayDate, validityDateTo)) {
-      return renderStatusChip({
-        chipColor: 'error',
-        chipLabel: t('commissionBundlesPage.list.states.onRemovalInactive'),
-        dataTestId: 'error-removal-state-chip',
-      });
-    }
-
     return renderStatusChip({
       chipColor: 'default',
       chipLabel: t('commissionBundlesPage.list.states.toBeActivated'),
       dataTestId: 'default-activate-state-chip',
+    });
+  }
+
+  if (bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
+    return renderStatusChip({
+      chipColor: 'error',
+      chipLabel: t('commissionBundlesPage.list.states.onRemovalInactive'),
+      dataTestId: 'error-removal-state-chip',
     });
   }
 

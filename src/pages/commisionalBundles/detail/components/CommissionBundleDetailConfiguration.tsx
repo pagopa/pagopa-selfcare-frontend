@@ -86,6 +86,7 @@ export default function CommissionBundleDetailConfiguration({
                 minHeight:
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== undefined &&
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE &&
+                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE_EXPIRED &&
           bundleDetail?.bundleTaxonomies?.length > 2
                         ? '370px'
                         : '310px',

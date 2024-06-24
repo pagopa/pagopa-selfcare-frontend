@@ -529,7 +529,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     });
     test('Bundle AVAILABLE expired', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
-      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE_EXPIRED;
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = new Date();
       render(

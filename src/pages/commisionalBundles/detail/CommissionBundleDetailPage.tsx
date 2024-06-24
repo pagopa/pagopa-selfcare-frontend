@@ -109,10 +109,7 @@ const BundleActionButtons = ({
     }
     if (orgInfo.types.isEc) {
       if (
-        (bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE &&
-        // TODO remove after VAS-1104
-        !(bundleDetail?.validityDateTo && 
-        datesAreOnSameDay(new Date(), bundleDetail?.validityDateTo))
+        (bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE
       ) {
         return (
           <>

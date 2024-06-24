@@ -11,6 +11,7 @@ import {LOADING_TASK_INSTITUTION_DATA_GET} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {
+    initialState,
     institutionsDataDetailsActions,
     institutionsDataDetailsSelectors
 } from '../../../redux/slices/institutionsDataDetailsSlice';
@@ -44,13 +45,13 @@ const PaymentNoticesAddEditPage = () => {
             selectedParty?.fiscalCode !== institutionUploadData?.taxCode
         )) {
             setLoadingStatus(true);
+            store.dispatch(institutionsDataDetailsActions
+                    .setInstitutionDataDetailsState(initialState));
             getInstitutionData(selectedParty?.fiscalCode as string)
                 .then(async (r) => {
                     setInstitutionUploadData(r ? r : null);
-                    if (r != null) {
-                        store.dispatch(institutionsDataDetailsActions
-                            .setInstitutionDataDetailsState(r));
-                    }
+                    store.dispatch(institutionsDataDetailsActions
+                            .setInstitutionDataDetailsState(r ? r : initialState));
                 })
                 .catch((err) => {
                     const problemJson = extractProblemJson(err);

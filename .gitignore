@@ -68,3 +68,7 @@ public/version.json
 
 /integration-test/key.pem
 **/*.test.js
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

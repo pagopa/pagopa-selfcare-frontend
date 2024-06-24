@@ -62,7 +62,7 @@ export const ecDetails: Array<CreditorInstitutionDetailsResource> = [
             zipCode: '20143',
         },
         businessName: 'businessName',
-        creditorInstitutionCode: '1122334455',
+        ciTaxCode: '1122334455',
         enabled: true,
         pspPayment: false,
         reportingFtp: false,
@@ -80,7 +80,7 @@ export const ecDirectUpdated: CreditorInstitutionDetailsResource = {
         zipCode: '20900',
     },
     businessName: 'businessName',
-    creditorInstitutionCode: '1122334455',
+    ciTaxCode: '1122334455',
     enabled: true,
     pspPayment: false,
     reportingFtp: false,
@@ -231,7 +231,7 @@ export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetail
 export const createECAndBroker = (
     ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>
-    new Promise((resolve) => resolve({...ec, broadcast: true}));
+    new Promise((resolve) => resolve({...ec, ciTaxCode: "", broadcast: true}));
 
 export const createEcBroker = (_broker: BrokerDto): Promise<BrokerResource> => {
     return new Promise((resolve) => resolve(ecBrokerDetails));
@@ -240,12 +240,12 @@ export const createEcBroker = (_broker: BrokerDto): Promise<BrokerResource> => {
 export const createECIndirect = (
     ec: CreditorInstitutionDto
 ): Promise<CreditorInstitutionDetailsResource> =>
-    new Promise((resolve) => resolve({...ec, broadcast: true}));
+    new Promise((resolve) => resolve({...ec, ciTaxCode: "", broadcast: true}));
 
 export const getECDetails = (
     ecCode: string
 ): Promise<CreditorInstitutionDetailsResource | undefined> => {
-    const ecDetail = ecDetails.find((ec) => ec.creditorInstitutionCode === ecCode);
+    const ecDetail = ecDetails.find((ec) => ec.ciTaxCode === ecCode);
     if (ecDetail === undefined) {
         return new Promise((resolve) => resolve(undefined));
     }

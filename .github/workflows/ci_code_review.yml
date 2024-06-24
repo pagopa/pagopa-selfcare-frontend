@@ -241,7 +241,7 @@ jobs:
 
       - name: Delete branch
         run: |
-          echo "Deleting branch ${{head_ref}}"
-          git push origin --delete "${{head_ref}}"
+          echo "Deleting branch ${{github.head_ref}}"
+          git push origin --delete "${{github.head_ref}}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

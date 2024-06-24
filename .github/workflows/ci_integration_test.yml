@@ -2,7 +2,7 @@ name: Integration Tests
 
 on:
   schedule:
-    - cron: '00 09 * * 1,5'
+    - cron: '00 09 * * *'
 
   workflow_call:
     inputs:
@@ -63,7 +63,7 @@ jobs:
         with:
           node-version: 18.15.0
 
-      - name: Run Integration Tests
+      - name: Run Integration Tests Puppeteer
         shell: bash
         run: |
           cd ./integration-test
@@ -85,8 +85,31 @@ jobs:
             export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
           fi
           
-          
           yarn run cucumber
+      
+      - name: Run Integration Tests Playwright
+        shell: bash
+        run: |
+          cd ./e2e
+          yarn install
+          npx playwright install --with-deps
+          
+          if [ "${{ inputs.environment }}" = "local" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
+          fi
+          
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
+          fi
+          
+          if [ "${{ inputs.environment }}" = "uat" ]; then
+            export KEY_PEM='${{ secrets.UAT_KEY_PEM }}'
+            export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
+          fi
+          
+          FE_URL=$FE_URL npx playwright test --workers=1 --project=chromium
 
   print_debug:
     runs-on: ubuntu-latest

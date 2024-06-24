@@ -13,8 +13,8 @@ export enum FormAction {
 }
 
 export enum SubscriptionStateType {
-    Waiting = 'WAITING',
-    Accepted = 'ACCEPTED',
+  Waiting = 'WAITING',
+  Accepted = 'ACCEPTED'
 }
 
 export type BundleCISubscriptionsMethodParams = {

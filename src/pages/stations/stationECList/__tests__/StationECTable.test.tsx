@@ -40,7 +40,7 @@ describe('<StationECTable />', () => {
         );
 
         await waitFor(() => {
-            const table = screen.getByTestId('table-data-grid');
+            const table = screen.getByTestId('data-grid');
             expect(table).toBeInTheDocument();
         });
     });

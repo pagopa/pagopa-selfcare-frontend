@@ -1,37 +1,27 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { ArrowBack } from '@mui/icons-material';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Stack,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-} from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { add } from 'date-fns';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { add } from 'date-fns';
+import {Box, Breadcrumbs, Button, Grid, Stack, Step, StepLabel, Stepper, Typography,} from '@mui/material';
+import { ButtonNaked } from '@pagopa/mui-italia';
 import { TFunction, useTranslation } from 'react-i18next';
+import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useHistory, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import GenericModal from '../../../components/Form/GenericModal';
+import {SigninData} from '../../../model/Node';
+import { Party } from '../../../model/Party';
+import ROUTES from '../../../routes';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { FormAction } from '../../../model/CommissionBundle';
+import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { createBundle, updatePSPBundle } from '../../../services/bundleService';
+import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
+import { extractProblemJson } from '../../../utils/client-utils';
+import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
 import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
 import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResource';
-import GenericModal from '../../../components/Form/GenericModal';
-import { FormAction } from '../../../model/CommissionBundle';
-import { SigninData } from '../../../model/Node';
-import { Party } from '../../../model/Party';
-import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import ROUTES from '../../../routes';
-import { createBundle, updatePSPBundle } from '../../../services/bundleService';
-import { extractProblemJson } from '../../../utils/client-utils';
-import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
-import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
@@ -165,10 +155,10 @@ const AddEditCommissionBundlePage = () => {
   const isEdit: boolean = actionId === FormAction.Edit;
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
-    useAppSelectorWithRedirect(
-      bundleDetailsSelectors.selectBundleDetails,
-      isEdit ? ROUTES.COMMISSION_BUNDLES : undefined
-    ) ?? {};
+    useAppSelectorWithRedirect({
+      selector: bundleDetailsSelectors.selectBundleDetails,
+      routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
+    }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';
 
   const formik = useFormik<Partial<BundleRequest>>({

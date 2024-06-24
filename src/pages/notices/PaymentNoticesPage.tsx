@@ -14,7 +14,7 @@ import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
 import {getInstitutionData} from '../../services/noticesService';
 import {InstitutionUploadData} from '../../api/generated/portal/InstitutionUploadData';
-import {institutionsDataDetailsActions} from '../../redux/slices/institutionsDataDetailsSlice';
+import { initialState, institutionsDataDetailsActions } from '../../redux/slices/institutionsDataDetailsSlice';
 import {store} from '../../redux/store';
 import PaymentNoticesDetailPage from './detail/PaymentNoticesDetailPage';
 
@@ -42,13 +42,13 @@ const PaymentNoticesPage = () => {
             (institutionUploadData === undefined || institutionUploadData === null ||
                 institutionUploadData?.taxCode !== selectedParty.fiscalCode)) {
             setLoadingStatus(true);
+            store.dispatch(institutionsDataDetailsActions
+                    .setInstitutionDataDetailsState(initialState));
             getInstitutionData(selectedParty.fiscalCode)
                 .then(async (r) => {
                     setInstitutionUploadData(r ? r : null);
-                    if (r !== undefined) {
-                        store.dispatch(institutionsDataDetailsActions
-                            .setInstitutionDataDetailsState(r));
-                    }
+                    store.dispatch(institutionsDataDetailsActions
+                            .setInstitutionDataDetailsState(r ? r : initialState));
                 })
                 .catch((err) => {
                     const problemJson = extractProblemJson(err);

@@ -1,4 +1,4 @@
-import {Alert} from '@mui/material';
+import {Alert, Box, Grid} from '@mui/material';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';

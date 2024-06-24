@@ -7,11 +7,20 @@ import {
 import {CreditorInstitutionsResource} from '../../api/generated/portal/CreditorInstitutionsResource';
 import {StationCodeResource} from '../../api/generated/portal/StationCodeResource';
 import {StationDetailResource} from '../../api/generated/portal/StationDetailResource';
-import {RedirectProtocolEnum, StationDetailsDto,} from '../../api/generated/portal/StationDetailsDto';
-import {TestResultEnum, TestStationResource,} from '../../api/generated/portal/TestStationResource';
+import {
+    RedirectProtocolEnum,
+    StationDetailsDto,
+} from '../../api/generated/portal/StationDetailsDto';
+import {
+    TestResultEnum,
+    TestStationResource,
+} from '../../api/generated/portal/TestStationResource';
 import {TypeEnum, WrapperEntities} from '../../api/generated/portal/WrapperEntities';
 import {WrapperStationDetailsDto} from '../../api/generated/portal/WrapperStationDetailsDto';
-import {WrapperStationResource, WrapperStatusEnum,} from '../../api/generated/portal/WrapperStationResource';
+import {
+    WrapperStationResource,
+    WrapperStatusEnum,
+} from '../../api/generated/portal/WrapperStationResource';
 import {WrapperStationsResource} from '../../api/generated/portal/WrapperStationsResource';
 import {StationOnCreation} from '../../model/Station';
 

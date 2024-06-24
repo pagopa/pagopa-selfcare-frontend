@@ -1,8 +1,8 @@
-import {Box, Breadcrumbs, Grid, Paper, Stack, Typography} from '@mui/material';
+import {Breadcrumbs, Divider, Box, Grid, Paper, Stack, Typography, Chip} from '@mui/material';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory, useParams} from 'react-router';
-import {useTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import {ArrowBack} from '@mui/icons-material';
 import {handleErrors} from '@pagopa/selfcare-common-frontend/services/errorService';
 import {useEffect, useState} from 'react';

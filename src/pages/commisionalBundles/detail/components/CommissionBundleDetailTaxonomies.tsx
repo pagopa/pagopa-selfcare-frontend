@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Divider, Paper, Typography} from '@mui/material';
+import {Paper, Typography, Divider, Alert} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
@@ -8,7 +8,10 @@ import {PaddedDrawer} from '../../../../components/PaddedDrawer';
 import {BundleResource, BundleTaxonomy} from '../../../../model/CommissionBundle';
 import {CIBundleFee} from '../../../../api/generated/portal/CIBundleFee';
 import {formatCurrencyEur} from '../../../../utils/common-utils';
-import {CIBundleResource, CiBundleStatusEnum,} from '../../../../api/generated/portal/CIBundleResource';
+import {
+    CIBundleResource,
+    CiBundleStatusEnum,
+} from '../../../../api/generated/portal/CIBundleResource';
 import {getSpecificBuiltInData} from '../../../../services/bundleService';
 
 const componentPath = 'commissionBundlesPage.commissionBundleDetail';

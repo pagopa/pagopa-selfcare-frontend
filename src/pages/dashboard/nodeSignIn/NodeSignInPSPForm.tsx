@@ -75,6 +75,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
             return signInData?.paymentServiceProviderDetailsResource?.psp_code;
         } else if (
             selectedParty?.pspData?.abi_code &&
+            selectedParty?.pspData?.abi_code !== 'N/A' &&
             /^\d{5}$/.test(selectedParty?.pspData?.abi_code)
         ) {
             return 'ABI'.concat(selectedParty?.pspData?.abi_code);

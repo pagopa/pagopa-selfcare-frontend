@@ -416,6 +416,40 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
                 expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
                 expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('alert-error-test')).toBeInTheDocument();
+                expect(screen.queryByTestId('alert-error-expired-test')).not.toBeInTheDocument();
+            });
+        });
+        test('With bundle in state AVAILABLE_EXPIRED', async () => {
+            let bundle = {...mockedCommissionBundleCiDetailPublic};
+            bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE_EXPIRED;
+            deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
+            jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+                userRole: ROLE.PAGOPA_OPERATOR,
+                userIsPspAdmin: false,
+                userIsEcAdmin: false,
+                userIsPspDirectAdmin: false,
+                userIsPagopaOperator: true,
+                userIsAdmin: true,
+            });
+            render(
+                <Provider store={store}>
+                    <ComponentToRender bundle={bundle}/>
+                </Provider>
+            );
+
+            await waitFor(() => {
+                expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('alert-error-test')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('alert-error-expired-test')).toBeInTheDocument();
             });
         });
     })

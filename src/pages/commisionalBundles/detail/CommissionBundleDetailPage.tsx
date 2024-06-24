@@ -47,6 +47,13 @@ function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }
       </Alert>
     );
   }
+  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
+    return (
+      <Alert severity={'error'} data-testid="alert-error-expired-test" variant="outlined">
+        {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired')}
+      </Alert>
+    );
+  }
   // eslint-disable-next-line functional/no-let
   let expiredFound = false;
   (bundleDetail?.bundleTaxonomies as Array<PSPBundleTaxonomy>)?.forEach((el: PSPBundleTaxonomy) => {

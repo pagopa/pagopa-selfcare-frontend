@@ -1021,7 +1021,8 @@
       "commissions": "Commissione a carico",
       "alert": {
         "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
-        "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani."
+        "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani.",
+        "availableExpired": "Il pacchetto sarà eliminato e non più visibile a partire da domani, non è possibile attivarlo."
       },
       "error": {
         "deleteBundlePsp": "Errore durante l'eliminazione del pacchetto",

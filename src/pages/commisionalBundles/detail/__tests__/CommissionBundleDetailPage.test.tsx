@@ -438,7 +438,6 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
                 </Provider>
             );
 
-<<<<<<< HEAD
             await waitFor(() => {
                 expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
                 expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
@@ -572,36 +571,4 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
             expect(rejectCIOffer).toBeCalled();
         });
     })
-=======
-    // describe("Bundle PRIVATE", () => {
-    //     test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
-    //         deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
-    //         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-    //             userRole: ROLE.PAGOPA_OPERATOR,
-    //             userIsPspAdmin: false,
-    //             userIsEcAdmin: false,
-    //             userIsPspDirectAdmin: false,
-    //             userIsPagopaOperator: true,
-    //             userIsAdmin: true,
-    //         });
-    //         render(
-    //             <Provider store={store}>
-    //                 <ComponentToRender bundle={mockedCommissionBundleCiDetailPrivate}/>
-    //             </Provider>
-    //         );
-
-    //         await waitFor(() => {
-    //             expect(screen.queryByTestId('taxonomies-detail')).toBeInTheDocument();
-    //             expect(screen.queryByTestId('config-detail')).toBeInTheDocument();
-    //             expect(screen.queryByTestId('subscription-table')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('delete-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('modify-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('reject-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('activate-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('deactivate-button')).not.toBeInTheDocument();
-    //             expect(screen.queryByTestId('delete-request-button')).not.toBeInTheDocument();
-    //         });
-    //     });
-    // })
->>>>>>> 3f32cfc3 (Formatting (#542))
 });

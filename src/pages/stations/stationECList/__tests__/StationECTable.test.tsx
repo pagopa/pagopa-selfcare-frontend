@@ -40,11 +40,7 @@ describe('<StationECTable />', () => {
         );
 
         await waitFor(() => {
-<<<<<<< HEAD
             const table = screen.getByTestId('data-grid');
-=======
-            const table = screen.getByTestId('table-data-grid');
->>>>>>> 3f32cfc3 (Formatting (#542))
             expect(table).toBeInTheDocument();
         });
     });

@@ -15,7 +15,6 @@ import StationECPage from '../StationECPage';
 let getAvailableCreditorInstitutionsForStationSpy: jest.SpyInstance;
 
 beforeEach(() => {
-<<<<<<< HEAD
   getAvailableCreditorInstitutionsForStationSpy = jest.spyOn(
     creditorInsitutionService,
     'getAvailableCreditorInstitutionsForStation'
@@ -23,18 +22,10 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.resetModules();
-=======
-    jest.spyOn(console, 'error').mockImplementation(() => {
-    });
-    jest.spyOn(console, 'warn').mockImplementation(() => {
-    });
-    jest.resetModules();
->>>>>>> 3f32cfc3 (Formatting (#542))
 });
 afterEach(cleanup);
 
 describe('<StationECTable />', () => {
-<<<<<<< HEAD
   const stationId = 'XPAY_03_ONUS';
   test('render component StationECTable', async () => {
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
@@ -54,26 +45,9 @@ describe('<StationECTable />', () => {
           </MemoryRouter>
         </Provider>
       );
-=======
-    const stationId = 'XPAY_03_ONUS';
-    test('render component StationECTable', async () => {
-        await waitFor(() => {
-            render(
-                <Provider store={store}>
-                    <MemoryRouter initialEntries={[`/stations/${stationId}/ec-list`]}>
-                        <Route path="/stations/:stationId/ec-list">
-                            <ThemeProvider theme={theme}>
-                                <StationECPage/>
-                            </ThemeProvider>
-                        </Route>
-                    </MemoryRouter>
-                </Provider>
-            );
-        });
->>>>>>> 3f32cfc3 (Formatting (#542))
     });
+  });
 
-<<<<<<< HEAD
   test('render component StationECTable with Alert', async () => {
     const state = { alertSuccessMessage: 'testAlertMessage' };
     const history = createMemoryHistory({
@@ -83,29 +57,21 @@ describe('<StationECTable />', () => {
         mockedCreditorInstitutionInfoArray
       );
     store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
-=======
-    test('render component StationECTable with Alert', async () => {
-        const state = {alertSuccessMessage: 'testAlertMessage'};
-        const history = createMemoryHistory({
-            initialEntries: [{pathname: `/stations/${stationId}/ec-list`, state: state}],
-        });
->>>>>>> 3f32cfc3 (Formatting (#542))
 
-        await waitFor(() => {
-            render(
-                <Provider store={store}>
-                    <Router history={history}>
-                        <Route path="/stations/:stationId/ec-list">
-                            <ThemeProvider theme={theme}>
-                                <StationECPage/>
-                            </ThemeProvider>
-                        </Route>
-                    </Router>
-                </Provider>
-            );
-        });
+    await waitFor(() => {
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <Route path="/stations/:stationId/ec-list">
+              <ThemeProvider theme={theme}>
+                <StationECPage />
+              </ThemeProvider>
+            </Route>
+          </Router>
+        </Provider>
+      );
+    });
 
-<<<<<<< HEAD
     const alertSuccessMessage = await screen.getAllByText(/testAlertMessage/i);
     expect(alertSuccessMessage.length).toBe(1);
   });
@@ -154,9 +120,4 @@ describe('<StationECTable />', () => {
       );
     });
   });
-=======
-        const alertSuccessMessage = await screen.getAllByText(/testAlertMessage/i);
-        expect(alertSuccessMessage.length).toBe(1);
-    });
->>>>>>> 3f32cfc3 (Formatting (#542))
 });

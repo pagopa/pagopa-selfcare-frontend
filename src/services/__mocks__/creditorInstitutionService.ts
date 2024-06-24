@@ -43,11 +43,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
     creditor_institutions: [
         {
             businessName: 'Ec 1',
-<<<<<<< HEAD
             ciTaxCode: '12345678912',
-=======
-            creditorInstitutionCode: '12345678912',
->>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             applicationCode: undefined,
             auxDigit: '3',
@@ -58,11 +54,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
         },
         {
             businessName: 'Ec 2',
-<<<<<<< HEAD
             ciTaxCode: '12345678913',
-=======
-            creditorInstitutionCode: '12345678913',
->>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             applicationCode: undefined,
             auxDigit: '3',
@@ -82,7 +74,6 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
 };
 
 export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoResource = {
-<<<<<<< HEAD
   creditor_institution_info_list: [
   {
     businessName: 'EC 1',
@@ -97,22 +88,6 @@ export const mockedCreditorInstitutionInfoArray: CreditorInstitutionInfoResource
     ciTaxCode: '012345678914',
   },
   ],
-=======
-    creditor_institution_info_list: [
-        {
-            business_name: 'EC 1',
-            ci_tax_code: '012345678912',
-        },
-        {
-            business_name: 'EC 2',
-            ci_tax_code: '012345678913',
-        },
-        {
-            business_name: 'EC 3',
-            ci_tax_code: '012345678914',
-        },
-    ],
->>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export const getCreditorInstitutionContactsMock =

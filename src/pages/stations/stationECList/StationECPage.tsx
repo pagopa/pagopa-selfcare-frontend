@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Add, ArrowBack, FileDownload } from '@mui/icons-material';
 import { Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography } from '@mui/material';
 import { ButtonNaked } from '@pagopa/mui-italia';
@@ -7,15 +6,6 @@ import { useEffect, useState } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
-=======
-import {ArrowBack, FileDownload} from '@mui/icons-material';
-import {Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory, useParams} from 'react-router';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import ROUTES from '../../../routes';
 import TableSearchBar from '../../../components/Table/TableSearchBar';
@@ -27,7 +17,6 @@ import { getAvailableCreditorInstitutionsForStation } from '../../../services/cr
 import StationECTable from './StationECTable';
 
 const StationECListPage = () => {
-<<<<<<< HEAD
   const { t } = useTranslation();
   const history = useHistory();
   const { stationId } = useParams<{ stationId: string }>();
@@ -38,33 +27,22 @@ const StationECListPage = () => {
   const [ciNameOrFiscalCodeInput, setCiNameInput] = useState<string>('');
   const [ciNameOrFiscalCodeFilter, setCiNameOrFiscalCodeFilter] = useState<string>('');
   const [noValidCi, setNoValidCi] = useState<boolean | undefined>();
-=======
-    const {t} = useTranslation();
-    const history = useHistory();
-    const {stationId} = useParams<{ stationId: string }>();
-    const [alertMessage, setAlertMessage] = useState('');
-    const goBack = () => history.push(ROUTES.STATIONS);
 
-    const [ciNameOrFiscalCodeInput, setCiNameInput] = useState<string>('');
-    const [ciNameOrFiscalCodeFilter, setCiNameOrFiscalCodeFilter] = useState<string>('');
->>>>>>> 3f32cfc3 (Formatting (#542))
+  useEffect(() => {
+    const setSearchValue = setTimeout(() => {
+      setCiNameOrFiscalCodeFilter(ciNameOrFiscalCodeInput);
+    }, 500);
 
-    useEffect(() => {
-        const setSearchValue = setTimeout(() => {
-            setCiNameOrFiscalCodeFilter(ciNameOrFiscalCodeInput);
-        }, 500);
+    return () => clearTimeout(setSearchValue);
+  }, [ciNameOrFiscalCodeInput]);
 
-        return () => clearTimeout(setSearchValue);
-    }, [ciNameOrFiscalCodeInput]);
+  useEffect(() => {
+    if (history.location.state && (history.location.state as any).alertSuccessMessage) {
+      setAlertMessage((history.location.state as any).alertSuccessMessage);
+      window.history.replaceState({}, document.title);
+    }
+  }, []);
 
-    useEffect(() => {
-        if (history.location.state && (history.location.state as any).alertSuccessMessage) {
-            setAlertMessage((history.location.state as any).alertSuccessMessage);
-            window.history.replaceState({}, document.title);
-        }
-    }, []);
-
-<<<<<<< HEAD
   useEffect(() => {
     if (selectedParty?.partyId) {
       getAvailableCreditorInstitutionsForStation({
@@ -99,57 +77,53 @@ const StationECListPage = () => {
   }, []);
 
   setTimeout(() => setAlertMessage(''), 6000);
-=======
-    setTimeout(() => setAlertMessage(''), 6000);
->>>>>>> 3f32cfc3 (Formatting (#542))
 
-    const downloadCSV = () => {
-        // TODO: fetch form station service
-    };
+  const downloadCSV = () => {
+    // TODO: fetch form station service
+  };
 
-    return (
-        <SideMenuLayout>
-            <Stack direction="row" mb={3}>
-                <ButtonNaked
-                    size="small"
-                    component="button"
-                    onClick={goBack}
-                    startIcon={<ArrowBack/>}
-                    sx={{color: 'primary.main', mr: '20px', fontWeight: 700}}
-                    weight="default"
-                >
-                    {t('general.back')}
-                </ButtonNaked>
-                <Breadcrumbs>
-                    <Typography fontSize={16}>{stationId}</Typography>
-                    <Typography fontWeight={'fontWeightMedium'}>{t('stationECList.title')}</Typography>
-                </Breadcrumbs>
-            </Stack>
+  return (
+    <SideMenuLayout>
+      <Stack direction="row" mb={3}>
+        <ButtonNaked
+          size="small"
+          component="button"
+          onClick={goBack}
+          startIcon={<ArrowBack />}
+          sx={{ color: 'primary.main', mr: '20px', fontWeight: 700 }}
+          weight="default"
+        >
+          {t('general.back')}
+        </ButtonNaked>
+        <Breadcrumbs>
+          <Typography fontSize={16}>{stationId}</Typography>
+          <Typography fontWeight={'fontWeightMedium'}>{t('stationECList.title')}</Typography>
+        </Breadcrumbs>
+      </Stack>
 
-            <Stack direction="row" justifyContent={'space-between'}>
-                <Box>
-                    <TitleBox
-                        title={t('stationECList.title')}
-                        subTitle={t('stationECList.subtitle')}
-                        mbTitle={2}
-                        mbSubTitle={3}
-                        variantTitle="h4"
-                        variantSubTitle="body1"
-                    />
-                </Box>
-                <Box>
-                    <Button
-                        variant="outlined"
-                        sx={{display: 'none'}}
-                        startIcon={<FileDownload/>}
-                        onClick={() => downloadCSV()}
-                    >
-                        {t('stationECList.csvDownload')}
-                    </Button>
-                </Box>
-            </Stack>
+      <Stack direction="row" justifyContent={'space-between'}>
+        <Box>
+          <TitleBox
+            title={t('stationECList.title')}
+            subTitle={t('stationECList.subtitle')}
+            mbTitle={2}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
+        </Box>
+        <Box>
+          <Button
+            variant="outlined"
+            sx={{ display: 'none' }}
+            startIcon={<FileDownload />}
+            onClick={() => downloadCSV()}
+          >
+            {t('stationECList.csvDownload')}
+          </Button>
+        </Box>
+      </Stack>
 
-<<<<<<< HEAD
       {alertMessage && (
         <Alert
           sx={{
@@ -196,38 +170,6 @@ const StationECListPage = () => {
       />
     </SideMenuLayout>
   );
-=======
-            {alertMessage && (
-                <Alert
-                    sx={{
-                        position: 'fixed',
-                        bottom: '20px',
-                        right: '20px',
-                        zIndex: 1000,
-                    }}
-                    severity="success"
-                    variant="outlined"
-                >
-                    {alertMessage}
-                </Alert>
-            )}
-
-            <StationECTableSearchBar
-                stationId={stationId}
-                ciNameOrFiscalCodeInput={ciNameOrFiscalCodeInput}
-                setCiNameInput={setCiNameInput}
-            />
-            <Box display="flex" width="100%" mt={0}>
-                <Box pt={0} display="flex" width="100%">
-                    <StationECTable
-                        ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter}
-                        setAlertMessage={setAlertMessage}
-                    />
-                </Box>
-            </Box>
-        </SideMenuLayout>
-    );
->>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export default StationECListPage;

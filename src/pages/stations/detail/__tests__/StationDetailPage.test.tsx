@@ -11,6 +11,8 @@ import { ecAdminSignedDirect } from '../../../../services/__mocks__/partyService
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
 import { ROLE } from '../../../../model/RolePermission';
+import * as StationService from '../../../../services/stationService';
+import { mockedFullStation } from '../../../../services/__mocks__/stationService';
 
 jest.mock('../../../components/commonFunctions');
 jest.mock('../../../../hooks/useUserRole');
@@ -52,6 +54,7 @@ describe('<StationDetailPage />', () => {
     const stationId = '81001870922_06';
 
   test('render component StationDetailPage', async () => {
+    spyOnGetStationDetail.mockReturnValueOnce(Promise.resolve(mockedFullStation));
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.EC_ADMIN,
       userIsPspAdmin: false,
@@ -92,12 +95,21 @@ describe('<StationDetailPage />', () => {
         const {store} = renderApp(stationId);
 
     expect(screen.getByText('stationDetailPage.associates')).toBeInTheDocument();
-    expect(screen.queryByTestId('station-detail-op')).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(spyOnGetStationDetail).toBeCalled();
+    });
   });
 
-        await waitFor(() => {
-            expect(spyOnGetStationDetail).toBeCalled();
-        });
+  test('Test Render station detail with role operator', async () => {
+    spyOnGetStationDetail.mockRejectedValueOnce(Promise.resolve(mockedFullStation));
+    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+      userRole: ROLE.PAGOPA_OPERATOR,
+      userIsPspAdmin: false,
+      userIsEcAdmin: false,
+      userIsPspDirectAdmin: false,
+      userIsPagopaOperator: true,
+      userIsAdmin: true,
     });
     const { store } = renderApp(stationId);
 
@@ -107,6 +119,9 @@ describe('<StationDetailPage />', () => {
         payload: ecAdminSignedDirect,
       })
     );
-    expect(screen.getByTestId('station-detail-op')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(spyOnGetStationDetail).toBeCalled();
+    });
   });
 });

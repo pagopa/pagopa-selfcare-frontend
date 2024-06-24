@@ -1,27 +1,22 @@
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getECListByStationCode, getStationDetail } from '../../../services/stationService';
 import { LOADING_TASK_STATION_DETAILS_WRAPPER } from '../../../utils/constants';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { useUserRole } from '../../../hooks/useUserRole';
-import ROUTES from '../../../routes';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 import StationDetails from './components/StationDetails';
 
 const StationDetailPage = () => {
-    const {t} = useTranslation();
-    const {stationId} = useParams<{ stationId: string }>();
-    const [stationDetail, setStationDetail] = useState<StationDetailResource>();
-    const [ecAssociatedNumber, setECAssociatedNumber] = useState<number>(0);
-    const addError = useErrorDispatcher();
-    const setLoadingWrap = useLoading(LOADING_TASK_STATION_DETAILS_WRAPPER);
-    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-
-    useEffect(() => {
-        setLoadingWrap(true);
+  const { t } = useTranslation();
+  const { stationId } = useParams<{ stationId: string }>();
+  const [stationDetail, setStationDetail] = useState<StationDetailResource>();
+  const [ecAssociatedNumber, setECAssociatedNumber] = useState<number>(0);
+  const addError = useErrorDispatcher();
+  const setLoadingWrap = useLoading(LOADING_TASK_STATION_DETAILS_WRAPPER);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
         async function getEcListByStationCode(): Promise<any> {
             try {
@@ -71,12 +66,10 @@ const StationDetailPage = () => {
       .finally(() => setLoadingWrap(false));
   }, [selectedParty]);
 
-  return userIsPagopaOperator ? (
-    <StationDetailsValidation stationDetail={stationDetail} setStationDetail={setStationDetail} />
-  ) : (
+  return (
     <StationDetails
       stationDetail={stationDetail}
-      goBack={goBack}
+      setStationDetail={setStationDetail}
       ecAssociatedNumber={ecAssociatedNumber}
     />
   );

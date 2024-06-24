@@ -1,5 +1,5 @@
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import {
   buildColumnDefs,
   duplicateStationAction,
@@ -8,9 +8,8 @@ import {
   manageStationAction,
   manageStationECAction,
 } from '../StationsTableColumns';
-import React from 'react';
-import { mockedFullStation } from '../../detail/components/__tests__/StationDetailsValidation.test';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
+import { mockedFullStation } from '../../../../services/__mocks__/stationService';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {

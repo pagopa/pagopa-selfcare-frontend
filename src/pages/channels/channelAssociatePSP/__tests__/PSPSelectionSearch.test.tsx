@@ -1,11 +1,11 @@
-import { ThemeProvider } from '@mui/system';
-import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {ThemeProvider} from '@mui/system';
+import {theme} from '@pagopa/mui-italia';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
-import { mockedDelegatedPSP } from '../../../../services/__mocks__/institutionsService';
+import {Provider} from 'react-redux';
+import {MemoryRouter, Route} from 'react-router-dom';
+import {store} from '../../../../redux/store';
+import {mockedDelegatedPSP} from '../../../../services/__mocks__/institutionsService';
 import PSPSelectionSearch from '../PSPSelectionSearch';
 
 beforeEach(() => {

@@ -1,15 +1,11 @@
-import {Divider, Typography, Paper, Grid} from '@mui/material';
-import {useTranslation, TFunction} from 'react-i18next';
+import {Divider, Grid, Paper, Typography} from '@mui/material';
+import {TFunction, useTranslation} from 'react-i18next';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useState} from 'react';
 import {PaddedDrawer} from '../../../../components/PaddedDrawer';
-import {
-    formatBooleanValueToYesOrNo,
-    formatCurrencyEur,
-    formatDateToDDMMYYYY,
-} from '../../../../utils/common-utils';
+import {formatBooleanValueToYesOrNo, formatCurrencyEur, formatDateToDDMMYYYY,} from '../../../../utils/common-utils';
 import {BundleResource} from '../../../../model/CommissionBundle';
 import {CIBundleResource, CiBundleStatusEnum} from '../../../../api/generated/portal/CIBundleResource';
 
@@ -19,12 +15,24 @@ const bundleConfigurationFields = {
         ['touchpoint', 'commissionBundlesPage.addEditCommissionBundle.form.touchpoint'],
         ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
     ],
-  ],
-  col4: [
-    ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
-    ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
-    ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
-  ]
+    col2: [
+        ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
+        ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
+        ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],
+    ],
+    col3: [
+        ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
+        ['digitalStamp', 'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'],
+        [
+            'digitalStampRestriction',
+            'commissionBundlesPage.addEditCommissionBundle.form.paymentOnlyDigitalStamp',
+        ],
+    ],
+    col4: [
+        ['validityDateFrom', 'commissionBundlesPage.list.headerFields.startDate'],
+        ['validityDateTo', 'commissionBundlesPage.list.headerFields.endDate'],
+        ['lastUpdatedDate', 'commissionBundlesPage.commissionBundleDetail.lastChange'],
+    ]
 };
 const formatConfigValues = (value: any, t: TFunction<'translation'>) => {
     if (typeof value === 'string' && value) {
@@ -73,8 +81,7 @@ export default function CommissionBundleDetailConfiguration({
                 padding: 3,
                 minHeight:
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== undefined &&
-                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE &&
-          bundleDetail?.bundleTaxonomies?.length > 2
+                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE
                         ? '370px'
                         : '310px',
                 display: 'flex',

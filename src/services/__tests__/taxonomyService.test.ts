@@ -1,5 +1,5 @@
 import {getTaxonomies, getTaxonomyGroups} from '../taxonomyService';
-import {mockedTaxonomyGroups, mockedTaxonomy} from '../__mocks__/taxonomyService';
+import {mockedTaxonomy, mockedTaxonomyGroups} from '../__mocks__/taxonomyService';
 
 describe('getTaxonomyGroups test', () => {
     test('Test getTaxonomyGroups', async () => {

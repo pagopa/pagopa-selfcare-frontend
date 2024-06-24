@@ -1,5 +1,5 @@
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import IbanDetailPage from '../IbanDetailPage';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';

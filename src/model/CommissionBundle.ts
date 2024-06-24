@@ -1,11 +1,11 @@
-import { CIBundleFee } from "../api/generated/portal/CIBundleFee";
-import { CIBundleResource } from "../api/generated/portal/CIBundleResource";
-import { CIBundlesResource } from "../api/generated/portal/CIBundlesResource";
-import { CIBundleSubscriptionsDetail } from "../api/generated/portal/CIBundleSubscriptionsDetail";
-import { CISubscriptionInfo } from "../api/generated/portal/CISubscriptionInfo";
-import { PSPBundleResource, TypeEnum } from "../api/generated/portal/PSPBundleResource";
-import { PSPBundlesResource } from "../api/generated/portal/PSPBundlesResource";
-import { PSPBundleTaxonomy } from "../api/generated/portal/PSPBundleTaxonomy";
+import {CIBundleFee} from "../api/generated/portal/CIBundleFee";
+import {CIBundleResource} from "../api/generated/portal/CIBundleResource";
+import {CIBundlesResource} from "../api/generated/portal/CIBundlesResource";
+import {CIBundleSubscriptionsDetail} from "../api/generated/portal/CIBundleSubscriptionsDetail";
+import {CISubscriptionInfo} from "../api/generated/portal/CISubscriptionInfo";
+import {PSPBundleResource, TypeEnum} from "../api/generated/portal/PSPBundleResource";
+import {PSPBundlesResource} from "../api/generated/portal/PSPBundlesResource";
+import {PSPBundleTaxonomy} from "../api/generated/portal/PSPBundleTaxonomy";
 
 export enum FormAction {
     Create = 'create',
@@ -13,36 +13,36 @@ export enum FormAction {
 }
 
 export enum SubscriptionStateType {
-  Waiting = 'WAITING',
-  Accepted = 'ACCEPTED'
+    Waiting = 'WAITING',
+    Accepted = 'ACCEPTED',
 }
 
 export type BundleCISubscriptionsMethodParams = {
-  idBundle: string;
-  pspTaxCode: string;
-  limit: number;
-  page: number;
-  status: SubscriptionStateType;
-  ciTaxCode?: string;
-  bundleType: TypeEnum;
+    idBundle: string;
+    pspTaxCode: string;
+    limit: number;
+    page: number;
+    status: SubscriptionStateType;
+    ciTaxCode?: string;
+    bundleType: TypeEnum;
 };
 
 export type BundleCISubscriptionsBodyRequest = {
-  'id-bundle': string;
-  'psp-tax-code': string;
-  limit: number;
-  page: number;
-  status: SubscriptionStateType;
-  ciTaxCode?: string;
-  bundleType: TypeEnum;
+    'id-bundle': string;
+    'psp-tax-code': string;
+    limit: number;
+    page: number;
+    status: SubscriptionStateType;
+    ciTaxCode?: string;
+    bundleType: TypeEnum;
 };
 
 export type BundleCiSubscriptionsDetailMethodParams = {
-  idBundle: string;
-  pspTaxCode: string;
-  ciTaxCode: string;
-  status: string;
-  bundleType: TypeEnum;
+    idBundle: string;
+    pspTaxCode: string;
+    ciTaxCode: string;
+    status: string;
+    bundleType: TypeEnum;
 };
 
 export type BundleCiSubscriptionDetailModel = CISubscriptionInfo & CIBundleSubscriptionsDetail;

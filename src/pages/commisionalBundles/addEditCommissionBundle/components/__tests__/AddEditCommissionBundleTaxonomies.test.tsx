@@ -47,116 +47,116 @@ const invalidFile = new File([[["specific_built_in_data", "macro_area_name"], ["
 });
 
 describe('<AddEditCommissionBundleTaxonomies />', () => {
-  test('render component AddEditCommissionBundleTaxonomies and delete all taxonomies by group', async () => {
-    render(
-      <Provider store={store}>
-        <Component taxonomyList={mockedPSPTaxonomyList}/>
-      </Provider>
-    );
+    test('render component AddEditCommissionBundleTaxonomies and delete all taxonomies by group', async () => {
+        render(
+            <Provider store={store}>
+                <Component taxonomyList={mockedPSPTaxonomyList}/>
+            </Provider>
+        );
 
-    const arrayDeleteTaxonomiesByGroupButtons = screen.queryAllByTestId(
-      'delete-all-taxonomies-by-group'
-    );
-    expect(arrayDeleteTaxonomiesByGroupButtons.length).toBeTruthy();
-    fireEvent.click(arrayDeleteTaxonomiesByGroupButtons[0]);
+        const arrayDeleteTaxonomiesByGroupButtons = screen.queryAllByTestId(
+            'delete-all-taxonomies-by-group'
+        );
+        expect(arrayDeleteTaxonomiesByGroupButtons.length).toBeTruthy();
+        fireEvent.click(arrayDeleteTaxonomiesByGroupButtons[0]);
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+        });
+        const confirmButton = screen.getByTestId('confirm-button-test');
+        fireEvent.click(confirmButton);
+
+        await waitFor(() => {
+            expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(
+                arrayDeleteTaxonomiesByGroupButtons.length - 1
+            );
+        });
     });
-    const confirmButton = screen.getByTestId('confirm-button-test');
-    fireEvent.click(confirmButton);
 
-    await waitFor(() => {
-      expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(
-        arrayDeleteTaxonomiesByGroupButtons.length - 1
-      );
-    });
-  });
+    // test('render component AddEditCommissionBundleTaxonomies test upload valid csv', async () => {
+    //   render(
+    //     <Provider store={store}>
+    //       <Component taxonomyList={[]}/>
+    //     </Provider>
+    //   );
 
-  // test('render component AddEditCommissionBundleTaxonomies test upload valid csv', async () => {
-  //   render(
-  //     <Provider store={store}>
-  //       <Component taxonomyList={[]}/>
-  //     </Provider>
-  //   );
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+    //   const fileInput = screen.getByTestId('fileInput');
+    //   expect(fileInput).toBeInTheDocument();
+    //   fireEvent.change(fileInput.children!.item(0) as Element, {
+    //     target: {
+    //       files: {
+    //         0: validFile,
+    //         length: 1,
+    //         item: () => validFile,
+    //       },
+    //     },
+    //   });
 
-  //   const fileInput = screen.getByTestId('fileInput');
-  //   expect(fileInput).toBeInTheDocument();
-  //   fireEvent.change(fileInput.children!.item(0) as Element, {
-  //     target: {
-  //       files: {
-  //         0: validFile,
-  //         length: 1,
-  //         item: () => validFile,
-  //       },
-  //     },
-  //   });
+    //   await waitFor(() => {
+    //     const alert = screen.queryByTestId('alert-success');
+    //     expect(alert).toBeInTheDocument();
+    //   });
 
-  //   await waitFor(() => {
-  //     const alert = screen.queryByTestId('alert-success');
-  //     expect(alert).toBeInTheDocument();
-  //   });
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(2);
+    // });
 
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(2);
-  // });
+    // test('render component AddEditCommissionBundleTaxonomies test upload partially invalid csv', async () => {
+    //   render(
+    //     <Provider store={store}>
+    //       <Component taxonomyList={[]}/>
+    //     </Provider>
+    //   );
 
-  // test('render component AddEditCommissionBundleTaxonomies test upload partially invalid csv', async () => {
-  //   render(
-  //     <Provider store={store}>
-  //       <Component taxonomyList={[]}/>
-  //     </Provider>
-  //   );
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+    //   const fileInput = screen.getByTestId('fileInput');
+    //   expect(fileInput).toBeInTheDocument();
+    //   fireEvent.change(fileInput.children!.item(0) as Element, {
+    //     target: {
+    //       files: {
+    //         0: partiallyInvalidFile,
+    //         length: 1,
+    //         item: () => partiallyInvalidFile,
+    //       },
+    //     },
+    //   });
 
-  //   const fileInput = screen.getByTestId('fileInput');
-  //   expect(fileInput).toBeInTheDocument();
-  //   fireEvent.change(fileInput.children!.item(0) as Element, {
-  //     target: {
-  //       files: {
-  //         0: partiallyInvalidFile,
-  //         length: 1,
-  //         item: () => partiallyInvalidFile,
-  //       },
-  //     },
-  //   });
+    //   await waitFor(() => {
+    //     const alert = screen.queryByTestId('alert-warning');
+    //     expect(alert).toBeInTheDocument();
+    //   });
 
-  //   await waitFor(() => {
-  //     const alert = screen.queryByTestId('alert-warning');
-  //     expect(alert).toBeInTheDocument();
-  //   });
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(1);
+    // });
 
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(1);
-  // });
+    // test('render component AddEditCommissionBundleTaxonomies test upload invalid csv', async () => {
+    //   render(
+    //     <Provider store={store}>
+    //       <Component taxonomyList={[]}/>
+    //     </Provider>
+    //   );
 
-  // test('render component AddEditCommissionBundleTaxonomies test upload invalid csv', async () => {
-  //   render(
-  //     <Provider store={store}>
-  //       <Component taxonomyList={[]}/>
-  //     </Provider>
-  //   );
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
 
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+    //   const fileInput = screen.getByTestId('fileInput');
+    //   expect(fileInput).toBeInTheDocument();
+    //   fireEvent.change(fileInput.children!.item(0) as Element, {
+    //     target: {
+    //       files: {
+    //         0: invalidFile,
+    //         length: 1,
+    //         item: () => invalidFile,
+    //       },
+    //     },
+    //   });
 
-  //   const fileInput = screen.getByTestId('fileInput');
-  //   expect(fileInput).toBeInTheDocument();
-  //   fireEvent.change(fileInput.children!.item(0) as Element, {
-  //     target: {
-  //       files: {
-  //         0: invalidFile,
-  //         length: 1,
-  //         item: () => invalidFile,
-  //       },
-  //     },
-  //   });
+    //   await waitFor(() => {
+    //     const alert = screen.queryByTestId('alert-error');
+    //     expect(alert).toBeInTheDocument();
+    //   });
 
-  //   await waitFor(() => {
-  //     const alert = screen.queryByTestId('alert-error');
-  //     expect(alert).toBeInTheDocument();
-  //   });
-
-  //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
-  // });
+    //   expect(screen.queryAllByTestId('delete-all-taxonomies-by-group').length).toBe(0);
+    // });
 });

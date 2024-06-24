@@ -8,7 +8,7 @@ import StationsPage, {clearLocationState} from '../StationsPage';
 import {createMemoryHistory} from 'history';
 import {Provider} from 'react-redux';
 import * as useUserRole from '../../../../hooks/useUserRole';
-import { ROLE } from '../../../../model/RolePermission';
+import {ROLE} from '../../../../model/RolePermission';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -20,69 +20,69 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('<StationsPage />', () => {
-  const history = createMemoryHistory();
+    const history = createMemoryHistory();
 
-  test('render component StationsPage', async () => {
-    history.location.state = { alertSuccessMessage: 'Success!' };
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <StationsPage />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
+    test('render component StationsPage', async () => {
+        history.location.state = {alertSuccessMessage: 'Success!'};
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <StationsPage/>
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
 
-    expect(screen.getByTestId('alert-test')).toBeInTheDocument();
+        expect(screen.getByTestId('alert-test')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByTestId('search-input'), { target: { value: 'search' } });
-  });
-
-  test('render component StationsPage operator', async () => {
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-      userRole: ROLE.PSP_ADMIN,
-      userIsPspAdmin: false,
-      userIsEcAdmin: false,
-      userIsPspDirectAdmin: false,
-      userIsPagopaOperator: true,
-      userIsAdmin: false
+        fireEvent.change(screen.getByTestId('search-input'), {target: {value: 'search'}});
     });
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <StationsPage />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
-  });
 
-  it('should replace the current state of window history', () => {
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-      userRole: ROLE.PSP_ADMIN,
-      userIsPspAdmin: false,
-      userIsEcAdmin: false,
-      userIsPspDirectAdmin: false,
-      userIsPagopaOperator: true,
-      userIsAdmin: false
+    test('render component StationsPage operator', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsPagopaOperator: true,
+            userIsAdmin: false
+        });
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <StationsPage/>
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
     });
-    render(
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <StationsPage />
-          </Router>
-        </ThemeProvider>
-      </Provider>
-    );
 
-    const mockReplaceState = jest.fn();
-    window.history.replaceState = mockReplaceState;
+    it('should replace the current state of window history', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsPagopaOperator: true,
+            userIsAdmin: false
+        });
+        render(
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={history}>
+                        <StationsPage/>
+                    </Router>
+                </ThemeProvider>
+            </Provider>
+        );
 
-    clearLocationState();
+        const mockReplaceState = jest.fn();
+        window.history.replaceState = mockReplaceState;
 
-    expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
-  });
+        clearLocationState();
+
+        expect(mockReplaceState).toHaveBeenCalledWith({}, document.title);
+    });
 });

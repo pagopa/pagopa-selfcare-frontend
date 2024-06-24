@@ -35,7 +35,6 @@ import {
   updateChannel,
   updateWrapperChannelDetailsByOpt,
   updateWrapperChannelDetailsToCheck,
-  updateWrapperChannelDetailsToCheckUpdate,
   updateWrapperChannelWithOperatorReview,
 } from '../channelService.ts';
 
@@ -131,8 +130,9 @@ describe('ChannelService test mocked', () => {
     expect(response).toMatchObject(mockedWrapperChannel);
   });
   test('Test updateWrapperChannelDetailsToCheck', async () => {
-    const response = await updateWrapperChannelDetailsToCheck(
-      {
+    const response = await updateWrapperChannelDetailsToCheck({
+      channelCode: 'channelCode',
+      channel: {
         broker_description: '',
         broker_psp_code: '',
         channel_code: '',
@@ -143,25 +143,8 @@ describe('ChannelService test mocked', () => {
         target_port: 0,
         validationUrl: '',
       },
-      'validationUrl'
-    );
-    expect(response).toMatchObject(mockedWrapperChannel);
-  });
-  test('Test updateWrapperChannelDetailsToCheckUpdate', async () => {
-    const response = await updateWrapperChannelDetailsToCheckUpdate(
-      {
-        broker_description: '',
-        broker_psp_code: '',
-        channel_code: '',
-        payment_types: [],
-        redirect_protocol: Redirect_protocolEnum.HTTPS,
-        target_host: '',
-        target_path: '',
-        target_port: 0,
-        validationUrl: '',
-      },
-      'validationUrl'
-    );
+      validationUrl: 'validationUrl',
+    });
     expect(response).toMatchObject(mockedWrapperChannel);
   });
   test('Test updateWrapperChannelDetailsByOpt', async () => {
@@ -301,7 +284,7 @@ describe('ChannelService test client', () => {
   test('Test associatePSPtoChannel', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'associatePSPtoChannel')
-      .mockReturnValue(new Promise((resolve) => resolve({})));
+      .mockReturnValue(Promise.resolve(mockedPaymentTypesResource));
     expect(
       associatePSPtoChannel('channelCode', 'taxCode', {
         payment_types: [],
@@ -350,8 +333,9 @@ describe('ChannelService test client', () => {
       .spyOn(BackofficeApi, 'updateWrapperChannelDetailsToCheck')
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(
-      updateWrapperChannelDetailsToCheck(
-        {
+      updateWrapperChannelDetailsToCheck({
+        channelCode: 'channelCode',
+        channel: {
           broker_description: '',
           broker_psp_code: '',
           channel_code: '',
@@ -362,30 +346,8 @@ describe('ChannelService test client', () => {
           target_port: 0,
           validationUrl: '',
         },
-        'validationUrl'
-      )
-    ).resolves.not.toThrow();
-    expect(spyOn).toBeCalledTimes(1);
-  });
-  test('Test updateWrapperChannelDetailsToCheckUpdate', async () => {
-    const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperChannelDetailsToCheckUpdate')
-      .mockReturnValue(new Promise((resolve) => resolve({})));
-    expect(
-      updateWrapperChannelDetailsToCheckUpdate(
-        {
-          broker_description: '',
-          broker_psp_code: '',
-          channel_code: '',
-          payment_types: [],
-          redirect_protocol: Redirect_protocolEnum.HTTPS,
-          target_host: '',
-          target_path: '',
-          target_port: 0,
-          validationUrl: '',
-        },
-        'validationUrl'
-      )
+        validationUrl: 'validationUrl',
+      })
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });

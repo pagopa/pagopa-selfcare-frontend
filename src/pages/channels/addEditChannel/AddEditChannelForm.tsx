@@ -443,7 +443,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             throw new Error('Wrong channel wrapper status');
           }
         } else {
-          await updateWrapperChannelDetailsToCheck(values, validationUrl);
+          await updateWrapperChannelDetailsToCheck({channelCode, channel: values, validationUrl});
         }
         redirect();
       }

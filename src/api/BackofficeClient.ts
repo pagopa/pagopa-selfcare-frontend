@@ -494,12 +494,18 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperChannelDetailsToCheck: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
+  updateWrapperChannelDetailsToCheck: async ({
+    channelCode,
+    channel,
+    validationUrl,
+  }: {
+    channelCode: string;
+    channel: ChannelDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateWrapperChannelDetails({
+      'channel-code': channelCode,
       body: {
         ...channelBody2Send,
         validationUrl,

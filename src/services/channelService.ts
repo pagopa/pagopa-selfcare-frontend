@@ -224,16 +224,23 @@ export const createWrapperChannelDetails = (
   }
 };
 
-export const updateWrapperChannelDetailsToCheck = (
-  channel: ChannelDetailsDto,
-  validationUrl: string
-): Promise<WrapperEntities> => {
+export const updateWrapperChannelDetailsToCheck = ({
+  channelCode,
+  channel,
+  validationUrl,
+}: {
+  channelCode: string;
+  channel: ChannelDetailsDto;
+  validationUrl: string;
+}): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return BackofficeApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
-      (resources) => resources
-    );
+    return BackofficeApi.updateWrapperChannelDetailsToCheck({
+      channelCode,
+      channel,
+      validationUrl,
+    }).then((resources) => resources);
   }
 };
 
@@ -251,22 +258,21 @@ export const updateWrapperChannelDetailsByOpt = (
 };
 
 export const updateWrapperChannelWithOperatorReview = ({
-                                                           channelCode,
-                                                           brokerPspCode,
-                                                           note,
-                                                       }: {
-    channelCode: string;
-    brokerPspCode: string;
-    note: string;
+  channelCode,
+  brokerPspCode,
+  note,
+}: {
+  channelCode: string;
+  brokerPspCode: string;
+  note: string;
 }): Promise<ChannelDetailsResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
-    } else {
-        return BackofficeApi.updateWrapperChannelWithOperatorReview({
-            channelCode,
-            brokerPspCode,
-            note,
-        }).then((resources) => resources);
-    }
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
+  } else {
+    return BackofficeApi.updateWrapperChannelWithOperatorReview({
+      channelCode,
+      brokerPspCode,
+      note,
+    }).then((resources) => resources);
+  }
 };
-

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {GridColDef, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
 import {cleanup} from '@testing-library/react';
 import {
@@ -14,18 +15,27 @@ import {mockedFullStation} from '../../../../services/__mocks__/stationService';
 =======
 import { GridColDef, GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid';
 import { cleanup, render } from '@testing-library/react';
+=======
+import {GridColDef, GridRenderCellParams, GridStateColDef} from '@mui/x-data-grid';
+import {cleanup} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {
-  buildColumnDefs,
-  duplicateStationAction,
-  editStationAction,
-  getRowActions,
-  manageStationAction,
-  manageStationECAction,
+    buildColumnDefs,
+    duplicateStationAction,
+    editStationAction,
+    getRowActions,
+    manageStationAction,
+    manageStationECAction,
 } from '../StationsTableColumns';
+<<<<<<< HEAD
 import React from 'react';
 import { mockedFullStation } from '../../detail/components/__tests__/StationDetailsValidation.test';
 import { WrapperStatusEnum } from '../../../../api/generated/portal/StationDetailResource';
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
+import {mockedFullStation} from '../../../../services/__mocks__/stationService';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -91,6 +101,9 @@ const mockTFunction = (key: string) => {
 
 describe('<StationsTableColumns />', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     test('Test of all the functions inside StationsTableColumns', () => {
         const ArrayBuildColumnDefs = [
             {
@@ -190,6 +203,7 @@ describe('<StationsTableColumns />', () => {
                 type: 'actions',
             },
         ] as Array<GridColDef>;
+<<<<<<< HEAD
 
         expect(buildColumnDefs(mockTFunction, false)).toEqual(ArrayBuildColumnDefs);
     });
@@ -402,112 +416,115 @@ describe('<StationsTableColumns />', () => {
         type: 'actions',
       },
     ] as Array<GridColDef>;
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
-    expect(buildColumnDefs(mockTFunction, false)).toEqual(ArrayBuildColumnDefs);
-  });
+        expect(buildColumnDefs(mockTFunction, false)).toEqual(ArrayBuildColumnDefs);
+    });
 
-  test('Test of all the functions inside StationsTableColumns as pagopa operator', () => {
-    const ArrayBuildColumnDefs = [
-      {
-        field: 'stationCode',
-        cellClassName: 'justifyContentBold',
-        headerName: 'Station Name',
-        align: 'left',
-        headerAlign: 'left',
-        minWidth: 900,
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
-        field: 'connectionType',
-        cellClassName: 'justifyContentNormal',
-        headerName: 'stationsPage.stationsTableColumns.headerFields.connection',
-        align: 'left',
-        headerAlign: 'left',
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
-        field: 'createdAt',
-        cellClassName: 'justifyContentNormal',
-        headerName: 'Creation Date',
-        align: 'left',
-        headerAlign: 'left',
-        maxWidth: 200,
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
-        field: 'wrapperStatus',
-        cellClassName: 'justifyContentNormal',
-        headerName: 'Status',
-        align: 'left',
-        headerAlign: 'left',
-        width: 145,
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
-        field: 'actions',
-        cellClassName: 'justifyContentNormalRight',
-        headerName: '',
-        align: 'center',
-        disableColumnMenu: true,
-        editable: false,
-        flex: 1,
-        getActions: expect.any(Function),
-        hideSortIcons: true,
-        sortable: false,
-        type: 'actions',
-      },
-    ] as Array<GridColDef>;
+    test('Test of all the functions inside StationsTableColumns as pagopa operator', () => {
+        const ArrayBuildColumnDefs = [
+            {
+                field: 'stationCode',
+                cellClassName: 'justifyContentBold',
+                headerName: 'Station Name',
+                align: 'left',
+                headerAlign: 'left',
+                minWidth: 900,
+                editable: false,
+                disableColumnMenu: true,
+                renderHeader: expect.any(Function),
+                renderCell: expect.any(Function),
+                sortable: false,
+                flex: 4,
+            },
+            {
+                field: 'connectionType',
+                cellClassName: 'justifyContentNormal',
+                headerName: 'stationsPage.stationsTableColumns.headerFields.connection',
+                align: 'left',
+                headerAlign: 'left',
+                editable: false,
+                disableColumnMenu: true,
+                renderHeader: expect.any(Function),
+                renderCell: expect.any(Function),
+                sortable: false,
+                flex: 4,
+            },
+            {
+                field: 'createdAt',
+                cellClassName: 'justifyContentNormal',
+                headerName: 'Creation Date',
+                align: 'left',
+                headerAlign: 'left',
+                maxWidth: 200,
+                editable: false,
+                disableColumnMenu: true,
+                renderHeader: expect.any(Function),
+                renderCell: expect.any(Function),
+                sortable: false,
+                flex: 4,
+            },
+            {
+                field: 'wrapperStatus',
+                cellClassName: 'justifyContentNormal',
+                headerName: 'Status',
+                align: 'left',
+                headerAlign: 'left',
+                width: 145,
+                editable: false,
+                disableColumnMenu: true,
+                renderHeader: expect.any(Function),
+                renderCell: expect.any(Function),
+                sortable: false,
+                flex: 4,
+            },
+            {
+                field: 'actions',
+                cellClassName: 'justifyContentNormalRight',
+                headerName: '',
+                align: 'center',
+                disableColumnMenu: true,
+                editable: false,
+                flex: 1,
+                getActions: expect.any(Function),
+                hideSortIcons: true,
+                sortable: false,
+                type: 'actions',
+            },
+        ] as Array<GridColDef>;
 
-    expect(buildColumnDefs(mockTFunction, true)).toEqual(ArrayBuildColumnDefs);
-  });
+        expect(buildColumnDefs(mockTFunction, true)).toEqual(ArrayBuildColumnDefs);
+    });
 
-  test('Test row actions StationsTableColumns as pagopa operator', () => {
-    let paramsApproved = {
-      row: { ...mockedFullStation, wrapperStatus: WrapperStatusEnum.APPROVED },
-    };
-    let paramsToCheck = {
-      row: { ...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK },
-    };
+    test('Test row actions StationsTableColumns as pagopa operator', () => {
+        let paramsApproved = {
+            row: {...mockedFullStation, wrapperStatus: WrapperStatusEnum.APPROVED},
+        };
+        let paramsToCheck = {
+            row: {...mockedFullStation, wrapperStatus: WrapperStatusEnum.TO_CHECK},
+        };
 
-    // Station approved, not an operator
-    expect(getRowActions(paramsApproved, false)).toEqual([
-      manageStationAction(mockedFullStation.stationCode),
-      manageStationECAction(mockedFullStation.stationCode),
-      duplicateStationAction(mockedFullStation.stationCode),
-    ]);
+        // Station approved, not an operator
+        expect(getRowActions(paramsApproved, false)).toEqual([
+            manageStationAction(mockedFullStation.stationCode),
+            manageStationECAction(mockedFullStation.stationCode),
+            duplicateStationAction(mockedFullStation.stationCode),
+        ]);
 
-    // Station not approved, not an operator
-    expect(getRowActions(paramsToCheck, false)).toEqual([
-      manageStationAction(mockedFullStation.stationCode),
-      editStationAction(mockedFullStation.stationCode),
-    ]);
+        // Station not approved, not an operator
+        expect(getRowActions(paramsToCheck, false)).toEqual([
+            manageStationAction(mockedFullStation.stationCode),
+            editStationAction(mockedFullStation.stationCode),
+        ]);
 
-    // Station approved, as operator
-    expect(getRowActions(paramsApproved, true)).toEqual([
-      manageStationAction(mockedFullStation.stationCode),
-      manageStationECAction(mockedFullStation.stationCode),
-    ]);
+        // Station approved, as operator
+        expect(getRowActions(paramsApproved, true)).toEqual([
+            manageStationAction(mockedFullStation.stationCode),
+            manageStationECAction(mockedFullStation.stationCode),
+        ]);
 
+<<<<<<< HEAD
     // Station not approved, as operator
     expect(getRowActions(paramsToCheck, true)).toEqual([
       manageStationAction(mockedFullStation.stationCode),
@@ -515,4 +532,12 @@ describe('<StationsTableColumns />', () => {
     ]);
   });
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+        // Station not approved, as operator
+        expect(getRowActions(paramsToCheck, true)).toEqual([
+            manageStationAction(mockedFullStation.stationCode),
+            editStationAction(mockedFullStation.stationCode),
+        ]);
+    });
+>>>>>>> 3f32cfc3 (Formatting (#542))
 });

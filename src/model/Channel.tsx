@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
     ChannelDetailsDto,
     Payment_modelEnum,
@@ -5,6 +6,9 @@ import {
     Redirect_protocolEnum,
 } from '../api/generated/portal/ChannelDetailsDto';
 import {StatusEnum} from '../api/generated/portal/WrapperChannelDetailsDto';
+=======
+import {ChannelDetailsDto,} from '../api/generated/portal/ChannelDetailsDto';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 export type ChannelStatus = 'ACTIVE' | 'REVISION' | 'NEEDCORRECTION';
 

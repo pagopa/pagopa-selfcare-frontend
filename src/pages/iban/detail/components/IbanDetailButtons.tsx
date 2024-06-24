@@ -1,6 +1,11 @@
 /* eslint-disable sonarjs/no-identical-functions */
+<<<<<<< HEAD
 import {Stack, Button} from '@mui/material';
 import {Link, generatePath} from 'react-router-dom';
+=======
+import {Button, Stack} from '@mui/material';
+import {generatePath, Link} from 'react-router-dom';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {useTranslation} from 'react-i18next';
 import {Dispatch, SetStateAction} from 'react';
 import ROUTES from '../../../../routes';

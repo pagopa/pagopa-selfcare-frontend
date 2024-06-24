@@ -1,6 +1,10 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
+<<<<<<< HEAD
 import {cleanup, screen, render, fireEvent} from '@testing-library/react';
+=======
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import React from 'react';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';

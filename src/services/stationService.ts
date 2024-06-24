@@ -15,7 +15,10 @@ import {WrapperStationDetailsDto} from '../api/generated/portal/WrapperStationDe
 import {WrapperStationsResource} from '../api/generated/portal/WrapperStationsResource';
 import {ConfigurationStatus, StationOnCreation} from '../model/Station';
 import {
+<<<<<<< HEAD
     updateStation as UpdateStationMocked,
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     associateEcToStation as associateEcToStationMocked,
     createStationMocked,
     createWrapperStation as createStationWrap,
@@ -26,10 +29,18 @@ import {
     getStationCodeMocked,
     getStationCodeV2Mocked,
     getStationDetail as getStationDetailMock,
+<<<<<<< HEAD
     getWrapperStation as getStationWrap,
     getStationsMerged as getStationsMergedMocked,
     getStations as getStationsMocked,
     testStation as testStationMocked,
+=======
+    getStations as getStationsMocked,
+    getStationsMerged as getStationsMergedMocked,
+    getWrapperStation as getStationWrap,
+    testStation as testStationMocked,
+    updateStation as UpdateStationMocked,
+>>>>>>> 3f32cfc3 (Formatting (#542))
     updateWrapperStation as updateStationWrap,
     updateWrapperStationByOpt as updateStationWrapByOpt,
 } from '../services/__mocks__/stationService';
@@ -193,6 +204,9 @@ export const updateWrapperStationToCheckUpdate = (
 
 export const updateWrapperStationWithOperatorReview = ({
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
                                                            stationCode,
                                                            ciTaxCode,
                                                            note,
@@ -200,6 +214,7 @@ export const updateWrapperStationWithOperatorReview = ({
     stationCode: string;
     ciTaxCode: string;
     note: string;
+<<<<<<< HEAD
 }): Promise<StationDetailResource> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return updateStationWrapByOpt();
@@ -229,6 +244,18 @@ export const updateWrapperStationWithOperatorReview = ({
     }).then((resources) => resources);
   }
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+}): Promise<StationDetailResource> => {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return updateStationWrapByOpt();
+    } else {
+        return BackofficeApi.updateWrapperStationWithOperatorReview({
+            stationCode,
+            ciTaxCode,
+            note,
+        }).then((resources) => resources);
+    }
+>>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export const updateStation = (

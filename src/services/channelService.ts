@@ -14,6 +14,7 @@ import {ChannelOnCreation} from '../model/Channel';
 import {WrapperEntities} from '../api/generated/portal/WrapperEntities';
 
 import {
+<<<<<<< HEAD
     getChannels as getChannelsMocked,
     getChannelsMerged as getChannelsMergedMocked,
     getPSPChannels as getPSPChannelsMocked,
@@ -28,6 +29,22 @@ import {
     createWrapperChannel,
     updateWrapperChannel,
     getWfespPlugins as mockedGetWfespPlugins,
+=======
+    associatePSPtoChannel as associatePSPtoChannelMocked,
+    createChannel as createChannelMocked,
+    createWrapperChannel,
+    dissociatePSPfromChannel as dissociatePSPfromChannelMocked,
+    getChannelCode as getChannelCodeMocked,
+    getChannelDetail as getChannelDetailMocked,
+    getChannelPSPs as getChannelPSPsMocked,
+    getChannels as getChannelsMocked,
+    getChannelsMerged as getChannelsMergedMocked,
+    getPSPChannels as getPSPChannelsMocked,
+    getWfespPlugins as mockedGetWfespPlugins,
+    getWrapperChannel,
+    updateChannel as updateChannelMocked,
+    updateWrapperChannel,
+>>>>>>> 3f32cfc3 (Formatting (#542))
 } from './__mocks__/channelService';
 
 // /channels endpoint

@@ -1,12 +1,20 @@
 import React from 'react';
+<<<<<<< HEAD
 import {render, screen, fireEvent, getByTestId, waitFor} from '@testing-library/react';
+=======
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import AddEditIbanForm from '../AddEditIbanForm';
 import {IbanFormAction} from '../../../../model/Iban';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {Provider} from 'react-redux';
+<<<<<<< HEAD
 import {MemoryRouter, Route, Router} from 'react-router-dom';
+=======
+import {MemoryRouter, Route} from 'react-router-dom';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {store} from '../../../../redux/store';
 import {emptyIban} from '../../IbanPage';
 import {add} from 'date-fns';

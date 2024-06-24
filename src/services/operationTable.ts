@@ -4,9 +4,15 @@ import {TavoloOpOperations} from '../api/generated/portal/TavoloOpOperations';
 import {TavoloOpResource} from '../api/generated/portal/TavoloOpResource';
 import {TavoloOpResourceList} from '../api/generated/portal/TavoloOpResourceList';
 import {
+<<<<<<< HEAD
     getOperationTableList as getOperationTableListMocked,
     getOperationTableDetails as getOperationTableDetailsMocked,
     createOperationTable as createOperationTableMocked,
+=======
+    createOperationTable as createOperationTableMocked,
+    getOperationTableDetails as getOperationTableDetailsMocked,
+    getOperationTableList as getOperationTableListMocked,
+>>>>>>> 3f32cfc3 (Formatting (#542))
     updateOperationTable as updateOperationTableMocked,
 } from './__mocks__/operationTable';
 

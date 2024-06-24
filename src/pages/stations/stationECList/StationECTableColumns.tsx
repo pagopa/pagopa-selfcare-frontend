@@ -52,7 +52,11 @@ export function buildColumnDefs(
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
+<<<<<<< HEAD
             renderCell: (params: any) => renderCell({value: params.row.ciTaxCode, mainCell: true}),
+=======
+            renderCell: (params: any) => renderCell({value: params.row.creditorInstitutionCode, mainCell: true}),
+>>>>>>> 3f32cfc3 (Formatting (#542))
             sortable: false,
             flex: 4,
         },
@@ -141,8 +145,13 @@ export function buildColumnDefs(
                     sx={{cursor: 'pointer'}}
                 >
                     <IconButton
+<<<<<<< HEAD
                         onClick={onRowClick ? () => onRowClick(p.row.ciTaxCode) : undefined}
                         data-testid={`dissociate-${p.row.ciTaxCode}`}
+=======
+                        onClick={onRowClick ? () => onRowClick(p.row.creditorInstitutionCode) : undefined}
+                        data-testid={`dissociate-${p.row.creditorInstitutionCode}`}
+>>>>>>> 3f32cfc3 (Formatting (#542))
                         sx={{
                             width: '100%',
                             '&:hover': {backgroundColor: 'transparent !important'},

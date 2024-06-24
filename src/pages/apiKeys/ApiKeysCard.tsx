@@ -1,21 +1,29 @@
 import {VisibilityOff} from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {Box, Button, Card, Stack, ToggleButton, Typography, useTheme} from '@mui/material';
+<<<<<<< HEAD
 import {
     SessionModal,
     useErrorDispatcher,
     useLoading,
     useUserNotify,
 } from '@pagopa/selfcare-common-frontend';
+=======
+import {SessionModal, useErrorDispatcher, useLoading, useUserNotify,} from '@pagopa/selfcare-common-frontend';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {ProductKeys} from '../../model/ApiKey';
 import {Party} from '../../model/Party';
+<<<<<<< HEAD
 import {
     getInstitutionApiKeys,
     regeneratePrimaryKey,
     regenerateSecondaryKey,
 } from '../../services/apiKeyService';
+=======
+import {getInstitutionApiKeys, regeneratePrimaryKey, regenerateSecondaryKey,} from '../../services/apiKeyService';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 type Props = {
     selectedParty?: Party;

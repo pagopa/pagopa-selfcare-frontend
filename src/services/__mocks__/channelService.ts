@@ -8,6 +8,7 @@ import {PspChannelPaymentTypesResource} from '../../api/generated/portal/PspChan
 import {PspChannelsResource} from '../../api/generated/portal/PspChannelsResource';
 import {WrapperStatusEnum} from '../../api/generated/portal/WrapperChannelResource';
 import {WrapperChannelsResource} from '../../api/generated/portal/WrapperChannelsResource';
+<<<<<<< HEAD
 import {
     StatusEnum,
     WrapperChannelDetailsDto,
@@ -16,6 +17,12 @@ import {WrapperEntities} from '../../api/generated/portal/WrapperEntities';
 import {ChannelOnCreation} from '../../model/Channel';
 import {WfespPluginConfs} from '../../api/generated/portal/WfespPluginConfs';
 import {Delegation} from '../../api/generated/portal/Delegation';
+=======
+import {StatusEnum, WrapperChannelDetailsDto,} from '../../api/generated/portal/WrapperChannelDetailsDto';
+import {WrapperEntities} from '../../api/generated/portal/WrapperEntities';
+import {ChannelOnCreation} from '../../model/Channel';
+import {WfespPluginConfs} from '../../api/generated/portal/WfespPluginConfs';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {mockedPaymentTypes} from './configurationService';
 import {channelWrapperMockedGet} from './institutionsService';
 

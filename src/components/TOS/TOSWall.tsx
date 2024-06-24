@@ -1,5 +1,9 @@
 import {Trans, useTranslation} from 'react-i18next';
+<<<<<<< HEAD
 import {Box, Typography, Link} from '@mui/material';
+=======
+import {Box, Link, Typography} from '@mui/material';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {TOSAgreement} from '@pagopa/mui-italia';
 import {Link as RouterLink} from 'react-router-dom';
 

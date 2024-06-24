@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {Box, Chip, IconButton} from '@mui/material';
 import {GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
 import {TFunction} from 'react-i18next';
@@ -7,6 +8,13 @@ import {
     renderStatusChip,
     showCustomHeader,
 } from '../../../components/Table/TableUtils';
+=======
+import {Box, IconButton} from '@mui/material';
+import {GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
+import {TFunction} from 'react-i18next';
+import {RemoveCircle} from '@mui/icons-material';
+import {renderCell, renderStatusChip, showCustomHeader,} from '../../../components/Table/TableUtils';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 const renderCellWithColor = (params: GridRenderCellParams) =>
     renderCell({

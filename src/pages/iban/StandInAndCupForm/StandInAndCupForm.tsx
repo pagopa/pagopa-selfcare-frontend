@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-let */
+<<<<<<< HEAD
 import {
     Button,
     Card,
@@ -10,6 +11,9 @@ import {
     Select,
     Typography,
 } from '@mui/material';
+=======
+import {Button, Card, Chip, FormControl, Grid, InputLabel, MenuItem, Select, Typography,} from '@mui/material';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
@@ -257,6 +261,9 @@ const StandInAndCupForm = ({ibanList, error, loading}: Props) => {
                             </Typography>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
                             {showManageButton ? (
                                 <Typography
                                     variant="body2"
@@ -403,6 +410,7 @@ const StandInAndCupForm = ({ibanList, error, loading}: Props) => {
                     </Grid>
                 </Grid>
             </Card>
+<<<<<<< HEAD
 =======
               {showManageButton ? (
                 <Typography
@@ -550,6 +558,8 @@ const StandInAndCupForm = ({ibanList, error, loading}: Props) => {
         </Grid>
       </Card>
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
             {selectedParty && <IbanTable ibanList={ibanList} error={error} loading={loading}/>}
 

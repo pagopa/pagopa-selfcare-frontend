@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import {useState} from 'react';
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {SigninData} from '../model/Node';
 import {Party} from '../model/Party';
 import {useAppDispatch} from '../redux/hooks';
 import {partiesActions} from '../redux/slices/partiesSlice';
+<<<<<<< HEAD
 import {
     getBrokerAndEcDetails,
     getBrokerAndPspDetails,
@@ -10,6 +14,9 @@ import {
     getPaymentServiceProviders,
 } from '../services/nodeService';
 import {PaymentServiceProvidersResource} from '../api/generated/portal/PaymentServiceProvidersResource';
+=======
+import {getBrokerAndEcDetails, getBrokerAndPspDetails, getPSPBrokerDetails,} from '../services/nodeService';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 /* A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux. */
 export const useSigninData = () => {

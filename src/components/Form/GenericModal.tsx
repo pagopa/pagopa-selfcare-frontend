@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import {Modal, Backdrop, Fade, Box, Typography, Button} from '@mui/material';
 import {MouseEventHandler} from 'react';
 
 type Props = {
 <<<<<<< HEAD
+=======
+import {Backdrop, Box, Button, Fade, Modal, Typography} from '@mui/material';
+import {MouseEventHandler} from 'react';
+
+type Props = {
+>>>>>>> 3f32cfc3 (Formatting (#542))
     openModal: boolean;
 
     title?: string;
@@ -12,6 +19,7 @@ type Props = {
     handleCloseModal?: MouseEventHandler;
     handleConfirm?: MouseEventHandler;
     renderContent?: () => any;
+<<<<<<< HEAD
 =======
   openModal: boolean;
   
@@ -23,6 +31,8 @@ type Props = {
   handleConfirm?: MouseEventHandler;
   renderContent?: () => any;
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 const GenericModal = ({

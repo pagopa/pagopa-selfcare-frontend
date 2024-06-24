@@ -16,6 +16,9 @@ import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     const {t} = useTranslation();
     const history = useHistory();
     const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
@@ -24,6 +27,7 @@ const AddEditStationPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
     const addError = useErrorDispatcher();
+<<<<<<< HEAD
 =======
   const { t } = useTranslation();
   const history = useHistory();
@@ -34,6 +38,8 @@ const AddEditStationPage = () => {
   const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
   const addError = useErrorDispatcher();
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 
     useEffect(() => {
@@ -62,6 +68,9 @@ const AddEditStationPage = () => {
     }, [selectedParty]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     return (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
@@ -104,6 +113,7 @@ const AddEditStationPage = () => {
                     variantTitle="h4"
                     variantSubTitle="body1"
                 />
+<<<<<<< HEAD
 
                 {selectedParty && (
                     <AddEditStationForm
@@ -168,6 +178,18 @@ const AddEditStationPage = () => {
     </Grid>
   );
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+
+                {selectedParty && (
+                    <AddEditStationForm
+                        stationDetail={stationDetail}
+                        formAction={formAction}
+                    />
+                )}
+            </Grid>
+        </Grid>
+    );
+>>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export default AddEditStationPage;

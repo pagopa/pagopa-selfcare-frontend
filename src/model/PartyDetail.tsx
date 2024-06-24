@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import {InstitutionDetail} from '../api/generated/portal/InstitutionDetail';
 
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 export type PartyDetail = {
     partyId: string;
     externalId: string;

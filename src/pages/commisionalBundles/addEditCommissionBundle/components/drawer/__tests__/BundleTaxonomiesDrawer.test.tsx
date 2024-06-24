@@ -1,12 +1,20 @@
+<<<<<<< HEAD
 import {cleanup, render, waitFor, screen, fireEvent} from '@testing-library/react';
+=======
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import React from 'react';
 import {store} from '../../../../../../redux/store';
 import BundleTaxonomiesDrawer from '../BundleTaxonomiesDrawer';
 import {Provider} from 'react-redux';
+<<<<<<< HEAD
 import {
     mockedTaxonomy,
     mockedTaxonomyGroups,
 } from '../../../../../../services/__mocks__/taxonomyService';
+=======
+import {mockedTaxonomy, mockedTaxonomyGroups,} from '../../../../../../services/__mocks__/taxonomyService';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 const spyOnGetTaxonomiesGroup = jest.spyOn(
     require('../../../../../../services/taxonomyService.ts'),

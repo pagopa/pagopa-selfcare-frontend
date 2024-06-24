@@ -1,7 +1,10 @@
 import {PartyAccountItem} from '@pagopa/mui-italia';
 import {Box, IconButton} from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+<<<<<<< HEAD
 import {PSP} from '../../../model/PSP';
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {Delegation} from '../../../api/generated/portal/Delegation';
 
 type Props = {

@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import {fireEvent, render, screen} from '@testing-library/react';
+=======
+import {render, screen} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import IbanDetailPage from '../IbanDetailPage';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';

@@ -7,6 +7,7 @@ import {
 import {CreditorInstitutionsResource} from '../../api/generated/portal/CreditorInstitutionsResource';
 import {StationCodeResource} from '../../api/generated/portal/StationCodeResource';
 import {StationDetailResource} from '../../api/generated/portal/StationDetailResource';
+<<<<<<< HEAD
 import {
     RedirectProtocolEnum,
     StationDetailsDto,
@@ -21,6 +22,13 @@ import {
     WrapperStationResource,
     WrapperStatusEnum,
 } from '../../api/generated/portal/WrapperStationResource';
+=======
+import {RedirectProtocolEnum, StationDetailsDto,} from '../../api/generated/portal/StationDetailsDto';
+import {TestResultEnum, TestStationResource,} from '../../api/generated/portal/TestStationResource';
+import {TypeEnum, WrapperEntities} from '../../api/generated/portal/WrapperEntities';
+import {WrapperStationDetailsDto} from '../../api/generated/portal/WrapperStationDetailsDto';
+import {WrapperStationResource, WrapperStatusEnum,} from '../../api/generated/portal/WrapperStationResource';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {WrapperStationsResource} from '../../api/generated/portal/WrapperStationsResource';
 import {StationOnCreation} from '../../model/Station';
 
@@ -299,7 +307,11 @@ export const mockedStationsMerged2: WrapperStationsResource = {
 export const mockedStationECs: CreditorInstitutionsResource = {
     creditor_institutions: [
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678901',
+=======
+            creditorInstitutionCode: '12345678901',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC1 S.p.A',
             auxDigit: '3',
@@ -308,7 +320,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '02',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678902',
+=======
+            creditorInstitutionCode: '12345678902',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC2 S.p.A',
             auxDigit: '3',
@@ -317,7 +333,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '03',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678903',
+=======
+            creditorInstitutionCode: '12345678903',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: false,
             businessName: 'EC3 S.p.A',
             auxDigit: '3',
@@ -326,7 +346,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '04',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678904',
+=======
+            creditorInstitutionCode: '12345678904',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC4 S.p.A',
             auxDigit: '3',
@@ -335,7 +359,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '05',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678905',
+=======
+            creditorInstitutionCode: '12345678905',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC5 S.p.A',
             auxDigit: '3',
@@ -344,7 +372,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '06',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678906',
+=======
+            creditorInstitutionCode: '12345678906',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC6 S.p.A',
             auxDigit: '3',
@@ -353,7 +385,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '07',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678907',
+=======
+            creditorInstitutionCode: '12345678907',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC7 S.p.A',
             auxDigit: '3',
@@ -362,7 +398,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '08',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678908',
+=======
+            creditorInstitutionCode: '12345678908',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC8 S.p.A',
             auxDigit: '3',
@@ -371,7 +411,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '09',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678909',
+=======
+            creditorInstitutionCode: '12345678909',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC9 S.p.A',
             auxDigit: '3',
@@ -380,7 +424,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
             segregationCode: '10',
         },
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678910',
+=======
+            creditorInstitutionCode: '12345678910',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC10 S.p.A',
             auxDigit: '3',
@@ -395,7 +443,11 @@ export const mockedStationECs: CreditorInstitutionsResource = {
 export const mockedStationECsPage2: CreditorInstitutionsResource = {
     creditor_institutions: [
         {
+<<<<<<< HEAD
             ciTaxCode: '12345678911',
+=======
+            creditorInstitutionCode: '12345678911',
+>>>>>>> 3f32cfc3 (Formatting (#542))
             enabled: true,
             businessName: 'EC11 S.p.A',
             broadcast: false,
@@ -595,11 +647,15 @@ export const updateWrapperStation = (_stations: StationDetailsDto): Promise<Wrap
     new Promise((resolve) => resolve(mockedWrapperStation));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const updateWrapperStationByOpt = (): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
 =======
 export const updateWrapperStationByOpt = (
 ): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+export const updateWrapperStationByOpt = (): Promise<StationDetailResource> => new Promise((resolve) => resolve(mockedFullStation));
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
 export const updateStation = (
     _stations: StationDetailsDto,

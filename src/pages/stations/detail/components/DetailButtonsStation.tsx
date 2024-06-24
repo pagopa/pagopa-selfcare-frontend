@@ -30,6 +30,9 @@ const ModalContent = ({
     const {t} = useTranslation();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     const addError = useErrorDispatcher();
     const setLoading = useLoading(LOADING_TASK_STATION_DETAILS_REQUEST_EDIT);
 
@@ -62,6 +65,7 @@ const ModalContent = ({
                 setLoading(false);
             });
     };
+<<<<<<< HEAD
     return (
 =======
 const DetailButtonsStation = ({ status, stationCode }: Props) => {
@@ -225,6 +229,111 @@ const DetailButtonsStation = ({stationDetail, setStationDetail}: Props) => {
     }
 
     return (
+=======
+    return (
+        <>
+            <Typography variant="h6">{t('stationDetailPageValidation.modal.title')}</Typography>
+            <Typography variant="body1" sx={{my: 2}}>
+                {t('stationDetailPageValidation.modal.subtitle')}
+            </Typography>
+            <TextField
+                fullWidth
+                id="requestInput"
+                name="requestInput"
+                required
+                multiline
+                placeholder={t('stationDetailPageValidation.modal.placeholder')}
+                size="small"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                helperText={t('stationDetailPageValidation.modal.helperText')}
+                inputProps={{
+                    'data-testid': 'requestInput',
+                    maxLength: 200,
+                }}
+            />
+            <Box display="flex" justifyContent={'flex-end'} mt={2}>
+                <Button
+                    variant="outlined"
+                    sx={{mr: 1}}
+                    onClick={() => setShowModal(false)}
+                    data-testid="cancel-button-test"
+                >
+                    {t('general.turnBack')}
+                </Button>
+                <Button
+                    variant="contained"
+                    disabled={!input}
+                    onClick={() => sendEditRequest()}
+                    data-testid="confirm-and-send-button"
+                >
+                    {t('general.confirmAndSend')}
+                </Button>
+            </Box>
+        </>
+    );
+};
+
+type Props = {
+    stationDetail: StationDetailResource;
+    setStationDetail: (value: any) => void;
+};
+
+const DetailButtonsStation = ({stationDetail, setStationDetail}: Props) => {
+    const {t} = useTranslation();
+    const {userIsPagopaOperator} = useUserRole();
+
+    const status = stationDetail?.wrapperStatus;
+    const stationCode = stationDetail?.stationCode;
+
+    const [showModal, setShowModal] = useState<boolean>(false);
+
+    const editPath = () =>
+        generatePath(ROUTES.STATION_EDIT, {
+            stationId: stationCode,
+            actionId: StationFormAction.Edit,
+        });
+
+    if (userIsPagopaOperator) {
+        return (
+            <>
+                <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
+                    {(status === WrapperStatusEnum.TO_CHECK ||
+                        status === WrapperStatusEnum.TO_CHECK_UPDATE) && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => setShowModal(true)}
+                            data-testid="request-edit-button"
+                        >
+                            {t('stationDetailPage.stationOptions.requestEdit')}
+                        </Button>
+                    )}
+                    <Button component={Link} to={editPath} variant="contained" data-testid="edit-button">
+                        {t(
+                            stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED
+                                ? 'stationDetailPage.stationOptions.approveAndValidate'
+                                : 'general.modify'
+                        )}
+                    </Button>
+                </Stack>
+                {showModal && (
+                    <GenericModal
+                        openModal={showModal}
+                        renderContent={() => (
+                            <ModalContent
+                                setShowModal={setShowModal}
+                                setStationDetail={setStationDetail}
+                                stationDetail={stationDetail}
+                            />
+                        )}
+                    />
+                )}
+            </>
+        );
+    }
+
+    return (
+>>>>>>> 3f32cfc3 (Formatting (#542))
         <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
             {status === WrapperStatusEnum.APPROVED ? (
                 <>

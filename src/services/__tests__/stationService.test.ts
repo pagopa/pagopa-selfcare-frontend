@@ -20,6 +20,9 @@ import {
 } from '../__mocks__/stationService';
 import {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     associateEcToStation,
     createStation,
     createWrapperStation,
@@ -36,6 +39,7 @@ import {
     getWrapperStation,
     testStation,
     updateStation,
+<<<<<<< HEAD
     updateWrapperStationWithOperatorReview,
     updateWrapperStationToCheck,
     updateWrapperStationToCheckUpdate,
@@ -270,6 +274,116 @@ describe('StationService test mocked', () => {
     expect(response).toMatchObject(stationTestErrorMocked);
   });
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+    updateWrapperStationToCheck,
+    updateWrapperStationToCheckUpdate,
+    updateWrapperStationWithOperatorReview,
+} from '../stationService';
+
+describe('StationService test mocked', () => {
+    test('Test createStation', async () => {
+        const response = await createStation(mockedCreatedStation);
+        expect(response).toMatchObject(mockedStation);
+    });
+    test('Test getStations', async () => {
+        const response = await getStations({
+            page: 0,
+            brokerCode: 'brokerCode',
+            status: ConfigurationStatus.ACTIVE,
+            stationCode: 'stationCode',
+            limit: 0,
+        });
+        expect(response).toMatchObject(mockedStations);
+    });
+    test('Test getStationsMerged', async () => {
+        const response = await getStationsMerged(0, 'brokerCode');
+        expect(response).toMatchObject(mockedStationsMerged2);
+    });
+    test('Test getStation', async () => {
+        const response = await getStation('stationId');
+        expect(response).toMatchObject(mockedFullStation);
+    });
+    test('Test getStationCode', async () => {
+        const response = await getStationCode('code');
+        expect(response).toMatchObject(mockedStationCode);
+    });
+    test('Test getStationCodeV2', async () => {
+        const response = await getStationCodeV2('code');
+        expect(response).toMatchObject(mockedStationCode);
+    });
+    test('Test getECListByStationCode', async () => {
+        const response = await getECListByStationCode('stationCode', 'ciName', 0);
+        expect(response).toMatchObject(mockedStationECs);
+    });
+    test('Test dissociateECfromStation', async () => {
+        const response = await dissociateECfromStation('ecCode', 'stationCode');
+        expect(response).toBeUndefined();
+    });
+    test('Test associateEcToStation', async () => {
+        const response = await associateEcToStation('ecCode', mockedCreditorInstitutionStationDTO);
+        expect(response).toMatchObject({stationCode: '123'});
+    });
+    test('Test getStationAvailableEC', async () => {
+        const response = await getStationAvailableEC();
+        expect(response).toMatchObject(mockedStationAvailableEC);
+    });
+    test('Test createWrapperStation', async () => {
+        const response = await createWrapperStation(mockedWrapperStation);
+        expect(response).toMatchObject(mockedWrapperStation);
+    });
+    test('Test getWrapperStation', async () => {
+        const response = await getWrapperStation('ecCode');
+        expect(response).toMatchObject(stationWrapperMockedGet('ecCode'));
+    });
+    test('Test updateWrapperStationToCheck', async () => {
+        const response = await updateWrapperStationToCheck(mockedStationDetailsDTO);
+        expect(response).toMatchObject(mockedWrapperStation);
+    });
+    test('Test updateWrapperStationToCheckUpdate', async () => {
+        const response = await updateWrapperStationToCheckUpdate(mockedStationDetailsDTO);
+        expect(response).toMatchObject(mockedWrapperStation);
+    });
+    test('Test updateWrapperStationWithOperatorReview', async () => {
+        const response = await updateWrapperStationWithOperatorReview({
+            stationCode: 'stationCode',
+            ciTaxCode: 'ciTaxCode',
+            note: 'note',
+        });
+        expect(response).toMatchObject(mockedFullStation);
+    });
+    test('Test updateStation', async () => {
+        const response = await updateStation(mockedStationDetailsDTO, 'stationCode');
+        expect(response).toMatchObject(mockedFullStation);
+    });
+    test('Test getStationDetail', async () => {
+        const response = await getStationDetail('stationId');
+        expect(response).toMatchObject(mockedFullStation);
+    });
+    test('Test getCreditorInstitutionSegregationcodes', async () => {
+        const response = await getCreditorInstitutionSegregationCodes('ecCode');
+        expect(response).toMatchObject(mockedSegregationCodeList);
+    });
+    test('Test testStation', async () => {
+        const response = await testStation(
+            'http',
+            'localhost',
+            8080,
+            '/success',
+            TestStationTypeEnum.PA_VERIFY
+        );
+        expect(response).toMatchObject(stationTestMocked);
+    });
+    test('Test testStation error', async () => {
+        const response = await testStation(
+            'http',
+            'localhost',
+            8080,
+            '/error',
+            TestStationTypeEnum.PA_VERIFY
+        );
+        expect(response).toMatchObject(stationTestErrorMocked);
+    });
+>>>>>>> 3f32cfc3 (Formatting (#542))
 });
 
 describe('StationService test', () => {
@@ -284,6 +398,9 @@ describe('StationService test', () => {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
     test('Test createStation', async () => {
         const spyOn = jest
             .spyOn(BackofficeApi, 'createStation')
@@ -435,6 +552,7 @@ describe('StationService test', () => {
         ).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
+<<<<<<< HEAD
 =======
   test('Test createStation', async () => {
     const spyOn = jest
@@ -588,4 +706,6 @@ describe('StationService test', () => {
     expect(spyOn).toBeCalledTimes(1);
   });
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 });

@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import {theme} from '@pagopa/mui-italia';
 import {Box, styled, Typography} from '@mui/material';
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
+=======
+import {Box, Typography} from '@mui/material';
+import {GridColDef} from '@mui/x-data-grid';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {useState} from 'react';
 import {Trans, useTranslation} from 'react-i18next';
 import {generatePath, useHistory} from 'react-router-dom';

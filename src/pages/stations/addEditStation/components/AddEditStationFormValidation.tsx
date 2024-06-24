@@ -153,6 +153,9 @@ const AddEditStationFormValidation = ({
                     <Box mt={1} width="50%" pr={1}>
                         <FormControl fullWidth>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
                             <RadioGroup
                                 sx={{display: 'block'}}
                                 aria-labelledby="demo-radio-buttons-group-label"
@@ -228,6 +231,7 @@ const AddEditStationFormValidation = ({
                                                 label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
                                             />
                                         </Grid>
+<<<<<<< HEAD
 
                                         <Grid container item xs={12} pt={1}>
                                             <FormControl fullWidth>
@@ -362,11 +366,56 @@ const AddEditStationFormValidation = ({
                             </FormHelperText>
                           ) : null}
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+
+                                        <Grid container item xs={12} pt={1}>
+                                            <FormControl fullWidth>
+                                                <InputLabel size="small" id="gdpConcatLabel">
+                                                    {t('addEditStationPage.addFormValidation.fields.select')}
+                                                </InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    id="gdpConcat"
+                                                    name="gdpConcat"
+                                                    labelId='gdpConcatLabel'
+                                                    data-testid="gdpConcat-select"
+                                                    label={'gdpConcat'}
+                                                    placeholder={'gdpConcat'}
+                                                    size="small"
+                                                    defaultValue={''}
+                                                    disabled={!gdp}
+                                                    value={formik.values.gdpConcat}
+                                                    onChange={formik.handleChange}
+                                                    error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
+                                                    inputProps={{
+                                                        'data-testid': 'gdpConcat-test',
+                                                    }}
+                                                >
+                                                    {Object.entries(gpdAddresses).map(([key, value]) => (
+                                                        <MenuItem key={key} selected={true} value={value}>
+                                                            {`${key.toUpperCase()} - ${value}`}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
+                                                    <FormHelperText sx={{color: '#bf3333'}}>
+                                                        {formik.touched.gdpConcat && formik.errors.gdpConcat}
+                                                    </FormHelperText>
+                                                ) : null}
+                                            </FormControl>
+                                        </Grid>
+                                    </>
+                                )}
+                            </RadioGroup>
+>>>>>>> 3f32cfc3 (Formatting (#542))
                         </FormControl>
                     </Box>
                 </Box>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
                 <Box sx={inputGroupStyle}>
                     <AddEditStationFormSectionTitle
                         title={t('addEditStationPage.addFormValidation.sections.proxy')}
@@ -408,6 +457,7 @@ const AddEditStationFormValidation = ({
                         </Grid>
                     </Grid>
                 </Box>
+<<<<<<< HEAD
 =======
         <Box sx={inputGroupStyle}>
           <AddEditStationFormSectionTitle
@@ -451,6 +501,8 @@ const AddEditStationFormValidation = ({
           </Grid>
         </Box>
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
                 <Box sx={inputGroupStyle}>
                     <AddEditStationFormSectionTitle

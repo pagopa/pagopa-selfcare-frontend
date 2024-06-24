@@ -75,6 +75,7 @@ describe('<CommissionBundlesTable />', () => {
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         });
     });
+<<<<<<< HEAD
 
     test('render component CommissionBundlesTable with bundle list for EC', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -96,6 +97,29 @@ describe('<CommissionBundlesTable />', () => {
             orgIsPspSigned: false,
         });
 
+=======
+
+    test('render component CommissionBundlesTable with bundle list for EC', async () => {
+        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+            orgInfo: {
+                isSigned: true,
+                types: {
+                    isPsp: false,
+                    isPspBroker: false,
+                    isEc: true,
+                    isEcBroker: true,
+                },
+            },
+            orgIsBrokerSigned: false,
+            orgIsEcBrokerSigned: false,
+            orgIsEcDirect: false,
+            orgIsEcSigned: false,
+            orgIsPspBrokerSigned: false,
+            orgIsPspDirect: false,
+            orgIsPspSigned: false,
+        });
+
+>>>>>>> 3f32cfc3 (Formatting (#542))
         mockEC.mockReturnValueOnce(new Promise((resolve) => resolve(mockedCommissionBundlePspList)));
         render(
             <Provider store={store}>
@@ -152,6 +176,7 @@ describe('<CommissionBundlesTable />', () => {
                 </MemoryRouter>
             </Provider>
         );
+<<<<<<< HEAD
 
         await waitFor(() => {
             expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
@@ -205,6 +230,12 @@ describe('<CommissionBundlesTable />', () => {
 
         await waitFor(() => {
             expect(mockEC).toBeCalledTimes(2);
+=======
+
+        await waitFor(() => {
+            expect(screen.queryByTestId('data-grid')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
+>>>>>>> 3f32cfc3 (Formatting (#542))
         });
     });
 });

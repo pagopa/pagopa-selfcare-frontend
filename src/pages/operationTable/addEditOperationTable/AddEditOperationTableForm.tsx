@@ -1,6 +1,10 @@
 import {useTranslation} from 'react-i18next';
 import {theme} from '@pagopa/mui-italia';
+<<<<<<< HEAD
 import {Grid, TextField, Button, Stack} from '@mui/material';
+=======
+import {Button, Grid, Stack, TextField} from '@mui/material';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {Box} from '@mui/system';
 import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';

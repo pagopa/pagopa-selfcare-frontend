@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -8,6 +11,7 @@ import {LOADING_TASK_STATION_DETAILS_WRAPPER} from '../../../utils/constants';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {StationDetailResource} from '../../../api/generated/portal/StationDetailResource';
+<<<<<<< HEAD
 =======
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
@@ -21,6 +25,8 @@ import { useUserRole } from '../../../hooks/useUserRole';
 import ROUTES from '../../../routes';
 import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import StationDetails from './components/StationDetails';
 
 const StationDetailPage = () => {
@@ -62,6 +68,7 @@ const StationDetailPage = () => {
             })
             .finally(() => setLoadingWrap(false));
     }, [selectedParty]);
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     return (
@@ -102,6 +109,16 @@ const StationDetailPage = () => {
     />
   );
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+
+    return (
+        <StationDetails
+            stationDetail={stationDetail}
+            setStationDetail={setStationDetail}
+            ecAssociatedNumber={ecAssociatedNumber}
+        />
+    );
+>>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export default StationDetailPage;

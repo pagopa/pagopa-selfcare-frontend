@@ -686,10 +686,14 @@
       "version": "Versione stazione",
       "connectionType": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "label": "Tipo di connessione",
 =======
         "label":"Tipo di connessione",
 >>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
+=======
+        "label": "Tipo di connessione",
+>>>>>>> 3f32cfc3 (Formatting (#542))
         "sync": "Sincrona",
         "async": "Asincrona"
       },
@@ -1061,6 +1065,7 @@
         "title": "Attiva pacchetto",
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
+<<<<<<< HEAD
           "PUBLIC": {
             "title": "Richiesta attivazione pacchetto",
             "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
@@ -1069,6 +1074,10 @@
             "title": "Attivazione pacchetto",
             "message": "Conferma l’attivazione del pacchetto."
           }
+=======
+          "title": "Richiesta attivazione pacchetto",
+          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
+>>>>>>> 3f32cfc3 (Formatting (#542))
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",
@@ -1226,10 +1235,14 @@
         }
       },
 <<<<<<< HEAD
+<<<<<<< HEAD
       "requestDrawer": {
 =======
       "requestDrawer":  {
 >>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
+=======
+      "requestDrawer": {
+>>>>>>> 3f32cfc3 (Formatting (#542))
         "businessName": "Nome Ente",
         "taxCode": "Codice Fiscale",
         "state": "Stato",

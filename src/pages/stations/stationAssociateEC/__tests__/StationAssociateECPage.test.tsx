@@ -1,6 +1,10 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
+<<<<<<< HEAD
 import {cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
+=======
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import React from 'react';
 import {Provider} from 'react-redux';
 import {MemoryRouter, Route} from 'react-router-dom';
@@ -46,7 +50,10 @@ describe('<StationAssociateECPage />', () => {
         );
 
         getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
+<<<<<<< HEAD
         associateEcToStationSpy.mockResolvedValue({stationCode: '123'});
+=======
+>>>>>>> 3f32cfc3 (Formatting (#542))
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
         render(
@@ -65,6 +72,7 @@ describe('<StationAssociateECPage />', () => {
             ? mockedSegregationCodeList.availableCodes[0]
             : '';
 
+<<<<<<< HEAD
         let ecAutocomplete = screen.getByTestId('ec-selection-id-test');
         let ecSelectionSearch = within(ecAutocomplete).getByRole("combobox");
     
@@ -81,6 +89,17 @@ describe('<StationAssociateECPage />', () => {
         await waitFor(() => {
             expect(getCreditorInstitutionSegregationCodesSpy).toBeCalled();
         })
+=======
+        const ecSelectionSearch = screen
+            .getByTestId('ec-selection-id-test')
+            .querySelector('input') as HTMLInputElement;
+
+        fireEvent.mouseDown(ecSelectionSearch);
+        fireEvent.select(ecSelectionSearch, {
+            target: {value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name},
+        });
+        expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name);
+>>>>>>> 3f32cfc3 (Formatting (#542))
 
         const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
         expect(auxDigit.value).toBe('3');
@@ -91,6 +110,7 @@ describe('<StationAssociateECPage />', () => {
         const confirm = screen.getByTestId('confirm-btn-test');
         fireEvent.click(confirm);
 
+<<<<<<< HEAD
         await waitFor(() => {
             expect(associateEcToStationSpy).toBeCalled();
         })
@@ -158,6 +178,18 @@ describe('<StationAssociateECPage />', () => {
 
         getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
         associateEcToStationSpy.mockRejectedValue({message:JSON.stringify({status: 404})});
+=======
+        const broadcast = screen.getByTestId('broadcast-test');
+        fireEvent.click(broadcast);
+
+        const back = screen.getByTestId('back-btn-test');
+        fireEvent.click(back);
+    });
+
+    test('render component StationAssociateECPage getAvailableCreditorInstitutionsForStation error', async () => {
+        getAvailableCreditorInstitutionsForStationSpy.mockRejectedValueOnce(new Error('error'));
+
+>>>>>>> 3f32cfc3 (Formatting (#542))
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
         render(
@@ -171,6 +203,7 @@ describe('<StationAssociateECPage />', () => {
                 </MemoryRouter>
             </Provider>
         );
+<<<<<<< HEAD
 
         const segCodeMocked = mockedSegregationCodeList.availableCodes
             ? mockedSegregationCodeList.availableCodes[0]
@@ -214,6 +247,14 @@ describe('<StationAssociateECPage />', () => {
 
         getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
         associateEcToStationSpy.mockRejectedValue({message:JSON.stringify({status: 409})});
+=======
+    });
+
+    test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes generic error', async () => {
+        getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
+            mockedCreditorInstitutionInfoArray
+        );
+        getCreditorInstitutionSegregationCodesSpy.mockRejectedValueOnce(new Error('error'));
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
         render(
@@ -228,6 +269,36 @@ describe('<StationAssociateECPage />', () => {
             </Provider>
         );
 
+        const ecSelectionSearch = screen
+            .getByTestId('ec-selection-id-test')
+            .querySelector('input') as HTMLInputElement;
+
+        fireEvent.mouseDown(ecSelectionSearch);
+        fireEvent.select(ecSelectionSearch, {
+            target: {value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name},
+        });
+        expect(ecSelectionSearch.value).toBe(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].business_name);
+    });
+
+    test('render component StationAssociateECPage getCreditorInstitutionSegregationcodes empty object array', async () => {
+        getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue({creditor_institution_info_list: []});
+
+>>>>>>> 3f32cfc3 (Formatting (#542))
+        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/stations/${stationId}/associate-ec`]}>
+                    <Route path="/stations/:stationId/associate-ec">
+                        <ThemeProvider theme={theme}>
+                            <StationAssociateECPage/>
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+<<<<<<< HEAD
         const segCodeMocked = mockedSegregationCodeList.availableCodes
             ? mockedSegregationCodeList.availableCodes[0]
             : '';
@@ -373,5 +444,11 @@ describe('<StationAssociateECPage />', () => {
         await waitFor(() => {
             expect(associateEcToStationSpy).toBeCalled();
         })
+=======
+        await waitFor(() => {
+            const alertMessage = screen.getByTestId('alert-warning-test');
+            expect(alertMessage).toBeInTheDocument();
+        });
+>>>>>>> 3f32cfc3 (Formatting (#542))
     });
 });

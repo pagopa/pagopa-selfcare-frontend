@@ -1,5 +1,9 @@
 import {ArrowBack, FileDownload} from '@mui/icons-material';
+<<<<<<< HEAD
 import {Alert, Box, Breadcrumbs, Button, Grid, Stack, Typography} from '@mui/material';
+=======
+import {Alert, Box, Breadcrumbs, Button, Stack, Typography} from '@mui/material';
+>>>>>>> 3f32cfc3 (Formatting (#542))
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useEffect, useState} from 'react';

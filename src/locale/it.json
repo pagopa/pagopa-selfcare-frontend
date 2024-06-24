@@ -1057,8 +1057,14 @@
         "title": "Attiva pacchetto",
         "subtitle": "Indica l'importo di commissioni a tuo carico per ogni servizio di incasso associato al pacchetto.",
         "modal": {
-          "title": "Richiesta attivazione pacchetto",
-          "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
+          "PUBLIC": {
+            "title": "Richiesta attivazione pacchetto",
+            "message": "Invia la richiesta di attivazione e attendi la conferma di attivazione tramite mail."
+          },
+          "PRIVATE": {
+            "title": "Attivazione pacchetto",
+            "message": "Conferma l’attivazione del pacchetto."
+          }
         },
         "titleFirstSection": "Commissioni applicate dal PSP",
         "titleSecondSection": "Commissioni a tuo carico",

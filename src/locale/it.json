@@ -962,7 +962,11 @@
     "list": {
       "search": {
         "placeholder": "Cerca per Nome",
-        "createButton": "Crea pacchetto"
+        "createButton": "Crea pacchetto",
+        "stateFilter": "Stato",
+        "stateAll": "Tutti",
+        "stateActive": "Attivi",
+        "stateWaiting": "Disponibili"
       },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}{{status}}.",

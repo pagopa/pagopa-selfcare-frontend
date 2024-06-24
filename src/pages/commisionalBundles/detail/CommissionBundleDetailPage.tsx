@@ -47,15 +47,26 @@ import ROUTES from '../../../routes';
 import {useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
 import {LOADING_TASK_COMMISSION_BUNDLE_DETAIL} from '../../../utils/constants';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {BundleDetailsActionTypes, BundleResource, FormAction,} from '../../../model/CommissionBundle';
+import {
+    BundleDetailsActionTypes,
+    BundleResource,
+    FormAction,
+} from '../../../model/CommissionBundle';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import {formatDateToDDMMYYYYhhmm} from '../../../utils/common-utils';
-import {deleteCIBundleRequest, deleteCIBundleSubscription, deletePSPBundle,} from '../../../services/bundleService';
+import {
+    deleteCIBundleRequest,
+    deleteCIBundleSubscription,
+    deletePSPBundle,
+} from '../../../services/bundleService';
 import GenericModal from '../../../components/Form/GenericModal';
 import {Party} from '../../../model/Party';
 import {useOrganizationType} from '../../../hooks/useOrganizationType';
 import {useUserRole} from '../../../hooks/useUserRole';
-import {CIBundleResource, CiBundleStatusEnum,} from '../../../api/generated/portal/CIBundleResource';
+import {
+    CIBundleResource,
+    CiBundleStatusEnum,
+} from '../../../api/generated/portal/CIBundleResource';
 import {TypeEnum} from '../../../api/generated/portal/PSPBundleResource';
 import {PSPBundleTaxonomy} from '../../../api/generated/portal/PSPBundleTaxonomy';
 >>>>>>> 3f32cfc3 (Formatting (#542))

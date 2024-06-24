@@ -33,17 +33,17 @@ import {
     createCIBundleRequest,
     deleteCIBundleRequest,
     deleteCIBundleSubscription,
-    deletePrivateBundleOffer,
     deletePSPBundle,
-    getBundleCISubscriptions,
-    getBundleCISubscriptionsDetail,
     getBundleDetailByPSP,
     getBundleListByPSP,
     getCisBundles,
+    getBundleCISubscriptions,
+    getBundleCISubscriptionsDetail,
     getSpecificBuiltInData,
     getTouchpoints,
     rejectPublicBundleSubscription,
     updatePSPBundle,
+    deletePrivateBundleOffer,
 } from '../bundleService';
 
 describe('BundleService test mocked', () => {

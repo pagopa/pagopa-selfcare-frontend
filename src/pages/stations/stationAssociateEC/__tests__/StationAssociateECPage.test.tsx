@@ -262,4 +262,116 @@ describe('<StationAssociateECPage />', () => {
             expect(associateEcToStationSpy).toBeCalled();
         })
     });
+
+    test('render component StationAssociateECPage associateEcToStation error 404', async () => {
+        getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
+            mockedCreditorInstitutionInfoArray
+        );
+
+        getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
+        associateEcToStationSpy.mockRejectedValue({message:JSON.stringify({status: 404})});
+        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/stations/${stationId}/associate-ec`]}>
+                    <Route path="/stations/:stationId/associate-ec">
+                        <ThemeProvider theme={theme}>
+                            <StationAssociateECPage/>
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const segCodeMocked = mockedSegregationCodeList.availableCodes
+            ? mockedSegregationCodeList.availableCodes[0]
+            : '';
+
+        let ecAutocomplete = screen.getByTestId('ec-selection-id-test');
+        let ecSelectionSearch = within(ecAutocomplete).getByRole("combobox");
+    
+        ecAutocomplete.focus();
+        fireEvent.change(ecSelectionSearch as Element, {
+            target: { value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName },
+        });
+        await waitFor(() => {
+            expect(screen.queryByText(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName)).toBeInTheDocument();
+        })
+        fireEvent.keyDown(ecAutocomplete as Element, { key: 'ArrowDown' });
+        fireEvent.keyDown(ecAutocomplete as Element, { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(getCreditorInstitutionSegregationCodesSpy).toBeCalled();
+        })
+
+        const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
+        expect(auxDigit.value).toBe('3');
+
+        const segCode = screen.getByTestId('segregation-code-test');
+        fireEvent.change(segCode, {target: {value: segCodeMocked}});
+
+        const confirm = screen.getByTestId('confirm-btn-test');
+        fireEvent.click(confirm);
+
+        await waitFor(() => {
+            expect(associateEcToStationSpy).toBeCalled();
+        })
+    });
+
+    test('render component StationAssociateECPage associateEcToStation error 409', async () => {
+        getAvailableCreditorInstitutionsForStationSpy.mockResolvedValue(
+            mockedCreditorInstitutionInfoArray
+        );
+
+        getCreditorInstitutionSegregationCodesSpy.mockResolvedValue(mockedSegregationCodeList);
+        associateEcToStationSpy.mockRejectedValue({message:JSON.stringify({status: 409})});
+        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/stations/${stationId}/associate-ec`]}>
+                    <Route path="/stations/:stationId/associate-ec">
+                        <ThemeProvider theme={theme}>
+                            <StationAssociateECPage/>
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const segCodeMocked = mockedSegregationCodeList.availableCodes
+            ? mockedSegregationCodeList.availableCodes[0]
+            : '';
+
+        let ecAutocomplete = screen.getByTestId('ec-selection-id-test');
+        let ecSelectionSearch = within(ecAutocomplete).getByRole("combobox");
+    
+        ecAutocomplete.focus();
+        fireEvent.change(ecSelectionSearch as Element, {
+            target: { value: mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName },
+        });
+        await waitFor(() => {
+            expect(screen.queryByText(mockedCreditorInstitutionInfoArray.creditor_institution_info_list![0].businessName)).toBeInTheDocument();
+        })
+        fireEvent.keyDown(ecAutocomplete as Element, { key: 'ArrowDown' });
+        fireEvent.keyDown(ecAutocomplete as Element, { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(getCreditorInstitutionSegregationCodesSpy).toBeCalled();
+        })
+
+        const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
+        expect(auxDigit.value).toBe('3');
+
+        const segCode = screen.getByTestId('segregation-code-test');
+        fireEvent.change(segCode, {target: {value: segCodeMocked}});
+
+        const confirm = screen.getByTestId('confirm-btn-test');
+        fireEvent.click(confirm);
+
+        await waitFor(() => {
+            expect(associateEcToStationSpy).toBeCalled();
+        })
+    });
 });

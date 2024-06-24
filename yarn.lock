@@ -10500,10 +10500,10 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-use-scrollspy@^3.0.1:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/react-use-scrollspy/-/react-use-scrollspy-3.0.2.tgz"
-  integrity sha512-MgXt4p4Ois21Xo2nI1jJyt7J9pxmtF0AQbj5DQWncmMLz1mijwsLQ3w6N7T67yULvluyYJQ9dUnCXFVZh0UIgA==
+react-use-scrollspy@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-use-scrollspy/-/react-use-scrollspy-3.1.1.tgz#3816294290d93d85d6a13f2ec716a13db13c04e0"
+  integrity sha512-EXkQoMKqt6VF4fAxcLFsNLZksctXXmtC8LYk1Zb0Cn0MZX1LErikAoAPWWJkel3Ze7NbJRVgpIzwEX4w108tOg==
   dependencies:
     lodash "4.17.21"
 

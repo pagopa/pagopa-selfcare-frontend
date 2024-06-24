@@ -14,7 +14,6 @@ import { CIBundleResource, CiBundleStatusEnum } from '../../api/generated/portal
 import { CIBundlesResource } from '../../api/generated/portal/CIBundlesResource';
 import { CIBundleSubscriptionsResource } from '../../api/generated/portal/CIBundleSubscriptionsResource';
 import { CIBundleSubscriptionsDetail } from '../../api/generated/portal/CIBundleSubscriptionsDetail';
-import { CIBundleAttributeResource } from '../../api/generated/portal/CIBundleAttributeResource';
 
 export const mockedTouchpoints: Touchpoints = {
   touchpoints: [
@@ -315,8 +314,8 @@ export const deletePSPBundle = (): Promise<void> => new Promise((resolve) => res
 
 export const updatePSPBundle = (): Promise<void> => new Promise((resolve) => resolve());
 
-export const getBundleCISubscriptionsMock = (): Promise<CIBundleSubscriptionsResource> =>
-  Promise.resolve(mockedCiSubscriptionList);
+export const getBundleCISubscriptionsMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionList);
 
-export const getBundleCISubscriptionsDetailMock = (): Promise<CIBundleSubscriptionsResource> =>
-  Promise.resolve(mockedCiSubscriptionDetail);
+export const getBundleCISubscriptionsDetailMock =
+  (): Promise<CIBundleSubscriptionsResource> => Promise.resolve(mockedCiSubscriptionDetail);

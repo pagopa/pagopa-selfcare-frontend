@@ -37,6 +37,7 @@ import CommissionBundleDetailConfiguration from './components/CommissionBundleDe
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleDetailSubscriptionsTable from './components/subscriptions/CommissionBundleDetailSubscriptionsTable';
 
+
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
 
@@ -321,7 +322,7 @@ const CommissionBundleDetailPage = () => {
                     : 'offer-table'
                 }
               >
-                <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
+                  <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
               </Grid>
             )}
         </Grid>

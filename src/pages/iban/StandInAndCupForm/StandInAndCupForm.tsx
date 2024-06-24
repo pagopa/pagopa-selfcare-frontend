@@ -256,6 +256,7 @@ const StandInAndCupForm = ({ibanList, error, loading}: Props) => {
                                 IBAN
                             </Typography>
 
+<<<<<<< HEAD
                             {showManageButton ? (
                                 <Typography
                                     variant="body2"
@@ -402,6 +403,153 @@ const StandInAndCupForm = ({ibanList, error, loading}: Props) => {
                     </Grid>
                 </Grid>
             </Card>
+=======
+              {showManageButton ? (
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  component="span"
+                  fontSize="inherit"
+                  mr={4}
+                  data-testid="iban-standin-with-manage-btn-false"
+                >
+                  {originalSelectedIban.standIn?.iban &&
+                  originalSelectedIban.standIn.iban?.length > 0
+                    ? originalSelectedIban.standIn.iban
+                    : '-'}
+                </Typography>
+              ) : (
+                <FormControl sx={{ minWidth: '55%' }}>
+                  <InputLabel size="small" id="ibanStandInLabel">{t('ibanPage.selectIban')}</InputLabel>
+                  <Select
+                    id="ibanStandIn"
+                    name="ibanStandIn"
+                    labelId='ibanStandInLabel'
+                    label={t('ibanPage.selectIban')}
+                    size="small"
+                    value={newSelectedIban.standIn.iban}
+                    onChange={(e) => handleIbanSelected(e, 'standIn')}
+                    data-testid="stand-in-test-ext"
+                    inputProps={{
+                      'data-testid': 'stand-in-test',
+                    }}
+                  >
+                    {ibanActiveList.ibans_enhanced.map((r: any) => (
+                      <MenuItem key={`ibanStandInList-${r.iban}`} value={r.iban}>
+                        {r.iban}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="overline">{t('ibanPage.cup')}</Typography>
+            <Typography variant="subtitle1" fontWeight="regular" fontSize={16} mt={1}>
+              {t('ibanPage.cupDetail')}
+            </Typography>
+            <Box display="flex" alignItems="center" mt={2}>
+              <Typography
+                component="span"
+                mr={4}
+                fontSize={'inherit'}
+                variant="body2"
+                fontWeight="regular"
+                data-testid="iban-cup-with-manage-btn-false"
+              >
+                IBAN
+              </Typography>
+              {showManageButton ? (
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  component="span"
+                  fontSize="inherit"
+                  mr={4}
+                >
+                  {originalSelectedIban.cup?.iban && originalSelectedIban.cup.iban?.length > 0
+                    ? originalSelectedIban.cup.iban
+                    : '-'}
+                </Typography>
+              ) : (
+                <FormControl sx={{ minWidth: '55%' }}>
+                  <InputLabel size="small" id="ibanCupLabel">{t('ibanPage.selectIban')}</InputLabel>
+                  <Select
+                    id="ibanCup"
+                    name="ibanCup"
+                    labelId='ibanCupLabel'
+                    label={t('ibanPage.selectIban')}
+                    size="small"
+                    value={newSelectedIban.cup.iban}
+                    onChange={(e) => handleIbanSelected(e, 'cup')}
+                    data-testid="cup-test-ext"
+                    inputProps={{
+                      'data-testid': 'cup-test',
+                    }}
+                  >
+                    {ibanActiveList.ibans_enhanced.map((r: any) => (
+                      <MenuItem key={`ibanActiveList-${r.iban}`} value={r.iban}>
+                        {r.iban}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+            </Box>
+          </Grid>
+          <Grid container direction="row" justifyContent="space-between" mt={1} spacing={1}>
+            <Grid item xs={1} ml={1}>
+              {showManageButton ? (
+                <ButtonNaked
+                  size="small"
+                  component="button"
+                  disabled={ibanList.ibans_enhanced.length <= 0}
+                  onClick={() => setShowManageButton(false)}
+                  endIcon={<EditIcon />}
+                  sx={{ color: 'primary.main', fontWeight: 'fontWeightBold' }}
+                  data-testid="iban-manage-btn"
+                >
+                  {t('ibanPage.manage')}
+                </ButtonNaked>
+              ) : (
+                <></>
+              )}
+            </Grid>
+            <Grid item xs={1} display="flex" justifyContent="flex-end">
+              {showManageButton ? (
+                <></>
+              ) : (
+                <>
+                  <Button
+                    size="medium"
+                    onClick={() => {
+                      setNewSelectedIban(originalSelectedIban);
+                      setShowManageButton(true);
+                    }}
+                    color="primary"
+                    variant="outlined"
+                    sx={{ mr: 2, whiteSpace: 'nowrap', minWidth: 'auto' }}
+                    data-testid="back-button-test"
+                  >
+                    {t('ibanPage.delete')}
+                  </Button>
+                  <Button
+                    onClick={() => setShowConfirmModal(true)}
+                    color="primary"
+                    variant="contained"
+                    sx={{ whiteSpace: 'nowrap', minWidth: 'auto' }}
+                    data-testid="upload-iban-test"
+                  >
+                    {t('ibanPage.upload')}
+                  </Button>
+                </>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Card>
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 
             {selectedParty && <IbanTable ibanList={ibanList} error={error} loading={loading}/>}
 

@@ -15,6 +15,7 @@ import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import AddEditStationForm from './AddEditStationForm';
 
 const AddEditStationPage = () => {
+<<<<<<< HEAD
     const {t} = useTranslation();
     const history = useHistory();
     const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
@@ -23,6 +24,16 @@ const AddEditStationPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
     const addError = useErrorDispatcher();
+=======
+  const { t } = useTranslation();
+  const history = useHistory();
+  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
+  const { stationId, actionId } = useParams<{ stationId: string; actionId: string }>();
+  const formAction = actionId ?? StationFormAction.Create;
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+  const [stationDetail, setStationDetail] = useState<StationDetailResource | undefined>();
+  const addError = useErrorDispatcher();
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 
 
     useEffect(() => {
@@ -50,6 +61,7 @@ const AddEditStationPage = () => {
         }
     }, [selectedParty]);
 
+<<<<<<< HEAD
     return (
         <Grid container justifyContent={'center'}>
             <Grid item p={3} xs={8}>
@@ -102,6 +114,60 @@ const AddEditStationPage = () => {
             </Grid>
         </Grid>
     );
+=======
+  return (
+    <Grid container justifyContent={'center'}>
+      <Grid item p={3} xs={8}>
+        <Stack direction="row">
+          <ButtonNaked
+            size="small"
+            component="button"
+            onClick={() => history.push(ROUTES.STATIONS)
+            }
+            startIcon={<ArrowBack />}
+            sx={{ color: 'primary.main', mr: '20px' }}
+            weight="default"
+            data-testid="back-btn-test"
+          >
+            {t('general.exit')}
+          </ButtonNaked>
+          <Breadcrumbs>
+            <Typography>{t('general.Stations')}</Typography>
+            <Typography color={'text.disaled'}>
+              {formAction === StationFormAction.Create
+                ? t(`addEditStationPage.create.breadcrumb`)
+                : stationId}
+            </Typography>
+          </Breadcrumbs>
+        </Stack>
+        <TitleBox
+          title={
+            formAction === StationFormAction.Create
+              ? t(`addEditStationPage.create.title`)
+              : t('addEditStationPage.configure.title')
+          }
+          subTitle={
+            formAction === StationFormAction.Create
+              ? t(`addEditChannelPage.create.subtitle`)
+              : t('addEditStationPage.configure.subtitle')
+          }
+          mbTitle={2}
+          mtTitle={4}
+          mbSubTitle={3}
+          variantTitle="h4"
+          variantSubTitle="body1"
+        />
+
+        {selectedParty && (
+          <AddEditStationForm
+            stationDetail={stationDetail}
+            formAction={formAction}
+          />
+        )}
+      </Grid>
+    </Grid>
+  );
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 };
 
 export default AddEditStationPage;

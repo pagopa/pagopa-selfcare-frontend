@@ -192,6 +192,7 @@ export const updateWrapperStationToCheckUpdate = (
 };
 
 export const updateWrapperStationWithOperatorReview = ({
+<<<<<<< HEAD
                                                            stationCode,
                                                            ciTaxCode,
                                                            note,
@@ -209,6 +210,25 @@ export const updateWrapperStationWithOperatorReview = ({
             note,
         }).then((resources) => resources);
     }
+=======
+  stationCode,
+  ciTaxCode,
+  note,
+}: {
+  stationCode: string;
+  ciTaxCode: string;
+  note: string;
+}): Promise<StationDetailResource> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateStationWrapByOpt();
+  } else {
+    return BackofficeApi.updateWrapperStationWithOperatorReview({
+      stationCode,
+      ciTaxCode,
+      note,
+    }).then((resources) => resources);
+  }
+>>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
 };
 
 export const updateStation = (

@@ -2,10 +2,7 @@ import {GridColDef} from '@mui/x-data-grid';
 import {cleanup} from '@testing-library/react';
 import {buildColumnDefs} from '../IbanTableColumns';
 import {showCustomHeader} from '../../../../components/Table/TableUtils';
-<<<<<<< HEAD
 import React from 'react';
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {

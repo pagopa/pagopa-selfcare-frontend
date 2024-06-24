@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {Alert, Box, Grid} from '@mui/material';
-=======
-import {Alert} from '@mui/material';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';

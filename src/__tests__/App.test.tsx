@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import {render, screen, waitFor} from '@testing-library/react';
-=======
-import {render} from '@testing-library/react';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {createMemoryHistory} from 'history';

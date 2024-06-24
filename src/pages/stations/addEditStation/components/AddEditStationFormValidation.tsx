@@ -152,10 +152,6 @@ const AddEditStationFormValidation = ({
                     />
                     <Box mt={1} width="50%" pr={1}>
                         <FormControl fullWidth>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
                             <RadioGroup
                                 sx={{display: 'block'}}
                                 aria-labelledby="demo-radio-buttons-group-label"
@@ -231,7 +227,6 @@ const AddEditStationFormValidation = ({
                                                 label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
                                             />
                                         </Grid>
-<<<<<<< HEAD
 
                                         <Grid container item xs={12} pt={1}>
                                             <FormControl fullWidth>
@@ -272,150 +267,10 @@ const AddEditStationFormValidation = ({
                                     </>
                                 )}
                             </RadioGroup>
-=======
-                          <InputLabel size="small" id="newConnConcatLabel">
-                            {t('addEditStationPage.addFormValidation.fields.select')}
-                          </InputLabel>
-                          <Select
-                            fullWidth
-                            id="newConnConcat"
-                            name="newConnConcat"
-                            labelId='newConnConcatLabel'
-                            data-testid="newConnConcat"
-                            label={'newConnConcat'}
-                            placeholder={'newConnConcat'}
-                            size="small"
-                            disabled={!newConn}
-                            defaultValue=""
-                            value={formik.values.newConnConcat}
-                            onChange={formik.handleChange}
-                            error={
-                              formik.touched.newConnConcat && Boolean(formik.errors.newConnConcat)
-                            }
-                            inputProps={{
-                              'data-testid': 'newConnConcat-test',
-                            }}
-                          >
-                            {Object.entries(forwarderAddresses).map(([key, value]) => (
-                              <MenuItem
-                                key={key}
-                                selected={
-                                  formik.values.pofService &&
-                                  value.includes(formik.values.pofService)
-                                    ? true
-                                    : false
-                                }
-                                value={value}
-                              >
-                                {`${key.toUpperCase()} - ${value}`}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          {formik.touched.newConnConcat && formik.errors.newConnConcat ? (
-                            <FormHelperText sx={{ color: '#bf3333' }}>
-                              {formik.touched.newConnConcat && formik.errors.newConnConcat}
-                            </FormHelperText>
-                          ) : null}
-                        </FormControl>
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      <Grid container item xs={12} >
-                        <FormControlLabel
-                          value="GPD"
-                          data-testid="radio-button-gdp"
-                          control={<Radio />}
-                          checked={gdp}
-                          label={t('addEditStationPage.addFormValidation.fields.GDPLabel')}
-                        />
-                      </Grid>
-
-                      <Grid container item xs={12} pt={1}>
-                        <FormControl fullWidth>
-                          <InputLabel size="small" id="gdpConcatLabel">
-                            {t('addEditStationPage.addFormValidation.fields.select')}
-                          </InputLabel>
-                          <Select
-                            fullWidth
-                            id="gdpConcat"
-                            name="gdpConcat"
-                            labelId='gdpConcatLabel'
-                            data-testid="gdpConcat-select"
-                            label={'gdpConcat'}
-                            placeholder={'gdpConcat'}
-                            size="small"
-                            defaultValue={''}
-                            disabled={!gdp}
-                            value={formik.values.gdpConcat}
-                            onChange={formik.handleChange}
-                            error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
-                            inputProps={{
-                              'data-testid': 'gdpConcat-test',
-                            }}
-                          >
-                            {Object.entries(gpdAddresses).map(([key, value]) => (
-                              <MenuItem key={key} selected={true} value={value}>
-                                {`${key.toUpperCase()} - ${value}`}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
-                            <FormHelperText sx={{ color: '#bf3333' }}>
-                              {formik.touched.gdpConcat && formik.errors.gdpConcat}
-                            </FormHelperText>
-                          ) : null}
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
-
-                                        <Grid container item xs={12} pt={1}>
-                                            <FormControl fullWidth>
-                                                <InputLabel size="small" id="gdpConcatLabel">
-                                                    {t('addEditStationPage.addFormValidation.fields.select')}
-                                                </InputLabel>
-                                                <Select
-                                                    fullWidth
-                                                    id="gdpConcat"
-                                                    name="gdpConcat"
-                                                    labelId='gdpConcatLabel'
-                                                    data-testid="gdpConcat-select"
-                                                    label={'gdpConcat'}
-                                                    placeholder={'gdpConcat'}
-                                                    size="small"
-                                                    defaultValue={''}
-                                                    disabled={!gdp}
-                                                    value={formik.values.gdpConcat}
-                                                    onChange={formik.handleChange}
-                                                    error={formik.touched.gdpConcat && Boolean(formik.errors.gdpConcat)}
-                                                    inputProps={{
-                                                        'data-testid': 'gdpConcat-test',
-                                                    }}
-                                                >
-                                                    {Object.entries(gpdAddresses).map(([key, value]) => (
-                                                        <MenuItem key={key} selected={true} value={value}>
-                                                            {`${key.toUpperCase()} - ${value}`}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                                {formik.touched.gdpConcat && formik.errors.gdpConcat ? (
-                                                    <FormHelperText sx={{color: '#bf3333'}}>
-                                                        {formik.touched.gdpConcat && formik.errors.gdpConcat}
-                                                    </FormHelperText>
-                                                ) : null}
-                                            </FormControl>
-                                        </Grid>
-                                    </>
-                                )}
-                            </RadioGroup>
->>>>>>> 3f32cfc3 (Formatting (#542))
                         </FormControl>
                     </Box>
                 </Box>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
                 <Box sx={inputGroupStyle}>
                     <AddEditStationFormSectionTitle
                         title={t('addEditStationPage.addFormValidation.sections.proxy')}
@@ -457,52 +312,6 @@ const AddEditStationFormValidation = ({
                         </Grid>
                     </Grid>
                 </Box>
-<<<<<<< HEAD
-=======
-        <Box sx={inputGroupStyle}>
-          <AddEditStationFormSectionTitle
-            title={t('addEditStationPage.addFormValidation.sections.proxy')}
-            icon={<BadgeIcon />}
-          />
-          <Grid container spacing={2} mt={1}>
-            <Grid container item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel size="small" id="proxyConcatLabel">
-                  {t('addEditStationPage.addFormValidation.fields.proxy')}
-                </InputLabel>
-                <Select
-                  fullWidth
-                  id="proxyConcat"
-                  labelId='proxyConcatLabel'
-                  name="proxyConcat"
-                  label={t('addEditStationPage.addFormValidation.fields.proxy')}
-                  placeholder={t('addEditStationPage.addFormValidation.fields.proxy')}
-                  size="small"
-                  defaultValue=""
-                  value={formik.values.proxyConcat || ''}
-                  onChange={formik.handleChange}
-                  error={formik.touched.proxyConcat && Boolean(formik.errors.proxyConcat)}
-                  inputProps={{
-                    'data-testid': 'proxy-proxyConcat-test',
-                  }}
-                >
-                  {Object.entries(proxyAddresses).map(([key, value]) => (
-                    <MenuItem
-                      key={key}
-                      selected={formik.values.proxyConcat.toString().includes(value)}
-                      value={value}
-                    >{`${value} (${t(
-                      'addEditStationPage.addFormValidation.fields.proxyValues.' + key
-                    )})`}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Box>
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
                 <Box sx={inputGroupStyle}>
                     <AddEditStationFormSectionTitle

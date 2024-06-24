@@ -1,14 +1,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable functional/no-let */
 import * as React from 'react';
-import {useCallback, useEffect, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import TextField, {TextFieldProps} from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import {styled} from '@mui/material/styles';
 import {debounce} from '@mui/material/utils';
-<<<<<<< HEAD
 import {useGridApiContext} from '@mui/x-data-grid';
 import {useGridRootProps} from '@mui/x-data-grid';
 import {useGridSelector} from '@mui/x-data-grid';
@@ -19,18 +17,6 @@ import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import ROUTES from '../../../routes';
-=======
-import {
-    GridFilterModel,
-    gridQuickFilterValuesSelector,
-    useGridApiContext,
-    useGridRootProps,
-    useGridSelector
-} from '@mui/x-data-grid';
-import {Box, InputAdornment} from '@mui/material';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
->>>>>>> 3f32cfc3 (Formatting (#542))
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
     name: 'MuiDataGrid',

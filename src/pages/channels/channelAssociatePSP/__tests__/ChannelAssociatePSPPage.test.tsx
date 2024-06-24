@@ -5,11 +5,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import {createMemoryHistory} from 'history';
 import {MemoryRouter, Route} from 'react-router-dom';
-<<<<<<< HEAD
 import {createStore, store} from '../../../../redux/store';
-=======
-import {createStore} from '../../../../redux/store';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {Provider} from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
 import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';

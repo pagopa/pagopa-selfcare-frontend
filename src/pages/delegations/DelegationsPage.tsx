@@ -1,17 +1,10 @@
 import {useState} from 'react';
-<<<<<<< HEAD
 import {Alert, Button, Grid, Stack, useTheme} from '@mui/material';
-=======
-import {Alert, Stack, useTheme} from '@mui/material';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {Box} from '@mui/system';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {useTranslation} from 'react-i18next';
 import {ButtonNaked} from '@pagopa/mui-italia';
-<<<<<<< HEAD
 import DownloadIcon from '@mui/icons-material/Download';
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 import TableSearchBar from '../../components/Table/TableSearchBar';
 import {formatDateToDDMMYYYY} from '../../utils/common-utils';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';

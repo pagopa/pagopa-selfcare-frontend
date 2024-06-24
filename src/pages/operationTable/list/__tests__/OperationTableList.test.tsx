@@ -3,18 +3,11 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {Provider} from 'react-redux';
-<<<<<<< HEAD
 import {MemoryRouter, Route, Router} from 'react-router-dom';
 import {createStore, store} from '../../../../redux/store';
 import {createMemoryHistory} from 'history';
 import OperationTableList from '../OperationTableList';
 import ROUTES from '../../../../routes';
-=======
-import {Router} from 'react-router-dom';
-import {createStore} from '../../../../redux/store';
-import {createMemoryHistory} from 'history';
-import OperationTableList from '../OperationTableList';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {operationTableList} from '../../../../services/__mocks__/operationTable';
 
 beforeEach(() => {

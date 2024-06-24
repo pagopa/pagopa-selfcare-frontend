@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {Box, Breadcrumbs, Grid, Paper, Stack, Typography} from '@mui/material';
-=======
-import {Box, Breadcrumbs, Stack, Typography} from '@mui/material';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory} from 'react-router';

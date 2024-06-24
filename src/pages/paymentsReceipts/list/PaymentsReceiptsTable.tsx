@@ -3,25 +3,17 @@ import {Box} from '@mui/system';
 import {GridColDef} from '@mui/x-data-grid';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useTranslation} from 'react-i18next';
-<<<<<<< HEAD
 import {useState, useEffect, ChangeEvent} from 'react';
-=======
-import {ChangeEvent, useEffect, useState} from 'react';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {Pagination} from '@mui/material';
 import {CustomDataGrid} from '../../../components/Table/TableDataGrid';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {LOADING_TASK_PAYMENTS_RECEIPTS} from '../../../utils/constants';
 import TableEmptyState from '../../../components/Table/TableEmptyState';
-<<<<<<< HEAD
 import {
     getPaymentReceiptDetail,
     getPaymentsReceipts,
 } from '../../../services/paymentsReceiptsService';
-=======
-import {getPaymentReceiptDetail, getPaymentsReceipts,} from '../../../services/paymentsReceiptsService';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {PaymentsResult} from '../../../api/generated/portal/PaymentsResult';
 import {buildColumnDefs} from './PaymentsReceiptsTableColumns';
 

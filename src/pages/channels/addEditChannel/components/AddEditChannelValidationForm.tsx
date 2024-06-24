@@ -5,10 +5,7 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-<<<<<<< HEAD
     FormHelperText,
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
     Grid,
     InputLabel,
     MenuItem,
@@ -20,7 +17,6 @@ import {
 import {theme} from '@pagopa/mui-italia';
 import {FormikProps} from 'formik';
 import {Badge as BadgeIcon, MenuBook as MenuBookIcon} from '@mui/icons-material';
-<<<<<<< HEAD
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import {ChannelOnCreation} from '../../../../model/Channel';
@@ -29,13 +25,6 @@ import {
     ChannelDetailsResource,
     ProtocolEnum,
 } from '../../../../api/generated/portal/ChannelDetailsResource';
-=======
-import {Dispatch, SetStateAction, useEffect} from 'react';
-import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
-import {ChannelOnCreation} from '../../../../model/Channel';
-import {ENV} from '../../../../utils/env';
-import {ChannelDetailsResource, ProtocolEnum,} from '../../../../api/generated/portal/ChannelDetailsResource';
->>>>>>> 3f32cfc3 (Formatting (#542))
 
 type Props = {
     formik: FormikProps<ChannelOnCreation>;

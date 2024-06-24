@@ -6,11 +6,7 @@ import Paper from '@mui/material/Paper';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-<<<<<<< HEAD
 import {useTranslation, Trans} from 'react-i18next';
-=======
-import {Trans, useTranslation} from 'react-i18next';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {Box} from '@mui/system';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useFormik} from 'formik';
@@ -19,22 +15,15 @@ import {theme} from '@pagopa/mui-italia';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_PSP_AVAILABLE} from '../../../utils/constants';
 import {addCurrentPSP} from '../../../utils/channel-utils';
-<<<<<<< HEAD
 import {
     associatePSPtoChannel,
     getChannelDetail,
 } from '../../../services/channelService';
-=======
-import {associatePSPtoChannel, getChannelDetail,} from '../../../services/channelService';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {getBrokerDelegation} from '../../../services/institutionService';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
-<<<<<<< HEAD
 import {Party} from '../../../model/Party';
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {Delegation} from '../../../api/generated/portal/Delegation';
 import {getBrokerAndPspDetails} from '../../../services/nodeService';
 import PSPSelectionSearch from './PSPSelectionSearch';

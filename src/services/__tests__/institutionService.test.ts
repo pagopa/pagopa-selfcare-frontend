@@ -1,12 +1,8 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
-<<<<<<< HEAD
 import {
     mockedDelegatedPSP,
     mockedInstitutionDetailResource,
 } from '../__mocks__/institutionsService';
-=======
-import {mockedDelegatedPSP, mockedInstitutionDetailResource,} from '../__mocks__/institutionsService';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {getBrokerDelegation, getInstitutions} from '../institutionService';
 
 describe('InstitutionService test mocked', () => {

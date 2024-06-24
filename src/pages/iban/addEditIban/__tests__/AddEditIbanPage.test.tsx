@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import {render, waitFor} from '@testing-library/react';
-=======
-import {render} from '@testing-library/react';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import AddEditIbanPage from '../AddEditIbanPage';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
@@ -11,10 +7,7 @@ import {Provider} from 'react-redux';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
-<<<<<<< HEAD
 import AddEditIbanForm from '../AddEditIbanForm';
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
 let getIbanListSpy: jest.SpyInstance;
 

@@ -20,10 +20,6 @@ const CommonRadioGroup = ({labelTrue, labelFalse, value, setIntermediaryAvailabl
     const {t} = useTranslation();
     const [showAlert, setShowAlert] = useState<boolean>(value);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const radioNewValue = (event.target as HTMLInputElement).value === "true";
         if (radioNewValue) {
@@ -31,18 +27,6 @@ const CommonRadioGroup = ({labelTrue, labelFalse, value, setIntermediaryAvailabl
         }
         setIntermediaryAvailableValue(radioNewValue);
     };
-<<<<<<< HEAD
-=======
-  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const radioNewValue = (event.target as HTMLInputElement).value === "true";
-    if (radioNewValue) {
-      setShowAlert(true);
-    }
-    setIntermediaryAvailableValue(radioNewValue);
-  };
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
     return (
         <>

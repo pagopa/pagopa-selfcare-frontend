@@ -1,21 +1,13 @@
 import React from 'react';
-<<<<<<< HEAD
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {Provider} from 'react-redux';
 import {MemoryRouter, Route, Router} from 'react-router-dom';
 import {createStore, store} from '../../../../redux/store';
-=======
-import {render} from '@testing-library/react';
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {Provider} from 'react-redux';
-import {Router} from 'react-router-dom';
-import {createStore} from '../../../../redux/store';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import {createMemoryHistory} from 'history';
 import OperationTableListPage from '../OperationTableListPage';
+import ROUTES from '../../../../routes';
 
 let getOperationTableListMocked;
 

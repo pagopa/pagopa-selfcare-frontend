@@ -10,19 +10,9 @@ import StationDetailPage from '../StationDetailPage';
 import {ecAdminSignedDirect} from '../../../../services/__mocks__/partyService';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import {ROLE} from '../../../../model/RolePermission';
 import * as StationService from '../../../../services/stationService';
 import {mockedFullStation} from '../../../../services/__mocks__/stationService';
-=======
-import { ROLE } from '../../../../model/RolePermission';
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
-import {ROLE} from '../../../../model/RolePermission';
-import * as StationService from '../../../../services/stationService';
-import {mockedFullStation} from '../../../../services/__mocks__/stationService';
->>>>>>> 3f32cfc3 (Formatting (#542))
 
 jest.mock('../../../components/commonFunctions');
 jest.mock('../../../../hooks/useUserRole');
@@ -62,124 +52,6 @@ const renderApp = (
 
 describe('<StationDetailPage />', () => {
     const stationId = '81001870922_06';
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-    test('render component StationDetailPage', async () => {
-        spyOnGetStationDetail.mockReturnValueOnce(Promise.resolve(mockedFullStation));
-        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-            userRole: ROLE.EC_ADMIN,
-            userIsPspAdmin: false,
-            userIsEcAdmin: true,
-            userIsPspDirectAdmin: false,
-            userIsPagopaOperator: false,
-            userIsAdmin: false,
-        });
-        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
-            orgInfo: {
-                isSigned: true,
-                types: {
-                    isEc: true,
-                    isPsp: false,
-                    isEcBroker: true,
-                    isPspBroker: false,
-                },
-            },
-            orgIsBrokerSigned: true,
-            orgIsEcBrokerSigned: false,
-            orgIsEcDirect: true,
-            orgIsEcSigned: true,
-            orgIsPspBrokerSigned: false,
-            orgIsPspDirect: false,
-            orgIsPspSigned: false,
-        });
-        const {store} = renderApp(stationId);
-
-        await waitFor(() =>
-            store.dispatch({
-                type: 'parties/setPartySelected',
-                payload: ecAdminSignedDirect,
-            })
-        );
-
-        expect(screen.getByText('stationDetailPage.associates')).toBeInTheDocument();
-
-        await waitFor(() => {
-            expect(spyOnGetStationDetail).toBeCalled();
-        });
-=======
-  test('render component StationDetailPage', async () => {
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-      userRole: ROLE.EC_ADMIN,
-      userIsPspAdmin: false,
-      userIsEcAdmin: true,
-      userIsPspDirectAdmin: false,
-      userIsPagopaOperator: false,
-      userIsAdmin: false,
-    });
-    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
-      orgInfo: {
-        isSigned: true,
-        types: {
-          isEc: true,
-          isPsp: false,
-          isEcBroker: true,
-          isPspBroker: false,
-        },
-      },
-      orgIsBrokerSigned: true,
-      orgIsEcBrokerSigned: false,
-      orgIsEcDirect: true,
-      orgIsEcSigned: true,
-      orgIsPspBrokerSigned: false,
-      orgIsPspDirect: false,
-      orgIsPspSigned: false,
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-    });
-
-    test('Test Render station detail with role operator', async () => {
-        spyOnGetStationDetail.mockRejectedValueOnce(Promise.resolve(mockedFullStation));
-        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-            userRole: ROLE.PAGOPA_OPERATOR,
-            userIsPspAdmin: false,
-            userIsEcAdmin: false,
-            userIsPspDirectAdmin: false,
-            userIsPagopaOperator: true,
-            userIsAdmin: true,
-        });
-        const {store} = renderApp(stationId);
-
-<<<<<<< HEAD
-        await waitFor(() =>
-            store.dispatch({
-                type: 'parties/setPartySelected',
-                payload: ecAdminSignedDirect,
-            })
-        );
-=======
-    expect(screen.getByText('stationDetailPage.associates')).toBeInTheDocument();
-    expect(screen.queryByTestId('station-detail-op')).not.toBeInTheDocument();
-  });
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-
-        await waitFor(() => {
-            expect(spyOnGetStationDetail).toBeCalled();
-        });
-    });
-<<<<<<< HEAD
-=======
-    const { store } = renderApp(stationId);
-
-    await waitFor(() =>
-      store.dispatch({
-        type: 'parties/setPartySelected',
-        payload: ecAdminSignedDirect,
-      })
-    );
-    expect(screen.getByTestId('station-detail-op')).toBeInTheDocument();
-  });
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
 
     test('render component StationDetailPage', async () => {
         spyOnGetStationDetail.mockReturnValueOnce(Promise.resolve(mockedFullStation));
@@ -248,5 +120,4 @@ describe('<StationDetailPage />', () => {
             expect(spyOnGetStationDetail).toBeCalled();
         });
     });
->>>>>>> 3f32cfc3 (Formatting (#542))
 });

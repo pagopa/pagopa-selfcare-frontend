@@ -1,5 +1,4 @@
 import {ArrowBack, ManageAccounts} from '@mui/icons-material';
-<<<<<<< HEAD
 import {Grid, Stack, Breadcrumbs, Typography, Paper, Chip, Divider} from '@mui/material';
 import {Box} from '@mui/system';
 import {ButtonNaked} from '@pagopa/mui-italia';
@@ -7,14 +6,6 @@ import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {Link, generatePath} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import {useState} from 'react';
-=======
-import {Breadcrumbs, Chip, Divider, Grid, Paper, Stack, Typography} from '@mui/material';
-import {Box} from '@mui/system';
-import {ButtonNaked} from '@pagopa/mui-italia';
-import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {generatePath, Link} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
->>>>>>> 3f32cfc3 (Formatting (#542))
 import ROUTES from '../../../../routes';
 import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDetailsResource';
 import {WrapperStatusEnum} from '../../../../api/generated/portal/WrapperChannelDetailsResource';

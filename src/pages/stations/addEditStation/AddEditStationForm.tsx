@@ -82,18 +82,8 @@ import {TestStationTypeEnum} from '../../../api/generated/portal/StationTestDto'
 import AddEditStationFormValidation from './components/AddEditStationFormValidation';
 
 type Props = {
-<<<<<<< HEAD
-<<<<<<< HEAD
     stationDetail?: StationDetailResource;
     formAction: string;
-=======
-  stationDetail?: StationDetailResource;
-  formAction: string;
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
-    stationDetail?: StationDetailResource;
-    formAction: string;
->>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 const ConnectionRadioLabel = ({type}: { type: ConnectionType }) => {
@@ -116,10 +106,6 @@ const getDefaultConnectionType = (stationDetail?: StationDetailResource) => {
 };
 
 const componentPath = 'addEditStationPage.addForm';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 const AddEditStationForm = ({stationDetail, formAction}: Props) => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -139,30 +125,6 @@ const AddEditStationForm = ({stationDetail, formAction}: Props) => {
     const [gdp, setGDP] = useState<boolean>(false);
     const [testRtResult, setTestRtResult] = useState<TestStationResource>();
     const [validatingRt, setValidatingRt] = useState<boolean>(false);
-<<<<<<< HEAD
-=======
-const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
-  const { t } = useTranslation();
-  const history = useHistory();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const addError = useErrorDispatcher();
-  const setLoading = useLoading(LOADING_TASK_STATION_ADD_EDIT);
-  const setLoadingGeneration = useLoading(LOADING_TASK_GENERATION_STATION_CODE);
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const [stationCodeGenerated, setStationCodeGenerated] = useState('');
-  const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-  const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
-  const { userIsPagopaOperator } = useUserRole();
-  const env: string = ENV.ENV;
-  const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
-  const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
-  const [newConn, setNewConn] = useState<boolean>(false);
-  const [gdp, setGDP] = useState<boolean>(false);
-  const [testRtResult, setTestRtResult] = useState<TestStationResource>();
-  const [validatingRt, setValidatingRt] = useState<boolean>(false);
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
     const [testRedirectResult, setTestRedirectResult] = useState<TestStationResource>();
     const [validatingRedirect, setValidatingRedirect] = useState<boolean>(false);
@@ -173,7 +135,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     const [connectionType, setConnectionType] = useState<ConnectionType>(
         getDefaultConnectionType(stationDetail)
     );
-<<<<<<< HEAD
 
     const isTesting = useFlagValue('test-stations');
 
@@ -297,131 +258,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
         mb: 3,
     };
 
-=======
-
-    const isTesting = useFlagValue('test-stations');
-
-    const emptyStationData = (detail?: StationDetailResource) => ({
-        brokerCode: brokerCodeCleaner,
-        ip: '',
-        password: '',
-        port: undefined,
-        primitiveVersion: 2,
-        protocol: undefined,
-        proxyConcat: '',
-        proxyHost: '',
-        proxyPort: undefined,
-        proxyEnabled: false,
-        redirectConcat: '',
-        redirectIp: '',
-        redirectPath: '',
-        redirectPort: undefined,
-        redirectProtocol: RedirectProtocolEnum.HTTPS,
-        redirectQueryString: '',
-        service: '',
-        stationCode: detail?.stationCode ?? stationCodeGenerated,
-        status: StatusEnum.TO_CHECK,
-        targetConcat: '',
-        targetHost: '',
-        targetPath: '',
-        targetPort: undefined,
-        targetPofConcat: '',
-        timeoutA: 7,
-        timeoutB: 30,
-        timeoutC: 120,
-        version: 0,
-        newConnConcat: '',
-        gdpConcat: '',
-        threadNumber: 1,
-    });
-    const mapStationDetailToCreation = (detail: StationDetailResource) => ({
-        brokerCode: detail.brokerCode ?? '',
-        enabled: detail.enabled,
-        ip: detail.ip ?? '',
-        password: detail.password ?? '',
-        port: detail.port ?? 443,
-        protocol: detail.protocol ?? undefined,
-        proxyConcat: `${detail.proxyHost ?? ''}${
-            detail.proxyPort ? ':'.concat(detail.proxyPort.toString()) : ''
-        }`,
-        proxyHost: detail.proxyHost ?? '',
-        proxyPort: detail.proxyPort ?? undefined,
-        proxyEnabled: detail.proxyEnabled ?? false,
-
-        service: detail.service ?? '',
-        stationCode:
-            formAction === StationFormAction.Duplicate ? stationCodeGenerated : detail.stationCode ?? '',
-        status: detail?.wrapperStatus,
-
-        timeoutA: detail.timeoutA ?? 7,
-        timeoutB: detail.timeoutB ?? 30,
-        timeoutC: detail.timeoutC ?? 120,
-        version: detail.version ?? undefined,
-        newConnConcat:
-            Object.entries(forwarderAddresses)
-                .map(([key, value]) => value)
-                .find((d) =>
-                    detail.pofService && detail.pofService !== '' && detail.pofService !== '/'
-                        ? d.includes(detail.pofService)
-                        : false
-                ) ?? '',
-        gdpConcat:
-            Object.entries(gpdAddresses)
-                .map(([key, value]) => value)
-                .find((gpd) =>
-                    detail.pofService && detail.pofService !== '' && detail.pofService !== '/'
-                        ? gpd.includes(detail.pofService)
-                        : false
-                ) ?? '',
-        threadNumber: 1,
-
-        // fields for redirect endpoint
-        redirectProtocol: detail.redirectProtocol ?? '',
-        redirectIp: detail.redirectIp ?? '',
-        redirectPort: detail.redirectPort ?? undefined,
-        redirectPath: detail.redirectPath ?? '',
-        redirectQueryString: detail.redirectQueryString ?? '',
-        redirectConcat:
-            detail.redirectPath && detail.redirectProtocol
-                ? `${detail.redirectProtocol.toLowerCase()}://${detail.redirectIp}${
-                    detail.redirectPort ? ':'.concat(detail.redirectPort.toString()) : ''
-                }${detail.redirectPath ?? ''}${
-                    detail.redirectQueryString ? '?' + String(detail.redirectQueryString) : ''
-                }`
-                : '',
-
-        // fields for RT endpoint
-        targetHost: detail.targetHost ?? '',
-        targetPath: detail.targetPath ?? '',
-        targetPort: detail.targetPort ?? '',
-        targetConcat: detail.targetHost
-            ? `${detail.targetHost ?? ''}${
-                detail.targetPort ? ':'.concat(detail.targetPort.toString()) : ''
-            }${detail.targetPath ?? ''}`
-            : '',
-
-        targetHostPof: detail.targetHostPof,
-        targetPathPof: detail.targetPathPof,
-        targetPortPof: detail.targetPortPof,
-        primitiveVersion: detail.primitiveVersion ?? 2,
-        targetPofConcat: detail.targetHostPof
-            ? `${detail.targetHostPof ?? ''}${
-                detail.targetPortPof ? ':'.concat(detail.targetPortPof.toString()) : ''
-            }${detail.targetPathPof ?? ''}`
-            : '',
-    });
-    const initialFormData = (detail?: StationDetailResource) =>
-        detail ? mapStationDetailToCreation(detail) : emptyStationData();
-
-    const inputGroupStyle = {
-        borderRadius: 1,
-        border: 1,
-        borderColor: theme.palette.divider,
-        p: 3,
-        mb: 3,
-    };
-
->>>>>>> 3f32cfc3 (Formatting (#542))
     const validatePrimitiveVersion = (primitiveVersion: number) => {
         if (primitiveVersion) {
             return !(primitiveVersion > 0 && primitiveVersion <= 2);
@@ -739,10 +575,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
         }
     }, [stationCodeCleaner]);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
     useEffect(() => {
         if (stationDetail) {
             setConnectionType(getDefaultConnectionType(stationDetail));
@@ -755,23 +587,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             }
         }
     }, [stationDetail]);
-<<<<<<< HEAD
-=======
-  useEffect(() => {
-    if (stationDetail) {
-      setConnectionType(getDefaultConnectionType(stationDetail));
-      const category = getStationCategoryFromDetail(stationDetail, env);
-      if (category === StationCategory.AsyncGPD) {
-        setGDP(true);
-      }
-      if (category === StationCategory.SyncNewConn) {
-        setNewConn(true);
-      }
-    }
-  }, [stationDetail]);
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
->>>>>>> 3f32cfc3 (Formatting (#542))
 
     useEffect(() => {
         setTestRtResult(undefined);
@@ -999,7 +814,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                         </FormControl>
                     </Box>
                 </Box>
-<<<<<<< HEAD
 
                 <Box sx={inputGroupStyle}>
                     <AddEditStationFormSectionTitle
@@ -1299,307 +1113,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                 )}
             </Paper>
 
-=======
-
-                <Box sx={inputGroupStyle}>
-                    <AddEditStationFormSectionTitle
-                        title={t(`${componentPath}.sections.registry`)}
-                        icon={<BadgeIcon/>}
-                        isRequired
-                    />
-                    <Grid container spacing={2} mt={1}>
-                        <Grid container item xs={6}>
-                            <TextField
-                                fullWidth
-                                id="stationCode"
-                                name="stationCode"
-                                label={t(`${componentPath}.fields.stationCode`)}
-                                placeholder={t(`${componentPath}.fields.stationCode`)}
-                                size="small"
-                                value={formik.values.stationCode}
-                                disabled
-                                onChange={(e) => formik.handleChange(e)}
-                                error={formik.touched.stationCode && Boolean(formik.errors.stationCode)}
-                                helperText={formik.touched.stationCode && formik.errors.stationCode}
-                                inputProps={{
-                                    'data-testid': 'station-code-test',
-                                }}
-                                required
-                            />
-                        </Grid>
-                        {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
-                            <Grid container item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    id="brokerCode"
-                                    name="brokerCode"
-                                    label={t(`${componentPath}.fields.brokerCode`)}
-                                    placeholder={t(`${componentPath}.fields.brokerCode`)}
-                                    size="small"
-                                    value={formik.values.brokerCode}
-                                    disabled
-                                    onChange={(e) => formik.handleChange(e)}
-                                    error={formik.touched.brokerCode && Boolean(formik.errors.brokerCode)}
-                                    helperText={formik.touched.brokerCode && formik.errors.brokerCode}
-                                    inputProps={{
-                                        'data-testid': 'broker-code-test',
-                                    }}
-                                    required
-                                />
-                            </Grid>
-                        ) : null}
-                    </Grid>
-                </Box>
-
-                {connectionType === ConnectionType.SYNC && (
-                    <>
-                        <Box sx={inputGroupStyle} data-testid="model-1-box">
-                            <AddEditStationFormSectionTitle
-                                title={t(`${componentPath}.sections.modello1`)}
-                                icon={<MenuBook/>}
-                            />
-                            <Grid container item spacing={2} mt={1} justifyContent={'center'}>
-                                <Grid container item xs={10}>
-                                    <TextField
-                                        fullWidth
-                                        id="targetConcat"
-                                        name="targetConcat"
-                                        label={t(`${componentPath}.fields.endpointRTConcat`)}
-                                        placeholder={t(`${componentPath}.fields.endpointRTConcat`)}
-                                        size="small"
-                                        value={formik.values.targetConcat}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={
-                                            (formik.touched.targetConcat || testRtResult) &&
-                                            Boolean(formik.errors.targetConcat)
-                                        }
-                                        helperText={
-                                            (formik.touched.targetConcat || testRtResult) && formik.errors.targetConcat
-                                        }
-                                        inputProps={{
-                                            'data-testid': 'targetConcat-test',
-                                        }}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {testRtResult !== undefined &&
-                                                    testRtResult.testResult === TestResultEnum.SUCCESS ? (
-                                                        <CheckIcon sx={{color: 'success.main'}}/>
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid container item xs={2}>
-                                    {validatingRt ? (
-                                        <CircularProgressIcon sx={{color: 'primary.main'}}/>
-                                    ) : (
-                                        isTesting && (
-                                            <ButtonNaked
-                                                size="large"
-                                                component="button"
-                                                disabled={
-                                                    (testRtResult !== undefined &&
-                                                        testRtResult.testResult === TestResultEnum.SUCCESS) ||
-                                                    formik.values.targetConcat === undefined ||
-                                                    formik.values.targetConcat === ''
-                                                }
-                                                onClick={() => validateRtEndpoint()}
-                                                sx={{color: 'primary.main'}}
-                                                weight="default"
-                                                data-testid="test-rt-endpoint-test"
-                                                endIcon={<NorthEastIcon/>}
-                                            >
-                                                {t(`${componentPath}.testStation`)}
-                                            </ButtonNaked>
-                                        )
-                                    )}
-                                </Grid>
-                            </Grid>
-                            <Grid container item spacing={2} mt={1} justifyContent={'center'}>
-                                <Grid container item xs={10}>
-                                    <TextField
-                                        fullWidth
-                                        id="redirectConcat"
-                                        name="redirectConcat"
-                                        label={t(`${componentPath}.fields.endpointRedirectConcat`)}
-                                        placeholder={t(`${componentPath}.fields.endpointRedirectConcat`)}
-                                        size="small"
-                                        value={formik.values.redirectConcat}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={
-                                            (formik.touched.redirectConcat || testRedirectResult) &&
-                                            Boolean(formik.errors.redirectConcat)
-                                        }
-                                        helperText={
-                                            (formik.touched.redirectConcat || testRedirectResult) &&
-                                            formik.errors.redirectConcat
-                                        }
-                                        inputProps={{
-                                            'data-testid': 'redirectConcat-test',
-                                        }}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {testRedirectResult !== undefined &&
-                                                    testRedirectResult.testResult === TestResultEnum.SUCCESS ? (
-                                                        <CheckIcon sx={{color: 'success.main'}}/>
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid container item xs={2}>
-                                    {validatingRedirect ? (
-                                        <CircularProgressIcon sx={{color: 'primary.main'}}/>
-                                    ) : (
-                                        isTesting && (
-                                            <ButtonNaked
-                                                size="large"
-                                                component="button"
-                                                hidden={!isTesting}
-                                                disabled={
-                                                    (testRedirectResult !== undefined &&
-                                                        testRedirectResult.testResult === TestResultEnum.SUCCESS) ||
-                                                    formik.values.redirectConcat === undefined ||
-                                                    formik.values.redirectConcat === ''
-                                                }
-                                                onClick={() => validateRedirectEndpoint()}
-                                                sx={{color: 'primary.main'}}
-                                                weight="default"
-                                                data-testid="test-redirect-endpoint-test"
-                                                endIcon={<NorthEastIcon/>}
-                                            >
-                                                {t(`${componentPath}.testStation`)}
-                                            </ButtonNaked>
-                                        )
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </Box>
-
-                        <Box sx={inputGroupStyle} data-testid="model-unique-box">
-                            <AddEditStationFormSectionTitle
-                                title={t(`${componentPath}.sections.modelloUnico`)}
-                                icon={<MenuBook/>}
-                            />
-                            <Grid container spacing={2} mt={1}>
-                                <Grid container item xs={10}>
-                                    <TextField
-                                        fullWidth
-                                        id="targetPofConcat"
-                                        name="targetPofConcat"
-                                        label={t(`${componentPath}.fields.endpointMUConcat`)}
-                                        placeholder={t(`${componentPath}.fields.endpointMUConcat`)}
-                                        size="small"
-                                        value={formik.values.targetPofConcat}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={
-                                            (formik.touched.targetPofConcat || testPofResult) &&
-                                            Boolean(formik.errors.targetPofConcat)
-                                        }
-                                        helperText={
-                                            (formik.touched.targetPofConcat || testPofResult) &&
-                                            formik.errors.targetPofConcat
-                                        }
-                                        inputProps={{
-                                            'data-testid': 'targetPofConcat-test',
-                                        }}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    {testPofResult !== undefined &&
-                                                        testPofResult.testResult === TestResultEnum.SUCCESS && (
-                                                            <CheckIcon sx={{color: 'success.main'}}/>
-                                                        )}
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid container item xs={2}>
-                                    {validatingPof ? (
-                                        <CircularProgressIcon sx={{color: 'primary.main'}}/>
-                                    ) : (
-                                        isTesting && (
-                                            <ButtonNaked
-                                                size="large"
-                                                component="button"
-                                                disabled={
-                                                    (testPofResult !== undefined &&
-                                                        testPofResult.testResult === TestResultEnum.SUCCESS) ||
-                                                    formik.values.targetPofConcat === undefined ||
-                                                    formik.values.targetPofConcat === ''
-                                                }
-                                                onClick={() => validatePofEndpoint()}
-                                                sx={{color: 'primary.main'}}
-                                                weight="default"
-                                                data-testid="test-pof-endpoint-test"
-                                                endIcon={<NorthEastIcon/>}
-                                            >
-                                                {t(`${componentPath}.testStation`)}
-                                            </ButtonNaked>
-                                        )
-                                    )}
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} mt={1}>
-                                <Grid container item xs={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel size="small" id="primitiveVersionLabel">
-                                            {t(`${componentPath}.fields.primitiveVersion`)}
-                                        </InputLabel>
-                                        <Select
-                                            fullWidth
-                                            type="number"
-                                            id="primitiveVersion"
-                                            name="primitiveVersion"
-                                            labelId='primitiveVersionLabel'
-                                            label={t(`${componentPath}.fields.primitiveVersion`)}
-                                            placeholder={t(`${componentPath}.fields.primitiveVersion`)}
-                                            size="small"
-                                            value={
-                                                formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion
-                                            }
-                                            onChange={formik.handleChange}
-                                            error={
-                                                formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)
-                                            }
-                                            inputProps={{
-                                                'data-testid': 'primitive-version-test',
-                                            }}
-                                        >
-                                            {Object.entries([1, 2]).map(([key, value]) => (
-                                                <MenuItem
-                                                    key={key}
-                                                    selected={
-                                                        formik.values.primitiveVersion &&
-                                                        value === formik.values.primitiveVersion
-                                                    }
-                                                    value={value}
-                                                >
-                                                    {`${value}`}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </>
-                )}
-            </Paper>
-
->>>>>>> 3f32cfc3 (Formatting (#542))
             {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
                 <AddEditStationFormValidation
                     formik={formik}
@@ -1626,8 +1139,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                                     : ROUTES.STATIONS
                             )
                         }
-<<<<<<< HEAD
-<<<<<<< HEAD
                         data-testid="cancel-button-test"
                     >
                         {t('general.back')}
@@ -1680,199 +1191,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             />
         </>
     );
-=======
-                        onClick={() => validatePofEndpoint()}
-                        sx={{ color: 'primary.main' }}
-                        weight="default"
-                        data-testid="test-pof-endpoint-test"
-                        endIcon={<NorthEastIcon />}
-                      >
-                        {t(`${componentPath}.testStation`)}
-                      </ButtonNaked>
-                    )
-                  )}
-                </Grid>
-              </Grid>
-              <Grid container spacing={2} mt={1}>
-                <Grid container item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel size="small" id="primitiveVersionLabel">
-                      {t(`${componentPath}.fields.primitiveVersion`)}
-                    </InputLabel>
-                    <Select
-                      fullWidth
-                      type="number"
-                      id="primitiveVersion"
-                      name="primitiveVersion"
-                      labelId='primitiveVersionLabel'
-                      label={t(`${componentPath}.fields.primitiveVersion`)}
-                      placeholder={t(`${componentPath}.fields.primitiveVersion`)}
-                      size="small"
-                      value={
-                        formik.values.primitiveVersion === 0 ? '' : formik.values.primitiveVersion
-                      }
-                      onChange={formik.handleChange}
-                      error={
-                        formik.touched.primitiveVersion && Boolean(formik.errors.primitiveVersion)
-                      }
-                      inputProps={{
-                        'data-testid': 'primitive-version-test',
-                      }}
-                    >
-                      {Object.entries([1, 2]).map(([key, value]) => (
-                        <MenuItem
-                          key={key}
-                          selected={
-                            formik.values.primitiveVersion &&
-                            value === formik.values.primitiveVersion
-                          }
-                          value={value}
-                        >
-                          {`${value}`}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Box>
-          </>
-        )}
-      </Paper>
-
-      {userIsPagopaOperator && formAction !== StationFormAction.Create ? (
-        <AddEditStationFormValidation
-          formik={formik}
-          handleChangeNumberOnly={handleChangeNumberOnly}
-          inputGroupStyle={inputGroupStyle}
-          newConn={newConn}
-          setNewConn={setNewConn}
-          gdp={gdp}
-          setGDP={setGDP}
-          connectionType={connectionType}
-        />
-      ) : (
-        <></>
-      )}
-      <Stack direction="row" justifyContent="space-between" mt={5}>
-        <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() =>
-              history.push(
-                formAction === StationFormAction.Edit
-                  ? generatePath(ROUTES.STATION_DETAIL, { stationId: stationDetail?.stationCode })
-                  : ROUTES.STATIONS
-              )
-            }
-            data-testid="cancel-button-test"
-          >
-            {t('general.back')}
-          </Button>
-        </Stack>
-        <Stack display="flex" justifyContent="flex-end">
-          <Button
-            onClick={() => {
-              openConfirmModal();
-              formik.handleSubmit();
-            }}
-            disabled={!enableSubmit(formik.values)}
-            color="primary"
-            variant="contained"
-            type="submit"
-            data-testid="confirm-button-test"
-          >
-            {t('general.confirm')}
-          </Button>
-        </Stack>
-      </Stack>
-      <ConfirmModal
-        title={
-          userIsPagopaOperator
-            ? t(`${componentPath}.confirmModal.titleOperator`)
-            : t(`${componentPath}.confirmModal.title`)
-        }
-        message={
-          userIsPagopaOperator ? (
-            <Trans i18nKey={`${componentPath}.confirmModal.messageStationOperator`}>
-              L’ente riceverà una notifica di conferma attivazione della stazione.
-              <br />
-            </Trans>
-          ) : (
-            <Trans i18nKey={`${componentPath}.confirmModal.messageStation`}>
-              Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
-              approvare. Riceverai una notifica a revisione completata.
-              <br />
-            </Trans>
-          )
-        }
-        openConfirmModal={showConfirmModal}
-        onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
-        onCloseLabel={t('general.turnBack')}
-        handleCloseConfirmModal={() => setShowConfirmModal(false)}
-        handleConfrimSubmit={async () => {
-          await submit(formik.values);
-          setShowConfirmModal(false);
-        }}
-      />
-    </>
-  );
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
-=======
-                        data-testid="cancel-button-test"
-                    >
-                        {t('general.back')}
-                    </Button>
-                </Stack>
-                <Stack display="flex" justifyContent="flex-end">
-                    <Button
-                        onClick={() => {
-                            openConfirmModal();
-                            formik.handleSubmit();
-                        }}
-                        disabled={!enableSubmit(formik.values)}
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                        data-testid="confirm-button-test"
-                    >
-                        {t('general.confirm')}
-                    </Button>
-                </Stack>
-            </Stack>
-            <ConfirmModal
-                title={
-                    userIsPagopaOperator
-                        ? t(`${componentPath}.confirmModal.titleOperator`)
-                        : t(`${componentPath}.confirmModal.title`)
-                }
-                message={
-                    userIsPagopaOperator ? (
-                        <Trans i18nKey={`${componentPath}.confirmModal.messageStationOperator`}>
-                            L’ente riceverà una notifica di conferma attivazione della stazione.
-                            <br/>
-                        </Trans>
-                    ) : (
-                        <Trans i18nKey={`${componentPath}.confirmModal.messageStation`}>
-                            Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di
-                            approvare. Riceverai una notifica a revisione completata.
-                            <br/>
-                        </Trans>
-                    )
-                }
-                openConfirmModal={showConfirmModal}
-                onConfirmLabel={userIsPagopaOperator ? t('general.confirm') : t('general.send')}
-                onCloseLabel={t('general.turnBack')}
-                handleCloseConfirmModal={() => setShowConfirmModal(false)}
-                handleConfrimSubmit={async () => {
-                    await submit(formik.values);
-                    setShowConfirmModal(false);
-                }}
-            />
-        </>
-    );
->>>>>>> 3f32cfc3 (Formatting (#542))
 };
 
 export default AddEditStationForm;

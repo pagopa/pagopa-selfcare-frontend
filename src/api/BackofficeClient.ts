@@ -6,10 +6,7 @@ import {
   BundleCISubscriptionsMethodParams,
   BundleCISubscriptionsBodyRequest,
   BundleCiSubscriptionsDetailMethodParams,
-<<<<<<< HEAD
   SubscriptionStateType,
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../model/CommissionBundle';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
@@ -814,11 +811,7 @@ export const BackofficeApi = {
       'station-code': stationCode,
       ciTaxCode,
       body: {
-<<<<<<< HEAD
         note,
-=======
-        note
->>>>>>> 0e41e3e8 ([VAS-820] feat:  Operator's station detail page & request edit modal (#507))
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -1036,10 +1029,19 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  deletePSPBundle: async (pspTaxCode: string, bundleId: string): Promise<void> => {
+  deletePSPBundle: async (
+    pspTaxCode: string,
+    bundleId: string,
+    bundleName: string,
+    pspName: string,
+    bundleType: string
+  ): Promise<void> => {
     const result = await backofficeClient.deletePSPBundle({
       'psp-tax-code': pspTaxCode,
       'id-bundle': bundleId,
+      bundleName,
+      pspName,
+      bundleType,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1350,30 +1352,21 @@ export const BackofficeApi = {
     idBundle,
     pspTaxCode,
     bundleOfferId,
-<<<<<<< HEAD
     ciTaxCode,
-    bundleName
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
+    bundleName,
   }: {
     idBundle: string;
     pspTaxCode: string;
     bundleOfferId: string;
-<<<<<<< HEAD
     ciTaxCode: string;
     bundleName: string;
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
   }): Promise<void> => {
     const result = await backofficeClient.deletePrivateBundleOffer({
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       'bundle-offer-id': bundleOfferId,
-<<<<<<< HEAD
       ciTaxCode,
-      bundleName
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -1472,7 +1465,7 @@ export const BackofficeApi = {
     ciTaxCode,
     idBundleOffer,
     pspTaxCode,
-    bundleName
+    bundleName,
   }: {
     ciTaxCode: string;
     idBundleOffer: string;
@@ -1483,8 +1476,8 @@ export const BackofficeApi = {
       'ci-tax-code': ciTaxCode,
       'id-bundle-offer': idBundleOffer,
       pspTaxCode,
-      bundleName
+      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
-  }
+  },
 };

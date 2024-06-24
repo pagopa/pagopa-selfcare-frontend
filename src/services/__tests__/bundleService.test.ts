@@ -31,12 +31,9 @@ import {
   rejectPublicBundleSubscription,
   updatePSPBundle,
   deletePrivateBundleOffer,
-<<<<<<< HEAD
   createCIBundleOffers,
   acceptPrivateBundleOffer,
   rejectPrivateBundleOffer,
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../bundleService';
 
 describe('BundleService test mocked', () => {
@@ -137,7 +134,6 @@ describe('BundleService test mocked', () => {
         pspTaxCode: 'pspTaxCode',
         bundleOfferId: 'ciTaxCode',
       })
-<<<<<<< HEAD
     ).resolves.not.toThrow();
   });
   test('Test createCIBundleOffers', async () => {
@@ -169,8 +165,6 @@ describe('BundleService test mocked', () => {
         pspTaxCode: 'pspTaxCode',
         bundleName: 'bundleName',
       })
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
     ).resolves.not.toThrow();
   });
 });
@@ -343,7 +337,6 @@ describe('BundleService test client', () => {
         pspTaxCode: 'pspTaxCode',
         bundleOfferId: 'ciTaxCode',
       })
-<<<<<<< HEAD
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
@@ -388,8 +381,6 @@ describe('BundleService test client', () => {
         pspTaxCode: 'pspTaxCode',
         bundleName: 'bundleName',
       })
-=======
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });

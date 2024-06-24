@@ -36,10 +36,6 @@ import { LOADING_TASK_COMMISSION_BUNDLE_DETAIL } from '../../../utils/constants'
 import CommissionBundleDetailConfiguration from './components/CommissionBundleDetailConfiguration';
 import CommissionBundleDetailTaxonomies from './components/CommissionBundleDetailTaxonomies';
 import CommissionBundleDetailSubscriptionsTable from './components/subscriptions/CommissionBundleDetailSubscriptionsTable';
-<<<<<<< HEAD
-=======
-
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
@@ -315,11 +311,7 @@ const CommissionBundleDetailPage = () => {
 
           {orgInfo.types.isPsp &&
             userIsAdmin &&
-<<<<<<< HEAD
             isValidBundleForSubscriptionTable(commissionBundleDetail) && (
-=======
-            commissionBundleDetail.type !== TypeEnum.GLOBAL && (
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
               <Grid
                 item
                 xs={12}
@@ -329,11 +321,7 @@ const CommissionBundleDetailPage = () => {
                     : 'offer-table'
                 }
               >
-<<<<<<< HEAD
                 <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
-=======
-                  <CommissionBundleDetailSubscriptionsTable bundleDetail={commissionBundleDetail} />
->>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
               </Grid>
             )}
         </Grid>

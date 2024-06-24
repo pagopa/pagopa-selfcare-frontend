@@ -21,6 +21,11 @@ import {
   getCommissionBundleCi,
   getCommissionBundleDetails,
   getCommissionBundlePsp,
+<<<<<<< HEAD
+=======
+  getBundleCISubscriptionsDetailMock,
+  getBundleCISubscriptionsMock,
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
   getTouchpoints as getTouchpointsMock,
   updatePSPBundle as updatePSPBundleMock,
 } from './__mocks__/bundleService';
@@ -287,6 +292,7 @@ export const deletePrivateBundleOffer = ({
   }
 };
 
+<<<<<<< HEAD
 export const createCIBundleOffers = ({
   idBundle,
   pspTaxCode,
@@ -356,5 +362,7 @@ export const createCIBundleOffers = ({
   }
 };
 
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 export const getSpecificBuiltInData = (t: TFunction, specificBuiltInData?: string) =>
   specificBuiltInData ? specificBuiltInData : t('commissionBundlesPage.allTaxonomies');

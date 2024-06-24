@@ -6,7 +6,10 @@ import {
   BundleCISubscriptionsMethodParams,
   BundleCISubscriptionsBodyRequest,
   BundleCiSubscriptionsDetailMethodParams,
+<<<<<<< HEAD
   SubscriptionStateType,
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
 } from '../model/CommissionBundle';
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
@@ -1352,21 +1355,30 @@ export const BackofficeApi = {
     idBundle,
     pspTaxCode,
     bundleOfferId,
+<<<<<<< HEAD
     ciTaxCode,
     bundleName,
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
   }: {
     idBundle: string;
     pspTaxCode: string;
     bundleOfferId: string;
+<<<<<<< HEAD
     ciTaxCode: string;
     bundleName: string;
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
   }): Promise<void> => {
     const result = await backofficeClient.deletePrivateBundleOffer({
       'id-bundle': idBundle,
       'psp-tax-code': pspTaxCode,
       'bundle-offer-id': bundleOfferId,
+<<<<<<< HEAD
       ciTaxCode,
       bundleName,
+=======
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

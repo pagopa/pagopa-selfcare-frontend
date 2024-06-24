@@ -312,7 +312,11 @@ const CommissionBundleDetailPage = () => {
 
           {orgInfo.types.isPsp &&
             userIsAdmin &&
+<<<<<<< HEAD
             isValidBundleForSubscriptionTable(commissionBundleDetail) && (
+=======
+            commissionBundleDetail.type !== TypeEnum.GLOBAL && (
+>>>>>>> 85e19a10 ([VAS-776] feat: Implement Private Bundle Offers table for PSP (#526))
               <Grid
                 item
                 xs={12}

@@ -17,6 +17,7 @@ import {
     pspAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
 import {BrokerOrPspDetailsResource} from '../../../../api/generated/portal/BrokerOrPspDetailsResource';
+import { mockedChannels } from '../../../../services/__mocks__/channelService';
 
 let createPSPDirectMocked: jest.SpyInstance;
 let createPSPIndirectMocked: jest.SpyInstance;
@@ -24,6 +25,7 @@ let useSigninDataMocked: jest.SpyInstance;
 let updatePSPInfoMocked: jest.SpyInstance;
 let getBrokerAndPspDetailsMocked: jest.SpyInstance;
 let createPspBroker: jest.SpyInstance;
+let spyOnGetChannels: jest.SpyInstance;
 
 jest.mock('../../../../decorators/withSelectedParty');
 
@@ -93,6 +95,7 @@ beforeEach(() => {
         'getBrokerAndPspDetails'
     );
     createPspBroker = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
+    spyOnGetChannels = jest.spyOn(require('../../../../services/channelService'), 'getChannels');
 
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
@@ -240,85 +243,96 @@ describe('NodeSignInPSPForm', () => {
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
     });
-});
-
-test('Test rendering NodeSignInPSPForm in case of updating the form with a psp direct', async () => {
-    const {store} = renderApp(brokerOrPspDetailsResource_PSPAndBroker);
-
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setSigninData',
-            payload: brokerOrPspDetailsResource_PSPAndBroker,
-        })
-    );
-
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setPartySelected',
-            payload: pspAdminSignedDirect,
-        })
-    );
-    const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-
-    expect(bicCode.value).toBe(
-        brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
-    );
-
-    fireEvent.change(bicCode, {target: {value: '12345'}});
-    expect(bicCode.value).toBe('12345');
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
-
-    await waitFor(() => {
-        expect(updatePSPInfoMocked).toHaveBeenCalled();
+    
+    test('Test rendering NodeSignInPSPForm in case of updating the form with a psp direct', async () => {
+        const {store} = renderApp(brokerOrPspDetailsResource_PSPAndBroker);
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setSigninData',
+                payload: brokerOrPspDetailsResource_PSPAndBroker,
+            })
+        );
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedDirect,
+            })
+        );
+        const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+    
+        expect(bicCode.value).toBe(
+            brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
+        );
+    
+        fireEvent.change(bicCode, {target: {value: '12345'}});
+        expect(bicCode.value).toBe('12345');
+    
+        const confirmBtn = await screen.findByTestId('continue-button-test');
+        fireEvent.click(confirmBtn);
+    
+        await waitFor(() => {
+            expect(updatePSPInfoMocked).toHaveBeenCalled();
+        });
+    });
+    
+    test('Test rendering NodeSignInPSPForm in case of updating the form with a psp indirect', async () => {
+        const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setSigninData',
+                payload: brokerOrPspDetailsResource_PSPOnly,
+            })
+        );
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedUndirect,
+            })
+        );
+        const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+        const intermediaryFalse = screen
+            .getByTestId('intermediary-available-test')
+            .querySelector('[value=false]') as HTMLInputElement;
+        const intermediaryTrue = screen
+            .getByTestId('intermediary-available-test')
+            .querySelector('[value=true]') as HTMLInputElement;
+    
+        expect(bicCode.value).toBe(
+            brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
+        );
+        expect(intermediaryFalse.checked).toBe(true);
+    
+        fireEvent.change(bicCode, {target: {value: '12345'}});
+        expect(bicCode.value).toBe('12345');
+    
+        expect(intermediaryTrue.checked).toBe(false);
+        fireEvent.click(intermediaryTrue);
+        expect(intermediaryTrue.checked).toBe(true);
+    
+        const confirmBtn = await screen.findByTestId('continue-button-test');
+        fireEvent.click(confirmBtn);
+    
+        await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
+        await waitFor(() => {
+            expect(updatePSPInfoMocked).toHaveBeenCalled();
+        });
+    });
+    
+    test('Test getChannels for intermediaryAvailable true', async () => {
+        spyOnGetChannels.mockReturnValue(mockedChannels);
+        renderApp(brokerOrPspDetailsResource_PSPOnly);
+    });
+    
+    test('Test getChannels error', async () => {
+        spyOnGetChannels.mockRejectedValue('error');
+        renderApp(brokerOrPspDetailsResource_PSPOnly);
     });
 });
 
-test('Test rendering NodeSignInPSPForm in case of updating the form with a psp indirect', async () => {
-    const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
-
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setSigninData',
-            payload: brokerOrPspDetailsResource_PSPOnly,
-        })
-    );
-
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setPartySelected',
-            payload: pspAdminSignedUndirect,
-        })
-    );
-    const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
-    const intermediaryFalse = screen
-        .getByTestId('intermediary-available-test')
-        .querySelector('[value=false]') as HTMLInputElement;
-    const intermediaryTrue = screen
-        .getByTestId('intermediary-available-test')
-        .querySelector('[value=true]') as HTMLInputElement;
-
-    expect(bicCode.value).toBe(
-        brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
-    );
-    expect(intermediaryFalse.checked).toBe(true);
-
-    fireEvent.change(bicCode, {target: {value: '12345'}});
-    expect(bicCode.value).toBe('12345');
-
-    expect(intermediaryTrue.checked).toBe(false);
-    fireEvent.click(intermediaryTrue);
-    expect(intermediaryTrue.checked).toBe(true);
-
-    const confirmBtn = await screen.findByTestId('continue-button-test');
-    fireEvent.click(confirmBtn);
-
-    await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
-    await waitFor(() => {
-        expect(updatePSPInfoMocked).toHaveBeenCalled();
-    });
-});
 
 const pspPartySelected = {
     partyId: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',

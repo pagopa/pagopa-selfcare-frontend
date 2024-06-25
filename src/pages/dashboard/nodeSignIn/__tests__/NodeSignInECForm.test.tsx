@@ -17,6 +17,7 @@ import {
     ecAdminSignedUndirect,
     ecAdminUnsigned,
 } from '../../../../services/__mocks__/partyService';
+import { mockedStations } from '../../../../services/__mocks__/stationService';
 
 const renderApp = (
     signInData: BrokerAndEcDetailsResource,
@@ -64,6 +65,7 @@ let spyOnCreateECAndBroker: jest.SpyInstance<any, unknown[]>;
 let spyOnCreateEcIndirect: jest.SpyInstance<any, unknown[]>;
 let spyOnUpdateCreditorInstitution: jest.SpyInstance<any, unknown[]>;
 let SpyOnCreateEcBroker: jest.SpyInstance<any, unknown[]>;
+let SpyOnGetStations: jest.SpyInstance<any, unknown[]>;
 
 beforeEach(() => {
     spyOnCreateECAndBroker = jest.spyOn(
@@ -79,6 +81,7 @@ beforeEach(() => {
         'updateCreditorInstitution'
     );
     SpyOnCreateEcBroker = jest.spyOn(require('../../../../services/nodeService'), 'createEcBroker');
+    SpyOnGetStations = jest.spyOn(require('../../../../services/stationService'), 'getStations');
 
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
@@ -407,5 +410,15 @@ describe('NodeSignInECForm', () => {
 
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
+    });
+
+    test('Test getStations for intermediaryAvailable true', async () => {
+        SpyOnGetStations.mockReturnValue(mockedStations);
+        renderApp(brokerAndEcDetailsResource_ECOnly);
+    });
+
+    test('Test getStations error', async () => {
+        SpyOnGetStations.mockRejectedValue('error');
+        renderApp(brokerAndEcDetailsResource_ECOnly);
     });
 });

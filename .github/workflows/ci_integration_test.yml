@@ -93,7 +93,15 @@ jobs:
           yarn install
           npx playwright install --with-deps
           
-          export SUBKEY='${{ secrets.SUBKEY }}'
+          if [ "${{ inputs.environment }}" = "local" ]; then
+            export SUBKEY='${{ secrets.DEV_SUBKEY }}'
+          fi
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            export SUBKEY='${{ secrets.DEV_SUBKEY }}'
+          fi
+          if [ "${{ inputs.environment }}" = "uat" ]; then
+            export SUBKEY='${{ secrets.UAT_SUBKEY }}'
+          fi
           
           SUBKEY=$SUBKEY npx playwright test --workers=1 --max-failures=1 --project=firefox
 

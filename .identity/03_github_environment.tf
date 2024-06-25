@@ -41,6 +41,12 @@ locals {
     "SELFCARE_API_BE" : var.env == "prod" ? "https://api.platform.pagopa.it" : "https://api.${var.env}.platform.pagopa.it",
     "REACT_APP_URL_STORAGE" : "https://pagopa${var.env_short}selfcaresa.z6.web.core.windows.net",
   }
+  special_repo_secrets = {
+    "SUBKEY" : {
+      "key" : "${upper(var.env)}_SUBKEY",
+      "value" : data.azurerm_key_vault_secret.key_vault_integration_test_subkey.value
+    }
+  }
 }
 
 ###############
@@ -98,4 +104,11 @@ resource "github_actions_secret" "secret_key_pem" {
   repository      = local.github.repository
   secret_name     = "KEY_PEM"
   plaintext_value =  var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
+}
+
+resource "github_actions_secret" "special_repo_secrets" {
+  for_each        = local.special_repo_secrets
+  repository      = local.github.repository
+  secret_name     = each.value.key
+  plaintext_value = each.value.value
 }

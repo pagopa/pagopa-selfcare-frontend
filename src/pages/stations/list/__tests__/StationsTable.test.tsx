@@ -1,16 +1,17 @@
-import {ThemeProvider} from '@mui/system';
-import {theme} from '@pagopa/mui-italia';
-import {cleanup, render, waitFor, screen} from '@testing-library/react';
+import { ThemeProvider } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import React from 'react';
-import {Router} from 'react-router-dom';
-import {createMemoryHistory} from 'history';
-import {Provider} from 'react-redux';
-import {useAppDispatch} from '../../../../redux/hooks';
-import {partiesActions} from '../../../../redux/slices/partiesSlice';
-import {store} from '../../../../redux/store';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { ConfigurationStatus } from '../../../../model/Station';
+import { useAppDispatch } from '../../../../redux/hooks';
+import { partiesActions } from '../../../../redux/slices/partiesSlice';
+import { store } from '../../../../redux/store';
+import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyService';
+import { mockedStations } from '../../../../services/__mocks__/stationService';
 import * as StationService from '../../../../services/stationService';
-import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';
-import {mockedStationsMerged2} from '../../../../services/__mocks__/stationService';
 import StationsTable from '../StationsTable';
 
 const mockGetStationsMerged = jest.spyOn(StationService, 'getStationsMerged');
@@ -32,7 +33,7 @@ const Component = () => {
     return (
         <ThemeProvider theme={theme}>
             <Router history={history}>
-                <StationsTable stationCode={'1'}/>
+                <StationsTable stationCode={'1'} statusFilter={ConfigurationStatus.ACTIVE}/>
             </Router>
         </ThemeProvider>
     );
@@ -40,7 +41,7 @@ const Component = () => {
 
 describe('<StationTable />', () => {
     test('render component StationTable', async () => {
-        mockGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
+        mockGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStations));
         render(
             <Provider store={store}>
                 <Component/>

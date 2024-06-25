@@ -39,7 +39,6 @@ import {
 } from './generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
-import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
@@ -206,7 +205,6 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   rt_push: false,
   serv_plugin: undefined,
   service: channel.service,
-  status: StatusEnum.TO_CHECK_UPDATE,
   target_host: channel.target_host,
   target_path: channel.target_path,
   target_port: channel.target_port,
@@ -380,8 +378,26 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getChannels: async (page: number): Promise<ChannelsResource> => {
-    const result = await backofficeClient.getChannels({ page });
+  getChannels: async ({
+    status,
+    channelCode,
+    brokerCode,
+    limit,
+    page,
+  }: {
+    status: ConfigurationStatus;
+    channelCode: string;
+    brokerCode: string;
+    limit?: number;
+    page: number;
+  }): Promise<WrapperChannelsResource> => {
+    const result = await backofficeClient.getChannels({
+      status: String(status),
+      brokerCode,
+      channelCode,
+      limit,
+      page,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -437,7 +453,7 @@ export const BackofficeApi = {
   createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.createChannel({
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
@@ -461,7 +477,6 @@ export const BackofficeApi = {
         target_port: channel.target_port,
         payment_types: channel.payment_types,
         validationUrl,
-        status: StatusEnum.TO_CHECK,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -474,32 +489,23 @@ export const BackofficeApi = {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateChannel({
       'channel-code': code,
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperChannelDetailsToCheck: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
+  updateWrapperChannelDetailsToCheck: async ({
+    channelCode,
+    channel,
+    validationUrl,
+  }: {
+    channelCode: string;
+    channel: ChannelDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateWrapperChannelDetails({
-      body: {
-        ...channelBody2Send,
-        status: StatusEnum.APPROVED,
-        validationUrl,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetailsToCheckUpdate: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
-    const channelBody2Send = channelBody(channel);
-    const result = await backofficeClient.updateWrapperChannelDetails({
+      'channel-code': channelCode,
       body: {
         ...channelBody2Send,
         validationUrl,
@@ -1477,6 +1483,25 @@ export const BackofficeApi = {
       'id-bundle-offer': idBundleOffer,
       pspTaxCode,
       bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperChannelWithOperatorReview: async ({
+    channelCode,
+    brokerPspCode,
+    note,
+  }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+  }): Promise<ChannelDetailsResource> => {
+    const result = await backofficeClient.updateWrapperChannelWithOperatorReview({
+      'channel-code': channelCode,
+      brokerPspCode,
+      body: {
+        note,
+      },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

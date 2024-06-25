@@ -18,7 +18,6 @@ import { ENV } from '../../../../utils/env';
 import { useUserRole } from '../../../../hooks/useUserRole';
 import DetailButtons from './DetailButtons';
 import GetChannelAlert from './GetChannelAlert';
-import ChannelDetailHeader from './ChannelDetailHeader';
 
 
 type Props = {

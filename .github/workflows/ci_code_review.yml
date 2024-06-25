@@ -232,6 +232,7 @@ jobs:
           action: "close"
 
   delete-branch:
+    name: delete branch when closed
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     steps:
@@ -240,7 +241,7 @@ jobs:
 
       - name: Delete branch
         run: |
-          echo "Deleting branch ${GITHUB_REF#refs/heads/}"
-          git push origin --delete "${GITHUB_REF#refs/heads/}"
+          echo "Deleting branch ${{github.head_ref}}"
+          git push origin --delete "${{github.head_ref}}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

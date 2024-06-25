@@ -39,6 +39,13 @@ const channelDetail: ChannelDetailsResource = {
     target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
     target_port: 443,
     target_host: 'www.lab.link.it',
+    proxy_enabled: false,
+    proxy_host: 'string',
+    proxy_password: 'string',
+    proxy_port: 0,
+    proxy_username: 'string',
+    ip: 'ip',
+    service: 'service',
     payment_types: ['PPAY'],
 };
 const channelDetailApproved: ChannelDetailsResource = {

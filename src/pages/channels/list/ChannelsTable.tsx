@@ -54,6 +54,9 @@ export default function ChannelsTable({
   const fetchChannels = (pageParam: number) => {
     if (brokerCode) {
       setLoadingOverlay(true);
+      if(pageParam){
+        setPage(pageParam);
+      }
       getChannels({
         status: statusFilter,
         channelCode: channelCodeFilter,
@@ -78,10 +81,6 @@ export default function ChannelsTable({
     }
   };
 
-  function handleChangePage(newPage: number) {
-    fetchChannels(newPage);
-  }
-
   return (
     <Box id="ChannelsSearchTableBox">
       <TableDataGrid
@@ -91,7 +90,7 @@ export default function ChannelsTable({
         columns={columns}
         totalPages={channels?.page_info?.total_pages}
         page={page}
-        handleChangePage={(newPage: number) => handleChangePage(newPage)}
+        handleChangePage={(newPage: number) => fetchChannels(newPage)}
         pageLimit={pageLimit}
         setPageLimit={setPageLimit}
         getRowId={(r) => r.channel_code}

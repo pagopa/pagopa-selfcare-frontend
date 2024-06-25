@@ -12,7 +12,7 @@ import * as useUserRole from '../../../../hooks/useUserRole';
 import {ROLE} from '../../../../model/RolePermission';
 import {FormAction} from '../../../../model/Channel';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
-import {mockedChannel} from '../../../../services/__mocks__/channelService';
+import {mockedChannel, mockedChannelDetail} from '../../../../services/__mocks__/channelService';
 
 let getChannelDetailMocked: jest.SpyInstance;
 let getChannelCodeMocked: jest.SpyInstance;
@@ -38,6 +38,42 @@ describe('<AddEditChannelPage />', () => {
     const history = createMemoryHistory();
 
     test('render component AddEditChannelPage formAction Edit', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: true,
+            userIsPagopaOperator: false,
+            userIsAdmin: false
+        });
+        getChannelDetailMocked.mockReturnValueOnce(Promise.resolve(mockedChannelDetail(mockedChannel.channel_code!)));
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${mockedChannel.channel_code}/edit`]}>
+                    <Route path="/channels/:channelId/:actionId">
+                        <ThemeProvider theme={theme}>
+                            <AddEditChannelPage/>
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        expect(getChannelDetailMocked).toBeCalled();
+    });
+
+    test('render component AddEditChannelPage formAction Edit Operator', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsPagopaOperator: true,
+            userIsAdmin: false
+        });
+        getChannelDetailMocked.mockReturnValueOnce(Promise.resolve(mockedChannelDetail(mockedChannel.channel_code!)));
+
         render(
             <Provider store={store}>
                 <MemoryRouter initialEntries={[`/channels/${mockedChannel.channel_code}/edit`]}>
@@ -54,6 +90,14 @@ describe('<AddEditChannelPage />', () => {
     });
 
     test('render component AddEditChannelPage formAction Edit with fetch error', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: true,
+            userIsPagopaOperator: false,
+            userIsAdmin: false
+        });
         const mockError = new Error('Fetch error');
         getChannelDetailMocked.mockRejectedValueOnce(mockError);
 
@@ -73,6 +117,14 @@ describe('<AddEditChannelPage />', () => {
     });
 
     test('render component AddEditChannelPage formAction Createwith fetch error', () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: true,
+            userIsPagopaOperator: false,
+            userIsAdmin: false
+        });
         const mockError = new Error('Fetch error');
         getChannelCodeMocked.mockRejectedValueOnce(mockError);
 

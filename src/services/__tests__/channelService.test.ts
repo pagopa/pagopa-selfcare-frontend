@@ -27,12 +27,14 @@ import {
   getChannelDetail,
   getChannelPSPs,
   getChannels,
+  getChannelsIdAssociatedToPSP,
+  getChannelsMerged,
   getPSPChannels,
   getWfespPlugins,
   getWrapperEntities,
   updateChannel,
+  updateWrapperChannelDetailsByOpt,
   updateWrapperChannelDetailsToCheck,
-  updateWrapperChannelDetailsToCheckUpdate,
   updateWrapperChannelWithOperatorReview,
 } from '../channelService.ts';
 
@@ -47,6 +49,10 @@ describe('ChannelService test mocked', () => {
     });
     expect(response).toMatchObject(mockedChannels);
   });
+  test('Test getChannelsMerged', async () => {
+    const response = await getChannelsMerged(0, 'brokerCode');
+    expect(response).toMatchObject(mockedChannelsMerged);
+  });
   test('Test getChannelDetail', async () => {
     const response = await getChannelDetail('channelId');
     expect(response).toMatchObject(mockedChannelDetail('channelId'));
@@ -54,6 +60,10 @@ describe('ChannelService test mocked', () => {
   test('Test getPSPChannels', async () => {
     const response = await getPSPChannels('pspTaxCode');
     expect(response).toMatchObject(channelEnabled(mockedPSPChannels));
+  });
+  test('Test getChannelsIdAssociatedToPSP', async () => {
+    const response = await getChannelsIdAssociatedToPSP(0, 'brokerCode');
+    expect(response).toMatchObject(mockedChannelsMerged!.channels!.map((el) => el!.channel_code));
   });
   test('Test getWfespPlugins', async () => {
     const response = await getWfespPlugins();
@@ -120,8 +130,9 @@ describe('ChannelService test mocked', () => {
     expect(response).toMatchObject(mockedWrapperChannel);
   });
   test('Test updateWrapperChannelDetailsToCheck', async () => {
-    const response = await updateWrapperChannelDetailsToCheck(
-      {
+    const response = await updateWrapperChannelDetailsToCheck({
+      channelCode: 'channelCode',
+      channel: {
         broker_description: '',
         broker_psp_code: '',
         channel_code: '',
@@ -132,12 +143,12 @@ describe('ChannelService test mocked', () => {
         target_port: 0,
         validationUrl: '',
       },
-      'validationUrl'
-    );
+      validationUrl: 'validationUrl',
+    });
     expect(response).toMatchObject(mockedWrapperChannel);
   });
-  test('Test updateWrapperChannelDetailsToCheckUpdate', async () => {
-    const response = await updateWrapperChannelDetailsToCheckUpdate(
+  test('Test updateWrapperChannelDetailsByOpt', async () => {
+    const response = await updateWrapperChannelDetailsByOpt(
       {
         broker_description: '',
         broker_psp_code: '',

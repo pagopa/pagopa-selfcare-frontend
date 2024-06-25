@@ -228,7 +228,7 @@
       "titleConfiguration": "Configura canale",
       "titleValidate": "Valida Canale",
       "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione.",
-      "subtitleValidate": "Verifica che le informazioni sul canale siano corrette, e completa quelle mancanti."
+      "subtitleValidate": "Verifica che le informazioni sul canale siano corrette e completa quelle mancanti."
     },
     "create": {
       "title": "Crea un nuovo canale",
@@ -261,7 +261,7 @@
         "endPoint": "Endpoint",
         "targetPort": "Porta",
         "paymentType": "Seleziona tipo di versamento",
-        "addPayment": "Aggiunta metodo"
+        "addPayment": "Aggiungi metodo"
       },
       "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
@@ -313,7 +313,7 @@
         "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
         "channelConfiguration": "Configurazione canale",
         "channelValidate": "Conferma validazione canale",
-        "messageChannelOperationValidate": "il canale passerà in stato attivo, e l'ente potrà utilizzarlo per attivare i suoi servizi"
+        "messageChannelOperationValidate": "Il canale passerà in stato attivo, e l'ente potrà utilizzarlo per attivare i suoi servizi"
       }
     },
     "validationMessage": {
@@ -327,8 +327,11 @@
     "subtitle": "Dopo la modifica sarà richiesta una nuova revisione del canale."
   },
   "channelDetailPage": {
+    "subtitle":{
+      "waiting": "Ecco i dettagli del canale inviato in revisione.",
+      "approved": "Ecco i dettagli della canale."
+    },
     "channels": "Canali",
-    "edit": "Modifica",
     "deleteRequired": "Richiedi eliminazione",
     "correctionRequired": "Richiedi correzione",
     "requestEdit": "Richiedi modifiche",
@@ -385,7 +388,8 @@
     "alert": {
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche al canale.",
       "toFixTitle": "Modifiche richieste",
-      "toFixMessage": "Canale in attesa di correzione da parte dell’ente."
+      "toFixMessage": "Canale in attesa di correzione da parte dell’ente.",
+      "waitingForRevision": "Il canale è in attesa di approvazione da parte di un nostro operatore. Riceverai una mail a procedura completata."
     },
     "modal": {
       "title": "Cosa c'è che non va?",
@@ -1514,9 +1518,8 @@
     "backButton": "Esci"
   },
   "tos": {
-    "title": "pagoPA",
-    "description": "Prima di entrare, leggi e accetta l’Informativa Privacy e i Termini e condizioni d’uso. Potrai consultarli di nuovo quando vuoi: li trovi sempre in fondo alla pagina.",
-    "termsDescription": "Entrando dichiari di aver letto e accettato l’<1>Informativa Privacy</1> e i <1>Termini e condizioni d’uso</1> di PagoPA"
+    "title": "Pagamenti pagoPA",
+    "termsDescription": "Accedendo, accetti i <1>Termini e condizioni d’uso</1> del servizio e confermi di avere letto l’<1>Informativa Privacy</1>. "
   },
   "general": {
     "noDataLabel": "Nessun risultato",

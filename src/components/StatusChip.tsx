@@ -14,7 +14,7 @@ export const StatusChip = ({status, size = 'regular'}: Props) => {
 
     return status ? (
         <Chip
-            label={t(`general.WrapperStatus.${resolvedChip.label}`)}
+            label={t(`general.WrapperStatus.${resolvedChip.label}${userIsPagopaOperator ? "_OPERATOR" : ""}`)}
             aria-label="Status"
             sx={{
                 fontWeight: 'fontWeightMedium',

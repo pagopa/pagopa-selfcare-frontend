@@ -452,12 +452,37 @@ Props) => {
         )}
 
         <Typography color="action.active" sx={{ my: 2 }}>
-          {t('channelDetailPage.createdOn')}{' '}
-          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-            {`${stationDetail?.createdAt?.toLocaleDateString('en-GB')} da ${
-              stationDetail?.createdBy
-            }`}
-          </Typography>
+          {stationDetail?.createdBy && (
+            <>
+              {t('channelDetailPage.createdOn')}{' '}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {`${stationDetail?.createdAt?.toLocaleDateString('en-GB') ?? '-'}`}
+              </Typography>{' '}
+              {t('general.fromLower')}{' '}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {stationDetail?.createdBy}
+              </Typography>
+              {'.'}
+            </>
+          )}
+          {stationDetail?.modifiedBy && (
+            <div>
+              {t('channelDetailPage.lastModified')}{' '}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {stationDetail?.modifiedBy}
+              </Typography>
+              {stationDetail?.modifiedAt && (
+                <>
+                  {' '}
+                  {t('general.atLower')}{' '}
+                  <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                    {`${stationDetail?.modifiedAt?.toLocaleDateString('en-GB')}`}
+                  </Typography>
+                </>
+              )}
+              {'.'}
+            </div>
+          )}
         </Typography>
         {stationDetail && (
           <DetailButtonsStation stationDetail={stationDetail} setStationDetail={setStationDetail} />

@@ -243,7 +243,7 @@ describe('NodeSignInPSPForm', () => {
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
     });
-    
+
     test('Test rendering NodeSignInPSPForm in case of updating the form with a psp direct', async () => {
         const {store} = renderApp(brokerOrPspDetailsResource_PSPAndBroker);
     
@@ -324,12 +324,73 @@ describe('NodeSignInPSPForm', () => {
     
     test('Test getChannels for intermediaryAvailable true', async () => {
         spyOnGetChannels.mockReturnValue(mockedChannels);
-        renderApp(brokerOrPspDetailsResource_PSPOnly);
+        const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
+        
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setSigninData',
+                payload: brokerOrPspDetailsResource_PSPOnly,
+            })
+        );
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedUndirect,
+            })
+        );
+        const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+        expect(bicCode).toBeInTheDocument();
+    });
+    
+    test('Test getChannels for intermediaryAvailable false', async () => {
+        spyOnGetChannels.mockReturnValue({
+            channels: [],
+            page_info: {
+              page: 0,
+              limit: 50,
+              items_found: 0,
+              total_pages: 0,
+            },
+          });
+        const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
+        
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setSigninData',
+                payload: brokerOrPspDetailsResource_PSPOnly,
+            })
+        );
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedUndirect,
+            })
+        );
+        const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+        expect(bicCode).toBeInTheDocument();
     });
     
     test('Test getChannels error', async () => {
         spyOnGetChannels.mockRejectedValue('error');
-        renderApp(brokerOrPspDetailsResource_PSPOnly);
+        const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
+        
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setSigninData',
+                payload: brokerOrPspDetailsResource_PSPOnly,
+            })
+        );
+    
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedUndirect,
+            })
+        );
+        const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
+        expect(bicCode).toBeInTheDocument();
     });
 });
 

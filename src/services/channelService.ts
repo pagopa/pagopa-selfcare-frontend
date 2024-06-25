@@ -21,14 +21,13 @@ import {
   getChannelCode as getChannelCodeMocked,
   getChannelDetail as getChannelDetailMocked,
   getChannelPSPs as getChannelPSPsMocked,
-  getChannelsMerged as getChannelsMergedMocked,
   getChannels as getChannelsMocked,
   getPSPChannels as getPSPChannelsMocked,
   getWrapperChannel,
   getWfespPlugins as mockedGetWfespPlugins,
   updateChannel as updateChannelMocked,
   updateWrapperChannel,
-  updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked,
+  updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked
 } from './__mocks__/channelService';
 
 // /channels endpoint
@@ -178,49 +177,40 @@ export const createWrapperChannelDetails = (
   }
 };
 
-export const updateWrapperChannelDetailsToCheck = (
-  channel: ChannelDetailsDto,
-  validationUrl: string
-): Promise<WrapperEntities> => {
+export const updateWrapperChannelDetails = ({
+  channelCode,
+  channel,
+  validationUrl,
+}: {
+  channelCode: string;
+  channel: ChannelDetailsDto;
+  validationUrl: string;
+}): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return BackofficeApi.updateWrapperChannelDetailsToCheck(channel, validationUrl).then(
-      (resources) => resources
-    );
-  }
-};
-
-export const updateWrapperChannelDetailsToCheckUpdate = (
-  channel: ChannelDetailsDto,
-  validationUrl: string
-): Promise<WrapperEntities> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return updateWrapperChannel(channel, validationUrl);
-  } else {
-    return BackofficeApi.updateWrapperChannelDetailsToCheckUpdate(channel, validationUrl).then(
+    return BackofficeApi.updateWrapperChannelDetails({ channelCode, channel, validationUrl }).then(
       (resources) => resources
     );
   }
 };
 
 export const updateWrapperChannelWithOperatorReview = ({
-                                                           channelCode,
-                                                           brokerPspCode,
-                                                           note,
-                                                       }: {
-    channelCode: string;
-    brokerPspCode: string;
-    note: string;
+  channelCode,
+  brokerPspCode,
+  note,
+}: {
+  channelCode: string;
+  brokerPspCode: string;
+  note: string;
 }): Promise<ChannelDetailsResource> => {
-    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-        return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
-    } else {
-        return BackofficeApi.updateWrapperChannelWithOperatorReview({
-            channelCode,
-            brokerPspCode,
-            note,
-        }).then((resources) => resources);
-    }
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
+  } else {
+    return BackofficeApi.updateWrapperChannelWithOperatorReview({
+      channelCode,
+      brokerPspCode,
+      note,
+    }).then((resources) => resources);
+  }
 };
-

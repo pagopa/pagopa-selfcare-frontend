@@ -476,7 +476,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperChannelDetailsToCheck: async ({
+  updateWrapperChannelDetails: async ({
     channelCode,
     channel,
     validationUrl,

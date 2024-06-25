@@ -185,7 +185,7 @@ describe('<StationsTableColumns />', () => {
                 headerName: 'Station Name',
                 align: 'left',
                 headerAlign: 'left',
-                minWidth: 900,
+                minWidth: 700,
                 editable: false,
                 disableColumnMenu: true,
                 renderHeader: expect.any(Function),

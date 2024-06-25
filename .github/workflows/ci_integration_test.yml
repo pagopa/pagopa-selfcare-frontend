@@ -19,7 +19,7 @@ on:
         description: 'notify result with slack message'
         required: false
         type: boolean
-        default: false
+        default: true
   
   
   workflow_dispatch:
@@ -134,7 +134,7 @@ jobs:
     needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
-    if: ${{ always() && inputs.notify == true && github.event_name != 'schedule'  }}
+    if: ${{ always() && ( inputs == null || inputs.notify == true ) }}
     steps:
       - name: Report Status
         uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2 # v2

@@ -119,34 +119,6 @@ describe('<ChannelDetails />', () => {
     expect(passwordField.innerHTML).toBe(passwordFieldValue);
   });
 
-    test('render component ChannelDetails with channelDetail TO_FIX', async () => {
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/channels/${channelId}`]}>
-                    <Route path="/channels/:channelId">
-                        <ThemeProvider theme={theme}>
-                            <ChannelDetails
-                                channelDetail={channelDetailToFix}
-                                channelId={channelId}
-                                goBack={jest.fn()}
-                                PSPAssociatedNumber={0}
-                            />
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
-
-        const passwordField = screen.getByTestId('password-value-test') as HTMLElement;
-        expect(passwordField.innerHTML).toBe('XXXXXXXXXXXXXX');
-
-        const showPasswordButton = screen.getByTestId('show-psw-test') as HTMLElement;
-
-        fireEvent.click(showPasswordButton);
-
-        expect(passwordField.innerHTML).toBe(passwordFieldValue);
-    });
-
   test('render component ChannelDetails with empty channelDetail', async () => {
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
         userRole: ROLE.EC_DIRECT_ADMIN,

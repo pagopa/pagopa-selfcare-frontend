@@ -60,7 +60,6 @@ export async function getToBundleDetailEc(page: Page, bundleName: string, bundle
   await page.waitForTimeout(2000);
   await page.getByTestId('page-limit-select').getByLabel('5').click();
   await page.getByRole('option', { name: '20' }).click();
-  const regex = new RegExp('^' + bundleName + 'TouchpointREMOVEME' + bundleState + '$');
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await page.waitForTimeout(2000);
@@ -135,47 +134,48 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
   );
   if(!response.ok){
     console.log("Invalidate bundle get bundle error", await response.text());
-  }
-  const bundleList = await response.json();
-  expect(bundleList?.bundles?.length).toBeTruthy();
-  // Update bundle
-  for (let i = 0; i < bundleList.bundles.length; i++) {
-    const bundle = bundleList.bundles[i];
-    const responseDelete = await fetch(
-      `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-        },
+  } else {
+    const bundleList = await response.json();
+    expect(bundleList?.bundles?.length).toBeTruthy();
+    // Update bundle
+    for (let i = 0; i < bundleList.bundles.length; i++) {
+      const bundle = bundleList.bundles[i];
+      const responseDelete = await fetch(
+        `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+          },
+        }
+      );
+      if (!responseDelete.ok) {
+        console.log('Invalidate bundle delete error', await responseDelete.text());
       }
-    );
-    if (!responseDelete.ok) {
-      console.log('Invalidate bundle delete error', await responseDelete.text());
-    }
-    expect(responseDelete.ok).toBeTruthy();
-
-    const responseUpdate = await fetch(
-      `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-        },
-        body: JSON.stringify({
-          ...bundle,
-          validityDateFrom: '2024-01-01',
-          validityDateTo: '2024-01-01',
-          abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
-        }),
+      expect(responseDelete.ok).toBeTruthy();
+  
+      const responseUpdate = await fetch(
+        `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+          },
+          body: JSON.stringify({
+            ...bundle,
+            validityDateFrom: '2024-01-01',
+            validityDateTo: '2024-01-01',
+            abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
+          }),
+        }
+      );
+      if (!responseUpdate.ok) {
+        console.log('Invalidate bundle update error', await responseUpdate.text());
       }
-    );
-    if (!responseUpdate.ok) {
-      console.log('Invalidate bundle update error', await responseUpdate.text());
+      expect(responseUpdate.ok).toBeTruthy();
     }
-    expect(responseUpdate.ok).toBeTruthy();
   }
 }
 

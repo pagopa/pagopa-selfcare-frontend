@@ -14,7 +14,7 @@ import { mockedStations } from '../../../../services/__mocks__/stationService';
 import * as StationService from '../../../../services/stationService';
 import StationsTable from '../StationsTable';
 
-const mockGetStationsMerged = jest.spyOn(StationService, 'getStationsMerged');
+const mockGetStations = jest.spyOn(StationService, 'getStations');
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -41,7 +41,7 @@ const Component = () => {
 
 describe('<StationTable />', () => {
     test('render component StationTable', async () => {
-        mockGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStations));
+        mockGetStations.mockReturnValueOnce(Promise.resolve(mockedStations));
         render(
             <Provider store={store}>
                 <Component/>
@@ -53,7 +53,7 @@ describe('<StationTable />', () => {
         });
     });
     test('render component StationTable error getStationMerged', async () => {
-        mockGetStationsMerged.mockRejectedValueOnce('error');
+        mockGetStations.mockRejectedValueOnce('error');
         render(
             <Provider store={store}>
                 <Component/>

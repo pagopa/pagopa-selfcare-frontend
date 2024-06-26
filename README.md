@@ -6,6 +6,9 @@
 - https://selfcare.uat.platform.pagopa.it/ui
 - https://selfcare.platform.pagopa.it/ui
 
+## Check the last report of integration test
+https://pagopa.github.io/pagopa-selfcare-frontend/
+
 ## To configure the workspace execute the following commands
 `yarn install`
 

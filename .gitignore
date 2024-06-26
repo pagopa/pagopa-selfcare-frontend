@@ -72,3 +72,4 @@ public/version.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+**/key.pem

@@ -46,7 +46,11 @@ permissions:
   id-token: write
   contents: read
   deployments: write
+  pages: write
 
+concurrency:
+  group: "integration"
+  cancel-in-progress: true
 
 jobs:
   integration_test:
@@ -97,6 +101,16 @@ jobs:
           export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
           
           npx playwright test --workers=1 --max-failures=1 --project=chromium
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './e2e/playwright-report/'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   print_debug:
     runs-on: ubuntu-latest

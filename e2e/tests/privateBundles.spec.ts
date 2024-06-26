@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import {Page, test} from '@playwright/test';
 import {
   bundleNamePrivate,
   ciBundleStates,
@@ -7,14 +7,7 @@ import {
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import {
-  BundleTypes,
-  changeToEcUser,
-  changeToPspUser,
-  checkReturnHomepage,
-  goToStart,
-  login,
-} from '../e2eUtils';
+import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login,} from '../e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Private bundles flow', () => {
@@ -101,7 +94,7 @@ test.describe('Private bundles flow', () => {
   });
 
   test('Validate bundle', async () => {
-    await validateBundle(bundleNamePrivate, BundleTypes.PRIVATE, jwt);
+    await validateBundle(bundleNamePrivate, BundleTypes.PRIVATE);
   });
 
   test('PSP sends private bundle offer', async () => {

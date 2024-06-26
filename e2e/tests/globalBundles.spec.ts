@@ -7,7 +7,6 @@ test.describe('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
   test.beforeAll(async ({ browser }) => {
-    console.log('DUMMY print in playwright',process.env.SUBKEY);
     page = await browser.newPage({ storageState: undefined });
     await login(page);
     await goToStart(page);

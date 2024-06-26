@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import {Page, test} from '@playwright/test';
 import {
   bundleNamePublic,
   ciBundleStates,
@@ -7,7 +7,7 @@ import {
   getToBundleDetailPsp,
   validateBundle,
 } from '../bundleUtils';
-import { BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login } from '../e2eUtils';
+import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login} from '../e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Public bundles flow', () => {
@@ -93,7 +93,7 @@ test.describe('Public bundles flow', () => {
   });
 
   test('Validate bundle', async () => {
-    await validateBundle(bundleNamePublic, BundleTypes.PUBLIC, jwt);
+    await validateBundle(bundleNamePublic, BundleTypes.PUBLIC);
   });
 
   test('EC activates public bundle', async () => {

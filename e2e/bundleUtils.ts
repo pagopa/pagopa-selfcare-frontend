@@ -1,13 +1,7 @@
 /* eslint-disable functional/no-let */
-import { Page, expect } from '@playwright/test';
+import {expect, Page} from '@playwright/test';
 import * as it from '../src/locale/it.json';
-import {
-  MARKETPLACE_BE_URL,
-  getTodayDate,
-  getTomorrowDate,
-  PSP_DEMO_DIRECT_CODE,
-  BundleTypes,
-} from './e2eUtils';
+import {BundleTypes, getTodayDate, getTomorrowDate, MARKETPLACE_BE_URL, PSP_DEMO_DIRECT_CODE,} from './e2eUtils';
 
 export const bundleNameGlobal = 'Integration test global';
 export const bundleNamePublic = 'Integration test public';
@@ -72,7 +66,7 @@ export async function getToBundleDetailEc(page: Page, bundleName: string, bundle
   }
 }
 
-export async function validateBundle(bundleName: string, bundleType: string, jwt: string) {
+export async function validateBundle(bundleName: string, bundleType: string) {
   // Retrieve bundle list
   const response = await fetch(
     `${MARKETPLACE_BE_URL}/bundles?limit=200&types=${bundleType}&name=${bundleName}`,
@@ -80,8 +74,7 @@ export async function validateBundle(bundleName: string, bundleType: string, jwt
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
-        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
       },
     }
   );
@@ -103,8 +96,7 @@ export async function validateBundle(bundleName: string, bundleType: string, jwt
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
-        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
       },
       body: JSON.stringify({
         ...bundle,

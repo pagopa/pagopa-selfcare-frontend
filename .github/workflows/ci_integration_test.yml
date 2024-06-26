@@ -93,15 +93,7 @@ jobs:
           yarn install
           npx playwright install --with-deps
           
-          if [ "${{ inputs.environment }}" = "local" ]; then
-            export SUBKEY='${{ vars.DUMMY }}'
-          fi
-          if [ "${{ inputs.environment }}" = "dev" ]; then
-            export SUBKEY='${{ vars.DUMMY }}'
-          fi
-        
-          echo $SUBKEY
-          SUBKEY=$SUBKEY npx playwright test --workers=1 --max-failures=1 --project=firefox
+          SUBKEY='${{ secrets.DEV_SUBKEY }}' npx playwright test --workers=1 --max-failures=1 --project=firefox
 
   print_debug:
     runs-on: ubuntu-latest

@@ -1247,6 +1247,7 @@
         "channelCode": "Codice canale",
         "noChannelsOption": "Nessun canale trovato",
         "brokerCode": "Codice intermediario",
+        "pspName": "Nome PSP",
         "noBrokersOption": "Nessun intermediario trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",

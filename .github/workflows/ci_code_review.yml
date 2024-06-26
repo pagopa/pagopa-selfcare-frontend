@@ -112,6 +112,7 @@ jobs:
           app_location: "/out" # App source code path relative to repository root
           skip_app_build: true
           skip_api_build: true
+          skip_deploy_on_missing_secrets: true
 
 
   # smoke_test:
@@ -217,7 +218,7 @@ jobs:
         with:
             args: >
               -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/e2e/**
-
+              -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
@@ -229,3 +230,18 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "close"
+
+  delete-branch:
+    name: delete branch when closed
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Delete branch
+        run: |
+          echo "Deleting branch ${{github.head_ref}}"
+          git push origin --delete "${{github.head_ref}}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

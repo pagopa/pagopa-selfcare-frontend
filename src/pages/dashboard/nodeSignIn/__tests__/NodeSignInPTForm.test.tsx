@@ -20,8 +20,8 @@ let spyOnCreateBrokerPsp: jest.SpyInstance<any, unknown[]>;
 let spyOnCreateEcBroker: jest.SpyInstance<any, unknown[]>;
 let spyOnGetPSPBrokerDetails: jest.SpyInstance<any, unknown[]>;
 let spyOnGetBrokerAndEcDetails: jest.SpyInstance<any, unknown[]>;
-let spyOnGetStationsMerged: jest.SpyInstance;
-let spyOnGetChannelsMerged: jest.SpyInstance;
+let spyOnGetStations: jest.SpyInstance;
+let spyOnGetChannels: jest.SpyInstance;
 
 beforeEach(() => {
     spyOnCreateBrokerPsp = jest.spyOn(require('../../../../services/nodeService'), 'createPspBroker');
@@ -34,13 +34,13 @@ beforeEach(() => {
         require('../../../../services/nodeService'),
         'getBrokerAndEcDetails'
     );
-    spyOnGetStationsMerged = jest.spyOn(
+    spyOnGetStations = jest.spyOn(
         require("../../../../services/stationService"),
-        "getStationsMerged"
+        "getStations"
     );
-    spyOnGetChannelsMerged = jest.spyOn(
+    spyOnGetChannels = jest.spyOn(
         require("../../../../services/channelService"),
-        "getChannelsMerged"
+        "getChannels"
     );
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
@@ -564,8 +564,8 @@ describe('<NodeSignInPTForm />', () => {
             orgIsPspSigned: false
 
         });
-        spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve({}));
-        spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve({}));
+        spyOnGetStations.mockReturnValueOnce(Promise.resolve({}));
+        spyOnGetChannels.mockReturnValueOnce(Promise.resolve({}));
         const {store, pspCheckbox, ecCheckbox} = renderApp({});
         await waitFor(() =>
             store.dispatch({
@@ -599,8 +599,8 @@ describe('<NodeSignInPTForm />', () => {
             orgIsPspSigned: false
 
         });
-        spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
-        spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
+        spyOnGetStations.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
+        spyOnGetChannels.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
         const {store, pspCheckbox, ecCheckbox} = renderApp({});
         await waitFor(() =>
             store.dispatch({
@@ -635,8 +635,8 @@ describe('<NodeSignInPTForm />', () => {
             orgIsPspSigned: false
 
         });
-        spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
-        spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve({}));
+        spyOnGetStations.mockReturnValueOnce(Promise.resolve(mockedStationsMerged2));
+        spyOnGetChannels.mockReturnValueOnce(Promise.resolve({}));
         const {store, pspCheckbox, ecCheckbox} = renderApp({});
         await waitFor(() =>
             store.dispatch({
@@ -671,8 +671,8 @@ describe('<NodeSignInPTForm />', () => {
             orgIsPspSigned: false
 
         });
-        spyOnGetStationsMerged.mockReturnValueOnce(Promise.resolve({}));
-        spyOnGetChannelsMerged.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
+        spyOnGetStations.mockReturnValueOnce(Promise.resolve({}));
+        spyOnGetChannels.mockReturnValueOnce(Promise.resolve(mockedChannelsMerged));
         const {store, pspCheckbox, ecCheckbox} = renderApp({});
         await waitFor(() =>
             store.dispatch({

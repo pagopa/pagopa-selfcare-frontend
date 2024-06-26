@@ -19,7 +19,7 @@ export function buildColumnDefs(
             headerName: t('stationsPage.stationsTableColumns.headerFields.name'),
             align: 'left',
             headerAlign: 'left',
-            minWidth: userIsPagopaOperator ? 900 : 485,
+            minWidth: userIsPagopaOperator ? 700 : 485,
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,

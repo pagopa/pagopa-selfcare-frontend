@@ -1,24 +1,25 @@
-import {Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon} from '@mui/icons-material';
-import {Box, Button, FormControlLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField,} from '@mui/material';
-import {theme} from '@pagopa/mui-italia';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {FormikProps, useFormik} from 'formik';
-import {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router';
-import {BrokerOrPspDetailsResource} from '../../../api/generated/portal/BrokerOrPspDetailsResource';
+import { Badge as BadgeIcon, BookmarkAdd as BookmarkAddIcon } from '@mui/icons-material';
+import { Box, Button, FormControlLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField, } from '@mui/material';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { FormikProps, useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { BrokerOrPspDetailsResource } from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import FormSectionTitle from '../../../components/Form/FormSectionTitle';
-import {useSigninData} from '../../../hooks/useSigninData';
-import {NodeOnSignInPSP} from '../../../model/Node';
-import {Party} from '../../../model/Party';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import { useOrganizationType } from "../../../hooks/useOrganizationType";
+import { useSigninData } from '../../../hooks/useSigninData';
+import { NodeOnSignInPSP } from '../../../model/Node';
+import { Party } from '../../../model/Party';
+import { ConfigurationStatus } from '../../../model/Station';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import {getChannelsMerged} from '../../../services/channelService';
-import {createPspBroker, createPSPDirect, createPSPIndirect, updatePSPInfo,} from '../../../services/nodeService';
-import {deletePSPBroker} from '../../../services/pspBrokerService';
-import {LOADING_TASK_CHANNEL_ADD_EDIT} from '../../../utils/constants';
-import {useOrganizationType} from "../../../hooks/useOrganizationType";
+import { getChannels } from '../../../services/channelService';
+import { createPSPDirect, createPSPIndirect, createPspBroker, updatePSPInfo, } from '../../../services/nodeService';
+import { deletePSPBroker } from '../../../services/pspBrokerService';
+import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
 import CommonRadioGroup from './components/CommonRadioGroup';
 
 type Props = {
@@ -49,11 +50,17 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
         setLoading(true);
         const brokerCode = selectedParty?.fiscalCode ?? '';
 
-        getChannelsMerged(0, brokerCode, undefined, 1)
-            .then((channels) => {
-                setHasPSPChannels(
-                    channels?.page_info?.items_found !== undefined && channels.page_info.items_found > 0
-                );
+        Promise.all([
+            getChannels({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
+            getChannels({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
+          ])
+            .then(([activeChannels, toBeActivatedChannels]) => {
+              setHasPSPChannels(
+                (activeChannels?.page_info?.total_items !== undefined &&
+                  activeChannels.page_info.total_items > 0) ||
+                  (toBeActivatedChannels?.page_info?.total_items !== undefined &&
+                    toBeActivatedChannels.page_info.total_items > 0)
+              );
             })
             .catch((reason) => {
                 addError({
@@ -75,6 +82,7 @@ const NodeSignInPSPForm = ({goBack, signInData}: Props) => {
             return signInData?.paymentServiceProviderDetailsResource?.psp_code;
         } else if (
             selectedParty?.pspData?.abi_code &&
+            selectedParty?.pspData?.abi_code !== 'N/A' &&
             /^\d{5}$/.test(selectedParty?.pspData?.abi_code)
         ) {
             return 'ABI'.concat(selectedParty?.pspData?.abi_code);

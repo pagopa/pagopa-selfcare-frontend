@@ -30,7 +30,7 @@ describe('<CommissionBundleDetailConfiguration />', () => {
             //Open Drawer
             fireEvent.click(buttonDrawer);
             expect(screen.queryByTestId('padded-drawer')).toBeInTheDocument();
-            expect(screen.queryAllByTestId('detail-column').length).toBe(15);
+            expect(screen.queryAllByTestId('detail-column').length).toBe(16);
         });
 
         const closeDrawerButton = screen.getByTestId('close-drawer-button');
@@ -54,7 +54,7 @@ describe('<CommissionBundleDetailConfiguration />', () => {
             //Open Drawer
             fireEvent.click(buttonDrawer);
             expect(screen.queryByTestId('padded-drawer')).toBeInTheDocument();
-            expect(screen.queryAllByTestId('detail-column').length).toBe(15);
+            expect(screen.queryAllByTestId('detail-column').length).toBe(16);
         });
 
         const closeDrawerButton = screen.getByTestId('close-drawer-button');
@@ -77,7 +77,7 @@ describe('<CommissionBundleDetailConfiguration />', () => {
 
             //Open Drawer
             fireEvent.click(buttonDrawer);
-            expect(screen.queryAllByTestId('detail-column').length).toBe(15);
+            expect(screen.queryAllByTestId('detail-column').length).toBe(16);
         });
     });
 });

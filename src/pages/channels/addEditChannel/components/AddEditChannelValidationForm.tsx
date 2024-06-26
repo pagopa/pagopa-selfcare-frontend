@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import {theme} from '@pagopa/mui-italia';
 import {FormikProps} from 'formik';
-import {Badge as BadgeIcon, MenuBook as MenuBookIcon} from '@mui/icons-material';
+import {Badge as BadgeIcon, Info, MenuBook as MenuBookIcon} from '@mui/icons-material';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import AddEditChannelFormSectionTitle from '../AddEditChannelFormSectionTitle';
 import {ChannelOnCreation} from '../../../../model/Channel';
@@ -257,7 +257,7 @@ const AddEditChannelValidationForm = ({
                 <Box sx={inputGroupStyle}>
                     <AddEditChannelFormSectionTitle
                         title={t('addEditChannelPage.addForm.validationForm.sections.otherInfo')}
-                        icon={<MenuBookIcon/>}
+                        icon={<Info/>}
                     ></AddEditChannelFormSectionTitle>
                     <Grid container spacing={2} mt={1}>
                         <Grid container item xs={6}>
@@ -317,7 +317,7 @@ const AddEditChannelValidationForm = ({
                             />
                         </Grid>
 
-                        <Grid container item xs={4} sx={{mt: 3, mb: 4}}>
+                        <Grid container item xs={4} sx={{mt: 3}}>
                             <FormControlLabel
                                 control={
                                     <Checkbox

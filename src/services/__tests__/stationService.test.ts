@@ -1,6 +1,6 @@
-import {BackofficeApi} from '../../api/BackofficeClient';
-import {TestStationTypeEnum} from '../../api/generated/portal/StationTestDto';
-import {ConfigurationStatus} from '../../model/Station';
+import { BackofficeApi } from '../../api/BackofficeClient';
+import { TestStationTypeEnum } from '../../api/generated/portal/StationTestDto';
+import { ConfigurationStatus } from '../../model/Station';
 import {
     mockedCreatedStation,
     mockedCreditorInstitutionStationDTO,
@@ -12,11 +12,10 @@ import {
     mockedStationDetailsDTO,
     mockedStationECs,
     mockedStations,
-    mockedStationsMerged2,
     mockedWrapperStation,
     stationTestErrorMocked,
     stationTestMocked,
-    stationWrapperMockedGet,
+    stationWrapperMockedGet
 } from '../__mocks__/stationService';
 import {
     associateEcToStation,
@@ -31,13 +30,12 @@ import {
     getStationCodeV2,
     getStationDetail,
     getStations,
-    getStationsMerged,
     getWrapperStation,
     testStation,
     updateStation,
-    updateWrapperStationWithOperatorReview,
     updateWrapperStationToCheck,
     updateWrapperStationToCheckUpdate,
+    updateWrapperStationWithOperatorReview,
 } from '../stationService';
 
 describe('StationService test mocked', () => {
@@ -54,10 +52,6 @@ describe('StationService test mocked', () => {
             limit: 0,
         });
         expect(response).toMatchObject(mockedStations);
-    });
-    test('Test getStationsMerged', async () => {
-        const response = await getStationsMerged(0, 'brokerCode');
-        expect(response).toMatchObject(mockedStationsMerged2);
     });
     test('Test getStation', async () => {
         const response = await getStation('stationId');
@@ -120,7 +114,7 @@ describe('StationService test mocked', () => {
         expect(response).toMatchObject(mockedFullStation);
     });
     test('Test getCreditorInstitutionSegregationcodes', async () => {
-        const response = await getCreditorInstitutionSegregationCodes('ecCode');
+        const response = await getCreditorInstitutionSegregationCodes('ecCode', 'targetCICode');
         expect(response).toMatchObject(mockedSegregationCodeList);
     });
     test('Test testStation', async () => {
@@ -176,13 +170,6 @@ describe('StationService test', () => {
                 limit: 0,
             })
         ).resolves.not.toThrow();
-        expect(spyOn).toBeCalledTimes(1);
-    });
-    test('Test getStationsMerged', async () => {
-        const spyOn = jest
-            .spyOn(BackofficeApi, 'getStationsMerged')
-            .mockReturnValue(new Promise((resolve) => resolve(mockedStationsMerged2)));
-        expect(getStationsMerged(0, 'brokerCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test getStation', async () => {
@@ -295,7 +282,7 @@ describe('StationService test', () => {
         const spyOn = jest
             .spyOn(BackofficeApi, 'getCreditorInstitutionSegregationCodes')
             .mockReturnValue(new Promise((resolve) => resolve(mockedSegregationCodeList)));
-        expect(getCreditorInstitutionSegregationCodes('ecCode')).resolves.not.toThrow();
+        expect(getCreditorInstitutionSegregationCodes('ecCode', 'targetCICode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test testStation', async () => {

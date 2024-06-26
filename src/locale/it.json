@@ -202,8 +202,12 @@
   "channelsPage": {
     "title": "Canali",
     "subtitle": "Cerca e visualizza lo stato dei canali presenti.",
-    "createChannelButtonLabel": "Crea canale",
-    "searchPlaceholder": "Cerca per codice",
+    "search": {
+      "placeholder": "Cerca per codice canale",
+      "createButton": "Crea canale",
+      "tabActive": "Attive",
+      "tabToBeValidated": "Da validare"
+    },
     "table": {
       "noResults": "Nessun risultato",
       "emptyState": "Non sono ancora presenti canali in questo ambiente.",
@@ -222,7 +226,9 @@
   "addEditChannelPage": {
     "config": {
       "titleConfiguration": "Configura canale",
-      "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione."
+      "titleValidate": "Valida Canale",
+      "subtitleConfiguration": "Completa le informazioni a carico di PagoPA per completare la configurazione.",
+      "subtitleValidate": "Verifica che le informazioni sul canale siano corrette e completa quelle mancanti."
     },
     "create": {
       "title": "Crea un nuovo canale",
@@ -255,7 +261,7 @@
         "endPoint": "Endpoint",
         "targetPort": "Porta",
         "paymentType": "Seleziona tipo di versamento",
-        "addPayment": "Aggiunta metodo"
+        "addPayment": "Aggiungi metodo"
       },
       "errorMessageDesc": "Errore durante l’invio delle informazioni, Riprova",
       "errorMessagePaymentTypesDesc": "Errore durante la ricezione dei metodi di pagamento",
@@ -305,7 +311,9 @@
         "message": "Un operatore PagoPA revisionerà le informazioni inserite nel canale prima di approvare. Riceverai una notifica a revisione completata.<br/>",
         "messageStation": "Un operatore PagoPA revisionerà le informazioni inserite nella stazione prima di approvare. Riceverai una notifica a revisione completata.<br/>",
         "messageChannelOperation": "L’ente riceverà una notifica di conferma attivazione del canale.",
-        "channelConfiguration": "Configurazione canale"
+        "channelConfiguration": "Configurazione canale",
+        "channelValidate": "Conferma validazione canale",
+        "messageChannelOperationValidate": "Il canale passerà in stato attivo, e l'ente potrà utilizzarlo per attivare i suoi servizi"
       }
     },
     "validationMessage": {
@@ -319,14 +327,20 @@
     "subtitle": "Dopo la modifica sarà richiesta una nuova revisione del canale."
   },
   "channelDetailPage": {
+    "subtitle":{
+      "waiting": "Ecco i dettagli del canale inviato in revisione.",
+      "approved": "Ecco i dettagli della canale."
+    },
     "channels": "Canali",
-    "edit": "Modifica",
     "deleteRequired": "Richiedi eliminazione",
     "correctionRequired": "Richiedi correzione",
+    "requestEdit": "Richiedi modifiche",
+    "approveAndValidate": "Approva e valida",
     "configure": "Configura",
     "duplicate": "Duplica",
     "disable": "Disabilita",
     "createdOn": "Creato il",
+    "lastModified": "Ultima modifica operata da",
     "alertWarning": "Canale in attesa di revisione da parte di un operatore PagoPA.",
     "detail": "dettaglio",
     "state": "Stato",
@@ -370,7 +384,21 @@
     "timeoutB": "Timeout B",
     "timeoutC": "Timeout C",
     "pspNotify": "PSP Notify Payment",
-    "stamp": "Marca da bollo"
+    "stamp": "Marca da bollo",
+    "alert": {
+      "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche al canale.",
+      "toFixTitle": "Modifiche richieste",
+      "toFixMessage": "Canale in attesa di correzione da parte dell’ente.",
+      "waitingForRevision": "Il canale è in attesa di approvazione da parte di un nostro operatore. Riceverai una mail a procedura completata."
+    },
+    "modal": {
+      "title": "Cosa c'è che non va?",
+      "subtitle": "il tuo commento sarà condiviso con l'ente",
+      "placeholder": "Descrivi l'anomalia",
+      "helperText": "Scrivi massimo 200 caratteri",
+      "successMessage": "Richiesta di modifiche inviata con successo",
+      "error": "Errore riscontrato in fase di invia richiesta di modifiche"
+    }
   },
   "channelPSPList": {
     "title": "Gestisci PSP",
@@ -1494,9 +1522,8 @@
     "backButton": "Esci"
   },
   "tos": {
-    "title": "pagoPA",
-    "description": "Prima di entrare, leggi e accetta l’Informativa Privacy e i Termini e condizioni d’uso. Potrai consultarli di nuovo quando vuoi: li trovi sempre in fondo alla pagina.",
-    "termsDescription": "Entrando dichiari di aver letto e accettato l’<1>Informativa Privacy</1> e i <1>Termini e condizioni d’uso</1> di PagoPA"
+    "title": "Pagamenti pagoPA",
+    "termsDescription": "Accedendo, accetti i <1>Termini e condizioni d’uso</1> del servizio e confermi di avere letto l’<1>Informativa Privacy</1>. "
   },
   "general": {
     "noDataLabel": "Nessun risultato",
@@ -1554,7 +1581,9 @@
     "maintenancePageText": "Il portale è in manutenzione",
     "rejectedFile": "Tipo di file non supportato",
     "noOptions": "Nessun elemento",
-    "loading": "Caricamento..."
+    "loading": "Caricamento...",
+    "fromLower": "da",
+    "atLower": "il"
   },
   "ANY": "Tutti"
 }

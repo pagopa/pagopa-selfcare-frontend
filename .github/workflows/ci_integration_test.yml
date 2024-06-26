@@ -94,15 +94,13 @@ jobs:
           npx playwright install --with-deps
           
           if [ "${{ inputs.environment }}" = "local" ]; then
-            export SUBKEY='${{ secrets.DEV_SUBKEY }}'
+            export SUBKEY='${{ vars.DUMMY }}'
           fi
           if [ "${{ inputs.environment }}" = "dev" ]; then
-            export SUBKEY='${{ secrets.DEV_SUBKEY }}'
+            export SUBKEY='${{ vars.DUMMY }}'
           fi
-          if [ "${{ inputs.environment }}" = "uat" ]; then
-            export SUBKEY='${{ secrets.UAT_SUBKEY }}'
-          fi
-          
+        
+          echo $SUBKEY
           SUBKEY=$SUBKEY npx playwright test --workers=1 --max-failures=1 --project=firefox
 
   print_debug:

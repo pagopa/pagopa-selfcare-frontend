@@ -58,3 +58,8 @@ data "azurerm_cdn_profile" "cdn_profile" {
   name                = local.cdn.name
   resource_group_name = local.cdn.resource_group_name
 }
+
+data "azurerm_key_vault_secret" "key_vault_integration_test_subkey" {
+  name         = "integration-test-subkey"
+  key_vault_id = data.azurerm_key_vault.key_vault.id
+}

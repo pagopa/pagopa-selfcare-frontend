@@ -1,6 +1,6 @@
 import {Page, test} from '@playwright/test';
 import {
-  bundleNamePublic,
+  bundleNamePrivate,
   ciBundleStates,
   deleteAllExpiredBundles,
   getToBundleDetailEc,
@@ -10,7 +10,7 @@ import {
 import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
 
 test.setTimeout(100000);
-test.describe('Public bundles flow', () => {
+test.describe('Private bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
 
@@ -19,17 +19,17 @@ test.describe('Public bundles flow', () => {
   });
 
   test.afterAll(async () => {
-    await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
+    await deleteAllExpiredBundles(bundleNamePrivate, BundleTypes.PRIVATE);
     await page.close();
   });
 
-  test('PSP creates public bundle', async () => {
+  test('PSP creates private bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
-    await page.getByLabel('Su richiesta').check();
+    await page.getByLabel('Su invito').check();
     await page.getByTestId('name-test').click();
-    await page.getByTestId('name-test').fill(bundleNamePublic);
+    await page.getByTestId('name-test').fill(bundleNamePrivate);
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
     await page.getByLabel('Tipo di pagamento').click();
@@ -92,88 +92,115 @@ test.describe('Public bundles flow', () => {
   });
 
   test('Validate bundle', async () => {
-    await validateBundle(bundleNamePublic, BundleTypes.PUBLIC);
+    await validateBundle(bundleNamePrivate, BundleTypes.PRIVATE);
   });
 
-  test('EC activates public bundle', async () => {
-    await changeToEcUser(page);
-    await activatePublicBundle(page);
+  test('PSP sends private bundle offer', async () => {
+    await sendPrivateBundleOffer(page);
   });
 
-  test('EC delete subscription request', async () => {
+  test('PSP delete private bundle offer', async () => {
     await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.REQUESTED);
-    await page.getByTestId('delete-request-button').click();
-    await page.getByTestId('confirm-button-test').click();
-    await checkReturnHomepage(page);
-  });
-
-  test('EC activates public bundle 2nd time', async () => {
-    await activatePublicBundle(page);
-  });
-
-  test('PSP reject EC`s subscription request', async () => {
-    await changeToPspUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await page.getByTestId('tab-private').click();
+    await getToBundleDetailPsp(page, bundleNamePrivate, true);
     await page.getByTestId('request-detail-button').click();
-    await page.getByTestId('request-reject-button').click();
+    await page.getByTestId('offer-delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
   });
 
-  test('EC activates public bundle 3rd time', async () => {
-    await changeToEcUser(page);
-    await activatePublicBundle(page);
+  test('PSP sends private bundle offer 2nd time', async () => {
+    await sendPrivateBundleOffer(page);
   });
 
-  test('PSP accept EC`s subscription request', async () => {
+  test('EC reject private bundle offer', async () => {
+    await changeToEcUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-private').click();
+    await page
+      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
+      .click();
+    await page.getByLabel('Attivi').click();
+    await page.getByRole('option', { name: 'Disponibili' }).click();
+    await page.waitForTimeout(2000);
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
+    await page.getByTestId('reject-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await checkReturnHomepage(page);
+  });
+
+  test('PSP sends private bundle offer 3rd time', async () => {
     await changeToPspUser(page);
+    await sendPrivateBundleOffer(page);
+  });
+
+  test('EC accept private bundle offer', async () => {
+    await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
-    await page.getByTestId('request-detail-button').click();
-    await page.getByTestId('request-accept-button').click();
+    await page.getByTestId('tab-private').click();
+    await page
+      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
+      .click();
+    await page.getByLabel('Attivi').click();
+    await page.getByRole('option', { name: 'Disponibili' }).click();
+    await page.waitForTimeout(2000);
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
+    await page.getByTestId('activate-button').click();
+    await page.getByTestId('payment-amount-test').nth(0).click();
+    await page.getByTestId('payment-amount-test').nth(0).fill('40');
+    await page
+      .locator('div')
+      .filter({ hasText: /^Conferma$/ })
+      .click();
+    await page.getByTestId('payment-amount-test').nth(0).click();
+    await page.getByTestId('payment-amount-test').nth(0).fill('4');
+    await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
   });
 
-  test('EC de-activates public bundle', async () => {
-    await changeToEcUser(page);
+  test('EC de-activates private bundle', async () => {
     await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.ENABLED);
+    await page.getByTestId('tab-private').click();
+    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
   });
 
-  test('PSP deletes public bundle', async () => {
+  test('PSP deletes private bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await page.getByTestId('tab-private').click();
+    await getToBundleDetailPsp(page, bundleNamePrivate, true);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
   });
 });
 
-async function activatePublicBundle(page: Page) {
+async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('commission-bundles-test').click();
-  await page.getByTestId('tab-public').click();
-  await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.AVAILABLE);
-  await page.getByTestId('activate-button').click();
-  await page.getByLabel('Importo a tuo carico').click();
-  await page.getByLabel('Importo a tuo carico').fill('40');
-  await page
-    .locator('div')
-    .filter({ hasText: /^Conferma$/ })
-    .click();
-  await page.getByLabel('Importo a tuo carico').click();
-  await page.getByLabel('Importo a tuo carico').fill('4');
+  await page.getByTestId('tab-private').click();
+  await getToBundleDetailPsp(page, bundleNamePrivate, true);
+  await page.getByRole('link', { name: 'Invita enti' }).click();
+  await page.getByLabel('Cerca EC').click();
+  await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC DEMO');
+  await page.getByRole('option', { name: 'EC DEMO DIRECT' }).click();
+  await page.getByTestId('add-recipients-button').click();
+  await page.getByLabel('Cerca EC').click();
+  await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('COMUNE');
+  await page.getByLabel('Comune di Lorem Ipsum').click();
+  await page.getByTestId('remove-selected-ec-btn-id-test').nth(1).click();
+  await page.getByTestId('open-modal-button-test').click();
+  await page.getByTestId('confirm-button-test').click();
+  await page.getByTestId('request-detail-button').click();
+  await page.getByTestId('offer-delete-button').click();
+  await page.getByTestId('confirm-button-test').click();
+  await page.getByRole('link', { name: 'Invita enti' }).click();
+  await page.getByLabel('Cerca EC').click();
+  await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC DEMO');
+  await page.getByRole('option', { name: 'EC DEMO DIRECT' }).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
   await checkReturnHomepage(page);

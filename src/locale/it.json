@@ -1022,7 +1022,10 @@
       "alert": {
         "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
         "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani.",
-        "availableExpired": "Il pacchetto sarà eliminato e non più visibile a partire da domani, non è possibile attivarlo."
+        "availableExpired": {
+          "title": "Pacchetto in scadenza",
+          "message": "Non è più possibile attivare questo pacchetto perché in scadenza."
+        }
       },
       "error": {
         "deleteBundlePsp": "Errore durante l'eliminazione del pacchetto",

@@ -49,8 +49,11 @@ function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }
   }
   if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
     return (
-      <Alert severity={'error'} data-testid="alert-error-expired-test" variant="outlined">
-        {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired')}
+      <Alert severity={'warning'} data-testid="alert-error-expired-test" variant="outlined">
+        <Typography fontWeight={'fontWeightMedium'}>
+          {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired.title')}
+        </Typography>
+        {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired.message')}
       </Alert>
     );
   }
@@ -82,7 +85,7 @@ const BundleActionButtons = ({
   setShowConfirmModal: (arg: BundleDetailsActionTypes | null) => void;
   bundleDetail: BundleResource;
   bundleId: string;
-// eslint-disable-next-line sonarjs/cognitive-complexity
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 }) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
@@ -115,8 +118,10 @@ const BundleActionButtons = ({
       );
     }
     if (orgInfo.types.isEc) {
+      const bundleStatus = (bundleDetail as CIBundleResource).ciBundleStatus;
       if (
-        (bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE
+        bundleStatus === CiBundleStatusEnum.AVAILABLE ||
+        bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED
       ) {
         return (
           <>
@@ -135,13 +140,14 @@ const BundleActionButtons = ({
               to={ROUTES.COMMISSION_BUNDLES_ACTIVATE}
               variant="contained"
               data-testid="activate-button"
+              disabled={bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED}
             >
               {t('general.activate')}
             </Button>
           </>
         );
       }
-      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.ENABLED) {
+      if (bundleStatus === CiBundleStatusEnum.ENABLED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_EC)}
@@ -153,7 +159,7 @@ const BundleActionButtons = ({
           </Button>
         );
       }
-      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
+      if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_REQUEST_EC)}

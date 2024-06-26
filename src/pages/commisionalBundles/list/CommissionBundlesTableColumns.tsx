@@ -229,19 +229,11 @@ const getCIStatusChip = (
   bundleType: TypeEnum | undefined,
   bundleStatus: CiBundleStatusEnum | undefined
 ) => {
-  if (bundleStatus === CiBundleStatusEnum.AVAILABLE) {
+  if (bundleStatus === CiBundleStatusEnum.AVAILABLE || bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
     return renderStatusChip({
       chipColor: 'default',
       chipLabel: t('commissionBundlesPage.list.states.toBeActivated'),
       dataTestId: 'default-activate-state-chip',
-    });
-  }
-
-  if (bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
-    return renderStatusChip({
-      chipColor: 'error',
-      chipLabel: t('commissionBundlesPage.list.states.onRemovalInactive'),
-      dataTestId: 'error-removal-state-chip',
     });
   }
 

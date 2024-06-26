@@ -529,7 +529,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
     });
     test('Bundle AVAILABLE expired', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
-      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE;
+      bundle.ciBundleStatus = CiBundleStatusEnum.AVAILABLE_EXPIRED;
       bundle.validityDateFrom = new Date('01/01/2020');
       bundle.validityDateTo = new Date();
       render(
@@ -541,9 +541,9 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       );
 
       expect(screen.queryByTestId('success-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('error-removal-state-chip')).toBeInTheDocument();
+      expect(screen.queryByTestId('error-removal-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('warning-removal-state-chip')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('default-activate-state-chip')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('default-activate-state-chip')).toBeInTheDocument();
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
     });
     test('Bundle ON_REMOVAL', () => {

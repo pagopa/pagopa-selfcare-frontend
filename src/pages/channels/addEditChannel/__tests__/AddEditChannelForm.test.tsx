@@ -66,13 +66,78 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const operatorUser: Array<Party> = [pspOperatorSignedDirect];
 
-    test('Test rendering AddEditChannelForm', async () => {
+    test('Test rendering AddEditChannelForm Operator', async () => {
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
             userRole: ROLE.PAGOPA_OPERATOR,
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsPagopaOperator: true,
+            userIsAdmin: true,
+        });
+        render(
+            <Provider store={store}>
+                <Router history={history}>
+                    <ThemeProvider theme={theme}>
+                        <AddEditChannelForm
+                            formAction={FormAction.Duplicate}
+                            selectedParty={pspOperatorSignedDirect}
+                            channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+                        />
+                    </ThemeProvider>
+                </Router>
+            </Provider>
+        );
+        const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+        const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
+        const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
+        const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
+        const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
+        const continueBtn = screen.getByText(
+            'addEditChannelPage.addForm.continueButton'
+        ) as HTMLButtonElement;
+
+        expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+        expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+        expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
+
+        fireEvent.click(businessName);
+        fireEvent.change(businessName, {target: {value: 'businessName'}});
+        expect(businessName.value).toBe('businessName');
+
+        fireEvent.click(pspBrokerCode);
+        fireEvent.change(pspBrokerCode, {target: {value: 'pspBrokerCode'}});
+        expect(pspBrokerCode.value).toBe('pspBrokerCode');
+
+        fireEvent.click(channelCode);
+        fireEvent.change(channelCode, {target: {value: 'channelCode'}});
+        expect(channelCode.value).toBe('channelCode');
+
+        fireEvent.click(targetUnion);
+        fireEvent.change(targetUnion, {target: {value: 'https://www.testTarget.it/path'}});
+        expect(targetUnion.value).toBe('https://www.testTarget.it/path');
+
+        fireEvent.click(paymentType);
+        fireEvent.change(paymentType, {target: {value: 'Option 1'}});
+
+        fireEvent.click(continueBtn);
+
+        const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
+        const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
+
+        userEvent.click(cancelBtn);
+        fireEvent.click(continueBtn);
+
+        userEvent.click(confirmBtn);
+    });
+
+    test('Test rendering AddEditChannelForm PSP', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: true,
+            userIsPagopaOperator: false,
             userIsAdmin: true,
         });
         render(

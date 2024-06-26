@@ -81,7 +81,6 @@ export const mockedFullStation: StationDetailResource = {
     targetHostPof: 'hostPof',
     targetPathPof: 'pathPof',
     targetPortPof: 456,
-    isConnectionSync: true,
     proxyEnabled: false,
     proxyHost: 'proxyHost',
     proxyPort: 888,

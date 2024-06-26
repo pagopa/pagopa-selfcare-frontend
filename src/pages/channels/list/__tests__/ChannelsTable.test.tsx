@@ -14,7 +14,7 @@ import { pspAdminSignedDirect } from '../../../../services/__mocks__/partyServic
 import * as ChannelService from '../../../../services/channelService';
 import ChannelsTable from '../ChannelsTable';
 
-const mockGetChannelsMerged = jest.spyOn(ChannelService, 'getChannelsMerged');
+const mockGetChannels = jest.spyOn(ChannelService, 'getChannels');
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -39,7 +39,7 @@ const Component = () => {
 
 describe('<ChannelsTable />', () => {
   test('render component ChannelsTable', async () => {
-    mockGetChannelsMerged.mockReturnValue(Promise.resolve(mockedChannels));
+    mockGetChannels.mockReturnValue(Promise.resolve(mockedChannels));
     render(
       <Provider store={store}>
         <Component />
@@ -51,7 +51,7 @@ describe('<ChannelsTable />', () => {
     });
   });
   test('render component ChannelsTable error getChannelsMerged', async () => {
-    mockGetChannelsMerged.mockRejectedValue('error');
+    mockGetChannels.mockRejectedValue('error');
     render(
       <Provider store={store}>
         <Component />

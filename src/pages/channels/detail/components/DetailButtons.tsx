@@ -236,3 +236,4 @@ const DetailButtons = ({ channelDetails, setChannelDetails, goBack }: Props) => 
 };
 
 export default DetailButtons;
+

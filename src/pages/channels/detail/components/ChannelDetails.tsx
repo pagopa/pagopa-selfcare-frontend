@@ -19,6 +19,7 @@ import { useUserRole } from '../../../../hooks/useUserRole';
 import DetailButtons from './DetailButtons';
 import GetChannelAlert from './GetChannelAlert';
 
+
 type Props = {
   channelDetail: ChannelDetailsResource;
   setChannelDetail: (value: any) => void;
@@ -375,3 +376,4 @@ const ChannelDetails = ({
 };
 
 export default ChannelDetails;
+

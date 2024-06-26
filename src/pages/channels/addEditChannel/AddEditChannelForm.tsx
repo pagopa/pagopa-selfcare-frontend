@@ -32,7 +32,7 @@ import {
   createChannel,
   createWrapperChannelDetails,
   updateChannel,
-  updateWrapperChannelDetailsToCheck,
+  updateWrapperChannelDetails,
 } from '../../../services/channelService';
 import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
 import { Party } from '../../../model/Party';
@@ -443,7 +443,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             throw new Error('Wrong channel wrapper status');
           }
         } else {
-          await updateWrapperChannelDetailsToCheck({channelCode, channel: values, validationUrl});
+          await updateWrapperChannelDetails({channelCode, channel: values, validationUrl});
         }
         redirect();
       }

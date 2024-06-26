@@ -154,7 +154,7 @@ const PaymentNoticesDetailPage = ({
                                             {t('addEditInstitutionsDataPage.addForm.fields.posteAuth')}
                                         </Typography>
                                         <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                                            {data?.posteAccountNumber}
+                                            {data?.posteAuth}
                                         </Typography>
                                     </Grid>
                                 </Grid>

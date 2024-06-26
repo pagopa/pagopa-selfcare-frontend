@@ -5,25 +5,24 @@ import {
   deleteAllExpiredBundles,
   getToBundleDetailEc,
   getToBundleDetailPsp,
-  validateBundle,
-} from '../bundleUtils';
-import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login} from '../e2eUtils';
+  validateBundle
+} from './utils/bundleUtils';
+import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Public bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  // eslint-disable-next-line functional/no-let
-  let jwt: string;
+
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    await login(page);
-    jwt = await page.evaluate(async () => localStorage.token);
-    await goToStart(page);
   });
+
   test.afterAll(async () => {
     await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
+    await page.close();
   });
+
   test('PSP creates public bundle', async () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();

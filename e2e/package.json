@@ -2,9 +2,16 @@
   "name": "e2e",
   "version": "1.0.0",
   "license": "MIT",
+  "scripts": {
+    "dep": "npx playwright install --with-deps",
+    "test": "npx playwright test --workers=1 --max-failures=1 --project=chromium --headed"
+  },
   "devDependencies": {
     "@playwright/test": "^1.44.1",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.2"
   },
-  "scripts": {}
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
 }

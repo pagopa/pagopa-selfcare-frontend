@@ -1,18 +1,19 @@
 import {Page, test} from '@playwright/test';
-import {bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetailPsp} from '../bundleUtils';
-import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage, goToStart, login,} from '../e2eUtils';
+import {bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetailPsp} from './utils/bundleUtils';
+import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
+
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage({ storageState: undefined });
-    await login(page);
-    await goToStart(page);
   });
+
   test.afterAll(async () => {
     await deleteAllExpiredBundles(bundleNameGlobal, BundleTypes.GLOBAL);
+    await page.close();
   });
 
   test('PSP creates global bundle', async () => {

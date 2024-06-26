@@ -92,8 +92,11 @@ jobs:
           cd ./e2e
           yarn install
           npx playwright install --with-deps
+
+          export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+          export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
           
-          SUBKEY='${{ secrets.DEV_SUBKEY }}' npx playwright test --workers=1 --max-failures=1 --project=firefox
+          npx playwright test --workers=1 --max-failures=1 --project=chromium
 
   print_debug:
     runs-on: ubuntu-latest

@@ -1049,7 +1049,11 @@
       "commissions": "Commissione a carico",
       "alert": {
         "expiredTaxonomies": "Alcuni servizi di incasso non sono più validi.",
-        "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani."
+        "onRemoval": "Il pacchetto sarà disattivato e non più visibile a partire da domani.",
+        "availableExpired": {
+          "title": "Pacchetto in scadenza",
+          "message": "Non è più possibile attivare questo pacchetto perché in scadenza."
+        }
       },
       "error": {
         "deleteBundlePsp": "Errore durante l'eliminazione del pacchetto",
@@ -1243,6 +1247,7 @@
         "channelCode": "Codice canale",
         "noChannelsOption": "Nessun canale trovato",
         "brokerCode": "Codice intermediario",
+        "pspName": "Nome PSP",
         "noBrokersOption": "Nessun intermediario trovato",
         "paymentWithDigitalStamp": "Pagamento con marca da bollo",
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",

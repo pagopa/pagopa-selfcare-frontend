@@ -23,6 +23,7 @@ const bundleConfigurationFields = {
         ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
         ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
         ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],
+        ['pspBusinessName', 'commissionBundlesPage.addEditCommissionBundle.form.pspName'],
     ],
     col3: [
         ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
@@ -86,6 +87,7 @@ export default function CommissionBundleDetailConfiguration({
                 minHeight:
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== undefined &&
                     (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE &&
+                    (bundleDetail as CIBundleResource)?.ciBundleStatus !== CiBundleStatusEnum.AVAILABLE_EXPIRED &&
           bundleDetail?.bundleTaxonomies?.length > 2
                         ? '370px'
                         : '310px',

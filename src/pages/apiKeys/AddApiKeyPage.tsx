@@ -15,10 +15,10 @@ import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans, useTranslation, TFunction } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
-import { API_KEY_PRODUCTS, AvailableProductKeys, ConfiguredProductKeys } from '../../model/ApiKey';
+import { getApiKeyProducts, AvailableProductKeys, ConfiguredProductKeys, API_KEY_PRODUCTS } from '../../model/ApiKey';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
@@ -27,14 +27,12 @@ import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
 
 function AddApiKeyPage() {
   const { t } = useTranslation();
-  const NODOAUTH = t('addApiKeyPage.products.NODOAUTH');
   const [selectedProduct, setSelectedProduct] = useState<string>();
   const [availableProduct, setAvailableProduct] = useState<Array<AvailableProductKeys>>([]);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
   const addError = useErrorDispatcher();
-  const products: Array<ConfiguredProductKeys> = API_KEY_PRODUCTS(
-    t,
+  const products: Array<ConfiguredProductKeys> = getApiKeyProducts(
     selectedParty?.institutionType === 'PSP'
   );
 
@@ -81,7 +79,7 @@ function AddApiKeyPage() {
       setLoading(true);
       void getInstitutionApiKeys(selectedParty.partyId)
         .then((data) => {
-          buildAvailableProduct(data, products, setAvailableProduct, NODOAUTH);
+          buildAvailableProduct(data, products, setAvailableProduct, t);
         })
         .finally(() => setLoading(false));
     }
@@ -212,21 +210,21 @@ const buildAvailableProduct = (
   data: InstitutionApiKeysResource,
   products: Array<ConfiguredProductKeys>,
   setAvailableProduct: any,
-  NODOAUTH: string
+  t: TFunction
 ) => {
-  if (data?.institution_api_key_list?.some((el) => el.displayName.includes(NODOAUTH))) {
+  if (data?.institution_api_key_list?.some((el) => el.id.includes(API_KEY_PRODUCTS.NODOAUTH.key))) {
     // if nodeAuth was created, elements that are present in both lists will be disabled
     setAvailableProduct(
       products.map((p) =>
-        data?.institution_api_key_list?.some((el) => el.displayName.includes(p.key))
+        data?.institution_api_key_list?.some((el) => el.id.includes(p.key))
           ? {
               id: p.id,
-              title: p.key,
+              title: t(`addApiKeyPage.products.${p.id}`),
               disabled: true,
             }
           : {
               id: p.id,
-              title: p.key,
+              title: t(`addApiKeyPage.products.${p.id}`),
               disabled: false,
             }
       )
@@ -235,15 +233,15 @@ const buildAvailableProduct = (
     // if no apikeys was created, nodeAuth is the only items enabled
     setAvailableProduct(
       products.map((p) =>
-        p.key.includes(NODOAUTH)
+        p.key.includes(API_KEY_PRODUCTS.NODOAUTH.key)
           ? {
               id: p.id,
-              title: p.key,
+              title: t(`addApiKeyPage.products.${p.id}`),
               disabled: false,
             }
           : {
               id: p.id,
-              title: p.key,
+              title: t(`addApiKeyPage.products.${p.id}`),
               disabled: true,
             }
       )

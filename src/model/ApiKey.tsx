@@ -1,4 +1,3 @@
-import { TFunction } from 'react-i18next';
 import { ENV } from '../utils/env';
 
 export type ProductKeys = {
@@ -19,14 +18,35 @@ export type ConfiguredProductKeys = {
   key: string;
 };
 
-export const API_KEY_PRODUCTS = (t: TFunction, isPsp: boolean): Array<ConfiguredProductKeys> => {
+export const API_KEY_PRODUCTS = {
+  NODOAUTH: { id: 'NODOAUTH', key: 'nodauth-' },
+  GPD: { id: 'GPD', key: 'gdp-' },
+  GPD_REP: { id: 'GPD_REP', key: 'gpdrep-' },
+  GPD_PAY: { id: 'GPD_PAY', key: 'gpdpay-' },
+  BIZ: { id: 'BIZ', key: 'biz-' },
+  FDR_ORG: { id: 'FDR_ORG', key: 'fdrorg-' },
+  FDR_PSP: { id: 'FDR_PSP', key: 'fdrpsp-' },
+  BO_EXT_EC: { id: 'BO_EXT_EC', key: 'selfcareboexternalec-' },
+  BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
+  PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
+};
+
+export const getApiKeyProducts = (isPsp: boolean): Array<ConfiguredProductKeys> => {
   const list = isPsp
-    ? ['NODOAUTH', 'BO_EXT_PSP']
-    : ['NODOAUTH', 'GPD', 'GPD_PAY', 'GPD_REP', 'BIZ', 'BO_EXT_EC', 'PRINT_NOTICE'];
+    ? [API_KEY_PRODUCTS.NODOAUTH, API_KEY_PRODUCTS.BO_EXT_PSP]
+    : [
+        API_KEY_PRODUCTS.NODOAUTH,
+        API_KEY_PRODUCTS.GPD,
+        API_KEY_PRODUCTS.GPD_PAY,
+        API_KEY_PRODUCTS.GPD_REP,
+        API_KEY_PRODUCTS.BIZ,
+        API_KEY_PRODUCTS.BO_EXT_EC,
+        API_KEY_PRODUCTS.PRINT_NOTICE,
+      ];
 
   if (ENV.FEATURES.FDR.ENABLED) {
     // eslint-disable-next-line functional/immutable-data
-    list.push(isPsp ? 'FDR_PSP' : 'FDR_ORG');
+    list.push(isPsp ? API_KEY_PRODUCTS.FDR_PSP : API_KEY_PRODUCTS.FDR_ORG);
   }
-  return list.map((el) => ({ id: el, key: t(`addApiKeyPage.products.${el}`) }));
+  return list;
 };

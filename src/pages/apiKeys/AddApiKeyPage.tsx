@@ -18,12 +18,18 @@ import { useEffect, useState } from 'react';
 import { Trans, useTranslation, TFunction } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
-import { getApiKeyProducts, AvailableProductKeys, ConfiguredProductKeys, API_KEY_PRODUCTS } from '../../model/ApiKey';
+import {
+  getApiKeyProducts,
+  AvailableProductKeys,
+  ConfiguredProductKeys,
+  API_KEY_PRODUCTS,
+} from '../../model/ApiKey';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
 import { createInstitutionApiKeys, getInstitutionApiKeys } from '../../services/apiKeyService';
 import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
+import { useFlagValue } from '../../hooks/useFeatureFlags';
 
 function AddApiKeyPage() {
   const { t } = useTranslation();
@@ -33,7 +39,8 @@ function AddApiKeyPage() {
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
   const addError = useErrorDispatcher();
   const products: Array<ConfiguredProductKeys> = getApiKeyProducts(
-    selectedParty?.institutionType === 'PSP'
+    selectedParty?.institutionType === 'PSP',
+    useFlagValue('payment-notices')
   );
 
   const formik = useFormik({

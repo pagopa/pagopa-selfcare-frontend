@@ -31,7 +31,10 @@ export const API_KEY_PRODUCTS = {
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
 };
 
-export const getApiKeyProducts = (isPsp: boolean): Array<ConfiguredProductKeys> => {
+export const getApiKeyProducts = (
+  isPsp: boolean,
+  flagPrintNotice: boolean
+): Array<ConfiguredProductKeys> => {
   const list = isPsp
     ? [API_KEY_PRODUCTS.NODOAUTH, API_KEY_PRODUCTS.BO_EXT_PSP]
     : [
@@ -41,12 +44,15 @@ export const getApiKeyProducts = (isPsp: boolean): Array<ConfiguredProductKeys> 
         API_KEY_PRODUCTS.GPD_REP,
         API_KEY_PRODUCTS.BIZ,
         API_KEY_PRODUCTS.BO_EXT_EC,
-        API_KEY_PRODUCTS.PRINT_NOTICE,
       ];
 
   if (ENV.FEATURES.FDR.ENABLED) {
     // eslint-disable-next-line functional/immutable-data
     list.push(isPsp ? API_KEY_PRODUCTS.FDR_PSP : API_KEY_PRODUCTS.FDR_ORG);
+  }
+  if (flagPrintNotice && !isPsp) {
+    // eslint-disable-next-line functional/immutable-data
+    list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
   }
   return list;
 };

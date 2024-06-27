@@ -26,7 +26,7 @@ export const API_KEY_PRODUCTS = (t: TFunction, isPsp: boolean): Array<Configured
 
   if (ENV.FEATURES.FDR.ENABLED) {
     // eslint-disable-next-line functional/immutable-data
-    list.push('FDR_ORG');
+    list.push(isPsp ? 'FDR_PSP' : 'FDR_ORG');
   }
   return list.map((el) => ({ id: el, key: t(`addApiKeyPage.products.${el}`) }));
 };

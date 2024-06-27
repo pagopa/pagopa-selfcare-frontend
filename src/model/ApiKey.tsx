@@ -1,58 +1,58 @@
-import {ENV} from "../utils/env";
+import { ENV } from '../utils/env';
 
 export type ProductKeys = {
-    id: string;
-    displayName: string;
-    primaryKey: string;
-    secondaryKey: string;
+  id: string;
+  displayName: string;
+  primaryKey: string;
+  secondaryKey: string;
 };
 
 export type AvailableProductKeys = {
-    id: string;
-    title: string;
-    disabled: boolean;
+  id: string;
+  title: string;
+  disabled: boolean;
 };
 
 export type ConfiguredProductKeys = {
-    id: string;
-    key: string;
+  id: string;
+  key: string;
 };
 
-export const NODOAUTH = 'Connessione con nodo';
-export const GPD = 'GPD - Posizioni Debitorie';
-export const GPD_REP = 'GPD - Gestione flussi di rendicontazione';
-export const GPD_PAY = 'GPD - Recupero ricevute';
-export const BIZ = 'BIZ - Recupero ricevute Ente Creditore';
-export const FDR_ORG = 'FdR - Flussi di Rendicontazione (EC)';
-export const FDR_PSP = 'FdR - Flussi di Rendicontazione (PSP)';
-export const BO_EXT_EC = 'Backoffice External (EC)';
-export const BO_EXT_PSP = 'Backoffice External (PSP)';
-
-export const API_KEY_PSP_PRODUCTS = (): Array<ConfiguredProductKeys> => {
-    const list = [
-        {id: 'NODOAUTH', key: NODOAUTH},
-        {id: 'BO_EXT_PSP', key: BO_EXT_PSP}
-    ];
-
-    if (ENV.FEATURES.FDR.ENABLED) {
-        return [...list, {id: 'FDR_PSP', key: FDR_PSP}];
-    }
-    return list;
+export const API_KEY_PRODUCTS = {
+  NODOAUTH: { id: 'NODOAUTH', key: 'nodauth-' },
+  GPD: { id: 'GPD', key: 'gdp-' },
+  GPD_REP: { id: 'GPD_REP', key: 'gpdrep-' },
+  GPD_PAY: { id: 'GPD_PAY', key: 'gpdpay-' },
+  BIZ: { id: 'BIZ', key: 'biz-' },
+  FDR_ORG: { id: 'FDR_ORG', key: 'fdrorg-' },
+  FDR_PSP: { id: 'FDR_PSP', key: 'fdrpsp-' },
+  BO_EXT_EC: { id: 'BO_EXT_EC', key: 'selfcareboexternalec-' },
+  BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
+  PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
 };
 
+export const getApiKeyProducts = (
+  isPsp: boolean,
+  flagPrintNotice: boolean
+): Array<ConfiguredProductKeys> => {
+  const list = isPsp
+    ? [API_KEY_PRODUCTS.NODOAUTH, API_KEY_PRODUCTS.BO_EXT_PSP]
+    : [
+        API_KEY_PRODUCTS.NODOAUTH,
+        API_KEY_PRODUCTS.GPD,
+        API_KEY_PRODUCTS.GPD_PAY,
+        API_KEY_PRODUCTS.GPD_REP,
+        API_KEY_PRODUCTS.BIZ,
+        API_KEY_PRODUCTS.BO_EXT_EC,
+      ];
 
-export const API_KEY_PRODUCTS = (): Array<ConfiguredProductKeys> => {
-    const list = [
-        {id: 'NODOAUTH', key: NODOAUTH},
-        {id: 'GPD', key: GPD},
-        {id: 'GPD_PAY', key: GPD_PAY},
-        {id: 'GPD_REP', key: GPD_REP},
-        {id: 'BIZ', key: BIZ},
-        {id: 'BO_EXT_EC', key: BO_EXT_EC}
-    ];
-
-    if (ENV.FEATURES.FDR.ENABLED) {
-        return [...list, {id: 'FDR_ORG', key: FDR_ORG}];
-    }
-    return list;
+  if (ENV.FEATURES.FDR.ENABLED) {
+    // eslint-disable-next-line functional/immutable-data
+    list.push(isPsp ? API_KEY_PRODUCTS.FDR_PSP : API_KEY_PRODUCTS.FDR_ORG);
+  }
+  if (flagPrintNotice && !isPsp) {
+    // eslint-disable-next-line functional/immutable-data
+    list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
+  }
+  return list;
 };

@@ -15,22 +15,22 @@ import { WrapperStationDetailsDto } from '../api/generated/portal/WrapperStation
 import { WrapperStationsResource } from '../api/generated/portal/WrapperStationsResource';
 import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import {
-    updateStation as UpdateStationMocked,
-    associateEcToStation as associateEcToStationMocked,
-    createStationMocked,
-    createWrapperStation as createStationWrap,
-    dissociateECfromStation as dissociateECfromStationMocked,
-    getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
-    getECListByStationCode as getECListByStationCodeMocked,
-    getStationAvailableEC as getStationAvailableECMocked,
-    getStationCodeMocked,
-    getStationCodeV2Mocked,
-    getStationDetail as getStationDetailMock,
-    getWrapperStation as getStationWrap,
-    getStations as getStationsMocked,
-    testStation as testStationMocked,
-    updateWrapperStation as updateStationWrap,
-    updateWrapperStationByOpt as updateStationWrapByOpt
+  updateStation as UpdateStationMocked,
+  associateEcToStation as associateEcToStationMocked,
+  createStationMocked,
+  createWrapperStation as createStationWrap,
+  dissociateECfromStation as dissociateECfromStationMocked,
+  getCreditorInstitutionSegregationcodes as getCreditorInstitutionSegregationcodesMocked,
+  getECListByStationCode as getECListByStationCodeMocked,
+  getStationAvailableEC as getStationAvailableECMocked,
+  getStationCodeMocked,
+  getStationCodeV2Mocked,
+  getStationDetail as getStationDetailMock,
+  getWrapperStation as getStationWrap,
+  getStations as getStationsMocked,
+  testStation as testStationMocked,
+  updateWrapperStation as updateStationWrap,
+  updateWrapperStationByOpt as updateStationWrapByOpt,
 } from '../services/__mocks__/stationService';
 
 export const createStation = (station: StationOnCreation): Promise<StationDetailResource> => {
@@ -143,35 +143,20 @@ export const createWrapperStation = (
   return BackofficeApi.createWrapperStation(station).then((resources) => resources);
 };
 
-export const getWrapperStation = (ecCode: string): Promise<WrapperEntities> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getStationWrap(ecCode);
-  } else {
-    return BackofficeApi.getWrapperEntitiesStation(ecCode).then((resources) => resources);
-  }
-};
-
-export const updateWrapperStationToCheck = (
-  station: StationDetailsDto
-): Promise<WrapperEntities> => {
+export const updateWrapperStationDetails = ({
+  stationCode,
+  station,
+}: {
+  stationCode: string;
+  station: StationDetailsDto;
+}): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrap(station);
   } else {
-    return BackofficeApi.updateWrapperStationToCheck(station.stationCode, station).then(
-      (resources) => resources
-    );
-  }
-};
-
-export const updateWrapperStationToCheckUpdate = (
-  station: StationDetailsDto
-): Promise<WrapperEntities> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return updateStationWrap(station);
-  } else {
-    return BackofficeApi.updateWrapperStationToCheckUpdate(station.stationCode, station).then(
-      (resources) => resources
-    );
+    return BackofficeApi.updateWrapperStationDetails({
+      stationCode,
+      station,
+    }).then((resources) => resources);
   }
 };
 
@@ -195,14 +180,17 @@ export const updateWrapperStationWithOperatorReview = ({
   }
 };
 
-export const updateStation = (
-  station: StationDetailsDto,
-  stationCode: string
-): Promise<StationDetailResource> => {
+export const updateStation = ({
+  stationCode,
+  station,
+}: {
+  stationCode: string;
+  station: StationDetailsDto;
+}): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return UpdateStationMocked(station, stationCode);
   } else {
-    return BackofficeApi.updateStation(station, stationCode).then((resources) => resources);
+    return BackofficeApi.updateStation({ station, stationCode }).then((resources) => resources);
   }
 };
 

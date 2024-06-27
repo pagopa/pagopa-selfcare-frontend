@@ -18,7 +18,10 @@ import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import { store } from '../redux/store';
 import { extractResponse } from '../utils/client-utils';
 import { ENV } from '../utils/env';
-import { WithDefaultsT as WithCustomDefaultsT, createClient as createCustomClient } from './custom/client';
+import {
+  WithDefaultsT as WithCustomDefaultsT,
+  createClient as createCustomClient,
+} from './custom/client';
 import { AvailableCodes } from './generated/portal/AvailableCodes';
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { BrokerDto } from './generated/portal/BrokerDto';
@@ -726,30 +729,16 @@ export const BackofficeApi = {
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  updateWrapperStationToCheck: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
+  updateWrapperStationDetails: async ({
+    stationCode,
+    station,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+  }): Promise<WrapperEntities> => {
     const result = await backofficeClient.updateWrapperStationDetails({
       'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperStationToCheckUpdate: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
-    const result = await backofficeClient.updateWrapperStationDetails({
-      'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK_UPDATE,
-      },
+      body: station,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -773,22 +762,17 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateStation: async (
-    station: StationDetailsDto,
-    stationcode: string
-  ): Promise<StationDetailResource> => {
+  updateStation: async ({
+    stationCode,
+    station,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+  }): Promise<StationDetailResource> => {
     const result = await backofficeClient.updateStation({
-      body: {
-        ...station,
-        status: StatusEnum.APPROVED,
-      },
-      'station-code': stationcode,
+      body: station,
+      'station-code': stationCode,
     });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getWrapperEntitiesStation: async (code: string): Promise<WrapperEntities> => {
-    const result = await backofficeClient.getWrapperEntitiesStation({ 'station-code': code });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

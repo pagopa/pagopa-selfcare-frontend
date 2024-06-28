@@ -11,9 +11,9 @@ import { StatusChip } from '../../../../components/StatusChip';
 import ROUTES from '../../../../routes';
 import {
   ChannelDetailsResource,
+  ProtocolEnum,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/ChannelDetailsResource';
-import { ProtocolEnum } from '../../../../api/generated/portal/WrapperChannelDetailsResource';
 import { ENV } from '../../../../utils/env';
 import { useUserRole } from '../../../../hooks/useUserRole';
 import DetailButtons from './DetailButtons';

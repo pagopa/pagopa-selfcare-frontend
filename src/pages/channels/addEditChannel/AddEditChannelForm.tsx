@@ -1,7 +1,12 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import {
+  Add,
+  Badge as BadgeIcon,
+  CreditCard as CreditCardIcon,
+  MenuBook as MenuBookIcon,
+  RemoveCircleOutline,
+} from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -15,18 +20,24 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormikProps, useFormik } from 'formik';
-import { Trans, useTranslation } from 'react-i18next';
 import { ButtonNaked, theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import {
-  Add,
-  Badge as BadgeIcon,
-  CreditCard as CreditCardIcon,
-  MenuBook as MenuBookIcon,
-  RemoveCircleOutline,
-} from '@mui/icons-material';
+import { FormikProps, useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
 import { generatePath } from 'react-router-dom';
+import {
+  ChannelDetailsResource,
+  ProtocolEnum,
+  WrapperStatusEnum,
+} from '../../../api/generated/portal/ChannelDetailsResource';
+import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
+import { useUserRole } from '../../../hooks/useUserRole';
+import { ChannelOnCreation, FormAction } from '../../../model/Channel';
+import { Party } from '../../../model/Party';
+import { sortPaymentType } from '../../../model/PaymentType';
+import { ConfigurationStatus } from '../../../model/Station';
 import ROUTES from '../../../routes';
 import {
   createChannel,
@@ -34,21 +45,11 @@ import {
   updateChannel,
   updateWrapperChannelDetails,
 } from '../../../services/channelService';
-import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
-import { Party } from '../../../model/Party';
+import { getPaymentTypes } from '../../../services/configurationService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
-import { sortPaymentType } from '../../../model/PaymentType';
-import { isValidURL } from '../../components/commonFunctions';
-import {
-  ChannelDetailsResource,
-  ProtocolEnum,
-} from '../../../api/generated/portal/ChannelDetailsResource';
-import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
 import { ENV } from '../../../utils/env';
 import ConfirmModal from '../../components/ConfirmModal';
-import { getPaymentTypes } from '../../../services/configurationService';
-import { useUserRole } from '../../../hooks/useUserRole';
+import { isValidURL } from '../../components/commonFunctions';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
 import AddEditChannelValidationForm from './components/AddEditChannelValidationForm';
 
@@ -401,9 +402,11 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     }
   };
 
-  const redirect = () => {
+  const redirect = (status: ConfigurationStatus) => {
     if (userIsPagopaOperator) {
-      history.push(generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code }));
+      history.push(
+        generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code, status })
+      );
     } else {
       history.push(ROUTES.CHANNELS);
     }
@@ -419,11 +422,12 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.CHANNEL_DETAIL, {
         channelId: formik.values.channel_code,
+        status: ConfigurationStatus.TO_BE_VALIDATED,
       })}`;
 
       if (formAction === FormAction.Create || formAction === FormAction.Duplicate) {
         await createWrapperChannelDetails(values as any, validationUrl);
-        redirect();
+        redirect(ConfigurationStatus.TO_BE_VALIDATED);
       }
 
       if (formAction === FormAction.Edit) {
@@ -442,10 +446,11 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
           } else {
             throw new Error('Wrong channel wrapper status');
           }
+          redirect(ConfigurationStatus.ACTIVE);
         } else {
-          await updateWrapperChannelDetails({channelCode, channel: values, validationUrl});
+          await updateWrapperChannelDetails({ channelCode, channel: values, validationUrl });
+          redirect(ConfigurationStatus.TO_BE_VALIDATED);
         }
-        redirect();
       }
     } catch (reason) {
       addError({
@@ -705,7 +710,13 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
             onClick={() =>
               userIsPagopaOperator
                 ? history.push(
-                    generatePath(ROUTES.CHANNEL_DETAIL, { channelId: formik.values.channel_code })
+                    generatePath(ROUTES.CHANNEL_DETAIL, {
+                      channelId: formik.values.channel_code,
+                      status:
+                        channelDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
+                          ? ConfigurationStatus.ACTIVE
+                          : ConfigurationStatus.TO_BE_VALIDATED,
+                    })
                   )
                 : history.push(ROUTES.CHANNELS)
             }

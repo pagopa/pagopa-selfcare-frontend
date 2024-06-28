@@ -46,6 +46,7 @@ import {
 import { useFlagValue } from '../../../hooks/useFeatureFlags';
 import { useUserRole } from '../../../hooks/useUserRole';
 import {
+  ConfigurationStatus,
   ConnectionType,
   GPDConfigs,
   IGPDConfig,
@@ -64,7 +65,7 @@ import {
   getStationCodeV2,
   testStation,
   updateStation,
-  updateWrapperStationDetails
+  updateWrapperStationDetails,
 } from '../../../services/stationService';
 import {
   LOADING_TASK_GENERATION_STATION_CODE,
@@ -350,9 +351,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     }
   };
 
-  const redirect = (stCode: string) => {
+  const redirect = (stCode: string, status: ConfigurationStatus) => {
     if (userIsPagopaOperator) {
-      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
+      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode, status }));
     } else {
       history.push(ROUTES.STATIONS);
     }
@@ -369,13 +370,12 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
         stationId: formik.values.stationCode,
+        status: ConfigurationStatus.TO_BE_VALIDATED,
       })}`;
-      // eslint-disable-next-line functional/immutable-data
-      values.validationUrl = validationUrl;
 
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values);
-        redirect(stationCode4Redirect);
+        await createWrapperStation({ station: values, validationUrl });
+        redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
       }
 
       if (formAction === StationFormAction.Edit) {
@@ -390,14 +390,15 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE ||
             stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE
           ) {
-            await updateStation({stationCode, station: values});
+            await updateStation({ stationCode, station: values });
           } else {
             throw new Error('Wrong channel wrapper status');
           }
+          redirect(stationCode4Redirect, ConfigurationStatus.ACTIVE);
         } else {
-          await updateWrapperStationDetails({stationCode, station: values});
+          await updateWrapperStationDetails({ stationCode, station: values, validationUrl });
+          redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
         }
-        redirect(stationCode4Redirect);
       }
     } catch (reason) {
       addError({
@@ -1126,7 +1127,13 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             onClick={() =>
               history.push(
                 formAction === StationFormAction.Edit
-                  ? generatePath(ROUTES.STATION_DETAIL, { stationId: stationDetail?.stationCode })
+                  ? generatePath(ROUTES.STATION_DETAIL, {
+                      stationId: stationDetail?.stationCode,
+                      status:
+                        stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
+                          ? ConfigurationStatus.ACTIVE
+                          : ConfigurationStatus.TO_BE_VALIDATED,
+                    })
                   : ROUTES.STATIONS
               )
             }

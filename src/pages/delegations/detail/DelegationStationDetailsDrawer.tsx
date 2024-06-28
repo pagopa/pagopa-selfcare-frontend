@@ -9,6 +9,7 @@ import {CIBrokerStationResource} from '../../../api/generated/portal/CIBrokerSta
 import {PaddedDrawer} from '../../../components/PaddedDrawer';
 import ROUTES from '../../../routes';
 import {formatDateToDDMMYYYY} from '../../../utils/common-utils';
+import { ConfigurationStatus } from '../../../model/Station';
 
 export const DelegationStationDetailsDrawer = ({
                                                    t,
@@ -104,7 +105,7 @@ export const DelegationStationDetailsDrawer = ({
                         endIcon={<ArrowForwardIcon/>}
                         onClick={() =>
                             history.push(
-                                generatePath(ROUTES.STATION_DETAIL, {stationId: drawerValue?.station_code})
+                                generatePath(ROUTES.STATION_DETAIL, {stationId: drawerValue?.station_code, status: ConfigurationStatus.ACTIVE})
                             )
                         }
                         sx={{color: 'primary.main', mt: 'auto', justifyContent: 'start'}}

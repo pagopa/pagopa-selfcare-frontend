@@ -6,14 +6,15 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
-import { WrapperStatusEnum } from '../../../api/generated/portal/WrapperChannelDetailsResource';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { useUserRole } from '../../../hooks/useUserRole';
 import { FormAction } from '../../../model/Channel';
+import { ConfigurationStatus } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { getChannelCode, getChannelDetail } from '../../../services/channelService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT } from '../../../utils/constants';
-import { useUserRole } from '../../../hooks/useUserRole';
 import AddEditChannelForm from './AddEditChannelForm';
 
 const AddEditChannelPage = () => {
@@ -34,7 +35,7 @@ const AddEditChannelPage = () => {
   useEffect(() => {
     if (formAction === FormAction.Edit) {
       setLoading(true);
-      getChannelDetail(channelId)
+      getChannelDetail({channelCode: channelId, status: ConfigurationStatus.TO_BE_VALIDATED})
         .then((response) => {
           setChannelDetail(response);
           setChannelCode(response.channel_code ?? '');

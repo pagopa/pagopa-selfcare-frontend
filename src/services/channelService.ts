@@ -23,11 +23,10 @@ import {
   getChannelPSPs as getChannelPSPsMocked,
   getChannels as getChannelsMocked,
   getPSPChannels as getPSPChannelsMocked,
-  getWrapperChannel,
   getWfespPlugins as mockedGetWfespPlugins,
   updateChannel as updateChannelMocked,
   updateWrapperChannel,
-  updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked
+  updateWrapperChannelWithOperatorReview as updateWrapperChannelWithOperatorReviewMocked,
 } from './__mocks__/channelService';
 
 // /channels endpoint
@@ -55,12 +54,18 @@ export const getChannels = ({
   }
 };
 
-export const getChannelDetail = (channelcode: string): Promise<ChannelDetailsResource> => {
+export const getChannelDetail = ({
+  channelCode,
+  status,
+}: {
+  channelCode: string;
+  status: ConfigurationStatus;
+}): Promise<ChannelDetailsResource> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getChannelDetailMocked(channelcode);
+    return getChannelDetailMocked(channelCode);
   } else {
-    return BackofficeApi.getChannelDetail(channelcode).then((resources) => resources);
+    return BackofficeApi.getChannelDetail({ channelCode, status }).then((resources) => resources);
   }
 };
 
@@ -153,14 +158,6 @@ export const dissociatePSPfromChannel = (
     return BackofficeApi.dissociatePSPfromChannel(channelcode, pspTaxCode).then(
       (resources) => resources
     );
-  }
-};
-
-export const getWrapperEntities = (pspCode: string): Promise<WrapperEntities> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getWrapperChannel(pspCode);
-  } else {
-    return BackofficeApi.getWrapperEntities(pspCode).then((resources) => resources);
   }
 };
 

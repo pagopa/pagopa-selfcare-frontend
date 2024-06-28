@@ -1,12 +1,12 @@
-import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'react-i18next';
-import {generatePath} from 'react-router-dom';
+import { GridColDef } from '@mui/x-data-grid';
+import { TFunction } from 'react-i18next';
+import { generatePath } from 'react-router-dom';
+import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
+import { StatusChip } from '../../../components/StatusChip';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
-import {FormAction} from '../../../model/Station';
+import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
+import { ConfigurationStatus, FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
-import {StatusEnum} from '../../../api/generated/portal/StationDetailsDto';
-import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';
-import {StatusChip} from '../../../components/StatusChip';
 
 export function buildColumnDefs(
     t: TFunction<'translation', undefined>,
@@ -131,24 +131,25 @@ export const getRowActions = (params: any, userIsPagopaOperator: boolean) => {
     const stationCode = params.row.stationCode;
     if (params.row.wrapperStatus === StatusEnum.APPROVED) {
         if (userIsPagopaOperator) {
-            return [manageStationAction(stationCode), manageStationECAction(stationCode)];
+            return [manageStationAction(stationCode, ConfigurationStatus.ACTIVE), manageStationECAction(stationCode)];
         }
         return [
-            manageStationAction(stationCode),
+            manageStationAction(stationCode, ConfigurationStatus.ACTIVE),
             manageStationECAction(stationCode),
             duplicateStationAction(stationCode),
         ];
     } else {
-        return [manageStationAction(stationCode), editStationAction(stationCode)];
+        return [manageStationAction(stationCode, ConfigurationStatus.TO_BE_VALIDATED), editStationAction(stationCode)];
     }
 };
 
-export const manageStationAction = (stationCode: string) => (
+export const manageStationAction = (stationCode: string, status: ConfigurationStatus) => (
     <GridLinkAction
         key="Gestisci stazione"
         label="Gestisci stazione"
         to={generatePath(`${ROUTES.STATION_DETAIL}`, {
             stationId: stationCode,
+            status
         })}
         showInMenu={true}
     />

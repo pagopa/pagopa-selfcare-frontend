@@ -7,10 +7,11 @@ import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { ConfigurationStatus } from '../../../model/Station';
 
 export function buildColumnDefs(
-  t: TFunction<'translation', undefined>,
-  _onRowClick: (channelId: string) => void
+  t: TFunction<'translation', undefined>
 ) {
   return [
     {
@@ -97,7 +98,13 @@ export function buildColumnDefs(
           <GridLinkAction
             key="Gestisci canale"
             label="Gestisci canale"
-            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
+            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, {
+              channelId: params.row.channel_code,
+              status:
+                params.row.wrapperStatus === WrapperStatusEnum.APPROVED
+                  ? ConfigurationStatus.ACTIVE
+                  : ConfigurationStatus.TO_BE_VALIDATED,
+            })}
             showInMenu={true}
           />
         );

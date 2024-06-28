@@ -26,7 +26,6 @@ import {
   getStationCodeMocked,
   getStationCodeV2Mocked,
   getStationDetail as getStationDetailMock,
-  getWrapperStation as getStationWrap,
   getStations as getStationsMocked,
   testStation as testStationMocked,
   updateWrapperStation as updateStationWrap,
@@ -63,13 +62,6 @@ export const getStations = ({
     stationCode,
     limit,
   }).then((resource) => resource);
-};
-
-export const getStation = (stationId: string): Promise<StationDetailResource> => {
-  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getStationDetail(stationId);
-  }
-  return BackofficeApi.getStation(stationId).then((resource) => resource);
 };
 
 export const getStationCode = (code: string): Promise<StationCodeResource> => {
@@ -134,21 +126,29 @@ export const getStationAvailableEC = (
   }
 };
 
-export const createWrapperStation = (
-  station: WrapperStationDetailsDto
-): Promise<WrapperEntities> => {
+export const createWrapperStation = ({
+  station,
+  validationUrl,
+}: {
+  station: WrapperStationDetailsDto;
+  validationUrl: string;
+}): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createStationWrap(station);
   }
-  return BackofficeApi.createWrapperStation(station).then((resources) => resources);
+  return BackofficeApi.createWrapperStation({ station, validationUrl }).then(
+    (resources) => resources
+  );
 };
 
 export const updateWrapperStationDetails = ({
   stationCode,
   station,
+  validationUrl,
 }: {
   stationCode: string;
   station: StationDetailsDto;
+  validationUrl: string;
 }): Promise<WrapperEntities> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateStationWrap(station);
@@ -156,6 +156,7 @@ export const updateWrapperStationDetails = ({
     return BackofficeApi.updateWrapperStationDetails({
       stationCode,
       station,
+      validationUrl,
     }).then((resources) => resources);
   }
 };
@@ -194,11 +195,17 @@ export const updateStation = ({
   }
 };
 
-export const getStationDetail = (stationId: string): Promise<StationDetailResource> => {
+export const getStationDetail = ({
+  stationCode,
+  status,
+}: {
+  stationCode: string;
+  status: ConfigurationStatus;
+}): Promise<StationDetailResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getStationDetailMock(stationId);
+    return getStationDetailMock(stationCode);
   } else {
-    return BackofficeApi.getStationDetail(stationId).then((resource) => resource);
+    return BackofficeApi.getStationDetails({ stationCode, status }).then((resource) => resource);
   }
 };
 

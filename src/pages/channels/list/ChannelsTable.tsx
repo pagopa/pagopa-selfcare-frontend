@@ -3,8 +3,6 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import { generatePath } from 'react-router-dom';
 import { WrapperChannelsResource } from '../../../api/generated/portal/WrapperChannelsResource';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { useUserRole } from '../../../hooks/useUserRole';
@@ -29,16 +27,11 @@ export default function ChannelsTable({
   statusFilter,
 }: Readonly<{ channelCodeFilter: string; statusFilter: ConfigurationStatus }>) {
   const { t } = useTranslation();
-  const history = useHistory();
   const { userIsPagopaOperator } = useUserRole();
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  const onRowClick = (channelIdRow: string) => {
-    history.push(generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: channelIdRow }));
-  };
-
-  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
+  const columns: Array<GridColDef> = buildColumnDefs(t);
   const setLoadingOverlay = useLoading(LOADING_TASK_CHANNELS_LIST);
 
   const [channels, setChannels] = useState<WrapperChannelsResource>(emptyChannelsResource);

@@ -77,7 +77,7 @@ describe('StationService test mocked', () => {
   test('Test createWrapperStation', async () => {
     const response = await createWrapperStation({
       station: mockedWrapperStation,
-      validationUrl: 'http://url',
+      validationUrl: 'url',
     });
     expect(response).toMatchObject(mockedWrapperStation);
   });

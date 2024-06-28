@@ -364,7 +364,10 @@
     "associated": "Associati",
     "changes": "Modifiche",
     "lastChange": "Ultima modifica",
-    "operatedBy": "Operata da"
+    "operatedBy": "Operata da",
+    "alert": {
+      "pendingUpdate": "Attenzione il canale ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sul canale da validare."
+    }
   },
   "channelDetailValidationPage": {
     "title": "Informazioni da completare",
@@ -625,6 +628,9 @@
       "configureStation": "Configura",
       "requestEdit": "Richiedi modifiche",
       "approveAndValidate": "Approva e valida"
+    },
+    "alert": {
+      "pendingUpdate": "Attenzione la stazione ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sulla stazione da validare."
     }
   },
   "stationECList": {

@@ -55,6 +55,16 @@ export default function GetChannelAlert({ channelDetail }: Props) {
         </Box>
       </>
     );
+  } else if (channelDetail?.pendingUpdate) {
+    return (
+      <Box my={2}>
+        <Alert severity="warning" variant="outlined" sx={{ py: 2 }}>
+          <Typography fontWeight={'fontWeightMedium'} sx={{ whiteSpace: 'pre-line'}}>
+            {t('channelDetailPage.alert.pendingUpdate')}
+          </Typography>
+        </Alert>
+      </Box>
+    );
   }
   return null;
 }

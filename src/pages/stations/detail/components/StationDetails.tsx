@@ -61,6 +61,16 @@ const GetAlert = ({ stationDetail }: { stationDetail?: StationDetailResource }) 
         )}
       </>
     );
+  } else if (stationDetail?.pendingUpdate) {
+    return (
+      <Box my={2}>
+        <Alert severity="warning" variant="outlined" sx={{ py: 2 }}>
+          <Typography fontWeight={'fontWeightMedium'} sx={{ whiteSpace: 'pre-line'}}>
+            {t('stationDetailPage.alert.pendingUpdate')}
+          </Typography>
+        </Alert>
+      </Box>
+    );
   }
   return null;
 };

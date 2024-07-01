@@ -18,7 +18,7 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-const passwordFieldValue = 'randomValue';
+const pFieldValue = 'randomValue';
 
 describe('<ChannelDetails />', () => {
   const channelId = 'XPAY_03_ONUS';
@@ -32,7 +32,7 @@ describe('<ChannelDetails />', () => {
     proxy_host: ' proxy.link.it',
     payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
     status: StatusEnum.TO_CHECK,
-    password: passwordFieldValue,
+    password: pFieldValue,
   };
   const channelDetailToFix = {
     broker_psp_code: '97735020584',
@@ -44,7 +44,7 @@ describe('<ChannelDetails />', () => {
     proxy_host: ' proxy.link.it',
     payment_types: mockedPaymentTypes.payment_types!.map((e) => e.payment_type ?? ''),
     status: StatusEnum.TO_FIX,
-    password: passwordFieldValue,
+    password: pFieldValue,
     note: 'note',
   };
   test('render component ChannelDetails with channelDetail', async () => {
@@ -80,7 +80,7 @@ describe('<ChannelDetails />', () => {
 
     fireEvent.click(showPasswordButton);
 
-    expect(passwordField.innerHTML).toBe(passwordFieldValue);
+    expect(passwordField.innerHTML).toBe(pFieldValue);
   });
 
   test('render component ChannelDetails with channelDetail TO_FIX', async () => {
@@ -116,7 +116,7 @@ describe('<ChannelDetails />', () => {
 
     fireEvent.click(showPasswordButton);
 
-    expect(passwordField.innerHTML).toBe(passwordFieldValue);
+    expect(passwordField.innerHTML).toBe(pFieldValue);
   });
 
   test('render component ChannelDetails with empty channelDetail', async () => {

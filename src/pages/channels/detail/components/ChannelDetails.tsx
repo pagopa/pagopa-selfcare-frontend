@@ -1,24 +1,23 @@
 /* eslint-disable complexity */
 import { ArrowBack, VisibilityOff } from '@mui/icons-material';
-import { Breadcrumbs, Chip, Divider, Grid, IconButton, Paper, Typography } from '@mui/material';
-import { Box, Stack } from '@mui/system';
-import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Chip, Grid, IconButton, Paper, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
-import { StatusChip } from '../../../../components/StatusChip';
-import ROUTES from '../../../../routes';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import {
   ChannelDetailsResource,
   ProtocolEnum,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/ChannelDetailsResource';
-import { ENV } from '../../../../utils/env';
+import GetAlert from '../../../../components/WrapperCommon/GetAlert';
+import { StatusChip } from '../../../../components/WrapperCommon/StatusChip';
 import { useUserRole } from '../../../../hooks/useUserRole';
+import ROUTES from '../../../../routes';
+import { ENV } from '../../../../utils/env';
 import DetailButtons from './DetailButtons';
-import GetChannelAlert from './GetChannelAlert';
-
 
 type Props = {
   channelDetail: ChannelDetailsResource;
@@ -87,7 +86,12 @@ const ChannelDetails = ({
           )}
         </Typography>
 
-        <GetChannelAlert channelDetail={channelDetail} />
+        <GetAlert
+          componentPath={'channelDetailValidationPage'}
+          wrapperStatus={channelDetail?.wrapperStatus ?? WrapperStatusEnum.APPROVED}
+          note={channelDetail?.note ?? ''}
+          pendingUpdate={channelDetail?.pendingUpdate ?? false}
+        />
 
         <Paper
           elevation={5}
@@ -376,4 +380,3 @@ const ChannelDetails = ({
 };
 
 export default ChannelDetails;
-

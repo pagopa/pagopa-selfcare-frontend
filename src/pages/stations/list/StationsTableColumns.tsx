@@ -2,11 +2,11 @@ import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router-dom';
 import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
-import { StatusChip } from '../../../components/StatusChip';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 import { ConfigurationStatus, FormAction } from '../../../model/Station';
 import ROUTES from '../../../routes';
+import { StatusChip } from '../../../components/WrapperCommon/StatusChip';
 
 export function buildColumnDefs(
     t: TFunction<'translation', undefined>,

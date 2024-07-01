@@ -364,10 +364,7 @@
     "associated": "Associati",
     "changes": "Modifiche",
     "lastChange": "Ultima modifica",
-    "operatedBy": "Operata da",
-    "alert": {
-      "pendingUpdate": "Attenzione il canale ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sul canale da validare."
-    }
+    "operatedBy": "Operata da"
   },
   "channelDetailValidationPage": {
     "title": "Informazioni da completare",
@@ -392,7 +389,8 @@
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche al canale.",
       "toFixTitle": "Modifiche richieste",
       "toFixMessage": "Canale in attesa di correzione da parte dell’ente.",
-      "waitingForRevision": "Il canale è in attesa di approvazione da parte di un nostro operatore. Riceverai una mail a procedura completata."
+      "waitingForRevision": "Il canale è in attesa di approvazione da parte di un nostro operatore. Riceverai una mail a procedura completata.",
+      "pendingUpdate": "Attenzione il canale ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sul canale da validare."
     },
     "modal": {
       "title": "Cosa c'è che non va?",
@@ -628,9 +626,6 @@
       "configureStation": "Configura",
       "requestEdit": "Richiedi modifiche",
       "approveAndValidate": "Approva e valida"
-    },
-    "alert": {
-      "pendingUpdate": "Attenzione la stazione ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sulla stazione da validare."
     }
   },
   "stationECList": {
@@ -698,7 +693,8 @@
     "alert": {
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
       "toFixTitle": "Modifiche richieste",
-      "toFixMessage": "Stazione in attesa di correzione da parte dell’ente."
+      "toFixMessage": "Stazione in attesa di correzione da parte dell’ente.",
+      "pendingUpdate": "Attenzione la stazione ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sulla stazione da validare."
     },
     "modal": {
       "title": "Cosa c'è che non va?",

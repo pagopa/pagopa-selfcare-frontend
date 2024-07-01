@@ -1,79 +1,24 @@
-import { Alert, Box, Divider, Grid, IconButton } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { useTranslation } from 'react-i18next';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { useHistory, useParams } from 'react-router-dom';
-import { useState } from 'react';
 import { ArrowBack, VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Box, Divider, Grid, IconButton } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { ButtonNaked } from '@pagopa/mui-italia';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
-import { StatusChip } from '../../../../components/StatusChip';
+import GetAlert from '../../../../components/WrapperCommon/GetAlert';
+import { StatusChip } from '../../../../components/WrapperCommon/StatusChip';
+import { useUserRole } from '../../../../hooks/useUserRole';
 import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
 import ROUTES from '../../../../routes';
 import { ENV } from '../../../../utils/env';
-import { useUserRole } from '../../../../hooks/useUserRole';
 import DetailButtonsStation from './DetailButtonsStation';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-const GetAlert = ({ stationDetail }: { stationDetail?: StationDetailResource }) => {
-  const { t } = useTranslation();
-  const { userIsPagopaOperator } = useUserRole();
-
-  if (stationDetail?.wrapperStatus !== WrapperStatusEnum.APPROVED) {
-    const isToBeValidated =
-      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE;
-    const isToBeFixed =
-      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX ||
-      stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE;
-
-    const userHasToTakeAction =
-      (isToBeValidated && userIsPagopaOperator) || (isToBeFixed && !userIsPagopaOperator);
-    return (
-      <>
-        {(userIsPagopaOperator || userHasToTakeAction) && (
-          <Box my={2}>
-            <Alert
-              severity={userHasToTakeAction ? 'warning' : 'info'}
-              variant="outlined"
-              sx={{ py: 2 }}
-            >
-              {isToBeFixed && (
-                <Typography fontWeight={'fontWeightMedium'}>
-                  {t('stationDetailPageValidation.alert.toFixTitle')}
-                </Typography>
-              )}
-              <Typography>
-                {isToBeFixed && stationDetail?.note?.trim()
-                  ? stationDetail.note
-                  : t(
-                      `stationDetailPageValidation.alert.${
-                        isToBeValidated ? 'toCheckMessage' : 'toFixMessage'
-                      }`
-                    )}
-              </Typography>
-            </Alert>
-          </Box>
-        )}
-      </>
-    );
-  } else if (stationDetail?.pendingUpdate) {
-    return (
-      <Box my={2}>
-        <Alert severity="warning" variant="outlined" sx={{ py: 2 }}>
-          <Typography fontWeight={'fontWeightMedium'} sx={{ whiteSpace: 'pre-line'}}>
-            {t('stationDetailPage.alert.pendingUpdate')}
-          </Typography>
-        </Alert>
-      </Box>
-    );
-  }
-  return null;
-};
 type Props = {
   stationDetail?: StationDetailResource;
   setStationDetail: (value: any) => void;
@@ -130,7 +75,12 @@ Props) => {
           )}
         </Typography>
 
-        <GetAlert stationDetail={stationDetail} />
+        <GetAlert
+          componentPath={'stationDetailPageValidation'}
+          wrapperStatus={stationDetail?.wrapperStatus ?? WrapperStatusEnum.APPROVED}
+          note={stationDetail?.note ?? ''}
+          pendingUpdate={stationDetail?.pendingUpdate ?? false}
+        />
 
         <Paper
           elevation={5}

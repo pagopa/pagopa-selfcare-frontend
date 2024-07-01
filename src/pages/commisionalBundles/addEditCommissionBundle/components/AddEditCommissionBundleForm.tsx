@@ -143,7 +143,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                     if (isEdit && idBrokerPsp) {
                         const brokerTaxCode = listBroker?.find(
                             (el) => el.broker_id === idBrokerPsp
-                        )?.tax_code;
+                        )?.broker_tax_code;
                         if (brokerTaxCode) {
                             getChannelsByBrokerCode(brokerTaxCode);
                         }
@@ -193,11 +193,11 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
             setChannelsId([]);
         } else {
             const broker = brokerDelegationList?.find(
-                (el) => el.institution_name === value
+                (el) => el.broker_name === value
             );
             formik.handleChange('idBrokerPsp')(broker?.broker_id ?? "");
-            if (broker?.tax_code) {
-                getChannelsByBrokerCode(broker?.tax_code);
+            if (broker?.broker_tax_code) {
+                getChannelsByBrokerCode(broker?.broker_tax_code);
             }
         }
     }
@@ -487,10 +487,10 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                     id="brokerCodes"
                                     disablePortal
                                     options={brokerDelegationList
-                                        ?.map((el) => el?.institution_name ?? '')
+                                        ?.map((el) => el?.broker_name ?? '')
                                         ?.sort((a, b) => a.localeCompare(b))}
                                     disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
-                                    value={brokerDelegationList?.find(el => el.broker_id === formik.values.idBrokerPsp)?.institution_name ?? ""}
+                                    value={brokerDelegationList?.find(el => el.broker_id === formik.values.idBrokerPsp)?.broker_name ?? ""}
                                     onChange={(_, value) => {
                                         handleBrokerCodesSelection(value);
                                     }}

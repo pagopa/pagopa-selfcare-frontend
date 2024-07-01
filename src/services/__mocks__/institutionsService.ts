@@ -48,6 +48,7 @@ export const mockedDelegatedPSP: DelegationResource = {
             institution_name: 'Azienda Pubblica di Servizi alla Persona Test 1',
             broker_name: 'PSP1',
             tax_code: '800011104871',
+            broker_tax_code: '800011104871',
         },
         {
             broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
@@ -58,6 +59,7 @@ export const mockedDelegatedPSP: DelegationResource = {
             institution_type: 'PA',
             product_id: 'prod-pagopa',
             tax_code: '800011104872',
+            broker_tax_code: '800011104872',
             type: 'PT',
         },
         {
@@ -69,27 +71,32 @@ export const mockedDelegatedPSP: DelegationResource = {
             institution_type: 'PA',
             product_id: 'prod-pagopa',
             tax_code: '800011104873',
+            broker_tax_code: '800011104873',
             type: 'PT',
         },
         {
             institution_id: '0000004',
             broker_name: 'PSP4',
             tax_code: '800011104874',
+            broker_tax_code: '800011104874',
         },
         {
             institution_id: '0000005',
             broker_name: 'PSP5',
             tax_code: '800011104875',
+            broker_tax_code: '800011104875',
         },
         {
             institution_id: '0000006',
             broker_name: 'PSP6',
             tax_code: '800011104876',
+            broker_tax_code: '800011104876',
         },
         {
             institution_id: '0000007',
             broker_name: 'PSP76',
             tax_code: '8000111048747',
+            broker_tax_code: '800011104877',
         },
     ],
 };

@@ -3,13 +3,13 @@ import { theme } from '@pagopa/mui-italia';
 import { cleanup, screen, render, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { store } from '../../../../redux/store';
+import { store } from '../../../../../redux/store';
 import { Provider } from 'react-redux';
-import ChannelDetails from '../components/ChannelDetails';
-import { StatusEnum } from '../../../../api/generated/portal/ChannelDetailsDto';
-import { mockedPaymentTypes } from '../../../../services/__mocks__/configurationService';
-import * as useUserRole from '../../../../hooks/useUserRole';
-import { ROLE } from '../../../../model/RolePermission';
+import ChannelDetails from '../ChannelDetails';
+import { StatusEnum } from '../../../../../api/generated/portal/ChannelDetailsDto';
+import { mockedPaymentTypes } from '../../../../../services/__mocks__/configurationService';
+import * as useUserRole from '../../../../../hooks/useUserRole';
+import { ROLE } from '../../../../../model/RolePermission';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

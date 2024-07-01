@@ -32,7 +32,7 @@ export default function GetAlert({
     const userHasToTakeAction =
       (isToBeValidated && userIsPagopaOperator) || (isToBeFixed && !userIsPagopaOperator);
     return (
-      <Box my={2}>
+      <Box my={2} data-testId="on-validation-alert-test-id">
         <Alert
           severity={userHasToTakeAction ? 'warning' : 'info'}
           variant="outlined"
@@ -51,7 +51,7 @@ export default function GetAlert({
     );
   } else if (pendingUpdate) {
     return (
-      <Box my={2}>
+      <Box my={2} data-testId="pending-update-alert-test-id">
         <Alert severity="warning" variant="outlined" sx={{ py: 2 }}>
           <Typography fontWeight={'fontWeightMedium'} sx={{ whiteSpace: 'pre-line' }}>
             {t(`${componentPath}.alert.pendingUpdate`)}
@@ -81,7 +81,7 @@ function GetAlertContent({
   if (isToBeFixed) {
     return (
       <>
-        <Typography fontWeight={'fontWeightMedium'}>
+        <Typography fontWeight={'fontWeightMedium'}  data-testId="to-fix-alert-test-id">
           {t(`${componentPath}.alert.toFixTitle`)}
         </Typography>
         <Typography>{note.trim() ? note : t(`${componentPath}.alert.toFixMessage`)}</Typography>
@@ -89,10 +89,10 @@ function GetAlertContent({
     );
   }
   if (isToBeValidated && userIsPagopaOperator) {
-    return <Typography>{t(`${componentPath}.alert.toCheckMessage`)}</Typography>;
+    return <Typography  data-testId="to-check-alert-test-id">{t(`${componentPath}.alert.toCheckMessage`)}</Typography>;
   }
   if (isToBeValidated && !userIsPagopaOperator) {
-    return <Typography>{t(`${componentPath}.alert.waitingForRevision`)}</Typography>;
+    return <Typography  data-testId="waiting-for-review-alert-test-id">{t(`${componentPath}.alert.waitingForRevision`)}</Typography>;
   }
   return null;
 }

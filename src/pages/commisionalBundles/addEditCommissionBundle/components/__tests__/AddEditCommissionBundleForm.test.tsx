@@ -1,14 +1,11 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
-import {cleanup, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {createStore, store} from '../../../../../redux/store';
 import {Provider} from 'react-redux';
 import React from 'react';
-import {
-    mockedBundleRequest,
-    mockedChannelsIdList,
-} from '../../../../../services/__mocks__/bundleService';
+import {mockedBundleRequest, mockedChannelsIdList,} from '../../../../../services/__mocks__/bundleService';
 import {partiesActions} from '../../../../../redux/slices/partiesSlice';
 import {pspOperatorSignedDirect} from '../../../../../services/__mocks__/partyService';
 import AddEditCommissionBundleForm from '../AddEditCommissionBundleForm';
@@ -246,16 +243,16 @@ describe('<AddEditCommissionBundleForm />', () => {
         // Change broker code list
         expect(input.channelList.disabled).toBe(true);
         fireEvent.change(input.brokerCodeList, {
-            target: {value: mockedDelegatedPSP.delegation_list![1].institution_name},
+            target: {value: mockedDelegatedPSP.delegation_list![1].broker_name},
         });
         input.brokerCodeList.focus();
 
         fireEvent.change(document.activeElement as Element, {
-            target: {value: mockedDelegatedPSP.delegation_list![1].institution_name},
+            target: {value: mockedDelegatedPSP.delegation_list![1].broker_name},
         });
         fireEvent.keyDown(document.activeElement as Element, {key: 'ArrowDown'});
         fireEvent.keyDown(document.activeElement as Element, {key: 'Enter'});
-        expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP.delegation_list![1].institution_name);
+        expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP.delegation_list![1].broker_name);
         await waitFor(() => {
             expect(spyOnGetChannelService).toBeCalledTimes(1);
             expect(input.channelList.disabled).toBe(false);
@@ -375,7 +372,7 @@ describe('<AddEditCommissionBundleForm />', () => {
         // Check broker code list
         expect(input.brokerCodeList.value).toBe(
             mockedDelegatedPSP.delegation_list!.find((el) => el.broker_id === mockedBundleRequest.idBrokerPsp)
-                ?.institution_name
+                ?.broker_name
         );
 
         // Check channel id

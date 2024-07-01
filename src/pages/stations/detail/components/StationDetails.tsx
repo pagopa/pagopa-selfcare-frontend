@@ -92,7 +92,7 @@ Props) => {
         >
           <Grid container item spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h4" mb={2}>
+              <Typography variant="h6" mb={2}>
                 {t('stationDetailPageValidation.configuration.title')}
               </Typography>
             </Grid>

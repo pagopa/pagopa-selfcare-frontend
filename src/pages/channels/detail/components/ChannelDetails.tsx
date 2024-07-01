@@ -341,15 +341,19 @@ const ChannelDetails = ({
           </Paper>
         )}
         <Typography color="action.active" sx={{ my: 2 }}>
-          {t('channelDetailPage.createdOn')}{' '}
-          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-            {`${channelDetail?.createdAt?.toLocaleDateString('en-GB') ?? '-'}`}
-          </Typography>{' '}
-          {t('general.fromLower')}{' '}
-          <Typography component={'span'} fontWeight={'fontWeightMedium'}>
-            {channelDetail?.createdBy}
-          </Typography>
-          {'.'}
+          {channelDetail?.createdBy && (
+            <>
+              {t('channelDetailPage.createdOn')}{' '}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {`${channelDetail?.createdAt?.toLocaleDateString('en-GB') ?? '-'}`}
+              </Typography>{' '}
+              {t('general.fromLower')}{' '}
+              <Typography component={'span'} fontWeight={'fontWeightMedium'}>
+                {channelDetail?.createdBy}
+              </Typography>
+              {'.'}
+            </>
+          )}
           {channelDetail?.modifiedBy && (
             <div>
               {t('channelDetailPage.lastModified')}{' '}

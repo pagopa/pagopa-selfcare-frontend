@@ -125,7 +125,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
         Promise.all([
             getPaymentTypes(),
             getTouchpoints(0, 50),
-            getBrokerDelegation(undefined, selectedParty?.partyId ?? ''),
+            getBrokerDelegation(selectedParty?.partyId ?? '', undefined),
         ])
             .then(([paymentTypes, touchpoints, brokerDelegation]) => {
                 if (paymentTypes) {

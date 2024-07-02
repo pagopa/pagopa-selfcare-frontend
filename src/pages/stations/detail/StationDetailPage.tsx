@@ -1,17 +1,18 @@
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
-import {getECListByStationCode, getStationDetail} from '../../../services/stationService';
-import {LOADING_TASK_STATION_DETAILS_WRAPPER} from '../../../utils/constants';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {StationDetailResource} from '../../../api/generated/portal/StationDetailResource';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { StationDetailResource } from '../../../api/generated/portal/StationDetailResource';
+import { ConfigurationStatus } from '../../../model/Station';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { getECListByStationCode, getStationDetail } from '../../../services/stationService';
+import { LOADING_TASK_STATION_DETAILS_WRAPPER } from '../../../utils/constants';
 import StationDetails from './components/StationDetails';
 
 const StationDetailPage = () => {
     const {t} = useTranslation();
-    const {stationId} = useParams<{ stationId: string }>();
+    const {stationId, status} = useParams<{ stationId: string; status: ConfigurationStatus }>();
     const [stationDetail, setStationDetail] = useState<StationDetailResource>();
     const [ecAssociatedNumber, setECAssociatedNumber] = useState<number>(0);
     const addError = useErrorDispatcher();
@@ -29,7 +30,7 @@ const StationDetailPage = () => {
             }
         }
 
-        Promise.all([getStationDetail(stationId), getEcListByStationCode()])
+        Promise.all([getStationDetail({stationCode: stationId, status}), getEcListByStationCode()])
             .then(([stationDetail, ecList]) => {
                 setStationDetail(stationDetail);
                 setECAssociatedNumber(ecList?.page_info?.total_items ?? 0);

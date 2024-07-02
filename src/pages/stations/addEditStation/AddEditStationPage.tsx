@@ -9,7 +9,7 @@ import ROUTES from '../../../routes';
 import {StationDetailResource} from '../../../api/generated/portal/StationDetailResource';
 import {LOADING_TASK_STATION_ADD_EDIT} from '../../../utils/constants';
 import {getStationDetail} from '../../../services/stationService';
-import {StationFormAction} from '../../../model/Station';
+import {ConfigurationStatus, StationFormAction} from '../../../model/Station';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import AddEditStationForm from './AddEditStationForm';
@@ -28,7 +28,7 @@ const AddEditStationPage = () => {
     useEffect(() => {
         if (formAction !== StationFormAction.Create) {
             setLoading(true);
-            getStationDetail(stationId)
+            getStationDetail({stationCode: stationId, status: ConfigurationStatus.TO_BE_VALIDATED})
                 .then((response) => {
                     setStationDetail(response);
                 })

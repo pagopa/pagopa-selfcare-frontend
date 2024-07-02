@@ -2,15 +2,16 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { generatePath } from 'react-router';
 import { StatusEnum } from '../../../api/generated/portal/ChannelDetailsDto';
-import { StatusChip } from '../../../components/StatusChip';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import { renderCell, showCustomHeader } from '../../../components/Table/TableUtils';
 import { FormAction } from '../../../model/Channel';
 import ROUTES from '../../../routes';
+import { WrapperStatusEnum } from '../../../api/generated/portal/StationDetailResource';
+import { ConfigurationStatus } from '../../../model/Station';
+import { StatusChip } from '../../../components/WrapperCommon/StatusChip';
 
 export function buildColumnDefs(
-  t: TFunction<'translation', undefined>,
-  _onRowClick: (channelId: string) => void
+  t: TFunction<'translation', undefined>
 ) {
   return [
     {
@@ -97,7 +98,13 @@ export function buildColumnDefs(
           <GridLinkAction
             key="Gestisci canale"
             label="Gestisci canale"
-            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, { channelId: params.row.channel_code })}
+            to={generatePath(`${ROUTES.CHANNEL_DETAIL}`, {
+              channelId: params.row.channel_code,
+              status:
+                params.row.wrapperStatus === WrapperStatusEnum.APPROVED
+                  ? ConfigurationStatus.ACTIVE
+                  : ConfigurationStatus.TO_BE_VALIDATED,
+            })}
             showInMenu={true}
           />
         );

@@ -1,29 +1,29 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import {
-    Badge as BadgeIcon,
-    Cable as CableIcon,
-    CallMade,
-    Check as CheckIcon,
-    MenuBook,
-    NorthEast as NorthEastIcon,
+  Badge as BadgeIcon,
+  Cable as CableIcon,
+  CallMade,
+  Check as CheckIcon,
+  MenuBook,
+  NorthEast as NorthEastIcon,
 } from '@mui/icons-material';
 import {
-    Button,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    InputAdornment,
-    InputLabel,
-    Link,
-    MenuItem,
-    Paper,
-    Radio,
-    RadioGroup,
-    Select,
-    Stack,
-    TextField,
-    Typography,
+  Button,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  Link,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Select,
+  Stack,
+  TextField,
+  Typography,
 } from '@mui/material';
 import CircularProgressIcon from '@mui/material/CircularProgress';
 import { Box } from '@mui/system';
@@ -34,48 +34,48 @@ import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
 import {
-    StationDetailResource,
-    WrapperStatusEnum,
+  StationDetailResource,
+  WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
 import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { TestStationTypeEnum } from '../../../api/generated/portal/StationTestDto';
 import {
-    TestResultEnum,
-    TestStationResource,
+  TestResultEnum,
+  TestStationResource,
 } from '../../../api/generated/portal/TestStationResource';
 import { useFlagValue } from '../../../hooks/useFeatureFlags';
 import { useUserRole } from '../../../hooks/useUserRole';
 import {
-    ConnectionType,
-    GPDConfigs,
-    IGPDConfig,
-    INewConnConfig,
-    NewConnConfigs,
-    StationCategory,
-    StationFormAction,
-    StationOnCreation,
+  ConfigurationStatus,
+  ConnectionType,
+  GPDConfigs,
+  IGPDConfig,
+  INewConnConfig,
+  NewConnConfigs,
+  StationCategory,
+  StationFormAction,
+  StationOnCreation,
 } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import {
-    createStation,
-    createWrapperStation,
-    getStationCodeV2,
-    testStation,
-    updateStation,
-    updateWrapperStationToCheck,
-    updateWrapperStationToCheckUpdate,
+  createStation,
+  createWrapperStation,
+  getStationCodeV2,
+  testStation,
+  updateStation,
+  updateWrapperStationDetails,
 } from '../../../services/stationService';
 import {
-    LOADING_TASK_GENERATION_STATION_CODE,
-    LOADING_TASK_STATION_ADD_EDIT,
+  LOADING_TASK_GENERATION_STATION_CODE,
+  LOADING_TASK_STATION_ADD_EDIT,
 } from '../../../utils/constants';
 import { ENV } from '../../../utils/env';
 import {
-    alterStationValuesToFitCategories,
-    getStationCategoryFromDetail,
-    splitURL,
+  alterStationValuesToFitCategories,
+  getStationCategoryFromDetail,
+  splitURL,
 } from '../../../utils/station-utils';
 import ConfirmModal from '../../components/ConfirmModal';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
@@ -351,9 +351,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     }
   };
 
-  const redirect = (stCode: string) => {
+  const redirect = (stCode: string, status: ConfigurationStatus) => {
     if (userIsPagopaOperator) {
-      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode }));
+      history.push(generatePath(ROUTES.STATION_DETAIL, { stationId: stCode, status }));
     } else {
       history.push(ROUTES.STATIONS);
     }
@@ -370,47 +370,34 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
         stationId: formik.values.stationCode,
+        status: ConfigurationStatus.TO_BE_VALIDATED,
       })}`;
-      // eslint-disable-next-line functional/immutable-data
-      values.validationUrl = validationUrl;
 
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
-        await createWrapperStation(values);
-        redirect(stationCode4Redirect);
+        await createWrapperStation({ station: values, validationUrl });
+        redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
       }
 
       if (formAction === StationFormAction.Edit) {
-        switch (stationDetail?.wrapperStatus) {
-          case WrapperStatusEnum.TO_CHECK:
-            if (userIsPagopaOperator) {
-              await createStation(values);
-              redirect(stationCode4Redirect);
-            } else {
-              await updateWrapperStationToCheck(values);
-              redirect(stationCode4Redirect);
-            }
-            break;
-          case WrapperStatusEnum.APPROVED:
-          case WrapperStatusEnum.TO_CHECK_UPDATE:
-            if (userIsPagopaOperator) {
-              await updateStation(values, stationCode);
-              redirect(stationCode4Redirect);
-            } else {
-              await updateWrapperStationToCheckUpdate(values);
-              redirect(stationCode4Redirect);
-            }
-            break;
-          case WrapperStatusEnum.TO_FIX:
-            await updateWrapperStationToCheck(values);
-            redirect(stationCode4Redirect);
-            break;
-          case WrapperStatusEnum.TO_FIX_UPDATE:
-            await updateWrapperStationToCheckUpdate(values);
-            redirect(stationCode4Redirect);
-            break;
-          default:
-            redirect(stationCode4Redirect);
-            break;
+        if (userIsPagopaOperator) {
+          if (
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX
+          ) {
+            await createStation(values);
+          } else if (
+            stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED ||
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE ||
+            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE
+          ) {
+            await updateStation({ stationCode, station: values });
+          } else {
+            throw new Error('Wrong channel wrapper status');
+          }
+          redirect(stationCode4Redirect, ConfigurationStatus.ACTIVE);
+        } else {
+          await updateWrapperStationDetails({ stationCode, station: values, validationUrl });
+          redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
         }
       }
     } catch (reason) {
@@ -1140,7 +1127,13 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             onClick={() =>
               history.push(
                 formAction === StationFormAction.Edit
-                  ? generatePath(ROUTES.STATION_DETAIL, { stationId: stationDetail?.stationCode })
+                  ? generatePath(ROUTES.STATION_DETAIL, {
+                      stationId: stationDetail?.stationCode,
+                      status:
+                        stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED
+                          ? ConfigurationStatus.ACTIVE
+                          : ConfigurationStatus.TO_BE_VALIDATED,
+                    })
                   : ROUTES.STATIONS
               )
             }

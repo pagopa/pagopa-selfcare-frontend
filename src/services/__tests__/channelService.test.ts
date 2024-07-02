@@ -1,6 +1,5 @@
 import { BackofficeApi } from '../../api/BackofficeClient.ts';
 import { Redirect_protocolEnum } from '../../api/generated/portal/WrapperChannelDetailsDto.ts';
-import { WrapperChannelDetailsResource } from '../../api/generated/portal/WrapperChannelDetailsResource.ts';
 import { ConfigurationStatus } from '../../model/Station.tsx';
 import { channelCode } from '../__mocks__/channelService';
 import {
@@ -16,7 +15,6 @@ import {
   mockedWfespPlugIn,
   mockedWrapperChannel,
 } from '../__mocks__/channelService.ts';
-import { channelWrapperMockedGet } from '../__mocks__/institutionsService.ts';
 import {
   associatePSPtoChannel,
   createChannel,
@@ -28,7 +26,6 @@ import {
   getChannels,
   getPSPChannels,
   getWfespPlugins,
-  getWrapperEntities,
   updateChannel,
   updateWrapperChannelDetails,
   updateWrapperChannelWithOperatorReview,
@@ -46,7 +43,10 @@ describe('ChannelService test mocked', () => {
     expect(response).toMatchObject(mockedChannels);
   });
   test('Test getChannelDetail', async () => {
-    const response = await getChannelDetail('channelId');
+    const response = await getChannelDetail({
+      channelCode: 'channelId',
+      status: ConfigurationStatus.ACTIVE,
+    });
     expect(response).toMatchObject(mockedChannelDetail('channelId'));
   });
   test('Test getPSPChannels', async () => {
@@ -95,10 +95,6 @@ describe('ChannelService test mocked', () => {
   });
   test('Test dissociatePSPfromChannel', async () => {
     expect(dissociatePSPfromChannel('channelCode', 'pspTaxCode')).resolves.not.toThrow();
-  });
-  test('Test getWrapperEntities', async () => {
-    const response = await getWrapperEntities('pspCode');
-    expect(response).toMatchObject(channelWrapperMockedGet('pspCode'));
   });
   test('Test createWrapperChannelDetails', async () => {
     const response = await createWrapperChannelDetails(
@@ -175,7 +171,9 @@ describe('ChannelService test client', () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'getChannelDetail')
       .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
-    expect(getChannelDetail('channelId')).resolves.not.toThrow();
+    expect(
+      getChannelDetail({ channelCode: 'channelId', status: ConfigurationStatus.ACTIVE })
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getPSPChannels', async () => {
@@ -195,9 +193,7 @@ describe('ChannelService test client', () => {
   test('Test createChannel', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'createChannel')
-      .mockReturnValue(
-        new Promise((resolve) => resolve(mockedChannel as WrapperChannelDetailsResource))
-      );
+      .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
     expect(
       createChannel({
         validationUrl: '',
@@ -211,9 +207,7 @@ describe('ChannelService test client', () => {
   test('Test updateChannel', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'updateChannel')
-      .mockReturnValue(
-        new Promise((resolve) => resolve(mockedChannel as WrapperChannelDetailsResource))
-      );
+      .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
     expect(
       updateChannel('channelCode', {
         validationUrl: '',
@@ -254,13 +248,6 @@ describe('ChannelService test client', () => {
       .spyOn(BackofficeApi, 'dissociatePSPfromChannel')
       .mockReturnValue(new Promise((resolve) => resolve()));
     expect(dissociatePSPfromChannel('channelCode', 'pspTaxCode')).resolves.not.toThrow();
-    expect(spyOn).toBeCalledTimes(1);
-  });
-  test('Test getWrapperEntities', async () => {
-    const spyOn = jest
-      .spyOn(BackofficeApi, 'getWrapperEntities')
-      .mockReturnValue(new Promise((resolve) => resolve({})));
-    expect(getWrapperEntities('pspCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test createWrapperChannelDetails', async () => {

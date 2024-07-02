@@ -12,14 +12,14 @@ const ROUTES = {
   APIKEYS_CREATE: `${BASE_ROUTE}/add-apikey`,
 
   CHANNELS: `${BASE_ROUTE}/channels`,
-  CHANNEL_DETAIL: `${BASE_ROUTE}/channels/:channelId`,
+  CHANNEL_DETAIL: `${BASE_ROUTE}/channels/detail/:channelId/:status`,
   CHANNEL_EDIT: `${BASE_ROUTE}/channels/:channelId/:actionId`,
   CHANNEL_PSP_LIST: `${BASE_ROUTE}/channels/:channelId/psp-list`,
   CHANNEL_ASSOCIATE_PSP: `${BASE_ROUTE}/channels/:channelId/associate-psp`,
   CHANNEL_ADD: `${BASE_ROUTE}/channels/add-channel/`,
 
   STATIONS: `${BASE_ROUTE}/stations`,
-  STATION_DETAIL: `${BASE_ROUTE}/stations/:stationId`,
+  STATION_DETAIL: `${BASE_ROUTE}/stations/detail/:stationId/:status`,
   STATION_EDIT: `${BASE_ROUTE}/stations/:stationId/:actionId`,
   STATION_EC_LIST: `${BASE_ROUTE}/stations/:stationId/ec-list`,
   STATION_ASSOCIATE_EC: `${BASE_ROUTE}/stations/:stationId/associate-ec`,

@@ -118,6 +118,8 @@ function Buttons({
   const { userIsPagopaOperator } = useUserRole();
   const { t } = useTranslation();
   const { channelId } = useParams<{ channelId: string }>();
+  const disableOnPendingUpdate =
+  channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED && channelDetails?.pendingUpdate;
 
   if (userIsPagopaOperator) {
     return (
@@ -128,6 +130,7 @@ function Buttons({
             variant="outlined"
             onClick={() => setShowModal(true)}
             data-testid="request-edit-button"
+            disabled={disableOnPendingUpdate}
           >
             {t('channelDetailPage.requestEdit')}
           </Button>
@@ -139,6 +142,7 @@ function Buttons({
             actionId: FormAction.Edit,
           })}
           variant="contained"
+          disabled={disableOnPendingUpdate}
         >
           {t(
             channelDetails?.wrapperStatus === WrapperStatusEnum.APPROVED
@@ -183,6 +187,7 @@ function Buttons({
               color="primary"
               variant="outlined"
               startIcon={<ContentCopy />}
+              disabled={disableOnPendingUpdate}
             >
               {t('channelDetailPage.duplicate')}
             </Button>
@@ -196,6 +201,7 @@ function Buttons({
           })}
           variant="contained"
           startIcon={<Edit />}
+          disabled={disableOnPendingUpdate}
         >
           {t('general.modify')}
         </Button>

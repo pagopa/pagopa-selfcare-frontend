@@ -18,7 +18,10 @@ import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import { store } from '../redux/store';
 import { extractResponse } from '../utils/client-utils';
 import { ENV } from '../utils/env';
-import { WithDefaultsT as WithCustomDefaultsT, createClient as createCustomClient } from './custom/client';
+import {
+  WithDefaultsT as WithCustomDefaultsT,
+  createClient as createCustomClient,
+} from './custom/client';
 import { AvailableCodes } from './generated/portal/AvailableCodes';
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { BrokerDto } from './generated/portal/BrokerDto';
@@ -75,7 +78,7 @@ import { PspChannelsResource } from './generated/portal/PspChannelsResource';
 import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
-import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
+import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { TestStationTypeEnum } from './generated/portal/StationTestDto';
 import { TavoloOpDto } from './generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from './generated/portal/TavoloOpOperations';
@@ -91,7 +94,6 @@ import {
   Redirect_protocolEnum,
   WrapperChannelDetailsDto,
 } from './generated/portal/WrapperChannelDetailsDto';
-import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
 import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
@@ -400,9 +402,17 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  // retrive of channel detail before on db and then on the node
-  getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
-    const result = await backofficeClient.getChannelDetail({ 'channel-code': channelcode });
+  getChannelDetail: async ({
+    channelCode,
+    status,
+  }: {
+    channelCode: string;
+    status: ConfigurationStatus;
+  }): Promise<ChannelDetailsResource> => {
+    const result = await backofficeClient.getChannelDetails({
+      'channel-code': channelCode,
+      status,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -432,7 +442,7 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
+  createChannel: async (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.createChannel({
       body: channelBody2Send,
@@ -695,12 +705,13 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getWrapperEntities: async (code: string): Promise<WrapperEntities> => {
-    const result = await backofficeClient.getStation({ 'station-code': code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createWrapperStation: async (station: WrapperStationDetailsDto): Promise<WrapperEntities> => {
+  createWrapperStation: async ({
+    station,
+    validationUrl,
+  }: {
+    station: WrapperStationDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const result = await backofficeClient.createWrapperStationDetails({
       body: {
         brokerCode: station.brokerCode,
@@ -720,36 +731,24 @@ export const BackofficeApi = {
         targetHostPof: station.targetHostPof,
         targetPathPof: station.targetPathPof,
         targetPortPof: station.targetPortPof,
-        validationUrl: station.validationUrl,
+        validationUrl,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  updateWrapperStationToCheck: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
+  updateWrapperStationDetails: async ({
+    stationCode,
+    station,
+    validationUrl,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const result = await backofficeClient.updateWrapperStationDetails({
       'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperStationToCheckUpdate: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
-    const result = await backofficeClient.updateWrapperStationDetails({
-      'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK_UPDATE,
-      },
+      body: { ...station, validationUrl },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -773,34 +772,31 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateStation: async (
-    station: StationDetailsDto,
-    stationcode: string
-  ): Promise<StationDetailResource> => {
+  updateStation: async ({
+    stationCode,
+    station,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+  }): Promise<StationDetailResource> => {
     const result = await backofficeClient.updateStation({
-      body: {
-        ...station,
-        status: StatusEnum.APPROVED,
-      },
-      'station-code': stationcode,
+      body: station,
+      'station-code': stationCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getWrapperEntitiesStation: async (code: string): Promise<WrapperEntities> => {
-    const result = await backofficeClient.getWrapperEntitiesStation({ 'station-code': code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  // before tries to get the detail from the DB, if it doesn't find anything, will try to get the detail form apim
-  getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await backofficeClient.getStationDetail({ 'station-code': stationId });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  // get the detail directly from apim
-  getStation: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await backofficeClient.getStation({ 'station-code': stationId });
+  getStationDetails: async ({
+    stationCode,
+    status,
+  }: {
+    stationCode: string;
+    status: ConfigurationStatus;
+  }): Promise<StationDetailResource> => {
+    const result = await backofficeClient.getStationDetails({
+      'station-code': stationCode,
+      status,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

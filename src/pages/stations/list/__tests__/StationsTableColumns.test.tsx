@@ -10,6 +10,7 @@ import {
 } from '../StationsTableColumns';
 import {WrapperStatusEnum} from '../../../../api/generated/portal/StationDetailResource';
 import {mockedFullStation} from '../../../../services/__mocks__/stationService';
+import { ConfigurationStatus } from '../../../../model/Station';
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
@@ -262,26 +263,26 @@ describe('<StationsTableColumns />', () => {
 
         // Station approved, not an operator
         expect(getRowActions(paramsApproved, false)).toEqual([
-            manageStationAction(mockedFullStation.stationCode),
+            manageStationAction(mockedFullStation.stationCode, ConfigurationStatus.ACTIVE),
             manageStationECAction(mockedFullStation.stationCode),
             duplicateStationAction(mockedFullStation.stationCode),
         ]);
 
         // Station not approved, not an operator
         expect(getRowActions(paramsToCheck, false)).toEqual([
-            manageStationAction(mockedFullStation.stationCode),
+            manageStationAction(mockedFullStation.stationCode, ConfigurationStatus.TO_BE_VALIDATED),
             editStationAction(mockedFullStation.stationCode),
         ]);
 
         // Station approved, as operator
         expect(getRowActions(paramsApproved, true)).toEqual([
-            manageStationAction(mockedFullStation.stationCode),
+            manageStationAction(mockedFullStation.stationCode, ConfigurationStatus.ACTIVE),
             manageStationECAction(mockedFullStation.stationCode),
         ]);
 
         // Station not approved, as operator
         expect(getRowActions(paramsToCheck, true)).toEqual([
-            manageStationAction(mockedFullStation.stationCode),
+            manageStationAction(mockedFullStation.stationCode, ConfigurationStatus.TO_BE_VALIDATED),
             editStationAction(mockedFullStation.stationCode),
         ]);
     });

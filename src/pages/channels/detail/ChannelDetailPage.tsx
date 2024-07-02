@@ -3,11 +3,12 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { getChannelDetail, getChannelPSPs } from '../../../services/channelService';
-import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
+import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { ConfigurationStatus } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { getChannelDetail, getChannelPSPs } from '../../../services/channelService';
+import { LOADING_TASK_CHANNEL_DETAIL } from '../../../utils/constants';
 import ChannelDetails from './components/ChannelDetails';
 
 const ChannelDetailPage = () => {
@@ -17,12 +18,12 @@ const ChannelDetailPage = () => {
   const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>({} as any);
   const [PSPAssociatedNumber, setPSPAssociatedNumber] = useState<number>(0);
   const addError = useErrorDispatcher();
-  const { channelId } = useParams<{ channelId: string }>();
+  const { channelId, status } = useParams<{ channelId: string; status: ConfigurationStatus }>();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([getChannelDetail(channelId), getChannelPSPs(channelId, '', 0)])
+    Promise.all([getChannelDetail({channelCode: channelId, status}), getChannelPSPs(channelId, '', 0)])
       .then(([channelDetailResponse, channelPSPList]) => {
         setChannelDetail(channelDetailResponse);
         setPSPAssociatedNumber(channelPSPList?.page_info?.total_items ?? 0);

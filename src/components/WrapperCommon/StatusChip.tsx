@@ -1,7 +1,7 @@
-import {Chip} from '@mui/material';
-import {useTranslation} from 'react-i18next';
-import {useUserRole} from '../hooks/useUserRole';
-import {WrapperStatusEnum} from '../api/generated/portal/WrapperStationResource';
+import { Chip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { WrapperStatusEnum } from '../../api/generated/portal/StationDetailResource';
+import { useUserRole } from '../../hooks/useUserRole';
 
 type Props = {
     status: string;

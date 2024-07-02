@@ -83,10 +83,10 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
 
     const getChannelsByBrokerCode = (selectedBrokerCode: string) => {
         setLoadingChannels(true);
-        getChannels({status: ConfigurationStatus.ACTIVE, brokerCode: selectedBrokerCode})
+        getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
             .then((data) => {
-                if (data?.channels && data.channels.length > 0) {
-                    setChannelsId(data.channels.map(ch => ch.channel_code));
+                if (data && data.length > 0) {
+                    setChannelsId(data);
                 } else {
                     setChannelsId([]);
                     addError({

@@ -84,7 +84,7 @@ describe('<AddEditCommissionBundleForm />', () => {
         );
         spyOnGetChannelService = jest.spyOn(
             require('../../../../../services/channelService'),
-            'getChannels'
+            'getChannelsIdAssociatedToPSP'
         );
         spyOnErrorHook = jest
             .spyOn(useErrorDispatcher, 'useErrorDispatcher')

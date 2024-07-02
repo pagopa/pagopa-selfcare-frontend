@@ -193,6 +193,24 @@ export const mockedBundleRequest: BundleRequest = {
   validityDateTo: new Date('2024-02-22'),
 };
 
+export const mockedBundleRequestForEdit: BundleRequest = {
+  digitalStamp: false,
+  digitalStampRestriction: true,
+  idChannel: '97735020584_01',
+  idBrokerPsp: '800011104871',
+  name: 'Commission Bundle Name',
+  description: 'Commission bundle description',
+  paymentAmount: 5556,
+  minPaymentAmount: 4000,
+  maxPaymentAmount: 150100,
+  paymentType: 'Bonifico - SEPA',
+  touchpoint: 'ANY',
+  transferCategoryList: mockedPSPTaxonomyList.map((el) => el.specificBuiltInData!),
+  type: TypeEnum.GLOBAL,
+  validityDateFrom: new Date('2024-02-17'),
+  validityDateTo: new Date('2024-02-22'),
+};
+
 export const mockedCommissionBundlePspList: PSPBundlesResource = {
   bundles: [mockedCommissionBundlePspDetailGlobal],
   pageInfo: {

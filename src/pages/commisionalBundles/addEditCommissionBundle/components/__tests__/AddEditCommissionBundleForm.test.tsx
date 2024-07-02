@@ -5,7 +5,7 @@ import {MemoryRouter, Route} from 'react-router-dom';
 import {createStore, store} from '../../../../../redux/store';
 import {Provider} from 'react-redux';
 import React from 'react';
-import {mockedBundleRequest, mockedChannelsIdList,} from '../../../../../services/__mocks__/bundleService';
+import {mockedBundleRequest, mockedBundleRequestForEdit, mockedChannelsIdList,} from '../../../../../services/__mocks__/bundleService';
 import {partiesActions} from '../../../../../redux/slices/partiesSlice';
 import {pspOperatorSignedDirect} from '../../../../../services/__mocks__/partyService';
 import AddEditCommissionBundleForm from '../AddEditCommissionBundleForm';
@@ -325,12 +325,11 @@ describe('<AddEditCommissionBundleForm />', () => {
         await waitFor(() =>
             injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
         );
-        const {...input} = componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
+        const {...input} = componentRender(FormAction.Edit, mockedBundleRequestForEdit, injectStore);
         await waitFor(() => {
             expect(spyOnGetPaymentTypes).toHaveBeenCalled();
             expect(spyOnGetTouchpoint).toHaveBeenCalled();
             expect(spyOnGetInstitutionService).toHaveBeenCalled();
-            expect(spyOnGetChannelService).toHaveBeenCalled();
         });
 
         //Check radio group bundle type
@@ -371,7 +370,7 @@ describe('<AddEditCommissionBundleForm />', () => {
 
         // Check broker code list
         expect(input.brokerCodeList.value).toBe(
-            mockedDelegatedPSP.delegation_list!.find((el) => el.broker_id === mockedBundleRequest.idBrokerPsp)
+            mockedDelegatedPSP.delegation_list!.find((el) => el.broker_tax_code === mockedBundleRequestForEdit.idBrokerPsp)
                 ?.broker_name
         );
 

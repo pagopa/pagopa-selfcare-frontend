@@ -1,10 +1,10 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
-import {theme} from '@pagopa/mui-italia';
-import {FormikProps} from 'formik';
-import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import { MenuBook } from '@mui/icons-material';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import EuroIcon from '@mui/icons-material/Euro';
 import {
     Autocomplete,
     Box,
@@ -22,33 +22,34 @@ import {
     TextFieldProps,
     Typography,
 } from '@mui/material';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {MenuBook} from '@mui/icons-material';
-import EuroIcon from '@mui/icons-material/Euro';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {NumericFormat} from 'react-number-format';
-import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS, LOADING_TASK_GET_CHANNELS_IDS,} from '../../../../utils/constants';
-import {Party} from '../../../../model/Party';
-import {sortPaymentType} from '../../../../model/PaymentType';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { FormikProps } from 'formik';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { NumericFormat } from 'react-number-format';
+import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
+import { Delegation } from '../../../../api/generated/portal/Delegation';
+import { TypeEnum } from '../../../../api/generated/portal/PSPBundleResource';
+import { PaymentTypes } from '../../../../api/generated/portal/PaymentTypes';
+import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
-import {useAppSelector} from '../../../../redux/hooks';
-import {partiesSelectors} from '../../../../redux/slices/partiesSlice';
-import {PaymentTypes} from '../../../../api/generated/portal/PaymentTypes';
-import {BundleRequest} from '../../../../api/generated/portal/BundleRequest';
-import {Touchpoints} from '../../../../api/generated/portal/Touchpoints';
-import {getChannelsIdAssociatedToPSP} from '../../../../services/channelService';
-import {getPaymentTypes} from '../../../../services/configurationService';
-import {getTouchpoints} from '../../../../services/bundleService';
-import {getBrokerDelegation} from '../../../../services/institutionService';
-import {Delegation} from '../../../../api/generated/portal/Delegation';
-import {addCurrentPSP} from '../../../../utils/channel-utils';
-import {useFlagValue} from '../../../../hooks/useFeatureFlags';
-import {useUserRole} from "../../../../hooks/useUserRole";
-import {TypeEnum} from '../../../../api/generated/portal/PSPBundleResource';
-import {useOrganizationType} from "../../../../hooks/useOrganizationType";
+import { useFlagValue } from '../../../../hooks/useFeatureFlags';
+import { useOrganizationType } from "../../../../hooks/useOrganizationType";
+import { useUserRole } from "../../../../hooks/useUserRole";
+import { Party } from '../../../../model/Party';
+import { sortPaymentType } from '../../../../model/PaymentType';
+import { ConfigurationStatus } from '../../../../model/Station';
+import { useAppSelector } from '../../../../redux/hooks';
+import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
+import { getTouchpoints } from '../../../../services/bundleService';
+import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
+import { getPaymentTypes } from '../../../../services/configurationService';
+import { getBrokerDelegation } from '../../../../services/institutionService';
+import { addCurrentBroker } from '../../../../utils/channel-utils';
+import { LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS, LOADING_TASK_GET_CHANNELS_IDS, } from '../../../../utils/constants';
 
 type Props = {
     formik: FormikProps<BundleRequest>;
@@ -136,7 +137,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 }
                 let listBroker = brokerDelegation?.delegation_list ? [...brokerDelegation.delegation_list] : [];
                 if (orgIsPspDirect) {
-                    listBroker = addCurrentPSP(listBroker, selectedParty as Party);
+                    listBroker = addCurrentBroker(listBroker, selectedParty as Party);
                 }
                 if (listBroker.length > 0) {
                     setBrokerDelegationList(listBroker);
@@ -195,7 +196,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
             const broker = brokerDelegationList?.find(
                 (el) => el.broker_name === value
             );
-            formik.handleChange('idBrokerPsp')(broker?.broker_id ?? "");
+            formik.handleChange('idBrokerPsp')(broker?.broker_tax_code ?? "");
             if (broker?.broker_tax_code) {
                 getChannelsByBrokerCode(broker?.broker_tax_code);
             }
@@ -490,7 +491,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         ?.map((el) => el?.broker_name ?? '')
                                         ?.sort((a, b) => a.localeCompare(b))}
                                     disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
-                                    value={brokerDelegationList?.find(el => el.broker_id === formik.values.idBrokerPsp)?.broker_name ?? ""}
+                                    value={brokerDelegationList?.find(el => el.broker_tax_code === formik.values.idBrokerPsp)?.broker_name ?? ""}
                                     onChange={(_, value) => {
                                         handleBrokerCodesSelection(value);
                                     }}

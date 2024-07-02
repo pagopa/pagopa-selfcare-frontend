@@ -48,7 +48,7 @@ import { getTouchpoints } from '../../../../services/bundleService';
 import { getChannels } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
-import { addCurrentPSP } from '../../../../utils/channel-utils';
+import { addCurrentBroker } from '../../../../utils/channel-utils';
 import { LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS, LOADING_TASK_GET_CHANNELS_IDS, } from '../../../../utils/constants';
 
 type Props = {
@@ -137,7 +137,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 }
                 let listBroker = brokerDelegation?.delegation_list ? [...brokerDelegation.delegation_list] : [];
                 if (orgIsPspDirect) {
-                    listBroker = addCurrentPSP(listBroker, selectedParty as Party);
+                    listBroker = addCurrentBroker(listBroker, selectedParty as Party);
                 }
                 if (listBroker.length > 0) {
                     setBrokerDelegationList(listBroker);
@@ -196,7 +196,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
             const broker = brokerDelegationList?.find(
                 (el) => el.broker_name === value
             );
-            formik.handleChange('idBrokerPsp')(broker?.broker_id ?? "");
+            formik.handleChange('idBrokerPsp')(broker?.broker_tax_code ?? "");
             if (broker?.broker_tax_code) {
                 getChannelsByBrokerCode(broker?.broker_tax_code);
             }
@@ -491,7 +491,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         ?.map((el) => el?.broker_name ?? '')
                                         ?.sort((a, b) => a.localeCompare(b))}
                                     disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
-                                    value={brokerDelegationList?.find(el => el.broker_id === formik.values.idBrokerPsp)?.broker_name ?? ""}
+                                    value={brokerDelegationList?.find(el => el.broker_tax_code === formik.values.idBrokerPsp)?.broker_name ?? ""}
                                     onChange={(_, value) => {
                                         handleBrokerCodesSelection(value);
                                     }}

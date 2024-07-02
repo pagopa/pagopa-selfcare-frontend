@@ -18,3 +18,20 @@ export const addCurrentPSP = (availablePSP: Array<Delegation>, selectedParty: Pa
 
     return availablePSP;
 };
+
+export const addCurrentBroker = (availableBroker: Array<Delegation>, selectedParty: Party) => {
+
+    const value = {
+       broker_name: selectedParty.description,
+       broker_tax_code: selectedParty.fiscalCode,
+       broker_id: selectedParty.partyId
+    };
+
+    if (checkInstitutionTypes(selectedParty?.institutionType as string, INSTITUTIONS_PSP_TYPES)) {
+        // eslint-disable-next-line functional/immutable-data
+        availableBroker.push(value);
+    }
+
+    return availableBroker;
+
+};

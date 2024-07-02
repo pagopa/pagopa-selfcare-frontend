@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.26.3-1-next",
+  "version": "1.26.3-2-update-broker-selection-bundle",
   "homepage": "ui",
   "private": true,
   "scripts": {

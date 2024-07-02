@@ -45,7 +45,7 @@ import { ConfigurationStatus } from '../../../../model/Station';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { getTouchpoints } from '../../../../services/bundleService';
-import { getChannels } from '../../../../services/channelService';
+import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { addCurrentBroker } from '../../../../utils/channel-utils';

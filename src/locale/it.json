@@ -695,6 +695,7 @@
       "toCheckMessage": "Verifica le informazioni inserite dall’ente e approva o richiedi modifiche alla stazione.",
       "toFixTitle": "Modifiche richieste",
       "toFixMessage": "Stazione in attesa di correzione da parte dell’ente.",
+      "waitingForRevision": "La stazione è in attesa di approvazione da parte di un nostro operatore. Riceverai una mail a procedura completata.",
       "pendingUpdate": "Attenzione la stazione ha delle modifiche in corso ed è quindi disponibile in sola lettura.\nLa configurazione visualizzata è quella attiva sul nodo, per effettuare delle modifiche spostarsi sulla stazione da validare."
     },
     "modal": {

@@ -163,7 +163,7 @@ Props) => {
                   IconComponent={
                     formik.values.newConnection
                       ? () => (
-                          <IconButton onClick={() => formik.setFieldValue('newConnection', '')}>
+                          <IconButton onClick={() => formik.setFieldValue('newConnection', '')} data-testid="delete-new-connection">
                             <Close />
                           </IconButton>
                         )

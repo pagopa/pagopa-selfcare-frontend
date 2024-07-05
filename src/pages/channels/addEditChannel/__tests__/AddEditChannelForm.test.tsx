@@ -484,6 +484,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
                 </Router>
             </Provider>
         );
+        
     });
 
     test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true on config', async () => {

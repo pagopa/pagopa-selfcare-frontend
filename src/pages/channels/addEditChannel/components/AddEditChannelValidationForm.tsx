@@ -289,7 +289,7 @@ Props) => {
               />
             </Grid>
 
-            <Grid container item xs={4} sx={{ mt: 3 }}>
+            <Grid container item xs={4}>
               <FormControlLabel
                 control={
                   <Checkbox

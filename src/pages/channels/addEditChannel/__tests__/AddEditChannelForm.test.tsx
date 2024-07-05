@@ -371,7 +371,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     //   });
     // });
 
-    test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
+    test('Test of AddEditChannelValidationForm case checkbox select-new-connection-test flag true', async () => {
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
             userRole: ROLE.PAGOPA_OPERATOR,
             userIsPspAdmin: false,
@@ -405,16 +405,17 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
         const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
         const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-        const selectNewConnection = screen.getByTestId('select-new-connection-test');
         const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
 
-        fireEvent.click(selectNewConnection);
+        expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
 
         fireEvent.change(newConnection, {
             target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
         });
 
-        fireEvent.click(selectNewConnection);
+        const deleteNewConnection = screen.getByTestId('delete-new-connection');
+
+        fireEvent.click(deleteNewConnection);
 
         expect(newConnection.value).toBe('');
 
@@ -483,6 +484,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
                 </Router>
             </Provider>
         );
+        
     });
 
     test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true on config', async () => {
@@ -519,16 +521,17 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
         const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
         const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-        const selectNewConnection = screen.getByTestId('select-new-connection-test');
         const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
 
-        fireEvent.click(selectNewConnection);
+        expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
 
         fireEvent.change(newConnection, {
             target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
         });
 
-        fireEvent.click(selectNewConnection);
+        const deleteNewConnection = screen.getByTestId('delete-new-connection');
+
+        fireEvent.click(deleteNewConnection);
 
         expect(newConnection.value).toBe('');
 

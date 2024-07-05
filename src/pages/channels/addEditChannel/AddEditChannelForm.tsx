@@ -34,7 +34,7 @@ import {
 } from '../../../api/generated/portal/ChannelDetailsResource';
 import { PaymentTypes } from '../../../api/generated/portal/PaymentTypes';
 import { useUserRole } from '../../../hooks/useUserRole';
-import { ChannelOnCreation, FormAction } from '../../../model/Channel';
+import { ChannelOnCreation, FormAction, forwarder01 } from '../../../model/Channel';
 import { Party } from '../../../model/Party';
 import { sortPaymentType } from '../../../model/PaymentType';
 import { ConfigurationStatus } from '../../../model/Station';
@@ -47,7 +47,7 @@ import {
 } from '../../../services/channelService';
 import { getPaymentTypes } from '../../../services/configurationService';
 import { LOADING_TASK_CHANNEL_ADD_EDIT, LOADING_TASK_PAYMENT_TYPE } from '../../../utils/constants';
-import { ENV } from '../../../utils/env';
+import { isNewConnectivity } from '../../../model/Channel';
 import ConfirmModal from '../../components/ConfirmModal';
 import { isValidURL } from '../../components/commonFunctions';
 import AddEditChannelFormSectionTitle from './AddEditChannelFormSectionTitle';
@@ -72,11 +72,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>({ payment_types: [] });
   const { userIsPagopaOperator } = useUserRole();
 
-  const forwarder01 =
-    ENV.ENV === 'PROD'
-      ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
-      : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
-
   const initialFormData = (
     channelCode: string,
     channelDetail?: ChannelDetailsResource,
@@ -91,12 +86,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         digital_stamp_brand: channelDetail.digital_stamp_brand ?? false,
         flag_io: channelDetail.flag_io ?? false,
         ip: channelDetail.ip ?? '',
-        newConnection:
-          `${channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${
-            channelDetail.ip
-          }${channelDetail.service}` === forwarder01
-            ? forwarder01
-            : '',
+        newConnection: isNewConnectivity(channelDetail) ? forwarder01 : '',
         new_password: channelDetail.new_password ?? '',
         nmp_service: channelDetail.nmp_service ?? '',
         on_us: channelDetail.on_us ?? false,
@@ -213,8 +203,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
     validateOnMount: true,
   });
 
-  const [isNewConnectivity, setIsNewConnectivity] = useState(!!formik.values.newConnection);
-
   useEffect(() => {
     splitTarget(formik.values);
   }, [formik.values.targetUnion]);
@@ -318,7 +306,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
 
   const splitNewConnection = (values: ChannelOnCreation) => {
     const splitUrl =
-      formik.values.newConnection.trim() !== '' && isNewConnectivity
+      formik.values.newConnection.trim() !== ''
         ? splitURL(formik.values.newConnection)
         : splitURL(formik.values.targetUnion);
 
@@ -695,10 +683,6 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         <AddEditChannelValidationForm
           formik={formik}
           handleChangeNumberOnly={handleChangeNumberOnly}
-          setIsNewConnectivity={setIsNewConnectivity}
-          isNewConnectivity={isNewConnectivity}
-          forwarder01={forwarder01}
-          channelDetail={channelDetail}
         />
       ) : null}
 

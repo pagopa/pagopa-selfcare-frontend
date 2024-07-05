@@ -19,6 +19,8 @@ import {
   BundleDetailsActionTypes,
   BundleResource,
   FormAction,
+  isBundleDeleted,
+  isBundleValid,
 } from '../../../model/CommissionBundle';
 import { Party } from '../../../model/Party';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
@@ -40,7 +42,7 @@ import CommissionBundleDetailSubscriptionsTable from './components/subscriptions
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
 
-  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL || isBundleDeleted(bundleDetail)) {
     return (
       <Alert severity={'error'} data-testid="alert-error-test" variant="outlined">
         {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
@@ -95,14 +97,16 @@ const BundleActionButtons = ({
     if (orgInfo.types.isPsp) {
       return (
         <>
-          <Button
-            color="error"
-            variant="outlined"
-            onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_PSP)}
-            data-testid="delete-button"
-          >
-            {t('general.delete')}
-          </Button>
+          {!isBundleDeleted(bundleDetail) && (
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_PSP)}
+              data-testid="delete-button"
+            >
+              {t('general.delete')}
+            </Button>
+          )}
           <Button
             component={Link}
             to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
@@ -359,7 +363,6 @@ export default CommissionBundleDetailPage;
 function isValidBundleForSubscriptionTable(commissionBundleDetail: BundleResource) {
   return (
     commissionBundleDetail.type !== TypeEnum.GLOBAL &&
-    commissionBundleDetail.validityDateFrom &&
-    new Date().getTime() > commissionBundleDetail.validityDateFrom.getTime()
+    isBundleValid(commissionBundleDetail)
   );
 }

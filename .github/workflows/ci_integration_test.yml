@@ -19,7 +19,7 @@ on:
         description: 'notify result with slack message'
         required: false
         type: boolean
-        default: false
+        default: true
   
   
   workflow_dispatch:
@@ -31,7 +31,6 @@ on:
         options:
           - local
           - dev
-          - uat
       canary:
         description: 'run the tests on canary version'
         required: false
@@ -47,11 +46,15 @@ permissions:
   id-token: write
   contents: read
   deployments: write
+  pages: write
 
+concurrency:
+  group: "integration"
+  cancel-in-progress: true
 
 jobs:
   integration_test:
-    name: Test ${{(github.event.inputs == null && 'dev') || inputs.environment }}
+    name: Test ${{(inputs.environment == null && 'dev') || inputs.environment }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -93,23 +96,21 @@ jobs:
           cd ./e2e
           yarn install
           npx playwright install --with-deps
+
+          export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+          export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
           
-          if [ "${{ inputs.environment }}" = "local" ]; then
-            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
-            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
-          fi
-          
-          if [ "${{ inputs.environment }}" = "dev" ]; then
-            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
-            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
-          fi
-          
-          if [ "${{ inputs.environment }}" = "uat" ]; then
-            export KEY_PEM='${{ secrets.UAT_KEY_PEM }}'
-            export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
-          fi
-          
-          FE_URL=$FE_URL npx playwright test --workers=1 --project=chromium
+          npx playwright test --workers=1 --max-failures=1 --project=chromium
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './e2e/playwright-report/'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   print_debug:
     runs-on: ubuntu-latest
@@ -148,7 +149,7 @@ jobs:
     needs: [ integration_test ]
     runs-on: ubuntu-latest
     name: Notify
-    if: ${{ always() && inputs.notify == true && github.event_name != 'schedule'  }}
+    if: ${{ always() && (github.event_name == 'schedule' || inputs.notify == true ) }}
     steps:
       - name: Report Status
         uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2 # v2

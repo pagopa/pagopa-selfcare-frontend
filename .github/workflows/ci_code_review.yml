@@ -218,7 +218,7 @@ jobs:
         with:
             args: >
               -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/e2e/**
-
+              -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/e2e/**
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest

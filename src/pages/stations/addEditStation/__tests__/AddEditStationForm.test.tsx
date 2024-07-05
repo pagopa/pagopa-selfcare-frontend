@@ -21,7 +21,28 @@ import {mockedFullStation, mockedStationCode} from '../../../../services/__mocks
 
 jest.mock('../../../components/commonFunctions');
 
+let updateWrapperStationDetailsSpy: jest.SpyInstance;
+let createWrapperStationSpy: jest.SpyInstance;
+let updateStationSpy: jest.SpyInstance;
+let createStationSpy: jest.SpyInstance;
+
 beforeEach(() => {
+    updateWrapperStationDetailsSpy = jest.spyOn(
+        stationService,
+        'updateWrapperStationDetails'
+    );
+    createWrapperStationSpy = jest.spyOn(
+        stationService,
+        'createWrapperStation'
+    );
+    updateStationSpy = jest.spyOn(
+        stationService,
+        'updateStation'
+    );
+    createStationSpy = jest.spyOn(
+        stationService,
+        'createStation'
+    );
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
@@ -138,11 +159,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             flags: {['test-stations']: true},
         };
         await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
-        const updateWrapperStationToCheckUpdate = jest.spyOn(
-            stationService,
-            'updateWrapperStationToCheckUpdate'
-        );
-
+       
         const testStation = jest.spyOn(stationService, 'testStation');
 
         render(
@@ -283,8 +300,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             flags: {['test-stations']: true},
         };
         await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
-        const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
-        const updateWrapperStationToCheck = jest.spyOn(stationService, 'updateWrapperStationToCheck');
+        
 
         render(
             <Provider store={store}>
@@ -310,8 +326,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             fireEvent.click(confirmModalBtn);
         });
 
-        expect(createWrapperStation).toBeCalledTimes(0);
-        expect(updateWrapperStationToCheck).toBeCalledTimes(1);
+        expect(createWrapperStationSpy).toBeCalledTimes(0);
+        expect(updateWrapperStationDetailsSpy).toBeCalledTimes(1);
     });
 
     test('Test Edit rendering AddEditStationForm with operator true, with Station in status TO_CHECK_UPDATE', async () => {
@@ -328,8 +344,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             flags: {['test-stations']: true},
         };
         await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
-        const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
-        const updateStation = jest.spyOn(stationService, 'updateStation');
+        
 
         render(
             <Provider store={store}>
@@ -365,8 +380,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             fireEvent.click(confirmModalBtn);
         });
 
-        expect(createWrapperStation).toBeCalledTimes(0);
-        expect(updateStation).toBeCalledTimes(1);
+        expect(createWrapperStationSpy).toBeCalledTimes(0);
+        expect(updateStationSpy).toBeCalledTimes(1);
     });
 
     test('Test Edit rendering AddEditStationForm with operator false, with Station in status TO_CHECK_UPDATE', async () => {
@@ -383,8 +398,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             flags: {['test-stations']: true},
         };
         await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
-        const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
-        const updateWrapperStationToCheckUpdate = jest.spyOn(stationService, 'updateWrapperStationToCheckUpdate');
 
         render(
             <Provider store={store}>
@@ -410,8 +423,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             fireEvent.click(confirmModalBtn);
         });
 
-        expect(createWrapperStation).toBeCalledTimes(0);
-        expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);
+        expect(createWrapperStationSpy).toBeCalledTimes(0);
+        expect(updateWrapperStationDetailsSpy).toBeCalledTimes(1);
     });
 
     test('Test Edit rendering AddEditStationForm with operator true, with Station in status TO_FIX', async () => {
@@ -428,8 +441,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             flags: {['test-stations']: true},
         };
         await store.dispatch(featureFlagsActions.setFeatureFlags(flags));
-        const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
-        const updateWrapperStationToCheck = jest.spyOn(stationService, 'updateWrapperStationToCheck');
 
         render(
             <Provider store={store}>
@@ -465,8 +476,8 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             fireEvent.click(confirmModalBtn);
         });
 
-        expect(createWrapperStation).toBeCalledTimes(0);
-        expect(updateWrapperStationToCheck).toBeCalledTimes(1);
+        expect(createWrapperStationSpy).toBeCalledTimes(0);
+        expect(createStationSpy).toBeCalledTimes(1);
     });
 
     test('Test rendering AddEditStationForm with sync connection and operator true', async () => {

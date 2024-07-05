@@ -1,31 +1,31 @@
-import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useTranslation, Trans} from 'react-i18next';
-import {Box} from '@mui/system';
-import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
-import {useFormik} from 'formik';
-import {generatePath, useHistory, useParams} from 'react-router-dom';
-import {theme} from '@pagopa/mui-italia';
+import { Box } from '@mui/system';
+import { theme } from '@pagopa/mui-italia';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useFormik } from 'formik';
+import { Trans, useTranslation } from 'react-i18next';
+import { generatePath, useHistory, useParams } from 'react-router-dom';
+import { ChannelDetailsResource } from '../../../api/generated/portal/ChannelDetailsResource';
+import { Delegation } from '../../../api/generated/portal/Delegation';
+import { ConfigurationStatus } from '../../../model/Station';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
-import {LOADING_TASK_PSP_AVAILABLE} from '../../../utils/constants';
-import {addCurrentPSP} from '../../../utils/channel-utils';
 import {
     associatePSPtoChannel,
     getChannelDetail,
 } from '../../../services/channelService';
-import {getBrokerDelegation} from '../../../services/institutionService';
-import {useAppSelector} from '../../../redux/hooks';
-import {partiesSelectors} from '../../../redux/slices/partiesSlice';
-import {ChannelDetailsResource} from '../../../api/generated/portal/ChannelDetailsResource';
-import {Party} from '../../../model/Party';
-import {Delegation} from '../../../api/generated/portal/Delegation';
-import {getBrokerAndPspDetails} from '../../../services/nodeService';
+import { getBrokerDelegation } from '../../../services/institutionService';
+import { getBrokerAndPspDetails } from '../../../services/nodeService';
+import { addCurrentPSP } from '../../../utils/channel-utils';
+import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
 import PSPSelectionSearch from './PSPSelectionSearch';
 
 function ChannelAssociatePSPPage() {
@@ -102,7 +102,7 @@ function ChannelAssociatePSPPage() {
     useEffect(() => {
         setLoading(true);
         if (selectedParty) {
-            getChannelDetail(channelId)
+            getChannelDetail({channelCode: channelId, status: ConfigurationStatus.ACTIVE})
                 .then((channel) => setChannelDetail(channel))
                 .catch((reason) => console.error(reason));
             getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])

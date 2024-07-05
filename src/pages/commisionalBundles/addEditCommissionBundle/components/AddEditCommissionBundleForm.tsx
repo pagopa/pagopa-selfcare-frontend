@@ -45,7 +45,7 @@ import { ConfigurationStatus } from '../../../../model/Station';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { getTouchpoints } from '../../../../services/bundleService';
-import { getChannelsIdAssociatedToPSP } from '../../../../services/channelService';
+import { getChannels } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { addCurrentBroker } from '../../../../utils/channel-utils';
@@ -83,10 +83,10 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
 
     const getChannelsByBrokerCode = (selectedBrokerCode: string) => {
         setLoadingChannels(true);
-        getChannelsIdAssociatedToPSP(0, selectedBrokerCode)
+        getChannels({status: ConfigurationStatus.ACTIVE, brokerCode: selectedBrokerCode})
             .then((data) => {
-                if (data && data.length > 0) {
-                    setChannelsId(data);
+                if (data?.channels && data.channels.length > 0) {
+                    setChannelsId(data.channels.map(ch => ch.channel_code));
                 } else {
                     setChannelsId([]);
                     addError({

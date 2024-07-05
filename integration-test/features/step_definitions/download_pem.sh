@@ -5,6 +5,8 @@
 passphrase=""
 
 pkcs12_file="client_certificate.pfx"
+certificate_name="pagopa-d-weu-selfcare-jwt-signing-cert"
+KeyVaultName="pagopa-d-selfcare-kv"
 
 # Retrieve the client certificate from the Key Vault
 certificate_pfx_base64=$(az keyvault secret show --name ${certificate_name} --vault-name ${KeyVaultName} --query value --output tsv)

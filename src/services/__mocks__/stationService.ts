@@ -78,6 +78,13 @@ export const mockedFullStation: StationDetailResource = {
     targetHost: '1www',
     targetPort: 11,
     targetPath: 'www',
+    targetHostPof: 'hostPof',
+    targetPathPof: 'pathPof',
+    targetPortPof: 456,
+    proxyEnabled: false,
+    proxyHost: 'proxyHost',
+    proxyPort: 888,
+    proxyUsername: 'username',
     primitiveVersion: 1,
 };
 

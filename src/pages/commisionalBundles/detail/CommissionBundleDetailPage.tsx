@@ -19,6 +19,8 @@ import {
   BundleDetailsActionTypes,
   BundleResource,
   FormAction,
+  isBundleDeleted,
+  isBundleValid,
 } from '../../../model/CommissionBundle';
 import { Party } from '../../../model/Party';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
@@ -40,10 +42,20 @@ import CommissionBundleDetailSubscriptionsTable from './components/subscriptions
 function RenderAlert({ bundleDetail }: Readonly<{ bundleDetail: BundleResource }>) {
   const { t } = useTranslation();
 
-  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL) {
+  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.ON_REMOVAL || isBundleDeleted(bundleDetail)) {
     return (
       <Alert severity={'error'} data-testid="alert-error-test" variant="outlined">
         {t('commissionBundlesPage.commissionBundleDetail.alert.onRemoval')}
+      </Alert>
+    );
+  }
+  if ((bundleDetail as CIBundleResource)?.ciBundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
+    return (
+      <Alert severity={'warning'} data-testid="alert-error-expired-test" variant="outlined">
+        <Typography fontWeight={'fontWeightMedium'}>
+          {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired.title')}
+        </Typography>
+        {t('commissionBundlesPage.commissionBundleDetail.alert.availableExpired.message')}
       </Alert>
     );
   }
@@ -75,7 +87,7 @@ const BundleActionButtons = ({
   setShowConfirmModal: (arg: BundleDetailsActionTypes | null) => void;
   bundleDetail: BundleResource;
   bundleId: string;
-// eslint-disable-next-line sonarjs/cognitive-complexity
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 }) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
@@ -85,14 +97,16 @@ const BundleActionButtons = ({
     if (orgInfo.types.isPsp) {
       return (
         <>
-          <Button
-            color="error"
-            variant="outlined"
-            onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_PSP)}
-            data-testid="delete-button"
-          >
-            {t('general.delete')}
-          </Button>
+          {!isBundleDeleted(bundleDetail) && (
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_PSP)}
+              data-testid="delete-button"
+            >
+              {t('general.delete')}
+            </Button>
+          )}
           <Button
             component={Link}
             to={generatePath(ROUTES.COMMISSION_BUNDLES_EDIT, {
@@ -108,11 +122,10 @@ const BundleActionButtons = ({
       );
     }
     if (orgInfo.types.isEc) {
+      const bundleStatus = (bundleDetail as CIBundleResource).ciBundleStatus;
       if (
-        (bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.AVAILABLE &&
-        // TODO remove after VAS-1104
-        !(bundleDetail?.validityDateTo && 
-        datesAreOnSameDay(new Date(), bundleDetail?.validityDateTo))
+        bundleStatus === CiBundleStatusEnum.AVAILABLE ||
+        bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED
       ) {
         return (
           <>
@@ -131,13 +144,14 @@ const BundleActionButtons = ({
               to={ROUTES.COMMISSION_BUNDLES_ACTIVATE}
               variant="contained"
               data-testid="activate-button"
+              disabled={bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED}
             >
               {t('general.activate')}
             </Button>
           </>
         );
       }
-      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.ENABLED) {
+      if (bundleStatus === CiBundleStatusEnum.ENABLED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_BUNDLE_EC)}
@@ -149,7 +163,7 @@ const BundleActionButtons = ({
           </Button>
         );
       }
-      if ((bundleDetail as CIBundleResource).ciBundleStatus === CiBundleStatusEnum.REQUESTED) {
+      if (bundleStatus === CiBundleStatusEnum.REQUESTED) {
         return (
           <Button
             onClick={() => setShowConfirmModal(BundleDetailsActionTypes.DELETE_REQUEST_EC)}
@@ -349,7 +363,6 @@ export default CommissionBundleDetailPage;
 function isValidBundleForSubscriptionTable(commissionBundleDetail: BundleResource) {
   return (
     commissionBundleDetail.type !== TypeEnum.GLOBAL &&
-    commissionBundleDetail.validityDateFrom &&
-    new Date().getTime() > commissionBundleDetail.validityDateFrom.getTime()
+    isBundleValid(commissionBundleDetail)
   );
 }

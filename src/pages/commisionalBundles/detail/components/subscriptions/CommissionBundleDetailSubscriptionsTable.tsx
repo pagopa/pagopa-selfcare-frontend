@@ -34,6 +34,7 @@ import {
   BundleResource,
   BundleCiSubscriptionDetailModel,
   SubscriptionStateType,
+  isBundleDeleted,
 } from '../../../../../model/CommissionBundle';
 import {
   acceptBundleSubscriptionRequest,
@@ -273,6 +274,7 @@ export default function CommissionBundleSubscriptionsTable({
             to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD_RECIPIENT, {
               bundleId: bundleDetail.idBundle,
             })}
+            disabled={isBundleDeleted(bundleDetail)}
           >
             {t(`${componentPath}.inviteButton`)}
           </Button>

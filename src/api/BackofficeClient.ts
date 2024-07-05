@@ -3,8 +3,8 @@ import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/a
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
 import {
-  BundleCISubscriptionsMethodParams,
   BundleCISubscriptionsBodyRequest,
+  BundleCISubscriptionsMethodParams,
   BundleCiSubscriptionsDetailMethodParams,
   SubscriptionStateType,
 } from '../model/CommissionBundle';
@@ -18,6 +18,10 @@ import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import { store } from '../redux/store';
 import { extractResponse } from '../utils/client-utils';
 import { ENV } from '../utils/env';
+import {
+  WithDefaultsT as WithCustomDefaultsT,
+  createClient as createCustomClient,
+} from './custom/client';
 import { AvailableCodes } from './generated/portal/AvailableCodes';
 import { BrokerAndEcDetailsResource } from './generated/portal/BrokerAndEcDetailsResource';
 import { BrokerDto } from './generated/portal/BrokerDto';
@@ -30,6 +34,10 @@ import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
 import { BundleRequest } from './generated/portal/BundleRequest';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
+import { CIBundleAttributeResource } from './generated/portal/CIBundleAttributeResource';
+import { CIBundleId } from './generated/portal/CIBundleId';
+import { CIBundleSubscriptionsDetail } from './generated/portal/CIBundleSubscriptionsDetail';
+import { CIBundleSubscriptionsResource } from './generated/portal/CIBundleSubscriptionsResource';
 import { CIBundlesResource } from './generated/portal/CIBundlesResource';
 import { ChannelCodeResource } from './generated/portal/ChannelCodeResource';
 import {
@@ -39,7 +47,6 @@ import {
 } from './generated/portal/ChannelDetailsDto';
 import { ChannelDetailsResource } from './generated/portal/ChannelDetailsResource';
 import { ChannelPspListResource } from './generated/portal/ChannelPspListResource';
-import { ChannelsResource } from './generated/portal/ChannelsResource';
 import { CreditorInstitutionContactsResource } from './generated/portal/CreditorInstitutionContactsResource';
 import { CreditorInstitutionDetailsResource } from './generated/portal/CreditorInstitutionDetailsResource';
 import { CreditorInstitutionDto } from './generated/portal/CreditorInstitutionDto';
@@ -55,6 +62,7 @@ import { Ibans } from './generated/portal/Ibans';
 import { Institution } from './generated/portal/Institution';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
+import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
 import { PSPBundlesResource } from './generated/portal/PSPBundlesResource';
@@ -67,12 +75,10 @@ import { ProductResource } from './generated/portal/ProductResource';
 import { PspChannelPaymentTypes } from './generated/portal/PspChannelPaymentTypes';
 import { PspChannelPaymentTypesResource } from './generated/portal/PspChannelPaymentTypesResource';
 import { PspChannelsResource } from './generated/portal/PspChannelsResource';
-import { CIBundleSubscriptionsDetail } from './generated/portal/CIBundleSubscriptionsDetail';
-import { CIBundleSubscriptionsResource } from './generated/portal/CIBundleSubscriptionsResource';
 import { PublicBundleRequest } from './generated/portal/PublicBundleRequest';
 import { StationCodeResource } from './generated/portal/StationCodeResource';
 import { StationDetailResource } from './generated/portal/StationDetailResource';
-import { StationDetailsDto, StatusEnum } from './generated/portal/StationDetailsDto';
+import { StationDetailsDto } from './generated/portal/StationDetailsDto';
 import { TestStationTypeEnum } from './generated/portal/StationTestDto';
 import { TavoloOpDto } from './generated/portal/TavoloOpDto';
 import { TavoloOpOperations } from './generated/portal/TavoloOpOperations';
@@ -88,17 +94,11 @@ import {
   Redirect_protocolEnum,
   WrapperChannelDetailsDto,
 } from './generated/portal/WrapperChannelDetailsDto';
-import { WrapperChannelDetailsResource } from './generated/portal/WrapperChannelDetailsResource';
 import { WrapperChannelsResource } from './generated/portal/WrapperChannelsResource';
 import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
-import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
-import { createClient as createCustomClient } from './custom/client';
-import { WithDefaultsT as WithCustomDefaultsT } from './custom/client';
-import { CIBundleId } from './generated/portal/CIBundleId';
-import { CIBundleAttributeResource } from './generated/portal/CIBundleAttributeResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -206,7 +206,6 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   rt_push: false,
   serv_plugin: undefined,
   service: channel.service,
-  status: StatusEnum.TO_CHECK_UPDATE,
   target_host: channel.target_host,
   target_path: channel.target_path,
   target_port: channel.target_port,
@@ -380,31 +379,40 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getChannels: async (page: number): Promise<ChannelsResource> => {
-    const result = await backofficeClient.getChannels({ page });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getChannelsMerged: async (
-    page: number,
-    brokerCode: string,
-    channelcodefilter?: string,
-    limit?: number,
-    sorting?: string
-  ): Promise<WrapperChannelsResource> => {
-    const result = await backofficeClient.getAllChannelsMerged({
-      limit,
-      channelcodefilter,
+  getChannels: async ({
+    status,
+    channelCode,
+    brokerCode,
+    limit,
+    page,
+  }: {
+    status: ConfigurationStatus;
+    channelCode?: string;
+    brokerCode: string;
+    limit?: number;
+    page?: number;
+  }): Promise<WrapperChannelsResource> => {
+    const result = await backofficeClient.getChannels({
+      status: String(status),
       brokerCode,
+      channelCode,
+      limit,
       page,
-      sorting,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  // retrive of channel detail before on db and then on the node
-  getChannelDetail: async (channelcode: string): Promise<ChannelDetailsResource> => {
-    const result = await backofficeClient.getChannelDetail({ 'channel-code': channelcode });
+  getChannelDetail: async ({
+    channelCode,
+    status,
+  }: {
+    channelCode: string;
+    status: ConfigurationStatus;
+  }): Promise<ChannelDetailsResource> => {
+    const result = await backofficeClient.getChannelDetails({
+      'channel-code': channelCode,
+      status,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -434,10 +442,10 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  createChannel: async (channel: ChannelDetailsDto): Promise<WrapperChannelDetailsResource> => {
+  createChannel: async (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.createChannel({
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
@@ -461,7 +469,6 @@ export const BackofficeApi = {
         target_port: channel.target_port,
         payment_types: channel.payment_types,
         validationUrl,
-        status: StatusEnum.TO_CHECK,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -474,49 +481,25 @@ export const BackofficeApi = {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateChannel({
       'channel-code': code,
-      body: { ...channelBody2Send, status: StatusEnum.APPROVED },
+      body: channelBody2Send,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateWrapperChannelDetailsToCheck: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
+  updateWrapperChannelDetails: async ({
+    channelCode,
+    channel,
+    validationUrl,
+  }: {
+    channelCode: string;
+    channel: ChannelDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const channelBody2Send = channelBody(channel);
     const result = await backofficeClient.updateWrapperChannelDetails({
+      'channel-code': channelCode,
       body: {
         ...channelBody2Send,
-        status: StatusEnum.APPROVED,
-        validationUrl,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetailsToCheckUpdate: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
-    const channelBody2Send = channelBody(channel);
-    const result = await backofficeClient.updateWrapperChannelDetails({
-      body: {
-        ...channelBody2Send,
-        validationUrl,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperChannelDetailsByOpt: async (
-    channel: ChannelDetailsDto,
-    validationUrl: string
-  ): Promise<WrapperEntities> => {
-    const channelBody2Send = channelBody(channel);
-    const result = await backofficeClient.updateWrapperChannelDetailsByOpt({
-      body: {
-        ...channelBody2Send,
-        status: StatusEnum.APPROVED,
         validationUrl,
       },
     });
@@ -585,7 +568,7 @@ export const BackofficeApi = {
     stationCode,
     limit,
   }: {
-    page: number;
+    page?: number;
     brokerCode: string;
     status: ConfigurationStatus;
     stationCode?: string;
@@ -597,23 +580,6 @@ export const BackofficeApi = {
       stationCode,
       limit,
       status: String(status),
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getStationsMerged: async (
-    page: number,
-    brokerCode: string,
-    stationcodefilter?: string,
-    limit?: number,
-    sorting?: string
-  ): Promise<WrapperStationsResource> => {
-    const result = await backofficeClient.getAllStationsMerged({
-      limit,
-      stationcodefilter,
-      brokerCode,
-      page,
-      sorting,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -739,12 +705,13 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getWrapperEntities: async (code: string): Promise<WrapperEntities> => {
-    const result = await backofficeClient.getStation({ 'station-code': code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createWrapperStation: async (station: WrapperStationDetailsDto): Promise<WrapperEntities> => {
+  createWrapperStation: async ({
+    station,
+    validationUrl,
+  }: {
+    station: WrapperStationDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const result = await backofficeClient.createWrapperStationDetails({
       body: {
         brokerCode: station.brokerCode,
@@ -764,36 +731,24 @@ export const BackofficeApi = {
         targetHostPof: station.targetHostPof,
         targetPathPof: station.targetPathPof,
         targetPortPof: station.targetPortPof,
-        validationUrl: station.validationUrl,
+        validationUrl,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
-  updateWrapperStationToCheck: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
+  updateWrapperStationDetails: async ({
+    stationCode,
+    station,
+    validationUrl,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+    validationUrl: string;
+  }): Promise<WrapperEntities> => {
     const result = await backofficeClient.updateWrapperStationDetails({
       'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK,
-      },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  updateWrapperStationToCheckUpdate: async (
-    stationCode: string,
-    station: StationDetailsDto
-  ): Promise<WrapperEntities> => {
-    const result = await backofficeClient.updateWrapperStationDetails({
-      'station-code': stationCode,
-      body: {
-        ...station,
-        status: StatusEnum.TO_CHECK_UPDATE,
-      },
+      body: { ...station, validationUrl },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
@@ -817,34 +772,31 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  updateStation: async (
-    station: StationDetailsDto,
-    stationcode: string
-  ): Promise<StationDetailResource> => {
+  updateStation: async ({
+    stationCode,
+    station,
+  }: {
+    stationCode: string;
+    station: StationDetailsDto;
+  }): Promise<StationDetailResource> => {
     const result = await backofficeClient.updateStation({
-      body: {
-        ...station,
-        status: StatusEnum.APPROVED,
-      },
-      'station-code': stationcode,
+      body: station,
+      'station-code': stationCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getWrapperEntitiesStation: async (code: string): Promise<WrapperEntities> => {
-    const result = await backofficeClient.getWrapperEntitiesStation({ 'station-code': code });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  // before tries to get the detail from the DB, if it doesn't find anything, will try to get the detail form apim
-  getStationDetail: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await backofficeClient.getStationDetail({ 'station-code': stationId });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  // get the detail directly from apim
-  getStation: async (stationId: string): Promise<StationDetailResource> => {
-    const result = await backofficeClient.getStation({ 'station-code': stationId });
+  getStationDetails: async ({
+    stationCode,
+    status,
+  }: {
+    stationCode: string;
+    status: ConfigurationStatus;
+  }): Promise<StationDetailResource> => {
+    const result = await backofficeClient.getStationDetails({
+      'station-code': stationCode,
+      status,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -1477,6 +1429,25 @@ export const BackofficeApi = {
       'id-bundle-offer': idBundleOffer,
       pspTaxCode,
       bundleName,
+    });
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  updateWrapperChannelWithOperatorReview: async ({
+    channelCode,
+    brokerPspCode,
+    note,
+  }: {
+    channelCode: string;
+    brokerPspCode: string;
+    note: string;
+  }): Promise<ChannelDetailsResource> => {
+    const result = await backofficeClient.updateWrapperChannelWithOperatorReview({
+      'channel-code': channelCode,
+      brokerPspCode,
+      body: {
+        note,
+      },
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

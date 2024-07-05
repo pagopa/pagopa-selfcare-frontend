@@ -13,8 +13,9 @@ import {pspAdminSignedDirect, pspOperatorSignedDirect,} from '../../../../servic
 import {BackofficeApi} from '../../../../api/BackofficeClient';
 import {Party} from '../../../../model/Party';
 import {isValidURL} from '../../../components/commonFunctions';
-import {ChannelDetailsResource} from '../../../../api/generated/portal/ChannelDetailsResource';
+import {ChannelDetailsResource, WrapperStatusEnum} from '../../../../api/generated/portal/ChannelDetailsResource';
 import {ROLE} from "../../../../model/RolePermission";
+
 import * as useUserRole from "../../../../hooks/useUserRole"
 
 // import { wait } from '@testing-library/user-event/dist/types/utils';
@@ -38,7 +39,24 @@ const channelDetail: ChannelDetailsResource = {
     target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
     target_port: 443,
     target_host: 'www.lab.link.it',
+    proxy_enabled: false,
+    proxy_host: 'string',
+    proxy_password: 'string',
+    proxy_port: 0,
+    proxy_username: 'string',
+    ip: 'ip',
+    service: 'service',
     payment_types: ['PPAY'],
+};
+const channelDetailApproved: ChannelDetailsResource = {
+    broker_psp_code: '97735020584',
+    broker_description: 'AgID - Agenzia per l’Italia Digitale',
+    channel_code: `${pspOperatorSignedDirect.fiscalCode}_01`,
+    target_path: '/govpay/api/pagopa/PagamentiTelematiciCCPservice',
+    target_port: 443,
+    target_host: 'www.lab.link.it',
+    payment_types: ['PPAY'],
+    wrapperStatus: WrapperStatusEnum.APPROVED
 };
 
 describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMemoryHistory>) => {
@@ -48,13 +66,78 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
 
     const operatorUser: Array<Party> = [pspOperatorSignedDirect];
 
-    test('Test rendering AddEditChannelForm', async () => {
+    test('Test rendering AddEditChannelForm Operator', async () => {
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
             userRole: ROLE.PAGOPA_OPERATOR,
             userIsPspAdmin: false,
             userIsEcAdmin: false,
             userIsPspDirectAdmin: false,
             userIsPagopaOperator: true,
+            userIsAdmin: true,
+        });
+        render(
+            <Provider store={store}>
+                <Router history={history}>
+                    <ThemeProvider theme={theme}>
+                        <AddEditChannelForm
+                            formAction={FormAction.Duplicate}
+                            selectedParty={pspOperatorSignedDirect}
+                            channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+                        />
+                    </ThemeProvider>
+                </Router>
+            </Provider>
+        );
+        const businessName = screen.getByTestId('business-name-test') as HTMLInputElement;
+        const pspBrokerCode = screen.getByTestId('psp-brokercode-test') as HTMLInputElement;
+        const channelCode = screen.getByTestId('channel-code-test') as HTMLInputElement;
+        const targetUnion = screen.getByTestId('target-union-test') as HTMLInputElement;
+        const paymentType = screen.getByTestId('payment-type-test') as HTMLSelectElement;
+        const continueBtn = screen.getByText(
+            'addEditChannelPage.addForm.continueButton'
+        ) as HTMLButtonElement;
+
+        expect(businessName.value).toBe(pspOperatorSignedDirect.description);
+        expect(pspBrokerCode.value).toBe(pspOperatorSignedDirect.fiscalCode);
+        expect(channelCode.value).toBe(`${pspOperatorSignedDirect.fiscalCode}_01`);
+
+        fireEvent.click(businessName);
+        fireEvent.change(businessName, {target: {value: 'businessName'}});
+        expect(businessName.value).toBe('businessName');
+
+        fireEvent.click(pspBrokerCode);
+        fireEvent.change(pspBrokerCode, {target: {value: 'pspBrokerCode'}});
+        expect(pspBrokerCode.value).toBe('pspBrokerCode');
+
+        fireEvent.click(channelCode);
+        fireEvent.change(channelCode, {target: {value: 'channelCode'}});
+        expect(channelCode.value).toBe('channelCode');
+
+        fireEvent.click(targetUnion);
+        fireEvent.change(targetUnion, {target: {value: 'https://www.testTarget.it/path'}});
+        expect(targetUnion.value).toBe('https://www.testTarget.it/path');
+
+        fireEvent.click(paymentType);
+        fireEvent.change(paymentType, {target: {value: 'Option 1'}});
+
+        fireEvent.click(continueBtn);
+
+        const confirmBtn = screen.queryByTestId('confirm-button-test') as HTMLButtonElement;
+        const cancelBtn = screen.queryByTestId('cancel-button-test') as HTMLButtonElement;
+
+        userEvent.click(cancelBtn);
+        fireEvent.click(continueBtn);
+
+        userEvent.click(confirmBtn);
+    });
+
+    test('Test rendering AddEditChannelForm PSP', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PSP_ADMIN,
+            userIsPspAdmin: true,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: true,
+            userIsPagopaOperator: false,
             userIsAdmin: true,
         });
         render(
@@ -288,7 +371,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
     //   });
     // });
 
-    test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true', async () => {
+    test('Test of AddEditChannelValidationForm case checkbox select-new-connection-test flag true', async () => {
         jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
             userRole: ROLE.PAGOPA_OPERATOR,
             userIsPspAdmin: false,
@@ -322,16 +405,17 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
         const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
         const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
-        const selectNewConnection = screen.getByTestId('select-new-connection-test');
         const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
 
-        fireEvent.click(selectNewConnection);
+        expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
 
         fireEvent.change(newConnection, {
             target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
         });
 
-        fireEvent.click(selectNewConnection);
+        const deleteNewConnection = screen.getByTestId('delete-new-connection');
+
+        fireEvent.click(deleteNewConnection);
 
         expect(newConnection.value).toBe('');
 
@@ -400,5 +484,97 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
                 </Router>
             </Provider>
         );
+        
     });
+
+    test('Test of AddEditChannelValidationForm case chackbox select-new-connection-test flag true on config', async () => {
+        jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+            userRole: ROLE.PAGOPA_OPERATOR,
+            userIsPspAdmin: false,
+            userIsEcAdmin: false,
+            userIsPspDirectAdmin: false,
+            userIsPagopaOperator: true,
+            userIsAdmin: true,
+        });
+        (isValidURL as jest.Mock).mockReturnValue(true);
+
+        const {getByTestId, getByText} = render(
+            <Provider store={store}>
+                <Router history={history}>
+                    <ThemeProvider theme={theme}>
+                        <AddEditChannelForm
+                            formAction={FormAction.Edit}
+                            selectedParty={operatorUser[0]}
+                            channelCode={`${pspOperatorSignedDirect.fiscalCode}_01`}
+                            channelDetail={channelDetailApproved}
+                        />
+                    </ThemeProvider>
+                </Router>
+            </Provider>
+        );
+
+        const primitiveVersion = getByTestId('primitive-version-test') as HTMLInputElement;
+        const password = getByTestId('password-test') as HTMLInputElement;
+        const proxyUnion = getByTestId('proxy-union-test') as HTMLInputElement;
+        const timeoutA = getByTestId('timeout-a-test') as HTMLInputElement;
+        const timeoutB = getByTestId('timeout-b-test') as HTMLInputElement;
+        const timeoutC = getByTestId('timeout-c-test') as HTMLInputElement;
+        const continueBtn = getByText('addEditChannelPage.addForm.continueButton');
+        const backButton = getByTestId('back-btn-test') as HTMLButtonElement;
+        const newConnection = getByTestId('new-connection-channel') as HTMLInputElement;
+
+        expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
+
+        fireEvent.change(newConnection, {
+            target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
+        });
+
+        const deleteNewConnection = screen.getByTestId('delete-new-connection');
+
+        fireEvent.click(deleteNewConnection);
+
+        expect(newConnection.value).toBe('');
+
+        fireEvent.change(primitiveVersion, {target: {value: undefined}});
+        fireEvent.change(primitiveVersion, {target: {value: 1}});
+
+        fireEvent.change(password, {target: {value: 1}});
+
+        fireEvent.change(proxyUnion, {
+            target: {value: 'https://10.101.1.95:8080'},
+        });
+
+        fireEvent.change(timeoutA, {target: {value: 10}});
+
+        fireEvent.change(timeoutB, {target: {value: 20}});
+
+        fireEvent.change(timeoutC, {target: {value: 30}});
+
+        fireEvent.click(continueBtn);
+
+        const confirmBtn = screen.queryByText(
+            (_content, element) =>
+                element?.tagName.toLowerCase() === 'button' &&
+                element.textContent === 'addEditChannelPage.confirmModal.confirmButtonOpe'
+        ) as HTMLButtonElement;
+
+        const cancelBtn = screen.queryByText(
+            (_content, element) =>
+                element?.tagName.toLowerCase() === 'button' &&
+                element.textContent === 'addEditChannelPage.confirmModal.cancelButton'
+        ) as HTMLButtonElement;
+
+        if (cancelBtn) {
+            fireEvent.click(cancelBtn);
+        }
+
+        fireEvent.click(continueBtn);
+
+        if (confirmBtn) {
+            fireEvent.click(confirmBtn);
+        }
+
+        fireEvent.click(backButton);
+    });
+
 });

@@ -553,6 +553,7 @@ describe('<AddEditCommissionBundleForm />', () => {
   test('Test fetch getChannels throw error', async () => {
     const mockError = new Error('API error message getChannels');
     spyOnGetChannelService.mockRejectedValue(mockError);
+    spyOnGetChannelDetails.mockReturnValue(Promise.resolve(mockedChannelDetail('000')));
     const injectStore = createStore();
     await waitFor(() =>
       injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))

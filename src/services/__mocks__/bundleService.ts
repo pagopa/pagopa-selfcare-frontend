@@ -120,6 +120,7 @@ const baseCommissionBundlePspDetail: PSPBundleResource = {
   validityDateTo: new Date('2028-02-22'),
   insertedDate: new Date('2024-02-15T09:36:04.792731104'),
   lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
+  cart:false
 };
 
 export const mockedCommissionBundlePspDetailGlobal: PSPBundleResource = {
@@ -197,7 +198,7 @@ export const mockedBundleRequestForEdit: BundleRequest = {
   digitalStamp: false,
   digitalStampRestriction: true,
   idChannel: '97735020584_01',
-  idBrokerPsp: '800011104871',
+  idBrokerPsp: 'idBrokerPsp',
   name: 'Commission Bundle Name',
   description: 'Commission bundle description',
   paymentAmount: 5556,

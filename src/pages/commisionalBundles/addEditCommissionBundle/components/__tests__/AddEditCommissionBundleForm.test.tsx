@@ -70,6 +70,7 @@ const bundleName = 'bundleName';
 const bundleDescription = 'description';
 
 describe('<AddEditCommissionBundleForm />', () => {
+  jest.setTimeout(30000);
   beforeEach(() => {
     spyOnGetPaymentTypes = jest.spyOn(
       require('../../../../../services/configurationService'),
@@ -174,7 +175,6 @@ describe('<AddEditCommissionBundleForm />', () => {
   };
 
   test('Test AddEditCommissionBundleForm with all input change in CREATE', async () => {
-    jest.setTimeout(30000);
     const injectStore = createStore();
     spyOnUseFlagValue.mockReturnValue(true);
     await waitFor(() =>

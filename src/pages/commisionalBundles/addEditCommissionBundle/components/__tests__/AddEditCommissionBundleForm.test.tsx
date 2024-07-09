@@ -30,7 +30,6 @@ let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
 let spyOnGetInstitutionService: jest.SpyInstance<any, unknown[]>;
 let spyOnCreateCommissionBundle: jest.SpyInstance<any, unknown[]>;
 let spyOnGetChannelService: jest.SpyInstance<any, unknown[]>;
-let spyOnGetChannelDetails: jest.SpyInstance<any, unknown[]>;
 let spyOnErrorHook: jest.SpyInstance<any, unknown[]>;
 let spyOnUseFlagValue: jest.SpyInstance<boolean, string[]>;
 
@@ -91,10 +90,6 @@ describe('<AddEditCommissionBundleForm />', () => {
     spyOnGetChannelService = jest.spyOn(
       require('../../../../../services/channelService'),
       'getChannels'
-    );
-    spyOnGetChannelDetails = jest.spyOn(
-      require('../../../../../services/channelService'),
-      'getChannelDetail'
     );
     spyOnErrorHook = jest
       .spyOn(useErrorDispatcher, 'useErrorDispatcher')
@@ -329,7 +324,6 @@ describe('<AddEditCommissionBundleForm />', () => {
   });
 
   test('Test AddEditCommissionBundleForm with all input change in EDIT', async () => {
-    spyOnGetChannelDetails.mockReturnValue(Promise.resolve(mockedChannelDetail('000')));
     const injectStore = createStore();
     await waitFor(() =>
       injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
@@ -338,7 +332,6 @@ describe('<AddEditCommissionBundleForm />', () => {
     await waitFor(() => {
       expect(spyOnGetPaymentTypes).toHaveBeenCalled();
       expect(spyOnGetTouchpoint).toHaveBeenCalled();
-      expect(spyOnGetChannelDetails).toHaveBeenCalled();
       expect(spyOnGetInstitutionService).toHaveBeenCalled();
     });
 
@@ -536,7 +529,6 @@ describe('<AddEditCommissionBundleForm />', () => {
   test('Test fetch getChannels empty list', async () => {
     spyOnGetInstitutionService.mockReturnValue(Promise.resolve(mockedDelegatedPSP));
     spyOnGetChannelService.mockReturnValue(new Promise((resolve) => resolve([])));
-    spyOnGetChannelDetails.mockReturnValue(Promise.resolve(mockedChannelDetail('000')));
     const injectStore = createStore();
     await waitFor(() =>
       injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
@@ -544,7 +536,6 @@ describe('<AddEditCommissionBundleForm />', () => {
     componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
 
     await waitFor(() => {
-      expect(spyOnGetChannelDetails).toHaveBeenCalled();
       expect(spyOnGetChannelService).toHaveBeenCalled();
       expect(spyOnErrorHook).toHaveBeenCalled();
     });
@@ -553,7 +544,6 @@ describe('<AddEditCommissionBundleForm />', () => {
   test('Test fetch getChannels throw error', async () => {
     const mockError = new Error('API error message getChannels');
     spyOnGetChannelService.mockRejectedValue(mockError);
-    spyOnGetChannelDetails.mockReturnValue(Promise.resolve(mockedChannelDetail('000')));
     const injectStore = createStore();
     await waitFor(() =>
       injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
@@ -563,21 +553,6 @@ describe('<AddEditCommissionBundleForm />', () => {
     await waitFor(() => {
       expect(spyOnErrorHook).toHaveBeenCalled();
       expect(spyOnGetChannelService).toHaveBeenCalled();
-    });
-  });
-
-  test('Test fetch getChannelDetail throw error', async () => {
-    const mockError = new Error('API error message getChannelDetails');
-    spyOnGetChannelDetails.mockRejectedValue(mockError)
-    const injectStore = createStore();
-    await waitFor(() =>
-      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
-    );
-    componentRender(FormAction.Edit, mockedBundleRequest, injectStore);
-
-    await waitFor(() => {
-      expect(spyOnErrorHook).toHaveBeenCalled();
-      expect(spyOnGetChannelDetails).toHaveBeenCalled();
     });
   });
 });

@@ -46,7 +46,7 @@ import { ConfigurationStatus } from '../../../../model/Station';
 import { useAppSelector } from '../../../../redux/hooks';
 import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
 import { getTouchpoints } from '../../../../services/bundleService';
-import { getChannelDetail, getChannels } from '../../../../services/channelService';
+import { getChannels } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { addCurrentBroker } from '../../../../utils/channel-utils';
@@ -54,6 +54,7 @@ import {
   LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
+import { WrapperChannelResource } from '../../../../api/generated/portal/WrapperChannelResource';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -74,7 +75,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
   const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
   const [touchpointList, setTouchpointList] = useState<Touchpoints>();
   const [brokerDelegationList, setBrokerDelegationList] = useState<Array<Delegation>>([]);
-  const [channelsId, setChannelsId] = useState<Array<string>>([]);
+  const [channels, setChannels] = useState<Array<WrapperChannelResource>>([]);
   const [isChannelV2, setIsChannelV2] = useState<boolean>(false);
 
   const inputGroupStyle = {
@@ -90,9 +91,10 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
     getChannels({ status: ConfigurationStatus.ACTIVE, brokerCode: selectedBrokerCode })
       .then((data) => {
         if (data?.channels && data.channels.length > 0) {
-          setChannelsId(data.channels.map((ch) => ch.channel_code));
+          setChannels([...data.channels]);
+          handleIsChannelV2(formik.values.idChannel, [...data.channels]);
         } else {
-          setChannelsId([]);
+          setChannels([]);
           addError({
             id: 'GET_BROKER_DELEGATIONS_DATA',
             blocking: false,
@@ -108,7 +110,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
         }
       })
       .catch((error) => {
-        setChannelsId([]);
+        setChannels([]);
         addError({
           id: 'GET_CHANNEL_IDS_DATA',
           blocking: false,
@@ -127,9 +129,6 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
 
   useEffect(() => {
     setLoading(true);
-    if (isEdit) {
-      getIsChannelV2(formik.values.idChannel);
-    }
     Promise.all([
       getPaymentTypes(),
       getTouchpoints(0, 50),
@@ -148,7 +147,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
         if (orgIsPspDirect) {
           listBroker = addCurrentBroker(listBroker, selectedParty as Party);
         }
-        
+
         if (listBroker.length > 0) {
           setBrokerDelegationList(listBroker);
           if (isEdit && idBrokerPsp) {
@@ -197,10 +196,10 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
 
   function handleBrokerCodesSelection(value: string | null | undefined) {
     formik.setFieldValue('idChannel', '');
-    handleIsChannelV2(false);
+    handleIsChannelV2();
     if (value === null || value === undefined) {
       formik.setFieldValue('idBrokerPsp', '');
-      setChannelsId([]);
+      setChannels([]);
     } else {
       const broker = brokerDelegationList?.find((el) => el.broker_name === value);
       formik.handleChange('idBrokerPsp')(broker?.broker_tax_code ?? '');
@@ -210,36 +209,19 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
     }
   }
 
-  const handleIsChannelV2 = (bool: boolean) => {
+  const handleIsChannelV2 = (
+    channelCode?: string | null,
+    channelList?: Array<WrapperChannelResource>
+  ) => {
+    let bool = false;
+    if (channelCode) {
+      const arrayChannel = channelList ?? channels;
+      bool = arrayChannel.find((el) => el.channel_code === channelCode)?.primitive_version === 2;
+    }
+
     setIsChannelV2(bool);
     if (!bool) {
       formik.setFieldValue('cart', false);
-    }
-  };
-
-  const getIsChannelV2 = (channelCode?: string | null) => {
-    if (channelCode) {
-      setLoading(true);
-      getChannelDetail({ channelCode, status: ConfigurationStatus.ACTIVE })
-        .then((ch) => handleIsChannelV2(ch.primitive_version === 2))
-        .catch((error) => {
-          addError({
-            id: 'GET_CHANNEL_DATA',
-            blocking: false,
-            error: error as Error,
-            techDescription: `An error occurred while getting the channel's data`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'commissionBundlesPage.addEditCommissionBundle.error.errorMessageChannelIdsDataDesc'
-            ),
-            component: 'Toast',
-          });
-          handleIsChannelV2(false);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      handleIsChannelV2(false);
     }
   };
 
@@ -249,7 +231,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
     } else {
       formik.handleChange('idChannel')(value);
     }
-    getIsChannelV2(value);
+    handleIsChannelV2(value);
   };
 
   return (
@@ -571,9 +553,9 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                   id="idChannel"
                   options={
                     // eslint-disable-next-line functional/immutable-data
-                    channelsId.sort((a, b) => a.localeCompare(b))
+                    channels.map((el) => el.channel_code).sort((a, b) => a.localeCompare(b))
                   }
-                  disabled={!(channelsId && channelsId.length > 0)}
+                  disabled={!(channels && channels.length > 0)}
                   onChange={(_event, value) => handleChangeChannel(value)}
                   value={formik.values.idChannel}
                   fullWidth

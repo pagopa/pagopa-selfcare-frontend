@@ -270,10 +270,34 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(input.channelList.disabled).toBe(true);
     });
 
+    fireEvent.change(input.brokerCodeList, {
+      target: { value: mockedDelegatedPSP.delegation_list![1].broker_name },
+    });
+    input.brokerCodeList.focus();
+
+    fireEvent.change(document.activeElement as Element, {
+      target: { value: mockedDelegatedPSP.delegation_list![1].broker_name },
+    });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    expect(input.brokerCodeList.value).toEqual(mockedDelegatedPSP.delegation_list![1].broker_name);
+    await waitFor(() => {
+      expect(spyOnGetChannelService).toBeCalledTimes(2);
+      expect(input.channelList.disabled).toBe(false);
+    });
+
     // Change channel id
-    fireEvent.mouseDown(input.channelList);
-    fireEvent.select(input.channelList, { target: { value: mockedChannelsIdList[0] } });
-    expect(input.channelList.value).toBe(mockedChannelsIdList[0]);
+    fireEvent.change(input.channelList, {
+      target: { value: mockedChannelsIdList[0] },
+    });
+    input.channelList.focus();
+
+    fireEvent.change(document.activeElement as Element, {
+      target: { value: mockedChannelsIdList[0] },
+    });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    expect(input.channelList.value).toEqual(mockedChannelsIdList[0]);
 
     //Change radio buttons digitalStamp
     expect(input.digitalStampYes.checked).toBe(false);

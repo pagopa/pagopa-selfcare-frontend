@@ -226,11 +226,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
   };
 
   const handleChangeChannel = (value: string | null) => {
-    if (!value) {
-      formik.setFieldValue('idChannel', '');
-    } else {
-      formik.handleChange('idChannel')(value);
-    }
+    formik.handleChange('idChannel')(value ?? '');
     handleIsChannelV2(value);
   };
 
@@ -551,9 +547,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                 <Autocomplete
                   disablePortal
                   id="idChannel"
-                  options={
-                    channels.map((el) => el.channel_code).sort((a, b) => a.localeCompare(b))
-                  }
+                  options={channels.map((el) => el.channel_code).sort((a, b) => a.localeCompare(b))}
                   disabled={!(channels && channels.length > 0)}
                   onChange={(_event, value) => handleChangeChannel(value)}
                   value={formik.values.idChannel}

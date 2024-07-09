@@ -23,7 +23,7 @@ import * as useFeatureFlags from '../../../../../hooks/useFeatureFlags';
 import * as useUserRole from '../../../../../hooks/useUserRole';
 import { ROLE } from '../../../../../model/RolePermission';
 import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
-import { mockedChannelDetail } from '../../../../../services/__mocks__/channelService';
+import * as useOrganizationType from '../../../../../hooks/useOrganizationType';
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
@@ -96,7 +96,6 @@ describe('<AddEditCommissionBundleForm />', () => {
       .spyOn(useErrorDispatcher, 'useErrorDispatcher')
       .mockReturnValue(jest.fn());
     spyOnUseFlagValue = jest.spyOn(useFeatureFlags, 'useFlagValue');
-    jest.mock('../../../../../hooks/useUserRole');
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PSP_ADMIN,
       userIsPspAdmin: true,
@@ -105,6 +104,24 @@ describe('<AddEditCommissionBundleForm />', () => {
       userIsPagopaOperator: false,
       userIsAdmin: false,
     });
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+        orgInfo: {
+            types: {
+                isPsp: true,
+                isPspBroker: true,
+                isEc: false,
+                isEcBroker: false
+            },
+            isSigned: true
+        },
+        orgIsPspDirect: true,
+        orgIsEcDirect: false,
+        orgIsBrokerSigned: true,
+        orgIsPspSigned: true,
+        orgIsPspBrokerSigned: true,
+        orgIsEcSigned: false,
+        orgIsEcBrokerSigned: false,
+      });
     jest.spyOn(console, 'error').mockImplementation(() => {});
     jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
@@ -169,6 +186,7 @@ describe('<AddEditCommissionBundleForm />', () => {
         .querySelector('[value="false"]') as HTMLInputElement,
       fromDate: screen.getByTestId('from-date-test') as HTMLInputElement,
       ToDate: screen.getByTestId('to-date-test') as HTMLInputElement,
+      cartSwitch: screen.getByTestId('bundle-cart') as HTMLInputElement,
     };
 
     return input;

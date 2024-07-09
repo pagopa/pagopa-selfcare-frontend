@@ -552,7 +552,6 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                   disablePortal
                   id="idChannel"
                   options={
-                    // eslint-disable-next-line functional/immutable-data
                     channels.map((el) => el.channel_code).sort((a, b) => a.localeCompare(b))
                   }
                   disabled={!(channels && channels.length > 0)}

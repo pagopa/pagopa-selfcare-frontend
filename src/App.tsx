@@ -49,6 +49,7 @@ import StationAssociateECPage from './pages/stations/stationAssociateEC/StationA
 import StationECListPage from './pages/stations/stationECList/StationECPage';
 import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
 import { TOS } from './pages/tos/TOS';
+import { PRIVACY } from './pages/tos/PRIVACY';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
@@ -87,10 +88,10 @@ const SecuredRoutes = withLogin(
         );
       }
 
-      if (!isTOSAccepted && location.pathname !== routes.TOS) {
+      if (!isTOSAccepted && location.pathname !== routes.TOS && location.pathname !== routes.PRIVACY) {
         return (
           <Layout>
-            <TOSWall acceptTOS={acceptTOS} detailRoute={routes.TOS} />
+            <TOSWall acceptTOS={acceptTOS} tosRoute={routes.TOS} privacyRoute={routes.PRIVACY} />
           </Layout>
         );
       }
@@ -317,6 +318,11 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.TOS} exact={true}>
                   <TOS />
                 </Route>
+
+                <Route path={routes.PRIVACY} exact={true}>
+                  <PRIVACY />
+                </Route>
+
                 <Route path="*">
                   <Redirect to={routes.HOME} />
                 </Route>

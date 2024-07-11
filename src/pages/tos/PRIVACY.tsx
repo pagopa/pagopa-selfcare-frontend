@@ -1,10 +1,10 @@
-import React, {} from 'react';
+import React from 'react';
 import {Grid} from '@mui/material';
 import {useTranslation} from 'react-i18next';
-import tosJson from '../../data/tos.json';
+import tosJson from '../../data/privacy.json';
 import Snippet from '../../components/Snippet/Snippet';
 
-export function TOS() {
+export function PRIVACY() {
     const {t} = useTranslation();
 
     return (

@@ -605,6 +605,8 @@ export const BackofficeApi = {
         segregationCode: station.segregationCode,
         stationCode: station.stationCode,
         broadcast: station.broadcast,
+        aca: station.aca,
+        stand_in: station.stand_in
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -621,6 +623,8 @@ export const BackofficeApi = {
         segregationCode: station.segregationCode,
         stationCode: station.stationCode,
         broadcast: station.broadcast,
+        aca: station.aca,
+        stand_in: station.stand_in
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);

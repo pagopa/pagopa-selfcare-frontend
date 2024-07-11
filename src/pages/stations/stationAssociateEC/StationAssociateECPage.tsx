@@ -162,7 +162,8 @@ function StationAssociateECPage() {
       segregationCode: reduxCiRelation?.segregationCode ?? '',
       stationCode: stationId,
       broadcast: reduxCiRelation?.broadcast ?? false,
-      // TODO add standIn & aca flags
+      stand_in: reduxCiRelation?.stand_in ?? false,
+      aca: reduxCiRelation?.aca ?? false,
     },
     onSubmit: async (values) => {
       submit(values);
@@ -395,18 +396,24 @@ function StationAssociateECPage() {
           <FormControl>
             <RadioGroup
               name="aca"
-              onChange={(e) => formik.setFieldValue('aca', e.target.value)} // TODO define the right property to modify, if aca false => standin false & disabled
+              onChange={async (e) => {
+                const value = e.target.value;
+                void formik.setFieldValue('aca', value === 'true' ? true : false);
+                if (value === 'false') {
+                  void formik.setFieldValue('stand_in', false);
+                }
+              }}
               data-testid="aca-test"
-              // TODO value={`${formik.values.aca}`}
+              value={`${formik.values.aca}`}
             >
               <FormControlLabel
-                value={true}
+                value={'true'}
                 control={<Radio sx={{ ml: 1 }} />}
                 label={t('general.yes')}
                 sx={{ pr: 8 }}
               />
               <FormControlLabel
-                value={false}
+                value={'false'}
                 control={<Radio sx={{ ml: 1 }} />}
                 label={t('general.no')}
                 sx={{ pr: 8 }}
@@ -416,23 +423,23 @@ function StationAssociateECPage() {
           <Typography variant="subtitle1" sx={{ mt: 2 }}>
             {t('stationAssociateECPage.secondPaper.standIn')}
           </Typography>
-          <FormControl
-          // TODO disabled when aca is false disabled={!formik.values.aca}
-          >
+          <FormControl disabled={!formik.values.aca}>
             <RadioGroup
               name="standIn"
-              onChange={(e) => formik.setFieldValue('standIn', e.target.value)} // TODO define the right property to modify
+              onChange={(e) =>
+                formik.setFieldValue('stand_in', e.target.value === 'true' ? true : false)
+              }
               data-testid="standIn-test"
-              // TODO value={`${formik.values.standIn}`}
+              value={`${formik.values.stand_in}`}
             >
               <FormControlLabel
-                value={true}
+                value={'true'}
                 control={<Radio sx={{ ml: 1 }} />}
                 label={t('general.yes')}
                 sx={{ pr: 8 }}
               />
               <FormControlLabel
-                value={false}
+                value={'false'}
                 control={<Radio sx={{ ml: 1 }} />}
                 label={t('general.no')}
                 sx={{ pr: 8 }}

@@ -328,7 +328,7 @@
     "subtitle": "Dopo la modifica sarà richiesta una nuova revisione del canale."
   },
   "channelDetailPage": {
-    "subtitle":{
+    "subtitle": {
       "waiting": "Ecco i dettagli del canale inviato in revisione.",
       "approved": "Ecco i dettagli della canale."
     },
@@ -653,7 +653,8 @@
         "auxdigit": "Auxdigit",
         "segregationCode": "Segregation code",
         "appCode": "Application code",
-        "broadcast": "Broadcast"
+        "broadcast": "Broadcast",
+        "action": "Dissocia EC"
       }
     },
     "dissociateModal": {
@@ -673,7 +674,8 @@
       "ECSelectionInputPlaceholder": "Cerca EC",
       "segregationCode": "Codice segregazione",
       "auxDigit": "Aux digit",
-      "successMessage": "EC associato con successo.",
+      "successMessageUpdate": "Associazione aggioranta con successo.",
+      "successMessageAssociate": "EC associato con successo.",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageAlreadyAssociated": "L'EC associato è già stato associato in precedenza alla stazione",
@@ -682,12 +684,18 @@
       "backButton": "Annulla",
       "confirmButton": "Conferma"
     },
+    "secondPaper": {
+      "title": "Posizioni debitorie",
+      "subtitle": "Indica quali servizi puoi garantire in questo momento",
+      "aca": "Puoi mettere a disposizione i dati in Archivio Centralizzato Avvisi?",
+      "standIn": "Le posizioni debitorie sono pagabili in Stand In?"
+    },
     "alert": {
       "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
     }
   },
   "stationDetailPageValidation": {
-    "subtitle":{
+    "subtitle": {
       "waiting": "Ecco i dettagli della stazione inviata in revisione.",
       "approved": "Ecco i dettagli della stazione."
     },

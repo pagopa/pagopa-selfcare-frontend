@@ -24,6 +24,7 @@ type Props = {
   onChangeInput?: (event: any) => void;
   serverSide?: boolean;
   errorMessage?: string;
+  disabled?: boolean;
 };
 
 export default function ECSelection({
@@ -34,6 +35,7 @@ export default function ECSelection({
   onChangeInput,
   serverSide,
   errorMessage,
+  disabled,
 }: Readonly<Props>) {
   const { t } = useTranslation();
 
@@ -45,7 +47,7 @@ export default function ECSelection({
           loadingText={t('general.loading')}
           id="ec-selection"
           data-testid="ec-selection-id-test"
-          disabled={serverSide ? false : availableEC.length === 0}
+          disabled={disabled || (serverSide ? false : availableEC.length === 0)}
           value={selectedEC}
           loading={loading}
           onChange={(event, newSelecteCI: CreditorInstitutionGeneric | null) => {
@@ -110,16 +112,18 @@ export default function ECSelection({
                 noWrap={false}
               />
             </Box>
-            <Box display="flex" alignItems="center">
-              <IconButton
-                onClick={() => onECSelectionChange(undefined)}
-                id="clearIcon"
-                aria-label="removeSelectionIcon"
-                data-testid="remove-selected-ec-btn-id-test"
-              >
-                <ClearOutlinedIcon />
-              </IconButton>
-            </Box>
+            {!disabled && (
+              <Box display="flex" alignItems="center">
+                <IconButton
+                  onClick={() => onECSelectionChange(undefined)}
+                  id="clearIcon"
+                  aria-label="removeSelectionIcon"
+                  data-testid="remove-selected-ec-btn-id-test"
+                >
+                  <ClearOutlinedIcon />
+                </IconButton>
+              </Box>
+            )}
           </Box>
         )}
       </Grid>

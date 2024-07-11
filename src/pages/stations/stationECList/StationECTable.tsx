@@ -26,12 +26,14 @@ const emptyECList: CreditorInstitutionsResource = {
 type StationECTableProps = {
   setAlertMessage: any;
   ciNameOrFiscalCodeFilter: string;
+  setNoValidCi: (value: boolean) => void;
 };
 
 const componentPath = 'stationECList';
 export default function StationECTable({
   setAlertMessage,
   ciNameOrFiscalCodeFilter,
+  setNoValidCi
 }: StationECTableProps) {
   const { t } = useTranslation();
   const [showConfirmModal, setShowConfirmModal] = useState({ show: false, data: '' });
@@ -64,6 +66,7 @@ export default function StationECTable({
     try {
       await dissociateECfromStation(selectedECCode, stationId);
       setAlertMessage(t(`${componentPath}.dissociateEcSuccessMessage`));
+      setNoValidCi(false);
       fetchStationECs(page);
     } catch (reason) {
       addError({

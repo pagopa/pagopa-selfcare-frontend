@@ -167,6 +167,7 @@ const StationECListPage = () => {
       <StationECTable
         ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter}
         setAlertMessage={setAlertMessage}
+        setNoValidCi={setNoValidCi}
       />
     </SideMenuLayout>
   );

@@ -7,6 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { generatePath } from 'react-router-dom';
 import ROUTES from '../../../routes';
+import { StationECAssociateActionType } from '../../../model/Station';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
@@ -58,7 +59,7 @@ export default function StationECTable({
           ?.businessName ?? '',
     });
   };
-  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick);
+  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, stationId);
 
   const dissociateEC = async () => {
     setShowConfirmModal({ show: false, data: '' });
@@ -120,6 +121,7 @@ export default function StationECTable({
           componentPath={componentPath}
           linkToRedirect={generatePath(ROUTES.STATION_ASSOCIATE_EC, {
             stationId,
+            action: StationECAssociateActionType.ASSOCIATE
           })}
           rows={[...(ecListPage?.creditor_institutions ?? [])]}
           columns={columns}

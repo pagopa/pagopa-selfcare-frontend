@@ -17,6 +17,7 @@ import { ConfigurationStatus, StationOnCreation } from '../model/Station';
 import {
   updateStation as UpdateStationMocked,
   associateEcToStation as associateEcToStationMocked,
+  updateEcAssociationToStation as updateEcAssociationToStationMocked,
   createStationMocked,
   createWrapperStation as createStationWrap,
   dissociateECfromStation as dissociateECfromStationMocked,
@@ -113,6 +114,16 @@ export const associateEcToStation = (
     return associateEcToStationMocked(code, station);
   }
   return BackofficeApi.associateEcToStation(code, station).then((resource) => resource);
+};
+
+export const updateEcAssociationToStation = (
+  code: string,
+  station: CreditorInstitutionStationDto
+): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return updateEcAssociationToStationMocked(code, station);
+  }
+  return BackofficeApi.updateEcAssociationToStation(code, station).then((resource) => resource);
 };
 
 export const getStationAvailableEC = (

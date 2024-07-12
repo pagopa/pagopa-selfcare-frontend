@@ -212,14 +212,15 @@ export const gridLinkActionEdit = ({
       label={t('general.modify')}
       showInMenu
       onClick={() => handleOnClick()}
+      data-testid="editAction"
     />,
     <GridActionsCellItem
       label={t('stationECList.stationsTableColumns.headerFields.action')}
       onClick={onRowClick ? () => onRowClick(ci.ciTaxCode) : undefined}
-      data-testid={`dissociate-${ci.ciTaxCode}`}
       key="dissociateAction"
       showInMenu
       sx={{ color: '#D85757' }}
+      data-testid="dissociateAction"
     />,
   ];
 };

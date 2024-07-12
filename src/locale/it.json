@@ -654,7 +654,9 @@
         "segregationCode": "Segregation code",
         "appCode": "Application code",
         "broadcast": "Broadcast",
-        "action": "Dissocia EC"
+        "action": "Dissocia EC",
+        "aca": "ACA",
+        "standIn": "Stand In"
       }
     },
     "dissociateModal": {

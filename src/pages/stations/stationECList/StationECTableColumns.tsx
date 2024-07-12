@@ -1,7 +1,7 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { generatePath, useHistory } from 'react-router-dom';
-import { formatCodeInDoubleDigit } from '../../../utils/common-utils';
+import { formatBooleanValueToYesOrNo, formatCodeInDoubleDigit } from '../../../utils/common-utils';
 import {
   renderCell,
   renderStatusChip,
@@ -61,7 +61,7 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.ciTaxCode, mainCell: true }),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'auxDigit',
@@ -78,7 +78,7 @@ export function buildColumnDefs(
           color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,
-      flex: 3,
+      flex: 2,
     },
     {
       field: 'segregationCode',
@@ -95,7 +95,7 @@ export function buildColumnDefs(
           color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,
-      flex: 3,
+      flex: 2,
     },
     {
       field: 'applicationCode',
@@ -112,7 +112,41 @@ export function buildColumnDefs(
           color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,
-      flex: 3,
+      flex: 2,
+    },
+    {
+      field: 'aca',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationECList.stationsTableColumns.headerFields.aca'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: formatBooleanValueToYesOrNo(params.row.aca, t),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
+      sortable: false,
+      flex: 2,
+    },
+    {
+      field: 'standIn',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('stationECList.stationsTableColumns.headerFields.standIn'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: formatBooleanValueToYesOrNo(params.row.standIn, t),
+          color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
+        }),
+      sortable: false,
+      flex: 2,
     },
     {
       field: 'broadcast',

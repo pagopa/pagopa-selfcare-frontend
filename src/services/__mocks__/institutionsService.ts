@@ -48,7 +48,7 @@ export const mockedDelegatedPSP: DelegationResource = {
             institution_name: 'Azienda Pubblica di Servizi alla Persona Test 1',
             broker_name: 'PSP1',
             tax_code: '800011104871',
-            broker_tax_code: '800011104871',
+            broker_tax_code: 'idBrokerPsp',
         },
         {
             broker_id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',

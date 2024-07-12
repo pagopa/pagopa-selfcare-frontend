@@ -58,14 +58,14 @@ function StationAssociateECPage() {
 
   const [loadingCiList, setLoadingCiList] = useState<boolean>(false);
   const [inputCiName, setInputCiName] = useState<string>('');
-  const reduxCiRelation: CreditorInstitutionResource = isEditMode
-    ? useAppSelectorWithRedirect({
-        selector: stationCISelectors.selectStationCI,
-        routeToRedirect: generatePath(ROUTES.STATION_EC_LIST, {
+  const reduxCiRelation: CreditorInstitutionResource = useAppSelectorWithRedirect({
+    selector: stationCISelectors.selectStationCI,
+    routeToRedirect: isEditMode
+      ? generatePath(ROUTES.STATION_EC_LIST, {
           stationId,
-        }),
-      })
-    : undefined;
+        })
+      : undefined,
+  });
   const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>(
     isEditMode
       ? {

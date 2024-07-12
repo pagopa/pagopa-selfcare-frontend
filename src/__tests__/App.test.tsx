@@ -67,3 +67,16 @@ test('Test rendering', () => {
     verifyPartiesMockExecution(store.getState());
     verifySelectedPartyProductsMockExecution(store.getState());
 });
+
+test('Test rendering tosNotAccepted', () => {
+    const {store} = renderApp();
+
+    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+        isTOSAccepted: false,
+        acceptTOS: mockSignOutFn,
+        acceptedTOS: '',
+    }));
+
+    verifyLoginMockExecution(store.getState());
+
+});

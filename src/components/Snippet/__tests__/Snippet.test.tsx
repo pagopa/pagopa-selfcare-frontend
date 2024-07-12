@@ -21,4 +21,13 @@ describe('<Snippet />', () => {
                 rewriteLinks(routes.TOS, '.otnotice-content a');}}
         />);
     });
+    test('render component Snippet without condition', () => {
+        render(
+            <Snippet 
+                html={tosJson.html}
+                waitForElementCondition={null} 
+                waitForElementFunction={null}       
+            />
+        );
+    });
 });

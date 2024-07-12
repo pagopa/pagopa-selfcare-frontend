@@ -6,7 +6,7 @@ import routes from '../../routes';
 type Props = {
     html: string;
     waitForElementCondition: string | null | undefined;
-    waitForElementFunction: () => void | null | undefined;
+    waitForElementFunction: null | undefined | (() => void);
 };
 
 export default function Snippet({html, waitForElementCondition, waitForElementFunction = () => {}}: Props) {

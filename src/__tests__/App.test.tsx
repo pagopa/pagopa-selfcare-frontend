@@ -69,11 +69,12 @@ test('Test rendering', () => {
 });
 
 test('Test rendering tosNotAccepted', () => {
-    const {store} = renderApp();
 
     jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
         isTOSAccepted: false
     }));
+
+    const {store} = renderApp();
 
     verifyLoginMockExecution(store.getState());
 

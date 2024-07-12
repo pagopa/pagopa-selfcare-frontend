@@ -46,4 +46,29 @@ describe('<StationECTable />', () => {
       expect(table).toBeInTheDocument();
     });
   });
+
+  test('error getECListByStationCodeSpy', async () => {
+    getECListByStationCodeSpy.mockRejectedValueOnce(new Error(""));
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
+          <Route path="/stations/:stationId">
+            <ThemeProvider theme={theme}>
+              <StationECTable
+                setAlertMessage={() => ''}
+                ciNameOrFiscalCodeFilter={''}
+                setNoValidCi={() => jest.fn()}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      const table = screen.getByTestId('data-grid');
+      expect(table).toBeInTheDocument();
+    });
+  });
 });

@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { buildColumnDefs, gridLinkActionEdit } from '../StationECTableColumns';
+import { buildColumnDefs, getAuxDigit, gridLinkActionEdit } from '../StationECTableColumns';
 import { mockedCreditorInstitutionsResource } from '../../../../services/__mocks__/creditorInstitutionService';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -191,8 +191,24 @@ describe('<StationECTableColumns />', () => {
     await waitFor(() => {
       expect(onRowClick).toBeCalled();
     });
+  });
 
-
+  test('Test getAuxDigit', async () => {
+    expect(
+      getAuxDigit({ segregationCode: 'seg', applicationCode: undefined, auxDigit: 'auxDigit' })
+    ).toBe('3');
+    expect(
+      getAuxDigit({ segregationCode: undefined, applicationCode: 'appCode', auxDigit: 'auxDigit' })
+    ).toBe('0');
+    expect(
+      getAuxDigit({ segregationCode: 'seg', applicationCode: 'appCode', auxDigit: 'auxDigit' })
+    ).toBe('0/3');
+    expect(
+      getAuxDigit({ segregationCode: undefined, applicationCode: undefined, auxDigit: 'auxDigit' })
+    ).toBe('auxDigit');
+    expect(
+      getAuxDigit({ segregationCode: undefined, applicationCode: undefined, auxDigit: undefined })
+    ).toBe('-');
   });
 });
 

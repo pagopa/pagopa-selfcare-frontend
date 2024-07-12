@@ -15,7 +15,7 @@ import { stationCIActions } from '../../../redux/slices/stationCISlice';
 import ROUTES from '../../../routes';
 import { StationECAssociateActionType } from '../../../model/Station';
 
-const getAuxDigit = (station: any) => {
+export const getAuxDigit = (station: any) => {
   const hasSegregationCode = station.segregationCode !== undefined;
   const hasApplicationCode = station.applicationCode !== undefined;
   if (hasSegregationCode && !hasApplicationCode) {

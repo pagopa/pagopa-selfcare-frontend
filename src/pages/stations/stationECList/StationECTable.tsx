@@ -5,13 +5,16 @@ import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorSer
 import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useHistory } from 'react-router-dom';
 import ROUTES from '../../../routes';
 import { StationECAssociateActionType } from '../../../model/Station';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
+import { useAppDispatch } from '../../../redux/hooks';
+import { stationCIActions } from '../../../redux/slices/stationCISlice';
+import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { buildColumnDefs } from './StationECTableColumns';
 
 const emptyECList: CreditorInstitutionsResource = {
@@ -37,12 +40,23 @@ export default function StationECTable({
   setNoValidCi
 }: StationECTableProps) {
   const { t } = useTranslation();
-  const [showConfirmModal, setShowConfirmModal] = useState({ show: false, data: '' });
-
   const setLoadingOverlay = useLoading(LOADING_TASK_STATION_EC_TABLE);
-
   const addError = useErrorDispatcher();
+  const dispatcher = useAppDispatch();
+  const history = useHistory();
 
+  function handleOnClick(ci: CreditorInstitutionResource) {
+    dispatcher(stationCIActions.setStationCIState(ci));
+
+    history.push(
+      generatePath(ROUTES.STATION_ASSOCIATE_EC, {
+        stationId,
+        action: StationECAssociateActionType.EDIT,
+      })
+    );
+  }
+
+  const [showConfirmModal, setShowConfirmModal] = useState({ show: false, data: '' });
   const [ecListPage, setECListPage] = useState<CreditorInstitutionsResource>(emptyECList);
   const [page, setPage] = useState<number>(0);
   const [selectedECCode, setSelectedECCode] = useState<string>('');
@@ -59,7 +73,7 @@ export default function StationECTable({
           ?.businessName ?? '',
     });
   };
-  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, stationId);
+  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, stationId, handleOnClick);
 
   const dissociateEC = async () => {
     setShowConfirmModal({ show: false, data: '' });

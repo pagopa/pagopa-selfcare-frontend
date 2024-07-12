@@ -34,7 +34,8 @@ export const getAuxDigit = (station: any) => {
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   onRowClick: (ec_code: string) => void,
-  stationId: string
+  stationId: string,
+  onLinkClick: (ci: CreditorInstitutionResource) => void
 ) {
   return [
     {
@@ -176,7 +177,8 @@ export function buildColumnDefs(
       editable: false,
       sortable: false,
       flex: 1,
-      getActions: (p: any) => gridLinkActionEdit({ t, stationId, ci: p.row, onRowClick }),
+      getActions: (p: any) =>
+        gridLinkActionEdit({ t, stationId, ci: p.row, onRowClick, onLinkClick }),
     },
   ] as Array<GridColDef>;
 }
@@ -186,41 +188,27 @@ export const gridLinkActionEdit = ({
   stationId,
   t,
   onRowClick,
+  onLinkClick,
 }: {
   ci: CreditorInstitutionResource;
   stationId: string;
   t: TFunction<'translation', undefined>;
   onRowClick: (ec_code: string) => void;
-}) => {
-  const dispatcher = useAppDispatch();
-  const history = useHistory();
-
-  function handleOnClick() {
-    dispatcher(stationCIActions.setStationCIState(ci));
-
-    history.push(
-      generatePath(ROUTES.STATION_ASSOCIATE_EC, {
-        stationId,
-        action: StationECAssociateActionType.EDIT,
-      })
-    );
-  }
-
-  return [
-    <GridActionsCellItem
-      key="editAction"
-      label={t('general.modify')}
-      showInMenu
-      onClick={() => handleOnClick()}
-      data-testid="editAction"
-    />,
-    <GridActionsCellItem
-      label={t('stationECList.stationsTableColumns.headerFields.action')}
-      onClick={onRowClick ? () => onRowClick(ci.ciTaxCode) : undefined}
-      key="dissociateAction"
-      showInMenu
-      sx={{ color: '#D85757' }}
-      data-testid="dissociateAction"
-    />,
-  ];
-};
+  onLinkClick: (ci: CreditorInstitutionResource) => void;
+}) => [
+  <GridActionsCellItem
+    key="editAction"
+    label={t('general.modify')}
+    showInMenu
+    onClick={() => onLinkClick(ci)}
+    data-testid="editAction"
+  />,
+  <GridActionsCellItem
+    label={t('stationECList.stationsTableColumns.headerFields.action')}
+    onClick={onRowClick ? () => onRowClick(ci.ciTaxCode) : undefined}
+    key="dissociateAction"
+    showInMenu
+    sx={{ color: '#D85757' }}
+    data-testid="dissociateAction"
+  />,
+];

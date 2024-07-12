@@ -165,18 +165,19 @@ describe('<StationECTableColumns />', () => {
       },
     ] as Array<GridColDef>;
 
-    expect(buildColumnDefs(mockTFunction, () => jest.fn(), 'stationId')).toEqual(
+    expect(buildColumnDefs(mockTFunction, () => jest.fn(), 'stationId', () => jest.fn(),)).toEqual(
       ArrayBuildColumnDefs
     );
   });
 
   test('Test gridLinkActionEdit', async () => {
     const onRowClick = jest.fn();
+    const onLinkClick = jest.fn();
     const history = createMemoryHistory();
     render(
       <Provider store={store}>
         <Router history={history}>
-          <ComponentGridLinkAction onRowClick={onRowClick} />
+          <ComponentGridLinkAction onRowClick={onRowClick} onLinkClick={onLinkClick}/>
         </Router>
       </Provider>
     );
@@ -185,6 +186,10 @@ describe('<StationECTableColumns />', () => {
     const dissociateAction = screen.getByTestId('dissociateAction');
 
     fireEvent.click(editAction);
+
+    await waitFor(() => {
+      expect(onLinkClick).toBeCalled();
+    });
 
     fireEvent.click(dissociateAction);
 
@@ -212,13 +217,14 @@ describe('<StationECTableColumns />', () => {
   });
 });
 
-const ComponentGridLinkAction = ({ onRowClick }: { onRowClick: any }) => (
+const ComponentGridLinkAction = ({ onRowClick, onLinkClick }: { onRowClick: any , onLinkClick: any}) => (
   <>
     {gridLinkActionEdit({
       ci: mockedCreditorInstitutionsResource.creditor_institutions[0],
       stationId: 'stationId',
       t: mockTFunction,
       onRowClick,
+      onLinkClick
     })}
   </>
 );

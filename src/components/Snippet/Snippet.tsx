@@ -15,13 +15,13 @@ export default function Snippet({html, waitForElementCondition, waitForElementFu
 
   useEffect(() => {
     const innerHtml = document.createRange().createContextualFragment(html);
+    // eslint-disable-next-line functional/immutable-data
     divRef.current.innerHTML = '';
     divRef.current.appendChild(innerHtml);
 
     if (waitForElementCondition) {
       waitForElement(waitForElementCondition).then(waitForElementFunction)
       .catch((reason) => {
-        
       });
     }
 

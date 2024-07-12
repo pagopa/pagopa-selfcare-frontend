@@ -48,14 +48,17 @@ import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
 import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
-import { TOS } from './pages/tos/TOS';
-import { PRIVACY } from './pages/tos/PRIVACY';
+import { TOS_AND_PRIVACY } from './pages/tos_and_privacy/TOS_AND_PRIVACY';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
 import CommissionBundleDetailOffersAddRecipientsPage from './pages/commisionalBundles/detail/CommissionBundleDetailOffersAddRecipientsPage';
 import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
+import { rewriteLinks } from './utils/onetrust-utils';
+import tosJson from './data/tos.json';
+import privacyJson from './data/privacy.json';
+
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -316,11 +319,19 @@ const SecuredRoutes = withLogin(
                 </Route>
 
                 <Route path={routes.TOS} exact={true}>
-                  <TOS />
+                  <TOS_AND_PRIVACY html={tosJson.html}
+                     waitForElementCondition={'.otnotice-content'} 
+                     waitForElementFunction={() => {
+                        rewriteLinks(routes.TOS, '.otnotice-content a');}}
+                   />
                 </Route>
 
                 <Route path={routes.PRIVACY} exact={true}>
-                  <PRIVACY />
+                  <TOS_AND_PRIVACY html={privacyJson.html}
+                      waitForElementCondition={'.otnotice-content'} 
+                      waitForElementFunction={() => {
+                          rewriteLinks(routes.TOS, '.otnotice-content a');}}
+                    />
                 </Route>
 
                 <Route path="*">

@@ -330,7 +330,7 @@ const SecuredRoutes = withLogin(
                   <TOS_AND_PRIVACY html={privacyJson.html}
                       waitForElementCondition={'.otnotice-content'} 
                       waitForElementFunction={() => {
-                          rewriteLinks(routes.TOS, '.otnotice-content a');}}
+                          rewriteLinks(routes.PRIVACY, '.otnotice-content a');}}
                     />
                 </Route>
 

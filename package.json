@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.26.4-3-next",
+  "version": "1.26.4-4-VAS-1166-feat-add-tos-and-privacy-pages",
   "homepage": "ui",
   "private": true,
   "scripts": {

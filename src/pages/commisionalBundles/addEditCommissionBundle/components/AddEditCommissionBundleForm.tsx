@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
-import { MenuBook } from '@mui/icons-material';
+import {InfoOutlined, MenuBook} from '@mui/icons-material';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import EuroIcon from '@mui/icons-material/Euro';
@@ -18,38 +18,40 @@ import {
     Radio,
     RadioGroup,
     Select,
+    Switch,
     TextField,
     TextFieldProps,
+    Tooltip,
     Typography,
 } from '@mui/material';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { theme } from '@pagopa/mui-italia';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { FormikProps } from 'formik';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { NumericFormat } from 'react-number-format';
-import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
-import { Delegation } from '../../../../api/generated/portal/Delegation';
-import { TypeEnum } from '../../../../api/generated/portal/PSPBundleResource';
-import { PaymentTypes } from '../../../../api/generated/portal/PaymentTypes';
-import { Touchpoints } from '../../../../api/generated/portal/Touchpoints';
+import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {theme} from '@pagopa/mui-italia';
+import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {FormikProps} from 'formik';
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {NumericFormat} from 'react-number-format';
+import {BundleRequest} from '../../../../api/generated/portal/BundleRequest';
+import {Delegation} from '../../../../api/generated/portal/Delegation';
+import {TypeEnum} from '../../../../api/generated/portal/PSPBundleResource';
+import {PaymentTypes} from '../../../../api/generated/portal/PaymentTypes';
+import {Touchpoints} from '../../../../api/generated/portal/Touchpoints';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
-import { useFlagValue } from '../../../../hooks/useFeatureFlags';
-import { useOrganizationType } from "../../../../hooks/useOrganizationType";
-import { useUserRole } from "../../../../hooks/useUserRole";
-import { Party } from '../../../../model/Party';
-import { sortPaymentType } from '../../../../model/PaymentType';
-import { ConfigurationStatus } from '../../../../model/Station';
-import { useAppSelector } from '../../../../redux/hooks';
-import { partiesSelectors } from '../../../../redux/slices/partiesSlice';
-import { getTouchpoints } from '../../../../services/bundleService';
-import { getChannels } from '../../../../services/channelService';
-import { getPaymentTypes } from '../../../../services/configurationService';
-import { getBrokerDelegation } from '../../../../services/institutionService';
-import { addCurrentBroker } from '../../../../utils/channel-utils';
-import { LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS, LOADING_TASK_GET_CHANNELS_IDS, } from '../../../../utils/constants';
+import {useFlagValue} from '../../../../hooks/useFeatureFlags';
+import {useOrganizationType} from '../../../../hooks/useOrganizationType';
+import {Party} from '../../../../model/Party';
+import {sortPaymentType} from '../../../../model/PaymentType';
+import {ConfigurationStatus} from '../../../../model/Station';
+import {useAppSelector} from '../../../../redux/hooks';
+import {partiesSelectors} from '../../../../redux/slices/partiesSlice';
+import {getTouchpoints} from '../../../../services/bundleService';
+import {getChannels} from '../../../../services/channelService';
+import {getPaymentTypes} from '../../../../services/configurationService';
+import {getBrokerDelegation} from '../../../../services/institutionService';
+import {addCurrentBroker} from '../../../../utils/channel-utils';
+import {LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS, LOADING_TASK_GET_CHANNELS_IDS,} from '../../../../utils/constants';
+import {WrapperChannelResource} from '../../../../api/generated/portal/WrapperChannelResource';
 
 type Props = {
     formik: FormikProps<BundleRequest>;
@@ -59,19 +61,19 @@ type Props = {
 
 const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
     const {t} = useTranslation();
-    const {userIsPspDirectAdmin} = useUserRole();
-    const {orgInfo, orgIsPspDirect} = useOrganizationType();
+    const {orgIsPspDirect} = useOrganizationType();
     const setLoading = useLoading(LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS);
     const setLoadingChannels = useLoading(LOADING_TASK_GET_CHANNELS_IDS);
     const addError = useErrorDispatcher();
-    const isPrivateEnabled = useFlagValue("commission-bundles-private");
-    const isPublicEnabled = useFlagValue("commission-bundles-public");
+    const isPrivateEnabled = useFlagValue('commission-bundles-private');
+    const isPublicEnabled = useFlagValue('commission-bundles-public');
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
     const [paymentOptions, setPaymentOptions] = useState<PaymentTypes>();
     const [touchpointList, setTouchpointList] = useState<Touchpoints>();
     const [brokerDelegationList, setBrokerDelegationList] = useState<Array<Delegation>>([]);
-    const [channelsId, setChannelsId] = useState<Array<string>>([]);
+    const [channels, setChannels] = useState<Array<WrapperChannelResource>>([]);
+    const [isChannelV2, setIsChannelV2] = useState<boolean>(false);
 
     const inputGroupStyle = {
         borderRadius: 1,
@@ -86,9 +88,10 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
         getChannels({status: ConfigurationStatus.ACTIVE, brokerCode: selectedBrokerCode})
             .then((data) => {
                 if (data?.channels && data.channels.length > 0) {
-                    setChannelsId(data.channels.map(ch => ch.channel_code));
+                    setChannels([...data.channels]);
+                    handleIsChannelV2(formik.values.idChannel, [...data.channels]);
                 } else {
-                    setChannelsId([]);
+                    setChannels([]);
                     addError({
                         id: 'GET_BROKER_DELEGATIONS_DATA',
                         blocking: false,
@@ -104,7 +107,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 }
             })
             .catch((error) => {
-                setChannelsId([]);
+                setChannels([]);
                 addError({
                     id: 'GET_CHANNEL_IDS_DATA',
                     blocking: false,
@@ -135,15 +138,18 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 if (touchpoints) {
                     setTouchpointList(touchpoints);
                 }
-                let listBroker = brokerDelegation?.delegation_list ? [...brokerDelegation.delegation_list] : [];
+                let listBroker = brokerDelegation?.delegation_list
+                    ? [...brokerDelegation.delegation_list]
+                    : [];
                 if (orgIsPspDirect) {
                     listBroker = addCurrentBroker(listBroker, selectedParty as Party);
                 }
+
                 if (listBroker.length > 0) {
                     setBrokerDelegationList(listBroker);
                     if (isEdit && idBrokerPsp) {
                         const brokerTaxCode = listBroker?.find(
-                            (el) => el.broker_id === idBrokerPsp
+                            (el) => el.broker_tax_code === idBrokerPsp
                         )?.broker_tax_code;
                         if (brokerTaxCode) {
                             getChannelsByBrokerCode(brokerTaxCode);
@@ -185,23 +191,41 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
 
     const shouldDisableDate = (date: Date) => date < new Date();
 
-    function handleBrokerCodesSelection(
-        value: string | null | undefined
-    ) {
+    function handleBrokerCodesSelection(value: string | null | undefined) {
         formik.setFieldValue('idChannel', '');
+        handleIsChannelV2();
         if (value === null || value === undefined) {
             formik.setFieldValue('idBrokerPsp', '');
-            setChannelsId([]);
+            setChannels([]);
         } else {
-            const broker = brokerDelegationList?.find(
-                (el) => el.broker_name === value
-            );
-            formik.handleChange('idBrokerPsp')(broker?.broker_tax_code ?? "");
+            const broker = brokerDelegationList?.find((el) => el.broker_name === value);
+            formik.handleChange('idBrokerPsp')(broker?.broker_tax_code ?? '');
             if (broker?.broker_tax_code) {
                 getChannelsByBrokerCode(broker?.broker_tax_code);
             }
         }
     }
+
+    const handleIsChannelV2 = (
+        channelCode?: string | null,
+        channelList?: Array<WrapperChannelResource>
+    ) => {
+        let bool = false;
+        if (channelCode) {
+            const arrayChannel = channelList ?? channels;
+            bool = arrayChannel.find((el) => el.channel_code === channelCode)?.primitive_version === 2;
+        }
+
+        setIsChannelV2(bool);
+        if (!bool) {
+            formik.setFieldValue('cart', false);
+        }
+    };
+
+    const handleChangeChannel = (value: string | null) => {
+        formik.handleChange('idChannel')(value ?? '');
+        handleIsChannelV2(value);
+    };
 
     return (
         <>
@@ -491,7 +515,11 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         ?.map((el) => el?.broker_name ?? '')
                                         ?.sort((a, b) => a.localeCompare(b))}
                                     disabled={!(brokerDelegationList && brokerDelegationList.length > 0)}
-                                    value={brokerDelegationList?.find(el => el.broker_tax_code === formik.values.idBrokerPsp)?.broker_name ?? ""}
+                                    value={
+                                        brokerDelegationList?.find(
+                                            (el) => el.broker_tax_code === formik.values.idBrokerPsp
+                                        )?.broker_name ?? ''
+                                    }
                                     onChange={(_, value) => {
                                         handleBrokerCodesSelection(value);
                                     }}
@@ -516,18 +544,9 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                 <Autocomplete
                                     disablePortal
                                     id="idChannel"
-                                    options={
-                                        // eslint-disable-next-line functional/immutable-data
-                                        channelsId.sort((a, b) => a.localeCompare(b))
-                                    }
-                                    disabled={!(channelsId && channelsId.length > 0)}
-                                    onChange={(_event, value) => {
-                                        if (value === null) {
-                                            formik.setFieldValue('idChannel', '');
-                                        } else {
-                                            formik.handleChange('idChannel')(value);
-                                        }
-                                    }}
+                                    options={channels.map((el) => el.channel_code).sort((a, b) => a.localeCompare(b))}
+                                    disabled={!(channels && channels.length > 0)}
+                                    onChange={(_event, value) => handleChangeChannel(value)}
                                     value={formik.values.idChannel}
                                     fullWidth
                                     renderInput={(params) => (
@@ -544,6 +563,32 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         'commissionBundlesPage.addEditCommissionBundle.form.noChannelsOption'
                                     )}
                                     data-testid="channels-id-test"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControlLabel
+                                    sx={{width: '100%', mt: 2}}
+                                    control={
+                                        <Switch
+                                            id={'cart'}
+                                            name="cart"
+                                            onChange={(e) => formik.setFieldValue('cart', e.target.checked)}
+                                            checked={formik.values.cart ?? false}
+                                            disabled={!isChannelV2}
+                                            data-testid="bundle-cart"
+                                        />
+                                    }
+                                    label={
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            {t('commissionBundlesPage.addEditCommissionBundle.form.cart')}
+                                            <Tooltip
+                                                title={t('commissionBundlesPage.addEditCommissionBundle.form.cartInfo')}
+                                                placement="right"
+                                            >
+                                                <InfoOutlined fontSize="small" color="primary" sx={{ml: 2}}/>
+                                            </Tooltip>
+                                        </div>
+                                    }
                                 />
                             </Grid>
                         </Grid>

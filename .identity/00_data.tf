@@ -54,6 +54,11 @@ data "azurerm_key_vault_secret" "key_vault_key_pem" {
   key_vault_id = data.azurerm_key_vault.domain_key_vault.id
 }
 
+data "azurerm_key_vault_certificate" "certificate_key_pem" {
+  name         = "pagopa-${var.env_short}-weu-selfcare-jwt-signing-cert"
+  key_vault_id = data.azurerm_key_vault.domain_key_vault.id
+}
+
 data "azurerm_cdn_profile" "cdn_profile" {
   name                = local.cdn.name
   resource_group_name = local.cdn.resource_group_name

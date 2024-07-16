@@ -25,7 +25,7 @@ locals {
     "TENANT_ID" : data.azurerm_client_config.current.tenant_id,
     "SUBSCRIPTION_ID" : data.azurerm_subscription.current.subscription_id,
     "SUBKEY" : data.azurerm_key_vault_secret.key_vault_integration_test_subkey.value,
-    
+
     "REACT_APP_MIXPANEL_TOKEN" : data.azurerm_key_vault_secret.key_vault_mixpanel_token.value
     "REACT_APP_ONETRUST_DOMAIN_ID" : data.azurerm_key_vault_secret.key_vault_onetrust_domain.value
     "BLOB_CONNECTION_STRING" : data.azurerm_key_vault_secret.key_vault_blob_connection_string.value
@@ -48,10 +48,26 @@ locals {
     },
     "KEY_PEM" : {
       "key" : "${upper(var.env)}_KEY_PEM",
-      "value" : var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
+      "value" : data.external.pem.result.pem
     }
   }
 }
+
+data "external" "pem" {
+  program = [
+    "bash", "download_pem.sh"
+  ]
+  query = {
+    env = var.env_short
+  }
+}
+
+
+output "certificate" {
+  description = "certificate"
+  value = data.external.pem.result.pem
+}
+
 
 ###############
 # ENV Secrets #

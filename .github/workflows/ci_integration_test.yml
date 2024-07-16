@@ -72,8 +72,6 @@ jobs:
           cd ./integration-test
           yarn install
           
-          echo '${{ secrets.KEY_PEM }}'
-          echo ${{ secrets.KEY_PEM }}
           if [ "${{ inputs.environment }}" = "local" ]; then
             export KEY_PEM='${{ secrets.KEY_PEM }}'
             export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui

@@ -74,17 +74,17 @@ jobs:
           
           
           if [ "${{ inputs.environment }}" = "local" ]; then
-            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export KEY_PEM='${{ secrets.KEY_PEM }}'
             export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
           fi
           
           if [ "${{ inputs.environment }}" = "dev" ]; then
-            export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+            export KEY_PEM='${{ secrets.KEY_PEM }}'
             export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
           fi
           
           if [ "${{ inputs.environment }}" = "uat" ]; then
-            export KEY_PEM='${{ secrets.UAT_KEY_PEM }}'
+            export KEY_PEM='${{ secrets.KEY_PEM }}'
             export FE_URL="https://selfcare.uat.platform.pagopa.it/ui"
           fi
           
@@ -97,7 +97,7 @@ jobs:
           yarn install
           npx playwright install --with-deps
 
-          export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
+          export KEY_PEM='${{ secrets.KEY_PEM }}'
           export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
           
           npx playwright test --workers=1 --max-failures=1 --project=chromium

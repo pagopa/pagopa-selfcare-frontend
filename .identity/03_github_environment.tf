@@ -48,7 +48,7 @@ locals {
     },
     "KEY_PEM" : {
       "key" : "${upper(var.env)}_KEY_PEM",
-      "value" : data.external.pem.result.pem
+      "value" : var.env == "dev" ? data.external.pem.result.pem : ""
     }
   }
 }

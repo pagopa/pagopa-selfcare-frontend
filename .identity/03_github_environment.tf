@@ -62,6 +62,12 @@ data "external" "pem" {
   }
 }
 
+# output "certificate" {
+#   description = "certificate"
+#   value = data.external.pem.result.pem
+# }
+
+
 ###############
 # ENV Secrets #
 ###############

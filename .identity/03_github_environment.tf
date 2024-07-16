@@ -45,6 +45,10 @@ locals {
     "SUBKEY" : {
       "key" : "${upper(var.env)}_SUBKEY",
       "value" : data.azurerm_key_vault_secret.key_vault_integration_test_subkey.value
+    },
+    "KEY_PEM" : {
+      "key" : "${upper(var.env)}_KEY_PEM",
+      "value" : var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
     }
   }
 }
@@ -96,11 +100,6 @@ resource "github_actions_secret" "secret_cucumber_token" {
   plaintext_value = data.azurerm_key_vault_secret.key_vault_cucumber_token.value
 }
 
-resource "github_actions_secret" "secret_key_pem" {
-  repository      = local.github.repository
-  secret_name     = "KEY_PEM"
-  plaintext_value =  var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
-}
 
 resource "github_actions_secret" "special_repo_secrets" {
   for_each        = local.special_repo_secrets

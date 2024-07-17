@@ -71,11 +71,11 @@ jobs:
         run: |
           
           export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
-          if [ "${{ inputs.environment }}" = "local" ]; then
+          if [ "${{ inputs.environment || 'dev' }}" = "local" ]; then
             export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
           fi
           
-          if [ "${{ inputs.environment }}" = "dev" ]; then
+          if [ "${{ inputs.environment || 'dev' }}" = "dev" ]; then
             export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
           fi
 
@@ -150,7 +150,7 @@ jobs:
           status: ${{ needs.integration_test.result }}
           token: ${{ secrets.GITHUB_TOKEN }}
           notify_when: 'success,failure,skipped'
-          notification_title: '<{run_url}| Integration Test> has {status_message} in ${{ inputs.environment }}'
+          notification_title: "<{run_url}| Integration Test> has {status_message} in ${{ inputs.environment || 'dev'}}"
           message_format: '{emoji} <{run_url}|{workflow}> {status_message} in <{repo_url}|{repo}>'
           footer: 'Linked to <{workflow_url}| workflow file>'
         env:

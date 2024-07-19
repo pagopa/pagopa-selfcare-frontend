@@ -311,6 +311,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '02',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678902',
@@ -320,6 +322,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '03',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678903',
@@ -329,6 +333,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '04',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678904',
@@ -338,6 +344,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '05',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678905',
@@ -347,6 +355,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '06',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678906',
@@ -356,6 +366,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '07',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678907',
@@ -365,6 +377,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '08',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678908',
@@ -374,6 +388,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '09',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678909',
@@ -383,6 +399,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '10',
+      stand_in: true,
+      aca: true
     },
     {
       ciTaxCode: '12345678910',
@@ -392,6 +410,8 @@ export const mockedStationECs: CreditorInstitutionsResource = {
       broadcast: true,
       applicationCode: 'Value',
       segregationCode: '11',
+      stand_in: true,
+      aca: true
     },
   ],
   page_info: { page: 0, limit: 10, items_found: 11, total_pages: 2 },
@@ -404,6 +424,8 @@ export const mockedStationECsPage2: CreditorInstitutionsResource = {
       enabled: true,
       businessName: 'EC11 S.p.A',
       broadcast: false,
+      stand_in: true,
+      aca: false
     },
   ],
   page_info: { page: 1, limit: 10, items_found: 11, total_pages: 2 },

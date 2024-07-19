@@ -51,6 +51,8 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
             cbillCode: '123',
             mod4: 'mod',
             segregationCode: '15',
+            aca:false,
+            standIn: true
         },
         {
             businessName: 'Ec 2',
@@ -62,6 +64,8 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
             cbillCode: '124',
             mod4: 'mod',
             segregationCode: '16',
+            aca: true,
+            standIn: false
         },
     ],
     page_info: {

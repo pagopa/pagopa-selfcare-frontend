@@ -52,7 +52,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
             mod4: 'mod',
             segregationCode: '15',
             aca:false,
-            standIn: true
+            stand_in: true
         },
         {
             businessName: 'Ec 2',
@@ -65,7 +65,7 @@ export const mockedCreditorInstitutionsResource: CreditorInstitutionsResource = 
             mod4: 'mod',
             segregationCode: '16',
             aca: true,
-            standIn: false
+            stand_in: false
         },
     ],
     page_info: {

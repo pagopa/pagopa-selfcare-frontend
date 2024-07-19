@@ -7,7 +7,8 @@ const ROUTES = {
   AUTH: `${BASE_ROUTE}/auth`,
   HOME: `${BASE_ROUTE}`,
   NODE_SIGNIN: `${BASE_ROUTE}/node-signin`,
-  TOS: `${BASE_ROUTE}/terms-of-service`,
+  TOS: `${BASE_ROUTE}/termini-di-servizio`,
+  PRIVACY:`${BASE_ROUTE}/informativa-privacy`,
   APIKEYS: `${BASE_ROUTE}/api-keys`,
   APIKEYS_CREATE: `${BASE_ROUTE}/add-apikey`,
 

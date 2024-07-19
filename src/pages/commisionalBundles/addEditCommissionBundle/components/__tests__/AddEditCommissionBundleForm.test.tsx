@@ -90,7 +90,7 @@ describe('<AddEditCommissionBundleForm />', () => {
     );
     spyOnGetChannelService = jest.spyOn(
       require('../../../../../services/channelService'),
-      'getChannels'
+            'getChannels'
     );
     spyOnErrorHook = jest
       .spyOn(useErrorDispatcher, 'useErrorDispatcher')

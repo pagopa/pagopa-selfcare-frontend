@@ -25,7 +25,7 @@ locals {
     "TENANT_ID" : data.azurerm_client_config.current.tenant_id,
     "SUBSCRIPTION_ID" : data.azurerm_subscription.current.subscription_id,
     "SUBKEY" : data.azurerm_key_vault_secret.key_vault_integration_test_subkey.value,
-    
+
     "REACT_APP_MIXPANEL_TOKEN" : data.azurerm_key_vault_secret.key_vault_mixpanel_token.value
     "REACT_APP_ONETRUST_DOMAIN_ID" : data.azurerm_key_vault_secret.key_vault_onetrust_domain.value
     "BLOB_CONNECTION_STRING" : data.azurerm_key_vault_secret.key_vault_blob_connection_string.value
@@ -45,9 +45,28 @@ locals {
     "SUBKEY" : {
       "key" : "${upper(var.env)}_SUBKEY",
       "value" : data.azurerm_key_vault_secret.key_vault_integration_test_subkey.value
+    },
+    "KEY_PEM" : {
+      "key" : "${upper(var.env)}_KEY_PEM",
+      "value" : var.env == "dev" ? data.external.pem.result.pem : ""
     }
   }
 }
+
+data "external" "pem" {
+  program = [
+    "bash", "download_pem.sh"
+  ]
+  query = {
+    env = var.env_short
+  }
+}
+
+# output "certificate" {
+#   description = "certificate"
+#   value = data.external.pem.result.pem
+# }
+
 
 ###############
 # ENV Secrets #
@@ -78,33 +97,24 @@ resource "github_actions_environment_variable" "github_environment_runner_variab
 # Secrets of the Repository #
 #############################
 
-#tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
 resource "github_actions_secret" "secret_sonar_token" {
   repository      = local.github.repository
   secret_name     = "SONAR_TOKEN"
   plaintext_value = data.azurerm_key_vault_secret.key_vault_sonar.value
 }
 
-#tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
 resource "github_actions_secret" "secret_bot_token" {
   repository      = local.github.repository
   secret_name     = "BOT_TOKEN_GITHUB"
   plaintext_value = data.azurerm_key_vault_secret.key_vault_bot_token.value
 }
 
-#tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
 resource "github_actions_secret" "secret_cucumber_token" {
   repository      = local.github.repository
   secret_name     = "CUCUMBER_PUBLISH_TOKEN"
   plaintext_value = data.azurerm_key_vault_secret.key_vault_cucumber_token.value
 }
 
-#tfsec:ignore:github-actions-no-plain-text-action-secrets # not real secret
-resource "github_actions_secret" "secret_key_pem" {
-  repository      = local.github.repository
-  secret_name     = "KEY_PEM"
-  plaintext_value =  var.env == "dev" ? data.azurerm_key_vault_secret.key_vault_key_pem[0].value : ""
-}
 
 resource "github_actions_secret" "special_repo_secrets" {
   for_each        = local.special_repo_secrets

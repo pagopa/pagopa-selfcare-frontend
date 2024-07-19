@@ -5,10 +5,11 @@ import { Link as RouterLink } from 'react-router-dom';
 
 interface TOSWallProps {
   acceptTOS: () => void;
-  detailRoute: string;
+  tosRoute: string;
+  privacyRoute: string;
 }
 
-const TOSWall = ({ acceptTOS, detailRoute }: TOSWallProps) => {
+const TOSWall = ({ acceptTOS, tosRoute, privacyRoute }: TOSWallProps) => {
   const { t } = useTranslation();
   return (
     <Box width="100%" px={2}>
@@ -20,12 +21,19 @@ const TOSWall = ({ acceptTOS, detailRoute }: TOSWallProps) => {
             <Link
               component={RouterLink}
               to={{
-                pathname: detailRoute,
+                pathname: tosRoute,
               }}
               sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
             >
               <strong> Accedi</strong>
             </Link>
+            <Link
+              component={RouterLink}
+              to={{
+                pathname: privacyRoute,
+              }}
+              sx={{ color: 'primary.main', cursor: 'pointer', textDecoration: 'none' }}
+            ></Link>
           </Trans>
         }
         onConfirm={() => acceptTOS()}

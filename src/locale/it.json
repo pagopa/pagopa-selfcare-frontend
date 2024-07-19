@@ -1,4 +1,46 @@
 {
+  "common": {
+    "footer": {
+      "legalInfoText": "<0>PagoPA S.p.A.</0> - Società per azioni con socio unico - Capitale sociale di euro 1,000,000 interamente versato - Sede legale in Roma, Piazza Colonna 370, <2/> CAP 00187 - N. di iscrizione a Registro Imprese di Roma, CF e P.IVA 15376371009",
+      "privacyPolicyLink": "Informativa Privacy",
+      "termsAndConditionLink": "Termini e condizioni d’uso del sito ",
+      "informationSecurityLink": "Sicurezza delle informazioni ",
+      "assistanceLink": "Assistenza ",
+      "preLoginLinks": {
+        "aboutUs": {
+          "links": {
+            "aboutUs": "PagoPA S.p.A.",
+            "media": "Media",
+            "workwithud": "Lavora con noi"
+          }
+        },
+        "resources": {
+          "title": "Risorse",
+          "links": {
+            "privacyPolicy": "Informativa Privacy",
+            "certifications": "Certificazioni",
+            "informationsecurity": "Sicurezza delle informazioni",
+            "protectionofpersonaldata": "Diritto alla protezione dei dati personali",
+            "cookies": "Preferenze Cookie",
+            "termsandconditions": "Termini e Condizioni",
+            "transparentcompany": "Società trasparente",
+            "disclosurePolicy": "Responsible Disclosure Policy",
+            "model231": "Modello 231"
+          }
+        },
+        "followUs": {
+          "title": "Seguici su"
+        },
+        "accessibility": "Accessibilità"
+      },
+      "postLoginLinks": {
+        "privacyPolicy": "Informativa Privacy",
+        "protectionofpersonaldata": "Diritto alla protezione dei dati personali",
+        "termsandconditions": "Termini e Condizioni",
+        "accessibility": "Accessibilità"
+      }
+    }
+  },
   "session": {
     "expired": {
       "title": "Sessione scaduta",
@@ -1530,7 +1572,7 @@
   },
   "tos": {
     "title": "Pagamenti pagoPA",
-    "termsDescription": "Accedendo, accetti i <1>Termini e condizioni d’uso</1> del servizio e confermi di avere letto l’<1>Informativa Privacy</1>. "
+    "termsDescription": "Accedendo, accetti i <1>Termini e condizioni d’uso</1> del servizio e confermi di avere letto l’<2>Informativa Privacy</2>. "
   },
   "general": {
     "noDataLabel": "Nessun risultato",

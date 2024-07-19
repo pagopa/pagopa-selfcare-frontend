@@ -1,10 +1,10 @@
 import {Box, Grid} from '@mui/material';
-import {Footer} from '@pagopa/selfcare-common-frontend';
 import {useUnloadEventOnExit} from '@pagopa/selfcare-common-frontend/hooks/useUnloadEventInterceptor';
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {userSelectors} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
 import Header from '../Header';
+import CommonFooter from '../CommonFooter/CommonFooter';
 // import withParties, { WithPartiesProps } from '../../decorators/withParties';
 // import SideMenu from '../SideMenu/SideMenu';
 
@@ -37,7 +37,7 @@ const Layout = ({children}: Props) => {
                 {children}
             </Grid>
             <Box gridArea="footer">
-                <Footer onExit={onExit} loggedUser={true}/>
+                <CommonFooter onExit={onExit} loggedUser={true}/>
             </Box>
         </Box>
     );

@@ -126,6 +126,7 @@ export default function StationECTable({
     fetchStationECs(0);
   }, [ciNameOrFiscalCodeFilter, pageLimit]);
 
+
   return (
     <>
       <Box

@@ -71,4 +71,5 @@ describe('<StationECTable />', () => {
       expect(table).toBeInTheDocument();
     });
   });
+
 });

@@ -133,7 +133,7 @@ export function buildColumnDefs(
       flex: 2,
     },
     {
-      field: 'stand_id',
+      field: 'stand_in',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationECList.stationsTableColumns.headerFields.standIn'),
       align: 'left',

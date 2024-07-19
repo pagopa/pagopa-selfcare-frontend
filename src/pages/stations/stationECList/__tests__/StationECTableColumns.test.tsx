@@ -125,7 +125,7 @@ describe('<StationECTableColumns />', () => {
         flex: 2,
       },
       {
-        field: 'standIn',
+        field: 'stand_in',
         cellClassName: 'justifyContentNormal',
         headerName: 'Stand In',
         align: 'left',
@@ -228,3 +228,4 @@ const ComponentGridLinkAction = ({ onRowClick, onLinkClick }: { onRowClick: any 
     })}
   </>
 );
+

@@ -133,7 +133,7 @@ export function buildColumnDefs(
       flex: 2,
     },
     {
-      field: 'standIn',
+      field: 'stand_id',
       cellClassName: 'justifyContentNormal',
       headerName: t('stationECList.stationsTableColumns.headerFields.standIn'),
       align: 'left',
@@ -143,7 +143,7 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: formatBooleanValueToYesOrNo(params.row.standIn, t),
+          value: formatBooleanValueToYesOrNo(params.row.stand_in, t),
           color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,

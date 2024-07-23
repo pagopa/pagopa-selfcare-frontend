@@ -73,3 +73,4 @@ public/version.json
 /blob-report/
 /playwright/.cache/
 **/key.pem
+**/client_certificate.pfx

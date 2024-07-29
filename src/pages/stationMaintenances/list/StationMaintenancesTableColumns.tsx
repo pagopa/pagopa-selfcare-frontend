@@ -28,7 +28,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params: any) => renderCell({ value: params.row.stationCode, mainCell: true }),
+      renderCell: (params: any) => renderCell({ value: params.row.station_code, mainCell: true }),
       sortable: false,
       flex: 4,
     },
@@ -44,8 +44,8 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: params.row.endDateTime
-            ? formatDateToDDMMYYYY(new Date(params.row.startDateTime))
+          value: params.row.start_date_time
+            ? formatDateToDDMMYYYY(new Date(params.row.start_date_time))
             : undefined,
         }),
       sortable: false,
@@ -62,8 +62,8 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: params.row.endDateTime
-            ? formatDateToDDMMYYYY(new Date(params.row.endDateTime))
+          value: params.row.end_date_time
+            ? formatDateToDDMMYYYY(new Date(params.row.end_date_time))
             : undefined,
         }),
       sortable: false,

@@ -117,7 +117,7 @@ export default function StationMaintenancesTable({
         handleChangePage={(newPage: number) => getStationsMaintenances(newPage)}
         pageLimit={pageLimit}
         setPageLimit={setPageLimit}
-        getRowId={(el) => el.maintenanceId}
+        getRowId={(el) => el.maintenance_id}
       />
     </Box>
   );

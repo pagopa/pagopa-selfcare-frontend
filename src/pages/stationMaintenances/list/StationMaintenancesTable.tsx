@@ -8,6 +8,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
+import { getStationMaintenances } from '../../../services/stationMaintenancesService';
 import { StationMaintenanceState } from '../../../model/StationMaintenance';
 import { StationMaintenanceListResource } from '../../../api/generated/portal/StationMaintenanceListResource';
 import { buildColumnDefs } from './StationMaintenancesTableColumns';
@@ -30,7 +31,7 @@ export default function StationMaintenancesTable({
   searchTrigger,
 }: {
   filterStationCode: string;
-  filterYear: number | null;
+  filterYear: number;
   filterState: StationMaintenanceState;
   searchTrigger: boolean;
 }) {
@@ -46,7 +47,14 @@ export default function StationMaintenancesTable({
   const getStationsMaintenances = (newPage?: number) => {
     setLoading(true);
     const toPage = newPage ?? 0;
-    new Promise((resolve) => resolve(emptyList)) // TODO get maintenance list API integration
+    getStationMaintenances({
+      brokerTaxCode: selectedParty?.fiscalCode ?? '',
+      stationCode: filterStationCode,
+      state: filterState,
+      year: filterYear,
+      limit: pageLimit,
+      page,
+    })
       .then((res: any) => {
         // TODO FIX RES TYPE
         if (res?.station_maintenance_list && res.station_maintenance_list.length > 0) {
@@ -91,8 +99,12 @@ export default function StationMaintenancesTable({
       justifyContent="start"
     >
       <TableDataGrid
-        componentPath={"stationMaintenancesPage"}
-        translationPathSuffix={filterState === StationMaintenanceState.FINISHED ? StationMaintenanceState.FINISHED : StationMaintenanceState.SCHEDULED}
+        componentPath={'stationMaintenancesPage'}
+        translationPathSuffix={
+          filterState === StationMaintenanceState.FINISHED
+            ? StationMaintenanceState.FINISHED
+            : StationMaintenanceState.SCHEDULED
+        }
         linkToRedirect={undefined} // TODO ROUTES TO NEW MAINTENANCE
         rows={
           stationMaintenancesList?.station_maintenance_list

@@ -4,6 +4,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import ROUTES from '../../../routes';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
@@ -55,8 +56,7 @@ export default function StationMaintenancesTable({
       limit: pageLimit,
       page,
     })
-      .then((res: any) => {
-        // TODO FIX RES TYPE
+      .then((res: StationMaintenanceListResource) => {
         if (res?.station_maintenance_list && res.station_maintenance_list.length > 0) {
           setStationMaintenancesList(res);
         } else {
@@ -105,7 +105,7 @@ export default function StationMaintenancesTable({
             ? StationMaintenanceState.FINISHED
             : StationMaintenanceState.SCHEDULED
         }
-        linkToRedirect={undefined} // TODO ROUTES TO NEW MAINTENANCE
+        linkToRedirect={ROUTES.STATION_MAINTENANCES_LIST} // TODO ROUTES TO NEW MAINTENANCE
         rows={
           stationMaintenancesList?.station_maintenance_list
             ? [...stationMaintenancesList.station_maintenance_list]

@@ -131,6 +131,13 @@ export const permissions = {
         ROLE.PT_PSPEC_OPERATOR,
         ROLE.PAGOPA_OPERATOR,
     ],
+    "station-maintenances": [
+        ROLE.EC_DIRECT_OPERATOR,
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.PT_EC_OPERATOR,
+        ROLE.PT_PSPEC_OPERATOR,
+        ROLE.PAGOPA_OPERATOR,
+    ]
 };
 
 export type PermissionName = keyof typeof permissions;

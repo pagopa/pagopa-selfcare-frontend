@@ -58,6 +58,7 @@ import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAdd
 import { rewriteLinks } from './utils/onetrust-utils';
 import tosJson from './data/tos.json';
 import privacyJson from './data/privacy.json';
+import StationMaintenancesPage from './pages/stationMaintenances/StationMaintenancesPage';
 
 
 const SecuredRoutes = withLogin(
@@ -315,6 +316,12 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.PAYMENT_NOTICES_ADDEDIT} exact={true}>
                   <ProtectedRoute permission="payment-notices-addedit" flagValue="payment-notices">
                     <PaymentNoticesAddEditPage />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.STATION_MAINTENANCES_LIST} exact={true}>
+                  <ProtectedRoute permission="station-maintenances" flagValue="station-maintenances">
+                    <StationMaintenancesPage />
                   </ProtectedRoute>
                 </Route>
 

@@ -3,8 +3,15 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-
-import { Alert, FormControlLabel, InputLabel, MenuItem, Select, Switch } from '@mui/material';
+import {
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  Switch,
+} from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
@@ -18,43 +25,63 @@ import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorI
 import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import ECSelection from '../../../components/Form/ECSelection';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { getAvailableCreditorInstitutionsForStation } from '../../../services/creditorInstitutionService';
 import {
   associateEcToStation,
   getCreditorInstitutionSegregationCodes,
+  updateEcAssociationToStation,
 } from '../../../services/stationService';
 import { extractProblemJson } from '../../../utils/client-utils';
 import {
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
+import { StationECAssociateActionType } from '../../../model/Station';
+import { stationCISelectors } from '../../../redux/slices/stationCISlice';
+import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 
 const availableEcEmptyState: CreditorInstitutionInfoResource = {
-    creditor_institution_info_list: []
-  };
-  
+  creditor_institution_info_list: [],
+};
+
 function StationAssociateECPage() {
   const { t } = useTranslation();
   const setLoading = useLoading(LOADING_TASK_EC_AVAILABLE);
   const setLoadingList = useLoading(LOADING_TASK_SEGREGATION_CODES_AVAILABLE);
   const addError = useErrorDispatcher();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const { stationId } = useParams<{ stationId: string }>();
+  const { stationId, action } = useParams<{ stationId: string; action: string }>();
+  const isEditMode = action === StationECAssociateActionType.EDIT;
 
   const [loadingCiList, setLoadingCiList] = useState<boolean>(false);
   const [inputCiName, setInputCiName] = useState<string>('');
-  const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>();
-  const [availableEC, setAvailableEC] = useState<CreditorInstitutionInfoResource>(availableEcEmptyState);
+  const reduxCiRelation: CreditorInstitutionResource = useAppSelectorWithRedirect({
+    selector: stationCISelectors.selectStationCI,
+    routeToRedirect: isEditMode
+      ? generatePath(ROUTES.STATION_EC_LIST, {
+          stationId,
+        })
+      : undefined,
+  });
+  const [selectedEC, setSelectedEC] = useState<CreditorInstitutionInfo | undefined>(
+    isEditMode
+      ? {
+          businessName: reduxCiRelation.businessName,
+          ciTaxCode: reduxCiRelation.ciTaxCode,
+        }
+      : undefined
+  );
+  const [availableEC, setAvailableEC] =
+    useState<CreditorInstitutionInfoResource>(availableEcEmptyState);
   const [segregationCodeList, setSegregationCodeList] = useState<AvailableCodes>({
     availableCodes: [],
   });
-  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (selectedParty?.partyId) {
+    if (selectedParty?.partyId && !isEditMode) {
       setLoadingCiList(true);
       setAvailableEC(availableEcEmptyState);
       const timeout = setTimeout(() => {
@@ -90,7 +117,7 @@ function StationAssociateECPage() {
   }, [inputCiName]);
 
   useEffect(() => {
-    if (selectedEC && selectedEC.ciTaxCode && selectedParty?.fiscalCode) {
+    if (selectedEC && selectedEC.ciTaxCode && selectedParty?.fiscalCode && !isEditMode) {
       setLoadingList(true);
       getCreditorInstitutionSegregationCodes(selectedParty.fiscalCode, selectedEC.ciTaxCode)
         .then((data) => {
@@ -119,11 +146,12 @@ function StationAssociateECPage() {
           });
         })
         .finally(() => setLoadingList(false));
+    } else if (isEditMode && reduxCiRelation?.segregationCode !== undefined) {
+      setSegregationCodeList({ availableCodes: [reduxCiRelation.segregationCode] });
     }
   }, [selectedEC]);
 
   const handleChange = (event: any) => {
-    setChecked(event.target.checked);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     formik.setFieldValue('broadcast', event.target.checked);
   };
@@ -131,9 +159,11 @@ function StationAssociateECPage() {
   const formik = useFormik<CreditorInstitutionStationDto>({
     initialValues: {
       auxDigit: 3,
-      segregationCode: '',
+      segregationCode: reduxCiRelation?.segregationCode ?? '',
       stationCode: stationId,
-      broadcast: false,
+      broadcast: reduxCiRelation?.broadcast ?? false,
+      stand_in: reduxCiRelation?.stand_in ?? false,
+      aca: reduxCiRelation?.aca ?? false,
     },
     onSubmit: async (values) => {
       submit(values);
@@ -159,10 +189,15 @@ function StationAssociateECPage() {
   const submit = (values: CreditorInstitutionStationDto) => {
     if (selectedEC && selectedEC.ciTaxCode) {
       setLoading(true);
-      associateEcToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId })
+      const promise = isEditMode
+        ? updateEcAssociationToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId })
+        : associateEcToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId });
+      promise
         .then((_) => {
           history.push(generatePath(ROUTES.STATION_EC_LIST, { stationId }), {
-            alertSuccessMessage: t('stationAssociateECPage.associationForm.successMessage'),
+            alertSuccessMessage: t(
+              `stationAssociateECPage.associationForm.successMessage${isEditMode ? 'Update' : 'Associate'}`
+            ),
           });
         })
         .catch((err: Error) => {
@@ -217,13 +252,7 @@ function StationAssociateECPage() {
           </Typography>
         </Grid>
       </Box>
-      <Box
-        display="flex"
-        justifyContent="center"
-        flexGrow={0}
-        mb={1}
-        sx={{ width: '100%', maxWidth: '684px' }}
-      >
+      <Box mb={3} sx={{ width: '100%', maxWidth: '684px' }}>
         <Paper
           elevation={8}
           sx={{
@@ -232,125 +261,191 @@ function StationAssociateECPage() {
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: theme.spacing(2),
+            padding: 3,
           }}
         >
-          <Grid item xs={12} p={3}>
-            <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid container item alignContent="center" spacing={2} pb={4}>
-                  <Grid item xs={12}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.institutionToAssociate')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl sx={{ width: '100%', minWidth: '100%' }}>
-                      <ECSelection
-                        availableEC={
-                          availableEC?.creditor_institution_info_list
-                            ? [...availableEC.creditor_institution_info_list]
-                            : []
-                        }
-                        selectedEC={selectedEC}
-                        onECSelectionChange={(selectedEC: CreditorInstitutionInfo | undefined) => {
-                          setSelectedEC(selectedEC);
-                        }}
-                        onChangeInput={(event) => setInputCiName(event?.target?.value ?? '')}
-                        loading={loadingCiList}
-                        serverSide={true}
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} sx={{ mb: 1 }}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.associationParams')}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <FormControl sx={{ width: '100%' }}>
-                      <InputLabel size="small">
-                        {t('stationAssociateECPage.associationForm.auxDigit')}
-                      </InputLabel>
-                      <Select
-                        id="auxDigit"
-                        name="auxDigit"
-                        label={t('stationAssociateECPage.associationForm.auxDigit')}
-                        size="small"
-                        value={formik.values.auxDigit}
-                        inputProps={{
-                          'data-testid': 'aux-digit-test',
-                        }}
-                        disabled={true}
-                      >
-                        <MenuItem value={3}>3</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ width: '100%' }}>
-                      <InputLabel size="small">
-                        {t('stationAssociateECPage.associationForm.segregationCode')}
-                      </InputLabel>
-                      <Select
-                        disabled={selectedEC?.ciTaxCode === undefined}
-                        id="segregationCode"
-                        name="segregationCode"
-                        label={t('stationAssociateECPage.associationForm.segregationCode')}
-                        size="small"
-                        value={formik.values.segregationCode}
-                        onChange={(e) => {
-                          formik.handleChange(e);
-                        }}
-                        error={
-                          formik.touched.segregationCode && Boolean(formik.errors.segregationCode)
-                        }
-                        inputProps={{
-                          'data-testid': 'segregation-code-test',
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: '200px', // Imposta l'altezza massima del menu
-                            },
-                          },
-                        }}
-                      >
-                        {segregationCodeList?.availableCodes?.map((code, i) => (
-                          <MenuItem key={i} value={code}>
-                            {code}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="sidenav">
-                      {t('stationAssociateECPage.broadcast')}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControlLabel
-                      sx={{ width: '100%' }}
-                      control={
-                        <Switch
-                          name="broadcast"
-                          checked={checked}
-                          onChange={handleChange}
-                          value={formik.values.broadcast}
-                          inputProps={{
-                            'aria-label': 'controlled',
-                          }}
-                          data-testid="broadcast-test"
-                        />
-                      }
-                      label={checked ? 'Attivo' : 'Non attivo'}
-                    />
-                  </Grid>
-                </Grid>
+          <form onSubmit={formik.handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="sidenav">
+                  {t('stationAssociateECPage.institutionToAssociate')}
+                </Typography>
               </Grid>
-            </form>
-          </Grid>
+              <Grid item xs={12}>
+                <FormControl sx={{ width: '100%', minWidth: '100%' }}>
+                  <ECSelection
+                    availableEC={
+                      availableEC?.creditor_institution_info_list
+                        ? [...availableEC.creditor_institution_info_list]
+                        : []
+                    }
+                    selectedEC={selectedEC}
+                    onECSelectionChange={(selectedEC: CreditorInstitutionInfo | undefined) => {
+                      setSelectedEC(selectedEC);
+                    }}
+                    onChangeInput={(event) => setInputCiName(event?.target?.value ?? '')}
+                    loading={loadingCiList}
+                    serverSide={true}
+                    disabled={isEditMode}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 1 }}>
+                <Typography variant="sidenav">
+                  {t('stationAssociateECPage.associationParams')}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <FormControl sx={{ width: '100%' }}>
+                  <InputLabel size="small">
+                    {t('stationAssociateECPage.associationForm.auxDigit')}
+                  </InputLabel>
+                  <Select
+                    id="auxDigit"
+                    name="auxDigit"
+                    label={t('stationAssociateECPage.associationForm.auxDigit')}
+                    size="small"
+                    value={formik.values.auxDigit}
+                    inputProps={{
+                      'data-testid': 'aux-digit-test',
+                    }}
+                    disabled={true}
+                  >
+                    <MenuItem value={3}>3</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl sx={{ width: '100%' }}>
+                  <InputLabel size="small">
+                    {t('stationAssociateECPage.associationForm.segregationCode')}
+                  </InputLabel>
+                  <Select
+                    disabled={selectedEC?.ciTaxCode === undefined || isEditMode}
+                    id="segregationCode"
+                    name="segregationCode"
+                    label={t('stationAssociateECPage.associationForm.segregationCode')}
+                    size="small"
+                    value={formik.values.segregationCode}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                    }}
+                    error={formik.touched.segregationCode && Boolean(formik.errors.segregationCode)}
+                    inputProps={{
+                      'data-testid': 'segregation-code-test',
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: '200px', // Imposta l'altezza massima del menu
+                        },
+                      },
+                    }}
+                  >
+                    {segregationCodeList?.availableCodes?.map((code, i) => (
+                      <MenuItem key={i} value={code}>
+                        {code}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="sidenav">{t('stationAssociateECPage.broadcast')}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControlLabel
+                  sx={{ width: '100%' }}
+                  control={
+                    <Switch
+                      name="broadcast"
+                      checked={formik.values.broadcast}
+                      onChange={handleChange}
+                      inputProps={{
+                        'aria-label': 'controlled',
+                      }}
+                      data-testid="broadcast-test"
+                    />
+                  }
+                  label={formik.values.broadcast ? 'Attivo' : 'Non attivo'}
+                />
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Box>
+      <Box sx={{ width: '100%', maxWidth: '684px' }}>
+        <Paper
+          elevation={8}
+          sx={{
+            minWidth: '100%',
+            borderRadius: theme.spacing(2),
+            padding: 3,
+          }}
+        >
+          <Typography variant="overline">
+            {t('stationAssociateECPage.secondPaper.title')}
+          </Typography>
+          <Typography variant="body2">
+            {t('stationAssociateECPage.secondPaper.subtitle')}
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            {t('stationAssociateECPage.secondPaper.aca')}
+          </Typography>
+          <FormControl>
+            <RadioGroup
+              name="aca"
+              onChange={async (e) => {
+                const value = e.target.value;
+                void formik.setFieldValue('aca', value === 'true' ? true : false);
+                if (value === 'false') {
+                  void formik.setFieldValue('stand_in', false);
+                }
+              }}
+              data-testid="aca-test"
+              value={`${formik.values.aca}`}
+            >
+              <FormControlLabel
+                value={'true'}
+                control={<Radio sx={{ ml: 1 }} />}
+                label={t('general.yes')}
+                sx={{ pr: 8 }}
+              />
+              <FormControlLabel
+                value={'false'}
+                control={<Radio sx={{ ml: 1 }} />}
+                label={t('general.no')}
+                sx={{ pr: 8 }}
+              />
+            </RadioGroup>
+          </FormControl>
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            {t('stationAssociateECPage.secondPaper.standIn')}
+          </Typography>
+          <FormControl disabled={!formik.values.aca}>
+            <RadioGroup
+              name="standIn"
+              onChange={(e) =>
+                formik.setFieldValue('stand_in', e.target.value === 'true' ? true : false)
+              }
+              data-testid="standIn-test"
+              value={`${formik.values.stand_in}`}
+            >
+              <FormControlLabel
+                value={'true'}
+                control={<Radio sx={{ ml: 1 }} />}
+                label={t('general.yes')}
+                sx={{ pr: 8 }}
+              />
+              <FormControlLabel
+                value={'false'}
+                control={<Radio sx={{ ml: 1 }} />}
+                label={t('general.no')}
+                sx={{ pr: 8 }}
+              />
+            </RadioGroup>
+          </FormControl>
         </Paper>
       </Box>
       <Stack direction="row" justifyContent="space-between" mt={5} mb={5}>

@@ -88,6 +88,48 @@ describe('<StationAssociateECPage />', () => {
         const segCode = screen.getByTestId('segregation-code-test');
         fireEvent.change(segCode, {target: {value: segCodeMocked}});
 
+        const aca = screen.getByTestId('aca-test')as HTMLInputElement;
+        const acaTrue = aca.querySelector(`[value="true"]`) as HTMLInputElement;
+        const acaFalse = aca.querySelector(`[value="false"]`) as HTMLInputElement
+        const standIn = screen.getByTestId('standIn-test')as HTMLInputElement;
+        const standInTrue = standIn.querySelector(`[value="true"]`) as HTMLInputElement;
+        const standInFalse = standIn.querySelector(`[value="false"]`) as HTMLInputElement;
+        expect(acaTrue.checked).toBe(false);
+        expect(acaFalse.checked).toBe(true);
+        expect(standInTrue.checked).toBe(false);
+        expect(standInFalse.checked).toBe(true);
+        expect(standInTrue.disabled).toBe(true);
+        expect(standInFalse.disabled).toBe(true);
+
+        fireEvent.click(acaTrue);
+
+        await waitFor(() => {
+            expect(acaTrue.checked).toBe(true);
+            expect(acaFalse.checked).toBe(false);
+            expect(standInTrue.checked).toBe(false);
+            expect(standInFalse.checked).toBe(true);
+            expect(standInTrue.disabled).toBe(false);
+            expect(standInFalse.disabled).toBe(false);
+        });
+
+        fireEvent.click(standInTrue);
+
+        await waitFor(() => {
+            expect(standInTrue.checked).toBe(true);
+            expect(standInFalse.checked).toBe(false);
+        });
+
+        fireEvent.click(acaFalse);
+
+        await waitFor(() => {
+            expect(acaTrue.checked).toBe(false);
+            expect(acaFalse.checked).toBe(true);
+            expect(standInTrue.checked).toBe(false);
+            expect(standInFalse.checked).toBe(true);
+            expect(standInTrue.disabled).toBe(true);
+            expect(standInFalse.disabled).toBe(true);
+        });
+
         const confirm = screen.getByTestId('confirm-btn-test');
         fireEvent.click(confirm);
 

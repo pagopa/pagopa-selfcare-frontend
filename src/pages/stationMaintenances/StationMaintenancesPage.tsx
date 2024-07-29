@@ -149,7 +149,7 @@ export default function StationMaintenancesPage() {
             maxDate={
               filterState === StationMaintenanceState.FINISHED
                 ? `01/01/${todaysYear}`
-                : `01/01/${todaysYear + 10}`
+                : `01/01/${todaysYear + 1}`
             }
             renderInput={(params: TextFieldProps) => (
               <TextField

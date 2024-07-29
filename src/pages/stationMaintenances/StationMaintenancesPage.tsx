@@ -1,11 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
+import { Add } from '@mui/icons-material';
+import { theme } from '@pagopa/mui-italia';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   TextFieldProps,
 } from '@mui/material';
@@ -90,12 +94,38 @@ export default function StationMaintenancesPage() {
   };
   return (
     <SideMenuLayout>
-      <TitleBox
-        title={t(`${componentPath}.title`)}
-        mbSubTitle={3}
-        variantTitle="h4"
-        variantSubTitle="body1"
-      />
+      <Stack direction="row" justifyContent="space-between">
+        <Stack display="flex" justifyContent="flex-start" mr={2}>
+          <TitleBox
+            title={t(`${componentPath}.title`)}
+            subTitle={t(`${componentPath}.subTitle`)}
+            mbSubTitle={3}
+            variantTitle="h4"
+            variantSubTitle="body1"
+          />
+        </Stack>
+        <Stack display="flex" justifyContent="flex-end" mb={5}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              /* TODO ROUTE TO CREATE MAINTENANCE PAGE */
+            }}
+            endIcon={<Add />}
+            color="primary"
+            sx={{
+              border: `2px solid ${theme.palette.primary.main}`,
+              borderRadius: theme.spacing(0.5),
+              px: 2,
+              py: 1.5,
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            {t(`${componentPath}.createButton`)}
+          </Button>
+        </Stack>
+      </Stack>
+
       <TableSearchBar
         setExternalSearchInput={setFilterStationCode}
         handleSearchTrigger={handleSearchTrigger}

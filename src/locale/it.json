@@ -1539,6 +1539,8 @@
   },
   "stationMaintenancesPage": {
     "title": "Manutenzioni programmate",
+    "subTitle": "Crea e gestisci le manutenzioni programmate delle tue stazioni",
+    "createButton": "Nuova manutenzione",
     "search": {
       "placeholder": "Cerca per codice stazione",
       "tabScheduled": "Programmate",

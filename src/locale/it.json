@@ -1537,6 +1537,38 @@
       "downloadButton": "Scarica ricevuta"
     }
   },
+  "stationMaintenancesPage": {
+    "title": "Manutenzioni programmate",
+    "search": {
+      "placeholder": "Cerca per codice stazione",
+      "tabScheduled": "Programmate",
+      "tabFinished": "Passate",
+      "state": "Stato manutenzione",
+      "select": {
+        "SCHEDULED_AND_IN_PROGRESS": "Tutti",
+        "SCHEDULED": "In programma",
+        "IN_PROGRESS": "In corso"
+      }
+    },
+    "table": {
+      "emptyState": {
+        "FINISHED": "Non ci sono manutenzioni passate.",
+        "SCHEDULED": "Non ci sono manutenzioni in programma."
+      },
+      "link": "Crea nuova manutenzione",
+      "errorMessageMaintenanceList": "Errore durante il recupero delle manutenzioni",
+      "columns": {
+        "stationCode": "Codice stazione",
+        "startDateTime": "Inizio manutenzione",
+        "endDateTime": "Fine manutenzione",
+        "state": "Stato  manutenzione",
+        "chipStates": {
+          "IN_PROGRESS": "In corso",
+          "SCHEDULED": "In programma"
+        }
+      }
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -1573,6 +1605,9 @@
     },
     "paymentNotices": {
       "title": "Avvisi di pagamento"
+    },
+    "stationMaintenances": {
+      "title": "Manutenzioni programmate"
     }
   },
   "header": {
@@ -1652,7 +1687,8 @@
     "noOptions": "Nessun elemento",
     "loading": "Caricamento...",
     "fromLower": "da",
-    "atLower": "il"
+    "atLower": "il",
+    "year": "Anno"
   },
   "ANY": "Tutti"
 }

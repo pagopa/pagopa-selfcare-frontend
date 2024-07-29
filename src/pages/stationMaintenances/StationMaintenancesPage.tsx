@@ -38,7 +38,7 @@ const baseInputStyle = {
 const componentPath = 'stationMaintenancesPage';
 export default function StationMaintenancesPage() {
   const { t } = useTranslation();
-  const [selectedYear, setSelectedYear] = useState<number | null>(todaysYear);
+  const [selectedYear, setSelectedYear] = useState<number>(todaysYear);
   const [filterStationCode, setFilterStationCode] = useState<string>('');
   const [filterState, setFilterState] = useState<StationMaintenanceState>(
     StationMaintenanceState.SCHEDULED_AND_IN_PROGRESS
@@ -53,8 +53,6 @@ export default function StationMaintenancesPage() {
   function handleSetYear(newYear: string | null) {
     if (newYear) {
       setSelectedYear(new Date(newYear).getFullYear());
-    } else {
-      setSelectedYear(null);
     }
   }
 
@@ -78,6 +76,9 @@ export default function StationMaintenancesPage() {
         : StationMaintenanceState.FINISHED
     );
     setSearchTrigger((prev) => !prev);
+    if ((value === 0 && selectedYear < todaysYear) || (value === 1 && selectedYear > todaysYear)) {
+      setSelectedYear(todaysYear);
+    }
   };
 
   const resetFilters = () => {
@@ -110,8 +111,16 @@ export default function StationMaintenancesPage() {
             views={['year']}
             onChange={(value) => handleSetYear(value)}
             value={selectedYear ? `01/01/${selectedYear}` : null}
-            minDate="01/01/2024"
-            maxDate={`01/01/${todaysYear}`}
+            minDate={
+              filterState === StationMaintenanceState.FINISHED
+                ? '01/01/2024'
+                : `01/01/${todaysYear}`
+            }
+            maxDate={
+              filterState === StationMaintenanceState.FINISHED
+                ? `01/01/${todaysYear}`
+                : `01/01/${todaysYear + 10}`
+            }
             renderInput={(params: TextFieldProps) => (
               <TextField
                 {...params}

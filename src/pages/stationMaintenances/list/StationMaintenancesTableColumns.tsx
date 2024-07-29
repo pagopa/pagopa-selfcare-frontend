@@ -29,7 +29,7 @@ export function buildColumnDefs(
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.stationCode, mainCell: true }),
-      sortable: true,
+      sortable: false,
       flex: 4,
     },
     {
@@ -48,7 +48,7 @@ export function buildColumnDefs(
             ? formatDateToDDMMYYYY(new Date(params.row.startDateTime))
             : undefined,
         }),
-      sortable: true,
+      sortable: false,
       flex: 4,
     },
     {
@@ -66,7 +66,7 @@ export function buildColumnDefs(
             ? formatDateToDDMMYYYY(new Date(params.row.endDateTime))
             : undefined,
         }),
-      sortable: true,
+      sortable: false,
       flex: 4,
     },
     ...[
@@ -82,7 +82,7 @@ export function buildColumnDefs(
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
             renderCell: (params: any) => getStatusChip(t, params.row),
-            sortable: true,
+            sortable: false,
             flex: 4,
           },
     ],

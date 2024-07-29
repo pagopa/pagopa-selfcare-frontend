@@ -24,9 +24,6 @@ type Props = {
   bundleType: string;
 };
 
-const rowHeight = 64;
-const headerHeight = 56;
-
 const emptyCommissionBundleList: BundlesResource = {
   bundles: [],
   pageInfo: {

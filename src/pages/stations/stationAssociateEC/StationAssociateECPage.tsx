@@ -162,8 +162,8 @@ function StationAssociateECPage() {
       segregationCode: isEditMode ? reduxCiRelation?.segregationCode ?? '' : '',
       stationCode: stationId,
       broadcast: isEditMode ? Boolean(reduxCiRelation?.broadcast) : false,
-      stand_in: isEditMode ? Boolean(reduxCiRelation.stand_in) : true,
-      aca: isEditMode ? Boolean(reduxCiRelation.aca) : true,
+      stand_in: isEditMode ? Boolean(reduxCiRelation?.stand_in) : true,
+      aca: isEditMode ? Boolean(reduxCiRelation?.aca) : true,
     },
     onSubmit: async (values) => {
       submit(values);

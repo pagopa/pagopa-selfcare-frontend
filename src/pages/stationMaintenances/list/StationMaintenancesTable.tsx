@@ -105,7 +105,7 @@ export default function StationMaintenancesTable({
             ? StationMaintenanceState.FINISHED
             : StationMaintenanceState.SCHEDULED
         }
-        linkToRedirect={ROUTES.STATION_MAINTENANCES_LIST} // TODO ROUTES TO NEW MAINTENANCE
+        linkToRedirect={filterState === StationMaintenanceState.FINISHED ? undefined : ROUTES.STATION_MAINTENANCES_LIST} // TODO ROUTES TO NEW MAINTENANCE
         rows={
           stationMaintenancesList?.station_maintenance_list
             ? [...stationMaintenancesList.station_maintenance_list]

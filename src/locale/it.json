@@ -6,6 +6,10 @@
       "toastError": "ERRORE",
       "toastMessage": "Spiacenti, qualcosa è andato storto."
     },
+    "blockingErrorPage": {
+      "title": "Errore",
+      "description": "Spiacenti, qualcosa è andato storto."
+    },
     "sessionModal": {
       "closeButton": "Annulla",
       "confirmButton": "Riprova"

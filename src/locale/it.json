@@ -1448,7 +1448,7 @@
     }
   },
   "delegationsPage": {
-    "title": "I tuoi enti",
+    "title": "Enti gestiti",
     "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
     "downloadButton": "Scarica lista",
     "alertMessage": "Il file che stai esportando contiene informazioni aggiornate al {{date}} alle ore {{hours}}",
@@ -1560,7 +1560,7 @@
       "title": "Tavoli Operativi"
     },
     "delegations": {
-      "title": "I tuoi enti"
+      "title": "Enti gestiti"
     },
     "paymentsReceipts": {
       "title": "Pagamenti CUP"
@@ -1585,8 +1585,8 @@
   },
   "subHeader": {
     "partySelectionSearch": {
-      "title": "I tuoi enti",
-      "label": "I tuoi enti"
+      "title": "Enti gestiti",
+      "label": "Enti gestiti"
     },
     "backButton": "Esci"
   },

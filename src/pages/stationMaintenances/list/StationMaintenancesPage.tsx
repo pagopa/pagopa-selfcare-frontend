@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Add } from '@mui/icons-material';
 import { theme } from '@pagopa/mui-italia';
-import { Button, Stack } from '@mui/material';
+import { Alert, Button, Stack } from '@mui/material';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import StationMaintenancesTable from './StationMaintenancesTable';
 import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
@@ -10,6 +11,7 @@ import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
 const componentPath = 'stationMaintenancesPage';
 export default function StationMaintenancesPage() {
   const { t } = useTranslation();
+  const [alertMessage, setAlertMessage] = useState<string | undefined>();
 
   return (
     <SideMenuLayout>
@@ -44,8 +46,22 @@ export default function StationMaintenancesPage() {
           </Button>
         </Stack>
       </Stack>
+      {alertMessage && (
+        <Alert
+          sx={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: 1000,
+          }}
+          severity="success"
+          variant="outlined"
+        >
+          {alertMessage}
+        </Alert>
+      )}
       <StationMaintenancesHoursSummary />
-      <StationMaintenancesTable />
+      <StationMaintenancesTable setAlertMessage={setAlertMessage}/>
     </SideMenuLayout>
   );
 }

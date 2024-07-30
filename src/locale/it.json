@@ -1597,7 +1597,11 @@
           "title": "Elimina manutenzione",
           "message": "La manutenzione programmata sarà rimossa definitivamente."
         }
-      }
+      },
+      "errorMessageTerminate": "Errore durante la terminazione della manutenzione",
+      "errorMessageDelete": "Errore durante l'eliminazione della manutenzione",
+      "successMessageTerminate": "Manutenzione terminata con successo",
+      "successMessageDelete": "Manutenzione eliminata con successo"
     }
   },
   "sideMenu": {

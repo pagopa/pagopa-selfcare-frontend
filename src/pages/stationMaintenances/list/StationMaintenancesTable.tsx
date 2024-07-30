@@ -62,7 +62,11 @@ const baseInputStyle = {
 };
 
 const componentPath = 'stationMaintenancesPage.table';
-export default function StationMaintenancesTable() {
+export default function StationMaintenancesTable({
+  setAlertMessage,
+}: {
+  setAlertMessage: (value: string) => void;
+}) {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
@@ -168,6 +172,7 @@ export default function StationMaintenancesTable() {
       if (promise !== undefined) {
         promise
           .then(() => {
+            setAlertMessage(t(`${componentPath}.successMessage${description}`));
             handleGetStationMaintenances(0);
           })
           .catch((reason) => {

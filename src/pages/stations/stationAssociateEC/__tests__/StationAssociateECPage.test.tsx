@@ -94,23 +94,25 @@ describe('<StationAssociateECPage />', () => {
         const standIn = screen.getByTestId('standIn-test')as HTMLInputElement;
         const standInTrue = standIn.querySelector(`[value="true"]`) as HTMLInputElement;
         const standInFalse = standIn.querySelector(`[value="false"]`) as HTMLInputElement;
-        expect(acaTrue.checked).toBe(false);
-        expect(acaFalse.checked).toBe(true);
-        expect(standInTrue.checked).toBe(false);
-        expect(standInFalse.checked).toBe(true);
-        expect(standInTrue.disabled).toBe(true);
-        expect(standInFalse.disabled).toBe(true);
+        expect(acaTrue.checked).toBe(true);
+        expect(acaFalse.checked).toBe(false);
+        expect(standInTrue.checked).toBe(true);
+        expect(standInFalse.checked).toBe(false);
+        expect(standInTrue.disabled).toBe(false);
+        expect(standInFalse.disabled).toBe(false);
 
-        fireEvent.click(acaTrue);
+        fireEvent.click(acaFalse);
 
         await waitFor(() => {
-            expect(acaTrue.checked).toBe(true);
-            expect(acaFalse.checked).toBe(false);
+            expect(acaTrue.checked).toBe(false);
+            expect(acaFalse.checked).toBe(true);
             expect(standInTrue.checked).toBe(false);
             expect(standInFalse.checked).toBe(true);
-            expect(standInTrue.disabled).toBe(false);
-            expect(standInFalse.disabled).toBe(false);
+            expect(standInTrue.disabled).toBe(true);
+            expect(standInFalse.disabled).toBe(true);
         });
+
+        fireEvent.click(acaTrue);
 
         fireEvent.click(standInTrue);
 

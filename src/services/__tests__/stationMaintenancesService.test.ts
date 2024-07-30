@@ -1,8 +1,8 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { StationMaintenanceState } from '../../model/StationMaintenance';
 import {
-  maintenanceHoursSummary,
-  stationMaintenancesList,
+  mockMaintenanceHoursSummary,
+  mockStationMaintenancesList,
 } from '../__mocks__/stationMaintenancesService';
 import {
   deleteStationMaintenance,
@@ -21,14 +21,14 @@ describe('StationMaintenancesService test mocked', () => {
       page: 0,
       year: 2024,
     });
-    expect(response).toMatchObject(stationMaintenancesList);
+    expect(response).toMatchObject(mockStationMaintenancesList);
   });
   test('Test getBrokerMaintenancesSummary', async () => {
     const response = await getBrokerMaintenancesSummary({
       brokerTaxCode: 'brokerTaxCode',
       maintenanceYear: '2024',
     });
-    expect(response).toMatchObject(maintenanceHoursSummary);
+    expect(response).toMatchObject(mockMaintenanceHoursSummary);
   });
   test('Test deleteStationMaintenance', async () => {
     const response = await deleteStationMaintenance({
@@ -60,7 +60,7 @@ describe('StationMaintenancesService test', () => {
   test('Test getStationMaintenances', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi.stationMaintenances, 'getStationMaintenances')
-      .mockReturnValue(new Promise((resolve) => resolve(stationMaintenancesList)));
+      .mockReturnValue(new Promise((resolve) => resolve(mockStationMaintenancesList)));
     expect(
       getStationMaintenances({
         brokerTaxCode: 'brokerTaxCode',
@@ -76,7 +76,7 @@ describe('StationMaintenancesService test', () => {
   test('Test getBrokerMaintenancesSummary', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi.stationMaintenances, 'getBrokerMaintenancesSummary')
-      .mockReturnValue(new Promise((resolve) => resolve(maintenanceHoursSummary)));
+      .mockReturnValue(new Promise((resolve) => resolve(mockMaintenanceHoursSummary)));
     expect(
       getBrokerMaintenancesSummary({
         brokerTaxCode: 'brokerTaxCode',

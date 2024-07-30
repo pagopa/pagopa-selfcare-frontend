@@ -1580,6 +1580,22 @@
         "chipStates": {
           "IN_PROGRESS": "In corso",
           "SCHEDULED": "In programma"
+        },
+        "actions": {
+          "edit": "Modifica",
+          "delete": "Elimina manutenzione",
+          "terminate": "Termina manutenzione",
+          "details": "Dettagli"
+        }
+      },
+      "actionModal": {
+        "terminate": {
+          "title": "Termina manutenzione",
+          "message": "La manutenzione in corso sarà interrotta e la stazione tornerà in regolare esercizio."
+        },
+        "delete": {
+          "title": "Elimina manutenzione",
+          "message": "La manutenzione programmata sarà rimossa definitivamente."
         }
       }
     }

@@ -1,6 +1,8 @@
+/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
-import { GridColDef } from '@mui/x-data-grid';
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
+import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
 import {
   colorType,
   renderCell,
@@ -9,12 +11,23 @@ import {
 } from '../../../components/Table/TableUtils';
 import { formatDateToDDMMYYYY } from '../../../utils/common-utils';
 import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
-import { StationMaintenanceState } from '../../../model/StationMaintenance';
+import {
+  mapStationMaintenanceState,
+  StationMaintenanceActionType,
+  StationMaintenanceState,
+} from '../../../model/StationMaintenance';
 
 const componentPath = 'stationMaintenancesPage.table.columns';
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
-  filterState: StationMaintenanceState
+  filterState: StationMaintenanceState,
+  handleOnRowActionClick: ({
+    maintenance,
+    routeAction,
+  }: {
+    maintenance: StationMaintenanceResource;
+    routeAction: StationMaintenanceActionType | false;
+  }) => void
 ) {
   return [
     {
@@ -95,20 +108,79 @@ export function buildColumnDefs(
       minWidth: 170,
       disableColumnMenu: true,
       editable: false,
-      getActions: (params: any) => [
-        <>TODO</>, // TODO ROWS ACTION
-      ],
+      getActions: (params: any) => getRowActions(t, params.row, handleOnRowActionClick),
       sortable: false,
       flex: 1,
     },
   ] as Array<GridColDef>;
 }
 
-const getStatusChip = (t: TFunction<'translation'>, maintenance: StationMaintenanceResource) => {
-  const dateToday = new Date();
+export const getRowActions = (
+  t: TFunction<'translation'>,
+  maintenance: StationMaintenanceResource,
+  handleOnRowActionClick: ({
+    maintenance,
+    routeAction,
+  }: {
+    maintenance: StationMaintenanceResource;
+    routeAction: StationMaintenanceActionType | false;
+  }) => void
+) => {
+  const baseActions = [];
+
+  const maintenanceState = mapStationMaintenanceState(maintenance);
+
+  if (maintenanceState === StationMaintenanceState.FINISHED) {
+    baseActions.push(
+      <GridActionsCellItem
+        key="detailAction"
+        label={t(`${componentPath}.actions.details`)}
+        onClick={() =>
+          handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.DETAILS })
+        }
+        showInMenu
+        icon={<Info sx={{ mr: 1 }} fontSize="small" />}
+      />
+    );
+  } else {
+    baseActions.push(
+      <GridActionsCellItem
+        key="editAction"
+        label={t(`${componentPath}.actions.edit`)}
+        onClick={() =>
+          handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.EDIT })
+        }
+        showInMenu
+        icon={<Edit sx={{ mr: 1 }} fontSize="small" />}
+      />
+    );
+    const actionType = maintenanceState === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete';
+    baseActions.push(
+      <GridActionsCellItem
+        key={`${actionType}Action`}
+        label={t(`${componentPath}.actions.${actionType}`)}
+        onClick={() => handleOnRowActionClick({ maintenance, routeAction: false })}
+        showInMenu
+        data-testid={`${actionType}Action`}
+        sx={{ color: '#D85757' }}
+        icon={
+          actionType === 'delete' ? (
+            <Delete sx={{ mr: 1 }} fontSize="small" color="error" />
+          ) : (
+            <Cancel sx={{ mr: 1 }} fontSize="small" color="error" />
+          )
+        }
+      />
+    );
+  }
+
+  return baseActions;
+};
+
+export const getStatusChip = (t: TFunction<'translation'>, maintenance: StationMaintenanceResource) => {
   let chipColor: colorType;
   let label: StationMaintenanceState;
-  if (maintenance.start_date_time.getTime() < dateToday.getTime()) {
+  if (mapStationMaintenanceState(maintenance) === StationMaintenanceState.IN_PROGRESS) {
     chipColor = 'primary';
     label = StationMaintenanceState.IN_PROGRESS;
   } else {

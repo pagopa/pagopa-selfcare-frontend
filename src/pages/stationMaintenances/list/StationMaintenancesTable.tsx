@@ -1,7 +1,9 @@
+/* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
 import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { generatePath, useHistory } from 'react-router-dom';
+import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -21,7 +23,12 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { getStationMaintenances } from '../../../services/stationMaintenancesService';
-import { StationMaintenanceState } from '../../../model/StationMaintenance';
+import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
+import {
+  mapStationMaintenanceState,
+  StationMaintenanceActionType,
+  StationMaintenanceState,
+} from '../../../model/StationMaintenance';
 import { StationMaintenanceListResource } from '../../../api/generated/portal/StationMaintenanceListResource';
 import { buildColumnDefs } from './StationMaintenancesTableColumns';
 
@@ -57,6 +64,7 @@ const baseInputStyle = {
 const componentPath = 'stationMaintenancesPage.table';
 export default function StationMaintenancesTable() {
   const { t } = useTranslation();
+  const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_STATION_MAINTENANCES);
   const [stationMaintenancesList, setStationMaintenancesList] =
@@ -71,6 +79,10 @@ export default function StationMaintenancesTable() {
     StationMaintenanceState.SCHEDULED_AND_IN_PROGRESS
   );
   const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
+
+  const [showConfirmModal, setShowConfirmModal] = useState<
+    StationMaintenanceResource | undefined
+  >();
 
   const handleSearchTrigger = (stationCode: string) => {
     setFilterStationCode(stationCode);
@@ -117,7 +129,67 @@ export default function StationMaintenancesTable() {
     setSearchTrigger((prev) => !prev);
   };
 
-  const getStationsMaintenances = (newPage?: number) => {
+  function handleOnRowActionClick({
+    maintenance,
+    routeAction,
+  }: {
+    maintenance: StationMaintenanceResource;
+    routeAction: StationMaintenanceActionType | false;
+  }) {
+    if (routeAction) {
+      // TODO dispatcher(stationCIActions.setStationCIState(ci));
+      history.push(
+        generatePath(`${ROUTES.STATION_MAINTENANCES_LIST}`, {
+          maintenanceId: maintenance.maintenance_id,
+          action: routeAction,
+        }) // TODO GO TO EDIT/DETAIL PAGE
+      );
+    } else {
+      setShowConfirmModal(maintenance);
+    }
+  }
+
+  const handleConfirmModal = () => {
+    if (showConfirmModal) {
+      const maintenanceState = mapStationMaintenanceState(showConfirmModal);
+
+      let promise: Promise<string> | undefined; // TODO type
+      let actionId: string;
+      let description: string;
+      if (maintenanceState === StationMaintenanceState.IN_PROGRESS) {
+        promise = new Promise((resolve) => resolve('terminate')); // TODO TERMINATE API
+        actionId = 'TERMINATE_STATION_MAINTENANCE';
+        description = 'Terminate';
+      } else if (maintenanceState === StationMaintenanceState.SCHEDULED) {
+        promise = new Promise((resolve) => resolve('delete')); // TODO DELETE API
+        actionId = 'DELETE_STATION_MAINTENANCE';
+        description = 'Delete';
+      }
+      if (promise !== undefined) {
+        promise
+          .then(() => {
+            handleGetStationMaintenances(0);
+          })
+          .catch((reason) => {
+            addError({
+              component: 'Toast',
+              id: actionId,
+              displayableTitle: t('general.errorTitle'),
+              techDescription: `An error occured trying to ${description.toLowerCase()} the station's maintenance`,
+              blocking: false,
+              error: reason,
+              toNotify: true,
+              displayableDescription: t(`${componentPath}.errorMessage${description}`),
+            });
+          })
+          .finally(() => {
+            setShowConfirmModal(undefined);
+          });
+      }
+    }
+  };
+
+  const handleGetStationMaintenances = (newPage?: number) => {
     setLoading(true);
     const toPage = newPage ?? 0;
     getStationMaintenances({
@@ -154,10 +226,10 @@ export default function StationMaintenancesTable() {
   };
 
   useEffect(() => {
-    getStationsMaintenances();
+    handleGetStationMaintenances();
   }, [searchTrigger]);
 
-  const columns: Array<GridColDef> = buildColumnDefs(t, filterState);
+  const columns: Array<GridColDef> = buildColumnDefs(t, filterState, handleOnRowActionClick);
 
   return (
     <>
@@ -256,12 +328,29 @@ export default function StationMaintenancesTable() {
           columns={columns}
           totalPages={stationMaintenancesList?.page_info?.total_pages}
           page={page}
-          handleChangePage={(newPage: number) => getStationsMaintenances(newPage)}
+          handleChangePage={(newPage: number) => handleGetStationMaintenances(newPage)}
           pageLimit={pageLimit}
           setPageLimit={setPageLimit}
           getRowId={(el) => el.maintenance_id}
         />
       </Box>
+      {showConfirmModal && (
+        <SessionModal
+          open={Boolean(showConfirmModal)}
+          title={t(
+            `${componentPath}.actionModal.${mapStationMaintenanceState(showConfirmModal) === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete'}.title`
+          )}
+          message={t(
+            `${componentPath}.actionModal.${mapStationMaintenanceState(showConfirmModal) === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete'}.message`
+          )}
+          onConfirmLabel={t(`general.confirm`)}
+          onCloseLabel={t(`general.turnBack`)}
+          onConfirm={handleConfirmModal}
+          handleClose={() => {
+            setShowConfirmModal(undefined);
+          }}
+        />
+      )}
     </>
   );
 }

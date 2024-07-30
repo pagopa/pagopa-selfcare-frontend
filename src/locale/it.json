@@ -1547,11 +1547,11 @@
     "createButton": "Nuova manutenzione",
     "hoursSummary": {
       "title": "Riepilogo ore",
-      "usedHours": "Svolte",
-      "scheduledHours": "In programma",
-      "remainingHours": "Residue",
-      "annualHoursLimit": "Limite annuale",
-      "extraHours": "Extra",
+      "used_hours": "Svolte",
+      "scheduled_hours": "In programma",
+      "remaining_hours": "Residue",
+      "annual_hours_limit": "Limite annuale",
+      "extra_hours": "Extra",
       "errorGetSummary": "Errore durante il recupero del riepilogo ore"
     },
     "table": {

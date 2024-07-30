@@ -22,14 +22,18 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
-import { getStationMaintenances } from '../../../services/stationMaintenancesService';
+import {
+  deleteStationMaintenance,
+  getStationMaintenances,
+  finishStationMaintenance,
+} from '../../../services/stationMaintenancesService';
 import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
+import { StationMaintenanceListResource } from '../../../api/generated/portal/StationMaintenanceListResource';
 import {
   mapStationMaintenanceState,
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import { StationMaintenanceListResource } from '../../../api/generated/portal/StationMaintenanceListResource';
 import { buildColumnDefs } from './StationMaintenancesTableColumns';
 
 const emptyList: StationMaintenanceListResource = {
@@ -157,15 +161,21 @@ export default function StationMaintenancesTable({
     if (showConfirmModal) {
       const maintenanceState = mapStationMaintenanceState(showConfirmModal);
 
-      let promise: Promise<string> | undefined; // TODO type
+      let promise: Promise<void> | undefined;
       let actionId: string;
       let description: string;
       if (maintenanceState === StationMaintenanceState.IN_PROGRESS) {
-        promise = new Promise((resolve) => resolve('terminate')); // TODO TERMINATE API
+        promise = finishStationMaintenance({
+          brokerTaxCode: selectedParty?.fiscalCode ?? '',
+          maintenanceId: showConfirmModal?.maintenance_id,
+        });
         actionId = 'TERMINATE_STATION_MAINTENANCE';
         description = 'Terminate';
       } else if (maintenanceState === StationMaintenanceState.SCHEDULED) {
-        promise = new Promise((resolve) => resolve('delete')); // TODO DELETE API
+        promise = deleteStationMaintenance({
+          brokerTaxCode: selectedParty?.fiscalCode ?? '',
+          maintenanceId: showConfirmModal?.maintenance_id,
+        });
         actionId = 'DELETE_STATION_MAINTENANCE';
         description = 'Delete';
       }

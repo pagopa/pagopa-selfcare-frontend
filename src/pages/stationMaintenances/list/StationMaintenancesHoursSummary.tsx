@@ -1,25 +1,28 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LOADING_TASK_STATION_MAINTENANCES_HOURS_SUMMARY } from '../../../utils/constants';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { useAppSelector } from '../../../redux/hooks';
+import { getBrokerMaintenancesSummary } from '../../../services/stationMaintenancesService';
+import { MaintenanceHoursSummaryResource } from '../../../api/generated/portal/MaintenanceHoursSummaryResource';
 
-const emptySummary = {
-  // TODO TYPE MaintenanceHoursSummaryResource
-  usedHours: null,
-  scheduledHours: null,
-  remainingHours: null,
-  extraHours: null,
-  annualHoursLimit: null,
+const emptySummary: MaintenanceHoursSummaryResource = {
+  used_hours: '',
+  scheduled_hours: '',
+  remaining_hours: '',
+  extra_hours: '',
+  annual_hours_limit: '',
 };
 
 const rowOrder = [
-  'usedHours',
-  'annualHoursLimit',
-  'scheduledHours',
-  'extraHours',
-  'remainingHours',
+  'used_hours',
+  'annual_hours_limit',
+  'scheduled_hours',
+  'extra_hours',
+  'remaining_hours',
 ];
 
 const componentPath = 'stationMaintenancesPage.hoursSummary';
@@ -27,15 +30,17 @@ export default function StationMaintenancesHoursSummary() {
   const { t } = useTranslation();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_STATION_MAINTENANCES_HOURS_SUMMARY);
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
-  const [hoursSummary, setHoursSummary] = useState<any>(emptySummary); // TODO TYPE MaintenanceHoursSummaryResource
+  const [hoursSummary, setHoursSummary] = useState<MaintenanceHoursSummaryResource>(emptySummary);
 
-  const getHoursSummary = (newPage?: number) => {
+  const getHoursSummary = () => {
     setLoading(true);
-    const toPage = newPage ?? 0;
-    new Promise((resolve) => resolve(emptySummary)) // TODO
-      .then((res: any) => {
-        // TODO
+    getBrokerMaintenancesSummary({
+      brokerTaxCode: selectedParty?.fiscalCode ?? '',
+      maintenanceYear: new Date().getFullYear().toString(),
+    })
+      .then((res: MaintenanceHoursSummaryResource) => {
         if (res) {
           setHoursSummary(res);
         } else {
@@ -74,7 +79,7 @@ export default function StationMaintenancesHoursSummary() {
             </Grid>
             <Grid item xs={4}>
               <Typography variant="body1" ml={5} fontWeight="medium">
-                {hoursSummary[el] ?? '-'}
+                {hoursSummary[el as keyof MaintenanceHoursSummaryResource] || '-'}
               </Typography>
             </Grid>
           </React.Fragment>

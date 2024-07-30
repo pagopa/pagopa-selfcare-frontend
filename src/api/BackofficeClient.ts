@@ -101,6 +101,7 @@ import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetai
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { StationMaintenanceListResource } from './generated/portal/StationMaintenanceListResource';
+import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceHoursSummaryResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1497,6 +1498,45 @@ export const BackofficeApi = {
         year,
         limit,
         page,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    getBrokerMaintenancesSummary: async ({
+      brokerTaxCode,
+      maintenanceYear,
+    }: {
+      brokerTaxCode: string;
+      maintenanceYear: string;
+    }): Promise<MaintenanceHoursSummaryResource> => {
+      const result = await backofficeClient.getBrokerMaintenancesSummary({
+        'broker-tax-code': brokerTaxCode,
+        maintenanceYear,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    deleteStationMaintenance: async ({
+      brokerTaxCode,
+      maintenanceId,
+    }: {
+      brokerTaxCode: string;
+      maintenanceId: number;
+    }): Promise<void> => {
+      const result = await backofficeClient.deleteStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        'maintenance-id': maintenanceId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    finishStationMaintenance: async ({
+      brokerTaxCode,
+      maintenanceId,
+    }: {
+      brokerTaxCode: string;
+      maintenanceId: number;
+    }): Promise<void> => {
+      const result = await backofficeClient.finishStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        'maintenance-id': maintenanceId,
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

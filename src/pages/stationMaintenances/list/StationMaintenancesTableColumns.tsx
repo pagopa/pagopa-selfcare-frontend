@@ -135,6 +135,7 @@ export const getRowActions = (
       }
       showInMenu
       icon={<Info sx={{ mr: 1 }} fontSize="small" />}
+      data-testid="detail-action"
     />,
   ];
 
@@ -150,6 +151,7 @@ export const getRowActions = (
         }
         showInMenu
         icon={<Edit sx={{ mr: 1 }} fontSize="small" />}
+        data-testid="edit-action"
       />
     );
     const actionType =
@@ -160,7 +162,7 @@ export const getRowActions = (
         label={t(`${componentPath}.actions.${actionType}`)}
         onClick={() => handleOnRowActionClick({ maintenance, routeAction: false })}
         showInMenu
-        data-testid={`${actionType}Action`}
+        data-testid={`${actionType}-action`}
         sx={{ color: '#D85757' }}
         icon={
           actionType === 'delete' ? (

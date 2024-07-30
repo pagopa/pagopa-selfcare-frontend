@@ -3,8 +3,8 @@ import { MaintenanceHoursSummaryResource } from '../api/generated/portal/Mainten
 import { StationMaintenanceListResource } from '../api/generated/portal/StationMaintenanceListResource';
 import { StationMaintenanceState } from '../model/StationMaintenance';
 import {
-  maintenanceHoursSummary,
-  stationMaintenancesList,
+  mockMaintenanceHoursSummary,
+  mockStationMaintenancesList,
 } from './__mocks__/stationMaintenancesService';
 
 export const getStationMaintenances = ({
@@ -23,7 +23,7 @@ export const getStationMaintenances = ({
   page: number;
 }): Promise<StationMaintenanceListResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return new Promise((resolve) => resolve(stationMaintenancesList));
+    return new Promise((resolve) => resolve(mockStationMaintenancesList));
   } else {
     return BackofficeApi.stationMaintenances.getStationMaintenances({
       brokerTaxCode,
@@ -44,7 +44,7 @@ export const getBrokerMaintenancesSummary = ({
   maintenanceYear: string;
 }): Promise<MaintenanceHoursSummaryResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return new Promise((resolve) => resolve(maintenanceHoursSummary));
+    return new Promise((resolve) => resolve(mockMaintenanceHoursSummary));
   } else {
     return BackofficeApi.stationMaintenances.getBrokerMaintenancesSummary({
       brokerTaxCode,

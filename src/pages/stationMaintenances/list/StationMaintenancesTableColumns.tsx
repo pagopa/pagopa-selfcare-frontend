@@ -9,13 +9,13 @@ import {
   renderStatusChip,
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
-import { formatDateToDDMMYYYY } from '../../../utils/common-utils';
-import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
+import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
 import {
   mapStationMaintenanceState,
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
+import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
 
 const componentPath = 'stationMaintenancesPage.table.columns';
 export function buildColumnDefs(
@@ -57,7 +57,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.start_date_time
-            ? formatDateToDDMMYYYY(new Date(params.row.start_date_time))
+            ? formatDateToDDMMYYYYhhmm(new Date(params.row.start_date_time))
             : undefined,
         }),
       sortable: false,
@@ -75,7 +75,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.end_date_time
-            ? formatDateToDDMMYYYY(new Date(params.row.end_date_time))
+            ? formatDateToDDMMYYYYhhmm(new Date(params.row.end_date_time))
             : undefined,
         }),
       sortable: false,
@@ -126,23 +126,21 @@ export const getRowActions = (
     routeAction: StationMaintenanceActionType | false;
   }) => void
 ) => {
-  const baseActions = [];
+  const baseActions = [
+    <GridActionsCellItem
+      key="detailAction"
+      label={t(`${componentPath}.actions.details`)}
+      onClick={() =>
+        handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.DETAILS })
+      }
+      showInMenu
+      icon={<Info sx={{ mr: 1 }} fontSize="small" />}
+    />,
+  ];
 
   const maintenanceState = mapStationMaintenanceState(maintenance);
 
-  if (maintenanceState === StationMaintenanceState.FINISHED) {
-    baseActions.push(
-      <GridActionsCellItem
-        key="detailAction"
-        label={t(`${componentPath}.actions.details`)}
-        onClick={() =>
-          handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.DETAILS })
-        }
-        showInMenu
-        icon={<Info sx={{ mr: 1 }} fontSize="small" />}
-      />
-    );
-  } else {
+  if (maintenanceState !== StationMaintenanceState.FINISHED) {
     baseActions.push(
       <GridActionsCellItem
         key="editAction"
@@ -154,7 +152,8 @@ export const getRowActions = (
         icon={<Edit sx={{ mr: 1 }} fontSize="small" />}
       />
     );
-    const actionType = maintenanceState === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete';
+    const actionType =
+      maintenanceState === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete';
     baseActions.push(
       <GridActionsCellItem
         key={`${actionType}Action`}
@@ -177,7 +176,10 @@ export const getRowActions = (
   return baseActions;
 };
 
-export const getStatusChip = (t: TFunction<'translation'>, maintenance: StationMaintenanceResource) => {
+export const getStatusChip = (
+  t: TFunction<'translation'>,
+  maintenance: StationMaintenanceResource
+) => {
   let chipColor: colorType;
   let label: StationMaintenanceState;
   if (mapStationMaintenanceState(maintenance) === StationMaintenanceState.IN_PROGRESS) {

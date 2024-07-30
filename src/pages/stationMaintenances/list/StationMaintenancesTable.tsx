@@ -145,12 +145,12 @@ export default function StationMaintenancesTable({
     routeAction: StationMaintenanceActionType | false;
   }) {
     if (routeAction) {
-      // TODO dispatcher(stationCIActions.setStationCIState(ci));
+      // TODO dispatcher(stationCIActions.setStationCIState(ci)); PPANTT-42
       history.push(
         generatePath(`${ROUTES.STATION_MAINTENANCES_LIST}`, {
           maintenanceId: maintenance.maintenance_id,
           action: routeAction,
-        }) // TODO GO TO EDIT/DETAIL PAGE
+        }) // TODO GO TO EDIT/DETAIL PAGE PPANTT-42
       );
     } else {
       setShowConfirmModal(maintenance);
@@ -334,7 +334,7 @@ export default function StationMaintenancesTable({
             filterState === StationMaintenanceState.FINISHED
               ? undefined
               : ROUTES.STATION_MAINTENANCES_LIST
-          } // TODO ROUTES TO NEW MAINTENANCE
+          } // TODO ROUTES TO NEW MAINTENANCE PPANTT-42
           rows={
             stationMaintenancesList?.station_maintenance_list
               ? [...stationMaintenancesList.station_maintenance_list]

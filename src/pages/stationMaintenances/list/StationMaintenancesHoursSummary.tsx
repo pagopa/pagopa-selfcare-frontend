@@ -42,6 +42,7 @@ export default function StationMaintenancesHoursSummary() {
     })
       .then((res: MaintenanceHoursSummaryResource) => {
         if (res) {
+          // TODO save summary on redux PPANTT-42
           setHoursSummary(res);
         } else {
           setHoursSummary(emptySummary);

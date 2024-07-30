@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-let */
 import { GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import { Box, Button } from '@mui/material';
 import {
   colorType,
   renderCell,

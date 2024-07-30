@@ -1545,18 +1545,27 @@
     "title": "Manutenzioni programmate",
     "subTitle": "Crea e gestisci le manutenzioni programmate delle tue stazioni",
     "createButton": "Nuova manutenzione",
-    "search": {
-      "placeholder": "Cerca per codice stazione",
-      "tabScheduled": "Programmate",
-      "tabFinished": "Passate",
-      "state": "Stato manutenzione",
-      "select": {
-        "SCHEDULED_AND_IN_PROGRESS": "Tutti",
-        "SCHEDULED": "In programma",
-        "IN_PROGRESS": "In corso"
-      }
+    "hoursSummary": {
+      "title": "Riepilogo ore",
+      "usedHours": "Svolte",
+      "scheduledHours": "In programma",
+      "remainingHours": "Residue",
+      "annualHoursLimit": "Limite annuale",
+      "extraHours": "Extra",
+      "errorGetSummary": "Errore durante il recupero del riepilogo ore"
     },
     "table": {
+      "search": {
+        "placeholder": "Cerca per codice stazione",
+        "tabScheduled": "Programmate",
+        "tabFinished": "Passate",
+        "state": "Stato manutenzione",
+        "select": {
+          "SCHEDULED_AND_IN_PROGRESS": "Tutti",
+          "SCHEDULED": "In programma",
+          "IN_PROGRESS": "In corso"
+        }
+      },
       "emptyState": {
         "FINISHED": "Non ci sono manutenzioni passate.",
         "SCHEDULED": "Non ci sono manutenzioni in programma."

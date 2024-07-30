@@ -58,7 +58,7 @@ import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAdd
 import { rewriteLinks } from './utils/onetrust-utils';
 import tosJson from './data/tos.json';
 import privacyJson from './data/privacy.json';
-import StationMaintenancesPage from './pages/stationMaintenances/StationMaintenancesPage';
+import StationMaintenancesPage from './pages/stationMaintenances/list/StationMaintenancesPage';
 
 
 const SecuredRoutes = withLogin(

@@ -91,6 +91,7 @@ export default function StationMaintenancesPage() {
     }
     setSelectedYear(todaysYear);
     setFilterStationCode('');
+    setSearchTrigger(prev => !prev);
   };
   return (
     <SideMenuLayout>

@@ -6,6 +6,10 @@
       "toastError": "ERRORE",
       "toastMessage": "Spiacenti, qualcosa è andato storto."
     },
+    "blockingErrorPage": {
+      "title": "Errore",
+      "description": "Spiacenti, qualcosa è andato storto."
+    },
     "sessionModal": {
       "closeButton": "Annulla",
       "confirmButton": "Riprova"
@@ -1537,6 +1541,69 @@
       "downloadButton": "Scarica ricevuta"
     }
   },
+  "stationMaintenancesPage": {
+    "title": "Manutenzioni programmate",
+    "subTitle": "Crea e gestisci le manutenzioni programmate delle tue stazioni",
+    "createButton": "Nuova manutenzione",
+    "hoursSummary": {
+      "title": "Riepilogo ore",
+      "used_hours": "Svolte",
+      "scheduled_hours": "In programma",
+      "remaining_hours": "Residue",
+      "annual_hours_limit": "Limite annuale",
+      "extra_hours": "Extra",
+      "errorGetSummary": "Errore durante il recupero del riepilogo ore"
+    },
+    "table": {
+      "search": {
+        "placeholder": "Cerca per codice stazione",
+        "tabScheduled": "Programmate",
+        "tabFinished": "Passate",
+        "state": "Stato manutenzione",
+        "select": {
+          "SCHEDULED_AND_IN_PROGRESS": "Tutti",
+          "SCHEDULED": "In programma",
+          "IN_PROGRESS": "In corso"
+        }
+      },
+      "emptyState": {
+        "FINISHED": "Non ci sono manutenzioni passate.",
+        "SCHEDULED": "Non ci sono manutenzioni in programma."
+      },
+      "link": "Crea nuova manutenzione",
+      "errorMessageMaintenanceList": "Errore durante il recupero delle manutenzioni",
+      "columns": {
+        "stationCode": "Codice stazione",
+        "startDateTime": "Inizio manutenzione",
+        "endDateTime": "Fine manutenzione",
+        "state": "Stato  manutenzione",
+        "chipStates": {
+          "IN_PROGRESS": "In corso",
+          "SCHEDULED": "In programma"
+        },
+        "actions": {
+          "edit": "Modifica",
+          "delete": "Elimina manutenzione",
+          "terminate": "Termina manutenzione",
+          "details": "Dettaglio"
+        }
+      },
+      "actionModal": {
+        "terminate": {
+          "title": "Termina manutenzione",
+          "message": "La manutenzione in corso sarà interrotta e la stazione tornerà in regolare esercizio."
+        },
+        "delete": {
+          "title": "Elimina manutenzione",
+          "message": "La manutenzione programmata sarà rimossa definitivamente."
+        }
+      },
+      "errorMessageTerminate": "Errore durante la terminazione della manutenzione",
+      "errorMessageDelete": "Errore durante l'eliminazione della manutenzione",
+      "successMessageTerminate": "Manutenzione terminata con successo",
+      "successMessageDelete": "Manutenzione eliminata con successo"
+    }
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -1573,6 +1640,9 @@
     },
     "paymentNotices": {
       "title": "Avvisi di pagamento"
+    },
+    "stationMaintenances": {
+      "title": "Manutenzioni programmate"
     }
   },
   "header": {
@@ -1652,7 +1722,8 @@
     "noOptions": "Nessun elemento",
     "loading": "Caricamento...",
     "fromLower": "da",
-    "atLower": "il"
+    "atLower": "il",
+    "year": "Anno"
   },
   "ANY": "Tutti"
 }

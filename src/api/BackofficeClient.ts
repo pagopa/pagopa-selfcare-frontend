@@ -15,6 +15,7 @@ import {
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
 import { ConfigurationStatus, StationOnCreation } from '../model/Station';
+import { StationMaintenanceState } from '../model/StationMaintenance';
 import { store } from '../redux/store';
 import { extractResponse } from '../utils/client-utils';
 import { ENV } from '../utils/env';
@@ -99,6 +100,8 @@ import { WrapperEntities } from './generated/portal/WrapperEntities';
 import { WrapperStationDetailsDto } from './generated/portal/WrapperStationDetailsDto';
 import { WrapperStationsResource } from './generated/portal/WrapperStationsResource';
 import { WithDefaultsT, createClient } from './generated/portal/client';
+import { StationMaintenanceListResource } from './generated/portal/StationMaintenanceListResource';
+import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceHoursSummaryResource';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -606,7 +609,7 @@ export const BackofficeApi = {
         stationCode: station.stationCode,
         broadcast: station.broadcast,
         aca: station.aca,
-        stand_in: station.stand_in
+        stand_in: station.stand_in,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -624,7 +627,7 @@ export const BackofficeApi = {
         stationCode: station.stationCode,
         broadcast: station.broadcast,
         aca: station.aca,
-        stand_in: station.stand_in
+        stand_in: station.stand_in,
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -1470,5 +1473,72 @@ export const BackofficeApi = {
       },
     });
     return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  stationMaintenances: {
+    getStationMaintenances: async ({
+      brokerTaxCode,
+      stationCode,
+      state,
+      year,
+      limit,
+      page,
+    }: {
+      brokerTaxCode: string;
+      stationCode: string;
+      state: StationMaintenanceState;
+      year: number;
+      limit: number;
+      page: number;
+    }): Promise<StationMaintenanceListResource> => {
+      const result = await backofficeClient.getStationMaintenances({
+        'broker-tax-code': brokerTaxCode,
+        stationCode,
+        state,
+        year,
+        limit,
+        page,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    getBrokerMaintenancesSummary: async ({
+      brokerTaxCode,
+      maintenanceYear,
+    }: {
+      brokerTaxCode: string;
+      maintenanceYear: string;
+    }): Promise<MaintenanceHoursSummaryResource> => {
+      const result = await backofficeClient.getBrokerMaintenancesSummary({
+        'broker-tax-code': brokerTaxCode,
+        maintenanceYear,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    deleteStationMaintenance: async ({
+      brokerTaxCode,
+      maintenanceId,
+    }: {
+      brokerTaxCode: string;
+      maintenanceId: number;
+    }): Promise<void> => {
+      const result = await backofficeClient.deleteStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        'maintenance-id': maintenanceId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    finishStationMaintenance: async ({
+      brokerTaxCode,
+      maintenanceId,
+    }: {
+      brokerTaxCode: string;
+      maintenanceId: number;
+    }): Promise<void> => {
+      const result = await backofficeClient.finishStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        'maintenance-id': maintenanceId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
   },
 };

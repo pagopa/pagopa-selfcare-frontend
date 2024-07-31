@@ -159,11 +159,11 @@ function StationAssociateECPage() {
   const formik = useFormik<CreditorInstitutionStationDto>({
     initialValues: {
       auxDigit: 3,
-      segregationCode: reduxCiRelation?.segregationCode ?? '',
+      segregationCode: isEditMode ? reduxCiRelation?.segregationCode ?? '' : '',
       stationCode: stationId,
-      broadcast: reduxCiRelation?.broadcast ?? false,
-      stand_in: reduxCiRelation?.stand_in ?? false,
-      aca: reduxCiRelation?.aca ?? false,
+      broadcast: isEditMode ? Boolean(reduxCiRelation?.broadcast) : false,
+      stand_in: isEditMode ? Boolean(reduxCiRelation?.stand_in) : true,
+      aca: isEditMode ? Boolean(reduxCiRelation?.aca) : true,
     },
     onSubmit: async (values) => {
       submit(values);

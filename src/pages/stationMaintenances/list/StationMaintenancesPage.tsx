@@ -4,6 +4,9 @@ import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { Add } from '@mui/icons-material';
 import { theme } from '@pagopa/mui-italia';
 import { Alert, Button, Stack } from '@mui/material';
+import { generatePath, useHistory } from 'react-router-dom';
+import ROUTES from '../../../routes';
+import { StationMaintenanceActionType } from '../../../model/StationMaintenance';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import StationMaintenancesTable from './StationMaintenancesTable';
 import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
@@ -11,6 +14,8 @@ import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
 const componentPath = 'stationMaintenancesPage';
 export default function StationMaintenancesPage() {
   const { t } = useTranslation();
+  const history = useHistory();
+
   const [alertMessage, setAlertMessage] = useState<string | undefined>();
 
   return (
@@ -29,7 +34,10 @@ export default function StationMaintenancesPage() {
           <Button
             variant="contained"
             onClick={() => {
-              /* TODO ROUTE TO CREATE MAINTENANCE PAGE PPANTT-42 */ 
+             history.push(  generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
+                action: StationMaintenanceActionType.CREATE,
+                maintenanceId: 0
+              }));
             }}
             endIcon={<Add />}
             color="primary"
@@ -61,7 +69,7 @@ export default function StationMaintenancesPage() {
         </Alert>
       )}
       <StationMaintenancesHoursSummary />
-      <StationMaintenancesTable setAlertMessage={setAlertMessage}/>
+      <StationMaintenancesTable setAlertMessage={setAlertMessage} />
     </SideMenuLayout>
   );
 }

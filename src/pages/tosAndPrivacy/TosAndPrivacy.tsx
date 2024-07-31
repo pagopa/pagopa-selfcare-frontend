@@ -19,7 +19,7 @@ const CustomGrid = styled(Grid)({
 
 });
 
-export function TOS_AND_PRIVACY({html, waitForElementCondition, waitForElementFunction}: Props) {
+export function TosAndPrivacy({html, waitForElementCondition, waitForElementFunction}: Props) {
     const {t} = useTranslation();
 
     return (

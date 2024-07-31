@@ -48,7 +48,7 @@ import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
 import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
-import { TOS_AND_PRIVACY } from './pages/tos_and_privacy/TOS_AND_PRIVACY';
+import { TosAndPrivacy } from './pages/tosAndPrivacy/TosAndPrivacy';
 import routes from './routes';
 import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
@@ -59,7 +59,7 @@ import { rewriteLinks } from './utils/onetrust-utils';
 import tosJson from './data/tos.json';
 import privacyJson from './data/privacy.json';
 import StationMaintenancesPage from './pages/stationMaintenances/list/StationMaintenancesPage';
-
+import { StationMaintenanceAddEditDetail } from './pages/stationMaintenances/addEditDetail/StationMaintenanceAddEditDetail';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -92,7 +92,11 @@ const SecuredRoutes = withLogin(
         );
       }
 
-      if (!isTOSAccepted && location.pathname !== routes.TOS && location.pathname !== routes.PRIVACY) {
+      if (
+        !isTOSAccepted &&
+        location.pathname !== routes.TOS &&
+        location.pathname !== routes.PRIVACY
+      ) {
         return (
           <Layout>
             <TOSWall acceptTOS={acceptTOS} tosRoute={routes.TOS} privacyRoute={routes.PRIVACY} />
@@ -289,7 +293,7 @@ const SecuredRoutes = withLogin(
                     <OperationTableListPage />
                   </ProtectedRoute>
                 </Route>
-                
+
                 <Route path={routes.DELEGATIONS_LIST} exact={true}>
                   <ProtectedRoute permission="delegations-list" flagValue="delegations-list">
                     <DelegationsPage />
@@ -320,25 +324,41 @@ const SecuredRoutes = withLogin(
                 </Route>
 
                 <Route path={routes.STATION_MAINTENANCES_LIST} exact={true}>
-                  <ProtectedRoute permission="station-maintenances" flagValue="station-maintenances">
+                  <ProtectedRoute
+                    permission="station-maintenances"
+                    flagValue="station-maintenances"
+                  >
                     <StationMaintenancesPage />
                   </ProtectedRoute>
                 </Route>
 
+                <Route path={routes.STATION_MAINTENANCES_ADD_EDIT_DETAIL} exact={true}>
+                  <ProtectedRoute
+                    permission="station-maintenances"
+                    flagValue="station-maintenances"
+                  >
+                    <StationMaintenanceAddEditDetail />
+                  </ProtectedRoute>
+                </Route>
+
                 <Route path={routes.TOS} exact={true}>
-                  <TOS_AND_PRIVACY html={tosJson.html}
-                     waitForElementCondition={'.otnotice-content'} 
-                     waitForElementFunction={() => {
-                        rewriteLinks(routes.TOS, '.otnotice-content a');}}
-                   />
+                  <TosAndPrivacy
+                    html={tosJson.html}
+                    waitForElementCondition={'.otnotice-content'}
+                    waitForElementFunction={() => {
+                      rewriteLinks(routes.TOS, '.otnotice-content a');
+                    }}
+                  />
                 </Route>
 
                 <Route path={routes.PRIVACY} exact={true}>
-                  <TOS_AND_PRIVACY html={privacyJson.html}
-                      waitForElementCondition={'.otnotice-content'} 
-                      waitForElementFunction={() => {
-                          rewriteLinks(routes.PRIVACY, '.otnotice-content a');}}
-                    />
+                  <TosAndPrivacy
+                    html={privacyJson.html}
+                    waitForElementCondition={'.otnotice-content'}
+                    waitForElementFunction={() => {
+                      rewriteLinks(routes.PRIVACY, '.otnotice-content a');
+                    }}
+                  />
                 </Route>
 
                 <Route path="*">

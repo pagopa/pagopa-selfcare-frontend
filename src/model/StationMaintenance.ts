@@ -24,7 +24,8 @@ export const mapStationMaintenanceState = (
 };
 
 export enum StationMaintenanceActionType {
-  EDIT = 'EDIT',
-  CREATE = 'CREATE',
-  DETAILS = 'DETAILS',
+  EDIT_IN_PROGRESS = 'edit-in-progress',
+  EDIT_SCHEDULED = "edit-scheduled",
+  CREATE = 'create',
+  DETAILS = 'details',
 }

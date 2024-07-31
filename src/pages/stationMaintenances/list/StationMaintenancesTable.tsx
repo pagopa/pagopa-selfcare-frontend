@@ -18,10 +18,12 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TableSearchBar from '../../../components/Table/TableSearchBar';
 import ROUTES from '../../../routes';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
+import { fromHoursFormattedToNumbers } from '../../../utils/common-utils';
+import { stationMaintenanceActions, StationMaintenanceReduxState } from '../../../redux/slices/stationMaintenancesSlice';
 import {
   deleteStationMaintenance,
   getStationMaintenances,
@@ -68,13 +70,17 @@ const baseInputStyle = {
 const componentPath = 'stationMaintenancesPage.table';
 export default function StationMaintenancesTable({
   setAlertMessage,
+  hoursRemaining
 }: {
   setAlertMessage: (value: string) => void;
+  hoursRemaining: string;
 }) {
   const { t } = useTranslation();
   const history = useHistory();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_STATION_MAINTENANCES);
+  const dispatcher = useAppDispatch();
+
   const [stationMaintenancesList, setStationMaintenancesList] =
     useState<StationMaintenanceListResource>(emptyList);
   const addError = useErrorDispatcher();
@@ -145,12 +151,16 @@ export default function StationMaintenancesTable({
     routeAction: StationMaintenanceActionType | false;
   }) {
     if (routeAction) {
-      // TODO dispatcher(stationCIActions.setStationCIState(ci)); PPANTT-42
+      const state: StationMaintenanceReduxState = {
+        stationMaintenance: maintenance,
+        hoursRemaining: fromHoursFormattedToNumbers(hoursRemaining)
+      };
+      dispatcher(stationMaintenanceActions.setStationMaintenanceState(state));
       history.push(
-        generatePath(`${ROUTES.STATION_MAINTENANCES_LIST}`, {
+        generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
           maintenanceId: maintenance.maintenance_id,
           action: routeAction,
-        }) // TODO GO TO EDIT/DETAIL PAGE PPANTT-42
+        })
       );
     } else {
       setShowConfirmModal(maintenance);

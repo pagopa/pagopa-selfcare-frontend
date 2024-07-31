@@ -1608,21 +1608,27 @@
     "breadcrumb": {
       "title": "Manutenzioni",
       "create": "Nuova manutenzione",
-      "edit": "Modifica",
-      "detail": "Dettaglio"
+      "edit-scheduled": "Modifica",
+      "edit-in-progress": "Modifica",
+      "details": "Dettaglio"
     },
     "search": "Cerca stazione",
     "title": {
-      "edit": "Modifica programmazione",
+      "edit-scheduled": "Modifica programmazione",
+      "edit-in-progress": "Modifica programmazione",
       "create": "Nuova manutenzione",
-      "detail": "Dettagli programmazione"
+      "details": "Dettagli programmazione"
     },
     "subtitle": {
-      "edit": "Indica le modifiche al periodo di manutenzione.",
+      "edit-scheduled": "Indica le modifiche al periodo di manutenzione.",
+      "edit-in-progress": "Indica le modifiche al periodo di manutenzione.",
       "create": "Seleziona una stazione e indica il periodo di manutenzione.",
-      "detail": ""
+      "details": ""
     },
-    "alert": "Ricordati che è consentito un massimo di 36 ore di fermi programmati nel corso dell’anno solare. Tali limiti sono verificati periodicamente da parte di PagoPA S.p.A.",
+    "alert": {
+      "info": "Ricordati che è consentito un massimo di 36 ore di fermi programmati nel corso dell’anno solare. Tali limiti sono verificati periodicamente da parte di PagoPA S.p.A.",
+      "warning": "Hai raggiunto il limite di fermi programmati consentiti nell’anno solare. Da questo momento il tempo di manutenzione sarà conteggiato come extra."
+    },
     "configuration": {
       "title": "Configurazione",
       "subtitle": "Cerca il codice stazione utilizzando la barra di ricerca.",

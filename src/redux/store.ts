@@ -9,6 +9,7 @@ import {bundleDetailsReducer} from './slices/bundleDetailsSlice';
 import {delegationDetailReducer} from './slices/delegationDetailSlice';
 import {institutionsDataDetailsReducer} from './slices/institutionsDataDetailsSlice';
 import { stationCIReducer } from './slices/stationCISlice';
+import { stationMaintenanceReducer } from './slices/stationMaintenancesSlice';
 
 const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
 
@@ -22,7 +23,8 @@ export const createStore = () =>
             bundleDetails: bundleDetailsReducer,
             delegationDetail: delegationDetailReducer,
             institutionDataDetails: institutionsDataDetailsReducer,
-            stationCI: stationCIReducer
+            stationCI: stationCIReducer,
+            stationMaintenance: stationMaintenanceReducer
         },
         middleware: (getDefaultMiddleware) =>
             additionalMiddlewares.reduce(

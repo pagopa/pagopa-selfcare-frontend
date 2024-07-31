@@ -10,10 +10,12 @@ export const useAppSelectorWithRedirect = ({
   selector,
   routeToRedirect,
   conditionToRedirect,
+  callback,
 }: {
   selector: (state: RootState) => any;
   routeToRedirect?: string;
   conditionToRedirect?: (value: any) => boolean;
+  callback?: (state: any) => any;
 }) => {
   const selectedReduxState = useAppSelector(selector);
   const history = useHistory();
@@ -25,6 +27,9 @@ export const useAppSelectorWithRedirect = ({
       conditionResults)
   ) {
     history.push(routeToRedirect);
+  }
+  if (callback) {
+    callback(selectedReduxState);
   }
   return selectedReduxState;
 };

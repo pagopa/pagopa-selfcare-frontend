@@ -83,6 +83,18 @@ export const formatDateTohhmm = (value: any): string =>
     minute: '2-digit',
   });
 
+export function fromHoursFormattedToNumbers(hour: string): number {
+  const separator = hour.indexOf(':');
+  if (separator) {
+    const subStringHours = hour.substring(0, separator);
+    const subStringMinutes = hour.substring(separator + 1);
+
+    const numberMinutes = Number(subStringMinutes) / 60;
+    return Number(subStringHours) + numberMinutes;
+  }
+  return Number(hour);
+}
+
 export const datesAreOnSameDay = (first: Date, second: Date) =>
   first.getFullYear() === second.getFullYear() &&
   first.getMonth() === second.getMonth() &&

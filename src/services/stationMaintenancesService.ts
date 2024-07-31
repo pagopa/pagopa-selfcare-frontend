@@ -1,4 +1,5 @@
 import { BackofficeApi } from '../api/BackofficeClient';
+import { CreateStationMaintenance } from '../api/generated/portal/CreateStationMaintenance';
 import { MaintenanceHoursSummaryResource } from '../api/generated/portal/MaintenanceHoursSummaryResource';
 import { StationMaintenanceListResource } from '../api/generated/portal/StationMaintenanceListResource';
 import { StationMaintenanceState } from '../model/StationMaintenance';
@@ -83,6 +84,43 @@ export const finishStationMaintenance = ({
     return BackofficeApi.stationMaintenances.finishStationMaintenance({
       brokerTaxCode,
       maintenanceId,
+    });
+  }
+};
+
+export const createStationMaintenance = ({
+  brokerTaxCode,
+  createStationMaintenance,
+}: {
+  brokerTaxCode: string;
+  createStationMaintenance: CreateStationMaintenance;
+}): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return new Promise((resolve) => resolve());
+  } else {
+    return BackofficeApi.stationMaintenances.createStationMaintenance({
+      brokerTaxCode,
+      createStationMaintenance,
+    });
+  }
+};
+
+export const updateStationMaintenance = ({
+  brokerTaxCode,
+  maintenanceId,
+  createStationMaintenance,
+}: {
+  brokerTaxCode: string;
+  maintenanceId: number;
+  createStationMaintenance: CreateStationMaintenance;
+}): Promise<void> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return new Promise((resolve) => resolve());
+  } else {
+    return BackofficeApi.stationMaintenances.updateStationMaintenance({
+      brokerTaxCode,
+      maintenanceId,
+      createStationMaintenance,
     });
   }
 };

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { add } from 'date-fns';
 import {
   Alert,
+  AlertColor,
   Autocomplete,
   Box,
   Breadcrumbs,
@@ -29,15 +30,31 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { GridSearchIcon } from '@mui/x-data-grid';
 import { DesktopDatePicker, LocalizationProvider, DesktopTimePicker } from '@mui/x-date-pickers';
 import ROUTES from '../../../routes';
-import { StationMaintenanceActionType } from '../../../model/StationMaintenance';
-import { datesAreOnSameDay } from '../../../utils/common-utils';
-import { useAppSelector } from '../../../redux/hooks';
+import {
+  mapStationMaintenanceState,
+  StationMaintenanceActionType,
+  StationMaintenanceState,
+} from '../../../model/StationMaintenance';
+import { datesAreOnSameDay, removeDateZoneInfo } from '../../../utils/common-utils';
+import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
 import { ConfigurationStatus } from '../../../model/Station';
 import { WrapperStationResource } from '../../../api/generated/portal/WrapperStationResource';
 import { WrapperStationsResource } from '../../../api/generated/portal/WrapperStationsResource';
-import { LOADING_TASK_RETRIEVE_STATIONS } from '../../../utils/constants';
+import {
+  LOADING_TASK_RETRIEVE_STATIONS,
+  LOADING_TASK_STATION_MAINTENANCES_ACTION,
+} from '../../../utils/constants';
+import {
+  createStationMaintenance,
+  updateStationMaintenance,
+} from '../../../services/stationMaintenancesService';
+import { CreateStationMaintenance } from '../../../api/generated/portal/CreateStationMaintenance';
+import {
+  StationMaintenanceReduxState,
+  stationMaintenanceSelectors,
+} from '../../../redux/slices/stationMaintenancesSlice';
 
 function mergeDateAndHours(date: string, hours: string) {
   const dateFinal = new Date(date);
@@ -61,7 +78,26 @@ function getHoursDifference({
   const from = mergeDateAndHours(dateFrom, hoursFrom);
   const to = mergeDateAndHours(dateTo, hoursTo);
 
-  const hours = ((to.getTime() - from.getTime()) / (1000 * 60 * 60)).toString();
+  return ((to.getTime() - from.getTime()) / (1000 * 60 * 60)).toString();
+}
+
+function getHoursDifferenceFormatted({
+  hoursFrom,
+  dateFrom,
+  hoursTo,
+  dateTo,
+}: {
+  hoursFrom: string;
+  dateFrom: string;
+  hoursTo: string;
+  dateTo: string;
+}) {
+  const hours = getHoursDifference({
+    hoursFrom,
+    dateFrom,
+    hoursTo,
+    dateTo,
+  });
   const decimalIndex = hours.indexOf('.');
 
   let hoursString;
@@ -87,18 +123,41 @@ enum SetDateType {
 }
 
 const componentPath = 'stationMaintenanceAddEditDetail';
+
+const alertTypes = {
+  info: {
+    severity: 'info',
+    description: `${componentPath}.alert.info`,
+  },
+  warning: {
+    severity: 'warning',
+    description: `${componentPath}.alert.warning`,
+  },
+};
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 export function StationMaintenanceAddEditDetail() {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_RETRIEVE_STATIONS);
-
+  const setLoadingAction = useLoading(LOADING_TASK_STATION_MAINTENANCES_ACTION);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const { maintenanceId, action } = useParams<{
     maintenanceId: string;
     action: StationMaintenanceActionType;
   }>();
+  const isInProgress = action === StationMaintenanceActionType.EDIT_IN_PROGRESS;
+  const isEdit = isInProgress || action === StationMaintenanceActionType.EDIT_SCHEDULED;
+  const isDetail = action === StationMaintenanceActionType.DETAILS;
+  const selectedMaintenanceState: StationMaintenanceReduxState =
+    useAppSelectorWithRedirect({
+      selector: stationMaintenanceSelectors.selectStationMaintenanceState,
+      routeToRedirect: isEdit ? ROUTES.STATION_MAINTENANCES_LIST : undefined,
+    }) ?? {};
+
+  const [alert, setAlert] = useState(
+    action === StationMaintenanceActionType.CREATE ? alertTypes.info : undefined
+  );
 
   const [stationCodeFilter, setStationCodeFilter] = useState<string | undefined>();
   const [stationList, setStationList] = useState<Array<WrapperStationResource>>([]);
@@ -126,22 +185,99 @@ export function StationMaintenanceAddEditDetail() {
     calculateTotalHours(value, setDateType);
   }
 
+  // eslint-disable-next-line complexity
   function calculateTotalHours(value: string | null, setDateType: SetDateType) {
     // eslint-disable-next-line functional/no-let
     let total;
 
+    let tempHoursFrom = hoursFrom;
+    let tempHoursTo = hoursTo;
+    let tempDateFrom = dateFrom;
+    let tempDateTo = dateTo;
     if (value) {
       if (setDateType === SetDateType.DATE_FROM && dateTo && hoursTo && hoursFrom) {
-        total = getHoursDifference({ dateFrom: value, hoursFrom, dateTo, hoursTo });
+        total = getHoursDifferenceFormatted({ dateFrom: value, hoursFrom, dateTo, hoursTo });
+        tempDateFrom = value;
       } else if (setDateType === SetDateType.DATE_TO && dateFrom && hoursTo && hoursFrom) {
-        total = getHoursDifference({ dateFrom, hoursFrom, dateTo: value, hoursTo });
+        total = getHoursDifferenceFormatted({ dateFrom, hoursFrom, dateTo: value, hoursTo });
+        tempDateTo = value;
       } else if (setDateType === SetDateType.HOURS_FROM && dateTo && hoursTo && dateFrom) {
-        total = getHoursDifference({ dateFrom, hoursFrom: value, dateTo, hoursTo });
+        total = getHoursDifferenceFormatted({ dateFrom, hoursFrom: value, dateTo, hoursTo });
+        tempHoursFrom = value;
       } else if (setDateType === SetDateType.HOURS_TO && dateTo && dateFrom && hoursFrom) {
-        total = getHoursDifference({ dateFrom, hoursFrom, dateTo, hoursTo: value });
+        total = getHoursDifferenceFormatted({ dateFrom, hoursFrom, dateTo, hoursTo: value });
+        tempHoursTo = value;
       }
     }
     setTotalHours(total);
+    if (tempHoursFrom && tempHoursTo && tempDateTo && tempDateFrom) {
+      handleRemainingHoursAlert(tempHoursFrom, tempHoursTo, tempDateTo, tempDateFrom);
+    }
+  }
+
+  function handleRemainingHoursAlert(
+    hoursFrom: string,
+    hoursTo: string,
+    dateTo: string,
+    dateFrom: string
+  ) {
+    const difference = getHoursDifference({
+      hoursFrom,
+      hoursTo,
+      dateFrom,
+      dateTo,
+    });
+    const remainingHours = selectedMaintenanceState?.hoursRemaining;
+
+    if (remainingHours && difference && remainingHours < Number(difference)) {
+      setAlert(alertTypes.warning);
+    } else if (action === StationMaintenanceActionType.CREATE) {
+      setAlert(alertTypes.info);
+    } else {
+      setAlert(undefined);
+    }
+  }
+
+  function handleConfirmAction() {
+    if (dateTo && hoursTo && dateFrom && hoursFrom && selectedStation) {
+      let promise;
+      const body: CreateStationMaintenance = {
+        end_date_time: removeDateZoneInfo(mergeDateAndHours(dateTo, hoursTo))!,
+        stand_in: standIn,
+        start_date_time: removeDateZoneInfo(mergeDateAndHours(dateFrom, hoursFrom))!,
+        station_code: selectedStation?.stationCode ?? '',
+      };
+      if (action === StationMaintenanceActionType.CREATE) {
+        promise = createStationMaintenance({
+          brokerTaxCode: selectedParty?.fiscalCode ?? '',
+          createStationMaintenance: body,
+        });
+      } else if (isEdit) {
+        promise = updateStationMaintenance({
+          brokerTaxCode: selectedParty?.fiscalCode ?? '',
+          maintenanceId: Number(maintenanceId),
+          createStationMaintenance: body,
+        });
+      }
+
+      if (promise) {
+        setLoadingAction(true);
+        promise
+          .then(() => {
+            history.push(ROUTES.STATION_MAINTENANCES_LIST);
+          })
+          .catch((reason) =>
+            addError({
+              id: 'ACTION_ON_MAINTENANCE_ERROR',
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while creating or updating the maintenance`,
+              toNotify: true,
+            })
+          )
+          .finally(() => setLoadingAction(false));
+      }
+    }
   }
 
   function handleGetStations() {
@@ -154,10 +290,14 @@ export function StationMaintenanceAddEditDetail() {
       limit: 25,
     })
       .then((res: WrapperStationsResource) => {
-        if (res?.stationsList && res?.stationsList.length > 0) {
+        const resList = res?.stationsList;
+        if (resList && resList.length > 0) {
           setStationList([...res.stationsList]);
         } else {
           setStationList([]);
+        }
+        if (selectedMaintenanceState) {
+          initFromReduxState([...resList]);
         }
       })
       .catch((reason) => {
@@ -171,6 +311,66 @@ export function StationMaintenanceAddEditDetail() {
         setStationList([]);
       })
       .finally(() => setLoading(false));
+  }
+
+  function initFromReduxState(stationList: Array<WrapperStationResource>) {
+    const initStationCode = selectedMaintenanceState?.stationMaintenance?.station_code;
+    if (initStationCode) {
+      setSelectedStation(stationList.find((el) => el.stationCode === initStationCode));
+    }
+    const initStartDate = selectedMaintenanceState?.stationMaintenance?.start_date_time;
+    const initEndDate = selectedMaintenanceState?.stationMaintenance?.end_date_time;
+
+    let tempDateFrom;
+    let tempDateTo;
+    if (initStartDate) {
+      tempDateFrom = initStartDate.toString();
+      setDateFrom(tempDateFrom);
+      setHoursFrom(tempDateFrom);
+    }
+    if (initEndDate) {
+      tempDateTo = initEndDate.toString();
+      setDateTo(tempDateTo);
+      setHoursTo(tempDateTo);
+    }
+    if (tempDateFrom && tempDateTo) {
+      setTotalHours(
+        getHoursDifferenceFormatted({
+          dateFrom: tempDateFrom,
+          hoursFrom: tempDateFrom,
+          dateTo: tempDateTo,
+          hoursTo: tempDateTo,
+        })
+      );
+    }
+    const initStandIn = selectedMaintenanceState?.stationMaintenance?.stand_in;
+    if (initStandIn) {
+      setStandIn(initStandIn);
+    }
+    const initHoursRemaining = selectedMaintenanceState?.hoursRemaining;
+    if (initHoursRemaining && initHoursRemaining <= 0 && isEdit) {
+      setAlert(alertTypes.warning);
+    }
+    verifyActionAndMaintenanceState();
+  }
+
+  function verifyActionAndMaintenanceState() {
+    const stateMaintenance = selectedMaintenanceState?.stationMaintenance;
+    if (
+      stateMaintenance?.maintenance_id &&
+      stateMaintenance.end_date_time &&
+      stateMaintenance.start_date_time
+    ) {
+      const maintenanceStatus = mapStationMaintenanceState(stateMaintenance);
+      if (
+        (maintenanceStatus === StationMaintenanceState.IN_PROGRESS &&
+          action !== StationMaintenanceActionType.EDIT_IN_PROGRESS) ||
+        (maintenanceStatus === StationMaintenanceState.SCHEDULED &&
+          action !== StationMaintenanceActionType.EDIT_SCHEDULED)
+      ) {
+        history.push(ROUTES.STATION_MAINTENANCES_LIST);
+      }
+    }
   }
 
   useEffect(() => {
@@ -209,11 +409,11 @@ export function StationMaintenanceAddEditDetail() {
           variantSubTitle="body1"
         />
 
-        {action === StationMaintenanceActionType.CREATE && (
-          <Alert severity="info">
+        {alert && (
+          <Alert severity={alert.severity as AlertColor}>
             <Box display="flex" alignItems="center">
               <Typography variant="body1" width="85%">
-                {t(`${componentPath}.alert`)}
+                {t(alert.description)}
               </Typography>
               <Link
                 target="_blank"
@@ -251,10 +451,9 @@ export function StationMaintenanceAddEditDetail() {
                 loadingText={t('general.loading')}
                 id="station-selection"
                 data-testid="station-selection"
-                disabled={stationList.length === 0}
-                value={selectedStation}
-                onChange={(event, newSelectedStation: any | null) => {
-                  // TODO TYPE
+                disabled={stationList.length === 0 || isEdit || isDetail}
+                value={selectedStation ?? null}
+                onChange={(event, newSelectedStation: WrapperStationResource | null) => {
                   setSelectedStation(newSelectedStation ?? undefined);
                 }}
                 onInputChange={(event: any) => setStationCodeFilter(event?.target.value ?? '')}
@@ -313,10 +512,12 @@ export function StationMaintenanceAddEditDetail() {
                   label={t(`${componentPath}.configuration.hoursSection.fromHours`)}
                   hours={hoursFrom}
                   setHours={(value) => handleSetDate(value, SetDateType.HOURS_FROM)}
+                  disabled={isInProgress || isDetail}
                 />
                 <DatePicker
                   date={dateFrom}
                   setDate={(value) => handleSetDate(value, SetDateType.DATE_FROM)}
+                  disabled={isInProgress || isDetail}
                 />
               </Box>
               <Box display="flex" width="50%" justifyContent="space-between">
@@ -329,11 +530,13 @@ export function StationMaintenanceAddEditDetail() {
                       : undefined
                   }
                   setHours={(value) => handleSetDate(value, SetDateType.HOURS_TO)}
+                  disabled={isDetail}
                 />
                 <DatePicker
                   date={dateTo}
                   setDate={(value) => handleSetDate(value, SetDateType.DATE_TO)}
                   minDate={dateFrom}
+                  disabled={isDetail}
                 />
               </Box>
             </Grid>
@@ -344,7 +547,7 @@ export function StationMaintenanceAddEditDetail() {
               <Typography variant="body2" mb={2}>
                 {t(`${componentPath}.configuration.standInSection.subtitle`)}
               </Typography>
-              <FormControl>
+              <FormControl disabled={isInProgress || isDetail}>
                 <RadioGroup
                   name="standIn"
                   onChange={(e) => setStandIn(e.target.value === 'true' ? true : false)}
@@ -377,18 +580,18 @@ export function StationMaintenanceAddEditDetail() {
           >
             {t('general.back')}
           </Button>
-          <Button
-            onClick={() => {
-              /* TODO confirm */
-            }}
-            disabled={!dateFrom || !dateTo || !hoursFrom || !hoursTo || !selectedStation}
-            color="primary"
-            variant="contained"
-            type="submit"
-            data-testid="open-modal-button-test"
-          >
-            {t('general.confirm')}
-          </Button>
+          {!isDetail && (
+            <Button
+              onClick={() => handleConfirmAction()}
+              disabled={!dateFrom || !dateTo || !hoursFrom || !hoursTo || !selectedStation}
+              color="primary"
+              variant="contained"
+              type="submit"
+              data-testid="open-modal-button-test"
+            >
+              {t('general.confirm')}
+            </Button>
+          )}
         </Box>
       </Grid>
     </Grid>
@@ -400,11 +603,13 @@ const HoursInput = ({
   hours,
   setHours,
   minTime,
+  disabled,
 }: {
   label: string;
   hours: string | null;
   setHours: (value: string | null) => void;
   minTime?: string | null;
+  disabled?: boolean;
 }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <DesktopTimePicker
@@ -415,6 +620,7 @@ const HoursInput = ({
       ampm={false}
       minutesStep={15}
       minTime={minTime}
+      disabled={disabled}
       renderInput={(params: TextFieldProps) => (
         <TextField
           {...params}
@@ -437,10 +643,12 @@ const DatePicker = ({
   date,
   setDate,
   minDate,
+  disabled,
 }: {
   date: string | null;
   setDate: (value: string | null) => void;
   minDate?: string | null;
+  disabled?: boolean;
 }) => {
   const { t } = useTranslation();
   const defaultDate = add(new Date(), { days: 3 });
@@ -453,6 +661,7 @@ const DatePicker = ({
         onChange={(value) => setDate(value)}
         minDate={minDate ? minDate : defaultDate.toDateString()}
         maxDate={add(new Date(), { months: 6 }).toDateString()}
+        disabled={disabled}
         renderInput={(params: TextFieldProps) => (
           <TextField
             {...params}

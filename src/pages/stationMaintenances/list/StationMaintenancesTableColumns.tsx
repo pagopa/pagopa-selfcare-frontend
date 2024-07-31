@@ -147,7 +147,13 @@ export const getRowActions = (
         key="editAction"
         label={t(`${componentPath}.actions.edit`)}
         onClick={() =>
-          handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.EDIT })
+          handleOnRowActionClick({
+            maintenance,
+            routeAction:
+              maintenanceState === StationMaintenanceState.IN_PROGRESS
+                ? StationMaintenanceActionType.EDIT_IN_PROGRESS
+                : StationMaintenanceActionType.EDIT_SCHEDULED,
+          })
         }
         showInMenu
         icon={<Edit sx={{ mr: 1 }} fontSize="small" />}

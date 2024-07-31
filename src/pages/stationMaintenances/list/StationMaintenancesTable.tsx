@@ -241,8 +241,8 @@ export default function StationMaintenancesTable({
   };
 
   useEffect(() => {
-    handleGetStationMaintenances();
-  }, [searchTrigger]);
+    handleGetStationMaintenances(0);
+  }, [searchTrigger, pageLimit]);
 
   const columns: Array<GridColDef> = buildColumnDefs(t, filterState, handleOnRowActionClick);
 
@@ -301,7 +301,9 @@ export default function StationMaintenancesTable({
               size="small"
               value={filterState}
               onChange={(e) => setFilterState(e?.target?.value as StationMaintenanceState)}
-              data-testid="page-limit-select"
+              inputProps={{
+                'data-testid': 'state-select',
+              }}
               sx={{ height: '48px', backgroundColor: '#FFFFFF' }}
             >
               {stateOption.map((option: any) => (

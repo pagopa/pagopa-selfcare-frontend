@@ -36,7 +36,6 @@ import {
 } from '../../../model/StationMaintenance';
 import {
   datesAreOnSameDay,
-  formatDateToDDMMYYYYhhmmWithTimezone,
   removeDateZoneInfoGMT2,
 } from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
@@ -348,12 +347,12 @@ export function StationMaintenanceAddEditDetail() {
     let tempDateFrom;
     let tempDateTo;
     if (initStartDate) {
-      tempDateFrom = formatDateToDDMMYYYYhhmmWithTimezone(initStartDate).toString();
+      tempDateFrom = initStartDate.toString();
       setDateFrom(tempDateFrom);
       setHoursFrom(tempDateFrom);
     }
     if (initEndDate) {
-      tempDateTo = formatDateToDDMMYYYYhhmmWithTimezone(initEndDate).toString();
+      tempDateTo = initEndDate.toString();
       setDateTo(tempDateTo);
       setHoursTo(tempDateTo);
     }
@@ -670,7 +669,7 @@ const HoursInput = ({
             ...params.inputProps,
             placeholder: '00:00',
             'data-testid': 'select-hours',
-            readOnly: true
+            readOnly: true,
           }}
           sx={{ width: '100%' }}
           id="hours"
@@ -703,8 +702,8 @@ const DatePicker = ({
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DesktopDatePicker
         label={t(`${componentPath}.configuration.hoursSection.ofDay`)}
-        inputFormat="dd/MM/yyyy"
         value={date ? new Date(date).toString() : null}
+        inputFormat="dd/MM/yyyy"
         onChange={(value) => setDate(value)}
         minDate={minDate ? minDate : minDateFromToday}
         maxDate={add(new Date(), { months: 6 }).toDateString()}
@@ -716,7 +715,7 @@ const DatePicker = ({
               ...params.inputProps,
               placeholder: 'dd/MM/aaaa',
               'data-testid': 'date-test',
-              readOnly: true
+              readOnly: true,
             }}
             sx={{ width: '100%' }}
             id="date"

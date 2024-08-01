@@ -670,6 +670,7 @@ const HoursInput = ({
             ...params.inputProps,
             placeholder: '00:00',
             'data-testid': 'select-hours',
+            readOnly: true
           }}
           sx={{ width: '100%' }}
           id="hours"
@@ -715,6 +716,7 @@ const DatePicker = ({
               ...params.inputProps,
               placeholder: 'dd/MM/aaaa',
               'data-testid': 'date-test',
+              readOnly: true
             }}
             sx={{ width: '100%' }}
             id="date"

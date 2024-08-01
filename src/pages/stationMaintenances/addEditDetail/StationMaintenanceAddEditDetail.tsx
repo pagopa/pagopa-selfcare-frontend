@@ -8,7 +8,6 @@ import {
   Box,
   Breadcrumbs,
   Button,
-  CircularProgress,
   FormControl,
   FormControlLabel,
   Grid,
@@ -35,7 +34,7 @@ import {
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import { datesAreOnSameDay, removeDateZoneInfo } from '../../../utils/common-utils';
+import { datesAreOnSameDay, formatDateToDDMMYYYYhhmmWithTimezone, removeDateZoneInfoGMT2 } from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
@@ -78,7 +77,7 @@ function getHoursDifference({
   const from = mergeDateAndHours(dateFrom, hoursFrom);
   const to = mergeDateAndHours(dateTo, hoursTo);
 
-  return ((to.getTime() - from.getTime()) / (1000 * 60 * 60)).toString();
+  return (to.getTime() - from.getTime()) / (1000 * 60 * 60);
 }
 
 function getHoursDifferenceFormatted({
@@ -97,7 +96,7 @@ function getHoursDifferenceFormatted({
     dateFrom,
     hoursTo,
     dateTo,
-  });
+  }).toString();
   const decimalIndex = hours.indexOf('.');
 
   let hoursString;
@@ -134,6 +133,8 @@ const alertTypes = {
     description: `${componentPath}.alert.warning`,
   },
 };
+
+const minDateFromToday = add(new Date(), { days: 3 }).toString();
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 export function StationMaintenanceAddEditDetail() {
   const { t } = useTranslation();
@@ -171,6 +172,8 @@ export function StationMaintenanceAddEditDetail() {
   const [dateTo, setDateTo] = useState<string | null>(add(new Date(), { days: 3 }).toDateString());
   const [standIn, setStandIn] = useState<boolean>(true);
   const [selectedStation, setSelectedStation] = useState<WrapperStationResource>();
+
+  const [errorDate, setErrorDate] = useState<string | undefined>();
 
   function handleSetDate(value: string | null, setDateType: SetDateType) {
     if (setDateType === SetDateType.DATE_FROM) {
@@ -228,9 +231,9 @@ export function StationMaintenanceAddEditDetail() {
       dateTo,
     });
     const remainingHours = selectedMaintenanceState?.hoursRemaining;
-
-    if (remainingHours && difference && remainingHours < Number(difference)) {
+    if (remainingHours !== undefined && difference !== undefined && remainingHours < difference) {
       setAlert(alertTypes.warning);
+      setStandIn(true);
     } else if (action === StationMaintenanceActionType.CREATE) {
       setAlert(alertTypes.info);
     } else {
@@ -240,11 +243,17 @@ export function StationMaintenanceAddEditDetail() {
 
   function handleConfirmAction() {
     if (dateTo && hoursTo && dateFrom && hoursFrom && selectedStation) {
+      if (getHoursDifference({ hoursFrom, hoursTo, dateFrom, dateTo }) <= 0) {
+        setErrorDate(t(`${componentPath}.configuration.hoursSection.error`));
+        return;
+      } else {
+        setErrorDate(undefined);
+      }
       let promise;
       const body: CreateStationMaintenance = {
-        end_date_time: removeDateZoneInfo(mergeDateAndHours(dateTo, hoursTo))!,
+        end_date_time: removeDateZoneInfoGMT2(mergeDateAndHours(dateTo, hoursTo))!,
         stand_in: standIn,
-        start_date_time: removeDateZoneInfo(mergeDateAndHours(dateFrom, hoursFrom))!,
+        start_date_time: removeDateZoneInfoGMT2(mergeDateAndHours(dateFrom, hoursFrom))!,
         station_code: selectedStation?.stationCode ?? '',
       };
       if (action === StationMaintenanceActionType.CREATE) {
@@ -280,12 +289,16 @@ export function StationMaintenanceAddEditDetail() {
     }
   }
 
-  function handleGetStations() {
-    setLoading(true);
+  function handleGetStations(newStationCodeFilter?: string) {
+    if (newStationCodeFilter !== undefined) {
+      setStationCodeFilter(newStationCodeFilter);
+    } else {
+      setLoading(true);
+    }
     getStations({
       page: 0,
       brokerCode: selectedParty?.fiscalCode ?? '',
-      stationCode: stationCodeFilter,
+      stationCode: newStationCodeFilter ?? stationCodeFilter,
       status: ConfigurationStatus.ACTIVE,
       limit: 25,
     })
@@ -324,12 +337,12 @@ export function StationMaintenanceAddEditDetail() {
     let tempDateFrom;
     let tempDateTo;
     if (initStartDate) {
-      tempDateFrom = initStartDate.toString();
+      tempDateFrom = formatDateToDDMMYYYYhhmmWithTimezone(initStartDate).toString();
       setDateFrom(tempDateFrom);
       setHoursFrom(tempDateFrom);
     }
     if (initEndDate) {
-      tempDateTo = initEndDate.toString();
+      tempDateTo = formatDateToDDMMYYYYhhmmWithTimezone(initEndDate).toString();
       setDateTo(tempDateTo);
       setHoursTo(tempDateTo);
     }
@@ -348,8 +361,9 @@ export function StationMaintenanceAddEditDetail() {
       setStandIn(initStandIn);
     }
     const initHoursRemaining = selectedMaintenanceState?.hoursRemaining;
-    if (initHoursRemaining && initHoursRemaining <= 0 && isEdit) {
+    if (initHoursRemaining !== undefined && initHoursRemaining <= 0 && isEdit) {
       setAlert(alertTypes.warning);
+      setStandIn(true);
     }
     verifyActionAndMaintenanceState();
   }
@@ -363,10 +377,11 @@ export function StationMaintenanceAddEditDetail() {
     ) {
       const maintenanceStatus = mapStationMaintenanceState(stateMaintenance);
       if (
-        (maintenanceStatus === StationMaintenanceState.IN_PROGRESS &&
+        isEdit &&
+        ((maintenanceStatus === StationMaintenanceState.IN_PROGRESS &&
           action !== StationMaintenanceActionType.EDIT_IN_PROGRESS) ||
-        (maintenanceStatus === StationMaintenanceState.SCHEDULED &&
-          action !== StationMaintenanceActionType.EDIT_SCHEDULED)
+          (maintenanceStatus === StationMaintenanceState.SCHEDULED &&
+            action !== StationMaintenanceActionType.EDIT_SCHEDULED))
       ) {
         history.push(ROUTES.STATION_MAINTENANCES_LIST);
       }
@@ -375,7 +390,7 @@ export function StationMaintenanceAddEditDetail() {
 
   useEffect(() => {
     handleGetStations();
-  }, [stationCodeFilter]);
+  }, []);
 
   return (
     <Grid container justifyContent={'center'}>
@@ -451,12 +466,15 @@ export function StationMaintenanceAddEditDetail() {
                 loadingText={t('general.loading')}
                 id="station-selection"
                 data-testid="station-selection"
-                disabled={stationList.length === 0 || isEdit || isDetail}
+                filterOptions={(x) => x}
+                disabled={(stationList.length === 0 && !stationCodeFilter) || isEdit || isDetail}
                 value={selectedStation ?? null}
                 onChange={(event, newSelectedStation: WrapperStationResource | null) => {
                   setSelectedStation(newSelectedStation ?? undefined);
                 }}
-                onInputChange={(event: any) => setStationCodeFilter(event?.target.value ?? '')}
+                onInputChange={(event: any) => {
+                  handleGetStations(event?.target?.value ?? '');
+                }}
                 options={stationList}
                 getOptionLabel={(optionStation: WrapperStationResource) =>
                   optionStation?.stationCode ?? ''
@@ -507,38 +525,49 @@ export function StationMaintenanceAddEditDetail() {
                   </Typography>
                 </Box>
               </Box>
-              <Box display="flex" width="50%" mb={2} justifyContent="space-between">
-                <HoursInput
-                  label={t(`${componentPath}.configuration.hoursSection.fromHours`)}
-                  hours={hoursFrom}
-                  setHours={(value) => handleSetDate(value, SetDateType.HOURS_FROM)}
-                  disabled={isInProgress || isDetail}
-                />
-                <DatePicker
-                  date={dateFrom}
-                  setDate={(value) => handleSetDate(value, SetDateType.DATE_FROM)}
-                  disabled={isInProgress || isDetail}
-                />
-              </Box>
-              <Box display="flex" width="50%" justifyContent="space-between">
-                <HoursInput
-                  label={t(`${componentPath}.configuration.hoursSection.toHours`)}
-                  hours={hoursTo}
-                  minTime={
-                    dateTo && dateFrom && datesAreOnSameDay(new Date(dateFrom), new Date(dateTo))
-                      ? hoursTo
-                      : undefined
-                  }
-                  setHours={(value) => handleSetDate(value, SetDateType.HOURS_TO)}
-                  disabled={isDetail}
-                />
-                <DatePicker
-                  date={dateTo}
-                  setDate={(value) => handleSetDate(value, SetDateType.DATE_TO)}
-                  minDate={dateFrom}
-                  disabled={isDetail}
-                />
-              </Box>
+              <Grid item container xs={6} mb={2} spacing={3}>
+                <Grid item xs={6}>
+                  <HoursInput
+                    label={t(`${componentPath}.configuration.hoursSection.fromHours`)}
+                    hours={hoursFrom}
+                    setHours={(value) => handleSetDate(value, SetDateType.HOURS_FROM)}
+                    disabled={isInProgress || isDetail}
+                    error={errorDate}
+                    minTime={isEdit ? minDateFromToday : undefined}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <DatePicker
+                    date={dateFrom}
+                    setDate={(value) => handleSetDate(value, SetDateType.DATE_FROM)}
+                    disabled={isInProgress || isDetail}
+                    minDate={isEdit ? minDateFromToday : undefined}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item container xs={6} spacing={3}>
+                <Grid item xs={6}>
+                  <HoursInput
+                    label={t(`${componentPath}.configuration.hoursSection.toHours`)}
+                    hours={hoursTo}
+                    minTime={
+                      dateTo && dateFrom && datesAreOnSameDay(new Date(dateFrom), new Date(dateTo))
+                        ? hoursFrom
+                        : undefined
+                    }
+                    setHours={(value) => handleSetDate(value, SetDateType.HOURS_TO)}
+                    disabled={isDetail}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <DatePicker
+                    date={dateTo}
+                    setDate={(value) => handleSetDate(value, SetDateType.DATE_TO)}
+                    minDate={dateFrom}
+                    disabled={isDetail}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1" fontWeight="medium">
@@ -547,7 +576,7 @@ export function StationMaintenanceAddEditDetail() {
               <Typography variant="body2" mb={2}>
                 {t(`${componentPath}.configuration.standInSection.subtitle`)}
               </Typography>
-              <FormControl disabled={isInProgress || isDetail}>
+              <FormControl disabled={isInProgress || isDetail || alert === alertTypes.warning}>
                 <RadioGroup
                   name="standIn"
                   onChange={(e) => setStandIn(e.target.value === 'true' ? true : false)}
@@ -604,54 +633,60 @@ const HoursInput = ({
   setHours,
   minTime,
   disabled,
+  error,
 }: {
   label: string;
   hours: string | null;
   setHours: (value: string | null) => void;
   minTime?: string | null;
   disabled?: boolean;
+  error?: string;
 }) => (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <DesktopTimePicker
-      label={label}
-      views={['hours', 'minutes']}
-      onChange={(value) => setHours(value)}
-      value={hours}
-      ampm={false}
-      minutesStep={15}
-      minTime={minTime}
-      disabled={disabled}
-      renderInput={(params: TextFieldProps) => (
-        <TextField
-          {...params}
-          inputProps={{
-            ...params.inputProps,
-            placeholder: '00:00',
-            'data-testid': 'select-hours',
-          }}
-          id="hours"
-          name="hours"
-          type="time"
-          size="small"
-        />
-      )}
-    />
-  </LocalizationProvider>
-);
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DesktopTimePicker
+        label={label}
+        views={['hours', 'minutes']}
+        onChange={(value) => setHours(value)}
+        value={hours}
+        ampm={false}
+        minutesStep={15}
+        minTime={minTime ? minTime : minDateFromToday}
+        disabled={disabled}
+        renderInput={(params: TextFieldProps) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+              placeholder: '00:00',
+              'data-testid': 'select-hours',
+            }}
+            sx={{ width: '100%' }}
+            id="hours"
+            name="hours"
+            type="time"
+            size="small"
+            helperText={error}
+            error={disabled ? false : Boolean(error)}
+          />
+        )}
+      />
+    </LocalizationProvider>
+  );
 
 const DatePicker = ({
   date,
   setDate,
   minDate,
   disabled,
+  error,
 }: {
   date: string | null;
   setDate: (value: string | null) => void;
   minDate?: string | null;
   disabled?: boolean;
+  error?: string;
 }) => {
   const { t } = useTranslation();
-  const defaultDate = add(new Date(), { days: 3 });
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DesktopDatePicker
@@ -659,7 +694,7 @@ const DatePicker = ({
         inputFormat="dd/MM/yyyy"
         value={date ? new Date(date).toString() : null}
         onChange={(value) => setDate(value)}
-        minDate={minDate ? minDate : defaultDate.toDateString()}
+        minDate={minDate ? minDate : minDateFromToday}
         maxDate={add(new Date(), { months: 6 }).toDateString()}
         disabled={disabled}
         renderInput={(params: TextFieldProps) => (
@@ -670,10 +705,13 @@ const DatePicker = ({
               placeholder: 'dd/MM/aaaa',
               'data-testid': 'date-test',
             }}
+            sx={{ width: '100%' }}
             id="date"
             name="date"
             type="date"
             size="small"
+            error={disabled ? false : Boolean(error)}
+            helperText={error}
           />
         )}
       />

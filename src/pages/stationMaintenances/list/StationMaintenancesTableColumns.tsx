@@ -3,13 +3,14 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
 import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
+import { add } from 'date-fns';
 import {
   colorType,
   renderCell,
   renderStatusChip,
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
-import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { formatDateToDDMMYYYYhhmmWithTimezone } from '../../../utils/common-utils';
 import {
   mapStationMaintenanceState,
   StationMaintenanceActionType,
@@ -57,7 +58,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.start_date_time
-            ? formatDateToDDMMYYYYhhmm(new Date(params.row.start_date_time))
+            ? formatDateToDDMMYYYYhhmmWithTimezone(new Date(params.row.start_date_time))
             : undefined,
         }),
       sortable: false,
@@ -75,7 +76,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.end_date_time
-            ? formatDateToDDMMYYYYhhmm(new Date(params.row.end_date_time))
+            ? formatDateToDDMMYYYYhhmmWithTimezone(new Date(params.row.end_date_time))
             : undefined,
         }),
       sortable: false,

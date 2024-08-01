@@ -23,7 +23,10 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { fromHoursFormattedToNumbers } from '../../../utils/common-utils';
-import { stationMaintenanceActions, StationMaintenanceReduxState } from '../../../redux/slices/stationMaintenancesSlice';
+import {
+  stationMaintenanceActions,
+  StationMaintenanceReduxState,
+} from '../../../redux/slices/stationMaintenancesSlice';
 import {
   deleteStationMaintenance,
   getStationMaintenances,
@@ -70,10 +73,12 @@ const baseInputStyle = {
 const componentPath = 'stationMaintenancesPage.table';
 export default function StationMaintenancesTable({
   setAlertMessage,
-  hoursRemaining
+  hoursRemaining,
+  getHoursSummary,
 }: {
   setAlertMessage: (value: string) => void;
   hoursRemaining: string;
+  getHoursSummary: () => void;
 }) {
   const { t } = useTranslation();
   const history = useHistory();
@@ -153,7 +158,7 @@ export default function StationMaintenancesTable({
     if (routeAction) {
       const state: StationMaintenanceReduxState = {
         stationMaintenance: maintenance,
-        hoursRemaining: fromHoursFormattedToNumbers(hoursRemaining)
+        hoursRemaining: fromHoursFormattedToNumbers(hoursRemaining),
       };
       dispatcher(stationMaintenanceActions.setStationMaintenanceState(state));
       history.push(
@@ -194,6 +199,7 @@ export default function StationMaintenancesTable({
           .then(() => {
             setAlertMessage(t(`${componentPath}.successMessage${description}`));
             handleGetStationMaintenances(0);
+            getHoursSummary();
           })
           .catch((reason) => {
             addError({
@@ -345,8 +351,11 @@ export default function StationMaintenancesTable({
           linkToRedirect={
             filterState === StationMaintenanceState.FINISHED
               ? undefined
-              : ROUTES.STATION_MAINTENANCES_LIST
-          } // TODO ROUTES TO NEW MAINTENANCE PPANTT-42
+              : generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
+                  action: StationMaintenanceActionType.CREATE,
+                  maintenanceId: 0
+                })
+          }
           rows={
             stationMaintenancesList?.station_maintenance_list
               ? [...stationMaintenancesList.station_maintenance_list]

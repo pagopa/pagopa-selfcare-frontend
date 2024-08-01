@@ -132,6 +132,7 @@ export default function StationMaintenancesPage() {
       <StationMaintenancesHoursSummary hoursSummary={hoursSummary} />
       <StationMaintenancesTable
         setAlertMessage={setAlertMessage}
+        getHoursSummary={getHoursSummary}
         hoursRemaining={hoursSummary.remaining_hours}
       />
     </SideMenuLayout>

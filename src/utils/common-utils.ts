@@ -68,6 +68,14 @@ export const removeDateZoneInfo = (value: Date | undefined): Date | undefined =>
   return new Date(value.getTime() - userTimezoneOffset);
 };
 
+export const removeDateZoneInfoGMT2 = (value: Date | undefined): Date | undefined => {
+  if (!value) {
+    return value;
+  }
+  const userTimezoneOffset = (value.getTimezoneOffset() + 120) * 60000;
+  return new Date(value.getTime() - userTimezoneOffset);
+};
+
 export const formatDateToDDMMYYYYhhmm = (value: any): string =>
   value.toLocaleString('en-GB', {
     year: 'numeric',
@@ -81,6 +89,16 @@ export const formatDateTohhmm = (value: any): string =>
   value.toLocaleString('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
+  });
+
+export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string =>
+  value.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Rome',
   });
 
 export function fromHoursFormattedToNumbers(hour: string): number {

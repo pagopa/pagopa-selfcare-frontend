@@ -1617,7 +1617,7 @@
       "edit-scheduled": "Modifica programmazione",
       "edit-in-progress": "Modifica programmazione",
       "create": "Nuova manutenzione",
-      "details": "Dettagli programmazione"
+      "details": "Dettaglio programmazione"
     },
     "subtitle": {
       "edit-scheduled": "Indica le modifiche al periodo di manutenzione.",
@@ -1639,7 +1639,8 @@
         "totalHours": "Totale ore",
         "fromHours": "Dalle ore",
         "toHours": "Alle ore",
-        "ofDay": "Del giorno"
+        "ofDay": "Del giorno",
+        "error": "L’orario di inizio non può essere successivo a quello di fine"
       },
       "standInSection": {
         "title": "Le posizioni debitorie sono pagabili in Stand In?",

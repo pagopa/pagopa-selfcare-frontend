@@ -34,7 +34,11 @@ import {
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import { datesAreOnSameDay, formatDateToDDMMYYYYhhmmWithTimezone, removeDateZoneInfoGMT2 } from '../../../utils/common-utils';
+import {
+  datesAreOnSameDay,
+  formatDateToDDMMYYYYhhmmWithTimezone,
+  removeDateZoneInfoGMT2,
+} from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
@@ -54,6 +58,7 @@ import {
   StationMaintenanceReduxState,
   stationMaintenanceSelectors,
 } from '../../../redux/slices/stationMaintenancesSlice';
+import { extractProblemJson } from '../../../utils/client-utils';
 
 function mergeDateAndHours(date: string, hours: string) {
   const dateFinal = new Date(date);
@@ -176,6 +181,7 @@ export function StationMaintenanceAddEditDetail() {
   const [errorDate, setErrorDate] = useState<string | undefined>();
 
   function handleSetDate(value: string | null, setDateType: SetDateType) {
+    setErrorDate(undefined);
     if (setDateType === SetDateType.DATE_FROM) {
       setDateFrom(value);
     } else if (setDateType === SetDateType.DATE_TO) {
@@ -241,6 +247,7 @@ export function StationMaintenanceAddEditDetail() {
     }
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function handleConfirmAction() {
     if (dateTo && hoursTo && dateFrom && hoursFrom && selectedStation) {
       if (getHoursDifference({ hoursFrom, hoursTo, dateFrom, dateTo }) <= 0) {
@@ -275,15 +282,19 @@ export function StationMaintenanceAddEditDetail() {
           .then(() => {
             history.push(ROUTES.STATION_MAINTENANCES_LIST);
           })
-          .catch((reason) =>
-            addError({
-              id: 'ACTION_ON_MAINTENANCE_ERROR',
-              blocking: false,
-              error: reason,
-              techDescription: `An error occurred while creating or updating the maintenance`,
-              toNotify: true,
-            })
-          )
+          .catch((reason) => {
+            if (extractProblemJson(reason)?.response?.status === 502) {
+              setErrorDate(t(`${componentPath}.configuration.hoursSection.errorMinDate`));
+            } else {
+              addError({
+                id: 'ACTION_ON_MAINTENANCE_ERROR',
+                blocking: false,
+                error: reason,
+                techDescription: `An error occurred while creating or updating the maintenance`,
+                toNotify: true,
+              });
+            }
+          })
           .finally(() => setLoadingAction(false));
       }
     }
@@ -642,36 +653,36 @@ const HoursInput = ({
   disabled?: boolean;
   error?: string;
 }) => (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DesktopTimePicker
-        label={label}
-        views={['hours', 'minutes']}
-        onChange={(value) => setHours(value)}
-        value={hours}
-        ampm={false}
-        minutesStep={15}
-        minTime={minTime ? minTime : minDateFromToday}
-        disabled={disabled}
-        renderInput={(params: TextFieldProps) => (
-          <TextField
-            {...params}
-            inputProps={{
-              ...params.inputProps,
-              placeholder: '00:00',
-              'data-testid': 'select-hours',
-            }}
-            sx={{ width: '100%' }}
-            id="hours"
-            name="hours"
-            type="time"
-            size="small"
-            helperText={error}
-            error={disabled ? false : Boolean(error)}
-          />
-        )}
-      />
-    </LocalizationProvider>
-  );
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <DesktopTimePicker
+      label={label}
+      views={['hours', 'minutes']}
+      onChange={(value) => setHours(value)}
+      value={hours}
+      ampm={false}
+      minutesStep={15}
+      minTime={minTime ? minTime : minDateFromToday}
+      disabled={disabled}
+      renderInput={(params: TextFieldProps) => (
+        <TextField
+          {...params}
+          inputProps={{
+            ...params.inputProps,
+            placeholder: '00:00',
+            'data-testid': 'select-hours',
+          }}
+          sx={{ width: '100%' }}
+          id="hours"
+          name="hours"
+          type="time"
+          size="small"
+          helperText={error}
+          error={disabled ? false : Boolean(error)}
+        />
+      )}
+    />
+  </LocalizationProvider>
+);
 
 const DatePicker = ({
   date,

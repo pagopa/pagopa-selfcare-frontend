@@ -105,7 +105,7 @@ function getHoursDifferenceFormatted({
 
   let hoursString;
   let minutesString;
-  if (decimalIndex > 0) {
+  if (decimalIndex >= 0) {
     hoursString = hours.substring(0, decimalIndex);
     minutesString = Number('0.' + hours.substring(decimalIndex + 1, decimalIndex + 3)) * 60;
   } else {

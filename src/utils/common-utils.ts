@@ -103,7 +103,7 @@ export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string =>
 
 export function fromHoursFormattedToNumbers(hour: string): number {
   const separator = hour.indexOf(':');
-  if (separator) {
+  if (separator >= 0) {
     const subStringHours = hour.substring(0, separator);
     const subStringMinutes = hour.substring(separator + 1);
 

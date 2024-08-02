@@ -1633,6 +1633,7 @@
       "title": "Configurazione",
       "subtitle": "Cerca il codice stazione utilizzando la barra di ricerca.",
       "search": "Cerca stazione",
+      "errorGetStations": "E' stato riscontrato un errore durante il recupero delle stazioni",
       "hoursSection": {
         "title": "Quando sarà in manutenzione?",
         "subtitle": "Timezone: Rome, Italy (GMT +2:00)",
@@ -1641,7 +1642,9 @@
         "toHours": "Alle ore",
         "ofDay": "Del giorno",
         "error": "L’orario di inizio non può essere successivo a quello di fine",
-        "errorMinDate": "La manuntenzione deve iniziare dopo 72 ore dalla data odierna"
+        "errorMinDate": "La manutenzione deve iniziare dopo 72 ore dalla data odierna",
+        "errorGeneric": "E' stato riscontrato un errore durante la creazione o aggiornamento della manutenzione",
+        "errorConflict": "E' gia presente una manutenzione con questo intervallo temporale"
       },
       "standInSection": {
         "title": "Le posizioni debitorie sono pagabili in Stand In?",

@@ -34,10 +34,7 @@ import {
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import {
-  datesAreOnSameDay,
-  removeDateZoneInfoGMT2,
-} from '../../../utils/common-utils';
+import { datesAreOnSameDay, removeDateZoneInfoGMT2 } from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
@@ -140,7 +137,7 @@ const alertTypes = {
 
 const minDateFromToday = add(new Date(), { days: 3 }).toString();
 // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
-export function StationMaintenanceAddEditDetail() {
+export default function StationMaintenanceAddEditDetail() {
   const { t } = useTranslation();
   const history = useHistory();
   const addError = useErrorDispatcher();
@@ -282,15 +279,23 @@ export function StationMaintenanceAddEditDetail() {
             history.push(ROUTES.STATION_MAINTENANCES_LIST);
           })
           .catch((reason) => {
-            if (extractProblemJson(reason)?.response?.status === 502) {
+            const problem = extractProblemJson(reason);
+            let errorDesc = t(`${componentPath}.configuration.hoursSection.errorGeneric`);
+
+            if (problem?.response?.status === 502 && problem?.status !== 409) {
               setErrorDate(t(`${componentPath}.configuration.hoursSection.errorMinDate`));
             } else {
+              if (problem?.status === 409) {
+                errorDesc = t(`${componentPath}.configuration.hoursSection.errorConflict`);
+              }
               addError({
                 id: 'ACTION_ON_MAINTENANCE_ERROR',
                 blocking: false,
                 error: reason,
                 techDescription: `An error occurred while creating or updating the maintenance`,
                 toNotify: true,
+                displayableDescription: errorDesc,
+                component: 'Toast',
               });
             }
           })
@@ -330,6 +335,8 @@ export function StationMaintenanceAddEditDetail() {
           error: reason,
           techDescription: `An error occurred while retrieving stations`,
           toNotify: true,
+          displayableDescription: t(`${componentPath}.configuration.errorGetStations`),
+          component: 'Toast'
         });
         setStationList([]);
       })
@@ -435,7 +442,7 @@ export function StationMaintenanceAddEditDetail() {
         />
 
         {alert && (
-          <Alert severity={alert.severity as AlertColor}>
+          <Alert severity={alert.severity as AlertColor} data-testid={`alert-${alert.severity}`}>
             <Box display="flex" alignItems="center">
               <Typography variant="body1" width="85%">
                 {t(alert.description)}
@@ -626,7 +633,7 @@ export function StationMaintenanceAddEditDetail() {
               color="primary"
               variant="contained"
               type="submit"
-              data-testid="open-modal-button-test"
+              data-testid="confirm-button-test"
             >
               {t('general.confirm')}
             </Button>

@@ -59,7 +59,7 @@ import { rewriteLinks } from './utils/onetrust-utils';
 import tosJson from './data/tos.json';
 import privacyJson from './data/privacy.json';
 import StationMaintenancesPage from './pages/stationMaintenances/list/StationMaintenancesPage';
-import { StationMaintenanceAddEditDetail } from './pages/stationMaintenances/addEditDetail/StationMaintenanceAddEditDetail';
+import StationMaintenanceAddEditDetail from './pages/stationMaintenances/addEditDetail/StationMaintenanceAddEditDetail';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(

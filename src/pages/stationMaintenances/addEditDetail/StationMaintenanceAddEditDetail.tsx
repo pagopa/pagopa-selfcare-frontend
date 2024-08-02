@@ -276,7 +276,11 @@ export default function StationMaintenanceAddEditDetail() {
         setLoadingAction(true);
         promise
           .then(() => {
-            history.push(ROUTES.STATION_MAINTENANCES_LIST);
+            history.push(ROUTES.STATION_MAINTENANCES_LIST, {
+              alertSuccessMessage: t(
+                `${componentPath}.success${isEdit ? 'Update' : 'Create'}`
+              ),
+            });
           })
           .catch((reason) => {
             const problem = extractProblemJson(reason);
@@ -336,7 +340,7 @@ export default function StationMaintenanceAddEditDetail() {
           techDescription: `An error occurred while retrieving stations`,
           toNotify: true,
           displayableDescription: t(`${componentPath}.configuration.errorGetStations`),
-          component: 'Toast'
+          component: 'Toast',
         });
         setStationList([]);
       })

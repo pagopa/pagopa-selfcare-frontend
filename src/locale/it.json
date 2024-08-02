@@ -1650,7 +1650,9 @@
         "title": "Le posizioni debitorie sono pagabili in Stand In?",
         "subtitle": "Ti consente di non interrompere il pagamento delle posizioni debitorie durante un disservizio dei tuoi sistemi."
       }
-    }
+    },
+    "successCreate": "Manutenzione creata con successo",
+    "successUpdate": "Manutenzione aggiornata con successo"
   },
   "sideMenu": {
     "home": {

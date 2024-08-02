@@ -15,6 +15,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getBrokerMaintenancesSummary } from '../../../services/stationMaintenancesService';
 import { LOADING_TASK_STATION_MAINTENANCES_HOURS_SUMMARY } from '../../../utils/constants';
 import { stationMaintenanceActions } from '../../../redux/slices/stationMaintenancesSlice';
+import SuccessAlertLayout from '../../../components/Layout/SuccessAlertLayout';
 import StationMaintenancesTable from './StationMaintenancesTable';
 import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
 
@@ -47,10 +48,12 @@ export default function StationMaintenancesPage() {
     })
       .then((res: MaintenanceHoursSummaryResource) => {
         if (res) {
-          dispatcher(stationMaintenanceActions.setStationMaintenanceState({
-            hoursRemaining: fromHoursFormattedToNumbers(res.remaining_hours),
-            stationMaintenance: undefined
-          }));
+          dispatcher(
+            stationMaintenanceActions.setStationMaintenanceState({
+              hoursRemaining: fromHoursFormattedToNumbers(res.remaining_hours),
+              stationMaintenance: undefined,
+            })
+          );
           setHoursSummary(res);
         } else {
           setHoursSummary(emptySummary);
@@ -79,62 +82,64 @@ export default function StationMaintenancesPage() {
 
   return (
     <SideMenuLayout>
-      <Stack direction="row" justifyContent="space-between">
-        <Stack display="flex" justifyContent="flex-start" mr={2}>
-          <TitleBox
-            title={t(`${componentPath}.title`)}
-            subTitle={t(`${componentPath}.subTitle`)}
-            mbSubTitle={3}
-            variantTitle="h4"
-            variantSubTitle="body1"
-          />
+      <SuccessAlertLayout>
+        <Stack direction="row" justifyContent="space-between">
+          <Stack display="flex" justifyContent="flex-start" mr={2}>
+            <TitleBox
+              title={t(`${componentPath}.title`)}
+              subTitle={t(`${componentPath}.subTitle`)}
+              mbSubTitle={3}
+              variantTitle="h4"
+              variantSubTitle="body1"
+            />
+          </Stack>
+          <Stack display="flex" justifyContent="flex-end" mb={5}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                history.push(
+                  generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
+                    action: StationMaintenanceActionType.CREATE,
+                    maintenanceId: 0,
+                  })
+                );
+              }}
+              endIcon={<Add />}
+              color="primary"
+              sx={{
+                border: `2px solid ${theme.palette.primary.main}`,
+                borderRadius: theme.spacing(0.5),
+                px: 2,
+                py: 1.5,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              {t(`${componentPath}.createButton`)}
+            </Button>
+          </Stack>
         </Stack>
-        <Stack display="flex" justifyContent="flex-end" mb={5}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              history.push(
-                generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
-                  action: StationMaintenanceActionType.CREATE,
-                  maintenanceId: 0,
-                })
-              );
-            }}
-            endIcon={<Add />}
-            color="primary"
+        {alertMessage && (
+          <Alert
             sx={{
-              border: `2px solid ${theme.palette.primary.main}`,
-              borderRadius: theme.spacing(0.5),
-              px: 2,
-              py: 1.5,
-              display: 'flex',
-              justifyContent: 'center',
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              zIndex: 1000,
             }}
+            severity="success"
+            variant="outlined"
           >
-            {t(`${componentPath}.createButton`)}
-          </Button>
-        </Stack>
-      </Stack>
-      {alertMessage && (
-        <Alert
-          sx={{
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            zIndex: 1000,
-          }}
-          severity="success"
-          variant="outlined"
-        >
-          {alertMessage}
-        </Alert>
-      )}
-      <StationMaintenancesHoursSummary hoursSummary={hoursSummary} />
-      <StationMaintenancesTable
-        setAlertMessage={setAlertMessage}
-        getHoursSummary={getHoursSummary}
-        hoursRemaining={hoursSummary.remaining_hours}
-      />
+            {alertMessage}
+          </Alert>
+        )}
+        <StationMaintenancesHoursSummary hoursSummary={hoursSummary} />
+        <StationMaintenancesTable
+          setAlertMessage={setAlertMessage}
+          getHoursSummary={getHoursSummary}
+          hoursRemaining={hoursSummary.remaining_hours}
+        />
+      </SuccessAlertLayout>
     </SideMenuLayout>
   );
 }

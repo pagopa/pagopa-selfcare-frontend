@@ -588,7 +588,7 @@ describe('<NodeSignInPTForm />', () => {
                     isEcBroker: false,
                     isPspBroker: false,
                 },
-                isSigned: false
+                isSigned: true
             },
             orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
@@ -624,7 +624,7 @@ describe('<NodeSignInPTForm />', () => {
                     isEcBroker: false,
                     isPspBroker: false,
                 },
-                isSigned: false
+                isSigned: true
             },
             orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,
@@ -660,7 +660,7 @@ describe('<NodeSignInPTForm />', () => {
                     isEcBroker: false,
                     isPspBroker: false,
                 },
-                isSigned: false
+                isSigned: true
             },
             orgIsBrokerSigned: false,
             orgIsEcBrokerSigned: false,

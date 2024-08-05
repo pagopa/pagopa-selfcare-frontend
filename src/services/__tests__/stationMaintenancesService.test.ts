@@ -1,14 +1,17 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { StationMaintenanceState } from '../../model/StationMaintenance';
 import {
+  mockCreateStationMaintenance,
   mockMaintenanceHoursSummary,
   mockStationMaintenancesList,
 } from '../__mocks__/stationMaintenancesService';
 import {
+  createStationMaintenance,
   deleteStationMaintenance,
   finishStationMaintenance,
   getBrokerMaintenancesSummary,
   getStationMaintenances,
+  updateStationMaintenance,
 } from '../stationMaintenancesService';
 
 describe('StationMaintenancesService test mocked', () => {
@@ -41,6 +44,21 @@ describe('StationMaintenancesService test mocked', () => {
     const response = await finishStationMaintenance({
       brokerTaxCode: 'brokerTaxCode',
       maintenanceId: 0,
+    });
+    expect(response).toBeUndefined();
+  });
+  test('Test createStationMaintenance', async () => {
+    const response = await createStationMaintenance({
+      brokerTaxCode: 'brokerTaxCode',
+      createStationMaintenance: mockCreateStationMaintenance,
+    });
+    expect(response).toBeUndefined();
+  });
+  test('Test updateStationMaintenance', async () => {
+    const response = await updateStationMaintenance({
+      brokerTaxCode: 'brokerTaxCode',
+      maintenanceId: 0,
+      createStationMaintenance: mockCreateStationMaintenance,
     });
     expect(response).toBeUndefined();
   });
@@ -105,6 +123,31 @@ describe('StationMaintenancesService test', () => {
       finishStationMaintenance({
         brokerTaxCode: 'brokerTaxCode',
         maintenanceId: 0,
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test createStationMaintenance', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi.stationMaintenances, 'createStationMaintenance')
+      .mockReturnValue(new Promise((resolve) => resolve()));
+    expect(
+      createStationMaintenance({
+        brokerTaxCode: 'brokerTaxCode',
+        createStationMaintenance: mockCreateStationMaintenance,
+      })
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
+  test('Test updateStationMaintenance', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi.stationMaintenances, 'updateStationMaintenance')
+      .mockReturnValue(new Promise((resolve) => resolve()));
+    expect(
+      updateStationMaintenance({
+        brokerTaxCode: 'brokerTaxCode',
+        maintenanceId: 0,
+        createStationMaintenance: mockCreateStationMaintenance,
       })
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);

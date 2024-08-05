@@ -2,6 +2,7 @@ import { add } from 'date-fns';
 import { MaintenanceHoursSummaryResource } from '../../api/generated/portal/MaintenanceHoursSummaryResource';
 import { StationMaintenanceListResource } from '../../api/generated/portal/StationMaintenanceListResource';
 import { StationMaintenanceResource } from '../../api/generated/portal/StationMaintenanceResource';
+import { CreateStationMaintenance } from '../../api/generated/portal/CreateStationMaintenance';
 
 export const mockStationMaintenancesList: StationMaintenanceListResource = {
   station_maintenance_list: [],
@@ -29,6 +30,13 @@ export const mockStationMaintenance: StationMaintenanceResource = {
   start_date_time: new Date(),
   station_code: 'stationCode',
 };
+
+export const mockCreateStationMaintenance: CreateStationMaintenance = {
+  end_date_time: new Date("01/01/2020, 12:00"),
+  stand_in: true,
+  start_date_time: new Date("01/01/2020, 10:00"),
+  station_code: "stationCode"
+}
 
 export const getMockMaintenanceScheduled = (n: number): Array<StationMaintenanceResource> => {
   const arr: Array<StationMaintenanceResource> = [];

@@ -1604,6 +1604,56 @@
       "successMessageDelete": "Manutenzione eliminata con successo"
     }
   },
+  "stationMaintenanceAddEditDetail": {
+    "breadcrumb": {
+      "title": "Manutenzioni",
+      "create": "Nuova manutenzione",
+      "edit-scheduled": "Modifica",
+      "edit-in-progress": "Modifica",
+      "details": "Dettaglio"
+    },
+    "search": "Cerca stazione",
+    "title": {
+      "edit-scheduled": "Modifica programmazione",
+      "edit-in-progress": "Modifica programmazione",
+      "create": "Nuova manutenzione",
+      "details": "Dettaglio programmazione"
+    },
+    "subtitle": {
+      "edit-scheduled": "Indica le modifiche al periodo di manutenzione.",
+      "edit-in-progress": "Indica le modifiche al periodo di manutenzione.",
+      "create": "Seleziona una stazione e indica il periodo di manutenzione.",
+      "details": ""
+    },
+    "alert": {
+      "info": "Ricordati che è consentito un massimo di 36 ore di fermi programmati nel corso dell’anno solare. Tali limiti sono verificati periodicamente da parte di PagoPA S.p.A.",
+      "warning": "Hai raggiunto il limite di fermi programmati consentiti nell’anno solare. Da questo momento il tempo di manutenzione sarà conteggiato come extra."
+    },
+    "configuration": {
+      "title": "Configurazione",
+      "subtitle": "Cerca il codice stazione utilizzando la barra di ricerca.",
+      "search": "Cerca stazione",
+      "errorGetStations": "E' stato riscontrato un errore durante il recupero delle stazioni",
+      "hoursSection": {
+        "title": "Quando sarà in manutenzione?",
+        "subtitle": "Timezone: Rome, Italy (GMT +2:00)",
+        "totalHours": "Totale ore",
+        "fromHours": "Dalle ore",
+        "toHours": "Alle ore",
+        "ofDay": "Del giorno",
+        "error": "L’orario di inizio non può essere successivo a quello di fine",
+        "errorMinDate": "La manutenzione deve iniziare dopo 72 ore dalla data odierna",
+        "errorGeneric": "E' stato riscontrato un errore durante la creazione o aggiornamento della manutenzione",
+        "errorConflict": "E' gia presente una manutenzione con questo intervallo temporale"
+      },
+      "standInSection": {
+        "title": "Le posizioni debitorie sono pagabili in Stand In?",
+        "subtitle": "Ti consente di non interrompere il pagamento delle posizioni debitorie durante un disservizio dei tuoi sistemi."
+      }
+    },
+    "successCreate": "Manutenzione creata con successo",
+    "successUpdate": "Manutenzione aggiornata con successo"
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"

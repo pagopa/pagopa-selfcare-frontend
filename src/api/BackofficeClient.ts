@@ -102,6 +102,7 @@ import { WrapperStationsResource } from './generated/portal/WrapperStationsResou
 import { WithDefaultsT, createClient } from './generated/portal/client';
 import { StationMaintenanceListResource } from './generated/portal/StationMaintenanceListResource';
 import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceHoursSummaryResource';
+import { CreateStationMaintenance } from './generated/portal/CreateStationMaintenance';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1537,6 +1538,35 @@ export const BackofficeApi = {
       const result = await backofficeClient.finishStationMaintenance({
         'broker-tax-code': brokerTaxCode,
         'maintenance-id': maintenanceId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    createStationMaintenance: async ({
+      brokerTaxCode,
+      createStationMaintenance,
+    }: {
+      brokerTaxCode: string;
+      createStationMaintenance: CreateStationMaintenance;
+    }): Promise<void> => {
+      const result = await backofficeClient.createStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        body: createStationMaintenance,
+      });
+      return extractResponse(result, 201, onRedirectToLogin);
+    },
+    updateStationMaintenance: async ({
+      brokerTaxCode,
+      maintenanceId,
+      createStationMaintenance,
+    }: {
+      brokerTaxCode: string;
+      maintenanceId: number;
+      createStationMaintenance: CreateStationMaintenance;
+    }): Promise<void> => {
+      const result = await backofficeClient.updateStationMaintenance({
+        'broker-tax-code': brokerTaxCode,
+        'maintenance-id': maintenanceId,
+        body: createStationMaintenance,
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

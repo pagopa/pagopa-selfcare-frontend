@@ -9,7 +9,7 @@ import {
   renderStatusChip,
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
-import { formatDateToDDMMYYYYhhmm } from '../../../utils/common-utils';
+import { formatDateToDDMMYYYYhhmmWithTimezone } from '../../../utils/common-utils';
 import {
   mapStationMaintenanceState,
   StationMaintenanceActionType,
@@ -57,7 +57,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.start_date_time
-            ? formatDateToDDMMYYYYhhmm(new Date(params.row.start_date_time))
+            ? formatDateToDDMMYYYYhhmmWithTimezone(new Date(params.row.start_date_time))
             : undefined,
         }),
       sortable: false,
@@ -75,7 +75,7 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: params.row.end_date_time
-            ? formatDateToDDMMYYYYhhmm(new Date(params.row.end_date_time))
+            ? formatDateToDDMMYYYYhhmmWithTimezone(new Date(params.row.end_date_time))
             : undefined,
         }),
       sortable: false,
@@ -147,7 +147,13 @@ export const getRowActions = (
         key="editAction"
         label={t(`${componentPath}.actions.edit`)}
         onClick={() =>
-          handleOnRowActionClick({ maintenance, routeAction: StationMaintenanceActionType.EDIT })
+          handleOnRowActionClick({
+            maintenance,
+            routeAction:
+              maintenanceState === StationMaintenanceState.IN_PROGRESS
+                ? StationMaintenanceActionType.EDIT_IN_PROGRESS
+                : StationMaintenanceActionType.EDIT_SCHEDULED,
+          })
         }
         showInMenu
         icon={<Edit sx={{ mr: 1 }} fontSize="small" />}

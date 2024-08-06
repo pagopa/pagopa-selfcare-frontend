@@ -23,7 +23,7 @@ const ROUTES = {
   STATION_DETAIL: `${BASE_ROUTE}/stations/detail/:stationId/:status`,
   STATION_EDIT: `${BASE_ROUTE}/stations/:stationId/:actionId`,
   STATION_EC_LIST: `${BASE_ROUTE}/stations/:stationId/ec-list`,
-  STATION_ASSOCIATE_EC: `${BASE_ROUTE}/stations/:stationId/associate-ec`,
+  STATION_ASSOCIATE_EC: `${BASE_ROUTE}/stations/:stationId/associate-ec/:action`,
   STATION_ADD: `${BASE_ROUTE}/stations/add-station/`,
 
   IBAN: `${BASE_ROUTE}/iban`,
@@ -49,6 +49,9 @@ const ROUTES = {
 
   PAYMENT_NOTICES: `${BASE_ROUTE}/payments-notices`,
   PAYMENT_NOTICES_ADDEDIT: `${BASE_ROUTE}/payments-notices/addedit`,
+
+  STATION_MAINTENANCES_LIST: `${BASE_ROUTE}/station-maintenances`,
+  STATION_MAINTENANCES_ADD_EDIT_DETAIL: `${BASE_ROUTE}/station-maintenances/:action/:maintenanceId`,
 
   /* TOS: {
       PATH: '/terms-of-service',

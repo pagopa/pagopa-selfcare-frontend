@@ -9,7 +9,7 @@ import { useHistory, useParams } from 'react-router';
 import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import ROUTES from '../../../routes';
 import TableSearchBar from '../../../components/Table/TableSearchBar';
-// import { mockedStationECs } from '../../../services/__mocks__/stationService';
+import { StationECAssociateActionType } from '../../../model/Station';
 import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
@@ -154,6 +154,7 @@ const StationECListPage = () => {
             component={Link}
             to={generatePath(ROUTES.STATION_ASSOCIATE_EC, {
               stationId,
+              action: StationECAssociateActionType.ASSOCIATE
             })}
             variant="contained"
             sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto' }}
@@ -167,6 +168,7 @@ const StationECListPage = () => {
       <StationECTable
         ciNameOrFiscalCodeFilter={ciNameOrFiscalCodeFilter}
         setAlertMessage={setAlertMessage}
+        setNoValidCi={setNoValidCi}
       />
     </SideMenuLayout>
   );

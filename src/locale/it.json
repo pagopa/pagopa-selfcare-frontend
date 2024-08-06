@@ -6,6 +6,10 @@
       "toastError": "ERRORE",
       "toastMessage": "Spiacenti, qualcosa è andato storto."
     },
+    "blockingErrorPage": {
+      "title": "Errore",
+      "description": "Spiacenti, qualcosa è andato storto."
+    },
     "sessionModal": {
       "closeButton": "Annulla",
       "confirmButton": "Riprova"
@@ -380,7 +384,7 @@
     "subtitle": "Dopo la modifica sarà richiesta una nuova revisione del canale."
   },
   "channelDetailPage": {
-    "subtitle":{
+    "subtitle": {
       "waiting": "Ecco i dettagli del canale inviato in revisione.",
       "approved": "Ecco i dettagli della canale."
     },
@@ -705,7 +709,10 @@
         "auxdigit": "Auxdigit",
         "segregationCode": "Segregation code",
         "appCode": "Application code",
-        "broadcast": "Broadcast"
+        "broadcast": "Broadcast",
+        "action": "Dissocia EC",
+        "aca": "ACA",
+        "standIn": "Stand In"
       }
     },
     "dissociateModal": {
@@ -725,7 +732,8 @@
       "ECSelectionInputPlaceholder": "Cerca EC",
       "segregationCode": "Codice segregazione",
       "auxDigit": "Aux digit",
-      "successMessage": "EC associato con successo.",
+      "successMessageUpdate": "Associazione aggioranta con successo.",
+      "successMessageAssociate": "EC associato con successo.",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",
       "errorMessageAlreadyAssociated": "L'EC associato è già stato associato in precedenza alla stazione",
@@ -734,12 +742,18 @@
       "backButton": "Annulla",
       "confirmButton": "Conferma"
     },
+    "secondPaper": {
+      "title": "Posizioni debitorie",
+      "subtitle": "Indica quali servizi puoi garantire in questo momento",
+      "aca": "Puoi mettere a disposizione i dati in Archivio Centralizzato Avvisi?",
+      "standIn": "Le posizioni debitorie sono pagabili in Stand In?"
+    },
     "alert": {
       "noDelegations": "Tutti gli enti disponibili sono già associati alla stazione selezionata."
     }
   },
   "stationDetailPageValidation": {
-    "subtitle":{
+    "subtitle": {
       "waiting": "Ecco i dettagli della stazione inviata in revisione.",
       "approved": "Ecco i dettagli della stazione."
     },
@@ -1438,7 +1452,7 @@
     }
   },
   "delegationsPage": {
-    "title": "I tuoi enti",
+    "title": "Enti gestiti",
     "subtitle": "Di seguito gli enti che ti hanno indicato come intermediario per il prodotto Piattaforma pagoPA.",
     "downloadButton": "Scarica lista",
     "alertMessage": "Il file che stai esportando contiene informazioni aggiornate al {{date}} alle ore {{hours}}",
@@ -1527,6 +1541,119 @@
       "downloadButton": "Scarica ricevuta"
     }
   },
+  "stationMaintenancesPage": {
+    "title": "Manutenzioni programmate",
+    "subTitle": "Crea e gestisci le manutenzioni programmate delle tue stazioni",
+    "createButton": "Nuova manutenzione",
+    "hoursSummary": {
+      "title": "Riepilogo ore",
+      "used_hours": "Svolte",
+      "scheduled_hours": "In programma",
+      "remaining_hours": "Residue",
+      "annual_hours_limit": "Limite annuale",
+      "extra_hours": "Extra",
+      "errorGetSummary": "Errore durante il recupero del riepilogo ore"
+    },
+    "table": {
+      "search": {
+        "placeholder": "Cerca per codice stazione",
+        "tabScheduled": "Programmate",
+        "tabFinished": "Passate",
+        "state": "Stato manutenzione",
+        "select": {
+          "SCHEDULED_AND_IN_PROGRESS": "Tutti",
+          "SCHEDULED": "In programma",
+          "IN_PROGRESS": "In corso"
+        }
+      },
+      "emptyState": {
+        "FINISHED": "Non ci sono manutenzioni passate.",
+        "SCHEDULED": "Non ci sono manutenzioni in programma."
+      },
+      "link": "Crea nuova manutenzione",
+      "errorMessageMaintenanceList": "Errore durante il recupero delle manutenzioni",
+      "columns": {
+        "stationCode": "Codice stazione",
+        "startDateTime": "Inizio manutenzione",
+        "endDateTime": "Fine manutenzione",
+        "state": "Stato  manutenzione",
+        "chipStates": {
+          "IN_PROGRESS": "In corso",
+          "SCHEDULED": "In programma"
+        },
+        "actions": {
+          "edit": "Modifica",
+          "delete": "Elimina manutenzione",
+          "terminate": "Termina manutenzione",
+          "details": "Dettaglio"
+        }
+      },
+      "actionModal": {
+        "terminate": {
+          "title": "Termina manutenzione",
+          "message": "La manutenzione in corso sarà interrotta e la stazione tornerà in regolare esercizio."
+        },
+        "delete": {
+          "title": "Elimina manutenzione",
+          "message": "La manutenzione programmata sarà rimossa definitivamente."
+        }
+      },
+      "errorMessageTerminate": "Errore durante la terminazione della manutenzione",
+      "errorMessageDelete": "Errore durante l'eliminazione della manutenzione",
+      "successMessageTerminate": "Manutenzione terminata con successo",
+      "successMessageDelete": "Manutenzione eliminata con successo"
+    }
+  },
+  "stationMaintenanceAddEditDetail": {
+    "breadcrumb": {
+      "title": "Manutenzioni",
+      "create": "Nuova manutenzione",
+      "edit-scheduled": "Modifica",
+      "edit-in-progress": "Modifica",
+      "details": "Dettaglio"
+    },
+    "search": "Cerca stazione",
+    "title": {
+      "edit-scheduled": "Modifica programmazione",
+      "edit-in-progress": "Modifica programmazione",
+      "create": "Nuova manutenzione",
+      "details": "Dettaglio programmazione"
+    },
+    "subtitle": {
+      "edit-scheduled": "Indica le modifiche al periodo di manutenzione.",
+      "edit-in-progress": "Indica le modifiche al periodo di manutenzione.",
+      "create": "Seleziona una stazione e indica il periodo di manutenzione.",
+      "details": ""
+    },
+    "alert": {
+      "info": "Ricordati che è consentito un massimo di 36 ore di fermi programmati nel corso dell’anno solare. Tali limiti sono verificati periodicamente da parte di PagoPA S.p.A.",
+      "warning": "Hai raggiunto il limite di fermi programmati consentiti nell’anno solare. Da questo momento il tempo di manutenzione sarà conteggiato come extra."
+    },
+    "configuration": {
+      "title": "Configurazione",
+      "subtitle": "Cerca il codice stazione utilizzando la barra di ricerca.",
+      "search": "Cerca stazione",
+      "errorGetStations": "E' stato riscontrato un errore durante il recupero delle stazioni",
+      "hoursSection": {
+        "title": "Quando sarà in manutenzione?",
+        "subtitle": "Timezone: Rome, Italy (GMT +2:00)",
+        "totalHours": "Totale ore",
+        "fromHours": "Dalle ore",
+        "toHours": "Alle ore",
+        "ofDay": "Del giorno",
+        "error": "L’orario di inizio non può essere successivo a quello di fine",
+        "errorMinDate": "La manutenzione deve iniziare dopo 72 ore dalla data odierna",
+        "errorGeneric": "E' stato riscontrato un errore durante la creazione o aggiornamento della manutenzione",
+        "errorConflict": "E' gia presente una manutenzione con questo intervallo temporale"
+      },
+      "standInSection": {
+        "title": "Le posizioni debitorie sono pagabili in Stand In?",
+        "subtitle": "Ti consente di non interrompere il pagamento delle posizioni debitorie durante un disservizio dei tuoi sistemi."
+      }
+    },
+    "successCreate": "Manutenzione creata con successo",
+    "successUpdate": "Manutenzione aggiornata con successo"
+  },
   "sideMenu": {
     "home": {
       "title": "Panoramica"
@@ -1550,7 +1677,7 @@
       "title": "Tavoli Operativi"
     },
     "delegations": {
-      "title": "I tuoi enti"
+      "title": "Enti gestiti"
     },
     "paymentsReceipts": {
       "title": "Pagamenti CUP"
@@ -1563,6 +1690,9 @@
     },
     "paymentNotices": {
       "title": "Avvisi di pagamento"
+    },
+    "stationMaintenances": {
+      "title": "Manutenzioni programmate"
     }
   },
   "header": {
@@ -1575,8 +1705,8 @@
   },
   "subHeader": {
     "partySelectionSearch": {
-      "title": "I tuoi enti",
-      "label": "I tuoi enti"
+      "title": "Enti gestiti",
+      "label": "Enti gestiti"
     },
     "backButton": "Esci"
   },
@@ -1642,7 +1772,8 @@
     "noOptions": "Nessun elemento",
     "loading": "Caricamento...",
     "fromLower": "da",
-    "atLower": "il"
+    "atLower": "il",
+    "year": "Anno"
   },
   "ANY": "Tutti"
 }

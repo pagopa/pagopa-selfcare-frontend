@@ -137,7 +137,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
   test('render component CommissionBundleDetailPage bundle type PRIVATE', async () => {
     deleteMock.mockReturnValueOnce(new Promise((resolve) => resolve()));
     let bundle = { ...mockedCommissionBundlePspDetailPrivate };
-    bundle.validityDateFrom = new Date();
+    bundle.validityDateFrom = new Date("01/01/2020");
     render(
       <Provider store={store}>
         <ComponentToRender bundle={bundle} />

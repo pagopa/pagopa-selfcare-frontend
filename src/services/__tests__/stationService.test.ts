@@ -2,37 +2,38 @@ import { BackofficeApi } from '../../api/BackofficeClient';
 import { TestStationTypeEnum } from '../../api/generated/portal/StationTestDto';
 import { ConfigurationStatus } from '../../model/Station';
 import {
-    mockedCreatedStation,
-    mockedCreditorInstitutionStationDTO,
-    mockedFullStation,
-    mockedSegregationCodeList,
-    mockedStation,
-    mockedStationAvailableEC,
-    mockedStationCode,
-    mockedStationDetailsDTO,
-    mockedStationECs,
-    mockedStations,
-    mockedWrapperStation,
-    stationTestErrorMocked,
-    stationTestMocked,
-    updateWrapperStation,
+  mockedCreatedStation,
+  mockedCreditorInstitutionStationDTO,
+  mockedFullStation,
+  mockedSegregationCodeList,
+  mockedStation,
+  mockedStationAvailableEC,
+  mockedStationCode,
+  mockedStationDetailsDTO,
+  mockedStationECs,
+  mockedStations,
+  mockedWrapperStation,
+  stationTestErrorMocked,
+  stationTestMocked,
+  updateWrapperStation,
 } from '../__mocks__/stationService';
 import {
-    associateEcToStation,
-    createStation,
-    createWrapperStation,
-    dissociateECfromStation,
-    getCreditorInstitutionSegregationCodes,
-    getECListByStationCode,
-    getStationAvailableEC,
-    getStationCode,
-    getStationCodeV2,
-    getStationDetail,
-    getStations,
-    testStation,
-    updateStation,
-    updateWrapperStationDetails,
-    updateWrapperStationWithOperatorReview,
+  associateEcToStation,
+  createStation,
+  createWrapperStation,
+  dissociateECfromStation,
+  getCreditorInstitutionSegregationCodes,
+  getECListByStationCode,
+  getStationAvailableEC,
+  getStationCode,
+  getStationCodeV2,
+  getStationDetail,
+  getStations,
+  testStation,
+  updateEcAssociationToStation,
+  updateStation,
+  updateWrapperStationDetails,
+  updateWrapperStationWithOperatorReview,
 } from '../stationService';
 
 describe('StationService test mocked', () => {
@@ -68,6 +69,13 @@ describe('StationService test mocked', () => {
   });
   test('Test associateEcToStation', async () => {
     const response = await associateEcToStation('ecCode', mockedCreditorInstitutionStationDTO);
+    expect(response).toMatchObject({ stationCode: '123' });
+  });
+  test('Test updateEcAssociationToStation', async () => {
+    const response = await updateEcAssociationToStation(
+      'ecCode',
+      mockedCreditorInstitutionStationDTO
+    );
     expect(response).toMatchObject({ stationCode: '123' });
   });
   test('Test getStationAvailableEC', async () => {
@@ -203,6 +211,15 @@ describe('StationService test', () => {
     ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
+  test('Test updateEcAssociationToStation', async () => {
+    const spyOn = jest
+      .spyOn(BackofficeApi, 'updateEcAssociationToStation')
+      .mockReturnValue(new Promise((resolve) => resolve({ stationCode: '123' })));
+    expect(
+      updateEcAssociationToStation('ecCode', mockedCreditorInstitutionStationDTO)
+    ).resolves.not.toThrow();
+    expect(spyOn).toBeCalledTimes(1);
+  });
   test('Test getStationAvailableEC', async () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'getStationAvailableEc')
@@ -223,7 +240,13 @@ describe('StationService test', () => {
     const spyOn = jest
       .spyOn(BackofficeApi, 'updateWrapperStationDetails')
       .mockReturnValue(new Promise((resolve) => resolve(mockedWrapperStation)));
-    expect(updateWrapperStationDetails({stationCode: 'station-code', station: mockedStationDetailsDTO, validationUrl: 'url'})).resolves.not.toThrow();
+    expect(
+      updateWrapperStationDetails({
+        stationCode: 'station-code',
+        station: mockedStationDetailsDTO,
+        validationUrl: 'url',
+      })
+    ).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test updateWrapperStationWithOperatorReview', async () => {

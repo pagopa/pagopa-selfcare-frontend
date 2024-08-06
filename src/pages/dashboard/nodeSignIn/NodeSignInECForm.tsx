@@ -19,10 +19,10 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { deleteCIBroker } from '../../../services/brokerService';
 import {
-    createECAndBroker,
-    createECIndirect,
-    createEcBroker,
-    updateCreditorInstitution,
+  createECAndBroker,
+  createECIndirect,
+  createEcBroker,
+  updateCreditorInstitution,
 } from '../../../services/nodeService';
 import { getStations } from '../../../services/stationService';
 import { LOADING_TASK_NODE_SIGN_IN_EC } from '../../../utils/constants';
@@ -35,7 +35,7 @@ type Props = {
 
 const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
-  const { orgIsEcBrokerSigned, orgIsEcSigned } = useOrganizationType();
+  const { orgIsEcBrokerSigned, orgIsEcSigned, orgInfo } = useOrganizationType();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
@@ -44,6 +44,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
   const ciDirect = signInData && orgIsEcBrokerSigned && orgIsEcSigned;
   const [hasCIStations, setHasCIStations] = useState(true);
+  const isSignedIn = signInData ? orgInfo.isSigned : false;
 
   useEffect(() => {
     if (ciDirect) {
@@ -52,34 +53,38 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
       setIntermediaryAvailableValue(false);
     }
 
-    setLoading(true);
-    const brokerCode = selectedParty?.fiscalCode ?? '';
+    if (isSignedIn) {
+      setLoading(true);
+      const brokerCode = selectedParty?.fiscalCode ?? '';
 
-    Promise.all([
-      getStations({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
-      getStations({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
-    ])
-      .then(([activeStations, toBeActivatedStations]) => {
-        setHasCIStations(
-          (activeStations?.pageInfo?.total_items !== undefined &&
-            activeStations.pageInfo.total_items > 0) ||
-            (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
-              toBeActivatedStations.pageInfo.total_items > 0)
-        );
-      })
-      .catch((reason) => {
-        addError({
-          id: 'RETRIEVE_STATIONS_ERROR',
-          blocking: false,
-          error: reason,
-          techDescription: `An error occurred while retrieving ci stations`,
-          toNotify: true,
-          displayableTitle: t('general.errorTitle'),
-          displayableDescription: t('nodeSignInPage.error.retrieveStationsErrorMessage'),
-          component: 'Toast',
-        });
-      })
-      .finally(() => setLoading(false));
+      Promise.all([
+        getStations({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1 }),
+        getStations({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1 }),
+      ])
+        .then(([activeStations, toBeActivatedStations]) => {
+          setHasCIStations(
+            (activeStations?.pageInfo?.total_items !== undefined &&
+              activeStations.pageInfo.total_items > 0) ||
+              (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
+                toBeActivatedStations.pageInfo.total_items > 0)
+          );
+        })
+        .catch((reason) => {
+          addError({
+            id: 'RETRIEVE_STATIONS_ERROR',
+            blocking: false,
+            error: reason,
+            techDescription: `An error occurred while retrieving ci stations`,
+            toNotify: true,
+            displayableTitle: t('general.errorTitle'),
+            displayableDescription: t('nodeSignInPage.error.retrieveStationsErrorMessage'),
+            component: 'Toast',
+          });
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setHasCIStations(false);
+    }
   }, [selectedParty]);
 
   const initialFormData = (ecDetails: BrokerAndEcDetailsResource) =>

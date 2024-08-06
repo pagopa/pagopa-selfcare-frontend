@@ -361,7 +361,7 @@ const SecuredRoutes = withLogin(
                     }}
                   />
                 </Route>
-
+        
                 <Route path="*">
                   <Redirect to={routes.HOME} />
                 </Route>

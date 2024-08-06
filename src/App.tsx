@@ -351,6 +351,7 @@ const SecuredRoutes = withLogin(
                   />
                 </Route>
 
+
                 <Route path={routes.PRIVACY} exact={true}>
                   <TosAndPrivacy
                     html={privacyJson.html}

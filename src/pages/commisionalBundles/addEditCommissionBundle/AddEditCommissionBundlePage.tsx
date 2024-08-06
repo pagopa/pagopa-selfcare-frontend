@@ -1,36 +1,36 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { ArrowBack } from '@mui/icons-material';
-import { useFormik } from 'formik';
-import { add } from 'date-fns';
+import {ArrowBack} from '@mui/icons-material';
+import {useFormik} from 'formik';
+import {add} from 'date-fns';
 import {Box, Breadcrumbs, Button, Grid, Stack, Step, StepLabel, Stepper, Typography,} from '@mui/material';
-import { ButtonNaked } from '@pagopa/mui-italia';
-import { TFunction, useTranslation } from 'react-i18next';
-import { TitleBox, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { useHistory, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import {ButtonNaked} from '@pagopa/mui-italia';
+import {TFunction, useTranslation} from 'react-i18next';
+import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
+import {useHistory, useParams} from 'react-router-dom';
+import {useState} from 'react';
 import GenericModal from '../../../components/Form/GenericModal';
 import {SigninData} from '../../../model/Node';
-import { Party } from '../../../model/Party';
+import {Party} from '../../../model/Party';
 import ROUTES from '../../../routes';
-import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { FormAction } from '../../../model/CommissionBundle';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
-import { createBundle, updatePSPBundle } from '../../../services/bundleService';
-import { isValidArray, removeDateZoneInfo } from '../../../utils/common-utils';
-import { extractProblemJson } from '../../../utils/client-utils';
-import { LOADING_TASK_CREATING_COMMISSION_BUNDLE } from '../../../utils/constants';
-import { BundleRequest } from '../../../api/generated/portal/BundleRequest';
-import { PSPBundleResource } from '../../../api/generated/portal/PSPBundleResource';
+import {useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
+import {partiesSelectors} from '../../../redux/slices/partiesSlice';
+import {FormAction} from '../../../model/CommissionBundle';
+import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
+import {createBundle, updatePSPBundle} from '../../../services/bundleService';
+import {isValidArray, removeDateZoneInfo} from '../../../utils/common-utils';
+import {extractProblemJson} from '../../../utils/client-utils';
+import {LOADING_TASK_CREATING_COMMISSION_BUNDLE} from '../../../utils/constants';
+import {BundleRequest} from '../../../api/generated/portal/BundleRequest';
+import {PSPBundleResource} from '../../../api/generated/portal/PSPBundleResource';
 import AddEditCommissionBundleForm from './components/AddEditCommissionBundleForm';
 import AddEditCommissionBundleTaxonomies from './components/AddEditCommissionBundleTaxonomies';
 
 const componentPath = 'commissionBundlesPage.addEditCommissionBundle';
 
-const minDateTomorrow = () => {
+const minDateFrom = () => {
   const dateToday = new Date();
   dateToday.setHours(0, 0, 0, 0);
-  return add(dateToday, { days: 1 });
+  return add(dateToday, { days: 3 });
 };
 
 const toNewFormData = (
@@ -54,8 +54,8 @@ const toNewFormData = (
     ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? '')
     : [],
   type: data?.type ?? undefined,
-  validityDateFrom: data?.validityDateFrom ?? minDateTomorrow(),
-  validityDateTo: data?.validityDateTo ?? minDateTomorrow(),
+  validityDateFrom: data?.validityDateFrom ?? minDateFrom(),
+  validityDateTo: data?.validityDateTo ?? minDateFrom(),
   pspBusinessName: selectedParty?.description ?? '',
   cart: data?.cart
 });
@@ -108,7 +108,7 @@ const validate = (
         validityDateFrom: !values.validityDateFrom
           ? t(`${componentPath}.validationMessage.requiredField`)
           : (edit === undefined || !edit) &&
-              values.validityDateFrom.getTime() < minDateTomorrow().getTime()
+              values.validityDateFrom.getTime() < minDateFrom().getTime()
             ? t(`${componentPath}.validationMessage.dateNotValid`)
             : values.validityDateTo &&
                 values.validityDateFrom.getTime() > values.validityDateTo.getTime()

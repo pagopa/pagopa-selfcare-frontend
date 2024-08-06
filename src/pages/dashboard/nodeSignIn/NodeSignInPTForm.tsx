@@ -1,13 +1,13 @@
 import { Badge as BadgeIcon, CompareArrows as CompareArrowsIcon } from '@mui/icons-material';
 import {
-    Box,
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    Paper,
-    Stack,
-    TextField,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Stack,
+  TextField,
 } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -43,57 +43,64 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const { orgInfo, orgIsPspDirect, orgIsEcDirect, orgIsPspBrokerSigned, orgIsEcBrokerSigned } =
-    useOrganizationType();
+  const { orgInfo, orgIsPspBrokerSigned, orgIsEcBrokerSigned } = useOrganizationType();
 
   const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspBrokerSigned);
   const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcBrokerSigned);
   const [hasCIStations, setHasCIStations] = useState(true);
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
+  const isSignedIn = signInData ? orgInfo.isSigned : false;
 
   useEffect(() => {
     if (selectedParty) {
-      setLoading(true);
-      const brokerCode = selectedParty?.fiscalCode ?? '';
+      setIsPartnerPSPChecked(orgIsPspBrokerSigned);
+      setIsPartnerCIChecked(orgIsEcBrokerSigned);
 
-      Promise.all([
+      if (isSignedIn) {
+        setLoading(true);
+        const brokerCode = selectedParty?.fiscalCode ?? '';
+
+        Promise.all([
         getStations({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
         getStations({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
         getChannels({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
         getChannels({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
-      ])
-        .then(([activeStations, toBeActivatedStations, activeChannels, toBeActivatedChannels]) => {
-          setHasCIStations(
-            (activeStations?.pageInfo?.total_items !== undefined &&
-              activeStations.pageInfo.total_items > 0) ||
-              (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
-                toBeActivatedStations.pageInfo.total_items > 0)
-          );
-          setHasPSPChannels(
-            (activeChannels?.page_info?.total_items !== undefined &&
-              activeChannels.page_info.total_items > 0) ||
-              (toBeActivatedChannels?.page_info?.total_items !== undefined &&
-                toBeActivatedChannels.page_info.total_items > 0)
-          );
-        })
-        .catch((reason) => {
-          addError({
-            id: 'RETRIEVE_STATIONS_CHANNEL_ERROR',
-            blocking: false,
-            error: reason,
-            techDescription: `An error occurred while retrieving partner stations and channels`,
-            toNotify: true,
-            displayableTitle: t('general.errorTitle'),
-            displayableDescription: t(
-              'nodeSignInPage.error.retrieveChannelsAndStationsErrorMessage'
-            ),
-            component: 'Toast',
-          });
-        })
-        .finally(() => setLoading(false));
-
-      setIsPartnerPSPChecked(orgIsPspBrokerSigned);
-      setIsPartnerCIChecked(orgIsEcBrokerSigned);
+        ])
+          .then(
+            ([activeStations, toBeActivatedStations, activeChannels, toBeActivatedChannels]) => {
+              setHasCIStations(
+                (activeStations?.pageInfo?.total_items !== undefined &&
+                  activeStations.pageInfo.total_items > 0) ||
+                  (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
+                    toBeActivatedStations.pageInfo.total_items > 0)
+              );
+              setHasPSPChannels(
+                (activeChannels?.page_info?.total_items !== undefined &&
+                  activeChannels.page_info.total_items > 0) ||
+                  (toBeActivatedChannels?.page_info?.total_items !== undefined &&
+                    toBeActivatedChannels.page_info.total_items > 0)
+              );
+            }
+          )
+          .catch((reason) => {
+            addError({
+              id: 'RETRIEVE_STATIONS_CHANNEL_ERROR',
+              blocking: false,
+              error: reason,
+              techDescription: `An error occurred while retrieving partner stations and channels`,
+              toNotify: true,
+              displayableTitle: t('general.errorTitle'),
+              displayableDescription: t(
+                'nodeSignInPage.error.retrieveChannelsAndStationsErrorMessage'
+              ),
+              component: 'Toast',
+            });
+          })
+          .finally(() => setLoading(false));
+      } else {
+        setHasCIStations(false);
+        setHasPSPChannels(false);
+      }
     }
   }, [selectedParty, signInData]);
 

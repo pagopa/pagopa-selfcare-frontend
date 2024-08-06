@@ -29,6 +29,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {theme} from '@pagopa/mui-italia';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {FormikProps} from 'formik';
+import {add, isBefore} from "date-fns";
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {NumericFormat} from 'react-number-format';
@@ -188,8 +189,6 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                 setLoading(false);
             });
     }, [selectedParty]);
-
-    const shouldDisableDate = (date: Date) => date < new Date();
 
     function handleBrokerCodesSelection(value: string | null | undefined) {
         formik.setFieldValue('idChannel', '');
@@ -683,7 +682,13 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                         label={t('commissionBundlesPage.addEditCommissionBundle.form.from')}
                                         inputFormat="dd/MM/yyyy"
                                         value={formik.values.validityDateFrom}
-                                        onChange={(value) => formik.setFieldValue('validityDateFrom', value)}
+                                        onChange={(value) => {
+                                            formik.setFieldValue('validityDateFrom', value);
+                                            if (formik.values.validityDateTo && value
+                                                && isBefore(formik.values.validityDateTo, value)) {
+                                                formik.setFieldValue('validityDateTo', null);
+                                            }
+                                        }}
                                         renderInput={(params: TextFieldProps) => (
                                             <TextField
                                                 {...params}
@@ -704,7 +709,11 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                                 }
                                             />
                                         )}
-                                        shouldDisableDate={shouldDisableDate}
+                                        shouldDisableDate={(date: Date) => {
+                                            let limit = new Date();
+                                            limit = add(limit, {days: 2});
+                                            return date < limit;
+                                        }}
                                         disabled={isEdit}
                                     />
                                 </LocalizationProvider>
@@ -734,7 +743,7 @@ const AddEditCommissionBundleForm = ({isEdit, formik, idBrokerPsp}: Props) => {
                                                 helperText={formik.touched.validityDateTo && formik.errors.validityDateTo}
                                             />
                                         )}
-                                        shouldDisableDate={shouldDisableDate}
+                                        shouldDisableDate={(date: Date) => isBefore(date, formik.values.validityDateFrom ?? new Date())}
                                     />
                                 </LocalizationProvider>
                             </Grid>

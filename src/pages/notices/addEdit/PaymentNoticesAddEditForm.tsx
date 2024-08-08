@@ -98,6 +98,18 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
         }
     }, [hasPay]);
 
+    useEffect(() => {
+        if (!hasPoste) {
+              // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            formik.setValues({
+                ...formik.values,
+                posteName: undefined,
+                posteAuth: undefined,
+                posteAccountNumber: undefined
+            });
+        }
+    }, [hasPoste]);
+
     const setFlagValues = (formik: any, appChannel: boolean, webChannel: boolean) => {
         formik.setValues({
             ...formik.values,

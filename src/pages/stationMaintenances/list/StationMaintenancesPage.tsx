@@ -68,7 +68,7 @@ export default function StationMaintenancesPage() {
           blocking: false,
           error: reason,
           toNotify: true,
-          displayableDescription: t(`${componentPath}.errorGetSummary`),
+          displayableDescription: t(`${componentPath}.hoursSummary.errorGetSummary`),
         });
       })
       .finally(() => {

@@ -920,6 +920,12 @@
         "onlyWeb": "Solo sul sito",
         "both": "Sul sito e in app"
       },
+      "error": {
+        "getNoticeTitle": "Errore nel recupero dati stampa avvisi",
+        "getNoticeDesc": "Errore inatteso nel recupero delle informazioni salvate per la stampa avvisi",
+        "addEditTitle": "Errore in salvataggio configurazione",
+        "addEditMessage": "Errore inatteso nel corso del salvataggio della configurazione."
+      },
       "dropFileText": "Trascina qui il logo dell'ente per la stampa, o selezionalo dal tuo computer"
     }
   },

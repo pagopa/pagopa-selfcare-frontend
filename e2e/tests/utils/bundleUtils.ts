@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-let */
 import {expect, Page} from '@playwright/test';
 import * as it from '../../../src/locale/it.json';
-import {BundleTypes, getTodayDate, getTomorrowDate, MARKETPLACE_BE_URL, PSP_DEMO_DIRECT_CODE,} from './e2eUtils';
+import {BundleTypes, getDateAfterThreeDays, getTodayDate, MARKETPLACE_BE_URL, PSP_DEMO_DIRECT_CODE,} from './e2eUtils';
 
 export const bundleNameGlobal = 'Integration test global';
 export const bundleNamePublic = 'Integration test public';
@@ -23,9 +23,9 @@ export async function getToBundleDetailPsp(
     await page.getByTestId('search-input').fill(bundleName);
     await page.getByTestId('page-limit-select').getByLabel('5').click();
     await page.getByRole('option', {name: '20'}).click();
-    const tomorrowDate = getTomorrowDate();
+    const dateAfterThreeDays = getDateAfterThreeDays();
     const todayDate = getTodayDate();
-    const rowName = `${bundleName} ${validityDayToday ? todayDate : tomorrowDate} ${tomorrowDate} Touchpoint REMOVEME Status`;
+    const rowName = `${bundleName} ${validityDayToday ? todayDate : dateAfterThreeDays} ${dateAfterThreeDays} Touchpoint REMOVEME Status`;
     // eslint-disable-next-line no-constant-condition
     while (true) {
         await page.waitForTimeout(2000);

@@ -399,7 +399,7 @@ export const BackofficeApi = {
     const result = await backofficeClient.getChannels({
       status: String(status),
       brokerCode,
-      channelCode,
+      ...(channelCode ? {channelCode} : {}),
       limit,
       page,
     });

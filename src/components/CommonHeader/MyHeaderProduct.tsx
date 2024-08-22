@@ -15,13 +15,13 @@ import {ProductEntity, ProductSwitch, ProductSwitchItem} from '@pagopa/mui-itali
 import {trackEvent} from '@pagopa/selfcare-common-frontend/services/analyticsService';
 import {ReactNode, useEffect, useMemo, useState} from 'react';
 import {InstitutionDetail} from '../../api/generated/portal/InstitutionDetail';
-import {InstitutionDetailResource} from '../../api/generated/portal/InstitutionDetailResource';
 import {useSigninData} from '../../hooks/useSigninData';
 import {Party} from '../../model/Party';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {partiesActions, partiesSelectors} from '../../redux/slices/partiesSlice';
-import {getInstitutions} from '../../services/institutionService';
+import {getInstitutionFullDetail, getInstitutions} from '../../services/institutionService';
 import {PaddedDrawer} from '../PaddedDrawer';
+import { InstitutionBaseResources } from '../../api/generated/portal/InstitutionBaseResources';
 
 type HeaderProductProps = {
     borderBottom?: number;
@@ -64,41 +64,45 @@ const HeaderProduct = ({
         getOptions();
     }, [organizations]);
 
-    const updateState = (orgDetails: InstitutionDetail) => {
-        trackEvent('PARTY_SELECTION', {
-            party_id: orgDetails!.id,
-        });
-        const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-        const party: Party = {
-            description: orgDetails.name,
-            digitalAddress: orgDetails.mail_address!,
-            externalId: orgDetails.external_id,
-            fiscalCode: orgDetails.tax_code,
-            origin: orgDetails.origin,
-            originId: orgDetails.origin_id,
-            partyId: orgDetails.id,
-            registeredOffice: orgDetails.address!,
-            institutionType: orgDetails.institution_type,
-            status: 'ACTIVE',
-            roles: [
-                {
-                    partyRole: 'OPERATOR',
-                    roleKey: 'admin',
-                },
-            ],
-        };
-        if (orgDetails.psp_data) {
-            // eslint-disable-next-line functional/immutable-data
-            party.pspData = orgDetails?.psp_data;
-        }
-        setParty(party);
-        void updateSigninData(party);
+    const updateState = (institution: InstitutionDetail) => {
+        getInstitutionFullDetail(institution!.id)
+        .then((orgDetails: InstitutionDetail) => {
+            trackEvent('PARTY_SELECTION', {
+                party_id: orgDetails!.id,
+            });
+            const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
+            const party: Party = {
+                description: orgDetails.name,
+                digitalAddress: orgDetails.mail_address!,
+                externalId: orgDetails.external_id,
+                fiscalCode: orgDetails.tax_code,
+                origin: orgDetails.origin,
+                originId: orgDetails.origin_id,
+                partyId: orgDetails.id,
+                registeredOffice: orgDetails.address!,
+                institutionType: orgDetails.institution_type,
+                status: 'ACTIVE',
+                roles: [
+                    {
+                        partyRole: 'OPERATOR',
+                        roleKey: 'admin',
+                    },
+                ],
+            };
+            if (orgDetails.psp_data) {
+                // eslint-disable-next-line functional/immutable-data
+                party.pspData = orgDetails?.psp_data;
+            }
+            setParty(party);
+            void updateSigninData(party);
+        })
+        .catch((error) => {});
     };
 
     const searchCreditorInstitutions = (taxCode: string) => {
         getInstitutions(taxCode)
-            .then((value: InstitutionDetailResource) => {
-                if (value?.institution_detail_list && value.institution_detail_list.length > 0) {
+            .then((value: InstitutionBaseResources) => {
+                if (value?.institution_base_list && value.institution_base_list.length > 0) {
                     // @ts-ignore
                     setOrganizations(value.institution_detail_list);
                 }

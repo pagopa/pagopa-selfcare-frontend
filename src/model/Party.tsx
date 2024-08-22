@@ -2,6 +2,7 @@ import {InstitutionDetail} from '../api/generated/portal/InstitutionDetail';
 import {Institution} from '../api/generated/portal/Institution';
 import {PspData} from '../api/generated/portal/PspData';
 import {ENV} from '../utils/env';
+import { InstitutionBase } from '../api/generated/portal/InstitutionBase';
 
 export type SelfcareRole = 'ADMIN' | 'LIMITED';
 export type PartyRole = 'DELEGATE' | 'MANAGER' | 'OPERATOR' | 'SUB_DELEGATE';
@@ -28,6 +29,15 @@ export type UserRole = {
     partyRole: PartyRole;
     roleKey: string;
 };
+
+export type BaseParty = {
+    partyId: string;
+    description: string;
+    status: UserStatus;
+    roles: Array<UserRole>;
+    urlLogo?: string;
+    parentDescription?: string;
+  };
 
 const buildUrlLog = (partyId: string) =>
     `${ENV.URL_INSTITUTION_LOGO.PREFIX}${partyId}${ENV.URL_INSTITUTION_LOGO.SUFFIX}`;
@@ -75,3 +85,19 @@ export const institutionDetailResource2Party = (
         institutionType: institutionResource.institution_type,
     };
 };
+
+export const institutionBaseResource2BaseParty = (
+    institutionResource: InstitutionBase
+  ): BaseParty => {
+    const urlLogo = institutionResource.id && buildUrlLog(institutionResource.id);
+    return {
+      partyId: institutionResource.id ?? '',
+      description: institutionResource.name ?? '',
+      // status: institutionResource.status as 'ACTIVE' | 'PENDING',
+      status: 'ACTIVE',
+      roles: institutionResource.user_product_roles.map(
+        (u) => ({partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u} as UserRole)
+      ),      
+      urlLogo,
+    };
+  };

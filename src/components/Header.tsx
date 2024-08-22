@@ -14,7 +14,9 @@ import {partiesActions, partiesSelectors} from '../redux/slices/partiesSlice';
 import {useSigninData} from '../hooks/useSigninData';
 import {userIsPagopaOperator} from "../hooks/useUserRole";
 import {ENV} from '../utils/env';
+import { fetchPartyDetails } from '../services/partyService';
 import CommonHeader from './CommonHeader/CommonHeader';
+
 
 type Props = WithPartiesProps & {
     onExit: (exitAction: () => void) => void;
@@ -43,6 +45,7 @@ const selfcareProduct: ProductModel = {
     urlBO: ENV.URL_FE.SELFCARE,
     urlPublic: ENV.URL_FE.SELFCARE,
 };
+
 
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
@@ -133,20 +136,24 @@ const Header = ({onExit, loggedUser, parties}: Props) => {
                         )
                 )
             }
-            onSelectedParty={(selectedParty: PartySwitchItem) => {
+            onSelectedParty={
+            // eslint-disable-next-line sonarjs/cognitive-complexity
+            (selectedParty: PartySwitchItem) => {
                 if (selectedParty) {
                     trackEvent('PARTY_SELECTION', {
                         party_id: selectedParty.id,
                     });
                     onExit(() => {
                         if (ENV.ENV === 'LOCAL_DEV') {
-                            const partyToSwitch = parties.find((p) => p.partyId === selectedParty.id);
-                            const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-                            setParty(partyToSwitch);
-                            if (partyToSwitch) {
-
-                                void updateSigninData(partyToSwitch);
-                            }
+                            fetchPartyDetails(selectedParty.id).then((party) => {
+                                const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
+                                setParty(party ? party : undefined);
+                                if (party) {
+    
+                                    void updateSigninData(party);
+                                }
+                            }).catch((error) => {
+                            });
                         } else {
                             window.location.assign(
                                 `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${

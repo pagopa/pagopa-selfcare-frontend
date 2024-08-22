@@ -62,7 +62,6 @@ import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
 import { Institution } from './generated/portal/Institution';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
-import { InstitutionDetailResource } from './generated/portal/InstitutionDetailResource';
 import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
 import { PSPBundleResource } from './generated/portal/PSPBundleResource';
@@ -103,6 +102,8 @@ import { WithDefaultsT, createClient } from './generated/portal/client';
 import { StationMaintenanceListResource } from './generated/portal/StationMaintenanceListResource';
 import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceHoursSummaryResource';
 import { CreateStationMaintenance } from './generated/portal/CreateStationMaintenance';
+import { InstitutionBaseResources } from './generated/portal/InstitutionBaseResources';
+import { InstitutionDetail } from './generated/portal/InstitutionDetail';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -221,9 +222,16 @@ const channelBody = (channel: ChannelDetailsDto) => ({
 });
 
 export const BackofficeApi = {
-  getInstitutions: async (taxCode: string | undefined): Promise<InstitutionDetailResource> => {
+  getInstitutions: async (taxCode: string | undefined): Promise<InstitutionBaseResources> => {
     const result = await backofficeClient.getInstitutions({ 'tax-code': taxCode });
 
+    return extractResponse(result, 200, onRedirectToLogin);
+  },
+
+  getInstitutionFullDetail: async (institutionId: string): Promise<InstitutionDetail> => {
+    const result = await backofficeClient.getInstitutionFullDetail({
+      'institution-id': institutionId,
+    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 

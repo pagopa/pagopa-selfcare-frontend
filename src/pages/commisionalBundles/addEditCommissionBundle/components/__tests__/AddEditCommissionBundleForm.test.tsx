@@ -7,8 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import {
   mockedBundleRequest,
-  mockedBundleRequestForEdit,
-  mockedChannelsIdList,
+  mockedBundleRequestForEdit
 } from '../../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../../services/__mocks__/partyService';
@@ -24,6 +23,7 @@ import * as useUserRole from '../../../../../hooks/useUserRole';
 import { ROLE } from '../../../../../model/RolePermission';
 import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
 import * as useOrganizationType from '../../../../../hooks/useOrganizationType';
+import { mockedChannels, channelCode } from '../../../../../services/__mocks__/channelService';
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
@@ -306,16 +306,16 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     // Change channel id
     fireEvent.change(input.channelList, {
-      target: { value: mockedChannelsIdList[0] },
+      target: { value: mockedChannels.channels[4].channel_code },
     });
     input.channelList.focus();
 
     fireEvent.change(document.activeElement as Element, {
-      target: { value: mockedChannelsIdList[0] },
+      target: { value: mockedChannels.channels[4].channel_code },
     });
     fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
     fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
-    expect(input.channelList.value).toEqual(mockedChannelsIdList[0]);
+    expect(input.channelList.value).toEqual(mockedChannels.channels[4].channel_code);
 
     //Change radio buttons digitalStamp
     expect(input.digitalStampYes.checked).toBe(false);

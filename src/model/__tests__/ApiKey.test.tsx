@@ -12,7 +12,8 @@ describe("Test ApiKey model methods", ()=> {
             API_KEY_PRODUCTS.BIZ,
             API_KEY_PRODUCTS.BO_EXT_EC,
             API_KEY_PRODUCTS.FDR_ORG,
-            API_KEY_PRODUCTS.PRINT_NOTICE
+            API_KEY_PRODUCTS.PRINT_NOTICE,
+            API_KEY_PRODUCTS.ACA
           ])
     })
 })

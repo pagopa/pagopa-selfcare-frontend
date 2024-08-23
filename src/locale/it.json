@@ -253,7 +253,8 @@
       "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)",
       "BO_EXT_EC": "Backoffice External (EC)",
       "BO_EXT_PSP": "Backoffice External (PSP)",
-      "PRINT_NOTICE": "Stampa Avvisi"
+      "PRINT_NOTICE": "Stampa Avvisi",
+      "ACA": "ACA - paCreatePosition"
     }
   },
   "channelsPage": {

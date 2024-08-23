@@ -29,6 +29,7 @@ export const API_KEY_PRODUCTS = {
   BO_EXT_EC: { id: 'BO_EXT_EC', key: 'selfcareboexternalec-' },
   BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
+  ACA: {id: "ACA", key:"aca-"}
 };
 
 export const getApiKeyProducts = (
@@ -44,6 +45,7 @@ export const getApiKeyProducts = (
         API_KEY_PRODUCTS.GPD_REP,
         API_KEY_PRODUCTS.BIZ,
         API_KEY_PRODUCTS.BO_EXT_EC,
+        API_KEY_PRODUCTS.ACA
       ];
 
   if (ENV.FEATURES.FDR.ENABLED) {

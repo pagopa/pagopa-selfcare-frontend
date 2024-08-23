@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.30.3-1-next",
+  "version": "1.30.3-2-PPANTT-93-new-aca-apikey-product",
   "homepage": "ui",
   "private": true,
   "scripts": {

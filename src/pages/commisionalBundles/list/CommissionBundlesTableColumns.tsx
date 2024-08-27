@@ -40,11 +40,23 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.bundleName'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 400,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.name, mainCell: true }),
+      sortable: true,
+      flex: 5,
+    },
+    {
+      field: 'channel',
+      cellClassName: 'justifyContentBold',
+      headerName: t('commissionBundlesPage.list.headerFields.channel'),
+      align: 'left',
+      headerAlign: 'left',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params: any) => renderCell({ value: params.row.idChannel ?? '-' }),
       sortable: true,
       flex: 4,
     },
@@ -88,7 +100,6 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.touchpoint'),
       align: 'left',
       headerAlign: 'left',
-      maxWidth: 220,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -102,7 +113,6 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.paymentType'),
       align: 'left',
       headerAlign: 'left',
-      width: 145,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
@@ -143,7 +153,11 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: <EuroCell small>{formatCurrencyWithoutSymbol(params.row.paymentAmount) || '-'}</EuroCell>,
+          value: (
+            <EuroCell small>
+              {formatCurrencyWithoutSymbol(params.row.paymentAmount) || '-'}
+            </EuroCell>
+          ),
         }),
       sortable: false,
       flex: 3,
@@ -154,7 +168,6 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.state'),
       align: 'left',
       headerAlign: 'left',
-      width: 200,
       editable: false,
       disableColumnMenu: true,
       renderHeader: (params) =>
@@ -348,8 +361,13 @@ export const SelectStatusFilter = ({
   );
 };
 
-const EuroCell = ({ children, small }: { children: React.ReactNode; small?:boolean }) => (
-  <Box display="flex" alignItems="center" width={small ? "80px" :"170px"} justifyContent="space-between">
+const EuroCell = ({ children, small }: { children: React.ReactNode; small?: boolean }) => (
+  <Box
+    display="flex"
+    alignItems="center"
+    width={small ? '80px' : '170px'}
+    justifyContent="space-between"
+  >
     {children}
     <Euro sx={{ ml: 1 }} color="action" />
   </Box>

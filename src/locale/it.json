@@ -1086,9 +1086,10 @@
         "startDate": "Inizio validità",
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
-        "paymentType": "Tipo di pagamento",
+        "paymentType": "Pagamento con",
         "payment": "Importo",
         "commission": "Commissione",
+        "channel": "Canale",
         "state": "Stato"
       },
       "states": {

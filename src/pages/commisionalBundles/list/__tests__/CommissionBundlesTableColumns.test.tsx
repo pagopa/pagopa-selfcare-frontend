@@ -102,6 +102,8 @@ const mockTFunction = (key: string) => {
       return 'Commission';
     case 'commissionBundlesPage.list.headerFields.payment':
       return 'Payment Range';
+    case 'commissionBundlesPage.list.headerFields.channel':
+      return 'Channel';
     default:
       return '';
   }
@@ -125,7 +127,19 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: 'Bundle Name',
         align: 'left',
         headerAlign: 'left',
-        minWidth: 400,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: true,
+        flex: 5,
+      },
+      {
+        field: 'channel',
+        cellClassName: 'justifyContentBold',
+        headerName: 'Channel',
+        align: 'left',
+        headerAlign: 'left',
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -167,7 +181,6 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: 'Touch Point',
         align: 'left',
         headerAlign: 'left',
-        maxWidth: 220,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -181,7 +194,6 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: 'Payment Type',
         align: 'left',
         headerAlign: 'left',
-        width: 145,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -223,7 +235,6 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: '',
         align: 'left',
         headerAlign: 'left',
-        width: 200,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),

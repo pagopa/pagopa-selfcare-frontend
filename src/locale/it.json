@@ -1087,6 +1087,8 @@
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
         "paymentType": "Tipo di pagamento",
+        "payment": "Importo",
+        "commission": "Commissione",
         "state": "Stato"
       },
       "states": {

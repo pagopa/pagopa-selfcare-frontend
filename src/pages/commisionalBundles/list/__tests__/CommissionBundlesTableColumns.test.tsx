@@ -13,14 +13,12 @@ import {
   mockedCommissionBundleCiDetailPrivate,
   mockedCommissionBundleCiDetailPublic,
   mockedCommissionBundlePspDetailGlobal,
-  mockedCommissionBundlePspDetailPrivate,
 } from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import add from 'date-fns/add';
-import { showCustomHeader } from '../../../../components/Table/TableUtils';
 import { BundleResource, SubscriptionStateType } from '../../../../model/CommissionBundle';
 import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 
@@ -100,6 +98,10 @@ const mockTFunction = (key: string) => {
       return 'Payment Type';
     case 'commissionBundlesPage.list.headerFields.amountRange':
       return 'Amount Range';
+    case 'commissionBundlesPage.list.headerFields.commission':
+      return 'Commission';
+    case 'commissionBundlesPage.list.headerFields.payment':
+      return 'Payment Range';
     default:
       return '';
   }
@@ -171,7 +173,7 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
         sortable: false,
-        flex: 4,
+        flex: 3,
       },
       {
         field: 'paymentType',
@@ -185,7 +187,35 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
         sortable: false,
+        flex: 3,
+      },
+      {
+        field: 'payment',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Payment Range',
+        align: 'left',
+        headerAlign: 'left',
+        width: 145,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
         flex: 4,
+      },
+      {
+        field: 'commission',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Commission',
+        align: 'left',
+        headerAlign: 'left',
+        width: 145,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 3,
       },
       {
         field: 'state',
@@ -586,7 +616,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
       bundle.validityDateFrom = new Date('01/01/2020');
-      bundle.validityDateTo = add(new Date(), {days: 6});
+      bundle.validityDateTo = add(new Date(), { days: 6 });
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -620,14 +650,17 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-    test("Bundle state filter", () => {
-        render(
-            <Provider store={store}>
-              <Router history={history}>
-                <SelectStatusFilter bundleStatus={SubscriptionStateType.Accepted} setBundleStatus={jest.fn()} />
-              </Router>
-            </Provider>
-          );
-    })
+    test('Bundle state filter', () => {
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <SelectStatusFilter
+              bundleStatus={SubscriptionStateType.Accepted}
+              setBundleStatus={jest.fn()}
+            />
+          </Router>
+        </Provider>
+      );
+    });
   });
 });

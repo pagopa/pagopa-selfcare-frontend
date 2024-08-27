@@ -55,6 +55,16 @@ export const formatCurrencyEur = (value: number | undefined): string => {
   });
 };
 
+export const formatCurrencyWithoutSymbol = (value: number | undefined): string => {
+  if (value === undefined) {
+    return '';
+  }
+  const newValue = value / 100;
+  return newValue.toLocaleString('it-IT', {
+    minimumFractionDigits: 2,
+  });
+};
+
 export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'translation'>): string =>
   value ? t('general.yes') : t('general.no');
 

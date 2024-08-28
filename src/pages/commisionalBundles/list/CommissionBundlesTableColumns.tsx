@@ -47,49 +47,19 @@ export function buildColumnDefs(
       sortable: true,
       flex: 5,
     },
-    {
-      field: 'channel',
-      cellClassName: 'justifyContentBold',
-      headerName: t('commissionBundlesPage.list.headerFields.channel'),
-      align: 'left',
-      headerAlign: 'left',
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params: any) => renderCell({ value: params.row.idChannel ?? '-' }),
-      sortable: true,
-      flex: 4,
-    },
     ...(isPsp
       ? [
           {
-            field: 'validityDateFrom',
-            cellClassName: 'justifyContentNormal',
-            headerName: t('commissionBundlesPage.list.headerFields.startDate'),
+            field: 'channel',
+            cellClassName: 'justifyContentBold',
+            headerName: t('commissionBundlesPage.list.headerFields.channel'),
             align: 'left',
             headerAlign: 'left',
-            maxWidth: 150,
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
-            renderCell: (params: any) =>
-              renderCell({ value: params.row.validityDateFrom?.toLocaleDateString('en-GB') }),
-            sortable: false,
-            flex: 4,
-          },
-          {
-            field: 'validityDateTo',
-            cellClassName: 'justifyContentNormal',
-            headerName: t('commissionBundlesPage.list.headerFields.endDate'),
-            align: 'left',
-            headerAlign: 'left',
-            maxWidth: 150,
-            editable: false,
-            disableColumnMenu: true,
-            renderHeader: showCustomHeader,
-            renderCell: (params: any) =>
-              renderCell({ value: params.row.validityDateTo?.toLocaleDateString('en-GB') }),
-            sortable: false,
+            renderCell: (params: any) => renderCell({ value: params.row.idChannel ?? '-' }),
+            sortable: true,
             flex: 4,
           },
         ]
@@ -141,27 +111,31 @@ export function buildColumnDefs(
       sortable: false,
       flex: 4,
     },
-    {
-      field: 'commission',
-      cellClassName: 'justifyContentNormal',
-      headerName: t('commissionBundlesPage.list.headerFields.commission'),
-      align: 'left',
-      headerAlign: 'left',
-      width: 145,
-      editable: false,
-      disableColumnMenu: true,
-      renderHeader: showCustomHeader,
-      renderCell: (params) =>
-        renderCell({
-          value: (
-            <EuroCell small>
-              {formatCurrencyWithoutSymbol(params.row.paymentAmount) || '-'}
-            </EuroCell>
-          ),
-        }),
-      sortable: false,
-      flex: 3,
-    },
+    ...(isPsp
+      ? [
+          {
+            field: 'commission',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('commissionBundlesPage.list.headerFields.commission'),
+            align: 'left',
+            headerAlign: 'left',
+            width: 145,
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({
+                value: (
+                  <EuroCell small>
+                    {formatCurrencyWithoutSymbol(params.row.paymentAmount) || '-'}
+                  </EuroCell>
+                ),
+              }),
+            sortable: false,
+            flex: 3,
+          },
+        ]
+      : []),
     {
       field: 'state',
       cellClassName: 'justifyContentNormal',

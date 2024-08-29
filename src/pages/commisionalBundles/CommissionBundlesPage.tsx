@@ -1,13 +1,6 @@
-import {
-  Alert,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
-import { Box } from '@mui/system';
+import { Alert, Button, Typography } from '@mui/material';
+import { Download } from '@mui/icons-material';
+import { Box, Stack } from '@mui/system';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -16,14 +9,13 @@ import { generatePath, Link as RouterLink } from 'react-router-dom';
 import ROUTES from '../../routes';
 import { bundleDetailsSelectors } from '../../redux/slices/bundleDetailsSlice';
 import { useAppSelector } from '../../redux/hooks';
-import { useFlagValue } from '../../hooks/useFeatureFlags';
-import { BundleResource, SubscriptionStateType } from '../../model/CommissionBundle';
+import { BundleResource } from '../../model/CommissionBundle';
 import { TypeEnum } from '../../api/generated/portal/PSPBundleResource';
-import TableSearchBar from '../../components/Table/TableSearchBar';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import { useUserRole } from '../../hooks/useUserRole';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import CommissionBundlesTable from './list/CommissionBundlesTable';
+import CommissionBundlesSearchBar from './list/CommissionBundlesSearchBar';
 
 type Props = {
   children?: React.ReactNode;
@@ -61,20 +53,38 @@ function getTabValue(bundle: BundleResource | Record<any, any>) {
   return 2;
 }
 
+export const emptyFiltersValues = {
+  name: '',
+  paymentRange: {
+    value: undefined,
+    name: 'noOrder',
+  },
+  paymentAmount: {
+    name: 'all',
+    paymentAmountMax: undefined,
+    paymentAmountMin: undefined,
+  },
+  state: {
+    name: 'all',
+    validityBefore: undefined,
+    validityAfter: undefined,
+    expireBefore: undefined,
+    expireAfter: undefined,
+  },
+};
+
 const CommissionBundlesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
+
   const { userIsAdmin } = useUserRole();
   const { orgInfo } = useOrganizationType();
-
-  const isPrivateEnabled = useFlagValue('commission-bundles-private');
-  const isPublicEnabled = useFlagValue('commission-bundles-public');
 
   const commissionBundleDetail: BundleResource | Record<any, any> = useAppSelector(
     bundleDetailsSelectors.selectBundleDetails
   );
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
-  const [bundleNameInput, setBundleNameInput] = useState<string>('');
+  const [filtersValues, setFiltersValues] = useState(emptyFiltersValues);
 
   useEffect(() => {
     window.addEventListener('beforeunload', clearLocationState);
@@ -89,72 +99,66 @@ const CommissionBundlesPage = () => {
 
   return (
     <SideMenuLayout>
-      <TitleBox
-        title={t('commissionBundlesPage.title')}
-        subTitle={t('commissionBundlesPage.subtitle')}
-        mbSubTitle={3}
-        variantTitle="h4"
-        variantSubTitle="body1"
-      />
+      <Stack justifyContent="space-between" direction="row">
+        <TitleBox
+          title={t('commissionBundlesPage.title')}
+          subTitle={t('commissionBundlesPage.subtitle')}
+          mbSubTitle={3}
+          variantTitle="h4"
+          variantSubTitle="body1"
+        />
+        {orgInfo.types.isPsp && userIsAdmin && (
+          <>
+            <Button
+              variant="outlined"
+              sx={{ mr: 1, minWidth: '150px', fontWeight: 'bold', padding: 0 }}
+              data-testid={'download-bundle-button'}
+              onClick={() => {
+                /* TODO */
+              }}
+              endIcon={<Download />}
+            >
+              {t('commissionBundlesPage.list.search.downloadButton')}
+            </Button>
+            <Button
+              component={RouterLink}
+              to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}
+              variant="contained"
+              data-testid={'create-bundle-button'}
+              sx={{ minWidth: '200px', fontWeight: 'bold', padding: 0 }}
+            >
+              {t('commissionBundlesPage.list.search.createButton')}
+            </Button>
+          </>
+        )}
+      </Stack>
+
       {history.location.state && (history.location.state as any).alertSuccessMessage && (
         <Alert severity="success" variant="outlined" data-testid="alert-test">
           {(history.location.state as any).alertSuccessMessage}
         </Alert>
       )}
-      <TableSearchBar
-        componentName="commissionBundlesPage.list"
-        setExternalSearchInput={setBundleNameInput}
-        customEndButton={
-          orgInfo.types.isPsp &&
-          userIsAdmin && (
-            <Button
-              component={RouterLink}
-              to={generatePath(ROUTES.COMMISSION_BUNDLES_ADD)}
-              variant="contained"
-              sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
-              data-testid={'create-bundle-button'}
-            >
-              {t('commissionBundlesPage.list.search.createButton')}
-            </Button>
-          )
-        }
-        setActiveTab={(value) => {
-          setTabValue(value);
-        }}
-        activeTab={tabValue}
-        listTabFilter={[
-          {
-            label: t('commissionBundlesPage.privateBundles'),
-            disabled: !isPrivateEnabled,
-            'data-testid': 'private',
-          },
-          {
-            label: t('commissionBundlesPage.publicBundles'),
-            disabled: !isPublicEnabled,
-            'data-testid': 'public',
-          },
-          {
-            label: t('commissionBundlesPage.globalBundles'),
-            'data-testid': 'global',
-          },
-        ]}
-      ></TableSearchBar>
+      <CommissionBundlesSearchBar
+        setTabValue={setTabValue}
+        setFiltersValues={setFiltersValues}
+        tabValue={tabValue}
+      />
       <CustomTabPanel valueTab={tabValue} index={0}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.privateBundles'}
-          bundleNameFilter={bundleNameInput}
+          filtersValue={filtersValues}
         />
       </CustomTabPanel>
       <CustomTabPanel valueTab={tabValue} index={1}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.publicBundles'}
-          bundleNameFilter={bundleNameInput}
+          filtersValue={filtersValues}
         />
       </CustomTabPanel>
       <CustomTabPanel valueTab={tabValue} index={2}>
         <CommissionBundlesTable
           bundleType={'commissionBundlesPage.globalBundles'}
-          bundleNameFilter={bundleNameInput}
+          filtersValue={filtersValues}
         />
       </CustomTabPanel>
     </SideMenuLayout>

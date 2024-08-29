@@ -399,7 +399,7 @@ export const BackofficeApi = {
     const result = await backofficeClient.getChannels({
       status: String(status),
       brokerCode,
-      ...(channelCode ? {channelCode} : {}),
+      ...(channelCode ? { channelCode } : {}),
       limit,
       page,
     });
@@ -941,12 +941,26 @@ export const BackofficeApi = {
     page,
     pspCode,
     bundleName,
+    maxPaymentAmountOrder,
+    paymentAmountMinRange,
+    paymentAmountMaxRange,
+    validBefore,
+    validAfter,
+    expireBefore,
+    expireAfter,
   }: {
     bundleType: string;
     pageLimit: number;
     page: number;
     pspCode: string;
     bundleName?: string;
+    maxPaymentAmountOrder?: string;
+    paymentAmountMinRange?: number;
+    paymentAmountMaxRange?: number;
+    validBefore?: string;
+    validAfter?: string;
+    expireBefore?: string;
+    expireAfter?: string;
   }): Promise<PSPBundlesResource> => {
     const result = await backofficeClient.getBundlesByPSP({
       'bundle-type': [bundleType],
@@ -954,6 +968,13 @@ export const BackofficeApi = {
       ...(bundleName ? { name: bundleName } : {}),
       page,
       'psp-tax-code': pspCode,
+      ...(maxPaymentAmountOrder ? { maxPaymentAmountOrder } : {}),
+      ...(paymentAmountMinRange ? { paymentAmountMinRange } : {}),
+      ...(paymentAmountMaxRange ? { paymentAmountMaxRange } : {}),
+      ...(validBefore ? { validBefore } : {}),
+      ...(validAfter ? { validAfter } : {}),
+      ...(expireBefore ? { expireBefore } : {}),
+      ...(expireAfter ? { expireAfter } : {}),
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

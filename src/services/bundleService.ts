@@ -34,12 +34,26 @@ export const getBundleListByPSP = ({
   page,
   pspCode,
   bundleName,
+  maxPaymentAmountOrder,
+  paymentAmountMinRange,
+  paymentAmountMaxRange,
+  validBefore,
+  validAfter,
+  expireBefore,
+  expireAfter,
 }: {
   bundleType: string;
   pageLimit: number;
   page: number;
   pspCode: string;
   bundleName?: string;
+  maxPaymentAmountOrder?: string;
+  paymentAmountMinRange?: number;
+  paymentAmountMaxRange?: number;
+  validBefore?: string;
+  validAfter?: string;
+  expireBefore?: string;
+  expireAfter?: string;
 }): Promise<PSPBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundlePsp();
@@ -50,6 +64,13 @@ export const getBundleListByPSP = ({
       page,
       pspCode,
       bundleName,
+      maxPaymentAmountOrder,
+      paymentAmountMinRange,
+      paymentAmountMaxRange,
+      validBefore,
+      validAfter,
+      expireBefore,
+      expireAfter,
     });
   }
 };

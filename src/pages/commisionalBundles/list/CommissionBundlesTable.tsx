@@ -20,7 +20,7 @@ import { TypeEnum } from '../../../api/generated/portal/PSPBundleResource';
 import { buildColumnDefs } from './CommissionBundlesTableColumns';
 
 type Props = {
-  bundleNameFilter?: string;
+  filtersValue?: any;
   bundleType: string;
 };
 
@@ -48,7 +48,7 @@ const mapBundle = (bundleType: string) => {
 };
 
 const componentPath = 'commissionBundlesPage.list';
-const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
+const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
   const { t } = useTranslation();
   const { orgInfo } = useOrganizationType();
   const addError = useErrorDispatcher();
@@ -91,18 +91,26 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
     // eslint-disable-next-line functional/no-let
     let promise;
     if (orgInfo.types.isPsp) {
+      console.log("SAMU", filtersValue);
       promise = getBundleListByPSP({
         bundleType: mappedBundleType,
         pageLimit,
-        bundleName: bundleNameFilter ?? undefined,
+        bundleName: filtersValue?.name ?? undefined,
         page: newPage ?? page,
         pspCode: brokerCode,
+        maxPaymentAmountOrder: filtersValue?.paymentRange?.value,
+        paymentAmountMinRange: filtersValue?.paymentAmount?.paymentAmountMin,
+        paymentAmountMaxRange: filtersValue?.paymentAmount?.paymentAmountMax,
+        validBefore: filtersValue?.state?.validityBefore,
+        validAfter: filtersValue?.state?.validityAfter,
+        expireBefore: filtersValue?.state?.expireBefore,
+        expireAfter: filtersValue?.state?.expireAfter,
       });
     } else if (orgInfo.types.isEc) {
       promise = getCisBundles({
         bundleType: mappedBundleType,
         pageLimit,
-        bundleName: bundleNameFilter ?? undefined,
+        bundleName: filtersValue?.name ?? undefined,
         page: newPage ?? page,
         ciTaxCode: mappedBundleType === TypeEnum.GLOBAL ? undefined : brokerCode,
         bundleStatus: mappedBundleType === TypeEnum.PRIVATE ? privateBundleStatus : undefined,
@@ -153,7 +161,7 @@ const CommissionBundlesTable = ({ bundleNameFilter, bundleType }: Props) => {
       };
     }
     return () => {};
-  }, [bundleNameFilter, brokerCode]);
+  }, [filtersValue, brokerCode]);
 
   useEffect(() => {
     getBundleList(0);

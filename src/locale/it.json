@@ -1066,8 +1066,31 @@
     "globalBundles": "Per tutti",
     "list": {
       "search": {
-        "placeholder": "Cerca per Nome",
-        "createButton": "Crea pacchetto"
+        "placeholder": "Cerca per nome pacchetto",
+        "createButton": "Crea nuovo pacchetto",
+        "downloadButton": "Scarica lista",
+        "paymentRangeFilter": "Importo",
+        "paymentAmountFilter": "Commissione",
+        "stateFilter": "Stato",
+        "paymentRangeOptions": {
+          "noOrder": "Tutti",
+          "asc": "Prima il più basso",
+          "desc": "Prima il più alto"
+        },
+        "paymentAmountOptions": {
+          "all": "Tutti",
+          "section1": "Fino a 1€",
+          "section2": "Da 1€ a 2,50€",
+          "section3": "Da 2,50€ a 5€",
+          "section4": "Oltre i 5€"
+        },
+        "stateOptions": {
+          "all": "Tutti",
+          "active": "Attivi",
+          "toBeActivated": "In attivazione",
+          "expiring": "In scadenza",
+          "deleting": "In eliminazione"
+        }
       },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}{{status}}.",

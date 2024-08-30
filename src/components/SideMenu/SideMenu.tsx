@@ -179,7 +179,7 @@ export default function SideMenu() {
             )}
           {useFlagValue('station-maintenances') &&
             userHasPermission('station-maintenances') &&
-            orgInfo.types.isEc && (
+            orgInfo.types.isEcBroker && (
               <SidenavItem
                 title={t('sideMenu.stationMaintenances.title')}
                 handleClick={() => onExit(() => history.push(ROUTES.STATION_MAINTENANCES_LIST))}

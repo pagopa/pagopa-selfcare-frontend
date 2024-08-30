@@ -83,7 +83,7 @@ const stateOptions = [
   },
   {
     name: 'deleting',
-    validityBefore: formatDateToYYYYMMDD(new Date()),
+    validityBefore: undefined,
     validityAfter: undefined,
     expireBefore: formatDateToYYYYMMDD(new Date()),
     expireAfter: undefined,

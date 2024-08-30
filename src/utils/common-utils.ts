@@ -111,11 +111,7 @@ export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string =>
     timeZone: 'Europe/Rome',
   });
 
-export const formatDateToYYYYMMDD = (value: any): string => {
-  const offset = value.getTimezoneOffset();
-  const date = new Date(value.getTime() - offset * 60 * 1000);
-  return date.toISOString().split('T')[0];
-};
+export const formatDateToYYYYMMDD = (value: any): string => value.toISOString().split('T')[0];
 
 export function fromHoursFormattedToNumbers(hour: string): number {
   const separator = hour.indexOf(':');

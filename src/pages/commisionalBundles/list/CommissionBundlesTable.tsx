@@ -91,7 +91,6 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
     // eslint-disable-next-line functional/no-let
     let promise;
     if (orgInfo.types.isPsp) {
-      console.log("SAMU", filtersValue);
       promise = getBundleListByPSP({
         bundleType: mappedBundleType,
         pageLimit,

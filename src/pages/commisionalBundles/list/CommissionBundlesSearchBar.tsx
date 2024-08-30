@@ -65,27 +65,27 @@ const stateOptions = [
     validityBefore: formatDateToYYYYMMDD(new Date()),
     validityAfter: undefined,
     expireBefore: undefined,
-    expireAfter: formatDateToYYYYMMDD(new Date()),
+    expireAfter: formatDateToYYYYMMDD(add(new Date(), {days: 7})),
   },
   {
     name: 'toBeActivated',
     validityBefore: undefined,
-    validityAfter: formatDateToYYYYMMDD(new Date()),
+    validityAfter: formatDateToYYYYMMDD(add(new Date(), {days:1})),
     expireBefore: undefined,
-    expireAfter: formatDateToYYYYMMDD(new Date()),
+    expireAfter: undefined
   },
   {
     name: 'expiring',
     validityBefore: formatDateToYYYYMMDD(new Date()),
     validityAfter: undefined,
     expireBefore: formatDateToYYYYMMDD(add(new Date(), { days: 7 })),
-    expireAfter: undefined,
+    expireAfter: formatDateToYYYYMMDD(add(new Date(), {days:1})),
   },
   {
     name: 'deleting',
     validityBefore: formatDateToYYYYMMDD(new Date()),
     validityAfter: undefined,
-    expireBefore: formatDateToYYYYMMDD(add(new Date(), { days: 1 })),
+    expireBefore: formatDateToYYYYMMDD(new Date()),
     expireAfter: undefined,
   },
 ];

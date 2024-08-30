@@ -95,7 +95,7 @@ export function buildColumnDefs(
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionBundlesPage.list.headerFields.payment'),
       align: 'left',
-      headerAlign: 'left',
+      headerAlign: 'center',
       width: 145,
       editable: false,
       disableColumnMenu: true,
@@ -340,7 +340,7 @@ const EuroCell = ({ children, small }: { children: React.ReactNode; small?: bool
     display="flex"
     alignItems="center"
     width={small ? '80px' : '170px'}
-    justifyContent="space-between"
+    justifyContent="flex-end"
   >
     {children}
     <Euro sx={{ ml: 1 }} color="action" />

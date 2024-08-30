@@ -32,7 +32,7 @@ import { BrokerPspDetailsDto } from './generated/portal/BrokerPspDetailsDto';
 import { BrokerPspDetailsResource } from './generated/portal/BrokerPspDetailsResource';
 import { BrokerResource } from './generated/portal/BrokerResource';
 import { BundleCreateResponse } from './generated/portal/BundleCreateResponse';
-import { BundleRequest } from './generated/portal/BundleRequest';
+import { BundleRequest, TypeEnum } from './generated/portal/BundleRequest';
 import { CIBrokerDelegationPage } from './generated/portal/CIBrokerDelegationPage';
 import { CIBrokerStationPage } from './generated/portal/CIBrokerStationPage';
 import { CIBundleAttributeResource } from './generated/portal/CIBundleAttributeResource';
@@ -399,7 +399,7 @@ export const BackofficeApi = {
     const result = await backofficeClient.getChannels({
       status: String(status),
       brokerCode,
-      ...(channelCode ? {channelCode} : {}),
+      ...(channelCode ? { channelCode } : {}),
       limit,
       page,
     });
@@ -935,134 +935,374 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getBundlesByPsp: async ({
-    bundleType,
-    pageLimit,
-    page,
-    pspCode,
-    bundleName,
-  }: {
-    bundleType: string;
-    pageLimit: number;
-    page: number;
-    pspCode: string;
-    bundleName?: string;
-  }): Promise<PSPBundlesResource> => {
-    const result = await backofficeClient.getBundlesByPSP({
-      'bundle-type': [bundleType],
-      limit: pageLimit,
-      ...(bundleName ? { name: bundleName } : {}),
-      page,
-      'psp-tax-code': pspCode,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
+  taxonomies: {
+    getTaxonomyGroups: async (): Promise<TaxonomyGroups> => {
+      const result = await backofficeClient.getTaxonomyGroups({});
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getTaxonomies: async (
+      ec: string | undefined,
+      area: string | undefined,
+      code: string | undefined,
+      onlyValid: boolean
+    ): Promise<Taxonomies> => {
+      const result = await backofficeClient.getTaxonomies({
+        code,
+        ec,
+        macro_area: area,
+        only_valid: onlyValid,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
   },
 
-  createBundle: async (
-    pspTaxCode: string,
-    bundle: BundleRequest
-  ): Promise<BundleCreateResponse> => {
-    const result = await backofficeClient.createBundle({
-      'psp-tax-code': pspTaxCode,
-      body: bundle,
-    });
-    return extractResponse(result, 201, onRedirectToLogin);
-  },
-
-  getTouchpoints: async (page: number, limit: number): Promise<Touchpoints> => {
-    const result = await backofficeClient.getTouchpoints({ page, limit });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getTaxonomyGroups: async (): Promise<TaxonomyGroups> => {
-    const result = await backofficeClient.getTaxonomyGroups({});
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getTaxonomies: async (
-    ec: string | undefined,
-    area: string | undefined,
-    code: string | undefined,
-    onlyValid: boolean
-  ): Promise<Taxonomies> => {
-    const result = await backofficeClient.getTaxonomies({
-      code,
-      ec,
-      macro_area: area,
-      only_valid: onlyValid,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getBundleDetailByPSP: async (
-    pspTaxCode: string,
-    bundleId: string
-  ): Promise<PSPBundleResource> => {
-    const result = await backofficeClient.getBundleDetailByPSP({
-      'psp-tax-code': pspTaxCode,
-      'id-bundle': bundleId,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  deletePSPBundle: async (
-    pspTaxCode: string,
-    bundleId: string,
-    bundleName: string,
-    pspName: string,
-    bundleType: string
-  ): Promise<void> => {
-    const result = await backofficeClient.deletePSPBundle({
-      'psp-tax-code': pspTaxCode,
-      'id-bundle': bundleId,
-      bundleName,
-      pspName,
+  bundles: {
+    getBundlesByPsp: async ({
       bundleType,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
+      pageLimit,
+      page,
+      pspCode,
+      bundleName,
+      maxPaymentAmountOrder,
+      paymentAmountMinRange,
+      paymentAmountMaxRange,
+      validBefore,
+      validAfter,
+      expireBefore,
+      expireAfter,
+    }: {
+      bundleType: string;
+      pageLimit: number;
+      page: number;
+      pspCode: string;
+      bundleName?: string;
+      maxPaymentAmountOrder?: string;
+      paymentAmountMinRange?: number;
+      paymentAmountMaxRange?: number;
+      validBefore?: string;
+      validAfter?: string;
+      expireBefore?: string;
+      expireAfter?: string;
+    }): Promise<PSPBundlesResource> => {
+      const result = await backofficeClient.getBundlesByPSP({
+        'bundle-type': [bundleType],
+        limit: pageLimit,
+        ...(bundleName ? { name: bundleName } : {}),
+        page,
+        'psp-tax-code': pspCode,
+        ...(maxPaymentAmountOrder ? { maxPaymentAmountOrder } : {}),
+        ...(paymentAmountMinRange ? { paymentAmountMinRange } : {}),
+        ...(paymentAmountMaxRange ? { paymentAmountMaxRange } : {}),
+        ...(validBefore ? { validBefore } : {}),
+        ...(validAfter ? { validAfter } : {}),
+        ...(expireBefore ? { expireBefore } : {}),
+        ...(expireAfter ? { expireAfter } : {}),
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
 
-  updatePSPBundle: async (
-    pspTaxCode: string,
-    bundleId: string,
-    bundle: BundleRequest
-  ): Promise<void> => {
-    const result = await backofficeClient.updatePSPBundle({
-      'psp-tax-code': pspTaxCode,
-      'id-bundle': bundleId,
-      body: bundle,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
+    createBundle: async (
+      pspTaxCode: string,
+      bundle: BundleRequest
+    ): Promise<BundleCreateResponse> => {
+      const result = await backofficeClient.createBundle({
+        'psp-tax-code': pspTaxCode,
+        body: bundle,
+      });
+      return extractResponse(result, 201, onRedirectToLogin);
+    },
+
+    getTouchpoints: async (page: number, limit: number): Promise<Touchpoints> => {
+      const result = await backofficeClient.getTouchpoints({ page, limit });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBundleDetailByPSP: async (
+      pspTaxCode: string,
+      bundleId: string
+    ): Promise<PSPBundleResource> => {
+      const result = await backofficeClient.getBundleDetailByPSP({
+        'psp-tax-code': pspTaxCode,
+        'id-bundle': bundleId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deletePSPBundle: async (
+      pspTaxCode: string,
+      bundleId: string,
+      bundleName: string,
+      pspName: string,
+      bundleType: string
+    ): Promise<void> => {
+      const result = await backofficeClient.deletePSPBundle({
+        'psp-tax-code': pspTaxCode,
+        'id-bundle': bundleId,
+        bundleName,
+        pspName,
+        bundleType,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    updatePSPBundle: async (
+      pspTaxCode: string,
+      bundleId: string,
+      bundle: BundleRequest
+    ): Promise<void> => {
+      const result = await backofficeClient.updatePSPBundle({
+        'psp-tax-code': pspTaxCode,
+        'id-bundle': bundleId,
+        body: bundle,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getCisBundles: async ({
+      bundleType,
+      pageLimit,
+      page,
+      bundleName,
+      ciTaxCode,
+      bundleStatus,
+    }: {
+      bundleType: string;
+      pageLimit: number;
+      page: number;
+      bundleName?: string;
+      ciTaxCode?: string;
+      bundleStatus?: SubscriptionStateType;
+    }): Promise<CIBundlesResource> => {
+      const result = await backofficeClient.getCisBundles({
+        bundleType,
+        limit: pageLimit,
+        ...(bundleName ? { name: bundleName } : {}),
+        page,
+        ciTaxCode,
+        status: bundleStatus,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+    getBundleCISubscriptions: async ({
+      idBundle,
+      pspTaxCode,
+      ciTaxCode,
+      limit,
+      page,
+      status,
+      bundleType,
+    }: BundleCISubscriptionsMethodParams): Promise<CIBundleSubscriptionsResource> => {
+      // eslint-disable-next-line functional/no-let
+      let params: BundleCISubscriptionsBodyRequest = {
+        'id-bundle': idBundle,
+        'psp-tax-code': pspTaxCode,
+        limit,
+        page,
+        status,
+        bundleType,
+      };
+      if (ciTaxCode) {
+        params = { ...params, ciTaxCode };
+      }
+      const result = await backofficeClient.getBundleCISubscriptions(params);
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getBundleCISubscriptionsDetail: async ({
+      idBundle,
+      pspTaxCode,
+      ciTaxCode,
+      status,
+      bundleType,
+    }: BundleCiSubscriptionsDetailMethodParams): Promise<CIBundleSubscriptionsDetail> => {
+      const result = await backofficeClient.getBundleCISubscriptionsDetail({
+        'id-bundle': idBundle,
+        'psp-tax-code': pspTaxCode,
+        'ci-tax-code': ciTaxCode,
+        bundleType,
+        status,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    acceptBundleSubscriptionRequest: async (
+      pspTaxCode: string,
+      idBundleRequest: string,
+      ciTaxCode: string,
+      bundleName: string
+    ): Promise<void> => {
+      const result = await backofficeClient.acceptPublicBundleSubscriptions({
+        'psp-tax-code': pspTaxCode,
+        'bundle-request-id': idBundleRequest,
+        ciTaxCode,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    rejectPublicBundleSubscription: async (
+      pspTaxCode: string,
+      bundleRequestId: string,
+      ciTaxCode: string,
+      bundleName: string
+    ): Promise<void> => {
+      const result = await backofficeClient.rejectPublicBundleSubscription({
+        'psp-tax-code': pspTaxCode,
+        'bundle-request-id': bundleRequestId,
+        ciTaxCode,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deleteCIBundleSubscription: async (
+      ciBundleId: string,
+      ciTaxCode: string,
+      bundleName: string
+    ): Promise<void> => {
+      const result = await backofficeClient.deleteCIBundleSubscription({
+        'ci-bundle-id': ciBundleId,
+        'ci-tax-code': ciTaxCode,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deleteCIBundleRequest: async ({
+      idBundleRequest,
+      ciTaxCode,
+    }: {
+      idBundleRequest: string;
+      ciTaxCode: string;
+    }): Promise<void> => {
+      const result = await backofficeClient.deleteCIBundleRequest({
+        'bundle-request-id': idBundleRequest,
+        'ci-tax-code': ciTaxCode,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    createCIBundleRequest: async ({
+      ciTaxCode,
+      bundleRequest,
+      bundleName,
+    }: {
+      ciTaxCode: string;
+      bundleRequest: Partial<PublicBundleRequest>;
+      bundleName: string;
+    }): Promise<void> => {
+      const result = await backofficeClient.createCIBundleRequest({
+        'ci-tax-code': ciTaxCode,
+        body: bundleRequest as PublicBundleRequest,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    deletePrivateBundleOffer: async ({
+      idBundle,
+      pspTaxCode,
+      bundleOfferId,
+      ciTaxCode,
+      bundleName,
+    }: {
+      idBundle: string;
+      pspTaxCode: string;
+      bundleOfferId: string;
+      ciTaxCode: string;
+      bundleName: string;
+    }): Promise<void> => {
+      const result = await backofficeClient.deletePrivateBundleOffer({
+        'id-bundle': idBundle,
+        'psp-tax-code': pspTaxCode,
+        'bundle-offer-id': bundleOfferId,
+        ciTaxCode,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    createCIBundleOffers: async ({
+      idBundle,
+      pspTaxCode,
+      bundleName,
+      ciTaxCodeList,
+    }: {
+      idBundle: string;
+      pspTaxCode: string;
+      bundleName: string;
+      ciTaxCodeList: Array<string>;
+    }): Promise<void> => {
+      const result = await backofficeClient.createCIBundleOffers({
+        'id-bundle': idBundle,
+        'psp-tax-code': pspTaxCode,
+        bundleName,
+        body: { ciFiscalCodeList: ciTaxCodeList },
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    acceptPrivateBundleOffer: async ({
+      ciTaxCode,
+      idBundleOffer,
+      pspTaxCode,
+      bundleName,
+      ciBundleAttributes,
+    }: {
+      ciTaxCode: string;
+      idBundleOffer: string;
+      pspTaxCode: string;
+      bundleName: string;
+      ciBundleAttributes: CIBundleAttributeResource;
+    }): Promise<CIBundleId> => {
+      const result = await backofficeClient.acceptPrivateBundleOffer({
+        'ci-tax-code': ciTaxCode,
+        'id-bundle-offer': idBundleOffer,
+        pspTaxCode,
+        bundleName,
+        body: ciBundleAttributes,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    rejectPrivateBundleOffer: async ({
+      ciTaxCode,
+      idBundleOffer,
+      pspTaxCode,
+      bundleName,
+    }: {
+      ciTaxCode: string;
+      idBundleOffer: string;
+      pspTaxCode: string;
+      bundleName: string;
+    }): Promise<void> => {
+      const result = await backofficeClient.rejectPrivateBundleOffer({
+        'ci-tax-code': ciTaxCode,
+        'id-bundle-offer': idBundleOffer,
+        pspTaxCode,
+        bundleName,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    exportPSPBundleList: async ({
+      pspTaxCode,
+      bundleType,
+    }: {
+      pspTaxCode: string;
+      bundleType: Array<TypeEnum>;
+    }): Promise<Buffer> => {
+      const result = await backofficeClient.exportPSPBundleList({
+        'psp-tax-code': pspTaxCode,
+        bundleTypeList: bundleType,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
   },
 
   getFeatureFlags: async (): Promise<FeatureFlags> => {
     const result = await backofficeClient.getFeatureFlags({});
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getCisBundles: async ({
-    bundleType,
-    pageLimit,
-    page,
-    bundleName,
-    ciTaxCode,
-    bundleStatus,
-  }: {
-    bundleType: string;
-    pageLimit: number;
-    page: number;
-    bundleName?: string;
-    ciTaxCode?: string;
-    bundleStatus?: SubscriptionStateType;
-  }): Promise<CIBundlesResource> => {
-    const result = await backofficeClient.getCisBundles({
-      bundleType,
-      limit: pageLimit,
-      ...(bundleName ? { name: bundleName } : {}),
-      page,
-      ciTaxCode,
-      status: bundleStatus,
-    });
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
@@ -1208,145 +1448,6 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  getBundleCISubscriptions: async ({
-    idBundle,
-    pspTaxCode,
-    ciTaxCode,
-    limit,
-    page,
-    status,
-    bundleType,
-  }: BundleCISubscriptionsMethodParams): Promise<CIBundleSubscriptionsResource> => {
-    // eslint-disable-next-line functional/no-let
-    let params: BundleCISubscriptionsBodyRequest = {
-      'id-bundle': idBundle,
-      'psp-tax-code': pspTaxCode,
-      limit,
-      page,
-      status,
-      bundleType,
-    };
-    if (ciTaxCode) {
-      params = { ...params, ciTaxCode };
-    }
-    const result = await backofficeClient.getBundleCISubscriptions(params);
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getBundleCISubscriptionsDetail: async ({
-    idBundle,
-    pspTaxCode,
-    ciTaxCode,
-    status,
-    bundleType,
-  }: BundleCiSubscriptionsDetailMethodParams): Promise<CIBundleSubscriptionsDetail> => {
-    const result = await backofficeClient.getBundleCISubscriptionsDetail({
-      'id-bundle': idBundle,
-      'psp-tax-code': pspTaxCode,
-      'ci-tax-code': ciTaxCode,
-      bundleType,
-      status,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  acceptBundleSubscriptionRequest: async (
-    pspTaxCode: string,
-    idBundleRequest: string,
-    ciTaxCode: string,
-    bundleName: string
-  ): Promise<void> => {
-    const result = await backofficeClient.acceptPublicBundleSubscriptions({
-      'psp-tax-code': pspTaxCode,
-      'bundle-request-id': idBundleRequest,
-      ciTaxCode,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  rejectPublicBundleSubscription: async (
-    pspTaxCode: string,
-    bundleRequestId: string,
-    ciTaxCode: string,
-    bundleName: string
-  ): Promise<void> => {
-    const result = await backofficeClient.rejectPublicBundleSubscription({
-      'psp-tax-code': pspTaxCode,
-      'bundle-request-id': bundleRequestId,
-      ciTaxCode,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  deleteCIBundleSubscription: async (
-    ciBundleId: string,
-    ciTaxCode: string,
-    bundleName: string
-  ): Promise<void> => {
-    const result = await backofficeClient.deleteCIBundleSubscription({
-      'ci-bundle-id': ciBundleId,
-      'ci-tax-code': ciTaxCode,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  deleteCIBundleRequest: async ({
-    idBundleRequest,
-    ciTaxCode,
-  }: {
-    idBundleRequest: string;
-    ciTaxCode: string;
-  }): Promise<void> => {
-    const result = await backofficeClient.deleteCIBundleRequest({
-      'bundle-request-id': idBundleRequest,
-      'ci-tax-code': ciTaxCode,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createCIBundleRequest: async ({
-    ciTaxCode,
-    bundleRequest,
-    bundleName,
-  }: {
-    ciTaxCode: string;
-    bundleRequest: Partial<PublicBundleRequest>;
-    bundleName: string;
-  }): Promise<void> => {
-    const result = await backofficeClient.createCIBundleRequest({
-      'ci-tax-code': ciTaxCode,
-      body: bundleRequest as PublicBundleRequest,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  deletePrivateBundleOffer: async ({
-    idBundle,
-    pspTaxCode,
-    bundleOfferId,
-    ciTaxCode,
-    bundleName,
-  }: {
-    idBundle: string;
-    pspTaxCode: string;
-    bundleOfferId: string;
-    ciTaxCode: string;
-    bundleName: string;
-  }): Promise<void> => {
-    const result = await backofficeClient.deletePrivateBundleOffer({
-      'id-bundle': idBundle,
-      'psp-tax-code': pspTaxCode,
-      'bundle-offer-id': bundleOfferId,
-      ciTaxCode,
-      bundleName,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
   getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
     const result = await backofficeClient.getMaintenanceMessage({});
     return extractResponse(result, 200, onRedirectToLogin);
@@ -1390,69 +1491,6 @@ export const BackofficeApi = {
     const result = await customBoClient.updateInstitutions({
       file,
       body: JSON.stringify(uploadInstitutionData),
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  createCIBundleOffers: async ({
-    idBundle,
-    pspTaxCode,
-    bundleName,
-    ciTaxCodeList,
-  }: {
-    idBundle: string;
-    pspTaxCode: string;
-    bundleName: string;
-    ciTaxCodeList: Array<string>;
-  }): Promise<void> => {
-    const result = await backofficeClient.createCIBundleOffers({
-      'id-bundle': idBundle,
-      'psp-tax-code': pspTaxCode,
-      bundleName,
-      body: { ciFiscalCodeList: ciTaxCodeList },
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  acceptPrivateBundleOffer: async ({
-    ciTaxCode,
-    idBundleOffer,
-    pspTaxCode,
-    bundleName,
-    ciBundleAttributes,
-  }: {
-    ciTaxCode: string;
-    idBundleOffer: string;
-    pspTaxCode: string;
-    bundleName: string;
-    ciBundleAttributes: CIBundleAttributeResource;
-  }): Promise<CIBundleId> => {
-    const result = await backofficeClient.acceptPrivateBundleOffer({
-      'ci-tax-code': ciTaxCode,
-      'id-bundle-offer': idBundleOffer,
-      pspTaxCode,
-      bundleName,
-      body: ciBundleAttributes,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  rejectPrivateBundleOffer: async ({
-    ciTaxCode,
-    idBundleOffer,
-    pspTaxCode,
-    bundleName,
-  }: {
-    ciTaxCode: string;
-    idBundleOffer: string;
-    pspTaxCode: string;
-    bundleName: string;
-  }): Promise<void> => {
-    const result = await backofficeClient.rejectPrivateBundleOffer({
-      'ci-tax-code': ciTaxCode,
-      'id-bundle-offer': idBundleOffer,
-      pspTaxCode,
-      bundleName,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

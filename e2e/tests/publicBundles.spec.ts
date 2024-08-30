@@ -1,10 +1,8 @@
 import {Page, test} from '@playwright/test';
 import {
   bundleNamePublic,
-  ciBundleStates,
   deleteAllExpiredBundles,
-  getToBundleDetailEc,
-  getToBundleDetailPsp,
+  getToBundleDetail,
   validateBundle
 } from './utils/bundleUtils';
 import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
@@ -103,7 +101,7 @@ test.describe('Public bundles flow', () => {
   test('EC delete subscription request', async () => {
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.REQUESTED);
+    await getToBundleDetail(page, bundleNamePublic);
     await page.getByTestId('delete-request-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -117,7 +115,7 @@ test.describe('Public bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await getToBundleDetail(page, bundleNamePublic);
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('request-reject-button').click();
     await page.getByTestId('confirm-button-test').click();
@@ -133,7 +131,7 @@ test.describe('Public bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await getToBundleDetail(page, bundleNamePublic);
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('request-accept-button').click();
     await page.getByTestId('confirm-button-test').click();
@@ -144,7 +142,7 @@ test.describe('Public bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.ENABLED);
+    await getToBundleDetail(page, bundleNamePublic);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -154,7 +152,7 @@ test.describe('Public bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToBundleDetailPsp(page, bundleNamePublic, true);
+    await getToBundleDetail(page, bundleNamePublic);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -164,7 +162,7 @@ test.describe('Public bundles flow', () => {
 async function activatePublicBundle(page: Page) {
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-public').click();
-  await getToBundleDetailEc(page, bundleNamePublic, ciBundleStates.AVAILABLE);
+  await getToBundleDetail(page, bundleNamePublic);
   await page.getByTestId('activate-button').click();
   await page.getByLabel('Importo a tuo carico').click();
   await page.getByLabel('Importo a tuo carico').fill('40');

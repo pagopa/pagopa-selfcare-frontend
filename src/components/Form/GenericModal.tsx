@@ -11,6 +11,7 @@ type Props = {
     handleCloseModal?: MouseEventHandler;
     handleConfirm?: MouseEventHandler;
     renderContent?: () => any;
+    children?: React.ReactNode;
 };
 
 const GenericModal = ({
@@ -22,6 +23,7 @@ const GenericModal = ({
                           handleCloseModal,
                           handleConfirm,
                           renderContent,
+                          children
                       }: Props) => (
     <Modal
         aria-labelledby="modal-title"
@@ -55,6 +57,7 @@ const GenericModal = ({
                         <Typography variant="body1" sx={{my: 2}}>
                             {message}
                         </Typography>
+                        {children && <Box my={4}>{children}</Box>}
                         <Box
                             sx={{
                                 display: 'grid',

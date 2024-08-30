@@ -72,7 +72,7 @@ const stateOptions = [
     validityBefore: undefined,
     validityAfter: formatDateToYYYYMMDD(add(new Date(), {days:1})),
     expireBefore: undefined,
-    expireAfter: undefined
+    expireAfter: formatDateToYYYYMMDD(add(new Date(), {days:1}))
   },
   {
     name: 'expiring',

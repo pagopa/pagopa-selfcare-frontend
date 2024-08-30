@@ -1064,6 +1064,18 @@
     "privateBundles": "Su invito",
     "publicBundles": "Su richiesta",
     "globalBundles": "Per tutti",
+    "exportError": "Errore durante l'esportazione della lista dei bundle",
+    "exportModal": {
+      "title": "Scarica lista pacchetti",
+      "message": "Seleziona quali pacchetti includere nella lista CSV.",
+      "select": "Tipologia pacchetti",
+      "options": {
+        "all": "Tutti",
+        "global": "Per tutti",
+        "private": "Su invito",
+        "public": "Su richiesta"
+      }
+    },
     "list": {
       "search": {
         "placeholder": "Cerca per nome pacchetto",

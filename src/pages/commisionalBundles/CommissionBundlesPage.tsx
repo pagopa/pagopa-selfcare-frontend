@@ -117,6 +117,7 @@ const CommissionBundlesPage = () => {
                 /* TODO */
               }}
               endIcon={<Download />}
+              disabled={true}
             >
               {t('commissionBundlesPage.list.search.downloadButton')}
             </Button>

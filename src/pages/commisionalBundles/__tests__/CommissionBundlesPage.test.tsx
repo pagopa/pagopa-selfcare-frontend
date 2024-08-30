@@ -25,6 +25,32 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   spyOnUseFlagValue = jest.spyOn(useFeatureFlags, 'useFlagValue');
+  jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
+    userRole: ROLE.PSP_ADMIN,
+    userIsPspAdmin: false,
+    userIsEcAdmin: false,
+    userIsPspDirectAdmin: false,
+    userIsPagopaOperator: false,
+    userIsAdmin: true,
+  });
+  jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+    orgInfo: {
+      isSigned: true,
+      types: {
+        isPsp: true,
+        isPspBroker: false,
+        isEc: true,
+        isEcBroker: true,
+      },
+    },
+    orgIsBrokerSigned: false,
+    orgIsEcBrokerSigned: false,
+    orgIsEcDirect: false,
+    orgIsEcSigned: false,
+    orgIsPspBrokerSigned: false,
+    orgIsPspDirect: false,
+    orgIsPspSigned: false,
+  });
 });
 
 afterEach(cleanup);
@@ -49,32 +75,6 @@ describe('<CommisionalBundlesPage />', () => {
     const exportBundleList = jest
       .spyOn(require('../../../services/bundleService'), 'exportPSPBundleList')
       .mockResolvedValue('');
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-      userRole: ROLE.PSP_ADMIN,
-      userIsPspAdmin: false,
-      userIsEcAdmin: false,
-      userIsPspDirectAdmin: false,
-      userIsPagopaOperator: false,
-      userIsAdmin: true,
-    });
-    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
-      orgInfo: {
-        isSigned: true,
-        types: {
-          isPsp: true,
-          isPspBroker: false,
-          isEc: true,
-          isEcBroker: true,
-        },
-      },
-      orgIsBrokerSigned: false,
-      orgIsEcBrokerSigned: false,
-      orgIsEcDirect: false,
-      orgIsEcSigned: false,
-      orgIsPspBrokerSigned: false,
-      orgIsPspDirect: false,
-      orgIsPspSigned: false,
-    });
 
     spyOnUseFlagValue.mockReturnValue(true);
 
@@ -178,32 +178,6 @@ describe('<CommisionalBundlesPage />', () => {
     const exportBundleList = jest
       .spyOn(require('../../../services/bundleService'), 'exportPSPBundleList')
       .mockRejectedValue('');
-    jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
-      userRole: ROLE.PSP_ADMIN,
-      userIsPspAdmin: false,
-      userIsEcAdmin: false,
-      userIsPspDirectAdmin: false,
-      userIsPagopaOperator: false,
-      userIsAdmin: true,
-    });
-    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
-      orgInfo: {
-        isSigned: true,
-        types: {
-          isPsp: true,
-          isPspBroker: false,
-          isEc: true,
-          isEcBroker: true,
-        },
-      },
-      orgIsBrokerSigned: false,
-      orgIsEcBrokerSigned: false,
-      orgIsEcDirect: false,
-      orgIsEcSigned: false,
-      orgIsPspBrokerSigned: false,
-      orgIsPspDirect: false,
-      orgIsPspSigned: false,
-    });
 
     spyOnUseFlagValue.mockReturnValue(true);
 

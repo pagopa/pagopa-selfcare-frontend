@@ -117,6 +117,7 @@ export default function CommissionBundlesSearchBar({
     setPaymentRangeFilter(paymentRangeOptions[0]);
     setPaymentAmountFilter(paymentAmountOptions[0]);
     setStateFilter(stateOptions[0]);
+    setBundleNameInput("");
     setFiltersValues(emptyFiltersValues);
   };
 

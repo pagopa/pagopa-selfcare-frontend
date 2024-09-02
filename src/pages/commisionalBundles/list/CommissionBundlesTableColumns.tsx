@@ -4,7 +4,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction, useTranslation } from 'react-i18next';
 import { generatePath } from 'react-router-dom';
-import { Euro } from '@mui/icons-material';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
@@ -12,6 +11,7 @@ import { useAppDispatch } from '../../../redux/hooks';
 import {
   dateDifferenceInDays,
   datesAreOnSameDay,
+  formatCurrencyEur,
   formatCurrencyWithoutSymbol,
 } from '../../../utils/common-utils';
 import {
@@ -96,16 +96,13 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.payment'),
       align: 'left',
       headerAlign: 'center',
-      width: 145,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
           value: (
-            <EuroCell>
-              {`${formatCurrencyWithoutSymbol(params.row.minPaymentAmount) || ' '} - ${formatCurrencyWithoutSymbol(params.row.maxPaymentAmount) || ' '}`}
-            </EuroCell>
+         `${formatCurrencyWithoutSymbol(params.row.minPaymentAmount) || ' '} - ${formatCurrencyEur(params.row.maxPaymentAmount) || ' '}`
           ),
         }),
       sortable: false,
@@ -119,16 +116,13 @@ export function buildColumnDefs(
             headerName: t('commissionBundlesPage.list.headerFields.commission'),
             align: 'left',
             headerAlign: 'left',
-            width: 145,
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
             renderCell: (params: any) =>
               renderCell({
                 value: (
-                  <EuroCell small>
-                    {formatCurrencyWithoutSymbol(params.row.paymentAmount) || '-'}
-                  </EuroCell>
+                    formatCurrencyEur(params.row.paymentAmount) || '-'
                 ),
               }),
             sortable: false,
@@ -152,7 +146,7 @@ export function buildColumnDefs(
         ),
       renderCell: (params) => getStateChip(params, t, isPsp, isCi),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'actions',
@@ -334,15 +328,3 @@ export const SelectStatusFilter = ({
     </FormControl>
   );
 };
-
-const EuroCell = ({ children, small }: { children: React.ReactNode; small?: boolean }) => (
-  <Box
-    display="flex"
-    alignItems="center"
-    width={small ? '80px' : '170px'}
-    justifyContent="flex-end"
-  >
-    {children}
-    <Euro sx={{ ml: 1 }} color="action" />
-  </Box>
-);

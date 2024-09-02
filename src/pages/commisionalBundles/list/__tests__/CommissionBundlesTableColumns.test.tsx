@@ -13,14 +13,12 @@ import {
   mockedCommissionBundleCiDetailPrivate,
   mockedCommissionBundleCiDetailPublic,
   mockedCommissionBundlePspDetailGlobal,
-  mockedCommissionBundlePspDetailPrivate,
 } from '../../../../services/__mocks__/bundleService';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import add from 'date-fns/add';
-import { showCustomHeader } from '../../../../components/Table/TableUtils';
 import { BundleResource, SubscriptionStateType } from '../../../../model/CommissionBundle';
 import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 
@@ -100,6 +98,12 @@ const mockTFunction = (key: string) => {
       return 'Payment Type';
     case 'commissionBundlesPage.list.headerFields.amountRange':
       return 'Amount Range';
+    case 'commissionBundlesPage.list.headerFields.commission':
+      return 'Commission';
+    case 'commissionBundlesPage.list.headerFields.payment':
+      return 'Payment Range';
+    case 'commissionBundlesPage.list.headerFields.channel':
+      return 'Channel';
     default:
       return '';
   }
@@ -123,7 +127,19 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: 'Bundle Name',
         align: 'left',
         headerAlign: 'left',
-        minWidth: 400,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: true,
+        flex: 5,
+      },
+      {
+        field: 'channel',
+        cellClassName: 'justifyContentBold',
+        headerName: 'Channel',
+        align: 'left',
+        headerAlign: 'left',
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -132,46 +148,17 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         flex: 4,
       },
       {
-        field: 'validityDateFrom',
-        cellClassName: 'justifyContentNormal',
-        headerName: 'Activation Date',
-        align: 'left',
-        headerAlign: 'left',
-        maxWidth: 150,
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
-        field: 'validityDateTo',
-        cellClassName: 'justifyContentNormal',
-        headerName: 'Due Date',
-        align: 'left',
-        headerAlign: 'left',
-        maxWidth: 150,
-        editable: false,
-        disableColumnMenu: true,
-        renderHeader: expect.any(Function),
-        renderCell: expect.any(Function),
-        sortable: false,
-        flex: 4,
-      },
-      {
         field: 'touchpoint',
         cellClassName: 'justifyContentNormal',
         headerName: 'Touch Point',
         align: 'left',
         headerAlign: 'left',
-        maxWidth: 220,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
         sortable: false,
-        flex: 4,
+        flex: 3,
       },
       {
         field: 'paymentType',
@@ -179,6 +166,19 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         headerName: 'Payment Type',
         align: 'left',
         headerAlign: 'left',
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 3,
+      },
+      {
+        field: 'payment',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Payment Range',
+        align: 'left',
+        headerAlign: 'center',
         width: 145,
         editable: false,
         disableColumnMenu: true,
@@ -188,12 +188,25 @@ describe('<CommissionBundlesTableColumns /> for PSPs', () => {
         flex: 4,
       },
       {
+        field: 'commission',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Commission',
+        align: 'left',
+        headerAlign: 'left',
+        width: 145,
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 3,
+      },
+      {
         field: 'state',
         cellClassName: 'justifyContentNormal',
         headerName: '',
         align: 'left',
         headerAlign: 'left',
-        width: 200,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -329,13 +342,12 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
         headerName: 'Bundle Name',
         align: 'left',
         headerAlign: 'left',
-        minWidth: 400,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
         sortable: true,
-        flex: 4,
+        flex: 5,
       },
       {
         field: 'touchpoint',
@@ -343,13 +355,12 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
         headerName: 'Touch Point',
         align: 'left',
         headerAlign: 'left',
-        maxWidth: 220,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
         renderCell: expect.any(Function),
         sortable: false,
-        flex: 4,
+        flex: 3,
       },
       {
         field: 'paymentType',
@@ -357,6 +368,19 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
         headerName: 'Payment Type',
         align: 'left',
         headerAlign: 'left',
+        editable: false,
+        disableColumnMenu: true,
+        renderHeader: expect.any(Function),
+        renderCell: expect.any(Function),
+        sortable: false,
+        flex: 3,
+      },
+      {
+        field: 'payment',
+        cellClassName: 'justifyContentNormal',
+        headerName: 'Payment Range',
+        align: 'left',
+        headerAlign: 'center',
         width: 145,
         editable: false,
         disableColumnMenu: true,
@@ -371,7 +395,6 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
         headerName: '',
         align: 'left',
         headerAlign: 'left',
-        width: 200,
         editable: false,
         disableColumnMenu: true,
         renderHeader: expect.any(Function),
@@ -586,7 +609,7 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       let bundle = { ...mockedCommissionBundleCiDetailPrivate };
       bundle.ciBundleStatus = CiBundleStatusEnum.ENABLED;
       bundle.validityDateFrom = new Date('01/01/2020');
-      bundle.validityDateTo = add(new Date(), {days: 6});
+      bundle.validityDateTo = add(new Date(), { days: 6 });
       render(
         <Provider store={store}>
           <Router history={history}>
@@ -620,14 +643,17 @@ describe('<CommissionBundlesTableColumns /> for ECs', () => {
       expect(screen.queryByTestId('primary-state-chip')).not.toBeInTheDocument();
       expect(screen.queryByTestId('default-state-chip')).not.toBeInTheDocument();
     });
-    test("Bundle state filter", () => {
-        render(
-            <Provider store={store}>
-              <Router history={history}>
-                <SelectStatusFilter bundleStatus={SubscriptionStateType.Accepted} setBundleStatus={jest.fn()} />
-              </Router>
-            </Provider>
-          );
-    })
+    test('Bundle state filter', () => {
+      render(
+        <Provider store={store}>
+          <Router history={history}>
+            <SelectStatusFilter
+              bundleStatus={SubscriptionStateType.Accepted}
+              setBundleStatus={jest.fn()}
+            />
+          </Router>
+        </Provider>
+      );
+    });
   });
 });

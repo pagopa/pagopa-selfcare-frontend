@@ -11,7 +11,7 @@ export const getTaxonomies = (ec: string | undefined, area: string | undefined, 
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getTaxonomiesMock();
     } else {
-        return BackofficeApi.getTaxonomies(ec, area, code, onlyValid);
+        return BackofficeApi.taxonomies.getTaxonomies(ec, area, code, onlyValid);
     }
 };
 
@@ -19,6 +19,6 @@ export const getTaxonomyGroups = (): Promise<TaxonomyGroups> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getTaxonomyGroupsMock();
     } else {
-        return BackofficeApi.getTaxonomyGroups();
+        return BackofficeApi.taxonomies.getTaxonomyGroups();
     }
 };

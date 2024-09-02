@@ -1,10 +1,8 @@
 import {Page, test} from '@playwright/test';
 import {
   bundleNamePrivate,
-  ciBundleStates,
   deleteAllExpiredBundles,
-  getToBundleDetailEc,
-  getToBundleDetailPsp,
+  getToBundleDetail,
   validateBundle
 } from './utils/bundleUtils';
 import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
@@ -102,7 +100,7 @@ test.describe('Private bundles flow', () => {
   test('PSP delete private bundle offer', async () => {
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await getToBundleDetailPsp(page, bundleNamePrivate, true);
+    await getToBundleDetail(page, bundleNamePrivate);
     await page.getByTestId('request-detail-button').click();
     await page.getByTestId('offer-delete-button').click();
     await page.getByTestId('confirm-button-test').click();
@@ -123,7 +121,7 @@ test.describe('Private bundles flow', () => {
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
+    await getToBundleDetail(page, bundleNamePrivate);
     await page.getByTestId('reject-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -144,7 +142,7 @@ test.describe('Private bundles flow', () => {
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
+    await getToBundleDetail(page, bundleNamePrivate);
     await page.getByTestId('activate-button').click();
     await page.getByTestId('payment-amount-test').nth(0).click();
     await page.getByTestId('payment-amount-test').nth(0).fill('40');
@@ -162,7 +160,7 @@ test.describe('Private bundles flow', () => {
   test('EC de-activates private bundle', async () => {
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await getToBundleDetailEc(page, bundleNamePrivate, ciBundleStates.AVAILABLE);
+    await getToBundleDetail(page, bundleNamePrivate);
     await page.getByTestId('deactivate-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -172,7 +170,7 @@ test.describe('Private bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await getToBundleDetailPsp(page, bundleNamePrivate, true);
+    await getToBundleDetail(page, bundleNamePrivate);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -182,7 +180,7 @@ test.describe('Private bundles flow', () => {
 async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-private').click();
-  await getToBundleDetailPsp(page, bundleNamePrivate, true);
+  await getToBundleDetail(page, bundleNamePrivate);
   await page.getByRole('link', { name: 'Invita enti' }).click();
   await page.getByLabel('Cerca EC').click();
   await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC DEMO');

@@ -1,7 +1,7 @@
 import { TFunction } from 'react-i18next';
 import { BackofficeApi } from '../api/BackofficeClient';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
-import { BundleRequest } from '../api/generated/portal/BundleRequest';
+import { BundleRequest, TypeEnum } from '../api/generated/portal/BundleRequest';
 import { CIBundleAttributeResource } from '../api/generated/portal/CIBundleAttributeResource';
 import { CIBundleId } from '../api/generated/portal/CIBundleId';
 import { CIBundlesResource } from '../api/generated/portal/CIBundlesResource';
@@ -34,22 +34,43 @@ export const getBundleListByPSP = ({
   page,
   pspCode,
   bundleName,
+  maxPaymentAmountOrder,
+  paymentAmountMinRange,
+  paymentAmountMaxRange,
+  validBefore,
+  validAfter,
+  expireBefore,
+  expireAfter,
 }: {
   bundleType: string;
   pageLimit: number;
   page: number;
   pspCode: string;
   bundleName?: string;
+  maxPaymentAmountOrder?: string;
+  paymentAmountMinRange?: number;
+  paymentAmountMaxRange?: number;
+  validBefore?: string;
+  validAfter?: string;
+  expireBefore?: string;
+  expireAfter?: string;
 }): Promise<PSPBundlesResource> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundlePsp();
   } else {
-    return BackofficeApi.getBundlesByPsp({
+    return BackofficeApi.bundles.getBundlesByPsp({
       bundleType,
       pageLimit,
       page,
       pspCode,
       bundleName,
+      maxPaymentAmountOrder,
+      paymentAmountMinRange,
+      paymentAmountMaxRange,
+      validBefore,
+      validAfter,
+      expireBefore,
+      expireAfter,
     });
   }
 };
@@ -61,7 +82,7 @@ export const createBundle = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createCommissionBundle(bundle);
   } else {
-    return BackofficeApi.createBundle(pspTaxCode, bundle);
+    return BackofficeApi.bundles.createBundle(pspTaxCode, bundle);
   }
 };
 
@@ -69,7 +90,7 @@ export const getTouchpoints = (page: number, pageLimit: number): Promise<Touchpo
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getTouchpointsMock();
   } else {
-    return BackofficeApi.getTouchpoints(page, pageLimit);
+    return BackofficeApi.bundles.getTouchpoints(page, pageLimit);
   }
 };
 
@@ -80,7 +101,7 @@ export const getBundleDetailByPSP = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleDetails();
   } else {
-    return BackofficeApi.getBundleDetailByPSP(pspTaxCode, bundleId);
+    return BackofficeApi.bundles.getBundleDetailByPSP(pspTaxCode, bundleId);
   }
 };
 
@@ -94,7 +115,13 @@ export const deletePSPBundle = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return deletePSPBundleMock();
   } else {
-    return BackofficeApi.deletePSPBundle(pspTaxCode, bundleId, bundleName, pspName, bundleType);
+    return BackofficeApi.bundles.deletePSPBundle(
+      pspTaxCode,
+      bundleId,
+      bundleName,
+      pspName,
+      bundleType
+    );
   }
 };
 
@@ -106,7 +133,7 @@ export const updatePSPBundle = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updatePSPBundleMock();
   } else {
-    return BackofficeApi.updatePSPBundle(pspTaxCode, bundleId, bundle);
+    return BackofficeApi.bundles.updatePSPBundle(pspTaxCode, bundleId, bundle);
   }
 };
 
@@ -128,7 +155,7 @@ export const getCisBundles = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCommissionBundleCi();
   } else {
-    return BackofficeApi.getCisBundles({
+    return BackofficeApi.bundles.getCisBundles({
       bundleType,
       pageLimit,
       bundleName,
@@ -148,7 +175,7 @@ export const acceptBundleSubscriptionRequest = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.acceptBundleSubscriptionRequest(
+    return BackofficeApi.bundles.acceptBundleSubscriptionRequest(
       pspTaxCode,
       idBundleRequest,
       ciTaxCode,
@@ -166,7 +193,7 @@ export const rejectPublicBundleSubscription = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.rejectPublicBundleSubscription(
+    return BackofficeApi.bundles.rejectPublicBundleSubscription(
       pspTaxCode,
       bundleRequestId,
       ciTaxCode,
@@ -187,7 +214,7 @@ export const getBundleCISubscriptions = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsMock();
   } else {
-    return BackofficeApi.getBundleCISubscriptions({
+    return BackofficeApi.bundles.getBundleCISubscriptions({
       idBundle,
       pspTaxCode,
       ciTaxCode,
@@ -209,7 +236,7 @@ export const getBundleCISubscriptionsDetail = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getBundleCISubscriptionsDetailMock();
   } else {
-    return BackofficeApi.getBundleCISubscriptionsDetail({
+    return BackofficeApi.bundles.getBundleCISubscriptionsDetail({
       idBundle,
       pspTaxCode,
       ciTaxCode,
@@ -227,7 +254,7 @@ export const deleteCIBundleSubscription = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.deleteCIBundleSubscription(ciBundleId, ciTaxCode, bundleName);
+    return BackofficeApi.bundles.deleteCIBundleSubscription(ciBundleId, ciTaxCode, bundleName);
   }
 };
 
@@ -241,7 +268,7 @@ export const deleteCIBundleRequest = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.deleteCIBundleRequest({
+    return BackofficeApi.bundles.deleteCIBundleRequest({
       idBundleRequest,
       ciTaxCode,
     });
@@ -260,7 +287,7 @@ export const createCIBundleRequest = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.createCIBundleRequest({
+    return BackofficeApi.bundles.createCIBundleRequest({
       ciTaxCode,
       bundleRequest,
       bundleName,
@@ -284,7 +311,7 @@ export const deletePrivateBundleOffer = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.deletePrivateBundleOffer({
+    return BackofficeApi.bundles.deletePrivateBundleOffer({
       idBundle,
       pspTaxCode,
       bundleOfferId,
@@ -308,7 +335,7 @@ export const createCIBundleOffers = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.createCIBundleOffers({
+    return BackofficeApi.bundles.createCIBundleOffers({
       idBundle,
       pspTaxCode,
       bundleName,
@@ -333,7 +360,7 @@ export const acceptPrivateBundleOffer = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve({ idCiBundle: 'idCiBundle' });
   } else {
-    return BackofficeApi.acceptPrivateBundleOffer({
+    return BackofficeApi.bundles.acceptPrivateBundleOffer({
       ciTaxCode,
       idBundleOffer,
       pspTaxCode,
@@ -357,11 +384,28 @@ export const rejectPrivateBundleOffer = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return Promise.resolve();
   } else {
-    return BackofficeApi.rejectPrivateBundleOffer({
+    return BackofficeApi.bundles.rejectPrivateBundleOffer({
       ciTaxCode,
       idBundleOffer,
       pspTaxCode,
       bundleName,
+    });
+  }
+};
+
+export const exportPSPBundleList = ({
+  pspTaxCode,
+  bundleType,
+}: {
+  pspTaxCode: string;
+  bundleType: Array<TypeEnum>;
+}): Promise<Buffer> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return Promise.resolve(new Buffer(''));
+  } else {
+    return BackofficeApi.bundles.exportPSPBundleList({
+      pspTaxCode,
+      bundleType,
     });
   }
 };

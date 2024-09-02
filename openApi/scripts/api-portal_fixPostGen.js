@@ -34,3 +34,17 @@ regexReplace(
   'src/api/generated/portal/client.ts',
   { fileContentsOnly: true }
 );
+
+regexReplace(
+  'readonly bundleTypeList: array;',
+  'readonly bundleTypeList: Array<TypeEnum>;',
+  'src/api/generated/portal/requestTypes.ts',
+  { fileContentsOnly: true }
+);
+
+regexReplace(
+  'import { BundleRequest } from "./BundleRequest";',
+  'import { BundleRequest, TypeEnum } from "./BundleRequest";',
+  'src/api/generated/portal/requestTypes.ts',
+  { fileContentsOnly: true }
+);

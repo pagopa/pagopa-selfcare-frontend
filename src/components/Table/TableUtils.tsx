@@ -19,11 +19,13 @@ export function renderCell({
   color = undefined,
   overrideStyle = {},
   mainCell = false,
+  align,
 }: {
   value?: any;
   color?: string | undefined;
   overrideStyle?: CSSProperties;
   mainCell?: boolean;
+  align?: string;
 }) {
   return (
     <Box
@@ -33,6 +35,7 @@ export function renderCell({
         paddingLeft: 2.5,
         WebkitBoxOrient: 'vertical' as const,
         ...overrideStyle,
+        ...(align ? {display: "flex", justifyContent: align}: {})
       }}
     >
       <Typography

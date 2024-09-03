@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { Box, FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -94,16 +94,15 @@ export function buildColumnDefs(
       field: 'payment',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionBundlesPage.list.headerFields.payment'),
-      align: 'left',
+      align: 'center',
       headerAlign: 'center',
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: (
-         `${formatCurrencyWithoutSymbol(params.row.minPaymentAmount) || ' '} - ${formatCurrencyEur(params.row.maxPaymentAmount) || ' '}`
-          ),
+          value: `${formatCurrencyWithoutSymbol(params.row.minPaymentAmount) || ' '} - ${formatCurrencyEur(params.row.maxPaymentAmount) || ' '}`,
+          align: 'center',
         }),
       sortable: false,
       flex: 4,
@@ -114,16 +113,15 @@ export function buildColumnDefs(
             field: 'commission',
             cellClassName: 'justifyContentNormal',
             headerName: t('commissionBundlesPage.list.headerFields.commission'),
-            align: 'left',
-            headerAlign: 'left',
+            align: 'center',
+            headerAlign: 'center',
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
             renderCell: (params: any) =>
               renderCell({
-                value: (
-                    formatCurrencyEur(params.row.paymentAmount) || '-'
-                ),
+                value: formatCurrencyEur(params.row.paymentAmount) || '-',
+                align: 'center',
               }),
             sortable: false,
             flex: 3,

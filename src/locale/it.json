@@ -253,7 +253,8 @@
       "FDR_PSP": "FdR - Flussi di Rendicontazione (PSP)",
       "BO_EXT_EC": "Backoffice External (EC)",
       "BO_EXT_PSP": "Backoffice External (PSP)",
-      "PRINT_NOTICE": "Stampa Avvisi"
+      "PRINT_NOTICE": "Stampa Avvisi",
+      "ACA": "ACA - paCreatePosition"
     }
   },
   "channelsPage": {
@@ -1063,10 +1064,45 @@
     "privateBundles": "Su invito",
     "publicBundles": "Su richiesta",
     "globalBundles": "Per tutti",
+    "exportError": "Errore durante l'esportazione della lista dei bundle",
+    "exportModal": {
+      "title": "Scarica lista pacchetti",
+      "message": "Seleziona quali pacchetti includere nella lista CSV.",
+      "select": "Tipologia pacchetti",
+      "options": {
+        "all": "Tutti",
+        "global": "Per tutti",
+        "private": "Su invito",
+        "public": "Su richiesta"
+      }
+    },
     "list": {
       "search": {
-        "placeholder": "Cerca per Nome",
-        "createButton": "Crea pacchetto"
+        "placeholder": "Cerca per nome pacchetto",
+        "createButton": "Crea nuovo pacchetto",
+        "downloadButton": "Scarica lista",
+        "paymentRangeFilter": "Importo",
+        "paymentAmountFilter": "Commissione",
+        "stateFilter": "Stato",
+        "paymentRangeOptions": {
+          "noOrder": "Tutti",
+          "asc": "Prima il più basso",
+          "desc": "Prima il più alto"
+        },
+        "paymentAmountOptions": {
+          "all": "Tutti",
+          "section1": "Fino a 1€",
+          "section2": "Da 1€ a 2,50€",
+          "section3": "Da 2,50€ a 5€",
+          "section4": "Oltre i 5€"
+        },
+        "stateOptions": {
+          "all": "Tutti",
+          "active": "Attivi",
+          "toBeActivated": "In attivazione",
+          "expiring": "In scadenza",
+          "deleting": "In eliminazione"
+        }
       },
       "table": {
         "emptyState": "Non sono ancora presenti pacchetti commissioni {{bundleType}}{{status}}.",
@@ -1086,6 +1122,9 @@
         "endDate": "Fine validità",
         "touchpoint": "Touchpoint",
         "paymentType": "Tipo di pagamento",
+        "payment": "Importo",
+        "commission": "Commissione",
+        "channel": "Canale",
         "state": "Stato"
       },
       "states": {

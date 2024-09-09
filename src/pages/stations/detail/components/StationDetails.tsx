@@ -155,8 +155,14 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHost}:{stationDetail?.targetPort}
-                    {stationDetail?.targetPath}
+                    {stationDetail?.targetPath ? (
+                      <>
+                        {stationDetail?.targetHost}:{stationDetail?.targetPort}
+                        {stationDetail?.targetPath}
+                      </>
+                    ) : (
+                      '-'
+                    )}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>
@@ -166,15 +172,21 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.redirectProtocol
-                      ? `${stationDetail?.redirectProtocol.toLowerCase()}://`
-                      : ''}
-                    {stationDetail?.redirectIp}
-                    {stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ''}
-                    {stationDetail?.redirectPath}
-                    {stationDetail?.redirectQueryString
-                      ? `?${stationDetail?.redirectQueryString}`
-                      : ''}
+                    {stationDetail?.redirectPath ? (
+                      <>
+                        {stationDetail?.redirectProtocol
+                          ? `${stationDetail?.redirectProtocol.toLowerCase()}://`
+                          : ''}
+                        {stationDetail?.redirectIp}
+                        {stationDetail?.redirectPort ? `:${stationDetail?.redirectPort}` : ''}
+                        {stationDetail?.redirectPath}
+                        {stationDetail?.redirectQueryString
+                          ? `?${stationDetail?.redirectQueryString}`
+                          : ''}
+                      </>
+                    ) : (
+                      '-'
+                    )}
                   </Typography>
                 </Grid>
 
@@ -190,9 +202,15 @@ Props) => {
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                    {stationDetail?.targetHostPof}
-                    {stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}
-                    {stationDetail?.targetPathPof}
+                    {stationDetail?.targetPathPof ? (
+                      <>
+                        {stationDetail?.targetHostPof}
+                        {stationDetail?.targetPortPof ? `:${stationDetail?.targetPortPof}` : ''}
+                        {stationDetail?.targetPathPof}
+                      </>
+                    ) : (
+                      '-'
+                    )}
                   </Typography>
                 </Grid>
                 <Grid item xs={3}>

@@ -47,7 +47,7 @@ export default function ChannelsTable({
   const fetchChannels = (pageParam: number) => {
     if (brokerCode) {
       setLoadingOverlay(true);
-      if(pageParam){
+      if(pageParam !== undefined){
         setPage(pageParam);
       }
       getChannels({

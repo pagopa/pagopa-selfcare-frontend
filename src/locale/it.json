@@ -538,7 +538,7 @@
         "endpointRedirectConcat": "Endpoint Redirect",
         "primitiveVersion": "Versione primitive",
         "restEndpoint": "REST Endpoint",
-             "odp": "Opzioni di Pagamento"
+        "odp": "Opzioni di Pagamento"
       },
       "testStation": "Verifica URL",
       "confirmModal": {

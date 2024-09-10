@@ -78,7 +78,7 @@ import {
   alterStationValuesToFitCategories,
   getStationCategoryFromDetail,
   splitURL,
-  stationServicesOptions,
+  stationServicesConfiguration,
 } from '../../../utils/station-utils';
 import ConfirmModal from '../../components/ConfirmModal';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
@@ -1138,7 +1138,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                   />
                 </Grid>
 
-                {stationServicesOptions?.map((el) => (
+                {stationServicesConfiguration?.map((el) => (
                   <Grid item xs={10} ml={2} key={`service-${el.id}`}>
                     <Typography variant="subtitle1" fontWeight={'medium'}>
                       {t(`${componentPath}.fields.${el.id}`)}

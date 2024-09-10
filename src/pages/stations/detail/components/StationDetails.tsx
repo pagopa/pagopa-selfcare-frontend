@@ -13,7 +13,7 @@ import {
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
 import GetAlert from '../../../../components/WrapperCommon/GetAlert';
-import { stationServicesOptions } from '../../../../utils/station-utils';
+import { stationServicesConfiguration } from '../../../../utils/station-utils';
 import { StatusChip } from '../../../../components/WrapperCommon/StatusChip';
 import { useUserRole } from '../../../../hooks/useUserRole';
 import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
@@ -238,7 +238,7 @@ Props) => {
                       {stationDetail?.restEndpoint ?? '-'}
                     </Typography>
                   </Grid>
-                  {stationServicesOptions.map((el) => (
+                  {stationServicesConfiguration.map((el) => (
                     <React.Fragment key={'service-' + el.id}>
                       <Grid item xs={3}>
                         <Typography variant="body2">

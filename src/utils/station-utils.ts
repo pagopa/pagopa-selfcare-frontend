@@ -159,7 +159,7 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
   return station;
 };
 
-export const stationServicesOptions = [
+export const stationServicesConfiguration = [
   {
     id: 'odp',
     property: 'isPaymentOptionsEnabled',

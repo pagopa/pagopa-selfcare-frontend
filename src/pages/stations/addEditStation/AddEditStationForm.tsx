@@ -2,6 +2,7 @@
 /* eslint-disable complexity */
 import {
   Badge as BadgeIcon,
+  Cable,
   Cable as CableIcon,
   CallMade,
   Check as CheckIcon,
@@ -22,6 +23,7 @@ import {
   RadioGroup,
   Select,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -76,6 +78,7 @@ import {
   alterStationValuesToFitCategories,
   getStationCategoryFromDetail,
   splitURL,
+  stationServicesOptions,
 } from '../../../utils/station-utils';
 import ConfirmModal from '../../components/ConfirmModal';
 import AddEditStationFormSectionTitle from '../addEditStation/AddEditStationFormSectionTitle';
@@ -156,6 +159,8 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     redirectProtocol: RedirectProtocolEnum.HTTPS,
     redirectQueryString: '',
     service: '',
+    isPaymentOptionsEnabled: false,
+    restEndpoint: '',
     stationCode: detail?.stationCode ?? stationCodeGenerated,
     status: StatusEnum.TO_CHECK,
     targetConcat: '',
@@ -186,6 +191,11 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     proxyEnabled: detail.proxyEnabled ?? false,
 
     service: detail.service ?? '',
+
+    // Payment Options
+    isPaymentOptionsEnabled: detail.isPaymentOptionsEnabled ?? false,
+    restEndpoint: detail.restEndpoint ?? '',
+
     stationCode:
       formAction === StationFormAction.Duplicate ? stationCodeGenerated : detail.stationCode ?? '',
     status: detail?.wrapperStatus,
@@ -284,7 +294,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       return 'URL non valido';
     }
   };
-
+  
   const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
@@ -306,6 +316,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
           targetConcat: validateURL(values.targetConcat, false),
           redirectConcat: validateURL(values.redirectConcat, true),
           targetPofConcat: validateURL(values.targetPofConcat, false),
+          restEndpoint: validateURL(values.restEndpoint ?? '', true),
         },
         ...(userIsPagopaOperator && formAction !== StationFormAction.Create
           ? {
@@ -1099,6 +1110,60 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                     </Select>
                   </FormControl>
                 </Grid>
+              </Grid>
+            </Box>
+
+            <Box sx={inputGroupStyle} data-testid="services-box">
+              <AddEditStationFormSectionTitle
+                title={t(`${componentPath}.sections.services`)}
+                icon={<Cable />}
+              />
+              <Grid container item spacing={2} mt={1}>
+                <Grid item xs={10}>
+                  <TextField
+                    fullWidth
+                    id="restEndpoint"
+                    name="restEndpoint"
+                    label={t(`${componentPath}.fields.restEndpoint`)}
+                    placeholder={t(`${componentPath}.fields.restEndpoint`)}
+                    size="small"
+                    value={formik.values.restEndpoint}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={Boolean(formik.errors.restEndpoint)}
+                    helperText={formik.errors.restEndpoint}
+                    inputProps={{
+                      'data-testid': 'restEndpoint-test',
+                    }}
+                  />
+                </Grid>
+
+                {stationServicesOptions?.map((el) => (
+                  <Grid item xs={10} ml={2} key={`service-${el.id}`}>
+                    <Typography variant="subtitle1" fontWeight={'medium'}>
+                      {t(`${componentPath}.fields.${el.id}`)}
+                    </Typography>
+                    <Box display="flex" mt={1}>
+                      <Switch
+                        id={`${el.id}Service`}
+                        name={`${el.id}Service`}
+                        sx={{ ml: 2, mr: 2 }}
+                        onChange={(e) => formik.setFieldValue(el.property, e.target.checked)}
+                        checked={formik.values[el.property] ?? false}
+                        data-testid={`service-${el.id}`}
+                      />
+                      <TextField
+                        fullWidth
+                        id={`${el.id}Endpoint`}
+                        name={`${el.id}Endpoint`}
+                        size="small"
+                        disabled={true}
+                        sx={{ ml: 2, width: '50%' }}
+                        value={el.endpoint}
+                      />
+                    </Box>
+                  </Grid>
+                ))}
               </Grid>
             </Box>
           </>

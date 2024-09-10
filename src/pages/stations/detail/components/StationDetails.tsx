@@ -225,36 +225,38 @@ Props) => {
                     {stationDetail?.primitiveVersion}
                   </Typography>
                 </Grid>
-              </>
-            )}
 
-            <>
-              <Grid item xs={12} mt={2}>
-                <Typography variant="sidenav">{t('stationDetailPage.services')}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2">{t('stationDetailPage.restEndpoint')}</Typography>
-              </Grid>
-              <Grid item xs={9}>
-                <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                  {stationDetail?.restEndpoint ?? "-"}
-                </Typography>
-              </Grid>
-              {stationServicesOptions.map((el) => (
-                <React.Fragment key={'service-' + el.id}>
+                <>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">{t('stationDetailPage.services')}</Typography>
+                  </Grid>
                   <Grid item xs={3}>
-                    <Typography variant="body2">
-                      {t(`stationDetailPage.servicesOptions.${el.id}`)}
-                    </Typography>
+                    <Typography variant="body2">{t('stationDetailPage.restEndpoint')}</Typography>
                   </Grid>
                   <Grid item xs={9}>
                     <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.[el.property as keyof StationDetailResource] ? t("general.yes"): t("general.no")}
+                      {stationDetail?.restEndpoint ?? '-'}
                     </Typography>
                   </Grid>
-                </React.Fragment>
-              ))}
-            </>
+                  {stationServicesOptions.map((el) => (
+                    <React.Fragment key={'service-' + el.id}>
+                      <Grid item xs={3}>
+                        <Typography variant="body2">
+                          {t(`stationDetailPage.servicesOptions.${el.id}`)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                          {stationDetail?.[el.property as keyof StationDetailResource]
+                            ? t('general.yes')
+                            : t('general.no')}
+                        </Typography>
+                      </Grid>
+                    </React.Fragment>
+                  ))}
+                </>
+              </>
+            )}
 
             {!userIsPagopaOperator && (
               <>

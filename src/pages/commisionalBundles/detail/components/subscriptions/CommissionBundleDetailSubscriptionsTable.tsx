@@ -129,7 +129,7 @@ export default function CommissionBundleSubscriptionsTable({
     searchTriggered?: boolean
   ) => {
     setLoadingList(true);
-    if (newPage) {
+    if (newPage !== undefined) {
       setPage(newPage);
     }
 

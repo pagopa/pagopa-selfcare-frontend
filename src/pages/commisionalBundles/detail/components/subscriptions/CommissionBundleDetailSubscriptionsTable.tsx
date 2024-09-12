@@ -244,12 +244,6 @@ export default function CommissionBundleSubscriptionsTable({
     }
   };
 
-  function handleChangePage(value: number) {
-    const newPage = value - 1;
-    setPage(newPage);
-    getSubscriptionList(newPage);
-  }
-
   useEffect(() => {
     getSubscriptionList();
   }, []);
@@ -326,7 +320,7 @@ export default function CommissionBundleSubscriptionsTable({
           columns={columns}
           totalPages={subscriptionList?.page_info?.total_pages}
           page={page}
-          handleChangePage={(newPage: number) => handleChangePage(newPage)}
+          handleChangePage={(newPage: number) =>  getSubscriptionList(newPage)}
           getRowId={(r) => r.creditor_institution_code}
         />
       </Box>

@@ -19,7 +19,10 @@ import {
 } from '../../../services/bundleService';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { PublicBundleRequest } from '../../../api/generated/portal/PublicBundleRequest';
-import { formatCurrencyEur } from '../../../utils/common-utils';
+import {
+  formatCurrencyEur,
+  formatCurrencyStringToNumberCent,
+} from '../../../utils/common-utils';
 import { CIBundleResource } from '../../../api/generated/portal/CIBundleResource';
 import { TransferCategoryRelationEnum } from '../../../api/generated/portal/CIBundleAttribute';
 import { BundleResource } from '../../../model/CommissionBundle';
@@ -117,7 +120,7 @@ export default function CommissionBundleDetailActivationPage() {
   }
 
   function handleChangeCommissions(value: string, index: number) {
-    const numericValue = value ? parseFloat(value.replace(',', '.')) * 100 : 0;
+    const numericValue = value ? formatCurrencyStringToNumberCent(value) : 0;
     if (bundleDetails?.paymentAmount !== undefined && numericValue > bundleDetails.paymentAmount) {
       setInputErrors((prev) => ({ ...prev, [index]: t(`${componentPath}.errorCommission`) }));
     } else {

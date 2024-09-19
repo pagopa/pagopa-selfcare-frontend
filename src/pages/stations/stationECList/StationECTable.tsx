@@ -6,15 +6,16 @@ import { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { generatePath, useHistory } from 'react-router-dom';
-import ROUTES from '../../../routes';
-import { StationECAssociateActionType } from '../../../model/Station';
+import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
+import { StationECAssociateActionType } from '../../../model/Station';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { stationCIActions } from '../../../redux/slices/stationCISlice';
+import ROUTES from '../../../routes';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
 import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
-import { useAppDispatch } from '../../../redux/hooks';
-import { stationCIActions } from '../../../redux/slices/stationCISlice';
-import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { buildColumnDefs } from './StationECTableColumns';
 
 const emptyECList: CreditorInstitutionsResource = {
@@ -44,6 +45,7 @@ export default function StationECTable({
   const addError = useErrorDispatcher();
   const dispatcher = useAppDispatch();
   const history = useHistory();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   function handleOnClick(ci: CreditorInstitutionResource) {
     dispatcher(stationCIActions.setStationCIState(ci));
@@ -79,7 +81,7 @@ export default function StationECTable({
     setShowConfirmModal({ show: false, data: '' });
 
     try {
-      await dissociateECfromStation(selectedECCode, stationId);
+      await dissociateECfromStation(selectedECCode, stationId, selectedParty?.partyId ?? '', selectedParty?.fiscalCode ?? '');
       setAlertMessage(t(`${componentPath}.dissociateEcSuccessMessage`));
       setNoValidCi(false);
       fetchStationECs(page);

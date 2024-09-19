@@ -95,12 +95,12 @@ export const getECListByStationCode = (
   }
 };
 
-export const dissociateECfromStation = (ecCode: string, stationCode: string): Promise<void> => {
+export const dissociateECfromStation = (ecCode: string, stationCode: string, institutionId: string, brokerTaxCode: string,): Promise<void> => {
   /* istanbul ignore if */
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return dissociateECfromStationMocked(ecCode, stationCode);
   } else {
-    return BackofficeApi.dissociateECfromStation(ecCode, stationCode).then(
+    return BackofficeApi.dissociateECfromStation(ecCode, stationCode, institutionId, brokerTaxCode).then(
       (resources) => resources
     );
   }
@@ -108,17 +108,19 @@ export const dissociateECfromStation = (ecCode: string, stationCode: string): Pr
 
 export const associateEcToStation = (
   code: string,
-  station: CreditorInstitutionStationDto
+  station: CreditorInstitutionStationDto,
+  institutionId: string,
+  brokerTaxCode: string,
 ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return associateEcToStationMocked(code, station);
   }
-  return BackofficeApi.associateEcToStation(code, station).then((resource) => resource);
+  return BackofficeApi.associateEcToStation(code, station, institutionId, brokerTaxCode).then((resource) => resource);
 };
 
 export const updateEcAssociationToStation = (
   code: string,
-  station: CreditorInstitutionStationDto
+  station: CreditorInstitutionStationDto,
 ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateEcAssociationToStationMocked(code, station);

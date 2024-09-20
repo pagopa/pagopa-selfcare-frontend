@@ -1,13 +1,14 @@
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { SessionModal, useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { generatePath, useHistory } from 'react-router-dom';
 import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
+import ConfirmModal from '../../components/ConfirmModal';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { StationECAssociateActionType } from '../../../model/Station';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
@@ -15,7 +16,10 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { stationCIActions } from '../../../redux/slices/stationCISlice';
 import ROUTES from '../../../routes';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
-import { LOADING_TASK_DISSOCIATE_EC_STATION, LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
+import {
+  LOADING_TASK_DISSOCIATE_EC_STATION,
+  LOADING_TASK_STATION_EC_TABLE,
+} from '../../../utils/constants';
 import { buildColumnDefs } from './StationECTableColumns';
 
 const emptyECList: CreditorInstitutionsResource = {
@@ -38,7 +42,7 @@ const componentPath = 'stationECList';
 export default function StationECTable({
   setAlertMessage,
   ciNameOrFiscalCodeFilter,
-  setNoValidCi
+  setNoValidCi,
 }: StationECTableProps) {
   const { t } = useTranslation();
   const setLoadingOverlay = useLoading(LOADING_TASK_STATION_EC_TABLE);
@@ -76,14 +80,19 @@ export default function StationECTable({
           ?.businessName ?? '',
     });
   };
-  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, stationId, handleOnClick);
+  const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, handleOnClick);
 
   const dissociateEC = async () => {
     setLoadingDissociate(true);
     setShowConfirmModal({ show: false, data: '' });
 
     try {
-      await dissociateECfromStation(selectedECCode, stationId, selectedParty?.partyId ?? '', selectedParty?.fiscalCode ?? '');
+      await dissociateECfromStation(
+        selectedECCode,
+        stationId,
+        selectedParty?.partyId ?? '',
+        selectedParty?.fiscalCode ?? ''
+      );
       setAlertMessage(t(`${componentPath}.dissociateEcSuccessMessage`));
       setNoValidCi(false);
       fetchStationECs(page);
@@ -131,17 +140,14 @@ export default function StationECTable({
     fetchStationECs(0);
   }, [ciNameOrFiscalCodeFilter, pageLimit]);
 
-
   return (
     <>
-      <Box
-        id="StationsSearchTableBox"
-      >
+      <Box id="StationsSearchTableBox">
         <TableDataGrid
           componentPath={componentPath}
           linkToRedirect={generatePath(ROUTES.STATION_ASSOCIATE_EC, {
             stationId,
-            action: StationECAssociateActionType.ASSOCIATE
+            action: StationECAssociateActionType.ASSOCIATE,
           })}
           rows={[...(ecListPage?.creditor_institutions ?? [])]}
           columns={columns}
@@ -153,23 +159,17 @@ export default function StationECTable({
           getRowId={(r) => r.ciTaxCode}
         />
       </Box>
-      <SessionModal
-        open={showConfirmModal.show}
-        title={t(`${componentPath}.dissociateModal.title`)}
-        message={
-          <Trans
-            i18nKey="stationECList.dissociateModal.message"
-            values={{ ecName: showConfirmModal.data }}
-            defaults="Se dissoci {{ ecName }} sarà disattivata la sua connessione alla stazione."
-          />
-        }
-        onConfirmLabel={t(`${componentPath}.dissociateModal.confirmButton`)}
-        onCloseLabel={t(`${componentPath}.dissociateModal.cancelButton`)}
-        onConfirm={dissociateEC}
-        handleClose={() => {
-          setShowConfirmModal({ show: false, data: '' });
-        }}
-      />
+      {showConfirmModal.show && (
+        <ConfirmModal
+          title={t(`${componentPath}.dissociateModal.title`)}
+          message={t('stationECList.dissociateModal.message', { ecName: showConfirmModal.data })}
+          openConfirmModal={showConfirmModal.show}
+          onConfirmLabel={t(`${componentPath}.dissociateModal.confirmButton`)}
+          onCloseLabel={t(`${componentPath}.dissociateModal.cancelButton`)}
+          handleCloseConfirmModal={() => setShowConfirmModal({ show: false, data: '' })}
+          handleConfrimSubmit={dissociateEC}
+        />
+      )}
     </>
   );
 }

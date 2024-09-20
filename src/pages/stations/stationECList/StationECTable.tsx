@@ -15,7 +15,7 @@ import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { stationCIActions } from '../../../redux/slices/stationCISlice';
 import ROUTES from '../../../routes';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
-import { LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
+import { LOADING_TASK_DISSOCIATE_EC_STATION, LOADING_TASK_STATION_EC_TABLE } from '../../../utils/constants';
 import { buildColumnDefs } from './StationECTableColumns';
 
 const emptyECList: CreditorInstitutionsResource = {
@@ -42,6 +42,7 @@ export default function StationECTable({
 }: StationECTableProps) {
   const { t } = useTranslation();
   const setLoadingOverlay = useLoading(LOADING_TASK_STATION_EC_TABLE);
+  const setLoadingDissociate = useLoading(LOADING_TASK_DISSOCIATE_EC_STATION);
   const addError = useErrorDispatcher();
   const dispatcher = useAppDispatch();
   const history = useHistory();
@@ -78,6 +79,7 @@ export default function StationECTable({
   const columns: Array<GridColDef> = buildColumnDefs(t, onRowClick, stationId, handleOnClick);
 
   const dissociateEC = async () => {
+    setLoadingDissociate(true);
     setShowConfirmModal({ show: false, data: '' });
 
     try {
@@ -98,6 +100,7 @@ export default function StationECTable({
       });
     } finally {
       setSelectedECCode('');
+      setLoadingDissociate(false);
     }
   };
 
@@ -105,7 +108,7 @@ export default function StationECTable({
     setLoadingOverlay(true);
     setPage(currentPage);
 
-    getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage)
+    getECListByStationCode(stationId, ciNameOrFiscalCodeFilter, currentPage, pageLimit)
       .then((r) => {
         setECListPage(r);
       })

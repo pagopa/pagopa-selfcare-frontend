@@ -11,9 +11,12 @@ import {
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
 import Layout from './components/Layout/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import TOSWall from './components/TOS/TOSWall';
+import privacyJson from './data/privacy.json';
+import tosJson from './data/tos.json';
 import withFeatureFlags from './decorators/withFeatureFlags';
 import withLogin from './decorators/withLogin';
 import withSelectedPartyProducts from './decorators/withSelectedPartyProducts';
@@ -29,6 +32,8 @@ import ChannelDetailPage from './pages/channels/detail/ChannelDetailPage';
 import ChannelsPage from './pages/channels/list/ChannelsPage';
 import CommissionBundlesPage from './pages/commisionalBundles/CommissionBundlesPage';
 import AddEditCommissionBundlePage from './pages/commisionalBundles/addEditCommissionBundle/AddEditCommissionBundlePage';
+import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
+import CommissionBundleDetailOffersAddRecipientsPage from './pages/commisionalBundles/detail/CommissionBundleDetailOffersAddRecipientsPage';
 import CommissionBundleDetailPage from './pages/commisionalBundles/detail/CommissionBundleDetailPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import NodeSignInPage from './pages/dashboard/nodeSignIn/NodeSignInPage';
@@ -38,28 +43,23 @@ import IbanPage from './pages/iban/IbanPage';
 import AddEditIbanPage from './pages/iban/addEditIban/AddEditIbanPage';
 import IbanDetailPage from './pages/iban/detail/IbanDetailPage';
 import MaintenancePage from './pages/maintenance/MaintenancePage';
+import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
+import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
 import AddEditOperationTablePage from './pages/operationTable/addEditOperationTable/AddEditOperationTablePage';
 import OperationTableDetailPage from './pages/operationTable/detail/OperationTableDetailPage';
 import OperationTableListPage from './pages/operationTable/list/OperationTableListPage';
 import PaymentsReceiptsPage from './pages/paymentsReceipts/PaymentsReceiptsPage';
+import StationMaintenanceAddEditDetail from './pages/stationMaintenances/addEditDetail/StationMaintenanceAddEditDetail';
+import StationMaintenancesPage from './pages/stationMaintenances/list/StationMaintenancesPage';
 import AddEditStationPage from './pages/stations/addEditStation/AddEditStationPage';
 import StationDetailPage from './pages/stations/detail/StationDetailPage';
 import StationsPage from './pages/stations/list/StationsPage';
 import StationAssociateECPage from './pages/stations/stationAssociateEC/StationAssociateECPage';
 import StationECListPage from './pages/stations/stationECList/StationECPage';
-import PaymentNoticesPage from './pages/notices/PaymentNoticesPage';
 import { TosAndPrivacy } from './pages/tosAndPrivacy/TosAndPrivacy';
 import routes from './routes';
-import CommissionBundleDetailActivationPage from './pages/commisionalBundles/detail/CommissionBundleDetailActivationPage';
 import { getMaintenanceMessage } from './services/maintenanceService';
-import { MaintenanceMessage } from './api/generated/portal/MaintenanceMessage';
-import CommissionBundleDetailOffersAddRecipientsPage from './pages/commisionalBundles/detail/CommissionBundleDetailOffersAddRecipientsPage';
-import PaymentNoticesAddEditPage from './pages/notices/addEdit/PaymentNoticesAddEditPage';
 import { rewriteLinks } from './utils/onetrust-utils';
-import tosJson from './data/tos.json';
-import privacyJson from './data/privacy.json';
-import StationMaintenancesPage from './pages/stationMaintenances/list/StationMaintenancesPage';
-import StationMaintenanceAddEditDetail from './pages/stationMaintenances/addEditDetail/StationMaintenanceAddEditDetail';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -341,27 +341,6 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
 
-                <Route path={routes.TOS} exact={true}>
-                  <TosAndPrivacy
-                    html={tosJson.html}
-                    waitForElementCondition={'.otnotice-content'}
-                    waitForElementFunction={() => {
-                      rewriteLinks(routes.TOS, '.otnotice-content a');
-                    }}
-                  />
-                </Route>
-
-
-                <Route path={routes.PRIVACY} exact={true}>
-                  <TosAndPrivacy
-                    html={privacyJson.html}
-                    waitForElementCondition={'.otnotice-content'}
-                    waitForElementFunction={() => {
-                      rewriteLinks(routes.PRIVACY, '.otnotice-content a');
-                    }}
-                  />
-                </Route>
-        
                 <Route path="*">
                   <Redirect to={routes.HOME} />
                 </Route>
@@ -382,6 +361,25 @@ const App = () => (
     <Switch>
       <Route path={routes.AUTH}>
         <Auth />
+      </Route>
+      <Route path={routes.TOS} exact={true}>
+        <TosAndPrivacy
+          html={tosJson.html}
+          waitForElementCondition={'.otnotice-content'}
+          waitForElementFunction={() => {
+            rewriteLinks(routes.TOS, '.otnotice-content a');
+          }}
+        />
+      </Route>
+
+      <Route path={routes.PRIVACY} exact={true}>
+        <TosAndPrivacy
+          html={privacyJson.html}
+          waitForElementCondition={'.otnotice-content'}
+          waitForElementFunction={() => {
+            rewriteLinks(routes.PRIVACY, '.otnotice-content a');
+          }}
+        />
       </Route>
       <Route path="*">
         <SecuredRoutes />

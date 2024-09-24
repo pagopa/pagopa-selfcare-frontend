@@ -56,6 +56,7 @@ import {
   LOADING_TASK_GET_CHANNELS_IDS,
 } from '../../../../utils/constants';
 import { WrapperChannelResource } from '../../../../api/generated/portal/WrapperChannelResource';
+import { formatCurrencyStringToNumberCent } from '../../../../utils/common-utils';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -89,7 +90,11 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
     mb: 3,
   };
 
-  const getChannelsByBrokerCode = (selectedBrokerCode: string, filterByChannel?: string, fromAutocomplete?: boolean) => {
+  const getChannelsByBrokerCode = (
+    selectedBrokerCode: string,
+    filterByChannel?: string,
+    fromAutocomplete?: boolean
+  ) => {
     if (!fromAutocomplete) {
       setLoadingChannels(true);
     }
@@ -97,7 +102,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
       status: ConfigurationStatus.ACTIVE,
       brokerCode: selectedBrokerCode,
       channelCode: filterByChannel,
-      limit: 25
+      limit: 25,
     })
       .then((data) => {
         if (data?.channels && data.channels.length > 0) {
@@ -436,8 +441,10 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     size="small"
                     value={(formik.values.minPaymentAmount ?? 0) / 100}
                     onValueChange={({ value }) => {
-                      const numericValue = parseFloat(value.replace(',', '.'));
-                      formik.setFieldValue('minPaymentAmount', numericValue * 100);
+                      formik.setFieldValue(
+                        'minPaymentAmount',
+                        formatCurrencyStringToNumberCent(value)
+                      );
                     }}
                     thousandSeparator=""
                     decimalSeparator=","
@@ -466,8 +473,10 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     size="small"
                     value={(formik.values.maxPaymentAmount ?? 0) / 100}
                     onValueChange={({ value }) => {
-                      const numericValue = parseFloat(value.replace(',', '.'));
-                      formik.setFieldValue('maxPaymentAmount', numericValue * 100);
+                      formik.setFieldValue(
+                        'maxPaymentAmount',
+                        formatCurrencyStringToNumberCent(value)
+                      );
                     }}
                     thousandSeparator=""
                     decimalSeparator=","
@@ -504,8 +513,10 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     size="small"
                     value={(formik.values.paymentAmount ?? 0) / 100}
                     onValueChange={({ value }) => {
-                      const numericValue = parseFloat(value.replace(',', '.'));
-                      formik.setFieldValue('paymentAmount', numericValue * 100);
+                      formik.setFieldValue(
+                        'paymentAmount',
+                        formatCurrencyStringToNumberCent(value)
+                      );
                     }}
                     thousandSeparator=""
                     decimalSeparator=","

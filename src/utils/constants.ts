@@ -63,4 +63,4 @@ export const LOADING_TASK_STATION_MAINTENANCES_ACTION = 'STATION_MAINTENANCES_AC
 export const INSTITUTIONS_PSP_TYPES = ['PSP'];
 export const INSTITUTIONS_EC_TYPES = ['PA', 'GSP', 'SCP', 'PG'];
 export const INSTITUTIONS_PT_TYPES = ['PT'];
-export const DISALLOWED_PAYMENT_TYPES = ['PO', 'OBEP', 'JIF', 'BP', 'BBT', 'AD'];
+export const DISALLOWED_PAYMENT_TYPES = [ 'OBEP', 'JIF', 'BP', 'BBT', 'AD'];

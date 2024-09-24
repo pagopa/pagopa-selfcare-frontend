@@ -159,7 +159,6 @@ const CommissionBundlesPage = () => {
       bundleType: exportBundleTypes.types,
     })
       .then((csv: Buffer) => {
-        console.log(selectedParty);
         const filename = getCsvFileName(
           selectedParty?.description?.replace(' ', '-') ?? '',
           exportBundleTypes.types

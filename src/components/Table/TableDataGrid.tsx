@@ -113,6 +113,7 @@ export default function TableDataGrid({
         className="CustomDataGrid"
         columnBuffer={5}
         columns={columns}
+        disableVirtualization
         components={{
           Pagination: () =>
             handleChangePage && rows.length > 0 ? (

@@ -4,6 +4,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction, useTranslation } from 'react-i18next';
 import { generatePath } from 'react-router-dom';
+import { Euro } from '@mui/icons-material';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';

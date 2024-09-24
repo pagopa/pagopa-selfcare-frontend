@@ -1,8 +1,3 @@
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import { useEffect, useState } from 'react';
 import {
   FormControlLabel,
   InputLabel,
@@ -12,21 +7,29 @@ import {
   Select,
   Switch,
 } from '@mui/material';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generatePath, useHistory, useParams } from 'react-router-dom';
 import { AvailableCodes } from '../../../api/generated/portal/AvailableCodes';
 import { CreditorInstitutionInfo } from '../../../api/generated/portal/CreditorInstitutionInfo';
 import { CreditorInstitutionInfoResource } from '../../../api/generated/portal/CreditorInstitutionInfoResource';
+import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { CreditorInstitutionStationDto } from '../../../api/generated/portal/CreditorInstitutionStationDto';
 import ECSelection from '../../../components/Form/ECSelection';
+import { StationECAssociateActionType } from '../../../model/Station';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { stationCISelectors } from '../../../redux/slices/stationCISlice';
 import ROUTES from '../../../routes';
 import { getAvailableCreditorInstitutionsForStation } from '../../../services/creditorInstitutionService';
 import {
@@ -39,9 +42,6 @@ import {
   LOADING_TASK_EC_AVAILABLE,
   LOADING_TASK_SEGREGATION_CODES_AVAILABLE,
 } from '../../../utils/constants';
-import { StationECAssociateActionType } from '../../../model/Station';
-import { stationCISelectors } from '../../../redux/slices/stationCISlice';
-import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 
 const availableEcEmptyState: CreditorInstitutionInfoResource = {
   creditor_institution_info_list: [],
@@ -187,11 +187,11 @@ function StationAssociateECPage() {
     selectedEC;
 
   const submit = (values: CreditorInstitutionStationDto) => {
-    if (selectedEC && selectedEC.ciTaxCode) {
+    if (selectedEC && selectedEC.ciTaxCode && selectedParty?.partyId && selectedParty?.fiscalCode) {
       setLoading(true);
       const promise = isEditMode
         ? updateEcAssociationToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId })
-        : associateEcToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId });
+        : associateEcToStation(selectedEC.ciTaxCode, { ...values, stationCode: stationId }, selectedParty.partyId, selectedParty.fiscalCode);
       promise
         .then((_) => {
           history.push(generatePath(ROUTES.STATION_EC_LIST, { stationId }), {

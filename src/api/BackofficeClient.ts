@@ -600,7 +600,9 @@ export const BackofficeApi = {
 
   associateEcToStation: async (
     ecCode: string,
-    station: CreditorInstitutionStationDto
+    station: CreditorInstitutionStationDto,
+    institutionId: string,
+    brokerTaxCode: string,
   ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
     const result = await backofficeClient.associateStationToCreditorInstitution({
       'ci-tax-code': ecCode,
@@ -612,13 +614,15 @@ export const BackofficeApi = {
         aca: station.aca,
         stand_in: station.stand_in,
       },
+      institutionId,
+      brokerTaxCode
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
   updateEcAssociationToStation: async (
     ecCode: string,
-    station: CreditorInstitutionStationDto
+    station: CreditorInstitutionStationDto,
   ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
     const result = await backofficeClient.updateStationAssociationToCreditorInstitution({
       'ci-tax-code': ecCode,
@@ -634,10 +638,12 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  dissociateECfromStation: async (ecCode: string, stationcode: string): Promise<void> => {
+  dissociateECfromStation: async (ecCode: string, stationcode: string, institutionId: string, brokerTaxCode: string,): Promise<void> => {
     const result = await backofficeClient.deleteCreditorInstitutionStationRelationship({
       'ci-tax-code': ecCode,
       'station-code': stationcode,
+      institutionId,
+      brokerTaxCode
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

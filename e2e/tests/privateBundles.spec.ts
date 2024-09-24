@@ -115,9 +115,6 @@ test.describe('Private bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await page
-      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
-      .click();
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);
@@ -136,9 +133,6 @@ test.describe('Private bundles flow', () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    await page
-      .getByText('Pacchetti commissioniGestisci i pacchetti commissionali.Su invitoSu')
-      .click();
     await page.getByLabel('Attivi').click();
     await page.getByRole('option', { name: 'Disponibili' }).click();
     await page.waitForTimeout(2000);

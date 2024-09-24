@@ -40,7 +40,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -145,7 +147,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -195,7 +199,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -226,7 +232,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -250,7 +258,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>
@@ -298,7 +308,9 @@ describe('<StationMaintenancesTable />', () => {
         <MemoryRouter initialEntries={[`/station-maintenances`]}>
           <Route path="/station-maintenances">
             <ThemeProvider theme={theme}>
-              <StationMaintenancesTable setAlertMessage={alertFn} />
+              <StationMaintenancesTable setAlertMessage={alertFn} hoursRemaining={''} getHoursSummary={function (): void {
+                throw new Error('Function not implemented.');
+              } } />
             </ThemeProvider>
           </Route>
         </MemoryRouter>

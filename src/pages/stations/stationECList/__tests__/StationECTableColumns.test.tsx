@@ -183,7 +183,7 @@ describe('<StationECTableColumns />', () => {
     );
 
     const editAction = screen.getByTestId('editAction');
-    const dissociateAction = screen.getByTestId('dissociateAction');
+    const dissociateAction = screen.getByTestId('dissociate-action');
 
     fireEvent.click(editAction);
 

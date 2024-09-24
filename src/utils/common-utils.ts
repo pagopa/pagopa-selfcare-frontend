@@ -65,6 +65,11 @@ export const formatCurrencyWithoutSymbol = (value: number | undefined): string =
   });
 };
 
+export const formatCurrencyStringToNumberCent = (value: string): number => {
+  const valueToFormat = value.replace(',', '.'); // In case value includes ","
+  return Math.round(parseFloat(valueToFormat) * 100);
+};
+
 export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'translation'>): string =>
   value ? t('general.yes') : t('general.no');
 

@@ -118,6 +118,7 @@ export const permissions = {
         ROLE.PAGOPA_OPERATOR,
     ],
     "payment-notices": [
+        ROLE.EC_ADMIN,
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,
         ROLE.PT_EC_OPERATOR,
@@ -125,6 +126,7 @@ export const permissions = {
         ROLE.PAGOPA_OPERATOR,
     ],
     "payment-notices-addedit": [
+        ROLE.EC_ADMIN,
         ROLE.EC_DIRECT_ADMIN,
         ROLE.EC_DIRECT_OPERATOR,
         ROLE.PT_EC_OPERATOR,

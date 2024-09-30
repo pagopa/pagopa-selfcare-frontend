@@ -178,19 +178,13 @@ const SecuredRoutes = withLogin(
                 </Route>
 
                 <Route path={routes.STATIONS} exact={true}>
-                  <ProtectedRoute permission="stations">
                     <StationsPage />
-                  </ProtectedRoute>
                 </Route>
                 <Route path={routes.STATION_ADD} exact={true}>
-                  <ProtectedRoute permission="stations">
                     <AddEditStationPage />
-                  </ProtectedRoute>
                 </Route>
                 <Route path={routes.STATION_DETAIL} exact={true}>
-                  <ProtectedRoute permission="stations">
                     <StationDetailPage />
-                  </ProtectedRoute>
                 </Route>
                 <Route path={routes.STATION_EC_LIST} exact={true}>
                   <ProtectedRoute permission="stations">
@@ -203,9 +197,7 @@ const SecuredRoutes = withLogin(
                   </ProtectedRoute>
                 </Route>
                 <Route path={routes.STATION_EDIT} exact={true}>
-                  <ProtectedRoute permission="stations">
                     <AddEditStationPage />
-                  </ProtectedRoute>
                 </Route>
 
                 <Route path={routes.IBAN} exact={true}>

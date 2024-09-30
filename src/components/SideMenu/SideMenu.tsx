@@ -113,16 +113,15 @@ export default function SideMenu() {
               dataTestId="channels-test"
             />
           )}
-          {orgInfo.types.isEcBroker && userHasPermission('stations') && (
+ 
             <SidenavItem
               title={t('sideMenu.stations.title')}
               handleClick={() => onExit(() => history.push(ROUTES.STATIONS))}
               isSelected={pathname === ROUTES.STATIONS || pathname.startsWith(ROUTES.STATIONS)}
               icon={UsbIcon}
-              disabled={isDisabled}
               dataTestId="stations-test"
             />
-          )}
+          
           {orgInfo.types.isEc && userHasPermission('iban') && (
             <SidenavItem
               title={t('sideMenu.iban.title')}

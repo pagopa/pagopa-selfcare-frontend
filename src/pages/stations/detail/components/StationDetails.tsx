@@ -239,7 +239,7 @@ Props) => {
                     </Typography>
                   </Grid>
                   {stationServicesConfiguration.map((el) => (
-                    <React.Fragment key={'service-' + el.id}>
+                    <React.Fragment key={'service-' + (el.id as string)}>
                       <Grid item xs={3}>
                         <Typography variant="body2">
                           {t(`stationDetailPage.servicesOptions.${el.id}`)}

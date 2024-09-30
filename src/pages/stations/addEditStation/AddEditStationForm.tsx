@@ -39,7 +39,7 @@ import {
   StationDetailResource,
   WrapperStatusEnum,
 } from '../../../api/generated/portal/StationDetailResource';
-import { RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
+import { ProtocolEnum, RedirectProtocolEnum, StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import { TestStationTypeEnum } from '../../../api/generated/portal/StationTestDto';
 import {
   TestResultEnum,
@@ -313,10 +313,6 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
             : validatePrimitiveVersion(values.primitiveVersion)
               ? t('addEditStationPage.validation.overVersion')
               : undefined,
-          targetConcat: validateURL(values.targetConcat, false),
-          redirectConcat: validateURL(values.redirectConcat, true),
-          targetPofConcat: validateURL(values.targetPofConcat, false),
-          restEndpoint: validateURL(values.restEndpoint ?? '', true),
         },
         ...(userIsPagopaOperator && formAction !== StationFormAction.Create
           ? {
@@ -375,43 +371,84 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     const stationCode = stationDetail?.stationCode ? stationDetail.stationCode : '';
     const stationCode4Redirect =
       formAction !== StationFormAction.Edit ? stationCodeGenerated : stationCode;
-
-    const values = alterStationValuesToFitCategories(valuesFromForm, env);
+    const values = alterStationValuesToFitCategories({
+      "brokerCode": "77777777777",
+      "enabled": true,
+      "ip": "api.uat.platform.pagopa.it",
+      "password": "test",
+      "port": 443,
+      "protocol": ProtocolEnum.HTTPS,
+      "proxyConcat": "http://10.79.20.33:80",
+      "proxyHost": "10.79.20.33",
+      "proxyPort": 80,
+      "proxyEnabled": true,
+      "service": "/pagopa-node-forwarder/api/v1/forward",
+      "isPaymentOptionsEnabled": true,
+      "restEndpoint": "https://api.dev.platform.pagopa.it/mocker/v1",
+      "stationCode": "77777777777_01",
+      "wrapperStatus": WrapperStatusEnum.APPROVED,
+      "timeoutA": 15,
+      "timeoutB": 30,
+      "timeoutC": 120,
+      "version": 1,
+      "newConnConcat": "https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward",
+      "gdpConcat": "",
+      "threadNumber": 1,
+      "redirectProtocol": RedirectProtocolEnum.HTTP,
+      "redirectIp": "localhost",
+      "redirectPort": 80,
+      "redirectPath": "/yes",
+      "redirectQueryString": "ciao=abc",
+      "redirectConcat": "http://localhost:80/yes?ciao=abc",
+      "targetHost": "https://ciao",
+      "targetPath": "/mondo",
+      "targetPort": 8080,
+      "targetConcat": "https://ciao:8080/mondo",
+      "targetHostPof": "",
+      "targetPathPof": "",
+      "primitiveVersion": 2,
+      "targetPofConcat": "",
+      "pofService": "/pagopa-node-forwarder/api/v1/forward"
+  }, env);
 
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {
         stationId: formik.values.stationCode,
         status: ConfigurationStatus.TO_BE_VALIDATED,
       })}`;
-
       if (formAction === StationFormAction.Create || formAction === StationFormAction.Duplicate) {
         await createWrapperStation({ station: values, validationUrl });
         redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
       }
 
       if (formAction === StationFormAction.Edit) {
+        console.log("SAMU 0", values);
         if (userIsPagopaOperator) {
           if (
-            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
-            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX
+            values?.wrapperStatus === WrapperStatusEnum.TO_CHECK ||
+            values?.wrapperStatus === WrapperStatusEnum.TO_FIX
           ) {
+            console.log("SAMU 1.A", values);
             await createStation(values);
           } else if (
-            stationDetail?.wrapperStatus === WrapperStatusEnum.APPROVED ||
-            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE ||
-            stationDetail?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE
+            values?.wrapperStatus === WrapperStatusEnum.APPROVED ||
+            values?.wrapperStatus === WrapperStatusEnum.TO_CHECK_UPDATE ||
+            values?.wrapperStatus === WrapperStatusEnum.TO_FIX_UPDATE
           ) {
+            console.log("SAMU 1.B", values);
             await updateStation({ stationCode, station: values });
           } else {
             throw new Error('Wrong channel wrapper status');
           }
           redirect(stationCode4Redirect, ConfigurationStatus.ACTIVE);
         } else {
+          console.log("SAMU 2", values);
           await updateWrapperStationDetails({ stationCode, station: values, validationUrl });
           redirect(stationCode4Redirect, ConfigurationStatus.TO_BE_VALIDATED);
         }
       }
     } catch (reason) {
+      console.log("SAMU ERR", reason);
       addError({
         id: 'ADD_EDIT_STATION',
         blocking: false,

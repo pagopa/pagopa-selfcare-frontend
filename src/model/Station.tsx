@@ -53,8 +53,6 @@ export type StationOnCreation = {
   rtInstantaneousDispatch?: boolean | undefined;
   service?: string | undefined;
   pofService?: string | undefined;
-  restEndpoint?: string | undefined;
-  isPaymentOptionsEnabled: boolean;
   service4Mod?: string | undefined;
   stationCode: string;
   threadNumber?: number | undefined;
@@ -84,6 +82,8 @@ export type StationOnCreation = {
   targetPathPof?: string;
   targetPortPof?: number;
   primitiveVersion: number;
+  isPaymentOptionsEnabled: boolean;
+  restEndpoint?: string;
 };
 
 export type StationDetail = {

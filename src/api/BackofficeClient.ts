@@ -761,6 +761,8 @@ export const BackofficeApi = {
         targetHostPof: station.targetHostPof,
         targetPathPof: station.targetPathPof,
         targetPortPof: station.targetPortPof,
+        restEndpoint: station.restEndpoint,
+        isPaymentOptionsEnabled: station.isPaymentOptionsEnabled,
         validationUrl,
       },
     });

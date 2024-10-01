@@ -294,7 +294,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       return 'URL non valido';
     }
   };
-  
+
   const validate = (values: StationOnCreation) =>
     Object.fromEntries(
       Object.entries({
@@ -376,7 +376,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     const stationCode4Redirect =
       formAction !== StationFormAction.Edit ? stationCodeGenerated : stationCode;
 
-    const values = alterStationValuesToFitCategories(valuesFromForm, env);
+    const values: any = alterStationValuesToFitCategories(valuesFromForm, env);
 
     try {
       const validationUrl = `${window.location.origin}${generatePath(ROUTES.STATION_DETAIL, {

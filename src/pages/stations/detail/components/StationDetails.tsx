@@ -1,4 +1,5 @@
-import { ArrowBack, VisibilityOff } from '@mui/icons-material';
+import React from 'react';
+import { ArrowBack, Check, VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Divider, Grid, IconButton } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -12,6 +13,7 @@ import {
   WrapperStatusEnum,
 } from '../../../../api/generated/portal/StationDetailResource';
 import GetAlert from '../../../../components/WrapperCommon/GetAlert';
+import { stationServicesConfiguration } from '../../../../utils/station-utils';
 import { StatusChip } from '../../../../components/WrapperCommon/StatusChip';
 import { useUserRole } from '../../../../hooks/useUserRole';
 import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
@@ -223,6 +225,36 @@ Props) => {
                     {stationDetail?.primitiveVersion}
                   </Typography>
                 </Grid>
+
+                <>
+                  <Grid item xs={12} mt={2}>
+                    <Typography variant="sidenav">{t('stationDetailPage.services')}</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2">{t('stationDetailPage.restEndpoint')}</Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                      {stationDetail?.restEndpoint ?? '-'}
+                    </Typography>
+                  </Grid>
+                  {stationServicesConfiguration.map((el) => (
+                    <React.Fragment key={'service-' + el.id}>
+                      <Grid item xs={3}>
+                        <Typography variant="body2">
+                          {t(`stationDetailPage.servicesOptions.${el.id}`)}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                          {stationDetail?.[el.property as keyof StationDetailResource]
+                            ? t('general.yes')
+                            : t('general.no')}
+                        </Typography>
+                      </Grid>
+                    </React.Fragment>
+                  ))}
+                </>
               </>
             )}
 

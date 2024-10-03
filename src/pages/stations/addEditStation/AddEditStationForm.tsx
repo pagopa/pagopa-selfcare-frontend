@@ -176,6 +176,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
     newConnConcat: '',
     gdpConcat: '',
     threadNumber: 1,
+    flagStandIn: detail?.flagStandin ?? false,
   });
   const mapStationDetailToCreation = (detail: StationDetailResource) => ({
     brokerCode: detail.brokerCode ?? '',
@@ -257,6 +258,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
           detail.targetPortPof ? ':'.concat(detail.targetPortPof.toString()) : ''
         }${detail.targetPathPof ?? ''}`
       : '',
+    flagStandIn: detail?.flagStandin ?? false,
   });
   const initialFormData = (detail?: StationDetailResource) =>
     detail ? mapStationDetailToCreation(detail) : emptyStationData();

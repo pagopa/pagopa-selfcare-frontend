@@ -562,6 +562,7 @@ export const mockedCreatedStation: StationOnCreation = {
   targetPath: '',
   targetPofConcat: '',
   primitiveVersion: 0,
+  isPaymentOptionsEnabled: false
 };
 
 export const mockedCreditorInstitutionStationDTO: CreditorInstitutionStationDto = {

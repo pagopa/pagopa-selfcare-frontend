@@ -47,14 +47,10 @@ export const isNewConnectivity = ({
   protocol?: ProtocolEnum;
   ip?: string;
   service?: string;
-}): boolean => {
-  console.log('PP', protocol, ip, service, Boolean(
-    `${protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${ip}${service}` === forwarder01
-  ));
-  return Boolean(
+}): boolean =>
+  Boolean(
     `${protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'}${ip}${service}` === forwarder01
   );
-};
 
 /*
 export const channelsResource2Channel = (channelsResource: ChannelsResource): Channels => ({

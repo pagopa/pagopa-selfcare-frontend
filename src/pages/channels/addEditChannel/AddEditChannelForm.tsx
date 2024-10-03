@@ -125,6 +125,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         timeout_b: channelDetail.timeout_b ?? 0,
         timeout_c: channelDetail.timeout_c ?? 0,
         validationUrl: '',
+        flag_standin: channelDetail.flagStandin ?? false
       };
     } else {
       return {
@@ -152,6 +153,7 @@ const AddEditChannelForm = ({ selectedParty, channelCode, channelDetail, formAct
         timeout_b: 0,
         timeout_c: 0,
         validationUrl: '',
+        flag_standin: false
       };
     }
   };

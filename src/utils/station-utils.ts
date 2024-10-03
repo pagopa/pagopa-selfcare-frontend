@@ -159,10 +159,15 @@ export const alterStationValuesToFitCategories = (station: StationOnCreation, en
   return station;
 };
 
-export const stationServicesConfiguration = [
-  {
-    id: 'odp',
-    property: 'isPaymentOptionsEnabled',
-    endpoint: '/payment-options',
-  },
-];
+export const stationServicesConfiguration = (getFlagValue: (value: string) => boolean) => {
+  const arr = [];
+  if (getFlagValue('station-odp-service')) {
+    // eslint-disable-next-line functional/immutable-data
+    arr.push({
+      id: 'odp',
+      property: 'isPaymentOptionsEnabled',
+      endpoint: '/payment-options',
+    });
+  }
+  return arr;
+};

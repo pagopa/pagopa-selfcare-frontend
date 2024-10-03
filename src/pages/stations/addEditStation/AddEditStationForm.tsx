@@ -140,6 +140,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
   );
 
   const isTesting = useFlagValue('test-stations');
+  const isRestSectionVisibile = useFlagValue('station-rest-section');
 
   const emptyStationData = (detail?: StationDetailResource) => ({
     brokerCode: brokerCodeCleaner,
@@ -1113,59 +1114,61 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
               </Grid>
             </Box>
 
-            <Box sx={inputGroupStyle} data-testid="services-box">
-              <AddEditStationFormSectionTitle
-                title={t(`${componentPath}.sections.services`)}
-                icon={<Cable />}
-              />
-              <Grid container item spacing={2} mt={1}>
-                <Grid item xs={10}>
-                  <TextField
-                    fullWidth
-                    id="restEndpoint"
-                    name="restEndpoint"
-                    label={t(`${componentPath}.fields.restEndpoint`)}
-                    placeholder={t(`${componentPath}.fields.restEndpoint`)}
-                    size="small"
-                    value={formik.values.restEndpoint}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={Boolean(formik.errors.restEndpoint)}
-                    helperText={formik.errors.restEndpoint}
-                    inputProps={{
-                      'data-testid': 'restEndpoint-test',
-                    }}
-                  />
-                </Grid>
-
-                {stationServicesConfiguration?.map((el) => (
-                  <Grid item xs={10} ml={2} key={`service-${el.id}`}>
-                    <Typography variant="subtitle1" fontWeight={'medium'}>
-                      {t(`${componentPath}.fields.${el.id}`)}
-                    </Typography>
-                    <Box display="flex" mt={1}>
-                      <Switch
-                        id={`${el.id}Service`}
-                        name={`${el.id}Service`}
-                        sx={{ ml: 2, mr: 2 }}
-                        onChange={(e) => formik.setFieldValue(el.property, e.target.checked)}
-                        checked={formik.values[el.property] ?? false}
-                        data-testid={`service-${el.id}`}
-                      />
-                      <TextField
-                        fullWidth
-                        id={`${el.id}Endpoint`}
-                        name={`${el.id}Endpoint`}
-                        size="small"
-                        disabled={true}
-                        sx={{ ml: 2, width: '50%' }}
-                        value={el.endpoint}
-                      />
-                    </Box>
+            {isRestSectionVisibile && (
+              <Box sx={inputGroupStyle} data-testid="services-box">
+                <AddEditStationFormSectionTitle
+                  title={t(`${componentPath}.sections.services`)}
+                  icon={<Cable />}
+                />
+                <Grid container item spacing={2} mt={1}>
+                  <Grid item xs={10}>
+                    <TextField
+                      fullWidth
+                      id="restEndpoint"
+                      name="restEndpoint"
+                      label={t(`${componentPath}.fields.restEndpoint`)}
+                      placeholder={t(`${componentPath}.fields.restEndpoint`)}
+                      size="small"
+                      value={formik.values.restEndpoint}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={Boolean(formik.errors.restEndpoint)}
+                      helperText={formik.errors.restEndpoint}
+                      inputProps={{
+                        'data-testid': 'restEndpoint-test',
+                      }}
+                    />
                   </Grid>
-                ))}
-              </Grid>
-            </Box>
+
+                  {stationServicesConfiguration(useFlagValue)?.map((el) => (
+                    <Grid item xs={10} ml={2} key={`service-${el.id}`}>
+                      <Typography variant="subtitle1" fontWeight={'medium'}>
+                        {t(`${componentPath}.fields.${el.id}`)}
+                      </Typography>
+                      <Box display="flex" mt={1}>
+                        <Switch
+                          id={`${el.id}Service`}
+                          name={`${el.id}Service`}
+                          sx={{ ml: 2, mr: 2 }}
+                          onChange={(e) => formik.setFieldValue(el.property, e.target.checked)}
+                          checked={formik.values[el.property] ?? false}
+                          data-testid={`service-${el.id}`}
+                        />
+                        <TextField
+                          fullWidth
+                          id={`${el.id}Endpoint`}
+                          name={`${el.id}Endpoint`}
+                          size="small"
+                          disabled={true}
+                          sx={{ ml: 2, width: '50%' }}
+                          value={el.endpoint}
+                        />
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
           </>
         )}
       </Paper>

@@ -218,6 +218,7 @@ const channelBody = (channel: ChannelDetailsDto) => ({
   timeout_b: channel.timeout_b,
   timeout_c: channel.timeout_c,
   validationUrl: '',
+  flag_standin: channel.flag_standin,
 });
 
 export const BackofficeApi = {
@@ -473,6 +474,7 @@ export const BackofficeApi = {
         target_port: channel.target_port,
         payment_types: channel.payment_types,
         validationUrl,
+        flag_standin: channel.flag_standin,
       },
     });
     return extractResponse(result, 201, onRedirectToLogin);
@@ -602,7 +604,7 @@ export const BackofficeApi = {
     ecCode: string,
     station: CreditorInstitutionStationDto,
     institutionId: string,
-    brokerTaxCode: string,
+    brokerTaxCode: string
   ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
     const result = await backofficeClient.associateStationToCreditorInstitution({
       'ci-tax-code': ecCode,
@@ -615,14 +617,14 @@ export const BackofficeApi = {
         stand_in: station.stand_in,
       },
       institutionId,
-      brokerTaxCode
+      brokerTaxCode,
     });
     return extractResponse(result, 201, onRedirectToLogin);
   },
 
   updateEcAssociationToStation: async (
     ecCode: string,
-    station: CreditorInstitutionStationDto,
+    station: CreditorInstitutionStationDto
   ): Promise<CreditorInstitutionStationEditResource | ProblemJson> => {
     const result = await backofficeClient.updateStationAssociationToCreditorInstitution({
       'ci-tax-code': ecCode,
@@ -638,12 +640,17 @@ export const BackofficeApi = {
     return extractResponse(result, 200, onRedirectToLogin);
   },
 
-  dissociateECfromStation: async (ecCode: string, stationcode: string, institutionId: string, brokerTaxCode: string,): Promise<void> => {
+  dissociateECfromStation: async (
+    ecCode: string,
+    stationcode: string,
+    institutionId: string,
+    brokerTaxCode: string
+  ): Promise<void> => {
     const result = await backofficeClient.deleteCreditorInstitutionStationRelationship({
       'ci-tax-code': ecCode,
       'station-code': stationcode,
       institutionId,
-      brokerTaxCode
+      brokerTaxCode,
     });
     return extractResponse(result, 200, onRedirectToLogin);
   },

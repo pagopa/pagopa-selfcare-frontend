@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowBack, Check, VisibilityOff } from '@mui/icons-material';
+import { ArrowBack, VisibilityOff } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Box, Divider, Grid, IconButton } from '@mui/material';
 import Paper from '@mui/material/Paper';
@@ -19,6 +19,7 @@ import { useUserRole } from '../../../../hooks/useUserRole';
 import { IProxyConfig, ProxyConfigs } from '../../../../model/Station';
 import ROUTES from '../../../../routes';
 import { ENV } from '../../../../utils/env';
+import { useFlagValue } from '../../../../hooks/useFeatureFlags';
 import DetailButtonsStation from './DetailButtonsStation';
 
 type Props = {
@@ -38,6 +39,10 @@ Props) => {
   const history = useHistory();
   const { stationId } = useParams<{ stationId: string }>();
   const { userIsPagopaOperator } = useUserRole();
+
+  const stationServiceList = stationServicesConfiguration(useFlagValue);
+
+  const isRestSectionVisibile = useFlagValue('station-rest-section');
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -226,35 +231,37 @@ Props) => {
                   </Typography>
                 </Grid>
 
-                <>
-                  <Grid item xs={12} mt={2}>
-                    <Typography variant="sidenav">{t('stationDetailPage.services')}</Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography variant="body2">{t('stationDetailPage.restEndpoint')}</Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                      {stationDetail?.restEndpoint ?? '-'}
-                    </Typography>
-                  </Grid>
-                  {stationServicesConfiguration.map((el) => (
-                    <React.Fragment key={'service-' + (el.id as string)}>
-                      <Grid item xs={3}>
-                        <Typography variant="body2">
-                          {t(`stationDetailPage.servicesOptions.${el.id}`)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography variant="body2" fontWeight={'fontWeightMedium'}>
-                          {stationDetail?.[el.property as keyof StationDetailResource]
-                            ? t('general.yes')
-                            : t('general.no')}
-                        </Typography>
-                      </Grid>
-                    </React.Fragment>
-                  ))}
-                </>
+                {isRestSectionVisibile && (
+                  <>
+                    <Grid item xs={12} mt={2}>
+                      <Typography variant="sidenav">{t('stationDetailPage.services')}</Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="body2">{t('stationDetailPage.restEndpoint')}</Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                      <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                        {stationDetail?.restEndpoint ?? '-'}
+                      </Typography>
+                    </Grid>
+                    {stationServiceList?.map((el) => (
+                      <React.Fragment key={'service-' + el.id}>
+                        <Grid item xs={3}>
+                          <Typography variant="body2">
+                            {t(`stationDetailPage.servicesOptions.${el.id}`)}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography variant="body2" fontWeight={'fontWeightMedium'}>
+                            {stationDetail?.[el.property as keyof StationDetailResource]
+                              ? t('general.yes')
+                              : t('general.no')}
+                          </Typography>
+                        </Grid>
+                      </React.Fragment>
+                    ))}
+                  </>
+                )}
               </>
             )}
 

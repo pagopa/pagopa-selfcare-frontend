@@ -40,6 +40,8 @@ Props) => {
   const { stationId } = useParams<{ stationId: string }>();
   const { userIsPagopaOperator } = useUserRole();
 
+  const stationServiceList = stationServicesConfiguration(useFlagValue);
+
   const isRestSectionVisibile = useFlagValue('station-rest-section');
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -242,7 +244,7 @@ Props) => {
                         {stationDetail?.restEndpoint ?? '-'}
                       </Typography>
                     </Grid>
-                    {stationServicesConfiguration(useFlagValue).map((el) => (
+                    {stationServiceList?.map((el) => (
                       <React.Fragment key={'service-' + el.id}>
                         <Grid item xs={3}>
                           <Typography variant="body2">

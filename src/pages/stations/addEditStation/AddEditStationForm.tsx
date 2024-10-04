@@ -121,6 +121,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
   const stationCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const brokerCodeCleaner = typeof selectedParty !== 'undefined' ? selectedParty.fiscalCode : '';
   const { userIsPagopaOperator } = useUserRole();
+
+  const stationServiceList = stationServicesConfiguration(useFlagValue);
+  
   const env: string = ENV.ENV;
   const gpdAddresses = GPDConfigs[ENV.ENV as keyof IGPDConfig];
   const forwarderAddresses = NewConnConfigs[ENV.ENV as keyof INewConnConfig];
@@ -1142,7 +1145,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                     />
                   </Grid>
 
-                  {stationServicesConfiguration(useFlagValue)?.map((el) => (
+                  {stationServiceList?.map((el) => (
                     <Grid item xs={10} ml={2} key={`service-${el.id}`}>
                       <Typography variant="subtitle1" fontWeight={'medium'}>
                         {t(`${componentPath}.fields.${el.id}`)}

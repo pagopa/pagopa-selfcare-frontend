@@ -10,6 +10,7 @@ import StationDetails from '../StationDetails';
 import * as useUserRole from '../../../../../hooks/useUserRole';
 import {ROLE} from '../../../../../model/RolePermission';
 import {mockedFullStation} from '../../../../../services/__mocks__/stationService';
+import * as useFlagValue from '../../../../../hooks/useFeatureFlags';
 
 jest.mock('../../../../components/commonFunctions');
 jest.mock('../../../../../hooks/useUserRole');
@@ -35,6 +36,7 @@ describe('<StationDetails.test />', () => {
             userIsPagopaOperator: false,
             userIsAdmin: true,
         });
+        jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
         const mockedStation = {...mockedFullStation, isConnectionSync: true};
         render(
             <Provider store={store}>

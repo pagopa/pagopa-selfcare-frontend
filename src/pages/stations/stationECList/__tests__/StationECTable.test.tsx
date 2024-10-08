@@ -11,6 +11,7 @@ import { mockedStationECs } from '../../../../services/__mocks__/stationService'
 
 let spyApi: jest.SpyInstance;
 const getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
+const dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -24,7 +25,8 @@ describe('<StationECTable />', () => {
   const stationId = 'XPAY_03_ONUS';
   test('Render StationECTable', async () => {
     getECListByStationCodeSpy.mockReturnValueOnce(Promise.resolve(mockedStationECs));
-
+    dissociateEcSpy.mockReturnValueOnce(Promise.resolve());
+ 
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
@@ -44,6 +46,28 @@ describe('<StationECTable />', () => {
     await waitFor(() => {
       const table = screen.getByTestId('data-grid');
       expect(table).toBeInTheDocument();
+    });
+
+    const menuButton = screen.getAllByRole('menuitem')[0];
+    fireEvent.click(menuButton);
+
+    let dissociateButton;
+    await waitFor(() => {
+      expect(screen.queryByTestId('editAction')).toBeInTheDocument();
+      dissociateButton = screen.getByTestId("dissociate-action");
+    });
+
+    fireEvent.click(dissociateButton);
+
+    let confirmButton;
+    await waitFor(() => {
+      confirmButton = screen.getByTestId("confirm-button-modal-test");
+    });
+
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -72,4 +96,51 @@ describe('<StationECTable />', () => {
     });
   });
 
+  test('error dissociateECfromStation', async () => {
+    getECListByStationCodeSpy.mockReturnValueOnce(Promise.resolve(mockedStationECs));
+    dissociateEcSpy.mockRejectedValueOnce("");
+ 
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
+          <Route path="/stations/:stationId">
+            <ThemeProvider theme={theme}>
+              <StationECTable
+                setAlertMessage={() => ''}
+                ciNameOrFiscalCodeFilter={''}
+                setNoValidCi={() => jest.fn()}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      const table = screen.getByTestId('data-grid');
+      expect(table).toBeInTheDocument();
+    });
+
+    const menuButton = screen.getAllByRole('menuitem')[0];
+    fireEvent.click(menuButton);
+
+    let dissociateButton;
+    await waitFor(() => {
+      expect(screen.queryByTestId('editAction')).toBeInTheDocument();
+      dissociateButton = screen.getByTestId("dissociate-action");
+    });
+
+    fireEvent.click(dissociateButton);
+
+    let confirmButton;
+    await waitFor(() => {
+      confirmButton = screen.getByTestId("confirm-button-modal-test");
+    });
+
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 });

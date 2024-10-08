@@ -1,5 +1,5 @@
 import {Page, test} from '@playwright/test';
-import {bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetailPsp} from './utils/bundleUtils';
+import {bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetail} from './utils/bundleUtils';
 import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
 
 test.setTimeout(100000);
@@ -86,7 +86,7 @@ test.describe('Global bundles flow', () => {
 
   test('PSP edits global bundle', async () => {
     await page.getByTestId('commission-bundles-test').click();
-    await getToBundleDetailPsp(page, bundleNameGlobal);
+    await getToBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('modify-button').click();
     await page.getByTestId('max-import-test').click();
     await page.getByTestId('max-import-test').click();
@@ -106,7 +106,7 @@ test.describe('Global bundles flow', () => {
 
   test('PSP deletes global bundle', async () => {
     await page.getByTestId('commission-bundles-test').click();
-    await getToBundleDetailPsp(page, bundleNameGlobal);
+    await getToBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);

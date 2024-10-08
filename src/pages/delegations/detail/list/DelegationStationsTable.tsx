@@ -87,7 +87,7 @@ const DelegationStationsTable = ({ciTaxCode, filterByStationCode}: Props) => {
         setShowDisassociateStationModal(undefined);
         setLoading(true);
 
-        dissociateECfromStation(ciTaxCode, stationCode)
+        dissociateECfromStation(ciTaxCode, stationCode, selectedParty?.partyId ?? '', selectedParty?.fiscalCode ?? '')
             .catch((reason) => (
                 addError({
                     id: 'STATION_DELETE_RELATIONSHIP',

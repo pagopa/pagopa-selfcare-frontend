@@ -55,6 +55,21 @@ export const formatCurrencyEur = (value: number | undefined): string => {
   });
 };
 
+export const formatCurrencyWithoutSymbol = (value: number | undefined): string => {
+  if (value === undefined) {
+    return '';
+  }
+  const newValue = value / 100;
+  return newValue.toLocaleString('it-IT', {
+    minimumFractionDigits: 2,
+  });
+};
+
+export const formatCurrencyStringToNumberCent = (value: string): number => {
+  const valueToFormat = value.replace(',', '.'); // In case value includes ","
+  return Math.round(parseFloat(valueToFormat) * 100);
+};
+
 export const formatBooleanValueToYesOrNo = (value: boolean, t: TFunction<'translation'>): string =>
   value ? t('general.yes') : t('general.no');
 
@@ -100,6 +115,8 @@ export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string =>
     minute: '2-digit',
     timeZone: 'Europe/Rome',
   });
+
+export const formatDateToYYYYMMDD = (value: any): string => value.toISOString().split('T')[0];
 
 export function fromHoursFormattedToNumbers(hour: string): number {
   const separator = hour.indexOf(':');

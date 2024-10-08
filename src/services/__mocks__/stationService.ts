@@ -562,6 +562,7 @@ export const mockedCreatedStation: StationOnCreation = {
   targetPath: '',
   targetPofConcat: '',
   primitiveVersion: 0,
+  isPaymentOptionsEnabled: false
 };
 
 export const mockedCreditorInstitutionStationDTO: CreditorInstitutionStationDto = {
@@ -582,6 +583,7 @@ export const mockedStationDetailsDTO: StationDetailsDto = {
   stationCode: '',
   validationUrl: '',
   version: 0,
+  flagStandin: false
 };
 
 export const createStationMocked = (_station: StationOnCreation): Promise<StationDetailResource> =>

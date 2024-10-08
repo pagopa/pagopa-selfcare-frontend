@@ -38,9 +38,11 @@ const ChannelDetails = ({
   const { t } = useTranslation();
   const { userIsPagopaOperator } = useUserRole();
   const targetPath = (!channelDetail.target_path?.startsWith('/') ? '/' : '').concat(
-    channelDetail.target_path !== undefined ? channelDetail.target_path : ''
+    channelDetail.target_path ?? ''
   );
-  const targetValue = `${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`;
+  const targetValue = channelDetail.target_host
+    ? `${channelDetail.target_host}:${channelDetail.target_port}${targetPath}`
+    : '-';
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const hidePassword = 'XXXXXXXXXXXXXX';
@@ -56,9 +58,11 @@ const ChannelDetails = ({
       ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
       : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
-  const newConnectionValue = `${
-    channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
-  }${channelDetail.ip}${channelDetail.service}`;
+  const newConnectionValue = channelDetail.ip
+    ? `${
+        channelDetail.protocol === ProtocolEnum.HTTPS ? 'https://' : 'http://'
+      }${channelDetail.ip}${channelDetail.service}`
+    : '-';
 
   return (
     <Grid container justifyContent={'center'}>

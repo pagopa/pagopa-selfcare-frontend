@@ -1,14 +1,20 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { Chip, FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TFunction, useTranslation } from 'react-i18next';
 import { generatePath } from 'react-router-dom';
+import { Euro } from '@mui/icons-material';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
 import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
 import { useAppDispatch } from '../../../redux/hooks';
-import { dateDifferenceInDays, datesAreOnSameDay } from '../../../utils/common-utils';
+import {
+  dateDifferenceInDays,
+  datesAreOnSameDay,
+  formatCurrencyEur,
+  formatCurrencyWithoutSymbol,
+} from '../../../utils/common-utils';
 import {
   renderCell,
   renderStatusChip,
@@ -35,44 +41,26 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.bundleName'),
       align: 'left',
       headerAlign: 'left',
-      minWidth: 400,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params: any) => renderCell({ value: params.row.name, mainCell: true }),
       sortable: true,
-      flex: 4,
+      flex: 5,
     },
     ...(isPsp
       ? [
           {
-            field: 'validityDateFrom',
-            cellClassName: 'justifyContentNormal',
-            headerName: t('commissionBundlesPage.list.headerFields.startDate'),
+            field: 'channel',
+            cellClassName: 'justifyContentBold',
+            headerName: t('commissionBundlesPage.list.headerFields.channel'),
             align: 'left',
             headerAlign: 'left',
-            maxWidth: 150,
             editable: false,
             disableColumnMenu: true,
             renderHeader: showCustomHeader,
-            renderCell: (params: any) =>
-              renderCell({ value: params.row.validityDateFrom?.toLocaleDateString('en-GB') }),
-            sortable: false,
-            flex: 4,
-          },
-          {
-            field: 'validityDateTo',
-            cellClassName: 'justifyContentNormal',
-            headerName: t('commissionBundlesPage.list.headerFields.endDate'),
-            align: 'left',
-            headerAlign: 'left',
-            maxWidth: 150,
-            editable: false,
-            disableColumnMenu: true,
-            renderHeader: showCustomHeader,
-            renderCell: (params: any) =>
-              renderCell({ value: params.row.validityDateTo?.toLocaleDateString('en-GB') }),
-            sortable: false,
+            renderCell: (params: any) => renderCell({ value: params.row.idChannel ?? '-' }),
+            sortable: true,
             flex: 4,
           },
         ]
@@ -83,13 +71,12 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.touchpoint'),
       align: 'left',
       headerAlign: 'left',
-      maxWidth: 220,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => renderCell({ value: t(params.row.touchpoint) }),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'paymentType',
@@ -97,21 +84,57 @@ export function buildColumnDefs(
       headerName: t('commissionBundlesPage.list.headerFields.paymentType'),
       align: 'left',
       headerAlign: 'left',
-      width: 145,
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
       renderCell: (params) => renderCell({ value: t(params.row.paymentType) }),
       sortable: false,
+      flex: 3,
+    },
+    {
+      field: 'payment',
+      cellClassName: 'justifyContentNormal',
+      headerName: t('commissionBundlesPage.list.headerFields.payment'),
+      align: 'center',
+      headerAlign: 'center',
+      editable: false,
+      disableColumnMenu: true,
+      renderHeader: showCustomHeader,
+      renderCell: (params) =>
+        renderCell({
+          value: `${formatCurrencyWithoutSymbol(params.row.minPaymentAmount) || ' '} - ${formatCurrencyEur(params.row.maxPaymentAmount) || ' '}`,
+          align: 'center',
+        }),
+      sortable: false,
       flex: 4,
     },
+    ...(isPsp
+      ? [
+          {
+            field: 'commission',
+            cellClassName: 'justifyContentNormal',
+            headerName: t('commissionBundlesPage.list.headerFields.commission'),
+            align: 'center',
+            headerAlign: 'center',
+            editable: false,
+            disableColumnMenu: true,
+            renderHeader: showCustomHeader,
+            renderCell: (params: any) =>
+              renderCell({
+                value: formatCurrencyEur(params.row.paymentAmount) || '-',
+                align: 'center',
+              }),
+            sortable: false,
+            flex: 3,
+          },
+        ]
+      : []),
     {
       field: 'state',
       cellClassName: 'justifyContentNormal',
       headerName: t('commissionBundlesPage.list.headerFields.state'),
       align: 'left',
       headerAlign: 'left',
-      width: 200,
       editable: false,
       disableColumnMenu: true,
       renderHeader: (params) =>
@@ -122,7 +145,7 @@ export function buildColumnDefs(
         ),
       renderCell: (params) => getStateChip(params, t, isPsp, isCi),
       sortable: false,
-      flex: 4,
+      flex: 3,
     },
     {
       field: 'actions',
@@ -229,7 +252,10 @@ const getCIStatusChip = (
   bundleType: TypeEnum | undefined,
   bundleStatus: CiBundleStatusEnum | undefined
 ) => {
-  if (bundleStatus === CiBundleStatusEnum.AVAILABLE || bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED) {
+  if (
+    bundleStatus === CiBundleStatusEnum.AVAILABLE ||
+    bundleStatus === CiBundleStatusEnum.AVAILABLE_EXPIRED
+  ) {
     return renderStatusChip({
       chipColor: 'default',
       chipLabel: t('commissionBundlesPage.list.states.toBeActivated'),

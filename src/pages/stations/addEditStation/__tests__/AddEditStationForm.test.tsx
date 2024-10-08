@@ -18,6 +18,7 @@ import * as useUserRole from '../../../../hooks/useUserRole';
 import {featureFlagsActions} from "../../../../redux/slices/featureFlagsSlice";
 import {ROLE} from "../../../../model/RolePermission";
 import {mockedFullStation, mockedStationCode} from '../../../../services/__mocks__/stationService';
+import * as useFlagValue from '../../../../hooks/useFeatureFlags';
 
 jest.mock('../../../components/commonFunctions');
 
@@ -63,6 +64,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             userIsPagopaOperator: false,
             userIsAdmin: false,
         });
+        jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
         render(
@@ -153,6 +155,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             userIsPagopaOperator: false,
             userIsAdmin: false,
         });
+        jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
 
         const flags = {

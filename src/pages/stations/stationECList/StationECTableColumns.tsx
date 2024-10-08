@@ -1,19 +1,12 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { TFunction } from 'react-i18next';
-import { generatePath, useHistory } from 'react-router-dom';
 import { formatBooleanValueToYesOrNo, formatCodeInDoubleDigit } from '../../../utils/common-utils';
 import {
   renderCell,
   renderStatusChip,
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
-import { useAppDispatch } from '../../../redux/hooks';
 import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
-
-import { stationCIActions } from '../../../redux/slices/stationCISlice';
-
-import ROUTES from '../../../routes';
-import { StationECAssociateActionType } from '../../../model/Station';
 
 export const getAuxDigit = (station: any) => {
   const hasSegregationCode = station.segregationCode !== undefined;
@@ -34,7 +27,6 @@ export const getAuxDigit = (station: any) => {
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   onRowClick: (ec_code: string) => void,
-  stationId: string,
   onLinkClick: (ci: CreditorInstitutionResource) => void
 ) {
   return [
@@ -178,20 +170,18 @@ export function buildColumnDefs(
       sortable: false,
       flex: 1,
       getActions: (p: any) =>
-        gridLinkActionEdit({ t, stationId, ci: p.row, onRowClick, onLinkClick }),
+        gridLinkActionEdit({ t, ci: p.row, onRowClick, onLinkClick }),
     },
   ] as Array<GridColDef>;
 }
 
 export const gridLinkActionEdit = ({
   ci,
-  stationId,
   t,
   onRowClick,
   onLinkClick,
 }: {
   ci: CreditorInstitutionResource;
-  stationId: string;
   t: TFunction<'translation', undefined>;
   onRowClick: (ec_code: string) => void;
   onLinkClick: (ci: CreditorInstitutionResource) => void;
@@ -205,10 +195,10 @@ export const gridLinkActionEdit = ({
   />,
   <GridActionsCellItem
     label={t('stationECList.stationsTableColumns.headerFields.action')}
-    onClick={onRowClick ? () => onRowClick(ci.ciTaxCode) : undefined}
+    onClick={() => onRowClick(ci.ciTaxCode)}
     key="dissociateAction"
     showInMenu
     sx={{ color: '#D85757' }}
-    data-testid="dissociateAction"
+    data-testid="dissociate-action"
   />,
 ];

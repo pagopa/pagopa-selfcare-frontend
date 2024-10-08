@@ -28,6 +28,7 @@ export type Party = {
 export type UserRole = {
     partyRole: PartyRole;
     roleKey: string;
+    roleLabel: string;
 };
 
 export type BaseParty = {
@@ -54,7 +55,8 @@ export const institutionResource2Party = (institutionResource: InstitutionDetail
         digitalAddress: institutionResource.mail_address!,
         status: institutionResource.status as 'ACTIVE' | 'PENDING',
         roles: institutionResource.user_product_roles.map(
-            (u) => ({partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u} as UserRole)
+            (u) => ({partyRole: u.product_role === 'admin' || 'admin-psp' ?
+             'DELEGATE' : 'OPERATOR', roleKey: u.product_role, roleLabel: u.product_role_label} as UserRole)
         ),
         urlLogo,
         fiscalCode: institutionResource.tax_code,
@@ -77,7 +79,7 @@ export const institutionDetailResource2Party = (
         digitalAddress: institutionResource.digital_address!,
         status: 'ACTIVE', // 'ACTIVE' | 'PENDING',
         roles: [] /* institutionResource.userProductRoles.map(
-      (u) => ({ partyRole: u, roleKey: u } as UserRole)
+      (u) => ({ partyRole: u.product_role, roleKey: u.product_role, roleLabel: u.product_role_label } as UserRole)
     ), */,
         urlLogo,
         fiscalCode: institutionResource.tax_code,
@@ -96,7 +98,8 @@ export const institutionBaseResource2BaseParty = (
       // status: institutionResource.status as 'ACTIVE' | 'PENDING',
       status: 'ACTIVE',
       roles: institutionResource.user_product_roles.map(
-        (u) => ({partyRole: u === 'admin' ? 'DELEGATE' : 'OPERATOR', roleKey: u} as UserRole)
+            (u) => ({partyRole: u.product_role === 'admin' || 'admin-psp' ?
+             'DELEGATE' : 'OPERATOR', roleKey: u.product_role, roleLabel: u.product_role_label} as UserRole)
       ),      
       urlLogo,
     };

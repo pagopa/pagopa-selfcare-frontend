@@ -49,21 +49,23 @@ const selfcareProduct: ProductModel = {
 
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
+    const roleLabel = party.roles[0].roleLabel;
+
     const isOperator = userIsPagopaOperator();
     if (isOperator) {
         return 'roles.pagopaOperator';
     }
-    if (party.institutionType === 'PSP' && roleKey === 'operator') {
-        return 'roles.pspOperator';
+    if (party.institutionType === 'PSP' && (roleKey === 'operator' || roleKey === 'operator-psp')) {
+        return roleLabel ? roleLabel : 'roles.pspOperator';
     }
-    if (party.institutionType === 'PSP' && roleKey === 'admin') {
-        return 'roles.pspAdmin';
+    if (party.institutionType === 'PSP' && (roleKey === 'admin' || roleKey === 'admin-psp')) {
+        return roleLabel ? roleLabel : 'roles.pspAdmin';
     }
     if (roleKey === 'operator') {
-        return 'roles.ecOperator';
+        return roleLabel ? roleLabel : 'roles.ecOperator';
     }
     if (roleKey === 'admin') {
-        return 'roles.ecAdmin';
+        return roleLabel ? roleLabel : 'roles.ecAdmin';
     }
     return '';
 };

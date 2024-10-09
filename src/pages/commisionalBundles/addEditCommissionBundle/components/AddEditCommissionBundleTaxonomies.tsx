@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {Button, Link, Paper, Typography, Alert, AlertTitle} from '@mui/material';
 import {SingleFileInput} from '@pagopa/mui-italia';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import { extractTaxonomy } from '../../../../utils/bundle-utils';
 import {BundleRequest} from '../../../../api/generated/portal/BundleRequest';
 import {Taxonomy} from '../../../../api/generated/portal/Taxonomy';
 import GenericModal from '../../../../components/Form/GenericModal';
@@ -30,15 +31,17 @@ type Props = {
 
 const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
     taxonomies.reduce((result: any, taxonomy: PSPBundleTaxonomyWithFromFile) => {
+        const revisedTaxonomy = {...taxonomy, specificBuiltInData: extractTaxonomy(taxonomy.specificBuiltInData)};
         const macroAreaName = taxonomy.macroAreaName;
         const newResult: any = {
             ...result,
             ...{[macroAreaName]: result[macroAreaName] ? result[macroAreaName] : []},
         };
-        newResult[macroAreaName].push(taxonomy);
+        newResult[macroAreaName].push(revisedTaxonomy);
         return newResult;
     }, {});
 
+// eslint-disable-next-line @typescript-eslint/semi
 const mapTaxonomyToPspBundleTaxonomy = (
     taxonomy: TaxonomyWithFromFile
 ): PSPBundleTaxonomyWithFromFile => ({
@@ -57,7 +60,9 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
     const [areaToRemove, setAreaToRemove] = useState<string>();
     const [taxonomyToRemove, setTaxonomyToRemove] = useState<TaxonomyToRemove>();
     const [taxonomies, setTaxonomies] = useState<Array<PSPBundleTaxonomyWithFromFile>>(
-        bundleTaxonomies && bundleTaxonomies.length > 0 ? bundleTaxonomies : []
+        bundleTaxonomies && bundleTaxonomies.length > 0 ? bundleTaxonomies.map((item: PSPBundleTaxonomyWithFromFile) =>
+            ({ ...item, specificBuiltInData: extractTaxonomy(item.specificBuiltInData) })
+        ) : []
     );
     const [taxonomyTableData, setTaxonomyTableData] = useState<TaxonomyTableData>(
         bundleTaxonomies && bundleTaxonomies.length > 0 ? reduceTaxonomies(bundleTaxonomies) : undefined
@@ -128,7 +133,10 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
     };
 
     const handleAddFromDrawer = async (taxonomiesToAdd: Array<TaxonomyWithFromFile>) => {
-        const filteredTaxonomies = taxonomiesToAdd.filter(
+        const revisedTaxonomiesToAdd = taxonomiesToAdd.map((item: TaxonomyWithFromFile) =>
+            ({ ...item, specific_built_in_data: extractTaxonomy(item.specific_built_in_data) })
+        );
+        const filteredTaxonomies = revisedTaxonomiesToAdd.filter(
             (taxonomy) =>
                 !taxonomies.find((el) => el.specificBuiltInData === taxonomy.specific_built_in_data)
         );

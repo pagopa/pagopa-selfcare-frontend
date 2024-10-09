@@ -1,4 +1,4 @@
 export const extractTaxonomy = (inputTaxonomy : any) => {
-  const matchedContent = inputTaxonomy.match(/\/(\d+)\D*\//);  
-  return matchedContent ? matchedContent[1] : inputTaxonomy;
+  const extractedContent = inputTaxonomy.split("/");
+  return extractedContent.length > 1 ? extractedContent[1] : inputTaxonomy;
 };

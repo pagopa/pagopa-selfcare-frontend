@@ -4,6 +4,7 @@ import {TitleBox, useErrorDispatcher} from '@pagopa/selfcare-common-frontend';
 import {Box, Button, InputAdornment, Skeleton, TextField, Typography} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {ButtonNaked} from '@pagopa/mui-italia';
+import { extractTaxonomy } from '../../../../../utils/bundle-utils';
 import {PaddedDrawer} from '../../../../../components/PaddedDrawer';
 import {Taxonomy} from '../../../../../api/generated/portal/Taxonomy';
 import {TaxonomyGroup} from '../../../../../api/generated/portal/TaxonomyGroup';
@@ -173,9 +174,12 @@ export const BundleTaxonomiesDrawer = ({
         )
             .then((data) => {
                 if (data?.taxonomies) {
-                    setTaxonomies([...data.taxonomies]);
+                    const revisedTaxonomies = data?.taxonomies.map((item: Taxonomy) =>
+                        ({ ...item, specific_built_in_data: extractTaxonomy(item.specific_built_in_data) })
+                    );
+                    setTaxonomies([...revisedTaxonomies]);
                     const map = new Map<string, boolean>();
-                    data.taxonomies.forEach((item) => map.set(item.specific_built_in_data, false));
+                    revisedTaxonomies.forEach((item) => map.set(item.specific_built_in_data, false));
                     setCheckedTaxonomies(map);
                     setShowSearchError(searchText && data.taxonomies.length === 0 ? true : false);
                 }

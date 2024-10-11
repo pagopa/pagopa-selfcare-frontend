@@ -151,12 +151,12 @@ export interface INewConnConfig {
 
 export const NewConnConfigs: INewConnConfig = {
   LOCAL_DEV: {
-    forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
+    forwarder01: 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
   },
   TEST: {
-    forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
+    forwarder01: 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward',
   },
-  dev: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
+  dev: { forwarder01: 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
   uat: { forwarder01: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
   prod: { forwarder01: 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward' },
 };

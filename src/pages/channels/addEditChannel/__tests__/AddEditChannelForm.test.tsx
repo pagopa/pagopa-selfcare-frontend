@@ -410,7 +410,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
 
         fireEvent.change(newConnection, {
-            target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
+            target: {value: 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
         });
 
         const deleteNewConnection = screen.getByTestId('delete-new-connection');
@@ -526,7 +526,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
         expect(screen.queryByTestId('delete-new-connection')).not.toBeInTheDocument();
 
         fireEvent.change(newConnection, {
-            target: {value: 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
+            target: {value: 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'},
         });
 
         const deleteNewConnection = screen.getByTestId('delete-new-connection');

@@ -33,6 +33,7 @@ import { add, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
+import { extractTaxonomy } from '../../../../utils/bundle-utils';
 import { BundleRequest } from '../../../../api/generated/portal/BundleRequest';
 import { Delegation } from '../../../../api/generated/portal/Delegation';
 import { TypeEnum } from '../../../../api/generated/portal/PSPBundleResource';
@@ -51,6 +52,7 @@ import { getChannels } from '../../../../services/channelService';
 import { getPaymentTypes } from '../../../../services/configurationService';
 import { getBrokerDelegation } from '../../../../services/institutionService';
 import { addCurrentBroker } from '../../../../utils/channel-utils';
+
 import {
   LOADING_TASK_COMMISSION_BUNDLE_SELECT_DATAS,
   LOADING_TASK_GET_CHANNELS_IDS,

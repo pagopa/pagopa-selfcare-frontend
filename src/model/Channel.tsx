@@ -35,9 +35,11 @@ export type Channels = {
 };
 
 export const forwarder01 =
-  ENV.ENV === 'PROD'
+  ENV.ENV === 'prod'
     ? 'https://api.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
-    : 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
+    : ENV.ENV === 'uat'
+      ? 'https://api.uat.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward'
+      : 'https://api.dev.platform.pagopa.it/pagopa-node-forwarder/api/v1/forward';
 
 export const isNewConnectivity = ({
   protocol,

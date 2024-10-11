@@ -16,6 +16,7 @@ export const pspAdminSignedDirect: Party = {
         {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/26a0aabf-ce6a-4dfa-af4e-d4f744a8b944/logo.png',
@@ -43,6 +44,7 @@ export const pspAdminSignedUndirect: Party = {
         {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/pspAdminSignedUndirect/logo.png',
@@ -67,10 +69,11 @@ export const pspAdminUnsigned: Party = {
     status: 'ACTIVE',
     registeredOffice: 'VIA DEI PSP 20, ROMA',
     roles: [
-        {
+             {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
-        },
+            roleLabel: ''
+        }
     ],
     urlLogo: 'https://checkout.selfcare/institutions/pspAdminUnsigned/logo.png',
     institutionType: 'PSP',
@@ -97,6 +100,7 @@ export const pspOperatorSignedDirect: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/pspOperatorSigned/logo.png',
@@ -124,6 +128,7 @@ export const pspOperatorSignedUndirect: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/pspOperatorSignedUndirect/logo.png',
@@ -151,6 +156,7 @@ export const pspOperatorUnsigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/pspOperatorUnsigned/logo.png',
@@ -176,10 +182,11 @@ export const ecAdminSignedDirect: Party = {
     status: 'ACTIVE',
     registeredOffice: 'Via degli Enti Creditori 1',
     roles: [
-        {
+             {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
-        },
+            roleLabel: ''
+        }
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecAdminSignedDirect/logo.png',
     pspData: undefined,
@@ -200,6 +207,7 @@ export const c3f1: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/PTECPSPSigned/logo.png',
@@ -218,10 +226,11 @@ export const ecAdminSignedUndirect: Party = {
     status: 'ACTIVE',
     registeredOffice: 'Via degli Enti Creditori 1',
     roles: [
-        {
+             {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
-        },
+            roleLabel: ''
+        }
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecAdminSignedUndirect/logo.png',
     pspData: undefined,
@@ -239,10 +248,11 @@ export const ecAdminUnsigned: Party = {
     status: 'ACTIVE',
     registeredOffice: 'Via degli Enti Creditori 1',
     roles: [
-        {
+             {
             partyRole: 'DELEGATE',
             roleKey: 'admin', // TODO use real product role
-        },
+            roleLabel: ''
+        }
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecAdminUnsigned/logo.png',
     pspData: undefined,
@@ -263,6 +273,7 @@ export const ecOperatorSignedDirect: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecOperatorSigned/logo.png',
@@ -284,6 +295,7 @@ export const ecOperatorSignedUndirect: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecOperatorSignedUndirect/logo.png',
@@ -305,6 +317,7 @@ export const ecOperatorUnsigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/ecOperatorUnsigned/logo.png',
@@ -326,6 +339,7 @@ export const PTUnsigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/PTUnsigned/logo.png',
@@ -347,6 +361,7 @@ export const PTPSPSigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/PTPSPSigned/logo.png',
@@ -368,6 +383,7 @@ export const PTECSigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/PTECSigned/logo.png',
@@ -389,6 +405,7 @@ export const PTECPSPSigned: Party = {
         {
             partyRole: 'OPERATOR',
             roleKey: 'operator', // TODO use real product role
+            roleLabel: ''
         },
     ],
     urlLogo: 'https://checkout.selfcare/institutions/PTECPSPSigned/logo.png',

@@ -86,6 +86,7 @@ const HeaderProduct = ({
                     {
                         partyRole: 'OPERATOR',
                         roleKey: 'admin',
+                        roleLabel: ''
                     },
                 ],
             };

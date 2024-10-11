@@ -106,7 +106,7 @@ export const mockedInstitutionBaseResource: InstitutionBaseResources = {
         {
             id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
             name: 'Azienda Pubblica di Servizi alla Persona Test 2',
-            user_product_roles: ['admin']
+            user_product_roles: [{product_role:'admin'}]
         },
     ],
 };
@@ -122,7 +122,7 @@ export const mockedInstitutionDetailResource: InstitutionDetail =
             address : '',
             external_id: '',
             tax_code: '800011104872',
-            user_product_roles: ['admin'],
+            user_product_roles: [{product_role:'admin'}],
             assistance_contacts: {},
             company_informations: {},
             dpo_data: {

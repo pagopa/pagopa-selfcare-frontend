@@ -33,8 +33,8 @@ describe('PartyService test client', () => {
 
     test('Test fetchPartyDetails', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitution')
-            .mockReturnValue(new Promise((resolve) => resolve(institutionMock)));
+            .spyOn(BackofficeApi, 'getInstitutionFullDetail')
+            .mockReturnValue(new Promise((resolve) => resolve(mockedInstitutionDetailResource)));
         expect(fetchPartyDetails('partyId', [])).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });

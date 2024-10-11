@@ -47,25 +47,26 @@ const selfcareProduct: ProductModel = {
 };
 
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
     const roleLabel = party.roles[0].roleLabel;
 
     const isOperator = userIsPagopaOperator();
-    if (isOperator) {
+        if (isOperator) {
         return 'roles.pagopaOperator';
     }
-    if (party.institutionType === 'PSP' && (roleKey === 'operator' || roleKey === 'operator-psp')) {
-        return roleLabel ? roleLabel : 'roles.pspOperator';
+    if ((party.institutionType === 'PSP' && roleKey === 'operator') || roleKey === 'operator-psp') {
+        return roleLabel ?? 'roles.pspOperator';
     }
-    if (party.institutionType === 'PSP' && (roleKey === 'admin' || roleKey === 'admin-psp')) {
-        return roleLabel ? roleLabel : 'roles.pspAdmin';
+    if ((party.institutionType === 'PSP' && roleKey === 'admin') || roleKey === 'admin-psp') {
+        return roleLabel ?? 'roles.pspAdmin';
     }
     if (roleKey === 'operator') {
-        return roleLabel ? roleLabel : 'roles.ecOperator';
+        return roleLabel ?? 'roles.ecOperator';
     }
     if (roleKey === 'admin') {
-        return roleLabel ? roleLabel : 'roles.ecAdmin';
+        return roleLabel ?? 'roles.ecAdmin';
     }
     return '';
 };

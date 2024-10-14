@@ -14,7 +14,9 @@ import {partiesActions, partiesSelectors} from '../redux/slices/partiesSlice';
 import {useSigninData} from '../hooks/useSigninData';
 import {userIsPagopaOperator} from "../hooks/useUserRole";
 import {ENV} from '../utils/env';
+import { fetchPartyDetails } from '../services/partyService';
 import CommonHeader from './CommonHeader/CommonHeader';
+
 
 type Props = WithPartiesProps & {
     onExit: (exitAction: () => void) => void;
@@ -44,23 +46,27 @@ const selfcareProduct: ProductModel = {
     urlPublic: ENV.URL_FE.SELFCARE,
 };
 
+
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const roleKey2LanguageKey = (party: Party): string => {
     const roleKey = party.roles[0].roleKey;
+    const roleLabel = party.roles[0].roleLabel;
+
     const isOperator = userIsPagopaOperator();
-    if (isOperator) {
+        if (isOperator) {
         return 'roles.pagopaOperator';
     }
-    if (party.institutionType === 'PSP' && roleKey === 'operator') {
-        return 'roles.pspOperator';
+    if ((party.institutionType === 'PSP' && roleKey === 'operator') || roleKey === 'operator-psp') {
+        return roleLabel ?? 'roles.pspOperator';
     }
-    if (party.institutionType === 'PSP' && roleKey === 'admin') {
-        return 'roles.pspAdmin';
+    if ((party.institutionType === 'PSP' && roleKey === 'admin') || roleKey === 'admin-psp') {
+        return roleLabel ?? 'roles.pspAdmin';
     }
     if (roleKey === 'operator') {
-        return 'roles.ecOperator';
+        return roleLabel ?? 'roles.ecOperator';
     }
     if (roleKey === 'admin') {
-        return 'roles.ecAdmin';
+        return roleLabel ?? 'roles.ecAdmin';
     }
     return '';
 };
@@ -133,20 +139,24 @@ const Header = ({onExit, loggedUser, parties}: Props) => {
                         )
                 )
             }
-            onSelectedParty={(selectedParty: PartySwitchItem) => {
+            onSelectedParty={
+            // eslint-disable-next-line sonarjs/cognitive-complexity
+            (selectedParty: PartySwitchItem) => {
                 if (selectedParty) {
                     trackEvent('PARTY_SELECTION', {
                         party_id: selectedParty.id,
                     });
                     onExit(() => {
                         if (ENV.ENV === 'LOCAL_DEV') {
-                            const partyToSwitch = parties.find((p) => p.partyId === selectedParty.id);
-                            const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-                            setParty(partyToSwitch);
-                            if (partyToSwitch) {
-
-                                void updateSigninData(partyToSwitch);
-                            }
+                            fetchPartyDetails(selectedParty.id).then((party) => {
+                                const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
+                                setParty(party ? party : undefined);
+                                if (party) {
+    
+                                    void updateSigninData(party);
+                                }
+                            }).catch((error) => {
+                            });
                         } else {
                             window.location.assign(
                                 `${ENV.URL_FE.TOKEN_EXCHANGE}?institutionId=${

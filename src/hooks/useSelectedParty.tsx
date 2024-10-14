@@ -4,7 +4,7 @@ import {trackEvent} from '@pagopa/selfcare-common-frontend/services/analyticsSer
 import {Party} from '../model/Party';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {partiesActions, partiesSelectors} from '../redux/slices/partiesSlice';
-import {fetchParties} from '../services/partyService';
+import {fetchParties, fetchPartyDetails} from '../services/partyService';
 import {LOADING_TASK_SEARCH_PARTY} from '../utils/constants';
 import {parseJwt} from '../utils/jwt-utils';
 import {ENV} from '../utils/env';
@@ -44,8 +44,7 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
     const updateSigninData = useSigninData();
     const setLoadingDetails = useLoading(LOADING_TASK_SEARCH_PARTY);
     const fetchParty = (partyId: string): Promise<Party> =>
-        fetchParties().then((parties) => {
-            const party = parties.find((p) => p.partyId === partyId);
+        fetchPartyDetails(partyId).then((party) => {
             if (party) {
                 if (party.status !== 'ACTIVE') {
                     throw new Error(`INVALID_PARTY_STATE_${party.status}`);

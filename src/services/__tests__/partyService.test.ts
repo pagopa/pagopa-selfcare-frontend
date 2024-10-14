@@ -1,7 +1,6 @@
 import {BackofficeApi} from '../../api/BackofficeClient';
 import {mockedInstitutionDetailResource} from '../__mocks__/institutionsService';
-import {institutionMock, mockedParties} from '../__mocks__/partyService';
-import {mockedPartyProducts} from '../__mocks__/productService';
+import {mockedInstitutionBaseResource, mockedParties} from '../__mocks__/partyService';
 import {fetchParties, fetchPartyDetails} from '../partyService';
 
 describe('PartyService test client', () => {
@@ -18,7 +17,7 @@ describe('PartyService test client', () => {
     test('Test fetchParties', async () => {
         const spyOn = jest
             .spyOn(BackofficeApi, 'getInstitutions')
-            .mockReturnValue(new Promise((resolve) => resolve(mockedParties)));
+            .mockReturnValue(new Promise((resolve) => resolve(mockedInstitutionBaseResource)));
         expect(fetchParties()).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });

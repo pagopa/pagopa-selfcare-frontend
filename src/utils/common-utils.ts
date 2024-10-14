@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-let */
+import { DateTime } from 'luxon';
 import { TFunction } from 'react-i18next';
 import { Iban } from '../api/generated/portal/Iban';
 import { IbanOnCreation } from '../model/Iban';
@@ -106,15 +107,17 @@ export const formatDateTohhmm = (value: any): string =>
     minute: '2-digit',
   });
 
-export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string =>
-  value.toLocaleString('en-GB', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Rome',
-  });
+export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string => {
+  const timeZone = 'Europe/Rome';
+
+  const dt = DateTime.fromJSDate(value, { zone: timeZone });
+  const now = DateTime.now().setZone(timeZone);
+
+  const offset = now.offset - dt.offset;
+  const adjustedDate = dt.plus({ minutes: offset });
+
+  return adjustedDate.toFormat('dd/MM/yyyy, HH:mm');
+};
 
 export const formatDateToYYYYMMDD = (value: any): string => value.toISOString().split('T')[0];
 

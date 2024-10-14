@@ -378,7 +378,7 @@ export default function StationMaintenanceAddEditDetail() {
       );
     }
     const initStandIn = selectedMaintenanceState?.stationMaintenance?.stand_in;
-    if (initStandIn) {
+    if (initStandIn !== undefined) {
       setStandIn(initStandIn);
     }
     const initHoursRemaining = selectedMaintenanceState?.hoursRemaining;

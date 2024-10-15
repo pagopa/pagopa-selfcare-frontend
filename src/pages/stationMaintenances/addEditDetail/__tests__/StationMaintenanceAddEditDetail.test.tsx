@@ -29,13 +29,15 @@ const ComponentRender = ({
   hoursRemaining?: number;
   stationMaintenance?: StationMaintenanceResource;
 }) => {
-  const dispatch = useAppDispatch();
-  dispatch(
-    stationMaintenanceActions.setStationMaintenanceState({
-      hoursRemaining: hoursRemaining ?? 36,
-      stationMaintenance: stationMaintenance ?? mockStationMaintenance,
-    })
-  );
+  if(action !== StationMaintenanceActionType.CREATE){
+    const dispatch = useAppDispatch();
+    dispatch(
+      stationMaintenanceActions.setStationMaintenanceState({
+        hoursRemaining: hoursRemaining ?? 36,
+        stationMaintenance: stationMaintenance ?? mockStationMaintenance,
+      })
+    );
+  }
   return (
     <MemoryRouter initialEntries={[`/station-maintenances/${action}/${'0'}`]}>
       <Route path={'/station-maintenances/:action/:maintenanceId'}>

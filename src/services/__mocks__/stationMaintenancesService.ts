@@ -26,7 +26,7 @@ export const mockStationMaintenance: StationMaintenanceResource = {
   broker_code: 'brokerCode',
   end_date_time: new Date(),
   maintenance_id: 100,
-  stand_in: false,
+  stand_in: true,
   start_date_time: new Date(),
   station_code: 'stationCode',
 };

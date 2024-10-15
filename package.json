@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.36.1-1-next",
+  "version": "1.36.2",
   "homepage": "ui",
   "private": true,
   "scripts": {
@@ -51,6 +51,7 @@
     "buffer": "^6.0.3",
     "date-fns": "^2.30.0",
     "formik": "^2.2.9",
+    "luxon": "^3.5.0",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1",
     "react": "^17.0.2",
@@ -73,6 +74,7 @@
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.0.4",
+    "@types/luxon": "^3.4.2",
     "@types/react-test-renderer": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.45.0",

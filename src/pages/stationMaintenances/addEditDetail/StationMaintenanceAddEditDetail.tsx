@@ -34,7 +34,7 @@ import {
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import { datesAreOnSameDay, removeDateZoneInfoGMT2 } from '../../../utils/common-utils';
+import { datesAreOnSameDay, formatDateToDDMMYYYYhhmmWithTimezone, removeDateZoneInfoGMT2 } from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
@@ -358,12 +358,12 @@ export default function StationMaintenanceAddEditDetail() {
     let tempDateFrom;
     let tempDateTo;
     if (initStartDate) {
-      tempDateFrom = initStartDate.toString();
+      tempDateFrom = formatDateToDDMMYYYYhhmmWithTimezone(initStartDate, true);
       setDateFrom(tempDateFrom);
       setHoursFrom(tempDateFrom);
     }
     if (initEndDate) {
-      tempDateTo = initEndDate.toString();
+      tempDateTo = formatDateToDDMMYYYYhhmmWithTimezone(initEndDate, true);
       setDateTo(tempDateTo);
       setHoursTo(tempDateTo);
     }

@@ -107,7 +107,7 @@ export const formatDateTohhmm = (value: any): string =>
     minute: '2-digit',
   });
 
-export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string => {
+export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any, swapMonthDay?: boolean): string => {
   const timeZone = 'Europe/Rome';
 
   const dt = DateTime.fromJSDate(value, { zone: timeZone });
@@ -116,7 +116,7 @@ export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any): string => {
   const offset = now.offset - dt.offset;
   const adjustedDate = dt.plus({ minutes: offset });
 
-  return adjustedDate.toFormat('dd/MM/yyyy, HH:mm');
+  return adjustedDate.toFormat(swapMonthDay ? 'MM/dd/yyyy, HH:mm' : 'dd/MM/yyyy, HH:mm');
 };
 
 export const formatDateToYYYYMMDD = (value: any): string => value.toISOString().split('T')[0];

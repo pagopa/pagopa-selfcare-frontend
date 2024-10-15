@@ -33,7 +33,10 @@ const ComponentRender = ({
   dispatch(
     stationMaintenanceActions.setStationMaintenanceState({
       hoursRemaining: hoursRemaining ?? 36,
-      stationMaintenance: stationMaintenance ?? mockStationMaintenance,
+      stationMaintenance:
+        action !== StationMaintenanceActionType.CREATE
+          ? stationMaintenance ?? mockStationMaintenance
+          : undefined,
     })
   );
   return (
@@ -66,12 +69,12 @@ describe('<StationMaintenanceAddEditDetail />', () => {
       expect(mockGetStations).toHaveBeenCalledTimes(1);
     });
 
-    const stationAutocomplete = screen.getByTestId('station-selection')  as HTMLInputElement;
+    const stationAutocomplete = screen.getByTestId('station-selection') as HTMLInputElement;
     let stationSearch = within(stationAutocomplete).getByRole('combobox');
 
     stationAutocomplete.focus();
     fireEvent.change(stationSearch as Element, {
-      target: { value: "mockedStations.stationsList[0].stationCode)" },
+      target: { value: 'mockedStations.stationsList[0].stationCode)' },
     });
     await waitFor(() => {
       expect(screen.queryByText(mockedStations.stationsList[0].stationCode)).toBeInTheDocument();

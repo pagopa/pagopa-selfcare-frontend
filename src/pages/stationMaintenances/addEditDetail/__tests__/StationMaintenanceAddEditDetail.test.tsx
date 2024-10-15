@@ -29,15 +29,16 @@ const ComponentRender = ({
   hoursRemaining?: number;
   stationMaintenance?: StationMaintenanceResource;
 }) => {
-  if(action !== StationMaintenanceActionType.CREATE){
-    const dispatch = useAppDispatch();
-    dispatch(
-      stationMaintenanceActions.setStationMaintenanceState({
-        hoursRemaining: hoursRemaining ?? 36,
-        stationMaintenance: stationMaintenance ?? mockStationMaintenance,
-      })
-    );
-  }
+  const dispatch = useAppDispatch();
+  dispatch(
+    stationMaintenanceActions.setStationMaintenanceState({
+      hoursRemaining: hoursRemaining ?? 36,
+      stationMaintenance:
+        action !== StationMaintenanceActionType.CREATE
+          ? stationMaintenance ?? mockStationMaintenance
+          : undefined,
+    })
+  );
   return (
     <MemoryRouter initialEntries={[`/station-maintenances/${action}/${'0'}`]}>
       <Route path={'/station-maintenances/:action/:maintenanceId'}>
@@ -68,12 +69,12 @@ describe('<StationMaintenanceAddEditDetail />', () => {
       expect(mockGetStations).toHaveBeenCalledTimes(1);
     });
 
-    const stationAutocomplete = screen.getByTestId('station-selection')  as HTMLInputElement;
+    const stationAutocomplete = screen.getByTestId('station-selection') as HTMLInputElement;
     let stationSearch = within(stationAutocomplete).getByRole('combobox');
 
     stationAutocomplete.focus();
     fireEvent.change(stationSearch as Element, {
-      target: { value: "mockedStations.stationsList[0].stationCode)" },
+      target: { value: 'mockedStations.stationsList[0].stationCode)' },
     });
     await waitFor(() => {
       expect(screen.queryByText(mockedStations.stationsList[0].stationCode)).toBeInTheDocument();

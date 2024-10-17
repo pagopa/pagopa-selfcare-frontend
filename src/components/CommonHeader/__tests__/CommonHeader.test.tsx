@@ -1,3 +1,4 @@
+import React from "react";
 import {JwtUser} from '@pagopa/mui-italia';
 import {render} from '@testing-library/react';
 import CommonHeader from '../CommonHeader';

@@ -3,7 +3,7 @@ import {
     mockedDelegatedPSP,
     mockedInstitutionDetailResource,
 } from '../__mocks__/institutionsService';
-import {getBrokerDelegation, getInstitutions} from '../institutionService';
+import {getBrokerDelegation, getInstitutionFullDetail, getInstitutions} from '../institutionService';
 
 describe('InstitutionService test mocked', () => {
     test('Test getBrokerDelegation', async () => {
@@ -13,6 +13,11 @@ describe('InstitutionService test mocked', () => {
 
     test('Test getInstitutions', async () => {
         const response = await getInstitutions('taxCode');
+        expect(response).toMatchObject(mockedInstitutionDetailResource);
+    });
+
+    test('Test getInstitutionFullDetail', async () => {
+        const response = await getInstitutionFullDetail('taxCode');
         expect(response).toMatchObject(mockedInstitutionDetailResource);
     });
 });
@@ -41,6 +46,14 @@ describe('InstitutionService test client', () => {
             .spyOn(BackofficeApi, 'getInstitutions')
             .mockReturnValue(Promise.resolve(mockedInstitutionDetailResource));
         expect(getInstitutions('taxCode')).resolves.not.toThrow();
+        expect(spyOn).toBeCalledTimes(1);
+    });
+
+    test('Test InstitutionService', async () => {
+        const spyOn = jest
+            .spyOn(BackofficeApi, 'getInstitutionFullDetail')
+            .mockReturnValue(Promise.resolve(mockedInstitutionDetailResource));
+        expect(getInstitutionFullDetail('taxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
 });

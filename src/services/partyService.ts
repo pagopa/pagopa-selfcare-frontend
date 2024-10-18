@@ -1,13 +1,19 @@
 import {BackofficeApi} from '../api/BackofficeClient';
-import {institutionDetailResource2Party, institutionResource2Party, Party} from '../model/Party';
+import {BaseParty, institutionBaseResource2BaseParty, institutionResource2Party, Party} from '../model/Party';
 import {mockedParties} from './__mocks__/partyService';
 
-export const fetchParties = (): Promise<Array<Party>> => {
+export const fetchParties = (): Promise<Array<BaseParty>> => {
     /* istanbul ignore if */
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return new Promise((resolve) => resolve(mockedParties));
     } else {
-        return BackofficeApi.getInstitutions(undefined).then((institutionResources) => institutionResources?.institution_detail_list ? institutionResources.institution_detail_list.map(institutionResource2Party) : []);
+        return BackofficeApi.getInstitutions(undefined).then(
+            (institutionResources) =>
+                 institutionResources?.institution_base_list ? 
+            institutionResources.institution_base_list
+                .map(institutionBaseResource2BaseParty) : 
+                []
+            );
     }
 };
 
@@ -22,7 +28,7 @@ export const fetchPartyDetails = (
         );
     }
 
-    return BackofficeApi.getInstitution(partyId).then((institutionResource: any) =>
-        institutionResource ? institutionDetailResource2Party(institutionResource) : null
+    return BackofficeApi.getInstitutionFullDetail(partyId).then((institutionResource: any) =>
+        institutionResource ? institutionResource2Party(institutionResource) : null
     );
 };

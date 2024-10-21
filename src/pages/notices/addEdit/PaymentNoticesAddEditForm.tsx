@@ -203,7 +203,7 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
             }).filter(([_key, value]) => value)
         );
 
-    const enableSubmit = (values: InstitutionUploadData) => {
+    const enableSubmit = (values: InstitutionUploadData, file: File | null) => {
 
         const baseCondition =
             values.fullName !== '' &&
@@ -211,7 +211,9 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
             values.cbill !== '' &&
             values.info !== '' &&
             values.appChannel !== undefined &&
-            values.webChannel !== undefined;
+            values.webChannel !== undefined &&
+            ((file !== undefined && file !== null) ||
+             (values.logo !== undefined && values.logo !== null));
 
         if (hasPoste) {
             return baseCondition &&
@@ -651,7 +653,7 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                 </Stack>
                 <Stack display="flex" justifyContent="flex-end">
                     <Button
-                        disabled={!enableSubmit(formik.values)}
+                        disabled={!enableSubmit(formik.values, file)}
                         color="primary"
                         variant="contained"
                         type="submit"

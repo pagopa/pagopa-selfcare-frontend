@@ -243,8 +243,8 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                 error: reason as Error,
                 techDescription: `An error occurred while adding/editing notice ci data`,
                 toNotify: true,
-                displayableTitle: t('addEditInstitutionsDataPage.errors.addEditTitle'),
-                displayableDescription: t('addEditInstitutionsDataPage.errors.addEditMessage'),
+                displayableTitle: t('addEditInstitutionsDataPage.error.addEditTitle'),
+                displayableDescription: t('addEditInstitutionsDataPage.error.addEditMessage'),
                 component: 'Toast',
             });
         } finally {

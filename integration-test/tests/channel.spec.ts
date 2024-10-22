@@ -1,5 +1,5 @@
 import { Page, test } from '@playwright/test';
-import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToPspUser, checkReturnHomepage } from './utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Channel flow', () => {
@@ -16,8 +16,8 @@ test.describe('Channel flow', () => {
     await page.close();
   });
 
-  test('EC creates channel', async () => {
-    await changeToEcUser(page);
+  test('PSP creates channel', async () => {
+    await changeToPspUser(page);
     await page.getByTestId('channels-test').click();
     await page.getByTestId('create-channel').click();
     await page.waitForTimeout(2000);
@@ -31,7 +31,7 @@ test.describe('Channel flow', () => {
   });
 
   test('Pagopa Operator request edit', async () => {
-    await changeToEcUser(page, true);
+    await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
     await page.getByTestId('tab-toBeValidated').click();
     await page.getByTestId('search-input').click();
@@ -48,8 +48,8 @@ test.describe('Channel flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('EC modify channel', async () => {
-    await changeToEcUser(page);
+  test('PSP modify channel', async () => {
+    await changeToPspUser(page);
     await page.getByTestId('channels-test').click();
     await page.getByTestId('tab-toBeValidated').click();
     await page.getByTestId('search-input').click();
@@ -67,7 +67,7 @@ test.describe('Channel flow', () => {
   });
 
   test('Pagopa Operator approves channel', async () => {
-    await changeToEcUser(page, true);
+    await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
     await page.getByTestId('tab-toBeValidated').click();
     await page.getByTestId('search-input').click();
@@ -87,35 +87,34 @@ test.describe('Channel flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('EC associate another EC to Station', async () => {
-    await changeToEcUser(page);
-    await page.getByTestId('stations-test').click();
+  test('PSP associate another PSP to Channel', async () => {
+    await changeToPspUser(page);
+    await page.getByTestId('channels-test').click();
     await page.getByTestId('search-input').click();
     await page.getByTestId('search-input').fill(channelId);
     await page.waitForTimeout(1000);
     await page.getByLabel('more').click();
-    await page.getByRole('link', { name: 'Gestisci EC' }).click();
-    await page.getByRole('link', { name: 'Associa EC' }).first().click();
-    await page.getByLabel('Cerca EC').click();
-    await page.getByRole('option', { name: 'EC Signed Direct' }).click();
-    await page.getByRole('combobox', { name: '​', exact: true }).click();
-    await page.getByRole('option', { name: '01' }).click();
+    await page.getByRole('link', { name: 'Gestisci PSP' }).click();
+    await page.getByRole('link', { name: 'Associa PSP' }).first().click();
+    await page.getByTestId('psp-selection-search').click();
+    await page.getByTestId('psp-selection-search').fill('PSP');
+    await page.getByRole('button', { name: 'PSP DEMO DIRECT' }).click();
     await page.getByTestId('confirm-btn-test').click();
     await checkReturnHomepage(page);
   });
 
-  test('EC dissociate another EC from station', async () => {
-    await changeToEcUser(page);
-    await page.getByTestId('stations-test').click();
+  test('PSP dissociate another PSP from Channel', async () => {
+    await changeToPspUser(page);
+    await page.getByTestId('channels-test').click();
     await page.getByTestId('search-input').click();
     await page.getByTestId('search-input').fill(channelId);
     await page.waitForTimeout(1000);
     await page.getByLabel('more').click();
-    await page.getByRole('link', { name: 'Gestisci EC' }).click();
+    await page.getByRole('link', { name: 'Gestisci PSP' }).click();
     await page.waitForTimeout(1000);
     await page.getByLabel('more').click();
-    await page.getByTestId('dissociate-action').click();
-    await page.getByTestId('confirm-button-modal-test').click();
+    await page.getByTestId('dissociate-99999000011').click();
+    await page.getByRole('button', { name: 'Dissocia PSP' }).click();
     await checkReturnHomepage(page);
   });
 });

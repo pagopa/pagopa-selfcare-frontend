@@ -1,7 +1,7 @@
 import fs from 'fs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 
-export function createJWT(org_id: string): string {
+export function createJWT(org_id: string, isOperator?: boolean): string {
   // eslint-disable-next-line functional/no-let
   let cert: string | Buffer | undefined = process.env.KEY_PEM;
   if (!cert) {
@@ -16,7 +16,7 @@ export function createJWT(org_id: string): string {
     uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
     name: 'Anselmo',
     family_name: 'Sartori',
-    email: 'furiovitale@martino.it',
+    email: isOperator ? 'operatorePagopa@test.it' : 'furiovitale@martino.it',
     org_id,
     org_vat: '00000000000',
     org_party_role: 'MANAGER',

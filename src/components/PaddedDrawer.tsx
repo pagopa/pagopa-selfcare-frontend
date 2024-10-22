@@ -11,6 +11,7 @@ export const PaddedDrawer = ({
                                  backButtonAction,
                                  onClose = () => setOpenDrawer(false),
                                  drawerButtons,
+                                 paddingX
                              }: {
     openDrawer: boolean;
     setOpenDrawer: Dispatch<SetStateAction<boolean>>;
@@ -19,10 +20,11 @@ export const PaddedDrawer = ({
     backButtonAction?: React.Dispatch<React.MouseEvent<HTMLButtonElement, MouseEvent>>;
     onClose?: () => void;
     drawerButtons?: React.ReactNode;
+    paddingX?: number;
 }) => (
     <Drawer open={openDrawer} onClose={() => onClose()} anchor="right" data-testid="padded-drawer"
             style={{zIndex: 499}}>
-        <Box p={3} py={1} sx={{maxWidth: '420px', minWidth: '420px', minHeight: '65vh', height: "100%"}}>
+        <Box p={3} py={1} px={paddingX} sx={{maxWidth: '420px', minWidth: '420px', minHeight: '65vh', height: "100%"}}>
             <Stack direction="row" justifyContent="space-between">
                 <Box display="flex" justifyContent="flex-start" mb={1}>
                     {hasBackButton && (

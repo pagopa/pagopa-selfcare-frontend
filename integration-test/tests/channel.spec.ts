@@ -1,6 +1,8 @@
 import { Page, test } from '@playwright/test';
 import { changeToPspUser, checkReturnHomepage } from './utils/e2eUtils';
 
+const endpoint = 'https://test.it:80/';
+
 test.setTimeout(100000);
 test.describe('Channel flow', () => {
   // eslint-disable-next-line functional/no-let
@@ -23,7 +25,7 @@ test.describe('Channel flow', () => {
     await page.waitForTimeout(2000);
     channelId = await page.getByTestId('channel-code-test').inputValue();
     await page.getByTestId('target-union-test').click();
-    await page.getByTestId('target-union-test').fill('http://test.it:80/');
+    await page.getByTestId('target-union-test').fill(endpoint);
     await page.getByRole('option', { name: 'Bancomat Pay - BPAY' }).click();
     await page.getByRole('button', { name: 'Conferma' }).click();
     await page.getByTestId('confirm-button-modal-test').click();
@@ -60,7 +62,7 @@ test.describe('Channel flow', () => {
     await page.getByRole('link', { name: 'Modifica' }).click();
     await page.getByTestId('target-union-test').click();
     await page.getByTestId('target-union-test').press('ArrowRight');
-    await page.getByTestId('target-union-test').fill('http://test.it:81/');
+    await page.getByTestId('target-union-test').fill('https://test.it:81/');
     await page.getByRole('button', { name: 'Conferma' }).click();
     await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);

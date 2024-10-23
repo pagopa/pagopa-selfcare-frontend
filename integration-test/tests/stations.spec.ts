@@ -61,12 +61,12 @@ test.describe('Station flow', () => {
     await page.getByTestId('targetConcat-test').fill('test');
     await page.getByTestId('redirectConcat-test').click();
     await page.getByTestId('targetConcat-test').click();
-    await page.getByTestId('targetConcat-test').fill('http://test.it');
+    await page.getByTestId('targetConcat-test').fill('https://test.it');
     await page.getByTestId('redirectConcat-test').click();
-    await page.getByTestId('redirectConcat-test').fill('http://test.it');
+    await page.getByTestId('redirectConcat-test').fill('https://test.it');
     await page.getByTestId('targetPofConcat-test').click();
     await page.getByTestId('targetPofConcat-test').click();
-    await page.getByTestId('targetPofConcat-test').fill('http://test.it');
+    await page.getByTestId('targetPofConcat-test').fill('https://test.it');
     await page.getByTestId('restEndpoint-test').click();
     await page.getByTestId('restEndpoint-test').fill('https://restendpoint.it');
     await page.locator('#odpService').check();

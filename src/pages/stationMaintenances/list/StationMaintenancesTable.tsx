@@ -222,14 +222,16 @@ export default function StationMaintenancesTable({
 
   const handleGetStationMaintenances = (newPage?: number) => {
     setLoading(true);
-    const toPage = newPage ?? 0;
+    if(newPage !== undefined){
+      setPage(newPage);
+    }
     getStationMaintenances({
       brokerTaxCode: selectedParty?.fiscalCode ?? '',
       stationCode: filterStationCode,
       state: filterState,
       year: filterYear,
       limit: pageLimit,
-      page,
+      page: newPage ?? page,
     })
       .then((res: StationMaintenanceListResource) => {
         if (res?.station_maintenance_list && res.station_maintenance_list.length > 0) {
@@ -251,7 +253,6 @@ export default function StationMaintenancesTable({
         });
       })
       .finally(() => {
-        setPage(toPage);
         setLoading(false);
       });
   };

@@ -41,7 +41,7 @@ function AddApiKeyPage() {
   const addError = useErrorDispatcher();
   const orgType = useOrganizationType().orgInfo;
   const products: Array<ConfiguredProductKeys> = getApiKeyProducts(
-    orgType.types.isPsp,
+    orgType.types.isPsp || orgType.types.isPspBroker,
     useFlagValue('payment-notices')
   );
 

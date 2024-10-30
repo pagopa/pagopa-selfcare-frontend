@@ -1,3 +1,4 @@
+import { OrgTypes } from '../hooks/useOrganizationType';
 import { ENV } from '../utils/env';
 
 export type ProductKeys = {
@@ -29,32 +30,45 @@ export const API_KEY_PRODUCTS = {
   BO_EXT_EC: { id: 'BO_EXT_EC', key: 'selfcareboexternalec-' },
   BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
-  ACA: {id: "ACA", key:"aca-"}
+  ACA: { id: 'ACA', key: 'aca-' },
 };
 
+/* eslint-disable functional/immutable-data */
 export const getApiKeyProducts = (
-  isPsp: boolean,
+  orgType: OrgTypes,
   flagPrintNotice: boolean
 ): Array<ConfiguredProductKeys> => {
-  const list = isPsp
-    ? [API_KEY_PRODUCTS.NODOAUTH, API_KEY_PRODUCTS.BO_EXT_PSP]
-    : [
-        API_KEY_PRODUCTS.NODOAUTH,
-        API_KEY_PRODUCTS.GPD,
-        API_KEY_PRODUCTS.GPD_PAY,
-        API_KEY_PRODUCTS.GPD_REP,
-        API_KEY_PRODUCTS.BIZ,
-        API_KEY_PRODUCTS.BO_EXT_EC,
-        API_KEY_PRODUCTS.ACA
-      ];
+  const isPsp = orgType.isPsp || orgType.isPspBroker;
+  const isEc = orgType.isEc || orgType.isEcBroker;
+
+  const list = [API_KEY_PRODUCTS.NODOAUTH];
+
+  if (isPsp) {
+    list.push(API_KEY_PRODUCTS.BO_EXT_PSP);
+  }
+
+  if (isEc) {
+    list.push(
+      API_KEY_PRODUCTS.GPD,
+      API_KEY_PRODUCTS.GPD_PAY,
+      API_KEY_PRODUCTS.GPD_REP,
+      API_KEY_PRODUCTS.BIZ,
+      API_KEY_PRODUCTS.BO_EXT_EC,
+      API_KEY_PRODUCTS.ACA
+    );
+    if (flagPrintNotice) {
+      list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
+    }
+  }
 
   if (ENV.FEATURES.FDR.ENABLED) {
-    // eslint-disable-next-line functional/immutable-data
-    list.push(isPsp ? API_KEY_PRODUCTS.FDR_PSP : API_KEY_PRODUCTS.FDR_ORG);
+    if (isPsp) {
+      list.push(API_KEY_PRODUCTS.FDR_PSP);
+    }
+    if (isEc) {
+      list.push(API_KEY_PRODUCTS.FDR_ORG);
+    }
   }
-  if (flagPrintNotice && !isPsp) {
-    // eslint-disable-next-line functional/immutable-data
-    list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
-  }
+
   return list;
 };

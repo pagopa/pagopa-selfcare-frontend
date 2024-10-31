@@ -49,11 +49,11 @@ export const getApiKeyProducts = (
 
   if (isEc) {
     list.push(
+      API_KEY_PRODUCTS.BO_EXT_EC,
       API_KEY_PRODUCTS.GPD,
       API_KEY_PRODUCTS.GPD_PAY,
       API_KEY_PRODUCTS.GPD_REP,
       API_KEY_PRODUCTS.BIZ,
-      API_KEY_PRODUCTS.BO_EXT_EC,
       API_KEY_PRODUCTS.ACA
     );
     if (flagPrintNotice) {

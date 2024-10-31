@@ -6,7 +6,7 @@ import {useEffect, useState} from 'react';
 import {Party} from '../../../model/Party';
 import {usePermissions} from '../../../hooks/usePermissions';
 import {exportCreditorInstitutionToCSV, exportIbanToCSV, getBrokerExportStatus} from '../../../services/ibanService';
-import {downloadBlobAsCSV} from '../../../utils/common-utils';
+import {downloadBlobAsCSV, formatDateTohhmm} from '../../../utils/common-utils';
 
 type Props = {
     selectedParty?: Party;
@@ -83,7 +83,7 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     {ibanExportUpdatedAt !== undefined &&
                                         <Alert severity="info" sx={{mb: 3}}>
                                             <>Dati aggiornati al {format(ibanExportUpdatedAt, "dd/MM/yyyy")} alle
-                                                ore {format(ibanExportUpdatedAt, "hh:mm")}</>
+                                                ore {formatDateTohhmm(ibanExportUpdatedAt)}</>
                                         </Alert>
                                     }
 
@@ -112,7 +112,7 @@ const DownloadSection = ({selectedParty}: Props) => {
                                     {ciExportUpdatedAt !== undefined &&
                                         <Alert severity="info" sx={{mb: 3}}>
                                             <>Dati aggiornati al {format(ciExportUpdatedAt, "dd/MM/yyyy")} alle
-                                                ore {format(ciExportUpdatedAt, "hh:mm")}</>
+                                                ore {formatDateTohhmm(ciExportUpdatedAt)}</>
                                         </Alert>
                                     }
                                     {ciExportUpdatedAt === undefined &&

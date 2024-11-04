@@ -69,7 +69,7 @@ jobs:
       - name: Run Integration Tests Playwright
         shell: bash
         run: |
-          cd ./e2e
+          cd ./integration-test
           yarn install
           npx playwright install --with-deps
 

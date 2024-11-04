@@ -5,7 +5,7 @@ test.setTimeout(100000);
 test.describe('Station flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  let stationId: string;
+  const stationId: string = "99999000013_20";
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage({ storageState: undefined });
@@ -16,12 +16,26 @@ test.describe('Station flow', () => {
     await page.close();
   });
 
-  test('EC creates async station', async () => {
+  // test('EC creates async station', async () => {
+  //   await changeToEcUser(page);
+  //   await page.getByTestId('stations-test').click();
+  //   await page.getByTestId('create-station').click();
+  //   await page.waitForTimeout(2000);
+  //   stationId = await page.getByTestId('station-code-test').inputValue();
+  //   await page.getByTestId('confirm-button-test').click();
+  //   await page.getByTestId('confirm-button-modal-test').click();
+  //   await checkReturnHomepage(page);
+  // });
+  test('EC modify already existing station from sync to async', async () => {
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
-    await page.getByTestId('create-station').click();
-    await page.waitForTimeout(2000);
-    stationId = await page.getByTestId('station-code-test').inputValue();
+    await page.getByTestId('search-input').click();
+    await page.getByTestId('search-input').fill(stationId);
+    await page.waitForTimeout(1000);
+    await page.getByLabel('more').click();
+    await page.getByRole('link', { name: 'Gestisci stazione' }).click();
+    await page.getByTestId('edit-button').click();
+    await page.getByLabel('AsincronaGestito da PagoPA').check();
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);

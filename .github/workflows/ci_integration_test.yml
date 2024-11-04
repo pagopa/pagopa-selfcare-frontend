@@ -65,28 +65,11 @@ jobs:
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
           node-version: 18.15.0
-
-      - name: Run Integration Tests Puppeteer
-        shell: bash
-        run: |
-          
-          export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
-          if [ "${{ inputs.environment || 'dev' }}" = "local" ]; then
-            export FE_URL=https://icy-island-050778e03-${{ github.event.number }}.westeurope.5.azurestaticapps.net/ui
-          fi
-          
-          if [ "${{ inputs.environment || 'dev' }}" = "dev" ]; then
-            export FE_URL="https://selfcare.dev.platform.pagopa.it/ui"
-          fi
-
-          cd ./integration-test
-          yarn install
-          yarn run cucumber
       
       - name: Run Integration Tests Playwright
         shell: bash
         run: |
-          cd ./e2e
+          cd ./integration-test
           yarn install
           npx playwright install --with-deps
 

@@ -9,6 +9,10 @@ export enum BundleTypes {
 }
 
 export const DEV_URL = 'https://selfcare.dev.platform.pagopa.it/ui';
+export const BASE_BE_URL = 'https://api.dev.platform.pagopa.it';
+export const BACKOFFICE_BE_URL = BASE_BE_URL + '/backoffice/v1';
+export const MARKETPLACE_BE_URL = BASE_BE_URL + '/afm/marketplace-service/v1';
+
 export const PSP_DEMO_DIRECT = '99999000011';
 export const PSP_DEMO_DIRECT_CODE = 'ABI50004';
 

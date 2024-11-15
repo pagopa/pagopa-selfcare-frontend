@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.39.2-1-PPANTT-182-new-ec-roles",
+  "version": "1.39.3",
   "homepage": "ui",
   "private": true,
   "scripts": {

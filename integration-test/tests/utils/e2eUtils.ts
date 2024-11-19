@@ -12,6 +12,7 @@ export const DEV_URL = 'https://selfcare.dev.platform.pagopa.it/ui';
 export const BASE_BE_URL = 'https://api.dev.platform.pagopa.it';
 export const BACKOFFICE_BE_URL = BASE_BE_URL + '/backoffice/v1';
 export const MARKETPLACE_BE_URL = BASE_BE_URL + '/afm/marketplace-service/v1';
+
 export const PSP_DEMO_DIRECT = '99999000011';
 export const PSP_DEMO_DIRECT_CODE = 'ABI50004';
 
@@ -21,16 +22,16 @@ export const ORG_ID = {
   PSP_DEMO_DIRECT: '5b7130fb-dbe1-4e3b-b02b-2a9cfaf54602',
 };
 
-export async function login(page: Page, org_id: string = ORG_ID.COMUNE_FROSINONE) {
+export async function login(page: Page, org_id: string = ORG_ID.COMUNE_FROSINONE, isOperator?:boolean) {
   const feURL: string = process.env.FE_URL ?? DEV_URL;
-  const jwt = createJWT(org_id); // id Comune di Frosinone
+  const jwt = createJWT(org_id, isOperator); // id Comune di Frosinone
   await page.goto(feURL + '#logged=forced');
-  await page.evaluate((jwt) => {
+  await page.evaluate(({jwt, isOperator}) => {
     const user = {
       uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
       name: 'Anselmo',
       surname: 'Sartori',
-      email: 'furiovitale@martino.it',
+      email: isOperator ? 'operatorePagopa@test.it' : 'furiovitale@martino.it'
     };
     const tos = {
       id: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
@@ -39,9 +40,13 @@ export async function login(page: Page, org_id: string = ORG_ID.COMUNE_FROSINONE
     window.localStorage.setItem('acceptTOS', JSON.stringify(tos));
     window.localStorage.setItem('user', JSON.stringify(user));
     window.localStorage.setItem('token', jwt);
-  }, jwt);
+  }, {jwt, isOperator});
   await page.waitForTimeout(1000);
   await page.goto(feURL, { waitUntil: 'load' });
+}
+
+export async function isOperator(page: Page){
+  await page.getByText('Operatore PagoPA');
 }
 
 export async function checkReturnHomepage(page: Page) {
@@ -49,12 +54,12 @@ export async function checkReturnHomepage(page: Page) {
   await page.getByTestId('commission-bundles-test').click();
 }
 
-export async function changeToEcUser(page: Page) {
-  await login(page, ORG_ID.EC_DEMO_DIRECT);
+export async function changeToEcUser(page: Page, isOperator?: boolean) {
+  await login(page, ORG_ID.EC_DEMO_DIRECT, isOperator);
 }
 
-export async function changeToPspUser(page: Page) {
-  await login(page, ORG_ID.PSP_DEMO_DIRECT);
+export async function changeToPspUser(page: Page, isOperator?: boolean) {
+  await login(page, ORG_ID.PSP_DEMO_DIRECT, isOperator);
 }
 
 export function getTodayDate() {

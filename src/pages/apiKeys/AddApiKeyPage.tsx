@@ -30,6 +30,7 @@ import ROUTES from '../../routes';
 import { createInstitutionApiKeys, getInstitutionApiKeys } from '../../services/apiKeyService';
 import { LOADING_TASK_API_KEY_GENERATION } from '../../utils/constants';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
+import { useOrganizationType } from '../../hooks/useOrganizationType';
 
 function AddApiKeyPage() {
   const { t } = useTranslation();
@@ -38,8 +39,9 @@ function AddApiKeyPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const setLoading = useLoading(LOADING_TASK_API_KEY_GENERATION);
   const addError = useErrorDispatcher();
+  const orgType = useOrganizationType().orgInfo;
   const products: Array<ConfiguredProductKeys> = getApiKeyProducts(
-    selectedParty?.institutionType === 'PSP',
+    orgType.types,
     useFlagValue('payment-notices')
   );
 

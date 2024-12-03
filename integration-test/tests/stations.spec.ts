@@ -133,7 +133,7 @@ test.describe('Station flow', () => {
     await page.getByTestId('search-input').click();
     await page.getByTestId('search-input').fill(stationId);
     await page.waitForTimeout(1000);
-    await page.getByLabel('more').click();
+    await page.getByRole('row', { name: 'EC Signed Direct 99999000004' }).getByLabel('more').click();
     await page.getByRole('link', { name: 'Gestisci EC' }).click();
     await page.waitForTimeout(1000);
     await page.getByLabel('more').click();

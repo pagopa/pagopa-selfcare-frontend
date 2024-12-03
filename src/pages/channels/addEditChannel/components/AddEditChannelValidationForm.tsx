@@ -52,7 +52,7 @@ Props) => {
 
   const oldConnectionValue =
     ENV.ENV === 'prod' ? `http://10.102.1.85:8080` : `http://10.101.1.95:8080`;
-  const newConnectionValue = ENV.ENV === 'prod' ? `http://0.79.20.35:80` : `http://10.79.20.33:80`;
+  const newConnectionValue = ENV.ENV === 'prod' ? `http://10.79.20.35:80` : `http://10.79.20.33:80`;
 
   const proxyOptions = [
     {

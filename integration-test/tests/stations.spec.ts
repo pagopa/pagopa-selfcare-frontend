@@ -5,7 +5,7 @@ test.setTimeout(100000);
 test.describe('Station flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
-  const stationId: string = "99999000013_20";
+  const stationId: string = "99999000013_17";
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage({ storageState: undefined });

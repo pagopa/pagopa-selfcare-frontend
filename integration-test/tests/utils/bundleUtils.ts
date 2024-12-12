@@ -72,7 +72,8 @@ export async function validateBundle(bundleName: string, bundleType: string) {
     }
   );
   try {
-    console.log('Validate bundle update error', await responseUpdate.text());
+    const responseText = await responseUpdate.text();
+    console.log('Validate bundle update error: ', responseText);
   } finally {
     expect(responseUpdate.ok).toBeTruthy();
   }
@@ -109,7 +110,8 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
         }
       );
       if (!responseDelete.ok) {
-        console.log('Invalidate bundle delete error', await responseDelete.text());
+        const responseText = await responseDelete.text();
+        console.log('Invalidate bundle delete error: ', responseText);
       }
       expect(responseDelete.status === 200 || responseDelete.status === 400).toBeTruthy();
 
@@ -130,7 +132,8 @@ export async function invalidateAllBundles(bundleName: string, bundleType: Bundl
         }
       );
       if (!responseUpdate.ok) {
-        console.log('Invalidate bundle update error', await responseUpdate.text());
+        const responseText = await responseUpdate.text();
+        console.log('Invalidate bundle update error: ', responseText);
       }
       expect(responseUpdate.ok).toBeTruthy();
     }
@@ -146,7 +149,8 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
     },
   });
   try {
-    console.log('Delete all expired bundles response', await response.text());
+    const responseText = await response.text();
+    console.log('Delete all expired bundles response: ', responseText);
   } finally {
     expect(response.ok).toBeTruthy();
   }

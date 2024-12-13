@@ -197,12 +197,9 @@ export default function SideMenu() {
           <React.Fragment>
             <Divider sx={{ marginY: 1 }} />
 
-            {/* TODO ADD FEATURE FLAG TO INFRA */}
-            {
-              /* useFlagValue('quicksight-dashboard') && */ userHasPermission(
-                'quicksight-dashboard'
-              ) && <QuicksightDashboardSidenavItem />
-            }
+            {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') && (
+              <QuicksightDashboardSidenavItem />
+            )}
 
             <SidenavItem
               title={t('sideMenu.users.title')}

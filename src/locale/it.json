@@ -1746,6 +1746,14 @@
     },
     "stationMaintenances": {
       "title": "Manutenzioni programmate"
+    },
+    "quicksightDashboard": {
+      "title": "Dashboard",
+      "modal": {
+        "userSubscribedNotAdmin": "Utente non abilitato alla visualizzazione della dashboard, contatta il tuo amministratore per ulteriori informazioni",
+        "userNotSubscribedNotAdmin": "Contatta il tuo amministratore per sottoscrivere il servizio",
+        "userNotSubscribedAdmin": "Sottoscrivi il servizio"
+      }
     }
   },
   "header": {
@@ -1769,6 +1777,7 @@
   },
   "general": {
     "noDataLabel": "Nessun risultato",
+    "ok": "Ok",
     "exit": "Esci",
     "showMore": "Mostra di più",
     "discoverMore": "Scopri di più",
@@ -1826,7 +1835,8 @@
     "loading": "Caricamento...",
     "fromLower": "da",
     "atLower": "il",
-    "year": "Anno"
+    "year": "Anno",
+    "attention": "Attenzione"
   },
   "ANY": "Tutti"
 }

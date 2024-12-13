@@ -25,6 +25,7 @@ import { userIsPagopaOperator } from '../../hooks/useUserRole';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import SidenavItem from './SidenavItem';
+import QuicksightDashboardSidenavItem from './navItems/QuicksightDashboardSidenavItem';
 
 /** The side menu of the application */
 export default function SideMenu() {
@@ -195,6 +196,13 @@ export default function SideMenu() {
 
           <React.Fragment>
             <Divider sx={{ marginY: 1 }} />
+
+            {/* TODO ADD FEATURE FLAG TO INFRA */}
+            {
+              /* useFlagValue('quicksight-dashboard') && */ userHasPermission(
+                'quicksight-dashboard'
+              ) && <QuicksightDashboardSidenavItem />
+            }
 
             <SidenavItem
               title={t('sideMenu.users.title')}

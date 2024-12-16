@@ -38,7 +38,7 @@
     "@mui/lab": "^5.0.0-alpha.80",
     "@mui/material": "^5.8.2",
     "@mui/system": "^5.15.20",
-    "@mui/x-data-grid": "5.17.8",
+    "@mui/x-data-grid": "7.23.2",
     "@mui/x-data-grid-generator": "^6.18.4",
     "@mui/x-date-pickers": "^5.0.3",
     "@pagopa/mui-italia": "0.8.12",

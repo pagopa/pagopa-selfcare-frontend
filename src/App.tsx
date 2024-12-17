@@ -60,7 +60,7 @@ import { TosAndPrivacy } from './pages/tosAndPrivacy/TosAndPrivacy';
 import routes from './routes';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { rewriteLinks } from './utils/onetrust-utils';
-import QuicksightDashboardSidenavItem from './components/SideMenu/navItems/QuicksightDashboardPage';
+import QuicksightDashboardPage from './components/SideMenu/navItems/QuicksightDashboardPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -347,7 +347,7 @@ const SecuredRoutes = withLogin(
                     permission="quicksight-dashboard"
                     flagValue="quicksight-dashboard"
                   >
-                    <QuicksightDashboardSidenavItem />
+                    <QuicksightDashboardPage />
                   </ProtectedRoute>
                 </Route>
 

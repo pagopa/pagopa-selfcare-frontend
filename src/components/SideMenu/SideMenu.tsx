@@ -14,7 +14,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FilePresentOutlinedIcon from '@mui/icons-material/FilePresentOutlined';
-import { Handyman } from '@mui/icons-material';
+import { Analytics, Handyman } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
@@ -25,7 +25,6 @@ import { userIsPagopaOperator } from '../../hooks/useUserRole';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import SidenavItem from './SidenavItem';
-import QuicksightDashboardSidenavItem from './navItems/QuicksightDashboardSidenavItem';
 
 /** The side menu of the application */
 export default function SideMenu() {
@@ -194,12 +193,21 @@ export default function SideMenu() {
               />
             )}
 
+          {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') && (
+            <SidenavItem
+              title={t('sideMenu.quicksightDashboard.title')}
+              handleClick={() => onExit(() => history.push(ROUTES.QUICKSIGHT_DASHBOARD))}
+              icon={Analytics}
+              isSelected={
+                pathname === ROUTES.QUICKSIGHT_DASHBOARD ||
+                pathname.startsWith(ROUTES.QUICKSIGHT_DASHBOARD)
+              }
+              dataTestId={'quicksight-nav-test'}
+            />
+          )}
+
           <React.Fragment>
             <Divider sx={{ marginY: 1 }} />
-
-            {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') && (
-              <QuicksightDashboardSidenavItem />
-            )}
 
             <SidenavItem
               title={t('sideMenu.users.title')}

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Close } from '@mui/icons-material';
 import { Box, Button, Dialog, IconButton, Typography } from '@mui/material';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import LaunchIcon from '@mui/icons-material/Launch';
 import SidenavItem from '../SidenavItem';
 import { LOADING_TASK_QUICKSIGHT_DASHBOARD } from '../../../utils/constants';
 import { getEmbedUrlForAnonymousUser } from '../../../services/quicksightDashboardService';
@@ -42,8 +43,8 @@ export default function QuicksightDashboardSidenavItem() {
       <SidenavItem
         title={t('sideMenu.quicksightDashboard.title')}
         handleClick={() => openQuicksightDashboard()}
-        isLink={true}
         icon={AnalyticsIcon}
+        endIcon={LaunchIcon}
         dataTestId="quicksight-dashboard-test"
       />
       {openModal &&

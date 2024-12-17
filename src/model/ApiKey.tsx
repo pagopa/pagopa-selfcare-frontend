@@ -31,6 +31,7 @@ export const API_KEY_PRODUCTS = {
   BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
   ACA: { id: 'ACA', key: 'aca-' },
+  QI_FDR_KPI: { id: "QI_FDR_KPI", key: 'qifdrkpiservice-'}
 };
 
 /* eslint-disable functional/immutable-data */
@@ -63,6 +64,7 @@ export const getApiKeyProducts = (
 
   if (ENV.FEATURES.FDR.ENABLED) {
     if (isPsp) {
+      list.push(API_KEY_PRODUCTS.QI_FDR_KPI);
       list.push(API_KEY_PRODUCTS.FDR_PSP);
     }
     if (isEc) {

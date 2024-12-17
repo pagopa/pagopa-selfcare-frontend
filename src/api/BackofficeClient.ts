@@ -104,6 +104,7 @@ import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceH
 import { CreateStationMaintenance } from './generated/portal/CreateStationMaintenance';
 import { InstitutionBaseResources } from './generated/portal/InstitutionBaseResources';
 import { InstitutionDetail } from './generated/portal/InstitutionDetail';
+import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1628,6 +1629,19 @@ export const BackofficeApi = {
         'broker-tax-code': brokerTaxCode,
         'maintenance-id': maintenanceId,
         body: createStationMaintenance,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+  },
+
+  quicksightDashboard: {
+    getEmbedUrlForAnonymousUser: async ({
+      pspTaxCode,
+    }: {
+      pspTaxCode: string;
+    }): Promise<QuicksightEmbedUrlResponse> => {
+      const result = await backofficeClient.getEmbedUrlForAnonymousUser({
+        'psp-tax-code': pspTaxCode,
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

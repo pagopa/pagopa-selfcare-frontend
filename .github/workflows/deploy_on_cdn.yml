@@ -68,14 +68,17 @@ jobs:
 
           if [ "${{ inputs.environment }}" = "dev" ]; then
             export REACT_APP_FEATURES_FDR_ENABLED='true'
+            export REACT_APP_FEATURES_QI_FDR_KPI_ENABLED='true'
           fi
 
           if [ "${{ inputs.environment }}" = "uat" ]; then
             export REACT_APP_FEATURES_FDR_ENABLED='true'
+            export REACT_APP_FEATURES_QI_FDR_KPI_ENABLED='true'
           fi
 
           if [ "${{ inputs.environment }}" = "prod" ]; then
             export REACT_APP_FEATURES_FDR_ENABLED='false'
+            export REACT_APP_FEATURES_QI_FDR_KPI_ENABLED='false'
           fi
 
           yarn install

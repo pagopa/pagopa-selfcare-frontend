@@ -254,7 +254,8 @@
       "BO_EXT_EC": "Backoffice External (EC)",
       "BO_EXT_PSP": "Backoffice External (PSP)",
       "PRINT_NOTICE": "Stampa Avvisi",
-      "ACA": "ACA - Conferimento delle posizioni debitorie"
+      "ACA": "ACA - Conferimento delle posizioni debitorie",
+      "QI_FDR_KPI": "FdR - Quality Improvement KPI API"
     }
   },
   "channelsPage": {

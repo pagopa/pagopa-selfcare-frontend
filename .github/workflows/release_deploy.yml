@@ -22,6 +22,16 @@ on:
           - skip_or_promote
           - new_release
           - breaking_change
+      feature_fdr:
+        required: false
+        type: boolean
+        description: Feature FDR api key
+        default: false
+      feature_qi_fdr:
+        required: false
+        type: boolean
+        description: Feature Quality Improvement KPI API api key
+        default: false
 
 
 permissions:
@@ -159,6 +169,8 @@ jobs:
     uses: ./.github/workflows/deploy_on_cdn.yml
     with:
       environment: ${{ needs.setup.outputs.environment }}
+      feature_fdr: ${{ inputs.feature_fdr }}
+      feature_qi_fdr: ${{ inputs.feature_qi_fdr }}
     secrets: inherit
 
   notify:

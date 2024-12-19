@@ -59,13 +59,14 @@ const ApiKeysPage = () => {
                 subTitle={t('apiKeysPage.subtitle')}
                 variantTitle="h4"
                 variantSubTitle="body1"
+                mbSubTitle={1}
             />
             {history.location.state && (history.location.state as any).alertSuccessMessage && (
                 <Alert severity="success" variant="outlined">
                     {(history.location.state as any).alertSuccessMessage}
                 </Alert>
             )}
-            <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} mb={4}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2} mb={4}>
                 <Box>
                     <Typography variant="h6">{t('apiKeysPage.decription')}</Typography>
                 </Box>

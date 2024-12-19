@@ -7,6 +7,16 @@ on:
         required: true
         description: The name of the environment where to deploy
         type: string
+      feature_fdr:
+        required: false
+        type: boolean
+        description: Feature FDR api key
+        default: false
+      feature_qi_fdr:
+        required: false
+        type: boolean
+        description: Feature Quality Improvement KPI API
+        default: false
 
 
 permissions:
@@ -66,17 +76,8 @@ jobs:
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
 
-          if [ "${{ inputs.environment }}" = "dev" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ inputs.environment }}" = "uat" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='true'
-          fi
-
-          if [ "${{ inputs.environment }}" = "prod" ]; then
-            export REACT_APP_FEATURES_FDR_ENABLED='false'
-          fi
+          export REACT_APP_FEATURES_FDR_ENABLED='${{ inputs.feature_fdr }}'
+          export REACT_APP_FEATURES_QI_FDR_KPI_ENABLED='${{ inputs.feature_qi_fdr }}'
 
           yarn install
           if [ "${{ inputs.environment }}" = "dev" ]; then

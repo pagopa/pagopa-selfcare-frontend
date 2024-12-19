@@ -72,7 +72,7 @@ jobs:
     with:
       environment: 'uat'
       feature_fdr: true
-      feature_qi_fdr: false
+      feature_qi_fdr: true
     secrets: inherit
 
 #  integration_test:

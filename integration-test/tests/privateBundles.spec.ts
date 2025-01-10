@@ -181,8 +181,8 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByRole('option', { name: 'EC DEMO DIRECT' }).click();
   await page.getByTestId('add-recipients-button').click();
   await page.getByLabel('Cerca EC').click();
-  await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('COMUNE');
-  await page.getByLabel('Comune di Lorem Ipsum').click();
+  await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('Comune');
+  await page.getByRole('heading', { name: 'Comune di Test' }).click();
   await page.getByTestId('remove-selected-ec-btn-id-test').nth(1).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();

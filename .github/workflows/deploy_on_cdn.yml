@@ -95,12 +95,15 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-
+          
+      # https://github.com/Azure/azure-cli/issues/30635#issuecomment-2585039718 
+      # add tdnf install -y azcopy                
       - name: Deploy ${{ inputs.environment }}
         uses: azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd # v1
         with:
           azcliversion: latest
           inlineScript: |
+            tdnf install -y azcopy;
             az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
 
 

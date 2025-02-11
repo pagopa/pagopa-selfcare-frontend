@@ -84,11 +84,11 @@ export const removeDateZoneInfo = (value: Date | undefined): Date | undefined =>
   return new Date(value.getTime() - userTimezoneOffset);
 };
 
-export const removeDateZoneInfoGMT2 = (value: Date | undefined): Date | undefined => {
+export const removeDateZoneInfoGMT1 = (value: Date | undefined): Date | undefined => {
   if (!value) {
     return value;
   }
-  const userTimezoneOffset = (value.getTimezoneOffset() + 120) * 60000;
+  const userTimezoneOffset = (value.getTimezoneOffset() + 60) * 60000;
   return new Date(value.getTime() - userTimezoneOffset);
 };
 

@@ -1,4 +1,3 @@
-import { Institution, Institution_typeEnum } from '../../api/generated/portal/Institution';
 import { InstitutionBaseResources } from '../../api/generated/portal/InstitutionBaseResources';
 import { Party } from '../../model/Party';
 import { PartyDetail } from '../../model/PartyDetail';
@@ -444,26 +443,6 @@ export const mockedPartyDetail: PartyDetail = {
   digitalAddress: 'protocollo@comune.varese.legalmail.it',
   address: 'Piazza della Scala, 2 - 20121 Milano',
   zipCode: '000123',
-};
-
-export const institutionMock: Institution = {
-  attributes: [
-    {
-      code: '',
-      description: '',
-      origin: '',
-    },
-  ],
-  description: '',
-  external_id: 'pspAdminSigned',
-  id: '26a0aabf-ce6a-4dfa-af4e-d4f744a8b944',
-  institution_type: 'PSP' as Institution_typeEnum,
-  origin: 'SELC',
-  origin_id: 'PSP_pspAdminSigned',
-  tax_code: 'pspAdminSigned_DIRECT',
-  zip_code: '213454',
-  address: 'VIA DEI pspAdminSigned 20, ROMA',
-  digital_address: 'pectest@pec.pagopa.it',
 };
 
 export const verifyFetchPartiesMockExecution = (parties: Array<Party>) => {

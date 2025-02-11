@@ -60,7 +60,6 @@ import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { Iban } from './generated/portal/Iban';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
-import { Institution } from './generated/portal/Institution';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
@@ -232,13 +231,6 @@ export const BackofficeApi = {
 
   getInstitutionFullDetail: async (institutionId: string): Promise<InstitutionDetail> => {
     const result = await backofficeClient.getInstitutionFullDetail({
-      'institution-id': institutionId,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getInstitution: async (institutionId: string): Promise<Institution> => {
-    const result = await backofficeClient.getInstitution({
       'institution-id': institutionId,
     });
     return extractResponse(result, 200, onRedirectToLogin);

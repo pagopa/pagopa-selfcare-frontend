@@ -4,19 +4,22 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { getEmbedUrlForAnonymousUser } from '../../../services/quicksightDashboardService';
 import { useUserRole } from '../../../hooks/useUserRole';
 import SideMenuLayout from '../SideMenuLayout';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 
 const componentPath = 'sideMenu.quicksightDashboard.modal';
 export default function QuicksightDashboardPage() {
   const { t } = useTranslation();
   const { userIsPspAdmin } = useUserRole();
+  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState<boolean>(true);
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
 
   function openQuicksightDashboard() {
     const userIsSubscribed = true; // GET USER PRODUCTS TO SEE IF IT'S SUBSCRIBED
 
-    if (userIsPspAdmin && userIsSubscribed) {
-      getEmbedUrlForAnonymousUser('roma') // TODO PASS PSP ID / TAX CODE
+    if (userIsPspAdmin && userIsSubscribed && selectedParty?.partyId) {
+      getEmbedUrlForAnonymousUser(selectedParty?.partyId)
         .then((url) => {
           if (url.embedUrl) {
             setEmbedUrl(url.embedUrl);

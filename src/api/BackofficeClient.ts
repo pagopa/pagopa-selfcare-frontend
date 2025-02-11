@@ -1636,12 +1636,12 @@ export const BackofficeApi = {
 
   quicksightDashboard: {
     getEmbedUrlForAnonymousUser: async ({
-      pspTaxCode,
+      institutionId,
     }: {
-      pspTaxCode: string;
+      institutionId: string;
     }): Promise<QuicksightEmbedUrlResponse> => {
       const result = await backofficeClient.getEmbedUrlForAnonymousUser({
-        'psp-tax-code': pspTaxCode,
+        'institution-id': institutionId,
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

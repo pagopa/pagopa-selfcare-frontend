@@ -34,7 +34,7 @@ import {
   StationMaintenanceActionType,
   StationMaintenanceState,
 } from '../../../model/StationMaintenance';
-import { datesAreOnSameDay, formatDateToDDMMYYYYhhmmWithTimezone, removeDateZoneInfoGMT1 } from '../../../utils/common-utils';
+import { datesAreOnSameDay, formatDateToDDMMYYYYhhmmWithTimezone, removeDateZoneInfoGMT } from '../../../utils/common-utils';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getStations } from '../../../services/stationService';
@@ -254,11 +254,12 @@ export default function StationMaintenanceAddEditDetail() {
       }
       let promise;
       const body: CreateStationMaintenance = {
-        end_date_time: removeDateZoneInfoGMT1(mergeDateAndHours(dateTo, hoursTo))!,
+        end_date_time: removeDateZoneInfoGMT(mergeDateAndHours(dateTo, hoursTo))!,
         stand_in: standIn,
-        start_date_time: removeDateZoneInfoGMT1(mergeDateAndHours(dateFrom, hoursFrom))!,
+        start_date_time: removeDateZoneInfoGMT(mergeDateAndHours(dateFrom, hoursFrom))!,
         station_code: selectedStation?.stationCode ?? '',
       };
+      console.log(JSON.stringify(body));
       if (action === StationMaintenanceActionType.CREATE) {
         promise = createStationMaintenance({
           brokerTaxCode: selectedParty?.fiscalCode ?? '',

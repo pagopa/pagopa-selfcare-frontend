@@ -84,13 +84,7 @@ export const removeDateZoneInfo = (value: Date | undefined): Date | undefined =>
   return new Date(value.getTime() - userTimezoneOffset);
 };
 
-export const removeDateZoneInfoGMT1 = (value: Date | undefined): Date | undefined => {
-  if (!value) {
-    return value;
-  }
-  const userTimezoneOffset = (value.getTimezoneOffset() + 60) * 60000;
-  return new Date(value.getTime() - userTimezoneOffset);
-};
+export const removeDateZoneInfoGMT = (value: Date | undefined): Date | undefined => value && new Date(value.getTime());
 
 export const formatDateToDDMMYYYYhhmm = (value: any): string =>
   value.toLocaleString('en-GB', {
@@ -109,14 +103,9 @@ export const formatDateTohhmm = (value: any): string =>
 
 export const formatDateToDDMMYYYYhhmmWithTimezone = (value: any, swapMonthDay?: boolean): string => {
   const timeZone = 'Europe/Rome';
-
-  const dt = DateTime.fromJSDate(value, { zone: timeZone });
-  const now = DateTime.now().setZone(timeZone);
-
-  const offset = now.offset - dt.offset;
-  const adjustedDate = dt.plus({ minutes: offset });
-
-  return adjustedDate.toFormat(swapMonthDay ? 'MM/dd/yyyy, HH:mm' : 'dd/MM/yyyy, HH:mm');
+  const utcDate = DateTime.fromISO(value.toISOString(), { zone: "utc" });
+  const localDate = utcDate.setZone(timeZone);
+  return localDate.toFormat(swapMonthDay ? 'MM/dd/yyyy, HH:mm' : 'dd/MM/yyyy, HH:mm');
 };
 
 export const formatDateToYYYYMMDD = (value: any): string => value.toISOString().split('T')[0];

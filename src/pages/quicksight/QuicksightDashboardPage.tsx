@@ -10,7 +10,7 @@ import { partiesSelectors } from '../../redux/slices/partiesSlice';
 const componentPath = 'sideMenu.quicksightDashboard.modal';
 export default function QuicksightDashboardPage() {
   const { t } = useTranslation();
-  const { userIsPspAdmin } = useUserRole();
+  const { userIsPspAdmin, userIsPagopaOperator } = useUserRole();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState<boolean>(true);
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
@@ -18,7 +18,7 @@ export default function QuicksightDashboardPage() {
   function openQuicksightDashboard() {
     const userIsSubscribed = true; // GET USER PRODUCTS TO SEE IF IT'S SUBSCRIBED
 
-    if (userIsPspAdmin && userIsSubscribed && selectedParty?.partyId) {
+    if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) && selectedParty?.partyId) {
       getEmbedUrlForAnonymousUser(selectedParty?.partyId)
         .then((url) => {
           if (url.embedUrl) {

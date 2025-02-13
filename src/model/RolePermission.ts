@@ -142,7 +142,10 @@ export const permissions = {
     ],
     "quicksight-dashboard": [
         ROLE.PSP_ADMIN,
-        ROLE.PSP_DIRECT_ADMIN
+        ROLE.PSP_OPERATOR,
+        ROLE.PSP_DIRECT_ADMIN,
+        ROLE.PSP_DIRECT_OPERATOR,
+        ROLE.PAGOPA_OPERATOR,
     ]
 };
 

@@ -1752,8 +1752,8 @@
       "title": "Dashboard",
       "modal": {
         "userSubscribedNotAdmin": "Non sei abilitato alla visualizzazione della dashboard. Contatta il tuo amministratore per richiedere l'accesso o ulteriori informazioni.",
-        "userNotSubscribedNotAdmin": "Contatta il tuo amministratore per procedere alla sottoscrizione del servizio e richiederne l’accesso.",
-        "userNotSubscribedAdmin": "Servizio non attivo. Procedi alla sottoscrizione del contratto per abilitare la dashboard mediante il seguente link."
+        "userNotSubscribedNotAdmin": "Servizio non attivo. Contatta il tuo amministratore per procedere alla sottoscrizione del servizio e richiederne l’accesso.",
+        "userNotSubscribedAdmin": "Servizio non attivo. Procedi alla sottoscrizione del contratto per abilitare la dashboard."
       }
     }
   },

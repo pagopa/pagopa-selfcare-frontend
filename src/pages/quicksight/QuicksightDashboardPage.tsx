@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { getEmbedUrlForAnonymousUser } from '../../../services/quicksightDashboardService';
-import { useUserRole } from '../../../hooks/useUserRole';
-import SideMenuLayout from '../SideMenuLayout';
-import { useAppSelector } from '../../../redux/hooks';
-import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { getEmbedUrlForAnonymousUser } from '../../services/quicksightDashboardService';
+import { useUserRole } from '../../hooks/useUserRole';
+import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
 
 const componentPath = 'sideMenu.quicksightDashboard.modal';
 export default function QuicksightDashboardPage() {
@@ -49,7 +49,7 @@ export default function QuicksightDashboardPage() {
             {embedUrl &&
               (embedUrl.startsWith('user') ? (
                 <Box>
-                  <Typography variant="h6">{t('general.attention')}</Typography>
+                  <Typography variant="h6" data-testid="no-dashboard-message-id">{t('general.attention')}</Typography>
                   <Typography variant="body1" sx={{ my: 2, pb: 2 }}>
                     {t(`${componentPath}.${embedUrl}`)}
                   </Typography>

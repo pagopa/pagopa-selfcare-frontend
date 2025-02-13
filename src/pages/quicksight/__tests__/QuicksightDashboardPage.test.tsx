@@ -1,6 +1,5 @@
 import { ThemeProvider } from '@mui/material';
 import { theme } from '@pagopa/mui-italia';
-import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import React from 'react';
@@ -17,7 +16,9 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('../../../services/quicksightDashboardService');
+jest.mock('../../../services/quicksightDashboardService', () => ({
+  getEmbedUrlForAnonymousUser: jest.fn(), // mock function
+}));
 
 const renderApp = ({
   injectedStore,

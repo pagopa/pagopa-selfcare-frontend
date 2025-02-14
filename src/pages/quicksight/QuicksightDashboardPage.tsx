@@ -16,7 +16,7 @@ export default function QuicksightDashboardPage() {
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
 
   function openQuicksightDashboard() {
-    const userIsSubscribed = true; // GET USER PRODUCTS TO SEE IF IT'S SUBSCRIBED
+    const userIsSubscribed = true; // TODO: GET USER PRODUCTS TO SEE IF IT'S SUBSCRIBED
 
     if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) && selectedParty?.partyId) {
       getEmbedUrlForAnonymousUser(selectedParty?.partyId)

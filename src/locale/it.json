@@ -1690,7 +1690,7 @@
       "errorGetStations": "E' stato riscontrato un errore durante il recupero delle stazioni",
       "hoursSection": {
         "title": "Quando sarà in manutenzione?",
-        "subtitle": "Timezone: Rome, Italy (GMT +1:00)",
+        "subtitle": "Timezone: Rome, Italy",
         "totalHours": "Totale ore",
         "fromHours": "Dalle ore",
         "toHours": "Alle ore",

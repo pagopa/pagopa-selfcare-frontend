@@ -6,7 +6,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { createStore } from '../../../redux/store';
-import { pspAdminSignedDirect } from '../../../services/__mocks__/partyService';
+import { pspAdminSignedDirect, pspOperatorSignedDirect } from '../../../services/__mocks__/partyService';
 import { getEmbedUrlForAnonymousUser } from '../../../services/quicksightDashboardService';
 import QuicksightDashboardPage from '../QuicksightDashboardPage';
 
@@ -55,7 +55,6 @@ describe('QuicksightDashboardPage', () => {
     jest.clearAllMocks();
   });
 
-
   it('should display the dashboard embed iframe when conditions are met', async () => {
     mockGetEmbedUrlForAnonymousUser.mockResolvedValue({ embedUrl: 'https://example.com' });
 
@@ -66,12 +65,22 @@ describe('QuicksightDashboardPage', () => {
     });
   });
 
-  it('should display an attention message when conditions are not met', async () => {
-    mockGetEmbedUrlForAnonymousUser.mockResolvedValue({});
+  it('should display an attention message with PSP operator', async () => {
+    renderApp({ partyPayload: pspOperatorSignedDirect });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+      expect(screen.queryByTestId('confirm-button-test')).toBeInTheDocument();
+    });
+  });
+
+  it('should display an attention message with error on api call', async () => {
+    mockGetEmbedUrlForAnonymousUser.mockRejectedValue({});
     renderApp({ partyPayload: pspAdminSignedDirect });
 
     await waitFor(() => {
-      expect(screen.queryByTestId('no-dashboard-message-id')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('fade-test')).toBeInTheDocument();
+      expect(screen.queryByTestId('confirm-button-test')).toBeInTheDocument();
     });
   });
 });

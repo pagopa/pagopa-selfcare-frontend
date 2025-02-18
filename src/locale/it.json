@@ -1753,7 +1753,8 @@
       "modal": {
         "userSubscribedNotAdmin": "Non sei abilitato alla visualizzazione della dashboard. Contatta il tuo amministratore per richiedere l'accesso o ulteriori informazioni.",
         "userNotSubscribedNotAdmin": "Servizio non attivo. Contatta il tuo amministratore per procedere alla sottoscrizione del servizio e richiederne l’accesso.",
-        "userNotSubscribedAdmin": "Servizio non attivo. Procedi alla sottoscrizione del contratto per abilitare la dashboard."
+        "userNotSubscribedAdmin": "Servizio non attivo. Procedi alla sottoscrizione del contratto per abilitare la dashboard.",
+        "errorGeneric": "E' stato riscontrato un errore durante il recupero della dashboard"
       }
     }
   },

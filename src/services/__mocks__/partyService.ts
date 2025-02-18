@@ -15,7 +15,7 @@ export const pspAdminSignedDirect: Party = {
   roles: [
     {
       partyRole: 'DELEGATE',
-      roleKey: 'admin', // TODO use real product role
+      roleKey: 'admin-psp', 
       roleLabel: '',
     },
   ],

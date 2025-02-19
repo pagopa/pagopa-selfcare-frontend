@@ -9,6 +9,7 @@ type Props = {
     disabled?: boolean;
     dataTestId?: string;
     isLink?: boolean;
+    endIcon?: SvgIconComponent;
 };
 
 export default function SidenavItem({
@@ -18,7 +19,8 @@ export default function SidenavItem({
                                         icon,
                                         disabled,
                                         dataTestId,
-                                        isLink
+                                        isLink,
+                                        endIcon
                                     }: Props) {
     return (
         <ListItemButton
@@ -37,8 +39,8 @@ export default function SidenavItem({
 
             <ListItemText primary={title}/>
 
-            {isLink && <ListItemIcon>
-                <Icon component={ExitToApp}></Icon>
+            {(isLink || endIcon) && <ListItemIcon>
+                <Icon component={endIcon ?? ExitToApp}></Icon>
             </ListItemIcon>}
         </ListItemButton>
     );

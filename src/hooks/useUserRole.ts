@@ -66,10 +66,10 @@ function mapPtRoles(isPSPBroker: boolean, isECBroker: boolean) {
 
 function mapPspRoles(isPSPBroker: boolean, roleKey: string) {
     if (isPSPBroker) {
-        return roleKey === 'admin' ? ROLE.PSP_DIRECT_ADMIN : ROLE.PSP_DIRECT_OPERATOR;
+        return roleKey === 'admin-psp' ? ROLE.PSP_DIRECT_ADMIN : ROLE.PSP_DIRECT_OPERATOR;
     }
 
-    return roleKey === 'admin' ? ROLE.PSP_ADMIN : ROLE.PSP_OPERATOR;
+    return roleKey === 'admin-psp' ? ROLE.PSP_ADMIN : ROLE.PSP_OPERATOR;
 }
 
 function mapEcRoles(isECBroker: boolean, roleKey: string) {

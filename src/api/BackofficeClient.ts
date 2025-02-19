@@ -60,7 +60,6 @@ import { FeatureFlags } from './generated/portal/FeatureFlags';
 import { Iban } from './generated/portal/Iban';
 import { IbanCreate } from './generated/portal/IbanCreate';
 import { Ibans } from './generated/portal/Ibans';
-import { Institution } from './generated/portal/Institution';
 import { InstitutionApiKeysResource } from './generated/portal/InstitutionApiKeysResource';
 import { InstitutionUploadData } from './generated/portal/InstitutionUploadData';
 import { MaintenanceMessage } from './generated/portal/MaintenanceMessage';
@@ -104,6 +103,7 @@ import { MaintenanceHoursSummaryResource } from './generated/portal/MaintenanceH
 import { CreateStationMaintenance } from './generated/portal/CreateStationMaintenance';
 import { InstitutionBaseResources } from './generated/portal/InstitutionBaseResources';
 import { InstitutionDetail } from './generated/portal/InstitutionDetail';
+import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -231,13 +231,6 @@ export const BackofficeApi = {
 
   getInstitutionFullDetail: async (institutionId: string): Promise<InstitutionDetail> => {
     const result = await backofficeClient.getInstitutionFullDetail({
-      'institution-id': institutionId,
-    });
-    return extractResponse(result, 200, onRedirectToLogin);
-  },
-
-  getInstitution: async (institutionId: string): Promise<Institution> => {
-    const result = await backofficeClient.getInstitution({
       'institution-id': institutionId,
     });
     return extractResponse(result, 200, onRedirectToLogin);
@@ -1628,6 +1621,19 @@ export const BackofficeApi = {
         'broker-tax-code': brokerTaxCode,
         'maintenance-id': maintenanceId,
         body: createStationMaintenance,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+  },
+
+  quicksightDashboard: {
+    getEmbedUrlForAnonymousUser: async ({
+      institutionId,
+    }: {
+      institutionId: string;
+    }): Promise<QuicksightEmbedUrlResponse> => {
+      const result = await backofficeClient.getEmbedUrlForAnonymousUser({
+        'institution-id': institutionId,
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

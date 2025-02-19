@@ -28,7 +28,7 @@
     "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
     "generate:api-portal": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/main/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
     "generate:api-portal-next": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/next/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
-    "generate:api-portal-pr": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/PPANTT-223-new-fdr-kpi-api-sub-key/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
+    "generate:api-portal-pr": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/PPANTT-183-psp-quicksight-dashboard/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
     "generate:api-portal-local": "npm run generate:client",
     "generate:client": "jq 'walk(if type == \"object\" and has(\"parameters\") then .parameters |= map(select(.name != \"X-Request-Id\")) else . end)' ./openApi/portal-api-docs.json > ./openApi/portal-api-docs.json.temp && mv ./openApi/portal-api-docs.json.temp ./openApi/portal-api-docs.json && yarn run clean:api-portal && mkdirp openApi/generated && gen-api-models --api-spec openApi/portal-api-docs.json --out-dir src/api/generated/portal --no-strict --request-types --response-decoders --client && node openApi/scripts/api-portal_fixPostGen.js"
   },

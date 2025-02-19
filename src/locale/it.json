@@ -1747,6 +1747,15 @@
     },
     "stationMaintenances": {
       "title": "Manutenzioni programmate"
+    },
+    "quicksightDashboard": {
+      "title": "pagoPA Insights",
+      "modal": {
+        "userSubscribedNotAdmin": "Non sei abilitato alla visualizzazione della dashboard. Contatta il tuo amministratore per richiedere l'accesso o ulteriori informazioni.",
+        "userNotSubscribedNotAdmin": "Servizio non attivo. Contatta il tuo amministratore per procedere alla sottoscrizione del servizio e richiederne l’accesso.",
+        "userNotSubscribedAdmin": "Servizio non attivo. Procedi alla sottoscrizione del contratto per abilitare la dashboard.",
+        "errorGeneric": "E' stato riscontrato un errore durante il recupero della dashboard"
+      }
     }
   },
   "header": {
@@ -1770,6 +1779,7 @@
   },
   "general": {
     "noDataLabel": "Nessun risultato",
+    "ok": "Ok",
     "exit": "Esci",
     "showMore": "Mostra di più",
     "discoverMore": "Scopri di più",
@@ -1827,7 +1837,8 @@
     "loading": "Caricamento...",
     "fromLower": "da",
     "atLower": "il",
-    "year": "Anno"
+    "year": "Anno",
+    "attention": "Attenzione"
   },
   "ANY": "Tutti"
 }

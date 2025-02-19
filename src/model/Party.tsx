@@ -1,5 +1,4 @@
 import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
-import { Institution } from '../api/generated/portal/Institution';
 import { PspData } from '../api/generated/portal/PspData';
 import { ENV } from '../utils/env';
 import { InstitutionBase } from '../api/generated/portal/InstitutionBase';
@@ -70,26 +69,6 @@ export const institutionResource2Party = (institutionResource: InstitutionDetail
     registeredOffice: institutionResource.address!,
     institutionType: institutionResource.institution_type,
     pspData: institutionResource.psp_data,
-  };
-};
-
-export const institutionDetailResource2Party = (institutionResource: Institution): Party => {
-  const urlLogo = institutionResource.id && buildUrlLog(institutionResource.id);
-  return {
-    partyId: institutionResource.id,
-    externalId: institutionResource.external_id,
-    originId: institutionResource.origin_id,
-    origin: institutionResource.origin,
-    description: institutionResource.description,
-    digitalAddress: institutionResource.digital_address!,
-    status: 'ACTIVE', // 'ACTIVE' | 'PENDING',
-    roles: [] /* institutionResource.userProductRoles.map(
-      (u) => ({ partyRole: u.product_role, roleKey: u.product_role, roleLabel: u.product_role_label } as UserRole)
-    ), */,
-    urlLogo,
-    fiscalCode: institutionResource.tax_code,
-    registeredOffice: institutionResource.address!,
-    institutionType: institutionResource.institution_type,
   };
 };
 

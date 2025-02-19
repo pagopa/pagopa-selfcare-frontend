@@ -259,7 +259,6 @@ export default function StationMaintenanceAddEditDetail() {
         start_date_time: removeDateZoneInfoGMT(mergeDateAndHours(dateFrom, hoursFrom))!,
         station_code: selectedStation?.stationCode ?? '',
       };
-      console.log(JSON.stringify(body));
       if (action === StationMaintenanceActionType.CREATE) {
         promise = createStationMaintenance({
           brokerTaxCode: selectedParty?.fiscalCode ?? '',

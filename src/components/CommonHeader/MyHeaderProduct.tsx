@@ -4,15 +4,15 @@ import { ProductEntity, ProductSwitch, ProductSwitchItem } from '@pagopa/mui-ita
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
 import { useEffect, useMemo, useState } from 'react';
-import { InstitutionDetail } from '../../api/generated/portal/InstitutionDetail';
 import { useSigninData } from '../../hooks/useSigninData';
 import { Party } from '../../model/Party';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { partiesActions, partiesSelectors } from '../../redux/slices/partiesSlice';
-import { getInstitutionFullDetail, getInstitutions } from '../../services/institutionService';
+import { getInstitutions } from '../../services/institutionService';
 import { PaddedDrawer } from '../PaddedDrawer';
 import { InstitutionBaseResources } from '../../api/generated/portal/InstitutionBaseResources';
 import { InstitutionBase } from '../../api/generated/portal/InstitutionBase';
+import { fetchPartyDetails } from '../../services/partyService';
 
 type HeaderProductProps = {
   borderBottom?: number;
@@ -50,39 +50,18 @@ const HeaderProduct = ({
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
 
   const updateState = (institution: InstitutionBase) => {
-    getInstitutionFullDetail(institution.id)
-      .then((orgDetails: InstitutionDetail) => {
+    fetchPartyDetails(institution.id)
+      .then((partyResponse) => {
         trackEvent('PARTY_SELECTION', {
-          party_id: orgDetails.id,
+          party_id: partyResponse?.partyId,
         });
+
         const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
-        const party: Party = {
-          description: orgDetails.name,
-          digitalAddress: orgDetails.mail_address!,
-          externalId: orgDetails.external_id,
-          fiscalCode: orgDetails.tax_code,
-          origin: orgDetails.origin,
-          originId: orgDetails.origin_id,
-          partyId: orgDetails.id,
-          registeredOffice: orgDetails.address,
-          institutionType: orgDetails.institution_type,
-          onboarding: orgDetails.onboarding?.map(el => el),
-          status: 'ACTIVE',
-          roles: [
-            {
-              partyRole: 'OPERATOR',
-              roleKey: 'admin',
-              roleLabel: '',
-            },
-          ],
-        };
-        if (orgDetails.psp_data) {
-          // eslint-disable-next-line functional/immutable-data
-          party.pspData = orgDetails?.psp_data;
+        setParty(partyResponse ?? undefined);
+        setSelectedParty(partyResponse?.partyId);
+        if (partyResponse) {
+          void updateSigninData(partyResponse);
         }
-        setParty(party);
-        setSelectedParty(party.partyId);
-        void updateSigninData(party);
         setDrawerIsOpened(false);
       })
       .catch((error) => {});
@@ -242,8 +221,8 @@ const HeaderProduct = ({
                     border: '1px solid rgb(227, 231, 235)',
                     height: '50px',
                     width: '50px',
-                    background: "white",
-                    color: "rgb(162, 173, 184)"
+                    background: 'white',
+                    color: 'rgb(162, 173, 184)',
                   }}
                   display="flex"
                   justifyContent={'center'}

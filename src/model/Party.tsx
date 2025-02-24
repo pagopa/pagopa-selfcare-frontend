@@ -65,10 +65,11 @@ export const institutionResource2Party = (institutionResource: InstitutionDetail
     description: institutionResource.name,
     digitalAddress: institutionResource.mail_address!,
     status: institutionResource.status as 'ACTIVE' | 'PENDING',
+    onboarding: institutionResource.onboarding?.map(el => el),
     roles: getRoles(institutionResource),
     urlLogo,
     fiscalCode: institutionResource.tax_code,
-    registeredOffice: institutionResource.address!,
+    registeredOffice: institutionResource.address,
     institutionType: institutionResource.institution_type,
     pspData: institutionResource.psp_data,
   };

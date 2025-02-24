@@ -21,7 +21,7 @@ export default function QuicksightDashboardPage() {
   const history = useHistory();
 
   function openQuicksightDashboard() {
-    const userIsSubscribed = true; // TODO: GET USER PRODUCTS TO SEE IF IT'S SUBSCRIBED
+    const userIsSubscribed = selectedParty?.onboarding?.find(el => el.productId === "prod-dashboard-psp" && el.status === 'ACTIVE');
 
     if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) && selectedParty?.partyId) {
       getEmbedUrlForAnonymousUser(selectedParty?.partyId)

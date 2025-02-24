@@ -2,6 +2,7 @@ import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
 import { PspData } from '../api/generated/portal/PspData';
 import { ENV } from '../utils/env';
 import { InstitutionBase } from '../api/generated/portal/InstitutionBase';
+import { Onboarding } from '../api/generated/portal/Onboarding';
 
 export type SelfcareRole = 'ADMIN' | 'LIMITED';
 export type PartyRole = 'DELEGATE' | 'MANAGER' | 'OPERATOR' | 'SUB_DELEGATE';
@@ -22,6 +23,7 @@ export type Party = {
   registeredOffice: string;
   institutionType?: string;
   pspData?: PspData;
+  onboarding?: Array<Onboarding>;
 };
 
 export type UserRole = {

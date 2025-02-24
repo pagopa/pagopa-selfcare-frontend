@@ -53,7 +53,7 @@ const HeaderProduct = ({
     getInstitutionFullDetail(institution.id)
       .then((orgDetails: InstitutionDetail) => {
         trackEvent('PARTY_SELECTION', {
-          party_id: orgDetails!.id,
+          party_id: orgDetails.id,
         });
         const setParty = (party?: Party) => dispatch(partiesActions.setPartySelected(party));
         const party: Party = {
@@ -64,8 +64,9 @@ const HeaderProduct = ({
           origin: orgDetails.origin,
           originId: orgDetails.origin_id,
           partyId: orgDetails.id,
-          registeredOffice: orgDetails.address!,
+          registeredOffice: orgDetails.address,
           institutionType: orgDetails.institution_type,
+          onboarding: orgDetails.onboarding?.map(el => el),
           status: 'ACTIVE',
           roles: [
             {

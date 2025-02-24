@@ -50,7 +50,7 @@ export default function QuicksightDashboardPage() {
   return (
     <>
       <SideMenuLayout>
-        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="122vw">
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="140vw">
           {loading ? (
             <CircularProgress />
           ) : (

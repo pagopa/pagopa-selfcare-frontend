@@ -11,12 +11,10 @@ import EuroIcon from '@mui/icons-material/Euro';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import StorageIcon from '@mui/icons-material/Storage';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
-import UnfoldLessDoubleIcon from '@mui/icons-material/UnfoldLessDouble';
-import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FilePresentOutlinedIcon from '@mui/icons-material/FilePresentOutlined';
-import { Assessment, Handyman } from '@mui/icons-material';
+import { Assessment, Handyman, Menu } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
@@ -260,8 +258,8 @@ export default function SideMenu({
         >
           <ListItemIcon>
             <Icon
-              component={collapsed ? UnfoldMoreDoubleIcon : UnfoldLessDoubleIcon}
-              sx={{ rotate: '90deg' }}
+              component={Menu}
+              sx={collapsed ? { rotate: '90deg' } : {}}
             />
           </ListItemIcon>
         </ListItemButton>

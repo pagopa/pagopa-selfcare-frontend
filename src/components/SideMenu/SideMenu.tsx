@@ -14,7 +14,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FilePresentOutlinedIcon from '@mui/icons-material/FilePresentOutlined';
-import { Analytics, Handyman } from '@mui/icons-material';
+import { Assessment, Handyman } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
@@ -197,11 +197,12 @@ export default function SideMenu() {
             <SidenavItem
               title={t('sideMenu.quicksightDashboard.title')}
               handleClick={() => onExit(() => history.push(ROUTES.QUICKSIGHT_DASHBOARD))}
-              icon={Analytics}
+              icon={Assessment}
               isSelected={
                 pathname === ROUTES.QUICKSIGHT_DASHBOARD ||
                 pathname.startsWith(ROUTES.QUICKSIGHT_DASHBOARD)
               }
+              disabled={isDisabled}
               dataTestId={'quicksight-nav-test'}
             />
           )}

@@ -257,10 +257,7 @@ export default function SideMenu({
           data-testid={'side-menu-collapse-button'}
         >
           <ListItemIcon>
-            <Icon
-              component={Menu}
-              sx={collapsed ? { rotate: '90deg' } : {}}
-            />
+            <Icon component={Menu} />
           </ListItemIcon>
         </ListItemButton>
       </React.Fragment>

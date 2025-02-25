@@ -3,11 +3,10 @@ import { QuicksightEmbedUrlResponse } from '../api/generated/portal/QuicksightEm
 import { getMockEmbedUrlForAnonymousUser } from './__mocks__/quicksightDashboardService';
 
 export const getEmbedUrlForAnonymousUser = (
-  institutionId: string
 ): Promise<QuicksightEmbedUrlResponse> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getMockEmbedUrlForAnonymousUser(institutionId);
+    return getMockEmbedUrlForAnonymousUser();
   } else {
-    return BackofficeApi.quicksightDashboard.getEmbedUrlForAnonymousUser({ institutionId });
+    return BackofficeApi.quicksightDashboard.getEmbedUrlForAnonymousUser();
   }
 };

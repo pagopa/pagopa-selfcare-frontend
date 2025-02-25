@@ -23,8 +23,8 @@ export default function QuicksightDashboardPage() {
   function openQuicksightDashboard() {
     const userIsSubscribed = selectedParty?.onboarding?.find(el => el.productId === "prod-dashboard-psp" && el.status === 'ACTIVE');
 
-    if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) && selectedParty?.partyId) {
-      getEmbedUrlForAnonymousUser(selectedParty?.partyId)
+    if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed))) {
+      getEmbedUrlForAnonymousUser()
         .then((url) => {
           if (url.embedUrl) {
             setEmbedUrl(url.embedUrl);

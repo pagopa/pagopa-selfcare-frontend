@@ -9,6 +9,8 @@ import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
 import { getEmbedUrlForAnonymousUser } from '../../services/quicksightDashboardService';
+import { extractProblemJson } from '../../utils/client-utils';
+import { useFlagValue } from '../../hooks/useFeatureFlags';
 
 const componentPath = 'sideMenu.quicksightDashboard.modal';
 export default function QuicksightDashboardPage() {
@@ -19,11 +21,15 @@ export default function QuicksightDashboardPage() {
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
   const [errorMessage, setErrorMessage] = useState<string>();
   const history = useHistory();
+  const quicksightProductFreeTrial =  useFlagValue('quicksight-product-free-trial');
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function openQuicksightDashboard() {
-    const userIsSubscribed = selectedParty?.onboarding?.find(el => el.productId === "prod-dashboard-psp" && el.status === 'ACTIVE');
+    const userIsSubscribed = quicksightProductFreeTrial || selectedParty?.onboarding?.find(
+      (el) => el.productId === 'prod-dashboard-psp' && el.status === 'ACTIVE'
+    );
 
-    if ((userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed))) {
+    if (userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) {
       getEmbedUrlForAnonymousUser()
         .then((url) => {
           if (url.embedUrl) {
@@ -31,15 +37,21 @@ export default function QuicksightDashboardPage() {
           }
           setLoading(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          const problemJson = extractProblemJson(err);
+
+          if (!problemJson?.status) { // IF error 403
+            setErrorMessage(`userNotSubscribed${userIsPspAdmin ? '' : 'Not'}Admin`);
+          } else {
+            setErrorMessage('errorGeneric');
+          }
           setLoading(false);
-          setErrorMessage('errorGeneric');
         });
     } else {
-      setLoading(false);
       setErrorMessage(
         `user${userIsSubscribed ? '' : 'Not'}Subscribed${userIsPspAdmin ? '' : 'Not'}Admin`
       );
+      setLoading(false);
     }
   }
 

@@ -1749,7 +1749,7 @@
       "title": "Manutenzioni programmate"
     },
     "quicksightDashboard": {
-      "title": "pagoPA Insights",
+      "title": "Insights",
       "modal": {
         "userSubscribedNotAdmin": "Non sei abilitato alla visualizzazione della dashboard. Contatta il tuo amministratore per richiedere l'accesso o ulteriori informazioni.",
         "userNotSubscribedNotAdmin": "Servizio non attivo. Contatta il tuo amministratore per procedere alla sottoscrizione del servizio e richiederne l’accesso.",

@@ -5,5 +5,4 @@ export const mockedDashboardUrl: QuicksightEmbedUrlResponse = {
 };
 
 export const getMockEmbedUrlForAnonymousUser = (
-  _institutionId: string
 ): Promise<QuicksightEmbedUrlResponse> => Promise.resolve(mockedDashboardUrl);

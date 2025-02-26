@@ -68,7 +68,7 @@ export default function QuicksightDashboardPage() {
           ) : (
             <>
               {embedUrl ? (
-                <iframe title="Dashboard Embed" src={embedUrl} height="100%" width="100%" />
+                <iframe title="Dashboard Embed" src={embedUrl} height="100%" width="100%" style={{border:"1px solid lightgrey"}} />
               ) : (
                 <></>
               )}

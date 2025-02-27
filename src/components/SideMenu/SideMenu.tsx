@@ -207,7 +207,8 @@ export default function SideMenu({
           />
         )}
 
-      {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') && (
+      {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') &&
+        orgInfo.types.isPsp && (
         <SidenavItem
           collapsed={collapsed}
           title={t('sideMenu.quicksightDashboard.title')}

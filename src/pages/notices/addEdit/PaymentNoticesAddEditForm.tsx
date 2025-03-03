@@ -236,7 +236,6 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                 component: 'Toast',
             });
         } catch (reason: any) {
-            const problemJson = extractProblemJson(reason);
             addError({
                 id: 'ADDEDIT_INSTITUTION_DATA',
                 blocking: false,

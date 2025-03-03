@@ -60,6 +60,7 @@ import { TosAndPrivacy } from './pages/tosAndPrivacy/TosAndPrivacy';
 import routes from './routes';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { rewriteLinks } from './utils/onetrust-utils';
+import QuicksightDashboardPage from './pages/quicksight/QuicksightDashboardPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -338,6 +339,15 @@ const SecuredRoutes = withLogin(
                     flagValue="station-maintenances"
                   >
                     <StationMaintenanceAddEditDetail />
+                  </ProtectedRoute>
+                </Route>
+
+                <Route path={routes.QUICKSIGHT_DASHBOARD} exact={true}>
+                  <ProtectedRoute
+                    permission="quicksight-dashboard"
+                    flagValue="quicksight-dashboard"
+                  >
+                    <QuicksightDashboardPage />
                   </ProtectedRoute>
                 </Route>
 

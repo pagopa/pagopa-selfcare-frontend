@@ -65,7 +65,7 @@ const renderApp = (
         <ThemeProvider theme={theme}>
             <Router history={history}>
                 <Provider store={store}>
-                    <SideMenu/>
+                    <SideMenu collapsed={false} setCollapsed={undefined}/>
                 </Provider>
             </Router>
         </ThemeProvider>

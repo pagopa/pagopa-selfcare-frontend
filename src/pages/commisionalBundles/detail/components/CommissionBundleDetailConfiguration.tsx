@@ -31,6 +31,7 @@ const bundleConfigurationFields = {
   col3: [
     ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
     ['cart', 'commissionBundlesPage.addEditCommissionBundle.form.cart'],
+    ['onUs', 'commissionBundlesPage.addEditCommissionBundle.form.onUs'],
     ['digitalStamp', 'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'],
     [
       'digitalStampRestriction',

@@ -306,17 +306,37 @@ describe('<AddEditCommissionBundleForm />', () => {
     });
 
     // Change channel id
-    fireEvent.change(input.channelList, {
-      target: { value: mockedChannels.channels[4].channel_code },
-    });
-    input.channelList.focus();
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[2].channel_code));
+    expect(input.channelList.value).toEqual(mockedChannels.channels[2].channel_code);
 
-    fireEvent.change(document.activeElement as Element, {
-      target: { value: mockedChannels.channels[4].channel_code },
-    });
-    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
-    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    //Test cart flag
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(true);
+
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[3].channel_code));
+    expect(input.channelList.value).toEqual(mockedChannels.channels[3].channel_code);
+
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.click(input.cartSwitch);
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(true);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[4].channel_code));
     expect(input.channelList.value).toEqual(mockedChannels.channels[4].channel_code);
+
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(true);
 
     //Test onUs flag
     fireEvent.mouseDown(

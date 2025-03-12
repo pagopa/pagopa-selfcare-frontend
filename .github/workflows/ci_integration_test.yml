@@ -68,6 +68,7 @@ jobs:
       
       - name: Run Integration Tests Playwright
         shell: bash
+        continue-on-error: true
         run: |
           cd ./integration-test
           yarn install

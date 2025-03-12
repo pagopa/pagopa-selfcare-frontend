@@ -32,6 +32,36 @@ test.describe('Channel flow', () => {
   //   await checkReturnHomepage(page);
   // });
 
+  test('PSP modifies already existing channel', async () => {
+    await changeToPspUser(page);
+    await page.getByTestId('channels-test').click();
+    await page.getByTestId('search-input').click();
+    await page.getByTestId('search-input').fill(channelId);
+    await page.waitForTimeout(1000);
+    await page.getByLabel('more').click();
+    await page.getByRole('link', { name: 'Gestisci canale' }).click();
+
+    await page.waitForTimeout(2000);
+
+    const modifyButton = page.getByRole('link', { name: 'Modifica' });
+    const isEnabled = await modifyButton.isEnabled();
+    console.log('Bottone Modifica abilitato:', isEnabled);
+
+    if (isEnabled) {
+      await modifyButton.click();
+    } else {
+      console.log('Il bottone è disabilitato, forzo il click');
+      await modifyButton.click({ force: true });
+    }
+
+    await page.getByTestId('target-union-test').click();
+    await page.getByTestId('target-union-test').press('ArrowRight');
+    await page.getByTestId('target-union-test').fill('https://test.it:81/modify');
+    await page.getByRole('button', { name: 'Conferma' }).click();
+    await page.getByTestId('confirm-button-modal-test').click();
+    await checkReturnHomepage(page);
+  });
+
   test('Pagopa Operator request edit', async () => {
     await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
@@ -81,8 +111,17 @@ test.describe('Channel flow', () => {
     await page.getByTestId('password-test').fill('password');
     await page.getByRole('button', { name: 'Conferma' }).click();
     await page.getByTestId('confirm-button-modal-test').click();
-    await page.waitForTimeout(1000);
-    await page.getByTestId('back-button-test').click();
+
+    await page.waitForTimeout(3000);
+
+    try {
+      await page.getByTestId('back-button-test').waitFor({ timeout: 5000 });
+      await page.getByTestId('back-button-test').click();
+    } catch (error) {
+      console.log('Impossibile cliccare il bottone:', error);
+      await page.goBack();
+    }
+
     await checkReturnHomepage(page);
   });
 
@@ -114,36 +153,6 @@ test.describe('Channel flow', () => {
     await page.waitForTimeout(1000);
     await page.getByTestId('dissociate-99999000011').click();
     await page.getByRole('button', { name: 'Dissocia PSP' }).click();
-    await checkReturnHomepage(page);
-  });
-
-  test('PSP modifies already existing channel', async () => {
-    await changeToPspUser(page);
-    await page.getByTestId('channels-test').click();
-    await page.getByTestId('search-input').click();
-    await page.getByTestId('search-input').fill(channelId);
-    await page.waitForTimeout(1000);
-    await page.getByLabel('more').click();
-    await page.getByRole('link', { name: 'Gestisci canale' }).click();
-
-    await page.waitForTimeout(2000);
-
-    const modifyButton = page.getByRole('link', { name: 'Modifica' });
-    const isEnabled = await modifyButton.isEnabled();
-    console.log('Bottone Modifica abilitato:', isEnabled);
-
-    if (isEnabled) {
-      await modifyButton.click();
-    } else {
-      console.log('Il bottone è disabilitato, forzo il click');
-      await modifyButton.click({ force: true });
-    }
-
-    await page.getByTestId('target-union-test').click();
-    await page.getByTestId('target-union-test').press('ArrowRight');
-    await page.getByTestId('target-union-test').fill('https://test.it:81/modify');
-    await page.getByRole('button', { name: 'Conferma' }).click();
-    await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);
   });
 

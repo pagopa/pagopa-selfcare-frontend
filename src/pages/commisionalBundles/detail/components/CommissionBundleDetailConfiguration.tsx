@@ -23,6 +23,7 @@ const bundleConfigurationFields = {
     ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
   ],
   col2: [
+    ['onUs', 'commissionBundlesPage.addEditCommissionBundle.form.onUs'],
     ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
     ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
     ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],
@@ -31,7 +32,6 @@ const bundleConfigurationFields = {
   col3: [
     ['idChannel', 'commissionBundlesPage.addEditCommissionBundle.form.channelCode'],
     ['cart', 'commissionBundlesPage.addEditCommissionBundle.form.cart'],
-    ['onUs', 'commissionBundlesPage.addEditCommissionBundle.form.onUs'],
     ['digitalStamp', 'commissionBundlesPage.addEditCommissionBundle.form.paymentWithDigitalStamp'],
     [
       'digitalStampRestriction',

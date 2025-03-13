@@ -60,7 +60,7 @@ import {
 import { WrapperChannelResource } from '../../../../api/generated/portal/WrapperChannelResource';
 import { formatCurrencyStringToNumberCent } from '../../../../utils/common-utils';
 
-const CARD_PAYMENT_TYPE = "CP";
+const CARD_PAYMENT_TYPE = 'CP';
 
 type Props = {
   formik: FormikProps<BundleRequest>;
@@ -251,8 +251,8 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
 
   const handleChangePaymentType = (value: string | null) => {
     formik.handleChange('paymentType')(value ?? '');
-    
-    if(value !== CARD_PAYMENT_TYPE){
+
+    if (value !== CARD_PAYMENT_TYPE) {
       formik.setFieldValue('onUs', false);
     }
   };
@@ -543,6 +543,32 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     inputProps={{ 'data-testid': 'payment-amount-test' }}
                   />
                 </Grid>
+                <Grid item xs={6} >
+                  <FormControlLabel
+                    sx={{ width: '100%', ml: 1}}
+                    control={
+                      <Switch
+                        id={'onUs'}
+                        name="onUs"
+                        onChange={(e) => formik.setFieldValue('onUs', e.target.checked)}
+                        checked={formik.values.onUs ?? false}
+                        disabled={formik.values.paymentType !== CARD_PAYMENT_TYPE}
+                        data-testid="bundle-onUs"
+                      />
+                    }
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {t('commissionBundlesPage.addEditCommissionBundle.form.onUs')}
+                        <Tooltip
+                          title={t('commissionBundlesPage.addEditCommissionBundle.form.onUsInfo')}
+                          placement="right"
+                        >
+                          <InfoOutlined fontSize="small" color="primary" sx={{ ml: 2 }} />
+                        </Tooltip>
+                      </div>
+                    }
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Box>
@@ -630,32 +656,6 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       {t('commissionBundlesPage.addEditCommissionBundle.form.cart')}
                       <Tooltip
                         title={t('commissionBundlesPage.addEditCommissionBundle.form.cartInfo')}
-                        placement="right"
-                      >
-                        <InfoOutlined fontSize="small" color="primary" sx={{ ml: 2 }} />
-                      </Tooltip>
-                    </div>
-                  }
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <FormControlLabel
-                  sx={{ width: '100%', mt: 2 }}
-                  control={
-                    <Switch
-                      id={'onUs'}
-                      name="onUs"
-                      onChange={(e) => formik.setFieldValue('onUs', e.target.checked)}
-                      checked={formik.values.onUs ?? false}
-                      disabled={formik.values.paymentType !== CARD_PAYMENT_TYPE}
-                      data-testid="bundle-onUs"
-                    />
-                  }
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.onUs')}
-                      <Tooltip
-                        title={t('commissionBundlesPage.addEditCommissionBundle.form.onUsInfo')}
                         placement="right"
                       >
                         <InfoOutlined fontSize="small" color="primary" sx={{ ml: 2 }} />

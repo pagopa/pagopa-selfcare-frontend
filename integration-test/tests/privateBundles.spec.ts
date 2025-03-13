@@ -182,7 +182,7 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('add-recipients-button').click();
   await page.getByLabel('Cerca EC').click();
   await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('Comune');
-  await page.getByRole('heading', { name: 'Comune di Test' }).click();
+  await page.locator('#ec-selection-option-0').getByRole('heading', { name: 'Comune di Test' }).click();
   await page.getByTestId('remove-selected-ec-btn-id-test').nth(1).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();

@@ -6,7 +6,7 @@ const ecName = 'EC Signed Direct';
 const segregationCode = '40';
 
 test.setTimeout(100000);
-test.describe('Delegations flow', () => {
+test.describe.serial('Delegations flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
 
@@ -29,7 +29,9 @@ test.describe('Delegations flow', () => {
     await page.getByRole('link', { name: 'Associa EC' }).click();
     await page.getByLabel('Cerca EC').click();
     await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC');
-    await page.getByRole('option', { name: ecName }).click();
+    await page.waitForSelector('role=option');
+    await page.getByRole('option', { name: /EC DEMO DIRECT/i }).click();
+    test.setTimeout(20000);
     await page.getByRole('combobox', { name: '​', exact: true }).click();
     await page.getByRole('option', { name: segregationCode }).click();
     await page.getByTestId('confirm-btn-test').click();

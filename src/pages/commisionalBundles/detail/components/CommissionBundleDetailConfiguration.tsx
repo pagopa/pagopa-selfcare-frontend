@@ -23,6 +23,7 @@ const bundleConfigurationFields = {
     ['paymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.commission'],
   ],
   col2: [
+    ['onUs', 'commissionBundlesPage.addEditCommissionBundle.form.onUs'],
     ['minPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.minImport'],
     ['maxPaymentAmount', 'commissionBundlesPage.addEditCommissionBundle.form.maxImport'],
     ['idBrokerPsp', 'commissionBundlesPage.addEditCommissionBundle.form.brokerCode'],

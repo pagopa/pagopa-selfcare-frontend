@@ -57,7 +57,8 @@ const toNewFormData = (
   validityDateFrom: data?.validityDateFrom ?? minDateFrom(),
   validityDateTo: data?.validityDateTo ?? minDateFrom(),
   pspBusinessName: selectedParty?.description ?? '',
-  cart: data?.cart
+  cart: data?.cart,
+  onUs: data?.onUs ?? false
 });
 
 function getABIOrBIC(

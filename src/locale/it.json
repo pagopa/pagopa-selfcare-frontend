@@ -1379,7 +1379,9 @@
         "to": "A",
         "all": "Tutti",
         "cart": "Gestione carrello di pagamenti",
-        "cartInfo": "La gestione del carrello è possibile soltanto per i canali configurati con le primitive in versione 2"
+        "cartInfo": "La gestione del carrello è possibile soltanto per i canali configurati con le primitive in versione 2",
+        "onUs": "onUs",
+        "onUsInfo": "Bundle valido per i pagamenti con le carte emesse dal tuo istituto di Credito"
       },
       "addTaxonomies": {
         "subTitle": "Cerca i servici di incasso sfogliando il catalogo oppure carica una lista di codici.",

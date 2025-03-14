@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import {
   mockedBundleRequest,
-  mockedBundleRequestForEdit
+  mockedBundleRequestForEdit,
 } from '../../../../../services/__mocks__/bundleService';
 import { partiesActions } from '../../../../../redux/slices/partiesSlice';
 import { pspOperatorSignedDirect } from '../../../../../services/__mocks__/partyService';
@@ -23,7 +23,7 @@ import * as useUserRole from '../../../../../hooks/useUserRole';
 import { ROLE } from '../../../../../model/RolePermission';
 import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource';
 import * as useOrganizationType from '../../../../../hooks/useOrganizationType';
-import { mockedChannels, channelCode } from '../../../../../services/__mocks__/channelService';
+import { mockedChannels } from '../../../../../services/__mocks__/channelService';
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
@@ -90,7 +90,7 @@ describe('<AddEditCommissionBundleForm />', () => {
     );
     spyOnGetChannelService = jest.spyOn(
       require('../../../../../services/channelService'),
-            'getChannels'
+      'getChannels'
     );
     spyOnErrorHook = jest
       .spyOn(useErrorDispatcher, 'useErrorDispatcher')
@@ -105,23 +105,23 @@ describe('<AddEditCommissionBundleForm />', () => {
       userIsAdmin: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
-        orgInfo: {
-            types: {
-                isPsp: true,
-                isPspBroker: true,
-                isEc: false,
-                isEcBroker: false
-            },
-            isSigned: true
+      orgInfo: {
+        types: {
+          isPsp: true,
+          isPspBroker: true,
+          isEc: false,
+          isEcBroker: false,
         },
-        orgIsPspDirect: true,
-        orgIsEcDirect: false,
-        orgIsBrokerSigned: true,
-        orgIsPspSigned: true,
-        orgIsPspBrokerSigned: true,
-        orgIsEcSigned: false,
-        orgIsEcBrokerSigned: false,
-      });
+        isSigned: true,
+      },
+      orgIsPspDirect: true,
+      orgIsEcDirect: false,
+      orgIsBrokerSigned: true,
+      orgIsPspSigned: true,
+      orgIsPspBrokerSigned: true,
+      orgIsEcSigned: false,
+      orgIsEcBrokerSigned: false,
+    });
     jest.spyOn(console, 'error').mockImplementation(() => {});
     jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
@@ -187,6 +187,7 @@ describe('<AddEditCommissionBundleForm />', () => {
       fromDate: screen.getByTestId('from-date-test') as HTMLInputElement,
       ToDate: screen.getByTestId('to-date-test') as HTMLInputElement,
       cartSwitch: screen.getByTestId('bundle-cart') as HTMLInputElement,
+      onUsSwitch: screen.getByTestId('bundle-onUs') as HTMLInputElement,
     };
 
     return input;
@@ -305,17 +306,60 @@ describe('<AddEditCommissionBundleForm />', () => {
     });
 
     // Change channel id
-    fireEvent.change(input.channelList, {
-      target: { value: mockedChannels.channels[4].channel_code },
-    });
-    input.channelList.focus();
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[2].channel_code));
+    expect(input.channelList.value).toEqual(mockedChannels.channels[2].channel_code);
 
-    fireEvent.change(document.activeElement as Element, {
-      target: { value: mockedChannels.channels[4].channel_code },
-    });
-    fireEvent.keyDown(document.activeElement as Element, { key: 'ArrowDown' });
-    fireEvent.keyDown(document.activeElement as Element, { key: 'Enter' });
+    //Test cart flag
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(true);
+
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[3].channel_code));
+    expect(input.channelList.value).toEqual(mockedChannels.channels[3].channel_code);
+
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.click(input.cartSwitch);
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(true);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.channelCode')
+    );
+    fireEvent.click(screen.getByText(mockedChannels.channels[4].channel_code));
     expect(input.channelList.value).toEqual(mockedChannels.channels[4].channel_code);
+
+    expect(input.cartSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.cartSwitch.className.includes('Mui-disabled')).toBe(true);
+
+    //Test onUs flag
+    fireEvent.mouseDown(
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.paymentType')
+    );
+    fireEvent.click(screen.getByText(new RegExp('.*PostePay - PPAY.*', 'i')));
+    expect(input.paymentType).toHaveTextContent('PostePay - PPAY');
+    expect(input.onUsSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.onUsSwitch.className.includes('Mui-disabled')).toBe(true);
+
+    fireEvent.click(screen.getByText(new RegExp('.*Carta di Pagamento - CP.*', 'i')));
+    expect(input.paymentType).toHaveTextContent('Carta di Pagamento - CP');
+    expect(input.onUsSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.onUsSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.click(input.onUsSwitch);
+    expect(input.onUsSwitch.className.includes('Mui-checked')).toBe(true);
+    expect(input.onUsSwitch.className.includes('Mui-disabled')).toBe(false);
+
+    fireEvent.click(screen.getByText(new RegExp('.*Bonifico - SEPA.*', 'i')));
+    expect(input.paymentType).toHaveTextContent('Bonifico - SEPA');
+    expect(input.onUsSwitch.className.includes('Mui-checked')).toBe(false);
+    expect(input.onUsSwitch.className.includes('Mui-disabled')).toBe(true);
 
     //Change radio buttons digitalStamp
     expect(input.digitalStampYes.checked).toBe(false);

@@ -77,7 +77,7 @@ jobs:
           export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
           export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
           
-          npx playwright test --workers=1 --max-failures=1 --project=chromium
+          npx playwright test --workers=1 --max-failures=0 --project=chromium
 
       - name: Setup Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5

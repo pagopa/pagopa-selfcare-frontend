@@ -3,7 +3,7 @@ import {bundleNameGlobal, deleteAllExpiredBundles, getToBundleDetail} from './ut
 import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
 
 test.setTimeout(100000);
-test.describe('Global bundles flow', () => {
+test.describe.serial('Global bundles flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
 
@@ -17,6 +17,7 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP creates global bundle', async () => {
+    console.log('🚀 STARTING TEST: PSP creates global bundle');
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
@@ -85,6 +86,8 @@ test.describe('Global bundles flow', () => {
   });
 
   test('PSP edits global bundle', async () => {
+    console.log('🚀 STARTING TEST: PSP edits global bundle');
+    await changeToPspUser(page)
     await page.getByTestId('commission-bundles-test').click();
     await getToBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('modify-button').click();
@@ -104,15 +107,8 @@ test.describe('Global bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('PSP deletes global bundle', async () => {
-    await page.getByTestId('commission-bundles-test').click();
-    await getToBundleDetail(page, bundleNameGlobal);
-    await page.getByTestId('delete-button').click();
-    await page.getByTestId('confirm-button-test').click();
-    await checkReturnHomepage(page);
-  });
-
   test('EC goes to global bundle detail', async () => {
+    console.log('🚀 STARTING TEST: EC goes to global bundle detail');
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('search-input').click();
@@ -120,5 +116,15 @@ test.describe('Global bundles flow', () => {
     await page.waitForTimeout(2000);
     await page.getByLabel('Gestisci pacchetto').first().click();
     await page.getByTestId('exit-btn-test').click();
+  });
+
+  test('PSP deletes global bundle', async () => {
+    console.log('🚀 STARTING TEST: PSP deletes global bundle');
+    await changeToPspUser(page)
+    await page.getByTestId('commission-bundles-test').click();
+    await getToBundleDetail(page, bundleNameGlobal);
+    await page.getByTestId('delete-button').click();
+    await page.getByTestId('confirm-button-test').click();
+    await checkReturnHomepage(page);
   });
 });

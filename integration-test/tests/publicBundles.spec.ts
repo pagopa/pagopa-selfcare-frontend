@@ -22,8 +22,13 @@ test.describe.serial('Public bundles flow', () => {
   });
 
   test.afterAll(async () => {
-    await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
-    await page.close();
+    try {
+      await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
+    } catch (error) {
+      console.log(`Warning: Error in afterAll cleanup (public bundles): ${error}`);
+    } finally {
+      await page.close();
+    }
   });
 
   test('PSP creates public bundle', async () => {

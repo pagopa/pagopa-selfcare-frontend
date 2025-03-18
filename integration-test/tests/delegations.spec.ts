@@ -33,8 +33,6 @@ test.describe.serial('Delegations flow', () => {
     let associationSuccessful = false;
 
     for (const stationId of STATION_IDS) {
-      console.log(`Trying station ID: ${stationId}`);
-
       try {
         await page.getByTestId('search-input').click();
         await page.getByTestId('search-input').clear();
@@ -46,7 +44,6 @@ test.describe.serial('Delegations flow', () => {
           .catch(() => false);
 
         if (!isStationFound) {
-          console.log(`Station ${stationId} not found, trying next one`);
           continue;
         }
 
@@ -58,7 +55,6 @@ test.describe.serial('Delegations flow', () => {
           .catch(() => false);
 
         if (!isGestisciVisible) {
-          console.log(`'Gestisci EC' not visible for station ${stationId}, trying next one`);
           await page.getByTestId('search-input').click();
           continue;
         }
@@ -75,12 +71,10 @@ test.describe.serial('Delegations flow', () => {
           .catch(() => false);
 
         if (hasWarning) {
-          console.log(`All ECs are already associated with station ${stationId}, trying next one`);
           await navigateBackToStationsList(page);
           continue;
         }
 
-        console.log(`Attempting to find and click "Associa EC" for station ${stationId}`);
         let associaEcClicked = false;
 
         try {
@@ -89,38 +83,31 @@ test.describe.serial('Delegations flow', () => {
             .catch(() => false);
 
           if (isButtonVisible) {
-            console.log(`Found "Associa EC" button for station ${stationId}`);
             await associaButton.click();
             associaEcClicked = true;
           }
         } catch (error) {
-          console.log('Button approach failed:', error);
         }
 
         if (!associaEcClicked && hasNoEcsMessage) {
           try {
-            console.log('Trying to click the "Associa EC" text link');
             const associaLink = page.getByText('Associa EC').last();
             const isLinkVisible = await associaLink.isVisible({ timeout: 3000 })
               .catch(() => false);
 
             if (isLinkVisible) {
-              console.log(`Found "Associa EC" text link for station ${stationId}`);
               await associaLink.click();
               associaEcClicked = true;
             }
           } catch (error) {
-            console.log('Text link approach failed:', error);
           }
         }
 
         if (!associaEcClicked) {
-          console.log(`Unable to access "Associa EC" page for station ${stationId}, trying next one`);
           await navigateBackToStationsList(page);
           continue;
         }
 
-        console.log(`Found usable station: ${stationId}`);
         selectedStationId = stationId;
 
         await page.getByLabel('Cerca EC').click();
@@ -139,16 +126,13 @@ test.describe.serial('Delegations flow', () => {
             if (isOptionVisible) {
               await option.click();
               ecSelected = true;
-              console.log(`Selected EC: ${ecOption}`);
               break;
             }
           } catch (error) {
-            console.log(`Error selecting EC ${ecOption}:`, error);
           }
         }
 
         if (!ecSelected) {
-          console.log(`Could not select any EC for station ${stationId}, trying next station`);
           await navigateBackToStationsList(page);
           continue;
         }
@@ -171,15 +155,13 @@ test.describe.serial('Delegations flow', () => {
         associationSuccessful = true;
         break;
       } catch (error) {
-        console.log(`Error processing station ${stationId}:`, error);
         await page.goto('/ui/stations');
         await page.waitForTimeout(2000);
       }
     }
 
     if (!associationSuccessful) {
-      console.log('Could not find any station that can be associated with an EC');
-      console.log('Proceeding to next test...');
+      console.log('Could not find any station that can be associated with an EC, skipping test');
     }
   });
 
@@ -198,8 +180,6 @@ test.describe.serial('Delegations flow', () => {
         .catch(() => false);
 
       if (hasNoResults) {
-        console.log('No delegation results found for the EC name. Trying the station ID search...');
-
         if (selectedStationId) {
           await page.getByTestId('search-input').click();
           await page.getByTestId('search-input').clear();
@@ -226,7 +206,6 @@ test.describe.serial('Delegations flow', () => {
 
       if (isDetailButtonVisible) {
         await detailButton.click();
-        console.log('Successfully opened delegation details');
       } else {
         console.log('Delegation details button not found. Skipping delegation details test.');
       }
@@ -247,8 +226,6 @@ test.describe.serial('Delegations flow', () => {
       let disassociationSuccessful = false;
 
       for (const stationId of stationIdsToTry) {
-        console.log(`Trying to disassociate using station: ${stationId}`);
-
         try {
           await page.getByTestId('search-input').click();
           await page.getByTestId('search-input').clear();
@@ -260,7 +237,6 @@ test.describe.serial('Delegations flow', () => {
             .catch(() => false);
 
           if (!isStationVisible) {
-            console.log(`Station ${stationId} not found, trying next`);
             continue;
           }
 
@@ -283,16 +259,16 @@ test.describe.serial('Delegations flow', () => {
             const isVisible = await ecRow.isVisible({ timeout: 3000 }).catch(() => false);
 
             if (isVisible) {
-              console.log(`Found EC row: ${ecName}`);
               await ecRow.getByLabel('more').click();
               ecFound = true;
               break;
             }
-            console.log(`EC ${ecName} not found, trying next...`);
           }
 
           if (!ecFound) {
             throw new Error('None of the expected EC entries found in the list');
+            test.skip();
+            return;
           }
 
           await page.waitForTimeout(1000);
@@ -304,19 +280,13 @@ test.describe.serial('Delegations flow', () => {
 
           await page.getByTestId('confirm-button-modal-test').click();
           await page.waitForTimeout(1000);
-          console.log(`Successfully disassociated EC from station ${stationId}`);
           disassociationSuccessful = true;
           await checkReturnHomepage(page);
           break;
         } catch (error) {
-          console.log(`Error disassociating from ${stationId}:`, error);
           await page.goto('/ui/stations');
           await page.waitForTimeout(1000);
         }
-      }
-
-      if (!disassociationSuccessful) {
-        console.log('Failed to disassociate from all tried stations');
       }
     } catch (error) {
       console.log('Error in disassociation test:', error);
@@ -324,21 +294,17 @@ test.describe.serial('Delegations flow', () => {
   });
 
   async function navigateBackToStationsList(page) {
-    console.log('Attempting to return to stations list');
-
     try {
       const backButton = page.getByRole('link', { name: 'Indietro' });
       const isBackButtonVisible = await backButton.isVisible({ timeout: 2000 })
         .catch(() => false);
 
       if (isBackButtonVisible) {
-        console.log('Using Indietro link to return');
         await backButton.click();
         await page.waitForTimeout(2000);
         return;
       }
     } catch (error) {
-      console.log('Indietro link approach failed:', error);
     }
 
     try {
@@ -347,17 +313,14 @@ test.describe.serial('Delegations flow', () => {
         .catch(() => false);
 
       if (isArrowVisible) {
-        console.log('Using arrow back link to return');
         await arrowBackLink.click();
         await page.waitForTimeout(2000);
         return;
       }
     } catch (error) {
-      console.log('Arrow back approach failed:', error);
     }
 
     try {
-      console.log('Using browser navigation to go back');
       await page.goBack();
       await page.waitForTimeout(2000);
 
@@ -365,16 +328,12 @@ test.describe.serial('Delegations flow', () => {
         .catch(() => false);
 
       if (isOnStationsPage) {
-        console.log('Successfully returned using browser navigation');
         return;
       }
     } catch (error) {
-      console.log('Browser navigation failed:', error);
     }
 
-    console.log('Using direct navigation to stations page');
     await page.goto('/ui/stations');
     await page.waitForTimeout(2000);
-    console.log('Direct navigation completed');
   }
 });

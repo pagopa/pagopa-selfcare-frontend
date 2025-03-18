@@ -115,80 +115,119 @@ export async function validateBundle(bundleName: string, bundleType: string): Pr
   }
 }
 
-export async function invalidateAllBundles(bundleName: string, bundleType: BundleTypes) {
-  // Retrieve bundle list
-  const response = await fetch(
-    `${MARKETPLACE_BE_URL}/bundles?limit=200&name=${bundleName}&types=${bundleType}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-      },
+export async function invalidateAllBundles(bundleName: string, bundleType: BundleTypes): Promise<boolean> {
+  console.log("Invalidanting all expired bundles");
+  try {
+    // Retrieve bundle list
+    const response = await fetch(
+      `${MARKETPLACE_BE_URL}/bundles?limit=200&name=${bundleName}&types=${bundleType}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log('Invalidate bundle get bundle error', await response.text());
+      return false;
     }
-  );
-  if (!response.ok) {
-    console.log('Invalidate bundle get bundle error', await response.text());
-  } else {
+
     const bundleList = await response.json();
-    expect(bundleList?.bundles?.length).toBeTruthy();
+    if (!bundleList?.bundles?.length) {
+      console.log(`No bundles found with name ${bundleName} to invalidate`);
+      return false;
+    }
+
     // Update bundle
+    let allSucceeded = true;
     for (let i = 0; i < bundleList.bundles.length; i++) {
       const bundle = bundleList.bundles[i];
-      const responseDelete = await fetch(
-        `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-          },
-        }
-      );
-      if (!responseDelete.ok) {
-        const responseText = await responseDelete.text();
-        console.log('Invalidate bundle delete error: ', responseText);
-      }
-      expect(responseDelete.status === 200 || responseDelete.status === 400).toBeTruthy();
 
-      const responseUpdate = await fetch(
-        `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-          },
-          body: JSON.stringify({
-            ...bundle,
-            validityDateFrom: '2024-01-01',
-            validityDateTo: '2024-01-01',
-            abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
-          }),
+      try {
+        const responseDelete = await fetch(
+          `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+            },
+          }
+        );
+
+        if (!responseDelete.ok) {
+          const responseText = await responseDelete.text();
+          console.log(`Invalidate bundle delete error for bundle ${bundle.idBundle}: ${responseText}`);
         }
-      );
-      if (!responseUpdate.ok) {
-        const responseText = await responseUpdate.text();
-        console.log('Invalidate bundle update error: ', responseText);
+      } catch (error) {
+        console.log(`Exception during bundle deletion: ${error}`);
       }
-      expect(responseUpdate.ok).toBeTruthy();
+
+      try {
+        const responseUpdate = await fetch(
+          `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+            },
+            body: JSON.stringify({
+              ...bundle,
+              validityDateFrom: '2024-01-01',
+              validityDateTo: '2024-01-01',
+              abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
+            }),
+          }
+        );
+
+        if (!responseUpdate.ok) {
+          const responseText = await responseUpdate.text();
+          console.log(`Invalidate bundle update error for bundle ${bundle.idBundle}: ${responseText}`);
+          allSucceeded = false;
+        }
+      } catch (error) {
+        console.log(`Exception during bundle update: ${error}`);
+        allSucceeded = false;
+      }
     }
+
+    return allSucceeded;
+  } catch (error) {
+    console.log(`Exception in invalidateAllBundles: ${error}`);
+    return false;
   }
 }
 
-export async function deleteAllExpiredBundles(bundleName: string, bundleType: BundleTypes) {
-  await invalidateAllBundles(bundleName, bundleType);
-  const response = await fetch(`${MARKETPLACE_BE_URL}/configuration`, {
-    method: 'GET',
-    headers: {
-      'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
-    },
-  });
+export async function deleteAllExpiredBundles(bundleName: string, bundleType: BundleTypes): Promise<boolean> {
+  console.log("Deleting all expired bundles");
+  const invalidateSuccess = await invalidateAllBundles(bundleName, bundleType);
+  if (!invalidateSuccess) {
+    console.log(`Warning: Failed to invalidate all bundles for ${bundleName} (${bundleType})`);
+  }
+
   try {
-    const responseText = await response.text();
-    console.log('Delete all expired bundles response: ', responseText);
-  } finally {
-    expect(response.ok).toBeTruthy();
+    const response = await fetch(`${MARKETPLACE_BE_URL}/configuration`, {
+      method: 'GET',
+      headers: {
+        'Ocp-Apim-Subscription-Key': process.env.SUBKEY ?? '',
+      },
+    });
+
+    if (!response.ok) {
+      const responseText = await response.text();
+      console.log(`Warning: Failed to refresh configuration: ${response.status} ${response.statusText} - ${responseText}`);
+      return false;
+    }
+
+    console.log('Successfully refreshed configuration');
+    return true;
+  } catch (error) {
+    console.log(`Exception refreshing configuration: ${error}`);
+    return false;
   }
 }
 

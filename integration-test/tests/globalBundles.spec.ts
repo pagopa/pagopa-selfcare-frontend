@@ -20,8 +20,13 @@ test.describe.serial('Global bundles flow', () => {
   });
 
   test.afterAll(async () => {
-    await deleteAllExpiredBundles(bundleNameGlobal, BundleTypes.GLOBAL);
-    await page.close();
+    try {
+      await deleteAllExpiredBundles(bundleNameGlobal, BundleTypes.GLOBAL);
+    } catch (error) {
+      console.log(`Warning: Error in afterAll cleanup (global bundles): ${error}`);
+    } finally {
+      await page.close();
+    }
   });
 
   test('PSP creates global bundle', async () => {

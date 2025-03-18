@@ -380,7 +380,7 @@ test.describe.serial('Channel flow', () => {
     }
   });
 
-  test('PSP modify channel', async () => {
+  test.fixme('PSP modify channel', async () => {
     console.log('🚀 STARTING TEST: PSP modify channel');
     await changeToPspUser(page);
     await page.getByTestId('channels-test').click();

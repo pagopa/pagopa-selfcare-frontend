@@ -155,3 +155,29 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
     expect(response.ok).toBeTruthy();
   }
 }
+
+export async function getToDeletableBundleDetail(
+  page: Page,
+  bundleName: string
+) {
+  await page.getByTestId('search-input').click();
+  await page.getByTestId('search-input').fill(bundleName);
+  await page.getByTestId('state-filter').click();
+  await page.getByRole('option', { name: 'In attivazione' }).click();
+  await page.getByTestId('button-search').click();
+  await page.waitForTimeout(2000);
+  await page.getByTestId('button-search').click();
+  await page.getByLabel('Gestisci pacchetto').first().click();
+}
+
+export function getRandomMinImport() {
+  return Math.floor(Math.random() * (50000 - 49000 + 1)) + 49000;
+}
+
+export function getRandomMaxImport() {
+  return Math.floor(Math.random() * (100000 - 99000 + 1)) + 99000;
+}
+
+export function getRandomPaymentAmount() {
+  return Math.floor(Math.random() * 5) + 1;
+}

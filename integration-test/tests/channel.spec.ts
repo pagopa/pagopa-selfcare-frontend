@@ -19,30 +19,27 @@ test.describe.serial('Channel flow', () => {
   test('PSP creates channel', async () => {
     console.log('🚀 STARTING TEST: PSP creates channel');
     await changeToPspUser(page);
+    await page.waitForTimeout(2000);
     await page.getByTestId('channels-test').click();
     await page.getByTestId('create-channel').click();
 
     await page.waitForTimeout(2000);
 
     channelId = await page.getByTestId('channel-code-test').inputValue();
-    console.log(`Created new channel with ID: ${channelId}`);
 
     await page.getByTestId('target-union-test').click();
     await page.getByTestId('target-union-test').fill(endpoint);
 
     await page.waitForTimeout(1000);
 
-    console.log('Clicking payment type dropdown with exact ID');
     await page.locator('#payment_types0_select').click();
 
     await page.waitForTimeout(1000);
 
-    console.log('Selecting Bancomat Pay option');
     await page.getByRole('option', { name: /bancomat pay/i }).click({ timeout: 5000 });
 
     await page.waitForTimeout(1000);
 
-    console.log('Proceeding with confirmation');
     await page.getByRole('button', { name: 'Conferma' }).click();
     await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);
@@ -66,7 +63,6 @@ test.describe.serial('Channel flow', () => {
       let channelFound = false;
 
       for (const idToTry of channelIdsToTry) {
-        console.log(`Searching for channel to approve: ${idToTry}`);
 
         await page.waitForSelector('[data-testid="tab-toBeValidated"]', { state: 'visible', timeout: 10000 });
         await page.getByTestId('tab-toBeValidated').click();
@@ -82,11 +78,9 @@ test.describe.serial('Channel flow', () => {
           .catch(() => false);
 
         if (!isFound) {
-          console.log(`Channel ${idToTry} not found, trying next option`);
           continue;
         }
 
-        console.log(`Found channel ${idToTry}, checking if it can be approved`);
         targetChannelId = idToTry;
 
         try {
@@ -100,7 +94,6 @@ test.describe.serial('Channel flow', () => {
             .catch(() => false);
 
           if (!isButtonVisible) {
-            console.log(`Approve button not visible for channel ${idToTry}, trying another channel`);
             await page.getByTestId('back-button-test').click();
             await page.waitForTimeout(1000);
             continue;
@@ -108,13 +101,10 @@ test.describe.serial('Channel flow', () => {
 
           const isEnabled = await approveButton.isEnabled();
           if (!isEnabled) {
-            console.log(`Approve button not enabled for channel ${idToTry}, trying another channel`);
             await page.getByTestId('back-button-test').click();
             await page.waitForTimeout(1000);
             continue;
           }
-
-          console.log(`Channel ${idToTry} can be approved, proceeding with approval`);
           channelFound = true;
           break;
         } catch (error) {
@@ -135,14 +125,11 @@ test.describe.serial('Channel flow', () => {
         return;
       }
 
-      console.log(`Approving channel ${targetChannelId}`);
-
       const approveButton = page.getByRole('link', { name: 'Approva e valida' });
       await approveButton.click();
 
       await page.waitForTimeout(3000);
 
-      console.log('Filling the primitive versions field');
       let primitiveFieldFilled = false;
 
       try {
@@ -151,7 +138,6 @@ test.describe.serial('Channel flow', () => {
           await primitiveByPlaceholder.click({ force: true });
           await primitiveByPlaceholder.fill('1.0.0');
           primitiveFieldFilled = true;
-          console.log('Filled primitive field by placeholder');
         }
       } catch (err) {
         console.log('Error filling by placeholder:', err);
@@ -167,13 +153,11 @@ test.describe.serial('Channel flow', () => {
               await inputField.click({ force: true });
               await inputField.fill('1.0.0');
               primitiveFieldFilled = true;
-              console.log('Filled primitive field by label ID');
             } else {
               const nearbyInput = page.locator('label:has-text("Versioni primitive") + input, label:has-text("Versioni primitive") ~ input').first();
               await nearbyInput.click({ force: true });
               await nearbyInput.fill('1.0.0');
               primitiveFieldFilled = true;
-              console.log('Filled primitive field by sibling relationship');
             }
           }
         } catch (err) {
@@ -190,7 +174,6 @@ test.describe.serial('Channel flow', () => {
                 await input.click({ force: true });
                 await input.fill('1.0.0');
                 primitiveFieldFilled = true;
-                console.log('Filled first visible text input as fallback');
                 break;
               }
             }
@@ -200,7 +183,6 @@ test.describe.serial('Channel flow', () => {
         }
       }
 
-      console.log('Filling password field');
       let passwordFilled = false;
 
       try {
@@ -209,7 +191,6 @@ test.describe.serial('Channel flow', () => {
           await passwordByTestId.click({ force: true });
           await passwordByTestId.fill('password');
           passwordFilled = true;
-          console.log('Filled password by test ID');
         }
       } catch (err) {
         console.log('Error filling password by test ID:', err);
@@ -224,7 +205,6 @@ test.describe.serial('Channel flow', () => {
                 await field.click({ force: true });
                 await field.fill('password');
                 passwordFilled = true;
-                console.log('Filled password by type');
                 break;
               }
             }
@@ -244,7 +224,6 @@ test.describe.serial('Channel flow', () => {
               await passwordInput.click({ force: true });
               await passwordInput.fill('password');
               passwordFilled = true;
-              console.log('Filled password by label ID');
             }
           }
         } catch (err) {
@@ -255,7 +234,6 @@ test.describe.serial('Channel flow', () => {
       await handleDropdown(page, 'Nuova connettività canali');
       await handleDropdown(page, 'Indirizzo proxy');
 
-      console.log('Clicking confirm button');
       let confirmClicked = false;
 
       try {
@@ -263,7 +241,6 @@ test.describe.serial('Channel flow', () => {
         if (await confirmButton.isVisible({ timeout: 3000 })) {
           await confirmButton.click({ force: true });
           confirmClicked = true;
-          console.log('Clicked confirm button by text');
         }
       } catch (err) {
         console.log('Error clicking confirm by text:', err);
@@ -277,7 +254,6 @@ test.describe.serial('Channel flow', () => {
             if (text && (text.includes('Conferma') || text.includes('Confirm') || text.includes('Submit'))) {
               await button.click({ force: true });
               confirmClicked = true;
-              console.log('Clicked button with text:', text);
               break;
             }
           }
@@ -292,7 +268,6 @@ test.describe.serial('Channel flow', () => {
           if (primaryButtons.length > 0) {
             await primaryButtons[primaryButtons.length - 1].click({ force: true });
             confirmClicked = true;
-            console.log('Clicked primary/submit button as fallback');
           }
         } catch (err) {
           console.log('Error with primary button fallback:', err);
@@ -302,33 +277,26 @@ test.describe.serial('Channel flow', () => {
       await page.waitForTimeout(2000);
 
       try {
-        console.log(`Attempting to approve channel ID: ${targetChannelId}`);
 
         let modalConfirmButton;
 
         const confirmByText = page.getByRole('button', { name: 'Conferma' });
         if (await confirmByText.isVisible({ timeout: 3000 })) {
-          console.log('Found modal confirm button by text');
           modalConfirmButton = confirmByText;
         } else {
           const modalButtons = await page.locator('div[role="dialog"] button, .MuiDialog-root button').all();
-          console.log(`Found ${modalButtons.length} buttons in modal`);
 
           if (modalButtons.length > 0) {
             modalConfirmButton = modalButtons[modalButtons.length - 1];
-            console.log('Using last button in modal');
           } else {
             modalConfirmButton = page.getByTestId('confirm-button-modal-test');
-            console.log('Using button by test ID');
           }
         }
 
         if (modalConfirmButton) {
           await modalConfirmButton.click({ force: true });
-          console.log('Clicked confirm button in modal');
         }
 
-        console.log('Channel approval test COMPLETED - ending test after final confirmation');
 
         await page.waitForTimeout(1000).catch(() => { });
 
@@ -383,7 +351,6 @@ test.describe.serial('Channel flow', () => {
 
       const requestEditButton = page.getByTestId('request-edit-button');
       const isVisible = await requestEditButton.isVisible();
-      console.log('Request edit button visible:', isVisible);
 
       if (!isVisible) {
         console.log('Request edit button not visible, skipping test');
@@ -422,7 +389,7 @@ test.describe.serial('Channel flow', () => {
     const baseId = channelParts[0];
     const channelNumber = parseInt(channelParts[1], 10);
 
-    const channelIdsToTry = [];
+    const channelIdsToTry : string[] = [];
 
     channelIdsToTry.push(channelId);
 
@@ -450,7 +417,6 @@ test.describe.serial('Channel flow', () => {
     let targetChannelId = '';
 
     for (const idToTry of channelIdsToTry) {
-      console.log(`Searching for channel: ${idToTry}`);
 
       await page.waitForSelector('[data-testid="search-input"]', { state: 'visible', timeout: 10000 });
       await page.getByTestId('search-input').click();
@@ -462,11 +428,9 @@ test.describe.serial('Channel flow', () => {
         .catch(() => false);
 
       if (!isFound) {
-        console.log(`Channel ${idToTry} not found, trying next option`);
         continue;
       }
 
-      console.log(`Found channel ${idToTry}, checking if it's editable`);
       channelFound = true;
       targetChannelId = idToTry;
 
@@ -481,10 +445,7 @@ test.describe.serial('Channel flow', () => {
         return pageContent.includes(text.toLowerCase());
       }, warningText).catch(() => false);
 
-      console.log(`Channel ${idToTry} warning check result: ${hasWarning ? 'Has warning' : 'No warning'}`);
-
       if (hasWarning) {
-        console.log(`Channel ${idToTry} is in read-only mode, trying another channel`);
         await page.getByTestId('back-button-test').click();
         await page.waitForTimeout(1000);
         continue;
@@ -495,13 +456,11 @@ test.describe.serial('Channel flow', () => {
         .catch(() => false);
 
       if (!isModifyVisible) {
-        console.log(`Modify button not visible for channel ${idToTry}, trying another channel`);
         await page.getByTestId('back-button-test').click();
         await page.waitForTimeout(1000);
         continue;
       }
 
-      console.log(`Channel ${idToTry} is editable, proceeding with modification`);
       channelIsEditable = true;
       break;
     }
@@ -518,7 +477,6 @@ test.describe.serial('Channel flow', () => {
       return;
     }
 
-    console.log(`Modifying channel ${targetChannelId}`);
     await page.getByRole('link', { name: 'Modifica' }).click();
     await page.getByTestId('target-union-test').click();
     await page.getByTestId('target-union-test').clear();
@@ -545,7 +503,6 @@ test.describe.serial('Channel flow', () => {
     let channelFound = false;
 
     for (const idToTry of channelIdsToTry) {
-      console.log(`Searching for channel: ${idToTry}`);
 
       await page.waitForSelector('[data-testid="search-input"]', { state: 'visible', timeout: 10000 });
       await page.getByTestId('search-input').click();
@@ -557,12 +514,10 @@ test.describe.serial('Channel flow', () => {
         .catch(() => false);
 
       if (isFound) {
-        console.log(`Found channel ${idToTry}, proceeding with test`);
         targetChannelId = idToTry;
         channelFound = true;
         break;
       } else {
-        console.log(`Channel ${idToTry} not found, trying next option`);
       }
     }
 
@@ -577,25 +532,19 @@ test.describe.serial('Channel flow', () => {
     await page.waitForTimeout(2000);
 
     try {
-      console.log('Attempting to click Associa PSP button using different strategies');
 
       try {
         const blueButton = page.locator('button, a').filter({ hasText: 'Associa PSP' }).first();
-        console.log('Clicking blue Associa PSP button');
         await blueButton.click({ timeout: 5000 });
       } catch (error) {
-        console.log('Blue button approach failed, trying alternative methods');
 
         try {
           await page.getByTestId('associate-psp-button').click({ timeout: 3000 });
-          console.log('Clicked by test ID');
         } catch {
           try {
             const associaLink = page.locator('a').filter({ hasText: 'Associa PSP' }).last();
-            console.log('Clicking Associa PSP link in message');
             await associaLink.click({ timeout: 3000 });
           } catch {
-            console.log('Direct navigation to association page');
             await page.goto(`/ui/channels/${targetChannelId}/associate-psp`);
           }
         }
@@ -631,7 +580,6 @@ test.describe.serial('Channel flow', () => {
             .catch(() => false);
 
           if (isPspVisible) {
-            console.log(`Found PSP option with selector: ${selector}`);
             await pspOption.getByRole('button').click();
             pspFound = true;
             break;
@@ -642,9 +590,7 @@ test.describe.serial('Channel flow', () => {
       }
 
       if (!pspFound) {
-        console.log('Trying generic PSP selection approach');
         const pspItems = await page.locator('[data-testid^="PartyItemContainer"]').all();
-        console.log(`Found ${pspItems.length} generic PSP items`);
 
         if (pspItems.length > 0) {
           await pspItems[0].getByRole('button').first().click();
@@ -683,7 +629,6 @@ test.describe.serial('Channel flow', () => {
     ];
 
     for (const idToTry of channelIdsToTry) {
-      console.log(`Searching for channel: ${idToTry}`);
 
       await page.waitForSelector('[data-testid="search-input"]', { state: 'visible', timeout: 10000 });
       await page.getByTestId('search-input').click();
@@ -694,12 +639,10 @@ test.describe.serial('Channel flow', () => {
         .catch(() => false);
 
       if (isFound) {
-        console.log(`Found channel ${idToTry}, proceeding with test`);
         targetChannelId = idToTry;
         channelFound = true;
         break;
       } else {
-        console.log(`Channel ${idToTry} not found, trying next option`);
       }
     }
 
@@ -740,7 +683,6 @@ test.describe.serial('Channel flow', () => {
   });
 
   async function handleDropdown(page, dropdownLabel) {
-    console.log(`Attempting to handle ${dropdownLabel} dropdown`);
     try {
       const dropdownContainer = page.locator(`div:has-text("${dropdownLabel}")`).filter({
         hasText: dropdownLabel
@@ -750,7 +692,6 @@ test.describe.serial('Channel flow', () => {
         .catch(() => false);
 
       if (!isVisible) {
-        console.log(`${dropdownLabel} dropdown not found, skipping`);
         return;
       }
 
@@ -762,7 +703,6 @@ test.describe.serial('Channel flow', () => {
         for (const option of options) {
           if (await option.isVisible()) {
             await option.click({ force: true });
-            console.log(`Selected option from ${dropdownLabel} dropdown`);
             return;
           }
         }
@@ -770,7 +710,6 @@ test.describe.serial('Channel flow', () => {
 
       await page.keyboard.press('ArrowDown');
       await page.keyboard.press('Enter');
-      console.log(`Used keyboard to select option for ${dropdownLabel}`);
     } catch (err) {
       console.log(`Error handling ${dropdownLabel} dropdown:`, err);
     }

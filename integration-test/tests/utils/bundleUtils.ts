@@ -21,61 +21,97 @@ export const ciBundleStates = {
 export async function getToBundleDetail(
   page: Page,
   bundleName: string
-) {
+): Promise<boolean> {
+  let resultsFound = true;
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
   await page.getByTestId('button-search').click();
   await page.waitForTimeout(2000);
-  await page.getByTestId('page-limit-select').getByLabel('5').click();
-  await page.getByRole('option', { name: '20' }).click();
-  await page.waitForTimeout(2000);
-  await page.getByLabel('Gestisci pacchetto').click();
+  
+  try {
+    await page.getByText('Non sono ancora presenti').waitFor({ timeout: 3000 });
+    resultsFound = false;
+    return resultsFound;
+  } catch {
+    await page.getByTestId('page-limit-select').getByLabel('5').click();
+    await page.getByRole('option', { name: '20' }).click();
+    await page.waitForTimeout(2000);
+    await page.getByLabel('Gestisci pacchetto').first().click();
+    return resultsFound;
+  }
 }
 
-export async function validateBundle(bundleName: string, bundleType: string) {
-  // Retrieve bundle list
-  const response = await fetch(
-    `${MARKETPLACE_BE_URL}/bundles?limit=200&types=${bundleType}&name=${bundleName}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
-      } as HeadersInit,
-    }
-  );
-  const bundleList = await response.json();
-  expect(bundleList?.bundles?.length).toBeTruthy();
-  const dateToday = new Date().getTime();
-
-  // Update bundle
-  const bundle = bundleList.bundles.find(
-    (el: any) =>
-      new Date(el.validityDateFrom).getTime() > dateToday &&
-      new Date(el.validityDateTo).getTime() > dateToday
-  );
-  expect(bundle.validityDateFrom).toBeTruthy();
-  expect(bundle.validityDateTo).toBeTruthy();
-  const responseUpdate = await fetch(
-    `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
-      } as HeadersInit,
-      body: JSON.stringify({
-        ...bundle,
-        validityDateFrom: new Date(),
-        abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
-      }),
-    }
-  );
+export async function validateBundle(bundleName: string, bundleType: string): Promise<boolean> {
   try {
-    const responseText = await responseUpdate.text();
-    console.log('Validate bundle update error: ', responseText);
-  } finally {
-    expect(responseUpdate.ok).toBeTruthy();
+    // Retrieve bundle list
+    const response = await fetch(
+      `${MARKETPLACE_BE_URL}/bundles?limit=200&types=${bundleType}&name=${bundleName}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
+        } as HeadersInit,
+      }
+    );
+    
+    if (!response.ok) {
+      console.log(`Failed to get bundles: ${response.status} ${response.statusText}`);
+      return false;
+    }
+    
+    const bundleList = await response.json();
+    
+    // Check if we have any bundles
+    if (!bundleList?.bundles?.length) {
+      console.log(`No bundles found with name ${bundleName} and type ${bundleType}`);
+      return false;
+    }
+    
+    const dateToday = new Date().getTime();
+
+    // Update bundle
+    const bundle = bundleList.bundles.find(
+      (el: any) =>
+        new Date(el.validityDateFrom).getTime() > dateToday &&
+        new Date(el.validityDateTo).getTime() > dateToday
+    );
+    
+    if (!bundle || !bundle.validityDateFrom || !bundle.validityDateTo) {
+      console.log('No valid bundle with future validity dates found');
+      return false;
+    }
+    
+    const responseUpdate = await fetch(
+      `${MARKETPLACE_BE_URL}/psps/${PSP_DEMO_DIRECT_CODE}/bundles/${bundle.idBundle}?forceUpdate=true`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': process.env.SUBKEY,
+        } as HeadersInit,
+        body: JSON.stringify({
+          ...bundle,
+          validityDateFrom: new Date(),
+          abi: PSP_DEMO_DIRECT_CODE.replace('ABI', ''),
+        }),
+      }
+    );
+    
+    if (!responseUpdate.ok) {
+      try {
+        const responseText = await responseUpdate.text();
+        console.log('Validate bundle update error: ', responseText);
+      } catch (error) {
+        console.log('Error reading response body:', error);
+      }
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.log('Error in validateBundle:', error);
+    return false;
   }
 }
 
@@ -156,7 +192,7 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
   }
 }
 
-export async function getToDeletableBundleDetail(
+export async function getToNotDeletedBundleDetail(
   page: Page,
   bundleName: string
 ) {

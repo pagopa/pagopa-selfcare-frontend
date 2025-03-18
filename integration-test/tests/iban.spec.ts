@@ -2,7 +2,7 @@ import { Page, test } from '@playwright/test';
 import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
 
 test.setTimeout(100000);
-test.describe('IBAN flow', () => {
+test.describe.serial('IBAN flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
   const IBAN: string = 'IT49S0300203280447684177591';

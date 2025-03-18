@@ -8,6 +8,7 @@ test.describe.serial('IBAN flow', () => {
   const IBAN: string = 'IT49S0300203280447684177591';
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: iban.spec.ts');
     page = await browser.newPage({ storageState: undefined });
   });
 

@@ -7,6 +7,7 @@ test.describe.serial('Station Maintenances flow', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: stationMaintenances.spec.ts');
     page = await browser.newPage();
   });
 

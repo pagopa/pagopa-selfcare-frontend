@@ -9,6 +9,7 @@ test.describe.serial('Channel flow', () => {
   let channelId: string = "99999000011_20";
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: channel.spec.ts');
     page = await browser.newPage({ storageState: undefined });
   });
 

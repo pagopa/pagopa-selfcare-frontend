@@ -17,6 +17,7 @@ test.describe.serial('Private bundles flow', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: privateBundles.spec.ts');
     page = await browser.newPage();
   });
 

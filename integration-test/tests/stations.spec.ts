@@ -15,6 +15,7 @@ test.describe.serial('Station flow', () => {
   };
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: stations.spec.ts');
     page = await browser.newPage({ storageState: undefined });
   });
 
@@ -31,7 +32,6 @@ test.describe.serial('Station flow', () => {
     await page.waitForTimeout(2000);
 
     selectedStationId = await page.getByTestId('station-code-test').inputValue();
-    console.log(`Created station with ID: ${selectedStationId}`);
 
     await page.getByTestId('confirm-button-test').click();
     await page.getByTestId('confirm-button-modal-test').click();
@@ -51,7 +51,7 @@ test.describe.serial('Station flow', () => {
 
     const stationFound = await page.getByLabel('more').count() > 0;
     if (!stationFound) {
-      console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test may need to be skipped`);
+      console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test will be skipped`);
       test.skip();
       return;
     }
@@ -67,7 +67,6 @@ test.describe.serial('Station flow', () => {
       await page.getByTestId('password-test').clear();
       await page.getByTestId('password-test').dblclick();
       await page.getByTestId('password-test').type('password', { delay: 50 });
-      console.log('Successfully entered password');
     } catch (error) {
       console.error('Error while entering password:', error);
       await page.getByTestId('password-test').fill('password');
@@ -92,7 +91,6 @@ test.describe.serial('Station flow', () => {
 
       const stationExists = await page.getByLabel('more').count() > 0;
       if (!stationExists) {
-        console.log(`Station ${selectedStationId} not found, falling back to flexible search`);
         await page.getByTestId('search-input').clear();
         await page.getByTestId('search-input').fill('99999000013');
         await page.waitForTimeout(1000);
@@ -103,7 +101,6 @@ test.describe.serial('Station flow', () => {
         const extractedId = extractStationId(rowText);
         if (extractedId) {
           selectedStationId = extractedId;
-          console.log(`Updated station ID to: ${selectedStationId}`);
         } else {
           console.log(`Couldn't extract station ID from: ${rowText}`);
         }
@@ -120,7 +117,6 @@ test.describe.serial('Station flow', () => {
       const extractedId = extractStationId(rowText);
       if (extractedId) {
         selectedStationId = extractedId;
-        console.log(`Selected station ID: ${selectedStationId}`);
       } else {
         console.log(`Couldn't extract station ID from: ${rowText}`);
       }
@@ -168,7 +164,7 @@ test.describe.serial('Station flow', () => {
 
     const stationFound = await page.getByLabel('more').count() > 0;
     if (!stationFound) {
-      console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test may need to be skipped`);
+      console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test will be skipped`);
       test.skip();
       return;
     }
@@ -213,7 +209,7 @@ test.describe.serial('Station flow', () => {
 
     const ecOptions = await page.getByRole('option').all();
     if (ecOptions.length === 0) {
-      console.log('No EC options found, this test may need to be skipped');
+      console.log('No EC options found, this test will be skipped');
       test.skip();
       return;
     }
@@ -225,7 +221,6 @@ test.describe.serial('Station flow', () => {
     } else {
       const firstEcOption = ecOptions[0];
       associatedEcName = await firstEcOption.textContent() || 'Unknown EC';
-      console.log(`EC Signed Direct not found, using: ${associatedEcName}`);
       await firstEcOption.click();
     }
 
@@ -238,10 +233,9 @@ test.describe.serial('Station flow', () => {
     } else {
       const segregationOptions = await page.getByRole('option').all();
       if (segregationOptions.length > 0) {
-        console.log('Segregation code "01" not found, using first available option');
         await segregationOptions[0].click();
       } else {
-        console.log('No segregation code options found, test cannot continue');
+        console.log('No segregation code options found, this test will be skipped');
         test.skip();
         return;
       }
@@ -268,7 +262,6 @@ test.describe.serial('Station flow', () => {
     if (associatedEcName) {
       const associatedRows = await page.getByRole('row', { name: associatedEcName }).count();
       if (associatedRows > 0) {
-        console.log(`Found associated EC: ${associatedEcName}`);
         await page.getByRole('row', { name: associatedEcName }).getByLabel('more').click();
         foundEc = true;
       }
@@ -277,7 +270,7 @@ test.describe.serial('Station flow', () => {
     if (!foundEc) {
       const moreButtons = await page.getByLabel('more').all();
       if (moreButtons.length === 0) {
-        console.log('No associated ECs found to dissociate, this test may need to be skipped');
+        console.log('No associated ECs found to dissociate, this test will be skipped');
         test.skip();
         return;
       }

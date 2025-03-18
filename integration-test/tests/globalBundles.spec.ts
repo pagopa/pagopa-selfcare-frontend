@@ -16,6 +16,7 @@ test.describe.serial('Global bundles flow', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: globalBundles.spec.ts');
     page = await browser.newPage({ storageState: undefined });
   });
 

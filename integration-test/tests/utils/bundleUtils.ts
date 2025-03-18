@@ -116,7 +116,7 @@ export async function validateBundle(bundleName: string, bundleType: string): Pr
 }
 
 export async function invalidateAllBundles(bundleName: string, bundleType: BundleTypes): Promise<boolean> {
-  console.log("Invalidanting all expired bundles");
+  console.log("Invalidating all expired bundles");
   try {
     // Retrieve bundle list
     const response = await fetch(

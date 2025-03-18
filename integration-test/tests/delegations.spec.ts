@@ -18,6 +18,7 @@ test.describe.serial('Delegations flow', () => {
   let selectedStationId = '';
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: delegations.spec.ts');
     page = await browser.newPage({ storageState: undefined });
     await changeToEcUser(page);
   });

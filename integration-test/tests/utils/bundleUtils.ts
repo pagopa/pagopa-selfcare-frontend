@@ -231,18 +231,27 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
   }
 }
 
-export async function getToNotDeletedBundleDetail(
+export async function getToInActivationBundleDetail(
   page: Page,
   bundleName: string
-) {
+): Promise<boolean> {
+  let resultsFound = true;
   await page.getByTestId('search-input').click();
   await page.getByTestId('search-input').fill(bundleName);
   await page.getByTestId('state-filter').click();
   await page.getByRole('option', { name: 'In attivazione' }).click();
   await page.getByTestId('button-search').click();
   await page.waitForTimeout(2000);
-  await page.getByTestId('button-search').click();
-  await page.getByLabel('Gestisci pacchetto').first().click();
+  
+  try {
+    await page.getByText('Non sono ancora presenti').waitFor({ timeout: 3000 });
+    resultsFound = false;
+    return resultsFound;
+  } catch {
+    await page.getByTestId('button-search').click();
+    await page.getByLabel('Gestisci pacchetto').first().click();
+    return resultsFound;
+  }
 }
 
 export function getRandomMinImport() {

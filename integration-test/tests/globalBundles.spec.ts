@@ -3,7 +3,7 @@ import {
   bundleNameGlobal,
   deleteAllExpiredBundles,
   getToBundleDetail,
-  getToNotDeletedBundleDetail,
+  getToInActivationBundleDetail,
   getRandomMinImport,
   getRandomMaxImport,
   getRandomPaymentAmount
@@ -121,7 +121,7 @@ test.describe.serial('Global bundles flow', () => {
     console.log('🚀 STARTING TEST: PSP edits global bundle');
     await changeToPspUser(page)
     await page.getByTestId('commission-bundles-test').click();
-    await getToNotDeletedBundleDetail(page, bundleNameGlobal);
+    await getToInActivationBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('modify-button').click();
     await page.getByTestId('max-import-test').click();
     await page.getByTestId('max-import-test').click();
@@ -154,7 +154,7 @@ test.describe.serial('Global bundles flow', () => {
     console.log('🚀 STARTING TEST: PSP deletes global bundle');
     await changeToPspUser(page)
     await page.getByTestId('commission-bundles-test').click();
-    await getToNotDeletedBundleDetail(page, bundleNameGlobal);
+    await getToInActivationBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);

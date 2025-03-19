@@ -3,7 +3,7 @@ import {
   bundleNamePublic,
   deleteAllExpiredBundles,
   getToBundleDetail,
-  getToNotDeletedBundleDetail,
+  getToInActivationBundleDetail,
   validateBundle,
   getRandomMinImport,
   getRandomMaxImport,
@@ -280,7 +280,7 @@ test.describe.serial('Public bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
-    await getToNotDeletedBundleDetail(page, bundleNamePublic);
+    await getToInActivationBundleDetail(page, bundleNamePublic);
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);

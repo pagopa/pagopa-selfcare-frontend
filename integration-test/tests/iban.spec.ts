@@ -17,6 +17,7 @@ test.describe.serial('IBAN flow', () => {
   });
 
   test('EC creates IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC creates IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByRole('button', { name: 'Aggiungi IBAN' }).click();
@@ -29,6 +30,7 @@ test.describe.serial('IBAN flow', () => {
   });
 
   test('EC edits IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC edits IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByPlaceholder('Cerca per Codice IBAN').click();
@@ -42,6 +44,7 @@ test.describe.serial('IBAN flow', () => {
   });
 
   test('EC deletes IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC deletes IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByPlaceholder('Cerca per Codice IBAN').click();

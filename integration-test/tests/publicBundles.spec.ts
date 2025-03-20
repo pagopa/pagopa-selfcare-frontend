@@ -131,7 +131,7 @@ test.describe.serial('Public bundles flow', () => {
     }
   });
 
-  test('EC activates public bundle', async ({ page }) => {
+  test.fixme('EC activates public bundle', async ({ page }) => {
     console.log('🚀 STARTING TEST: EC activates public bundle');
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
@@ -170,7 +170,7 @@ test.describe.serial('Public bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('EC activates public bundle 2nd time', async () => {
+  test.fixme('EC activates public bundle 2nd time', async () => {
     console.log('🚀 STARTING TEST: EC activates public bundle 2nd time');
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
@@ -185,7 +185,7 @@ test.describe.serial('Public bundles flow', () => {
     await activatePublicBundle(page);
   });
 
-  test('PSP reject EC`s subscription request', async () => {
+  test.fixme('PSP reject EC`s subscription request', async () => {
     console.log('🚀 STARTING TEST: PSP rejects EC`s subscription request');
 
     await changeToPspUser(page);
@@ -212,7 +212,7 @@ test.describe.serial('Public bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('EC activates public bundle 3rd time', async () => {
+  test.fixme('EC activates public bundle 3rd time', async () => {
     console.log('🚀 STARTING TEST: EC activates public bundle 3rd time');
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();

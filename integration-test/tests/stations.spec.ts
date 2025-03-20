@@ -25,6 +25,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('EC creates async station', async () => {
+    console.log('🚀 STARTING TEST: EC creates async station');
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
 
@@ -39,6 +40,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('Pagopa Operator approves station', async () => {
+    console.log('🚀 STARTING TEST: Pagopa Operator approves station');
     await changeToEcUser(page, true);
     await page.getByTestId('stations-test').click();
 
@@ -80,6 +82,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('EC modify already existing station from sync to async', async () => {
+    console.log('🚀 STARTING TEST: EC modify already existing station from sync to async');
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
 
@@ -132,6 +135,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('Pagopa Operator request edit', async () => {
+    console.log('🚀 STARTING TEST: Pagopa Operator request edit');
     await changeToEcUser(page, true);
     await page.getByTestId('stations-test').click();
 
@@ -152,6 +156,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('EC modify station from async to sync', async () => {
+    console.log('🚀 STARTING TEST: EC modify station from async to sync');
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
 
@@ -192,6 +197,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('EC associate another EC to Station', async () => {
+    console.log('🚀 STARTING TEST: EC associate another EC to station');
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
 
@@ -246,6 +252,7 @@ test.describe.serial('Station flow', () => {
   });
 
   test('EC dissociate another EC from station', async () => {
+    console.log('🚀 STARTING TEST: EC dissociate another EC from station');
     await changeToEcUser(page);
     await page.getByTestId('stations-test').click();
 

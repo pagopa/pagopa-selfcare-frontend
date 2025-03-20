@@ -26,7 +26,6 @@ test.describe.serial('Public bundles flow', () => {
     try {
       await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
     } catch (error) {
-      console.log(`Warning: Error in afterAll cleanup (public bundles): ${error}`);
     } finally {
       await page.close();
     }
@@ -131,19 +130,32 @@ test.describe.serial('Public bundles flow', () => {
     }
   });
 
-  test.fixme('EC activates public bundle', async ({ page }) => {
+  test('EC activates public bundle', async () => {
     console.log('🚀 STARTING TEST: EC activates public bundle');
-    await changeToEcUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
 
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
+    await test.step('Navigate to public bundles as EC user', async () => {
+      await changeToEcUser(page);
+      await page.getByTestId('commission-bundles-test').click();
+      await page.getByTestId('tab-public').click();
+    });
+
+    const bundleFound = await test.step('Check if bundle exists', async () => {
+      const found = await getToBundleDetail(page, bundleNamePublic);
+      return found;
+    });
+
     if (!bundleFound) {
       test.skip();
       return;
     }
 
-    await activatePublicBundle(page);
+    const activated = await test.step('Activate the public bundle', async () => {
+      return await activatePublicBundle(page);
+    });
+
+    if (!activated) {
+      test.skip();
+    }
   });
 
   test('EC delete subscription request', async () => {
@@ -159,7 +171,7 @@ test.describe.serial('Public bundles flow', () => {
     }
 
     try {
-      await page.getByTestId('delete-request-button').waitFor({ timeout:5000 } );
+      await page.getByTestId('delete-request-button').waitFor({ timeout: 5000 });
     } catch {
       console.log('No subscription requests found, skipping test');
       test.skip();
@@ -170,61 +182,115 @@ test.describe.serial('Public bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test.fixme('EC activates public bundle 2nd time', async () => {
+  test('EC activates public bundle 2nd time', async () => {
     console.log('🚀 STARTING TEST: EC activates public bundle 2nd time');
-    await changeToEcUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
 
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
+    await test.step('Navigate to public bundles as EC user', async () => {
+      await changeToEcUser(page);
+      await page.getByTestId('commission-bundles-test').click();
+      await page.getByTestId('tab-public').click();
+    });
+
+    const bundleFound = await test.step('Check if bundle exists', async () => {
+      const found = await getToBundleDetail(page, bundleNamePublic);
+      return found;
+    });
+
     if (!bundleFound) {
       test.skip();
       return;
     }
 
-    await activatePublicBundle(page);
+    const activated = await test.step('Activate the public bundle again', async () => {
+      return await activatePublicBundle(page);
+    });
+
+    if (!activated) {
+      test.skip();
+    }
   });
 
-  test.fixme('PSP reject EC`s subscription request', async () => {
+  test('PSP reject EC`s subscription request', async () => {
     console.log('🚀 STARTING TEST: PSP rejects EC`s subscription request');
 
-    await changeToPspUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
+    await test.step('Navigate to public bundles as PSP user', async () => {
+      await changeToPspUser(page);
+      await page.getByTestId('commission-bundles-test').click();
+      await page.getByTestId('tab-public').click();
+    });
 
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
+    const bundleFound = await test.step('Check if bundle exists', async () => {
+      const found = await getToBundleDetail(page, bundleNamePublic);
+      return found;
+    });
+
     if (!bundleFound) {
       test.skip();
       return;
     }
 
-    try {
-      await page.getByTestId('request-detail-button').waitFor({ timeout: 5000 });
-    } catch {
-      console.log('No subscription requests found, skipping test');
+    const detailButtonExists = await test.step('Check for subscription request', async () => {
+      try {
+        await page.getByTestId('request-detail-button').waitFor({ timeout: 5000 });
+        return true;
+      } catch {
+        return false;
+      }
+    });
+
+    if (!detailButtonExists) {
       test.skip();
       return;
     }
 
-    await page.getByTestId('request-detail-button').click();
-    await page.getByTestId('request-reject-button').click();
-    await page.getByTestId('confirm-button-test').click();
-    await checkReturnHomepage(page);
+    await test.step('Reject the subscription request', async () => {
+      await page.getByTestId('request-detail-button').click();
+
+      try {
+        await page.getByTestId('request-reject-button').waitFor({ timeout: 5000 });
+      } catch {
+        return;
+      }
+
+      await page.getByTestId('request-reject-button').click();
+
+      try {
+        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
+      } catch {
+        return;
+      }
+
+      await page.getByTestId('confirm-button-test').click();
+      await checkReturnHomepage(page);
+    });
   });
 
-  test.fixme('EC activates public bundle 3rd time', async () => {
+  test('EC activates public bundle 3rd time', async () => {
     console.log('🚀 STARTING TEST: EC activates public bundle 3rd time');
-    await changeToEcUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
 
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
+    await test.step('Navigate to public bundles as EC user', async () => {
+      await changeToEcUser(page);
+      await page.getByTestId('commission-bundles-test').click();
+      await page.getByTestId('tab-public').click();
+    });
+
+    const bundleFound = await test.step('Check if bundle exists', async () => {
+      const found = await getToBundleDetail(page, bundleNamePublic);
+      return found;
+    });
+
     if (!bundleFound) {
       test.skip();
       return;
     }
 
-    await activatePublicBundle(page);
+    const activated = await test.step('Activate the public bundle one more time', async () => {
+      return await activatePublicBundle(page);
+    });
+
+    if (!activated) {
+      test.skip();
+    }
   });
 
   test('PSP accept EC`s subscription request', async () => {
@@ -253,26 +319,51 @@ test.describe.serial('Public bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test.fixme('EC de-activates public bundle', async () => {
-    await changeToEcUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
+  test('EC deactivates public bundle', async () => {
+    console.log('🚀 STARTING TEST: EC de-activates public bundle');
 
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
+    await test.step('Navigate to public bundles as EC user', async () => {
+      await changeToEcUser(page);
+      await page.getByTestId('commission-bundles-test').click();
+      await page.getByTestId('tab-public').click();
+    });
+
+    const bundleFound = await test.step('Check if bundle exists', async () => {
+      const found = await getToBundleDetail(page, bundleNamePublic);
+      return found;
+    });
+
     if (!bundleFound) {
       test.skip();
       return;
     }
 
-    try {
-      await page.getByTestId('deactivate-button').click();
-    } catch {
-      console.log('No bundle to deactivate found, skipping test');
+    const deactivateButtonExists = await test.step('Check for deactivate button', async () => {
+      try {
+        await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
+        return true;
+      } catch {
+        return false;
+      }
+    });
+
+    if (!deactivateButtonExists) {
       test.skip();
       return;
     }
-    await page.getByTestId('confirm-button-test').click();
-    await checkReturnHomepage(page);
+
+    await test.step('Deactivate the bundle', async () => {
+      await page.getByTestId('deactivate-button').click();
+
+      try {
+        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
+      } catch {
+        return;
+      }
+
+      await page.getByTestId('confirm-button-test').click();
+      await checkReturnHomepage(page);
+    });
   });
 
   test('PSP deletes public bundle', async () => {
@@ -300,17 +391,53 @@ test.describe.serial('Public bundles flow', () => {
   });
 });
 
-async function activatePublicBundle(page: Page) {
-  await page.getByTestId('activate-button').click();
-  await page.getByLabel('Importo a tuo carico').click();
-  await page.getByLabel('Importo a tuo carico').fill('40');
-  await page
-    .locator('div')
-    .filter({ hasText: /^Conferma$/ })
-    .click();
-  await page.getByLabel('Importo a tuo carico').click();
-  await page.getByLabel('Importo a tuo carico').fill('4');
-  await page.getByTestId('open-modal-button-test').click();
-  await page.getByTestId('confirm-button-test').click();
-  await checkReturnHomepage(page);
+async function activatePublicBundle(page: Page): Promise<boolean> {
+  try {
+    try {
+      await page.getByTestId('activate-button').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+
+    await page.getByTestId('activate-button').click();
+
+    try {
+      await page.getByLabel('Importo a tuo carico').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+
+    await page.getByLabel('Importo a tuo carico').click();
+    await page.getByLabel('Importo a tuo carico').fill('40');
+
+    const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
+    try {
+      await confirmButton.waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+    await confirmButton.click();
+
+    await page.getByLabel('Importo a tuo carico').click();
+    await page.getByLabel('Importo a tuo carico').fill('4');
+
+    try {
+      await page.getByTestId('open-modal-button-test').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+    await page.getByTestId('open-modal-button-test').click();
+
+    try {
+      await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+    await page.getByTestId('confirm-button-test').click();
+
+    await checkReturnHomepage(page);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

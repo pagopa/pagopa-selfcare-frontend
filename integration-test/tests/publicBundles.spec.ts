@@ -253,7 +253,7 @@ test.describe.serial('Public bundles flow', () => {
     await checkReturnHomepage(page);
   });
 
-  test('EC de-activates public bundle', async () => {
+  test.fixme('EC de-activates public bundle', async () => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();

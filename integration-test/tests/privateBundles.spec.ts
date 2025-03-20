@@ -1,11 +1,16 @@
-import {Page, test} from '@playwright/test';
+import { Page, test, expect } from '@playwright/test';
 import {
   bundleNamePrivate,
   deleteAllExpiredBundles,
   getToBundleDetail,
-  validateBundle
+  validateBundle,
 } from './utils/bundleUtils';
-import {BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage} from './utils/e2eUtils';
+import {
+  BundleTypes,
+  changeToEcUser,
+  changeToPspUser,
+  checkReturnHomepage,
+} from './utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe('Private bundles flow', () => {
@@ -25,27 +30,71 @@ test.describe('Private bundles flow', () => {
     await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('create-bundle-button').click();
+    // Test bundle type
     await page.getByLabel('Su invito').check();
+    // Test name
     await page.getByTestId('name-test').click();
     await page.getByTestId('name-test').fill(bundleNamePrivate);
+    // Test description
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
+    // Test payment type
     await page.getByLabel('Tipo di pagamento').click();
     await page.getByRole('option', { name: 'xiao - REMOVEME' }).click();
+    // Test touchpoint
     await page.getByLabel('Touchpoint').click();
     await page.getByRole('option', { name: 'Touchpoint' }).click();
+    // Test min import
     await page.getByTestId('min-import-test').click();
     await page.getByTestId('min-import-test').fill('50000');
+    // Test max import
     await page.getByTestId('max-import-test').click();
     await page.getByTestId('max-import-test').fill('100000');
+    // Test payment amount
     await page.getByTestId('payment-amount-test').click();
     await page.getByTestId('payment-amount-test').fill('5');
-    await page.getByLabel('Codice intermediario').click();
-    await page.getByLabel('Close').click();
+    // Test flag onUs
+    expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+    expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
+
+    await page.getByLabel('Tipo di pagamento').click();
+    await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
+
+    expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
+    await page.getByRole('checkbox', { name: 'onUs' }).check();
+    expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
+
+    await page.getByLabel('Tipo di pagamento').click();
+    await page.getByRole('option', { name: 'xiao - REMOVEME' }).click();
+    expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+    expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
+    // Test broker
     await page.getByLabel('Codice intermediario').click();
     await page.getByRole('option', { name: 'PSP DEMO DIRECT' }).click();
+    // Test channels
     await page.getByLabel('Codice canale').click();
+    await page.getByRole('option', { name: '99999000011_03' }).click();
+    // Test flag cart
+    expect(
+      page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })
+    ).not.toBeChecked();
+    expect(page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })).toBeDisabled();
+
+    await page.getByLabel('Codice canale').fill('99999000011_01');
     await page.getByRole('option', { name: '99999000011_01' }).click();
+    expect(
+      page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })
+    ).not.toBeDisabled();
+    await page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' }).check();
+    expect(page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })).toBeChecked();
+
+    await page.getByLabel('Codice canale').fill('99999000011_03');
+    await page.getByRole('option', { name: '99999000011_03' }).click();
+    expect(
+      page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })
+    ).not.toBeChecked();
+    expect(page.getByRole('checkbox', { name: 'Gestione carrello di pagamenti' })).toBeDisabled();
+    // Test taxonomies
     await page.getByTestId('open-modal-button-test').click();
     await page.getByTestId('open-taxonomies-drawer').click();
     await page.getByRole('heading', { name: 'AGENZIE FISCALI' }).click();

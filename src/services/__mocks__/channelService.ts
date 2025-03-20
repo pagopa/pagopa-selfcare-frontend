@@ -45,7 +45,7 @@ export const mockedChannels: WrapperChannelsResource = {
       enabled: false,
       broker_description: 'Intermediario per test WFESP',
       wrapperStatus: WrapperStatusEnum.APPROVED,
-      primitive_version: 1,
+      primitive_version: 2,
     },
     {
       channel_code: 'WFESP_07_ila',

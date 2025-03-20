@@ -120,7 +120,8 @@ const baseCommissionBundlePspDetail: PSPBundleResource = {
   validityDateTo: new Date('2028-02-22'),
   insertedDate: new Date('2024-02-15T09:36:04.792731104'),
   lastUpdatedDate: new Date('2024-02-17T09:36:04.792731104'),
-  cart:false
+  cart:false,
+  onUs:false
 };
 
 export const mockedCommissionBundlePspDetailGlobal: PSPBundleResource = {

@@ -13,6 +13,10 @@ export const mockedPaymentTypes: PaymentTypes = {
             description: 'Bonifico',
             payment_type: 'SEPA',
         },
+        {
+            description: 'Carta di Pagamento',
+            payment_type: 'CP',
+        },
     ],
 };
 

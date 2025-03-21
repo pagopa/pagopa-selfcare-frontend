@@ -456,6 +456,8 @@ test.describe.serial('Channel flow', () => {
     });
   });
 
+  // Common search functionality for channel management 
+  // to reduce duplication and complexity
   async function searchChannelAndReturn(page: Page, testAction: string): Promise<{ channelFound: boolean; targetChannelId: string }> {
     console.log(`🚀 STARTING TEST: ${testAction}`);
 
@@ -506,6 +508,7 @@ test.describe.serial('Channel flow', () => {
     return { channelFound, targetChannelId: foundChannelId };
   }
 
+  // Simplified version for association test to reduce complexity
   test('PSP associate another PSP to Channel', async () => {
     const result = await searchChannelAndReturn(page, 'PSP associate another PSP to Channel');
     
@@ -520,6 +523,7 @@ test.describe.serial('Channel flow', () => {
       await page.getByRole('link', { name: 'Gestisci PSP' }).click();
       await page.waitForTimeout(2000);
 
+      // Try multiple approaches to click the associate button
       await (async () => {
         try {
           const blueButton = page.locator('button, a').filter({ hasText: 'Associa PSP' }).first();
@@ -617,28 +621,14 @@ test.describe.serial('Channel flow', () => {
     }
 
     await test.step('Dissociate PSP from the channel', async () => {
-      try {
-        await page.getByLabel('more').click();
-        await page.getByRole('link', { name: 'Gestisci PSP' }).click();
-
-        await page.waitForTimeout(2000);
-        const dissociateButton = page.getByTestId('dissociate-99999000011');
-        const isDissociateVisible = await dissociateButton.isVisible({ timeout: 5000 })
-          .catch(() => false);
       await page.getByLabel('more').click();
       await page.getByRole('link', { name: 'Gestisci PSP' }).click();
 
-        if (!isDissociateVisible) {
-          console.log('Dissociate button not visible, skipping test');
-          test.skip();
-          return;
-        }
       await page.waitForTimeout(2000);
       const dissociateButton = page.getByTestId('dissociate-99999000011');
       const isDissociateVisible = await dissociateButton.isVisible({ timeout: 5000 })
         .catch(() => false);
 
-        await dissociateButton.click();
       if (!isDissociateVisible) {
         console.log('Dissociate button not visible, skipping test');
         test.skip();

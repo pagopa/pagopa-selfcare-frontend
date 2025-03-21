@@ -14,7 +14,9 @@ const segregationCode = '40';
 
 test.setTimeout(100000);
 test.describe.serial('Delegations flow', () => {
+  // eslint-disable-next-line functional/no-let
   let page: Page;
+  // eslint-disable-next-line functional/no-let
   let selectedStationId = '';
 
   test.beforeAll(async ({ browser }) => {
@@ -32,6 +34,7 @@ test.describe.serial('Delegations flow', () => {
     console.log('🚀 STARTING TEST: Associate station to EC');
     await page.getByTestId('stations-test').click();
 
+    // eslint-disable-next-line functional/no-let
     let associationSuccessful = false;
 
     for (const stationId of STATION_IDS) {
@@ -77,6 +80,7 @@ test.describe.serial('Delegations flow', () => {
           continue;
         }
 
+        // eslint-disable-next-line functional/no-let
         let associaEcClicked = false;
 
         try {
@@ -119,6 +123,7 @@ test.describe.serial('Delegations flow', () => {
         await page.waitForTimeout(1000);
 
         const ecOptions = ['EC DEMO DIRECT', 'EC Signed Direct', 'EC DEMO'];
+        // eslint-disable-next-line functional/no-let
         let ecSelected = false;
 
         for (const ecOption of ecOptions) {
@@ -228,6 +233,7 @@ test.describe.serial('Delegations flow', () => {
         [selectedStationId, ...STATION_IDS.filter(id => id !== selectedStationId)] :
         STATION_IDS;
 
+        // eslint-disable-next-line functional/no-let
       let disassociationSuccessful = false;
 
       for (const stationId of stationIdsToTry) {
@@ -257,6 +263,7 @@ test.describe.serial('Delegations flow', () => {
             'Comune di Frosinone'
           ];
 
+          // eslint-disable-next-line functional/no-let
           let ecFound = false;
 
           for (const ecName of EC_NAMES_TO_TRY) {

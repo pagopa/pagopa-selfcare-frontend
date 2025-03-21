@@ -51,9 +51,13 @@ test.describe.serial('Global bundles flow', () => {
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
 
+    // eslint-disable-next-line functional/no-let
     let currentPaymentOptionIndex = 0;
+    // eslint-disable-next-line functional/no-let
     let success = false;
+    // eslint-disable-next-line functional/no-let
     let firstAttempt = true;
+    // eslint-disable-next-line functional/no-let
     let skipTaxonomy = false;
 
     while (currentPaymentOptionIndex < paymentOptions.length && !success) {

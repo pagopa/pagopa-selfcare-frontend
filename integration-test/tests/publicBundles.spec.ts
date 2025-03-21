@@ -210,36 +210,35 @@ test.describe.serial('Public bundles flow', () => {
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
   };
-  
-  const checkBundleExists = async (page: Page): Promise<boolean> => {
-    return await getToBundleDetail(page, bundleNamePublic);
-  };
-  
+
+  const checkBundleExists = async (page: Page): Promise<boolean> =>
+    await getToBundleDetail(page, bundleNamePublic);
+
   const handleDeactivateAction = async (page: Page): Promise<boolean> => {
     try {
       await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
     } catch {
       return false;
     }
-    
+
     await page.getByTestId('deactivate-button').click();
-    
+
     try {
       await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
     } catch {
       return false;
     }
-    
+
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
     return true;
   };
-  
+
   const handleEcBundleActions = async (page: Page, action: 'activate' | 'deactivate', attempt?: string): Promise<boolean> => {
     console.log(`🚀 STARTING TEST: EC ${action}s public bundle${attempt ? ' ' + attempt : ''}`);
 
     await navigateToPublicBundles(page);
-    
+
     const bundleFound = await checkBundleExists(page);
     if (!bundleFound) {
       test.skip();
@@ -315,7 +314,7 @@ test.describe.serial('Public bundles flow', () => {
       await page.getByTestId('tab-public').click();
     });
 
-    const bundleFound = await test.step('Check if bundle exists', async () => 
+    const bundleFound = await test.step('Check if bundle exists', async () =>
       await getToBundleDetail(page, bundleNamePublic)
     );
 

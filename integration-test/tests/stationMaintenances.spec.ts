@@ -47,12 +47,8 @@ test.describe.serial('Station Maintenances flow', () => {
       const targetDay = fourDaysFromNow.getDate();
       const targetYear = fourDaysFromNow.getFullYear();
 
-      console.log(`Will select date: ${targetDay}/${targetMonth + 1}/${targetYear}`);
-
       await datePickers[1].click();
-
       const calendarHeader = await page.locator('.MuiPickersCalendarHeader-label').textContent();
-      console.log(`Calendar shows: ${calendarHeader}`);
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       let currentMonth = -1;
@@ -69,18 +65,14 @@ test.describe.serial('Station Maintenances flow', () => {
         }
       }
 
-      console.log(`Detected current calendar view: Month=${currentMonth + 1}, Year=${currentYear}`);
-
       while (currentMonth !== targetMonth || currentYear !== targetYear) {
         if (
           (targetYear > currentYear) ||
           (targetYear === currentYear && targetMonth > currentMonth)
         ) {
           await page.locator('button[aria-label="Next month"]').click();
-          console.log('Clicked Next month');
         } else {
           await page.locator('button[aria-label="Previous month"]').click();
-          console.log('Clicked Previous month');
         }
 
         const newHeader = await page.locator('.MuiPickersCalendarHeader-label').textContent();
@@ -95,18 +87,13 @@ test.describe.serial('Station Maintenances flow', () => {
           }
         }
 
-        console.log(`Calendar now shows: Month=${currentMonth + 1}, Year=${currentYear}`);
-
         await page.waitForTimeout(500);
       }
 
       try {
         const targetDaySelector = `button.MuiPickersDay-root:not(.MuiPickersDay-hiddenDaySpacingFiller):text("${targetDay}")`;
         await page.locator(targetDaySelector).click();
-        console.log(`Selected day ${targetDay}`);
       } catch (error) {
-        console.log(`Error selecting day: ${error.message}`);
-
         const dayButtons = await page.locator('button.MuiPickersDay-root:not(.MuiPickersDay-hiddenDaySpacingFiller)').all();
         let found = false;
 
@@ -115,17 +102,13 @@ test.describe.serial('Station Maintenances flow', () => {
           if (text != null && text.trim() === String(targetDay)) {
             await button.click();
             found = true;
-            console.log(`Found and clicked day ${targetDay} using fallback method`);
             break;
           }
         }
 
         if (!found) {
-          console.log(`Could not select day ${targetDay}, will proceed with current selection`);
         }
       }
-    } else {
-      console.log('Could not find the second date picker');
     }
 
     await page.getByTestId('confirm-button-test').click();

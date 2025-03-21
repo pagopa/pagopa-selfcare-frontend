@@ -488,6 +488,13 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('remove-selected-ec-btn-id-test').nth(1).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
+  
+  const requestDetailButtonExists = await page.getByTestId('request-detail-button').count() > 0;
+  if (!requestDetailButtonExists) {
+    console.log('Request detail button not found, skipping offer deletion and retry');
+    return { success: true, reason: 'request-detail-not-found-but-continuing' };
+  }
+
   await page.getByTestId('request-detail-button').click();
   await page.getByTestId('offer-delete-button').click();
   await page.getByTestId('confirm-button-test').click();

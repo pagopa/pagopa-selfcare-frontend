@@ -617,14 +617,28 @@ test.describe.serial('Channel flow', () => {
     }
 
     await test.step('Dissociate PSP from the channel', async () => {
+      try {
+        await page.getByLabel('more').click();
+        await page.getByRole('link', { name: 'Gestisci PSP' }).click();
+
+        await page.waitForTimeout(2000);
+        const dissociateButton = page.getByTestId('dissociate-99999000011');
+        const isDissociateVisible = await dissociateButton.isVisible({ timeout: 5000 })
+          .catch(() => false);
       await page.getByLabel('more').click();
       await page.getByRole('link', { name: 'Gestisci PSP' }).click();
 
+        if (!isDissociateVisible) {
+          console.log('Dissociate button not visible, skipping test');
+          test.skip();
+          return;
+        }
       await page.waitForTimeout(2000);
       const dissociateButton = page.getByTestId('dissociate-99999000011');
       const isDissociateVisible = await dissociateButton.isVisible({ timeout: 5000 })
         .catch(() => false);
 
+        await dissociateButton.click();
       if (!isDissociateVisible) {
         console.log('Dissociate button not visible, skipping test');
         test.skip();

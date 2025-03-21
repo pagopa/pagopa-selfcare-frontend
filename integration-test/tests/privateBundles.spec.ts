@@ -123,7 +123,6 @@ test.describe.serial('Private bundles flow', () => {
 
       await page.getByLabel('Codice canale').fill('99999000011_03');
       await page.getByRole('option', { name: '99999000011_03' }).click();
-      await page.getByRole('checkbox', { name: cartCheckboxLabel }).check();
       expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeChecked();
       expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeDisabled();
 

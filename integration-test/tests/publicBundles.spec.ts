@@ -27,6 +27,7 @@ test.describe.serial('Public bundles flow', () => {
     try {
       await deleteAllExpiredBundles(bundleNamePublic, BundleTypes.PUBLIC);
     } catch (error) {
+      console.error('Error occurred:', error);
     } finally {
       await page.close();
     }
@@ -197,6 +198,7 @@ test.describe.serial('Public bundles flow', () => {
     if (!validated) {
       console.log('Skipping validation test due to missing or invalid bundle');
       test.skip();
+      // eslint-disable-next-line sonarjs/no-redundant-jump
       return;
     }
   });
@@ -211,8 +213,7 @@ test.describe.serial('Public bundles flow', () => {
     });
 
     const bundleFound = await test.step('Check if bundle exists', async () => {
-      const found = await getToBundleDetail(page, bundleNamePublic);
-      return found;
+      return await getToBundleDetail(page, bundleNamePublic);
     });
 
     if (!bundleFound) {
@@ -231,7 +232,7 @@ test.describe.serial('Public bundles flow', () => {
 
   test('EC delete subscription request', async () => {
     console.log('🚀 STARTING TEST: EC delete subscription request');
-    await changeToEcUser(page)
+    await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-public').click();
 
@@ -263,8 +264,7 @@ test.describe.serial('Public bundles flow', () => {
     });
 
     const bundleFound = await test.step('Check if bundle exists', async () => {
-      const found = await getToBundleDetail(page, bundleNamePublic);
-      return found;
+      return await getToBundleDetail(page, bundleNamePublic);
     });
 
     if (!bundleFound) {
@@ -281,9 +281,10 @@ test.describe.serial('Public bundles flow', () => {
     }
   });
 
+  /* eslint-disable-next-line sonarjs/cognitive-complexity */
   test('PSP reject EC`s subscription request', async () => {
     console.log('🚀 STARTING TEST: PSP rejects EC`s subscription request');
-  
+
     await test.step('Navigate to public bundles as PSP user', async () => {
       const openDrawer = await page.getByTestId('padded-drawer').count() > 0;
       if (openDrawer) {
@@ -293,22 +294,22 @@ test.describe.serial('Public bundles flow', () => {
         } catch (error) {
         }
       }
-      
+
       await changeToPspUser(page);
       await page.getByTestId('commission-bundles-test').click();
       await page.getByTestId('tab-public').click();
     });
-  
+
     const bundleFound = await test.step('Check if bundle exists', async () => {
       const found = await getToBundleDetail(page, bundleNamePublic);
       return found;
     });
-  
+
     if (!bundleFound) {
       test.skip();
       return;
     }
-  
+
     const detailButtonExists = await test.step('Check for subscription request', async () => {
       try {
         const count = await page.getByTestId('request-detail-button').count();
@@ -320,35 +321,35 @@ test.describe.serial('Public bundles flow', () => {
         return false;
       }
     });
-  
+
     if (!detailButtonExists) {
       test.skip();
       return;
     }
-  
+
     await test.step('Reject the subscription request', async () => {
       try {
         await page.getByTestId('request-detail-button').click();
       } catch (error) {
         return;
       }
-  
+
       const rejectButtonExists = await page.getByTestId('request-reject-button').count() > 0;
       if (!rejectButtonExists) {
         return;
       }
-  
+
       try {
         await page.getByTestId('request-reject-button').click();
       } catch (error) {
         return;
       }
-  
+
       const confirmButtonExists = await page.getByTestId('confirm-button-test').count() > 0;
       if (!confirmButtonExists) {
         return;
       }
-  
+
       try {
         await page.getByTestId('confirm-button-test').click();
         await checkReturnHomepage(page);
@@ -368,8 +369,7 @@ test.describe.serial('Public bundles flow', () => {
     });
 
     const bundleFound = await test.step('Check if bundle exists', async () => {
-      const found = await getToBundleDetail(page, bundleNamePublic);
-      return found;
+      return await getToBundleDetail(page, bundleNamePublic);
     });
 
     if (!bundleFound) {
@@ -422,8 +422,7 @@ test.describe.serial('Public bundles flow', () => {
     });
 
     const bundleFound = await test.step('Check if bundle exists', async () => {
-      const found = await getToBundleDetail(page, bundleNamePublic);
-      return found;
+      return await getToBundleDetail(page, bundleNamePublic);
     });
 
     if (!bundleFound) {
@@ -492,9 +491,10 @@ async function activatePublicBundle(page: Page): Promise<boolean> {
         await page.keyboard.press('Escape');
         await page.waitForTimeout(1000);
       } catch (error) {
+        console.error('Error occurred:', error);
       }
     }
-    
+
     const activateButtonExists = await page.getByTestId('activate-button').count() > 0;
     if (!activateButtonExists) {
       return false;
@@ -511,33 +511,32 @@ async function activatePublicBundle(page: Page): Promise<boolean> {
     await page.getByLabel('Importo a tuo carico').fill('40');
 
     const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
-    
+
     const confirmButtonExists = await confirmButton.count() > 0;
     if (!confirmButtonExists) {
       return false;
     }
-    
+
     await confirmButton.click();
-    
+
     const paymentInputStillExists = await page.getByLabel('Importo a tuo carico').count() > 0;
     if (paymentInputStillExists) {
       await page.getByLabel('Importo a tuo carico').click();
       await page.getByLabel('Importo a tuo carico').fill('4');
-    } else {
     }
 
     const openModalButtonExists = await page.getByTestId('open-modal-button-test').count() > 0;
     if (!openModalButtonExists) {
       return false;
     }
-    
+
     await page.getByTestId('open-modal-button-test').click();
 
     const finalConfirmButtonExists = await page.getByTestId('confirm-button-test').count() > 0;
     if (!finalConfirmButtonExists) {
       return false;
     }
-    
+
     await page.getByTestId('confirm-button-test').click();
 
     await checkReturnHomepage(page);

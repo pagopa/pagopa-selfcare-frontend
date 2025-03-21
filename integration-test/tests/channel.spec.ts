@@ -42,6 +42,7 @@ test.describe.serial('Channel flow', () => {
       try {
         await page.getByRole('option', { name: /bancomat pay/i }).click({ timeout: 5000 });
       } catch (error) {
+        console.error('Error occurred:', error);
       }
 
       await page.waitForTimeout(1000);
@@ -51,6 +52,7 @@ test.describe.serial('Channel flow', () => {
     });
   });
 
+  /* eslint-disable-next-line sonarjs/cognitive-complexity */
   test('PSP modify channel', async () => {
     console.log('🚀 STARTING TEST: PSP modify channel');
 
@@ -63,9 +65,11 @@ test.describe.serial('Channel flow', () => {
     const channelIdsToTry = [channelId];
 
     if (channelId !== '99999000011_20') {
+      /* eslint-disable-next-line functional/immutable-data */
       channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
     }
 
+    /* eslint-disable-next-line functional/no-let */
     let channelFound = false;
     let channelIsEditable = false;
     let targetChannelId = '';
@@ -121,7 +125,9 @@ test.describe.serial('Channel flow', () => {
         }
       });
 
-      if (channelIsEditable) break;
+      if (channelIsEditable) {
+        break;
+      }
     }
 
     if (!channelFound) {
@@ -147,6 +153,7 @@ test.describe.serial('Channel flow', () => {
     });
   });
 
+  /* eslint-disable-next-line sonarjs/cognitive-complexity */
   test('Pagopa Operator approves channel', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
@@ -163,6 +170,7 @@ test.describe.serial('Channel flow', () => {
     const channelIdsToTry = [channelId];
 
     if (channelId !== '99999000011_20') {
+      /* eslint-disable-next-line functional/immutable-data */
       channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
     }
 
@@ -229,7 +237,9 @@ test.describe.serial('Channel flow', () => {
         }
       });
 
-      if (channelFound) break;
+      if (channelFound) {
+        break;
+      }
     }
 
     if (!channelFound) {
@@ -238,126 +248,129 @@ test.describe.serial('Channel flow', () => {
       return;
     }
 
+    /* eslint-disable-next-line complexity */
     await test.step('Approve the channel', async () => {
+      const approveButton = page.getByRole('link', { name: 'Approva e valida' });
+      await approveButton.click();
+      await page.waitForTimeout(3000);
+
+      let primitiveFieldFilled = false;
       try {
-        const approveButton = page.getByRole('link', { name: 'Approva e valida' });
-        await approveButton.click();
-        await page.waitForTimeout(3000);
-
-        let primitiveFieldFilled = false;
-        try {
-          const primitiveByPlaceholder = page.locator('input[placeholder="Versioni primitive"]').first();
-          if (await primitiveByPlaceholder.isVisible({ timeout: 3000 })) {
-            await primitiveByPlaceholder.click({ force: true });
-            await primitiveByPlaceholder.fill('1.0.0');
-            primitiveFieldFilled = true;
-          }
-        } catch (err) {
+        const primitiveByPlaceholder = page.locator('input[placeholder="Versioni primitive"]').first();
+        if (await primitiveByPlaceholder.isVisible({ timeout: 3000 })) {
+          await primitiveByPlaceholder.click({ force: true });
+          await primitiveByPlaceholder.fill('1.0.0');
+          primitiveFieldFilled = true;
         }
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
 
-        if (!primitiveFieldFilled) {
-          try {
-            const labelElement = page.locator('label:has-text("Versioni primitive")').first();
-            if (await labelElement.isVisible({ timeout: 3000 })) {
-              const labelId = await labelElement.getAttribute('for');
-              if (labelId) {
-                const inputField = page.locator(`#${labelId}`);
-                await inputField.click({ force: true });
-                await inputField.fill('1.0.0');
-                primitiveFieldFilled = true;
-              } else {
-                const nearbyInput = page.locator('label:has-text("Versioni primitive") + input, label:has-text("Versioni primitive") ~ input').first();
-                await nearbyInput.click({ force: true });
-                await nearbyInput.fill('1.0.0');
-                primitiveFieldFilled = true;
-              }
+      if (!primitiveFieldFilled) {
+        try {
+          const labelElement = page.locator('label:has-text("Versioni primitive")').first();
+          if (await labelElement.isVisible({ timeout: 3000 })) {
+            const labelId = await labelElement.getAttribute('for');
+            if (labelId) {
+              const inputField = page.locator(`#${labelId}`);
+              await inputField.click({ force: true });
+              await inputField.fill('1.0.0');
+              primitiveFieldFilled = true;
+            } else {
+              const nearbyInput = page.locator('label:has-text("Versioni primitive") + input, label:has-text("Versioni primitive") ~ input').first();
+              await nearbyInput.click({ force: true });
+              await nearbyInput.fill('1.0.0');
+              primitiveFieldFilled = true;
             }
-          } catch (err) {
           }
+        } catch (error) {
+          console.error('Error occurred:', error);
         }
+      }
 
-        let passwordFilled = false;
+      let passwordFilled = false;
+      try {
+        const passwordByTestId = page.getByTestId('password-test');
+        if (await passwordByTestId.isVisible({ timeout: 3000 })) {
+          await passwordByTestId.click({ force: true });
+          await passwordByTestId.fill('password');
+          passwordFilled = true;
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
+
+      if (!passwordFilled) {
         try {
-          const passwordByTestId = page.getByTestId('password-test');
-          if (await passwordByTestId.isVisible({ timeout: 3000 })) {
-            await passwordByTestId.click({ force: true });
-            await passwordByTestId.fill('password');
-            passwordFilled = true;
-          }
-        } catch (err) {
-        }
-
-        if (!passwordFilled) {
-          try {
-            const passwordFields = await page.locator('input[type="password"]').all();
-            if (passwordFields.length > 0) {
-              for (const field of passwordFields) {
-                if (await field.isVisible()) {
-                  await field.click({ force: true });
-                  await field.fill('password');
-                  passwordFilled = true;
-                  break;
-                }
-              }
-            }
-          } catch (err) {
-          }
-        }
-
-        await handleDropdown(page, 'Nuova connettività canali');
-        await handleDropdown(page, 'Indirizzo proxy');
-
-        let confirmClicked = false;
-        try {
-          const confirmButton = page.getByRole('button', { name: 'Conferma' });
-          if (await confirmButton.isVisible({ timeout: 3000 })) {
-            await confirmButton.click({ force: true });
-            confirmClicked = true;
-          }
-        } catch (err) {
-        }
-
-        if (!confirmClicked) {
-          try {
-            const allButtons = await page.locator('button').all();
-            for (const button of allButtons) {
-              const text = await button.textContent();
-              if (text && (text.includes('Conferma') || text.includes('Confirm') || text.includes('Submit'))) {
-                await button.click({ force: true });
-                confirmClicked = true;
+          const passwordFields = await page.locator('input[type="password"]').all();
+          if (passwordFields.length > 0) {
+            for (const field of passwordFields) {
+              if (await field.isVisible()) {
+                await field.click({ force: true });
+                await field.fill('password');
+                passwordFilled = true;
                 break;
               }
             }
-          } catch (err) {
           }
+        } catch (error) {
+          console.error('Error occurred:', error);
         }
+      }
 
-        await page.waitForTimeout(2000);
+      await handleDropdown(page, 'Nuova connettività canali');
+      await handleDropdown(page, 'Indirizzo proxy');
 
+      let confirmClicked = false;
+      try {
+        const confirmButton = page.getByRole('button', { name: 'Conferma' });
+        if (await confirmButton.isVisible({ timeout: 3000 })) {
+          await confirmButton.click({ force: true });
+          confirmClicked = true;
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+      }
+
+      if (!confirmClicked) {
         try {
-          let modalConfirmButton;
-          const confirmByText = page.getByRole('button', { name: 'Conferma' });
-          if (await confirmByText.isVisible({ timeout: 3000 })) {
-            modalConfirmButton = confirmByText;
-          } else {
-            const modalButtons = await page.locator('div[role="dialog"] button, .MuiDialog-root button').all();
-            if (modalButtons.length > 0) {
-              modalConfirmButton = modalButtons[modalButtons.length - 1];
-            } else {
-              modalConfirmButton = page.getByTestId('confirm-button-modal-test');
+          const allButtons = await page.locator('button').all();
+          for (const button of allButtons) {
+            const text = await button.textContent();
+            if (text && (text.includes('Conferma') || text.includes('Confirm') || text.includes('Submit'))) {
+              await button.click({ force: true });
+              confirmClicked = true;
+              break;
             }
           }
+        } catch (error) {
+          console.error('Error occurred:', error);
+        }
+      }
 
-          if (modalConfirmButton) {
-            await modalConfirmButton.click({ force: true });
+      await page.waitForTimeout(2000);
+
+      try {
+        let modalConfirmButton;
+        const confirmByText = page.getByRole('button', { name: 'Conferma' });
+        if (await confirmByText.isVisible({ timeout: 3000 })) {
+          modalConfirmButton = confirmByText;
+        } else {
+          const modalButtons = await page.locator('div[role="dialog"] button, .MuiDialog-root button').all();
+          if (modalButtons.length > 0) {
+            modalConfirmButton = modalButtons[modalButtons.length - 1];
+          } else {
+            modalConfirmButton = page.getByTestId('confirm-button-modal-test');
           }
-
-          await page.waitForTimeout(1000).catch(() => { });
-        } catch (err) {
         }
 
+        if (modalConfirmButton) {
+          await modalConfirmButton.click({ force: true });
+        }
+
+        await page.waitForTimeout(1000).catch(() => { });
       } catch (error) {
-        throw error;
+        console.error('Error occurred:', error);
       }
     });
   });
@@ -438,7 +451,8 @@ test.describe.serial('Channel flow', () => {
       } catch (error) {
         try {
           await page.getByTestId('back-button-test').click();
-        } catch {
+        } catch (error) {
+          console.error('Error occurred:', error);
         }
         throw error;
       }
@@ -548,6 +562,7 @@ test.describe.serial('Channel flow', () => {
               break;
             }
           } catch (error) {
+            console.error('Error occurred:', error);
           }
         }
 
@@ -684,7 +699,8 @@ test.describe.serial('Channel flow', () => {
 
       await page.keyboard.press('ArrowDown');
       await page.keyboard.press('Enter');
-    } catch (err) {
+    } catch (error) {
+      console.error('Error occurred:', error);
     }
   }
 });

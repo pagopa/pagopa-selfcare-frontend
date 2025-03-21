@@ -27,6 +27,7 @@ test.describe.serial('Delegations flow', () => {
     await page.close();
   });
 
+  /* eslint-disable-next-line sonarjs/cognitive-complexity */
   test('Associate station to EC', async () => {
     console.log('🚀 STARTING TEST: Associate station to EC');
     await page.getByTestId('stations-test').click();
@@ -88,6 +89,7 @@ test.describe.serial('Delegations flow', () => {
             associaEcClicked = true;
           }
         } catch (error) {
+          console.error('Error occurred:', error);
         }
 
         if (!associaEcClicked && hasNoEcsMessage) {
@@ -101,6 +103,7 @@ test.describe.serial('Delegations flow', () => {
               associaEcClicked = true;
             }
           } catch (error) {
+            console.error('Error occurred:', error);
           }
         }
 
@@ -130,6 +133,7 @@ test.describe.serial('Delegations flow', () => {
               break;
             }
           } catch (error) {
+            console.error('Error occurred:', error);
           }
         }
 
@@ -306,6 +310,7 @@ test.describe.serial('Delegations flow', () => {
         return;
       }
     } catch (error) {
+      console.error('Error occurred:', error);
     }
 
     try {
@@ -319,6 +324,7 @@ test.describe.serial('Delegations flow', () => {
         return;
       }
     } catch (error) {
+      console.error('Error occurred:', error);
     }
 
     try {
@@ -332,6 +338,7 @@ test.describe.serial('Delegations flow', () => {
         return;
       }
     } catch (error) {
+      console.error('Error occurred:', error);
     }
 
     await page.goto('/ui/stations');

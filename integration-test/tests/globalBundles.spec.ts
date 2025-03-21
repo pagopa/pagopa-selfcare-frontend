@@ -180,7 +180,7 @@ test.describe.serial('Global bundles flow', () => {
 
   test('PSP edits global bundle', async () => {
     console.log('🚀 STARTING TEST: PSP edits global bundle');
-    await changeToPspUser(page)
+    await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToInActivationBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('modify-button').click();
@@ -213,7 +213,7 @@ test.describe.serial('Global bundles flow', () => {
 
   test('PSP deletes global bundle', async () => {
     console.log('🚀 STARTING TEST: PSP deletes global bundle');
-    await changeToPspUser(page)
+    await changeToPspUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await getToInActivationBundleDetail(page, bundleNameGlobal);
     await page.getByTestId('delete-button').click();

@@ -27,6 +27,7 @@ test.describe.serial('Private bundles flow', () => {
     try {
       await deleteAllExpiredBundles(bundleNamePrivate, BundleTypes.PRIVATE);
     } catch (error) {
+      console.error('Error occurred:', error);
     } finally {
       await page.close();
     }
@@ -192,6 +193,7 @@ test.describe.serial('Private bundles flow', () => {
     if (!validated) {
       console.log('Skipping validation test due to missing or invalid bundle');
       test.skip();
+      // eslint-disable-next-line sonarjs/no-redundant-jump
       return;
     }
   });
@@ -216,13 +218,12 @@ test.describe.serial('Private bundles flow', () => {
 
     const bundleExists = await test.step('Check if bundle exists', async () => {
       const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      if (!bundleFound) {
-        return false;
-      }
-      return true;
+      return bundleFound;
     });
 
-    if (!bundleExists) return;
+    if (!bundleExists) {
+      return;
+    }
 
     const detailButtonExists = await test.step('Check if request detail button exists', async () => {
       try {
@@ -233,7 +234,9 @@ test.describe.serial('Private bundles flow', () => {
       }
     });
 
-    if (!detailButtonExists) return;
+    if (!detailButtonExists) {
+      return;
+    }
 
     await test.step('Delete private bundle offer', async () => {
       await page.getByTestId('request-detail-button').click();
@@ -283,13 +286,12 @@ test.describe.serial('Private bundles flow', () => {
 
     const bundleExists = await test.step('Check if bundle exists', async () => {
       const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      if (!bundleFound) {
-        return false;
-      }
-      return true;
+      return bundleFound;
     });
 
-    if (!bundleExists) return;
+    if (!bundleExists) {
+      return;
+    }
 
     const rejectButtonExists = await test.step('Check if reject button exists', async () => {
       try {
@@ -300,7 +302,9 @@ test.describe.serial('Private bundles flow', () => {
       }
     });
 
-    if (!rejectButtonExists) return;
+    if (!rejectButtonExists) {
+      return;
+    }
 
     await test.step('Reject private bundle offer', async () => {
       await page.getByTestId('reject-button').click();
@@ -349,13 +353,12 @@ test.describe.serial('Private bundles flow', () => {
 
     const bundleExists = await test.step('Check if bundle exists', async () => {
       const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      if (!bundleFound) {
-        return false;
-      }
-      return true;
+      return bundleFound;
     });
 
-    if (!bundleExists) return;
+    if (!bundleExists) {
+      return;
+    }
 
     const activateButtonExists = await test.step('Check if activate button exists', async () => {
       try {
@@ -366,7 +369,9 @@ test.describe.serial('Private bundles flow', () => {
       }
     });
 
-    if (!activateButtonExists) return;
+    if (!activateButtonExists) {
+      return;
+    }
 
     await test.step('Accept private bundle offer', async () => {
       await page.getByTestId('activate-button').click();
@@ -408,14 +413,13 @@ test.describe.serial('Private bundles flow', () => {
 
     const bundleExists = await test.step('Check if bundle exists', async () => {
       const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      if (!bundleFound) {
-        return false;
-      }
-      return true;
+      return bundleFound;
     });
 
-    if (!bundleExists) return;
-
+    if (!bundleExists) {
+      return;
+    }
+    
     const deactivateButtonExists = await test.step('Check if deactivate button exists', async () => {
       try {
         await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });

@@ -15,6 +15,7 @@ test.describe.serial('Station Maintenances flow', () => {
     await page.close();
   });
 
+  /* eslint-disable-next-line sonarjs/cognitive-complexity */
   test('EC creates new station maintenance', async () => {
     console.log('🚀 STARTING TEST: EC creates new station maintenance');
     await changeToEcUser(page);
@@ -51,6 +52,7 @@ test.describe.serial('Station Maintenances flow', () => {
       const calendarHeader = await page.locator('.MuiPickersCalendarHeader-label').textContent();
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      /* eslint-disable-next-line functional/no-let */
       let currentMonth = -1;
       let currentYear = 0;
 
@@ -104,9 +106,6 @@ test.describe.serial('Station Maintenances flow', () => {
             found = true;
             break;
           }
-        }
-
-        if (!found) {
         }
       }
     }

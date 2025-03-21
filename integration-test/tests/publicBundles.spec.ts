@@ -4,10 +4,7 @@ import {
   deleteAllExpiredBundles,
   getToBundleDetail,
   getToInActivationBundleDetail,
-  validateBundle,
-  getRandomMinImport,
-  getRandomMaxImport,
-  getRandomPaymentAmount
+  validateBundle
 } from './utils/bundleUtils';
 import {
   BundleTypes,
@@ -74,13 +71,13 @@ test.describe.serial('Public bundles flow', () => {
       await page.getByRole('option', { name: 'Touchpoint' }).click();
       // Test min import
       await page.getByTestId('min-import-test').click();
-      await page.getByTestId('min-import-test').fill(String(getRandomMinImport()));
+      await page.getByTestId('min-import-test').fill('50000');
       // Test max import
       await page.getByTestId('max-import-test').click();
-      await page.getByTestId('max-import-test').fill(String(getRandomMaxImport()));
+      await page.getByTestId('max-import-test').fill('100000');
       // Test payment amount
       await page.getByTestId('payment-amount-test').click();
-      await page.getByTestId('payment-amount-test').fill(String(getRandomPaymentAmount()));
+      await page.getByTestId('payment-amount-test').fill('5');
 
       // Test flag onUs
       const hasOnUsCheckbox = await page.getByRole('checkbox', { name: 'onUs' }).count() > 0;

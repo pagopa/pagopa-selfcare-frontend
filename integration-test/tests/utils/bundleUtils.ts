@@ -254,14 +254,3 @@ export async function getToInActivationBundleDetail(
   }
 }
 
-export function getRandomMinImport() {
-  return Math.floor(Math.random() * (50000 - 49000 + 1)) + 49000;
-}
-
-export function getRandomMaxImport() {
-  return Math.floor(Math.random() * (100000 - 99000 + 1)) + 99000;
-}
-
-export function getRandomPaymentAmount() {
-  return Math.floor(Math.random() * 5) + 1;
-}

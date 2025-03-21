@@ -10,7 +10,7 @@ test.describe.serial('Station flow', () => {
   test.setTimeout(100000);
 
   const extractStationId = (text: string): string | null => {
-    const idMatch = text.match(/(\d+_\d+)/);
+    const idMatch = text.match(/([0-9]+_[0-9]+)/);
     return idMatch && idMatch[1] ? idMatch[1] : null;
   };
 
@@ -260,11 +260,11 @@ test.describe.serial('Station flow', () => {
     await page.getByTestId('search-input').click();
     await page.getByTestId('search-input').fill(selectedStationId);
     await page.waitForTimeout(1000);
-    
+
     await page.getByLabel('more').first().click();
     await page.getByRole('link', { name: 'Gestisci EC' }).click();
     await page.waitForTimeout(1000);
-    
+
     let foundEc = false;
     if (associatedEcName) {
       const associatedRows = await page.getByRole('row', { name: associatedEcName }).count();
@@ -273,7 +273,7 @@ test.describe.serial('Station flow', () => {
         foundEc = true;
       }
     }
-    
+
     if (!foundEc) {
       const moreButtons = await page.getByLabel('more').all();
       if (moreButtons.length === 0) {
@@ -283,7 +283,7 @@ test.describe.serial('Station flow', () => {
       }
       await moreButtons[0].click();
     }
-    
+
     await page.getByTestId('dissociate-action').click();
     await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);

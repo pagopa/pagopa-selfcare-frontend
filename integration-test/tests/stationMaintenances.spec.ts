@@ -52,16 +52,18 @@ test.describe.serial('Station Maintenances flow', () => {
       const calendarHeader = await page.locator('.MuiPickersCalendarHeader-label').textContent();
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      /* eslint-disable-next-line functional/no-let */
+      // eslint-disable-next-line functional/no-let
       let currentMonth = -1;
+      // eslint-disable-next-line functional/no-let
       let currentYear = 0;
 
+      // eslint-disable-next-line functional/no-let
       for (let i = 0; i < monthNames.length; i++) {
         if (calendarHeader != null && calendarHeader.includes(monthNames[i])) {
           currentMonth = i;
           const yearMatch = calendarHeader.match(/\d{4}/);
           if (yearMatch) {
-            currentYear = parseInt(yearMatch[0]);
+            currentYear = parseInt(yearMatch[0], 10);
           }
           break;
         }
@@ -78,12 +80,13 @@ test.describe.serial('Station Maintenances flow', () => {
         }
 
         const newHeader = await page.locator('.MuiPickersCalendarHeader-label').textContent();
+        // eslint-disable-next-line functional/no-let
         for (let i = 0; i < monthNames.length; i++) {
           if (newHeader != null && newHeader.includes(monthNames[i])) {
             currentMonth = i;
             const yearMatch = newHeader.match(/\d{4}/);
             if (yearMatch) {
-              currentYear = parseInt(yearMatch[0]);
+              currentYear = parseInt(yearMatch[0], 10);
             }
             break;
           }
@@ -97,6 +100,7 @@ test.describe.serial('Station Maintenances flow', () => {
         await page.locator(targetDaySelector).click();
       } catch (error) {
         const dayButtons = await page.locator('button.MuiPickersDay-root:not(.MuiPickersDay-hiddenDaySpacingFiller)').all();
+        // eslint-disable-next-line functional/no-let
         let found = false;
 
         for (const button of dayButtons) {

@@ -58,9 +58,13 @@ test.describe.serial('Public bundles flow', () => {
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
 
+    // eslint-disable-next-line functional/no-let
     let currentPaymentOptionIndex = 0;
+    // eslint-disable-next-line functional/no-let
     let success = false;
+    // eslint-disable-next-line functional/no-let
     let firstAttempt = true;
+    // eslint-disable-next-line functional/no-let
     let skipTaxonomy = false;
 
     while (currentPaymentOptionIndex < paymentOptions.length && !success) {
@@ -198,36 +202,69 @@ test.describe.serial('Public bundles flow', () => {
     if (!validated) {
       console.log('Skipping validation test due to missing or invalid bundle');
       test.skip();
-      // eslint-disable-next-line sonarjs/no-redundant-jump
-      return;
     }
   });
 
-  test('EC activates public bundle', async () => {
-    console.log('🚀 STARTING TEST: EC activates public bundle');
+  const navigateToPublicBundles = async (page: Page): Promise<void> => {
+    await changeToEcUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-public').click();
+  };
+  
+  const checkBundleExists = async (page: Page): Promise<boolean> => {
+    return await getToBundleDetail(page, bundleNamePublic);
+  };
+  
+  const handleDeactivateAction = async (page: Page): Promise<boolean> => {
+    try {
+      await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+    
+    await page.getByTestId('deactivate-button').click();
+    
+    try {
+      await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
+    } catch {
+      return false;
+    }
+    
+    await page.getByTestId('confirm-button-test').click();
+    await checkReturnHomepage(page);
+    return true;
+  };
+  
+  const handleEcBundleActions = async (page: Page, action: 'activate' | 'deactivate', attempt?: string): Promise<boolean> => {
+    console.log(`🚀 STARTING TEST: EC ${action}s public bundle${attempt ? ' ' + attempt : ''}`);
 
-    await test.step('Navigate to public bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-public').click();
-    });
-
-    const bundleFound = await test.step('Check if bundle exists', async () => {
-      return await getToBundleDetail(page, bundleNamePublic);
-    });
-
+    await navigateToPublicBundles(page);
+    
+    const bundleFound = await checkBundleExists(page);
     if (!bundleFound) {
       test.skip();
-      return;
+      return false;
     }
 
-    const activated = await test.step('Activate the public bundle', async () => {
-      return await activatePublicBundle(page);
-    });
-
-    if (!activated) {
-      test.skip();
+    if (action === 'activate') {
+      const activated = await activatePublicBundle(page);
+      if (!activated) {
+        test.skip();
+        return false;
+      }
+    } else {
+      const deactivated = await handleDeactivateAction(page);
+      if (!deactivated) {
+        test.skip();
+        return false;
+      }
     }
+
+    return true;
+  };
+
+  test('EC activates public bundle', async () => {
+    await handleEcBundleActions(page, 'activate');
   });
 
   test('EC delete subscription request', async () => {
@@ -255,30 +292,7 @@ test.describe.serial('Public bundles flow', () => {
   });
 
   test('EC activates public bundle 2nd time', async () => {
-    console.log('🚀 STARTING TEST: EC activates public bundle 2nd time');
-
-    await test.step('Navigate to public bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-public').click();
-    });
-
-    const bundleFound = await test.step('Check if bundle exists', async () => {
-      return await getToBundleDetail(page, bundleNamePublic);
-    });
-
-    if (!bundleFound) {
-      test.skip();
-      return;
-    }
-
-    const activated = await test.step('Activate the public bundle again', async () => {
-      return await activatePublicBundle(page);
-    });
-
-    if (!activated) {
-      test.skip();
-    }
+    await handleEcBundleActions(page, 'activate', '2nd time');
   });
 
   /* eslint-disable-next-line sonarjs/cognitive-complexity */
@@ -292,6 +306,7 @@ test.describe.serial('Public bundles flow', () => {
           await page.keyboard.press('Escape');
           await page.waitForTimeout(1000);
         } catch (error) {
+          console.error('Error handling open drawer:', error);
         }
       }
 
@@ -300,10 +315,9 @@ test.describe.serial('Public bundles flow', () => {
       await page.getByTestId('tab-public').click();
     });
 
-    const bundleFound = await test.step('Check if bundle exists', async () => {
-      const found = await getToBundleDetail(page, bundleNamePublic);
-      return found;
-    });
+    const bundleFound = await test.step('Check if bundle exists', async () => 
+      await getToBundleDetail(page, bundleNamePublic)
+    );
 
     if (!bundleFound) {
       test.skip();
@@ -313,10 +327,7 @@ test.describe.serial('Public bundles flow', () => {
     const detailButtonExists = await test.step('Check for subscription request', async () => {
       try {
         const count = await page.getByTestId('request-detail-button').count();
-        if (count === 0) {
-          return false;
-        }
-        return true;
+        return count > 0;
       } catch (error) {
         return false;
       }
@@ -360,30 +371,7 @@ test.describe.serial('Public bundles flow', () => {
   });
 
   test('EC activates public bundle 3rd time', async () => {
-    console.log('🚀 STARTING TEST: EC activates public bundle 3rd time');
-
-    await test.step('Navigate to public bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-public').click();
-    });
-
-    const bundleFound = await test.step('Check if bundle exists', async () => {
-      return await getToBundleDetail(page, bundleNamePublic);
-    });
-
-    if (!bundleFound) {
-      test.skip();
-      return;
-    }
-
-    const activated = await test.step('Activate the public bundle one more time', async () => {
-      return await activatePublicBundle(page);
-    });
-
-    if (!activated) {
-      test.skip();
-    }
+    await handleEcBundleActions(page, 'activate', '3rd time');
   });
 
   test('PSP accept EC`s subscription request', async () => {
@@ -413,49 +401,7 @@ test.describe.serial('Public bundles flow', () => {
   });
 
   test('EC deactivates public bundle', async () => {
-    console.log('🚀 STARTING TEST: EC de-activates public bundle');
-
-    await test.step('Navigate to public bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-public').click();
-    });
-
-    const bundleFound = await test.step('Check if bundle exists', async () => {
-      return await getToBundleDetail(page, bundleNamePublic);
-    });
-
-    if (!bundleFound) {
-      test.skip();
-      return;
-    }
-
-    const deactivateButtonExists = await test.step('Check for deactivate button', async () => {
-      try {
-        await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
-        return true;
-      } catch {
-        return false;
-      }
-    });
-
-    if (!deactivateButtonExists) {
-      test.skip();
-      return;
-    }
-
-    await test.step('Deactivate the bundle', async () => {
-      await page.getByTestId('deactivate-button').click();
-
-      try {
-        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-      } catch {
-        return;
-      }
-
-      await page.getByTestId('confirm-button-test').click();
-      await checkReturnHomepage(page);
-    });
+    await handleEcBundleActions(page, 'deactivate');
   });
 
   test('PSP deletes public bundle', async () => {

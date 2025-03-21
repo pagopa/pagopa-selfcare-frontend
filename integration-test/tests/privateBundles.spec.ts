@@ -58,9 +58,13 @@ test.describe.serial('Private bundles flow', () => {
     await page.getByTestId('description-test').click();
     await page.getByTestId('description-test').fill('desc');
 
+    // eslint-disable-next-line functional/no-let
     let currentPaymentOptionIndex = 0;
+    // eslint-disable-next-line functional/no-let
     let success = false;
+    // eslint-disable-next-line functional/no-let
     let firstAttempt = true;
+    // eslint-disable-next-line functional/no-let
     let skipTaxonomy = false;
 
     while (currentPaymentOptionIndex < paymentOptions.length && !success) {
@@ -193,8 +197,6 @@ test.describe.serial('Private bundles flow', () => {
     if (!validated) {
       console.log('Skipping validation test due to missing or invalid bundle');
       test.skip();
-      // eslint-disable-next-line sonarjs/no-redundant-jump
-      return;
     }
   });
 
@@ -216,10 +218,9 @@ test.describe.serial('Private bundles flow', () => {
       await page.getByTestId('tab-private').click();
     });
 
-    const bundleExists = await test.step('Check if bundle exists', async () => {
-      const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      return bundleFound;
-    });
+    const bundleExists = await test.step('Check if bundle exists', async () => 
+      await getToBundleDetail(page, bundleNamePrivate)
+    );
 
     if (!bundleExists) {
       return;
@@ -262,62 +263,87 @@ test.describe.serial('Private bundles flow', () => {
     }
   });
 
-  test('EC reject private bundle offer', async ({ page }) => {
-    console.log('🚀 STARTING TEST: EC rejects private bundle offer');
-
-    await test.step('Navigate to private bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-private').click();
-    });
-
-    await test.step('Switch to Disponibili tab', async () => {
-      await page.getByLabel('Attivi').click();
-
-      try {
-        await page.getByRole('option', { name: 'Disponibili' }).waitFor({ timeout: 5000 });
-      } catch (error) {
-        return;
+  const checkBundleAvailability = async (page: Page, action: 'accept' | 'reject'): Promise<boolean> => {
+    await changeToEcUser(page);
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId('tab-private').click();
+    
+    try {
+      if (action === 'accept') {
+        await page.getByLabel('Attivi').waitFor({ timeout: 5000 });
+        await page.getByLabel('Attivi').click();
+      } else {
+        await page.getByLabel('Attivi').click();
       }
 
+      await page.getByRole('option', { name: 'Disponibili' }).waitFor({ timeout: 5000 });
       await page.getByRole('option', { name: 'Disponibili' }).click();
       await page.waitForTimeout(2000);
-    });
+    } catch (error) {
+      console.error(`Error switching to Disponibili tab: ${error}`);
+      return false;
+    }
+    
+    return await getToBundleDetail(page, bundleNamePrivate);
+  };
 
-    const bundleExists = await test.step('Check if bundle exists', async () => {
-      const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      return bundleFound;
-    });
+  const performAcceptAction = async (page: Page): Promise<boolean> => {
+    try {
+      await page.getByTestId('payment-amount-test').first().waitFor({ timeout: 5000 });
+      await page.getByTestId('payment-amount-test').first().click();
+      await page.getByTestId('payment-amount-test').first().fill('40');
 
+      const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
+      await confirmButton.waitFor({ timeout: 5000 });
+      await confirmButton.click();
+
+      await page.getByTestId('payment-amount-test').first().click();
+      await page.getByTestId('payment-amount-test').first().fill('4');
+
+      await page.getByTestId('open-modal-button-test').waitFor({ timeout: 5000 });
+      await page.getByTestId('open-modal-button-test').click();
+      return true;
+    } catch (error) {
+      console.error(`Error during bundle acceptance: ${error}`);
+      return false;
+    }
+  };
+
+  const handleEcBundleInteraction = async (page: Page, action: 'accept' | 'reject'): Promise<boolean> => {
+    console.log(`🚀 STARTING TEST: EC ${action}s private bundle offer`);
+
+    const bundleExists = await checkBundleAvailability(page, action);
     if (!bundleExists) {
-      return;
+      return false;
     }
 
-    const rejectButtonExists = await test.step('Check if reject button exists', async () => {
-      try {
-        await page.getByTestId('reject-button').waitFor({ timeout: 5000 });
-        return true;
-      } catch (error) {
-        return false;
-      }
-    });
-
-    if (!rejectButtonExists) {
-      return;
+    const buttonTestId = action === 'accept' ? 'activate-button' : 'reject-button';
+    try {
+      await page.getByTestId(buttonTestId).waitFor({ timeout: 5000 });
+    } catch (error) {
+      console.error(`${action} button does not exist: ${error}`);
+      return false;
     }
 
-    await test.step('Reject private bundle offer', async () => {
-      await page.getByTestId('reject-button').click();
+    await page.getByTestId(buttonTestId).click();
 
-      try {
-        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-      } catch (error) {
-        return;
-      }
+    if (action === 'accept' && !(await performAcceptAction(page))) {
+      return false;
+    }
 
+    try {
+      await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
       await page.getByTestId('confirm-button-test').click();
       await checkReturnHomepage(page);
-    });
+      return true;
+    } catch (error) {
+      console.error(`Error confirming ${action} action: ${error}`);
+      return false;
+    }
+  };
+
+  test('EC reject private bundle offer', async ({ page }) => {
+    await handleEcBundleInteraction(page, 'reject');
   });
 
   test('PSP sends private bundle offer 3rd time', async () => {
@@ -330,76 +356,7 @@ test.describe.serial('Private bundles flow', () => {
   });
 
   test('EC accept private bundle offer', async ({ page }) => {
-    console.log('🚀 STARTING TEST: EC accepts private bundle offer');
-
-    await test.step('Navigate to private bundles as EC user', async () => {
-      await changeToEcUser(page);
-      await page.getByTestId('commission-bundles-test').click();
-      await page.getByTestId('tab-private').click();
-    });
-
-    await test.step('Switch to Disponibili tab', async () => {
-      try {
-        await page.getByLabel('Attivi').waitFor({ timeout: 5000 });
-        await page.getByLabel('Attivi').click();
-
-        await page.getByRole('option', { name: 'Disponibili' }).waitFor({ timeout: 5000 });
-        await page.getByRole('option', { name: 'Disponibili' }).click();
-        await page.waitForTimeout(2000);
-      } catch (error) {
-        return;
-      }
-    });
-
-    const bundleExists = await test.step('Check if bundle exists', async () => {
-      const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      return bundleFound;
-    });
-
-    if (!bundleExists) {
-      return;
-    }
-
-    const activateButtonExists = await test.step('Check if activate button exists', async () => {
-      try {
-        await page.getByTestId('activate-button').waitFor({ timeout: 5000 });
-        return true;
-      } catch (error) {
-        return false;
-      }
-    });
-
-    if (!activateButtonExists) {
-      return;
-    }
-
-    await test.step('Accept private bundle offer', async () => {
-      await page.getByTestId('activate-button').click();
-
-      try {
-        await page.getByTestId('payment-amount-test').first().waitFor({ timeout: 5000 });
-
-        await page.getByTestId('payment-amount-test').first().click();
-        await page.getByTestId('payment-amount-test').first().fill('40');
-
-        const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
-        await confirmButton.waitFor({ timeout: 5000 });
-        await confirmButton.click();
-
-        await page.getByTestId('payment-amount-test').first().click();
-        await page.getByTestId('payment-amount-test').first().fill('4');
-
-        await page.getByTestId('open-modal-button-test').waitFor({ timeout: 5000 });
-        await page.getByTestId('open-modal-button-test').click();
-
-        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-        await page.getByTestId('confirm-button-test').click();
-
-        await checkReturnHomepage(page);
-      } catch (error) {
-        return;
-      }
-    });
+    await handleEcBundleInteraction(page, 'accept');
   });
 
   test('EC de-activates private bundle', async ({ page }) => {
@@ -411,10 +368,9 @@ test.describe.serial('Private bundles flow', () => {
       await page.getByTestId('tab-private').click();
     });
 
-    const bundleExists = await test.step('Check if bundle exists', async () => {
-      const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-      return bundleFound;
-    });
+    const bundleExists = await test.step('Check if bundle exists', async () => 
+      await getToBundleDetail(page, bundleNamePrivate)
+    );
 
     if (!bundleExists) {
       return;
@@ -429,7 +385,9 @@ test.describe.serial('Private bundles flow', () => {
       }
     });
 
-    if (!deactivateButtonExists) return;
+    if (!deactivateButtonExists) {
+      return;
+    }
 
     await test.step('Deactivate private bundle', async () => {
       await page.getByTestId('deactivate-button').click();
@@ -439,7 +397,7 @@ test.describe.serial('Private bundles flow', () => {
         await page.getByTestId('confirm-button-test').click();
         await checkReturnHomepage(page);
       } catch (error) {
-        return;
+        console.error('Error during deactivation:', error);
       }
     });
   });
@@ -506,4 +464,6 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
   await checkReturnHomepage(page);
+  
+  return { success: true };
 }

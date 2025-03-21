@@ -4,7 +4,9 @@ import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
 test.describe.serial('Station flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
+  // eslint-disable-next-line functional/no-let
   let selectedStationId = '';
+  // eslint-disable-next-line functional/no-let
   let associatedEcName = '';
 
   test.setTimeout(100000);
@@ -265,6 +267,7 @@ test.describe.serial('Station flow', () => {
     await page.getByRole('link', { name: 'Gestisci EC' }).click();
     await page.waitForTimeout(1000);
 
+    // eslint-disable-next-line functional/no-let
     let foundEc = false;
     if (associatedEcName) {
       const associatedRows = await page.getByRole('row', { name: associatedEcName }).count();

@@ -5,7 +5,9 @@ const endpoint = 'https://test.it:80/';
 
 test.setTimeout(100000);
 test.describe.serial('Channel flow', () => {
+  // eslint-disable-next-line functional/no-let
   let page: Page;
+  // eslint-disable-next-line functional/no-let
   let channelId: string;
 
   test.beforeAll(async ({ browser }) => {
@@ -52,7 +54,7 @@ test.describe.serial('Channel flow', () => {
     });
   });
 
-  /* eslint-disable-next-line sonarjs/cognitive-complexity */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   test('PSP modify channel', async () => {
     console.log('🚀 STARTING TEST: PSP modify channel');
 
@@ -69,10 +71,10 @@ test.describe.serial('Channel flow', () => {
       channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
     }
 
-    /* eslint-disable-next-line functional/no-let */
+    // eslint-disable-next-line functional/no-let
     let channelFound = false;
+    // eslint-disable-next-line functional/no-let
     let channelIsEditable = false;
-    let targetChannelId = '';
 
     for (const idToTry of channelIdsToTry) {
       await test.step(`Searching for channel ${idToTry}`, async () => {
@@ -90,7 +92,6 @@ test.describe.serial('Channel flow', () => {
         }
 
         channelFound = true;
-        targetChannelId = idToTry;
 
         await page.getByLabel('more').click();
         await page.getByRole('link', { name: 'Gestisci canale' }).click();
@@ -153,7 +154,7 @@ test.describe.serial('Channel flow', () => {
     });
   });
 
-  /* eslint-disable-next-line sonarjs/cognitive-complexity */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   test('Pagopa Operator approves channel', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
@@ -174,6 +175,7 @@ test.describe.serial('Channel flow', () => {
       channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
     }
 
+    // eslint-disable-next-line functional/no-let
     let channelFound = false;
 
     for (const idToTry of channelIdsToTry) {
@@ -195,7 +197,6 @@ test.describe.serial('Channel flow', () => {
           if (!isFound) {
             return;
           }
-
 
           await page.getByLabel('more').click();
           await page.getByRole('link', { name: 'Gestisci canale' }).click();
@@ -224,7 +225,6 @@ test.describe.serial('Channel flow', () => {
           if (idToTry !== channelId) {
             channelId = idToTry;
           }
-
         } catch (error) {
           try {
             await page.getByTestId('back-button-test').click();
@@ -233,7 +233,6 @@ test.describe.serial('Channel flow', () => {
             await page.getByTestId('channels-test').click();
             await page.waitForTimeout(2000);
           }
-          return;
         }
       });
 
@@ -248,12 +247,13 @@ test.describe.serial('Channel flow', () => {
       return;
     }
 
-    /* eslint-disable-next-line complexity */
+    // eslint-disable-next-line complexity
     await test.step('Approve the channel', async () => {
       const approveButton = page.getByRole('link', { name: 'Approva e valida' });
       await approveButton.click();
       await page.waitForTimeout(3000);
 
+      // eslint-disable-next-line functional/no-let
       let primitiveFieldFilled = false;
       try {
         const primitiveByPlaceholder = page.locator('input[placeholder="Versioni primitive"]').first();
@@ -288,6 +288,7 @@ test.describe.serial('Channel flow', () => {
         }
       }
 
+      // eslint-disable-next-line functional/no-let
       let passwordFilled = false;
       try {
         const passwordByTestId = page.getByTestId('password-test');
@@ -321,6 +322,7 @@ test.describe.serial('Channel flow', () => {
       await handleDropdown(page, 'Nuova connettività canali');
       await handleDropdown(page, 'Indirizzo proxy');
 
+      // eslint-disable-next-line functional/no-let
       let confirmClicked = false;
       try {
         const confirmButton = page.getByRole('button', { name: 'Conferma' });
@@ -351,18 +353,19 @@ test.describe.serial('Channel flow', () => {
       await page.waitForTimeout(2000);
 
       try {
-        let modalConfirmButton;
-        const confirmByText = page.getByRole('button', { name: 'Conferma' });
-        if (await confirmByText.isVisible({ timeout: 3000 })) {
-          modalConfirmButton = confirmByText;
-        } else {
+        const modalConfirmButton = await (async () => {
+          const confirmByText = page.getByRole('button', { name: 'Conferma' });
+          if (await confirmByText.isVisible({ timeout: 3000 })) {
+            return confirmByText;
+          }
+          
           const modalButtons = await page.locator('div[role="dialog"] button, .MuiDialog-root button').all();
           if (modalButtons.length > 0) {
-            modalConfirmButton = modalButtons[modalButtons.length - 1];
-          } else {
-            modalConfirmButton = page.getByTestId('confirm-button-modal-test');
+            return modalButtons[modalButtons.length - 1];
           }
-        }
+          
+          return page.getByTestId('confirm-button-modal-test');
+        })();
 
         if (modalConfirmButton) {
           await modalConfirmButton.click({ force: true });
@@ -407,7 +410,6 @@ test.describe.serial('Channel flow', () => {
           test.skip();
           return;
         }
-
       } catch (error) {
         test.skip();
         return;
@@ -449,33 +451,38 @@ test.describe.serial('Channel flow', () => {
         await page.getByTestId('back-button-test').click();
         await checkReturnHomepage(page);
       } catch (error) {
-        try {
-          await page.getByTestId('back-button-test').click();
-        } catch (error) {
-          console.error('Error occurred:', error);
-        }
+        await page.getByTestId('back-button-test').click().catch(e => {
+          console.error('Error during cleanup:', e);
+        });
         throw error;
       }
     });
   });
 
-  test('PSP associate another PSP to Channel', async () => {
-    console.log('🚀 STARTING TEST: PSP associate another PSP to Channel');
+  const searchAndManageChannel = async (page: Page, testAction: string): Promise<{ channelFound: boolean, targetChannelId: string }> => {
+    console.log(`🚀 STARTING TEST: ${testAction}`);
 
     await test.step('Navigate to channels as PSP user', async () => {
       await changeToPspUser(page);
       await page.getByTestId('channels-test').click();
     });
 
+    // eslint-disable-next-line functional/no-let
+    let channelFound = false;
+    // eslint-disable-next-line functional/no-let
+    let foundChannelId = '';
+    
     await test.step('Search for the channel', async () => {
       const channelIdsToTry = [channelId];
 
       if (channelId !== '99999000011_20') {
-        channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
+        const additionalIds = ['99999000011_20', '99999000011_19', '99999000011_18'];
+        for (const id of additionalIds) {
+          if (!channelIdsToTry.includes(id)) {
+            channelIdsToTry.push(id); // eslint-disable-line functional/immutable-data
+          }
+        }
       }
-
-      let targetChannelId = '';
-      let channelFound = false;
 
       for (const idToTry of channelIdsToTry) {
         await page.waitForSelector('[data-testid="search-input"]', { state: 'visible', timeout: 10000 });
@@ -488,22 +495,28 @@ test.describe.serial('Channel flow', () => {
           .catch(() => false);
 
         if (isFound) {
-          targetChannelId = idToTry;
           channelFound = true;
-
+          foundChannelId = idToTry;
+          
           if (idToTry !== channelId) {
             channelId = idToTry;
           }
           break;
         }
       }
-
-      if (!channelFound) {
-        console.log('No channel found in any of the attempts, skipping test');
-        test.skip();
-        return;
-      }
     });
+    
+    return { channelFound, targetChannelId: foundChannelId };
+  };
+
+  test('PSP associate another PSP to Channel', async () => {
+    const result = await searchAndManageChannel(page, 'PSP associate another PSP to Channel');
+    
+    if (!result.channelFound) {
+      console.log('No channel found in any of the attempts, skipping test');
+      test.skip();
+      return;
+    }
 
     await test.step('Associate another PSP to the channel', async () => {
       try {
@@ -548,6 +561,7 @@ test.describe.serial('Channel flow', () => {
           'PartyItemContainer: PSP DEMO'
         ];
 
+        // eslint-disable-next-line functional/no-let
         let pspFound = false;
 
         for (const selector of pspSelectors) {
@@ -590,50 +604,13 @@ test.describe.serial('Channel flow', () => {
   });
 
   test('PSP dissociate another PSP from Channel', async () => {
-    console.log('🚀 STARTING TEST: PSP dissociate another PSP from Channel');
-
-    await test.step('Navigate to channels as PSP user', async () => {
-      await changeToPspUser(page);
-      await page.getByTestId('channels-test').click();
-    });
-
-    await test.step('Search for the channel', async () => {
-      const channelIdsToTry = [channelId];
-
-      if (channelId !== '99999000011_20') {
-        channelIdsToTry.push('99999000011_20', '99999000011_19', '99999000011_18');
-      }
-
-      let targetChannelId = '';
-      let channelFound = false;
-
-      for (const idToTry of channelIdsToTry) {
-        await page.waitForSelector('[data-testid="search-input"]', { state: 'visible', timeout: 10000 });
-        await page.getByTestId('search-input').click();
-        await page.getByTestId('search-input').clear();
-        await page.getByTestId('search-input').fill(idToTry);
-        await page.waitForTimeout(2000);
-
-        const isFound = await page.getByText(idToTry, { exact: false }).isVisible({ timeout: 3000 })
-          .catch(() => false);
-
-        if (isFound) {
-          targetChannelId = idToTry;
-          channelFound = true;
-
-          if (idToTry !== channelId) {
-            channelId = idToTry;
-          }
-          break;
-        }
-      }
-
-      if (!channelFound) {
-        console.log('No channel found in any of the attempts, skipping test');
-        test.skip();
-        return;
-      }
-    });
+    const result = await searchAndManageChannel(page, 'PSP dissociate another PSP from Channel');
+    
+    if (!result.channelFound) {
+      console.log('No channel found in any of the attempts, skipping test');
+      test.skip();
+      return;
+    }
 
     await test.step('Dissociate PSP from the channel', async () => {
       try {

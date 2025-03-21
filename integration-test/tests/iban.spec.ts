@@ -2,12 +2,13 @@ import { Page, test } from '@playwright/test';
 import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
 
 test.setTimeout(100000);
-test.describe('IBAN flow', () => {
+test.describe.serial('IBAN flow', () => {
   // eslint-disable-next-line functional/no-let
   let page: Page;
   const IBAN: string = 'IT49S0300203280447684177591';
 
   test.beforeAll(async ({ browser }) => {
+    console.log('🚀 STARTING TEST FILE: iban.spec.ts');
     page = await browser.newPage({ storageState: undefined });
   });
 
@@ -16,6 +17,7 @@ test.describe('IBAN flow', () => {
   });
 
   test('EC creates IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC creates IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByRole('button', { name: 'Aggiungi IBAN' }).click();
@@ -28,6 +30,7 @@ test.describe('IBAN flow', () => {
   });
 
   test('EC edits IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC edits IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByPlaceholder('Cerca per Codice IBAN').click();
@@ -41,6 +44,7 @@ test.describe('IBAN flow', () => {
   });
 
   test('EC deletes IBAN', async () => {
+    console.log('🚀 STARTING TEST: EC deletes IBAN');
     await changeToEcUser(page);
     await page.getByTestId('iban-test').click();
     await page.getByPlaceholder('Cerca per Codice IBAN').click();

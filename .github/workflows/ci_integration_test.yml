@@ -71,7 +71,7 @@ jobs:
         run: |
           cd ./integration-test
           yarn install
-          npx playwright install --with-deps
+          npx playwright install chromium --with-deps
 
           export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
           export SUBKEY='${{ secrets.DEV_SUBKEY }}' 

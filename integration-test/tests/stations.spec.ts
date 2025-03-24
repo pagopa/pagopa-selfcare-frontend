@@ -288,7 +288,9 @@ test.describe.serial('Station flow', () => {
       return null;
     }
     
+    // eslint-disable-next-line functional/no-let
     let leftDigits = '';
+    // eslint-disable-next-line functional/no-let
     for (let i = underscorePos - 1; i >= 0; i--) {
       const char = text.charAt(i);
       if (char >= '0' && char <= '9') {
@@ -298,7 +300,9 @@ test.describe.serial('Station flow', () => {
       }
     }
     
+    // eslint-disable-next-line functional/no-let
     let rightDigits = '';
+    // eslint-disable-next-line functional/no-let
     for (let i = underscorePos + 1; i < text.length; i++) {
       const char = text.charAt(i);
       if (char >= '0' && char <= '9') {

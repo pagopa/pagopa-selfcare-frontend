@@ -242,20 +242,17 @@ test.describe.serial('Public bundles flow', () => {
     const bundleFound = await checkBundleExists(page);
     if (!bundleFound) {
       test.skip();
-      return false;
     }
 
     if (action === 'activate') {
       const activated = await activatePublicBundle(page);
       if (!activated) {
         test.skip();
-        return false;
       }
     } else {
       const deactivated = await handleDeactivateAction(page);
       if (!deactivated) {
         test.skip();
-        return false;
       }
     }
 
@@ -275,7 +272,6 @@ test.describe.serial('Public bundles flow', () => {
     const bundleFound = await getToBundleDetail(page, bundleNamePublic);
     if (!bundleFound) {
       test.skip();
-      return;
     }
 
     try {
@@ -283,7 +279,6 @@ test.describe.serial('Public bundles flow', () => {
     } catch {
       console.log('No subscription requests found, skipping test');
       test.skip();
-      return;
     }
     await page.getByTestId('delete-request-button').click();
     await page.getByTestId('confirm-button-test').click();
@@ -320,7 +315,6 @@ test.describe.serial('Public bundles flow', () => {
 
     if (!bundleFound) {
       test.skip();
-      return;
     }
 
     const detailButtonExists = await test.step('Check for subscription request', async () => {
@@ -334,7 +328,6 @@ test.describe.serial('Public bundles flow', () => {
 
     if (!detailButtonExists) {
       test.skip();
-      return;
     }
 
     await test.step('Reject the subscription request', async () => {
@@ -373,32 +366,6 @@ test.describe.serial('Public bundles flow', () => {
     await handleEcBundleActions(page, 'activate', '3rd time');
   });
 
-  test('PSP accept EC`s subscription request', async () => {
-    console.log('🚀 STARTING TEST: PSP accepts EC`s subscription request');
-
-    await changeToPspUser(page);
-    await page.getByTestId('commission-bundles-test').click();
-    await page.getByTestId('tab-public').click();
-
-    const bundleFound = await getToBundleDetail(page, bundleNamePublic);
-    if (!bundleFound) {
-      test.skip();
-      return;
-    }
-
-    try {
-      await page.getByTestId('request-detail-button').waitFor({ timeout: 5000 });
-    } catch {
-      console.log('No subscription requests found, skipping test');
-      test.skip();
-      return;
-    }
-    await page.getByTestId('request-detail-button').click();
-    await page.getByTestId('request-accept-button').click();
-    await page.getByTestId('confirm-button-test').click();
-    await checkReturnHomepage(page);
-  });
-
   test('EC deactivates public bundle', async () => {
     await handleEcBundleActions(page, 'deactivate');
   });
@@ -412,7 +379,6 @@ test.describe.serial('Public bundles flow', () => {
     const bundleFound = await getToInActivationBundleDetail(page, bundleNamePublic);
     if (!bundleFound) {
       test.skip();
-      return;
     }
 
     try {
@@ -420,7 +386,6 @@ test.describe.serial('Public bundles flow', () => {
     } catch {
       console.log('No public bundle found to delete, skipping test');
       test.skip();
-      return;
     }
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();

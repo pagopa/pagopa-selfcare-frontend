@@ -12,7 +12,7 @@ test.describe.serial('Station flow', () => {
   test.setTimeout(100000);
 
   const extractStationId = (text: string): string | null => {
-    const idMatch = text.match(/([0-9]+_[0-9]+)/);
+    const idMatch = text.match(/(\d{1,10}_\d{1,10})/);
     return idMatch && idMatch[1] ? idMatch[1] : null;
   };
 

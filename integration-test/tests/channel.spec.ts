@@ -9,8 +9,7 @@ import {
   clickConfirmButton,
   prepareChannelSearch,
   findAndClickPsp,
-  handleDropdown,
-  navigateToPagopaCannels
+  handleDropdown
 } from './utils/channelUtils';
 
 const endpoint = 'https://test.it:80/';
@@ -156,12 +155,8 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator approves channel', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
-    await test.step('Navigate to channels as Pagopa Operator', async () => {
-      const success = await navigateToPagopaCannels(page);
-      if (!success) {
-        test.skip();
-      }
-    });
+    await changeToPspUser(page, true);
+    await page.getByTestId('channels-test').click();
 
     const channelIdsToTry = prepareChannelIds(channelId);
     const { channelFound, foundChannelId } = await findApprovableChannel(page, channelIdsToTry);
@@ -218,12 +213,8 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator request edit', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator request edit');
 
-    await test.step('Navigate to channels as Pagopa Operator', async () => {
-      const success = await navigateToPagopaCannels(page);
-      if (!success) {
-        test.skip();
-      }
-    });
+    await changeToPspUser(page, true);
+    await page.getByTestId('channels-test').click();
 
     await test.step('Search for the channel', async () => {
       try {

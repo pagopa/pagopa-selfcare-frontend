@@ -345,19 +345,3 @@ export const handleDropdown = async (page: Page, dropdownLabel: string): Promise
     console.error('Error occurred:', error);
   }
 };
-
-/**
- * Navigates to Pagopa channels
- * @param page Playwright page
- * @returns Promise<boolean> Success status
- */
-export const navigateToPagopaCannels = async (page: Page): Promise<boolean> => {
-  try {
-    await changeToPspUser(page, true);
-    await page.getByTestId('channels-test').click();
-    return true;
-  } catch (error) {
-    console.error('Error navigating to channels as Pagopa Operator:', error);
-    return false;
-  }
-};

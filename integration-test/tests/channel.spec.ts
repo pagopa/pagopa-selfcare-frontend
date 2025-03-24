@@ -231,10 +231,8 @@ test.describe.serial('Channel flow', () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
     await test.step('Navigate to channels as Pagopa Operator', async () => {
-      try {
-        await changeToPspUser(page, true);
-        await page.getByTestId('channels-test').click();
-      } catch (error) {
+      const success = await navigateToPagopaCannels(page);
+      if (!success) {
         test.skip();
         return;
       }
@@ -389,10 +387,8 @@ test.describe.serial('Channel flow', () => {
     console.log('🚀 STARTING TEST: Pagopa Operator request edit');
 
     await test.step('Navigate to channels as Pagopa Operator', async () => {
-      try {
-        await changeToPspUser(page, true);
-        await page.getByTestId('channels-test').click();
-      } catch (error) {
+      const success = await navigateToPagopaCannels(page);
+      if (!success) {
         test.skip();
         return;
       }
@@ -685,4 +681,16 @@ test.describe.serial('Channel flow', () => {
       console.error('Error occurred:', error);
     }
   }
+
+  const navigateToPagopaCannels = async (page: Page): Promise<boolean> => {
+    try {
+      await changeToPspUser(page, true);
+      await page.getByTestId('channels-test').click();
+      return true;
+    } catch (error) {
+      console.error('Error navigating to channels as Pagopa Operator:', error);
+      return false;
+    }
+  };
+
 });

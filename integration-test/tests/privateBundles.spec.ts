@@ -412,7 +412,6 @@ test.describe.serial('Private bundles flow', () => {
     if (!bundleFound) {
       console.log(`Skipping deletion test due to missing bundle: ${bundleNamePrivate}`);
       test.skip();
-      return;
     }
 
     await page.getByTestId('delete-button').click();

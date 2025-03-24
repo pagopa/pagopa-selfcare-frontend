@@ -57,7 +57,6 @@ test.describe.serial('Station flow', () => {
     if (!stationFound) {
       console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test will be skipped`);
       test.skip();
-      return;
     }
 
     await page.getByLabel('more').first().click();
@@ -173,7 +172,6 @@ test.describe.serial('Station flow', () => {
     if (!stationFound) {
       console.log(`Station ${selectedStationId} not found in "To Be Validated" tab, this test will be skipped`);
       test.skip();
-      return;
     }
 
     await page.getByLabel('more').first().click();
@@ -219,7 +217,6 @@ test.describe.serial('Station flow', () => {
     if (ecOptions.length === 0) {
       console.log('No EC options found, this test will be skipped');
       test.skip();
-      return;
     }
 
     const exactMatch = await page.getByRole('option', { name: 'EC Signed Direct' }).count();
@@ -245,7 +242,6 @@ test.describe.serial('Station flow', () => {
       } else {
         console.log('No segregation code options found, this test will be skipped');
         test.skip();
-        return;
       }
     }
 
@@ -282,7 +278,6 @@ test.describe.serial('Station flow', () => {
       if (moreButtons.length === 0) {
         console.log('No associated ECs found to dissociate, this test will be skipped');
         test.skip();
-        return;
       }
       await moreButtons[0].click();
     }

@@ -11,11 +11,6 @@ test.describe.serial('Station flow', () => {
 
   test.setTimeout(100000);
 
-  const extractStationId = (text: string): string | null => {
-    const idMatch = text.match(/(\d{1,10}_\d{1,10})/);
-    return idMatch && idMatch[1] ? idMatch[1] : null;
-  };
-
   test.beforeAll(async ({ browser }) => {
     console.log('🚀 STARTING TEST FILE: stations.spec.ts');
     page = await browser.newPage({ storageState: undefined });
@@ -286,4 +281,37 @@ test.describe.serial('Station flow', () => {
     await page.getByTestId('confirm-button-modal-test').click();
     await checkReturnHomepage(page);
   });
+
+  const extractStationId = (text: string): string | null => {
+    const underscorePos = text.indexOf('_');
+    if (underscorePos === -1) {
+      return null;
+    }
+    
+    let leftDigits = '';
+    for (let i = underscorePos - 1; i >= 0; i--) {
+      const char = text.charAt(i);
+      if (char >= '0' && char <= '9') {
+        leftDigits = char + leftDigits;
+      } else {
+        break;
+      }
+    }
+    
+    let rightDigits = '';
+    for (let i = underscorePos + 1; i < text.length; i++) {
+      const char = text.charAt(i);
+      if (char >= '0' && char <= '9') {
+        rightDigits += char;
+      } else {
+        break;
+      }
+    }
+    
+    if (leftDigits.length > 0 && rightDigits.length > 0) {
+      return `${leftDigits}_${rightDigits}`;
+    }
+    
+    return null;
+  };
 });

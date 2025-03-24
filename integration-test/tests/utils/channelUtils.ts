@@ -40,7 +40,7 @@ export const isChannelVisibleInSearch = async (page: Page, channelId: string): P
  * @param channelIdsToTry Array of channel IDs to try
  * @returns Object with channelFound and foundChannelId
  */
-export const findApprovableChannel = async (page: Page, channelIdsToTry: string[]) => {
+export const findApprovableChannel = async (page: Page, channelIdsToTry: Array<string>) => {
   // eslint-disable-next-line functional/no-let
   let channelFound = false;
   // eslint-disable-next-line functional/no-let
@@ -217,7 +217,7 @@ export const clickConfirmButton = async (page: Page): Promise<boolean> => {
  * @param channelIds Array of channel IDs to search for
  * @returns Object with channelFound and targetChannelId
  */
-export const searchForChannel = async (page: Page, channelIds: string[]) => {
+export const searchForChannel = async (page: Page, channelIds: Array<string>) => {
   // eslint-disable-next-line functional/no-let
   let channelFound = false;
   // eslint-disable-next-line functional/no-let

@@ -11,7 +11,7 @@ export const getEmbedUrlForAnonymousUser = ({
     return getMockEmbedUrlForAnonymousUser();
   } else {
     return BackofficeApi.quicksightDashboard.getEmbedUrlForAnonymousUser({
-      institutionId: institutionId,
+      institutionId,
     });
   }
 };

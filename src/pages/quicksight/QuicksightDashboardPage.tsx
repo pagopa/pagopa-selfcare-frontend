@@ -21,16 +21,20 @@ export default function QuicksightDashboardPage() {
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
   const [errorMessage, setErrorMessage] = useState<string>();
   const history = useHistory();
-  const quicksightProductFreeTrial =  useFlagValue('quicksight-product-free-trial');
+  const quicksightProductFreeTrial = useFlagValue('quicksight-product-free-trial');
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   function openQuicksightDashboard() {
-    const userIsSubscribed = quicksightProductFreeTrial || selectedParty?.onboarding?.find(
-      (el) => el.productId === 'prod-dashboard-psp' && el.status === 'ACTIVE'
-    );
+    const userIsSubscribed =
+      quicksightProductFreeTrial ||
+      selectedParty?.onboarding?.find(
+        (el) => el.productId === 'prod-dashboard-psp' && el.status === 'ACTIVE'
+      );
 
     if (userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) {
-      getEmbedUrlForAnonymousUser()
+      getEmbedUrlForAnonymousUser(
+        userIsPagopaOperator ? { institutionId: selectedParty?.partyId } : {}
+      )
         .then((url) => {
           if (url.embedUrl) {
             setEmbedUrl(url.embedUrl);
@@ -40,7 +44,8 @@ export default function QuicksightDashboardPage() {
         .catch((err) => {
           const problemJson = extractProblemJson(err);
 
-          if (!problemJson?.status) { // IF error 403
+          if (!problemJson?.status) {
+            // IF error 403
             setErrorMessage(`userNotSubscribed${userIsPspAdmin ? '' : 'Not'}Admin`);
           } else {
             setErrorMessage('errorGeneric');
@@ -68,7 +73,13 @@ export default function QuicksightDashboardPage() {
           ) : (
             <>
               {embedUrl ? (
-                <iframe title="Dashboard Embed" src={embedUrl} height="100%" width="100%" style={{border:"1px solid lightgrey"}} />
+                <iframe
+                  title="Dashboard Embed"
+                  src={embedUrl}
+                  height="100%"
+                  width="100%"
+                  style={{ border: '1px solid lightgrey' }}
+                />
               ) : (
                 <></>
               )}

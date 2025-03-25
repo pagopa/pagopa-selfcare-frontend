@@ -41,18 +41,6 @@ jobs:
         with:
           node-version: 16.14.0
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Build
         run: |
           export REACT_APP_ENV='dev'
@@ -213,7 +201,7 @@ jobs:
           else
             yarn run generate:api-portal-pr
           fi   
-          
+
           yarn test:coverage --watchAll=false
 
       - name: SonarCloud Scan

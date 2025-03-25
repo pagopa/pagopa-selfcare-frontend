@@ -105,10 +105,12 @@ jobs:
           fi      
 
           yarn build
+          echo ls
 
       - name: Setup folder
         run: |
           mkdir ./out
+          echo ls
           mv ./build ./out/ui
           mv ./public/redirect.html ./out/index.html
 

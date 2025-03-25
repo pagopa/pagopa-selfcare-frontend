@@ -6,8 +6,8 @@ eval "$(jq -r '@sh "export $short_env=\(.env)"')"
 passphrase=""
 
 pkcs12_file="client_certificate.pfx"
-certificate_name='pagopa-d-weu-selfcare-jwt-signing-cert'
-KeyVaultName='pagopa-d-selfcare-kv'
+certificate_name='pagopa-p-weu-selfcare-jwt-signing-cert'
+KeyVaultName='pagopa-p-selfcare-kv'
 
 # Retrieve the client certificate from the Key Vault
 certificate_pfx_base64=$(az keyvault secret show --name ${certificate_name} --vault-name ${KeyVaultName} --query value --output tsv)

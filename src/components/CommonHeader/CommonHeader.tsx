@@ -107,6 +107,8 @@ const CommonHeader = ({
     }
 
     function getHeaderProduct() {
+      console.log(selectedProductId, selectedPartyId, productsList, partyList);
+      console.log(partyList?.find(elem => elem.id === selectedPartyId));
         return <HeaderProduct
             borderBottom={ENV.ENV !== 'prod' ? 3 : undefined}
             borderColor={ENV.ENV !== 'prod' ? theme.palette.warning.main : undefined}

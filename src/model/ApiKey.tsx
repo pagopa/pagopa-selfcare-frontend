@@ -62,18 +62,16 @@ export const getApiKeyProducts = (
     }
   }
 
-  if (ENV.FEATURES.QI_FDR_KPI.ENABLED && isPsp) {
+  if (isPsp) {
     list.push(API_KEY_PRODUCTS.QI_FDR_KPI);
   }
 
-  if (ENV.FEATURES.FDR.ENABLED) {
     if (isPsp) {
       list.push(API_KEY_PRODUCTS.FDR_PSP);
     }
     if (isEc) {
       list.push(API_KEY_PRODUCTS.FDR_ORG);
     }
-  }
 
   return list;
 };

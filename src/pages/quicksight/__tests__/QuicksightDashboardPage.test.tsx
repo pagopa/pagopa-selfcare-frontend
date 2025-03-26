@@ -10,6 +10,7 @@ import { pspAdminSignedDirect, pspOperatorSignedDirect } from '../../../services
 import { getEmbedUrlForAnonymousUser } from '../../../services/quicksightDashboardService';
 import { useFlagValue } from '../../../hooks/useFeatureFlags';
 import QuicksightDashboardPage from '../QuicksightDashboardPage';
+import { StatusEnum } from '../../../api/generated/portal/Onboarding';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -66,7 +67,7 @@ describe('QuicksightDashboardPage', () => {
     mockUseFlagValue.mockReturnValue(false);
 
     const payload = pspAdminSignedDirect;
-    payload.onboarding = [{productId: "prod-dashboard-psp", status: "ACTIVE"}]
+    payload.onboarding = [{productId: "prod-dashboard-psp", status: StatusEnum.ACTIVE}]
     renderApp({ partyPayload: payload });
 
     await waitFor(() => {

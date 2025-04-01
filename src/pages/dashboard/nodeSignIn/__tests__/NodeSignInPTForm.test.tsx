@@ -544,7 +544,7 @@ describe('<NodeSignInPTForm />', () => {
         fireEvent.click(continueBtn);
     });
 
-    test('Test Render NodeSignInPTForm all checks active', async () => {
+    test('Test Render NodeSignInPTForm all checks active - PT not signed', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {
                 types: {
@@ -564,8 +564,6 @@ describe('<NodeSignInPTForm />', () => {
             orgIsPspSigned: false
 
         });
-        spyOnGetStations.mockReturnValueOnce(Promise.resolve({}));
-        spyOnGetChannels.mockReturnValueOnce(Promise.resolve({}));
         const {store, pspCheckbox, ecCheckbox} = renderApp({});
         await waitFor(() =>
             store.dispatch({
@@ -579,7 +577,7 @@ describe('<NodeSignInPTForm />', () => {
         });
     });
 
-    test('Test Render NodeSignInPTForm all checks disabled', async () => {
+    test('Test Render NodeSignInPTForm all checks active - PT signed but not broker EC/PSP', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {
                 types: {
@@ -595,6 +593,39 @@ describe('<NodeSignInPTForm />', () => {
             orgIsEcDirect: false,
             orgIsEcSigned: false,
             orgIsPspBrokerSigned: false,
+            orgIsPspDirect: false,
+            orgIsPspSigned: false
+
+        });
+        const {store, pspCheckbox, ecCheckbox} = renderApp({});
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: PTUnsigned,
+            })
+        );
+        await waitFor(() => {
+            expect(pspCheckbox).not.toBeDisabled();
+            expect(ecCheckbox).not.toBeDisabled();
+        });
+    });
+
+    test('Test Render NodeSignInPTForm all checks disabled - Broker CI/PSP with station and channel', async () => {
+        jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+            orgInfo: {
+                types: {
+                    isEc: false,
+                    isPsp: false,
+                    isEcBroker: false,
+                    isPspBroker: false,
+                },
+                isSigned: true
+            },
+            orgIsBrokerSigned: true,
+            orgIsEcBrokerSigned: true,
+            orgIsEcDirect: false,
+            orgIsEcSigned: false,
+            orgIsPspBrokerSigned: true,
             orgIsPspDirect: false,
             orgIsPspSigned: false
 
@@ -615,7 +646,7 @@ describe('<NodeSignInPTForm />', () => {
         });
     });
 
-    test('Test Render NodeSignInPTForm ec check disabled', async () => {
+    test('Test Render NodeSignInPTForm ec check disabled - Broker CI/PSP with station but not channel', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {
                 types: {
@@ -626,11 +657,11 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: true
             },
-            orgIsBrokerSigned: false,
-            orgIsEcBrokerSigned: false,
+            orgIsBrokerSigned: true,
+            orgIsEcBrokerSigned: true,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
-            orgIsPspBrokerSigned: false,
+            orgIsPspBrokerSigned: true,
             orgIsPspDirect: false,
             orgIsPspSigned: false
 
@@ -651,7 +682,7 @@ describe('<NodeSignInPTForm />', () => {
         });
     });
 
-    test('Test Render NodeSignInPTForm psp check disabled', async () => {
+    test('Test Render NodeSignInPTForm psp check disabled - Broker CI/PSP with channel but not station', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
             orgInfo: {
                 types: {
@@ -662,11 +693,11 @@ describe('<NodeSignInPTForm />', () => {
                 },
                 isSigned: true
             },
-            orgIsBrokerSigned: false,
-            orgIsEcBrokerSigned: false,
+            orgIsBrokerSigned: true,
+            orgIsEcBrokerSigned: true,
             orgIsEcDirect: false,
             orgIsEcSigned: false,
-            orgIsPspBrokerSigned: false,
+            orgIsPspBrokerSigned: true,
             orgIsPspDirect: false,
             orgIsPspSigned: false
 

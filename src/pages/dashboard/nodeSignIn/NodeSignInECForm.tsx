@@ -35,25 +35,23 @@ type Props = {
 
 const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
   const { t } = useTranslation();
-  const { orgIsEcBrokerSigned, orgIsEcSigned, orgInfo } = useOrganizationType();
+  const { orgIsEcBrokerSigned, orgIsEcSigned, orgIsEcDirect } = useOrganizationType();
   const history = useHistory();
   const addError = useErrorDispatcher();
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
-  const ciDirect = signInData && orgIsEcBrokerSigned && orgIsEcSigned;
   const [hasCIStations, setHasCIStations] = useState(true);
-  const isSignedIn = signInData ? orgInfo.isSigned : false;
 
   useEffect(() => {
-    if (ciDirect) {
+    if (orgIsEcDirect) {
       setIntermediaryAvailableValue(true);
     } else {
       setIntermediaryAvailableValue(false);
     }
 
-    if (isSignedIn) {
+    if (orgIsEcBrokerSigned) {
       setLoading(true);
       const brokerCode = selectedParty?.fiscalCode ?? '';
 
@@ -149,7 +147,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
           });
         }
 
-        if (!hasCIStations && ciDirect && !intermediaryAvailableValue) {
+        if (!hasCIStations && orgIsEcDirect && !intermediaryAvailableValue) {
           await deleteCIBroker(selectedParty.fiscalCode);
         }
 

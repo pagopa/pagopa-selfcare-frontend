@@ -43,45 +43,70 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
   const setLoading = useLoading(LOADING_TASK_NODE_SIGN_IN_EC);
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
-  const { orgInfo, orgIsPspBrokerSigned, orgIsEcBrokerSigned } = useOrganizationType();
+  const { orgIsPspBrokerSigned, orgIsEcBrokerSigned, orgIsBrokerSigned } = useOrganizationType();
 
   const [isPartnerPSPChecked, setIsPartnerPSPChecked] = useState(orgIsPspBrokerSigned);
   const [isPartnerCIChecked, setIsPartnerCIChecked] = useState(orgIsEcBrokerSigned);
   const [hasCIStations, setHasCIStations] = useState(true);
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
-  const isSignedIn = signInData ? orgInfo.isSigned : false;
 
+  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   useEffect(() => {
     if (selectedParty) {
       setIsPartnerPSPChecked(orgIsPspBrokerSigned);
       setIsPartnerCIChecked(orgIsEcBrokerSigned);
 
-      if (isSignedIn) {
+      if (orgIsBrokerSigned) {
         setLoading(true);
         const brokerCode = selectedParty?.fiscalCode ?? '';
 
-        Promise.all([
-        getStations({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
-        getStations({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
-        getChannels({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1}),
-        getChannels({ status: ConfigurationStatus.TO_BE_VALIDATED, brokerCode, page: 0, limit: 1}),
-        ])
-          .then(
-            ([activeStations, toBeActivatedStations, activeChannels, toBeActivatedChannels]) => {
-              setHasCIStations(
-                (activeStations?.pageInfo?.total_items !== undefined &&
-                  activeStations.pageInfo.total_items > 0) ||
-                  (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
-                    toBeActivatedStations.pageInfo.total_items > 0)
-              );
-              setHasPSPChannels(
-                (activeChannels?.page_info?.total_items !== undefined &&
-                  activeChannels.page_info.total_items > 0) ||
-                  (toBeActivatedChannels?.page_info?.total_items !== undefined &&
-                    toBeActivatedChannels.page_info.total_items > 0)
-              );
-            }
-          )
+        new Promise((resolve, reject) => {
+          if (orgIsEcBrokerSigned) {
+            Promise.all([
+              getStations({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1 }),
+              getStations({
+                status: ConfigurationStatus.TO_BE_VALIDATED,
+                brokerCode,
+                page: 0,
+                limit: 1,
+              }),
+            ])
+              .then(([activeStations, toBeActivatedStations]) => {
+                setHasCIStations(
+                  (activeStations?.pageInfo?.total_items !== undefined &&
+                    activeStations.pageInfo.total_items > 0) ||
+                    (toBeActivatedStations?.pageInfo?.total_items !== undefined &&
+                      toBeActivatedStations.pageInfo.total_items > 0)
+                );
+              })
+              .catch((reason) => {
+                reject(reason);
+              });
+          }
+          if (orgIsPspBrokerSigned) {
+            Promise.all([
+              getChannels({ status: ConfigurationStatus.ACTIVE, brokerCode, page: 0, limit: 1 }),
+              getChannels({
+                status: ConfigurationStatus.TO_BE_VALIDATED,
+                brokerCode,
+                page: 0,
+                limit: 1,
+              }),
+            ])
+              .then(([activeChannels, toBeActivatedChannels]) => {
+                setHasPSPChannels(
+                  (activeChannels?.page_info?.total_items !== undefined &&
+                    activeChannels.page_info.total_items > 0) ||
+                    (toBeActivatedChannels?.page_info?.total_items !== undefined &&
+                      toBeActivatedChannels.page_info.total_items > 0)
+                );
+              })
+              .catch((reason) => {
+                reject(reason);
+              });
+          }
+          resolve(null);
+        })
           .catch((reason) => {
             addError({
               id: 'RETRIEVE_STATIONS_CHANNEL_ERROR',
@@ -102,7 +127,7 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
         setHasPSPChannels(false);
       }
     }
-  }, [selectedParty, signInData]);
+  }, [selectedParty]);
 
   const initialFormData = (selectedParty?: Party) => ({
     name: selectedParty?.fiscalCode ?? '',

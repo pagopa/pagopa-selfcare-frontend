@@ -82,6 +82,8 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
               .catch((reason) => {
                 reject(reason);
               });
+          } else {
+            setHasCIStations(false);
           }
           if (orgIsPspBrokerSigned) {
             Promise.all([
@@ -104,6 +106,8 @@ const NodeSignInPTForm = ({ goBack, signInData }: Props) => {
               .catch((reason) => {
                 reject(reason);
               });
+          } else {
+            setHasPSPChannels(false);
           }
           resolve(null);
         })

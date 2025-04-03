@@ -1627,8 +1627,12 @@ export const BackofficeApi = {
   },
 
   quicksightDashboard: {
-    getEmbedUrlForAnonymousUser: async (): Promise<QuicksightEmbedUrlResponse> => {
-      const result = await backofficeClient.getEmbedUrlForAnonymousUser({});
+    getEmbedUrlForAnonymousUser: async ({
+      institutionId,
+    }: {
+      institutionId?: string;
+    }): Promise<QuicksightEmbedUrlResponse> => {
+      const result = await backofficeClient.getEmbedUrlForAnonymousUser({ institutionId });
       return extractResponse(result, 200, onRedirectToLogin);
     },
   },

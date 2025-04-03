@@ -52,9 +52,8 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const updateSigninData = useSigninData();
   const [intermediaryAvailableValue, setIntermediaryAvailableValue] = useState<boolean>(false);
-  const { orgInfo, orgIsPspDirect } = useOrganizationType();
+  const { orgInfo, orgIsPspDirect, orgIsPspBrokerSigned } = useOrganizationType();
   const [hasPSPChannels, setHasPSPChannels] = useState(true);
-  const isSignedIn = signInData ? orgInfo.isSigned : false;
 
   useEffect(() => {
     if (orgIsPspDirect) {
@@ -63,7 +62,7 @@ const NodeSignInPSPForm = ({ goBack, signInData }: Props) => {
       setIntermediaryAvailableValue(false);
     }
 
-    if (isSignedIn) {
+    if (orgIsPspBrokerSigned) {
       setLoading(true);
       const brokerCode = selectedParty?.fiscalCode ?? '';
 

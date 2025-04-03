@@ -66,6 +66,7 @@ const CommonRadioGroup = ({labelTrue, labelFalse, value, setIntermediaryAvailabl
                         <FormControlLabel
                             value={true}
                             control={<Radio/>}
+                            disabled={isChangeDisabled}
                             label={labelTrue}
                         />
                     </RadioGroup>

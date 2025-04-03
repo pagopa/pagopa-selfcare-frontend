@@ -44,10 +44,6 @@ export const getApiKeyProducts = (
 
   const list = [API_KEY_PRODUCTS.NODOAUTH];
 
-  if (isPsp) {
-    list.push(API_KEY_PRODUCTS.BO_EXT_PSP);
-  }
-
   if (isEc) {
     list.push(
       API_KEY_PRODUCTS.BO_EXT_EC,
@@ -57,21 +53,20 @@ export const getApiKeyProducts = (
       API_KEY_PRODUCTS.BIZ,
       API_KEY_PRODUCTS.ACA
     );
+    
+    list.push(API_KEY_PRODUCTS.FDR_ORG);
+    
     if (flagPrintNotice) {
       list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
     }
   }
 
   if (isPsp) {
+    list.push(API_KEY_PRODUCTS.BO_EXT_PSP);
     list.push(API_KEY_PRODUCTS.QI_FDR_KPI);
+    list.push(API_KEY_PRODUCTS.FDR_PSP);
   }
 
-    if (isPsp) {
-      list.push(API_KEY_PRODUCTS.FDR_PSP);
-    }
-    if (isEc) {
-      list.push(API_KEY_PRODUCTS.FDR_ORG);
-    }
 
   return list;
 };

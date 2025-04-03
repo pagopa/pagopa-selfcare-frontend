@@ -71,9 +71,6 @@ jobs:
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
 
-          export REACT_APP_FEATURES_FDR_ENABLED='true'
-          export REACT_APP_FEATURES_QI_FDR_KPI_ENABLED='true'
-
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
 
 

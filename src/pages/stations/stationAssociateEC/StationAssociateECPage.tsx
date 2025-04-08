@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import {
   FormControlLabel,
   InputLabel,
@@ -158,9 +159,11 @@ function StationAssociateECPage() {
 
   const formik = useFormik<CreditorInstitutionStationDto>({
     initialValues: {
-      auxDigit: 3,
+      auxDigit: isEditMode && reduxCiRelation.auxDigit ? Number(reduxCiRelation.auxDigit) : 3,
       segregationCode: isEditMode ? reduxCiRelation?.segregationCode ?? '' : '',
+      applicationCode: isEditMode && reduxCiRelation.applicationCode ? Number(reduxCiRelation.applicationCode) : undefined,
       stationCode: stationId,
+      mod4: isEditMode && reduxCiRelation.mod4 ? reduxCiRelation.mod4 === "true" : undefined,
       broadcast: isEditMode ? Boolean(reduxCiRelation?.broadcast) : false,
       stand_in: isEditMode ? Boolean(reduxCiRelation?.stand_in) : true,
       aca: isEditMode ? Boolean(reduxCiRelation?.aca) : true,
@@ -182,7 +185,7 @@ function StationAssociateECPage() {
 
   const enableSubmit = (values: CreditorInstitutionStationDto) =>
     values.stationCode !== '' &&
-    values.auxDigit === 3 &&
+    values.auxDigit &&
     values.segregationCode !== '' &&
     selectedEC;
 
@@ -312,7 +315,7 @@ function StationAssociateECPage() {
                     }}
                     disabled={true}
                   >
-                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={formik.values.auxDigit}>{formik.values.auxDigit}</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

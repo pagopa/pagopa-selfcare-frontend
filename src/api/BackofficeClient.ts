@@ -612,8 +612,10 @@ export const BackofficeApi = {
       body: {
         auxDigit: station.auxDigit,
         segregationCode: station.segregationCode,
+        applicationCode : station.applicationCode,
         stationCode: station.stationCode,
         broadcast: station.broadcast,
+        mod4: station.mod4,
         aca: station.aca,
         stand_in: station.stand_in,
       },
@@ -632,8 +634,10 @@ export const BackofficeApi = {
       body: {
         auxDigit: station.auxDigit,
         segregationCode: station.segregationCode,
+        applicationCode : station.applicationCode,
         stationCode: station.stationCode,
         broadcast: station.broadcast,
+        mod4: station.mod4,
         aca: station.aca,
         stand_in: station.stand_in,
       },

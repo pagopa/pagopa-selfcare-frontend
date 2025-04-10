@@ -1,7 +1,8 @@
 import fs from 'fs';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { ORG_TYPE } from './e2eUtils';
 
-export function createJWT(org_id: string, isOperator?: boolean): string {
+export function createJWT(org: ORG_TYPE, isOperator?: boolean): string {
   // eslint-disable-next-line functional/no-let
   let cert: string | Buffer | undefined = process.env.KEY_PEM;
   if (!cert) {
@@ -17,8 +18,8 @@ export function createJWT(org_id: string, isOperator?: boolean): string {
     name: 'Anselmo',
     family_name: 'Sartori',
     email: isOperator ? 'operatorePagopa@test.it' : 'furiovitale@martino.it',
-    org_id,
-    org_vat: '00000000000',
+    org_id: org.id,
+    org_vat: org.taxCode,
     org_party_role: 'MANAGER',
     org_role: 'admin',
   };

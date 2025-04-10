@@ -5,9 +5,9 @@ describe('Test ApiKey model methods', () => {
     const orgType: OrgTypes = { isPsp: true, isPspBroker: false, isEc: false, isEcBroker: false };
     expect(getApiKeyProducts(orgType, true)).toEqual([
       API_KEY_PRODUCTS.NODOAUTH,
-      API_KEY_PRODUCTS.BO_EXT_PSP,
-      API_KEY_PRODUCTS.QI_FDR_KPI,
       API_KEY_PRODUCTS.FDR_PSP,
+      API_KEY_PRODUCTS.QI_FDR_KPI,
+      API_KEY_PRODUCTS.BO_EXT_PSP,
     ]);
   });
   test('Test getApiKeysProducts as EC', () => {
@@ -28,9 +28,9 @@ describe('Test ApiKey model methods', () => {
     const orgType: OrgTypes = { isPsp: false, isPspBroker: true, isEc: false, isEcBroker: false };
     expect(getApiKeyProducts(orgType, true)).toEqual([
       API_KEY_PRODUCTS.NODOAUTH,
-      API_KEY_PRODUCTS.BO_EXT_PSP,
-      API_KEY_PRODUCTS.QI_FDR_KPI,
       API_KEY_PRODUCTS.FDR_PSP,
+      API_KEY_PRODUCTS.QI_FDR_KPI,
+      API_KEY_PRODUCTS.BO_EXT_PSP
     ]);
   });
   test('Test getApiKeysProducts as PT EC', () => {
@@ -51,7 +51,6 @@ describe('Test ApiKey model methods', () => {
     const orgType: OrgTypes = { isPsp: false, isPspBroker: true, isEc: false, isEcBroker: true };
     expect(getApiKeyProducts(orgType, true)).toEqual([
       API_KEY_PRODUCTS.NODOAUTH,
-      API_KEY_PRODUCTS.BO_EXT_PSP,
       API_KEY_PRODUCTS.BO_EXT_EC,
       API_KEY_PRODUCTS.GPD,
       API_KEY_PRODUCTS.GPD_PAY,
@@ -59,9 +58,10 @@ describe('Test ApiKey model methods', () => {
       API_KEY_PRODUCTS.BIZ,
       API_KEY_PRODUCTS.ACA,
       API_KEY_PRODUCTS.PRINT_NOTICE,
-      API_KEY_PRODUCTS.QI_FDR_KPI,
-      API_KEY_PRODUCTS.FDR_PSP,
       API_KEY_PRODUCTS.FDR_ORG,
+      API_KEY_PRODUCTS.FDR_PSP,
+      API_KEY_PRODUCTS.QI_FDR_KPI,
+      API_KEY_PRODUCTS.BO_EXT_PSP,
     ]);
   });
 });

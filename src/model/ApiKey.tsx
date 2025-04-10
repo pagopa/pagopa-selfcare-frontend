@@ -54,17 +54,17 @@ export const getApiKeyProducts = (
       API_KEY_PRODUCTS.ACA
     );
     
-    list.push(API_KEY_PRODUCTS.FDR_ORG);
-    
     if (flagPrintNotice) {
       list.push(API_KEY_PRODUCTS.PRINT_NOTICE);
     }
+
+    list.push(API_KEY_PRODUCTS.FDR_ORG);
   }
 
   if (isPsp) {
-    list.push(API_KEY_PRODUCTS.BO_EXT_PSP);
-    list.push(API_KEY_PRODUCTS.QI_FDR_KPI);
     list.push(API_KEY_PRODUCTS.FDR_PSP);
+    list.push(API_KEY_PRODUCTS.QI_FDR_KPI);
+    list.push(API_KEY_PRODUCTS.BO_EXT_PSP);
   }
 
 

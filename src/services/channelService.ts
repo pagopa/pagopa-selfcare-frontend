@@ -48,7 +48,7 @@ export const getChannels = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getChannelsMocked(page ?? 0);
   } else {
-    return BackofficeApi.getChannels({ status, brokerCode, channelCode, limit, page }).then(
+    return BackofficeApi.channels.getChannels({ status, brokerCode, channelCode, limit, page }).then(
       (resources) => resources
     );
   }
@@ -65,7 +65,7 @@ export const getChannelDetail = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getChannelDetailMocked(channelCode);
   } else {
-    return BackofficeApi.getChannelDetail({ channelCode, status }).then((resources) => resources);
+    return BackofficeApi.channels.getChannelDetail({ channelCode, status }).then((resources) => resources);
   }
 };
 
@@ -74,7 +74,7 @@ export const getPSPChannels = (taxCode: string): Promise<PspChannelsResource> =>
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getPSPChannelsMocked(taxCode);
   } else {
-    return BackofficeApi.getPSPChannels(taxCode).then((resources) => resources);
+    return BackofficeApi.paymentServiceProviders.getPSPChannels(taxCode).then((resources) => resources);
   }
 };
 
@@ -82,7 +82,7 @@ export const getWfespPlugins = (): Promise<WfespPluginConfs> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return mockedGetWfespPlugins();
   } else {
-    return BackofficeApi.getWfespPlugins().then((resources) => resources);
+    return BackofficeApi.configurations.getWfespPlugins().then((resources) => resources);
   }
 };
 
@@ -91,7 +91,7 @@ export const createChannel = (channel: ChannelOnCreation): Promise<ChannelDetail
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createChannelMocked(channel);
   } else {
-    return BackofficeApi.createChannel(channel).then((resources) => resources);
+    return BackofficeApi.channels.createChannel(channel).then((resources) => resources);
   }
 };
 
@@ -103,7 +103,7 @@ export const updateChannel = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateChannelMocked(code, channel);
   } else {
-    return BackofficeApi.updateChannel(code, channel).then((resources) => resources);
+    return BackofficeApi.channels.updateChannel(code, channel).then((resources) => resources);
   }
 };
 
@@ -112,7 +112,7 @@ export const getChannelCode = (taxCode: string): Promise<ChannelCodeResource> =>
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getChannelCodeMocked(taxCode);
   } else {
-    return BackofficeApi.getChannelCode(taxCode).then((resources) => resources);
+    return BackofficeApi.paymentServiceProviders.getChannelCode(taxCode).then((resources) => resources);
   }
 };
 
@@ -126,7 +126,7 @@ export const getChannelPSPs = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getChannelPSPsMocked(page);
   } else {
-    return BackofficeApi.getChannelPSPs(channelcode, pspName, page, limit).then(
+    return BackofficeApi.channels.getChannelPSPs(channelcode, pspName, page, limit).then(
       (resources) => resources
     );
   }
@@ -141,7 +141,7 @@ export const associatePSPtoChannel = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return associatePSPtoChannelMocked(channelcode, taxcode, payment_type);
   } else {
-    return BackofficeApi.associatePSPtoChannel(channelcode, taxcode, payment_type).then(
+    return BackofficeApi.paymentServiceProviders.associatePSPtoChannel(channelcode, taxcode, payment_type).then(
       (resources) => resources
     );
   }
@@ -155,7 +155,7 @@ export const dissociatePSPfromChannel = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return dissociatePSPfromChannelMocked(channelcode, pspTaxCode);
   } else {
-    return BackofficeApi.dissociatePSPfromChannel(channelcode, pspTaxCode).then(
+    return BackofficeApi.paymentServiceProviders.dissociatePSPfromChannel(channelcode, pspTaxCode).then(
       (resources) => resources
     );
   }
@@ -168,7 +168,7 @@ export const createWrapperChannelDetails = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return createWrapperChannel(channel, validationUrl);
   } else {
-    return BackofficeApi.createWrapperChannelDetails(channel, validationUrl).then(
+    return BackofficeApi.channels.createWrapperChannelDetails(channel, validationUrl).then(
       (resources) => resources
     );
   }
@@ -186,7 +186,7 @@ export const updateWrapperChannelDetails = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannel(channel, validationUrl);
   } else {
-    return BackofficeApi.updateWrapperChannelDetails({ channelCode, channel, validationUrl }).then(
+    return BackofficeApi.channels.updateWrapperChannelDetails({ channelCode, channel, validationUrl }).then(
       (resources) => resources
     );
   }
@@ -204,7 +204,7 @@ export const updateWrapperChannelWithOperatorReview = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return updateWrapperChannelWithOperatorReviewMocked(channelCode, note);
   } else {
-    return BackofficeApi.updateWrapperChannelWithOperatorReview({
+    return BackofficeApi.channels.updateWrapperChannelWithOperatorReview({
       channelCode,
       brokerPspCode,
       note,

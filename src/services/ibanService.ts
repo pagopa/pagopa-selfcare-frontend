@@ -21,7 +21,7 @@ export const getIbanList = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getCreditorInstitutionIbansMocked(creditorInstitutionCode, labelName);
     } else {
-        return BackofficeApi.getCreditorInstitutionIbans(creditorInstitutionCode, labelName).then(
+        return BackofficeApi.ibans.getCreditorInstitutionIbans(creditorInstitutionCode, labelName).then(
             (resources) => resources
         );
     }
@@ -32,7 +32,7 @@ export const createIban = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createIbanMocked(iban);
     } else {
-        return BackofficeApi.createIban(ciCode, iban).then((resources) => resources);
+        return BackofficeApi.ibans.createIban(ciCode, iban).then((resources) => resources);
     }
 };
 
@@ -41,7 +41,7 @@ export const updateIban = (ciCode: string, iban: IbanCreate): Promise<Iban> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return updateIbanMocked(iban);
     } else {
-        return BackofficeApi.updateIban(ciCode, iban).then((resources) => resources);
+        return BackofficeApi.ibans.updateIban(ciCode, iban).then((resources) => resources);
     }
 };
 
@@ -50,7 +50,7 @@ export const deleteIban = (ecCode: string, ibanValue: string): Promise<void> => 
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return deleteIbanMocked(ecCode, ibanValue);
     } else {
-        return BackofficeApi.deleteIban(ecCode, ibanValue).then((resources) => resources);
+        return BackofficeApi.ibans.deleteIban(ecCode, ibanValue).then((resources) => resources);
     }
 };
 
@@ -59,7 +59,7 @@ export const exportIbanToCSV = (brokerCode: string): Promise<Buffer> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return exportIbansToCsvMocked(brokerCode);
     } else {
-        return BackofficeApi.exportIbansToCsv(brokerCode).then((resources) => resources);
+        return BackofficeApi.creditorInstitutionBroker.exportIbansToCsv(brokerCode).then((resources) => resources);
     }
 };
 
@@ -68,7 +68,7 @@ export const exportCreditorInstitutionToCSV = (brokerCode: string): Promise<Buff
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return exportCreditorInstitutionsToCsvMocked(brokerCode);
     } else {
-        return BackofficeApi.exportCreditorInstitutionsToCsv(brokerCode).then((resources) => resources);
+        return BackofficeApi.creditorInstitutionBroker.exportCreditorInstitutionsToCsv(brokerCode).then((resources) => resources);
     }
 };
 
@@ -77,7 +77,7 @@ export const getBrokerExportStatus = (brokerCode: string): Promise<BrokerECExpor
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getBrokerExportStatusMocked(brokerCode);
     } else {
-        return BackofficeApi.getBrokerExportStatus(brokerCode).then(
+        return BackofficeApi.creditorInstitutionBroker.getBrokerExportStatus(brokerCode).then(
             (resources) => resources
         );
     }

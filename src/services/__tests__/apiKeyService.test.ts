@@ -44,28 +44,28 @@ describe('BundleService test client', () => {
 
     test('Test getInstitutionApiKeys', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutionApiKeys')
+            .spyOn(BackofficeApi.institutions, 'getInstitutionApiKeys')
             .mockReturnValue(new Promise((resolve) => resolve([])));
         expect(getInstitutionApiKeys('institutionId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test createInstitutionApiKeys', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'createInstitutionApiKeys')
+            .spyOn(BackofficeApi.institutions, 'createInstitutionApiKeys')
             .mockReturnValue(new Promise((resolve) => resolve([])));
         expect(createInstitutionApiKeys('institutionId', 'subscriptionId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test regeneratePrimaryKey', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'regeneratePrimaryKey')
+            .spyOn(BackofficeApi.institutions, 'regeneratePrimaryKey')
             .mockReturnValue(new Promise((resolve) => resolve('')));
         expect(regeneratePrimaryKey('institutionId', 'subscriptionId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test regenerateSecondaryKey', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'regenerateSecondaryKey')
+            .spyOn(BackofficeApi.institutions, 'regenerateSecondaryKey')
             .mockReturnValue(new Promise((resolve) => resolve('')));
         expect(regenerateSecondaryKey('institutionId', 'subscriptionId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

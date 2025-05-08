@@ -14,7 +14,7 @@ describe('BrokerService test client', () => {
 
     test('Test deletePSPBroker', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'deletePSPBroker')
+            .spyOn(BackofficeApi.creditorInstitutionBroker, 'deletePSPBroker')
             .mockReturnValue(new Promise((resolve) => resolve()));
         expect(deletePSPBroker('brokerTaxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

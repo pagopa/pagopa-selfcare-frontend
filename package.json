@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.41.7-1-CHK-4094-refactor-backoffice-client-api",
+  "version": "1.41.7-2-CHK-4094-refactor-backoffice-client-api",
   "homepage": "ui",
   "private": true,
   "scripts": {

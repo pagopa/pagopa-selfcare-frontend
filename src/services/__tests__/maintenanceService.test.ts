@@ -22,7 +22,7 @@ describe('MaintenanceService test client', () => {
 
     test('Test getMaintenanceMessage', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getMaintenanceMessage')
+            .spyOn(BackofficeApi.home, 'getMaintenanceMessage')
             .mockReturnValue(Promise.resolve(mockMaintenanceMessage));
         expect(getMaintenanceMessage()).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

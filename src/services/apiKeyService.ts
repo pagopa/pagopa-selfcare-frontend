@@ -14,7 +14,7 @@ export const getInstitutionApiKeys = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getInstitutionApiKeysMocked(institutionId);
     } else {
-        return BackofficeApi.getInstitutionApiKeys(institutionId).then((resources) => resources);
+        return BackofficeApi.institutions.getInstitutionApiKeys(institutionId).then((resources) => resources);
     }
 };
 
@@ -26,7 +26,7 @@ export const createInstitutionApiKeys = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createInstitutionApiKeysMocked(institutionId, subscriptionCode);
     } else {
-        return BackofficeApi.createInstitutionApiKeys(institutionId, subscriptionCode).then(
+        return BackofficeApi.institutions.createInstitutionApiKeys(institutionId, subscriptionCode).then(
             (resources) => resources
         );
     }
@@ -40,7 +40,7 @@ export const regeneratePrimaryKey = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return regeneratePrimaryKeyMocked(institutionId, subscriptionId);
     } else {
-        return BackofficeApi.regeneratePrimaryKey(institutionId, subscriptionId).then(
+        return BackofficeApi.institutions.regeneratePrimaryKey(institutionId, subscriptionId).then(
             (resource) => resource
         );
     }
@@ -54,7 +54,7 @@ export const regenerateSecondaryKey = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return regenerateSecondaryKeyMocked(institutionId, subscriptionId);
     } else {
-        return BackofficeApi.regenerateSecondaryKey(institutionId, subscriptionId).then(
+        return BackofficeApi.institutions.regenerateSecondaryKey(institutionId, subscriptionId).then(
             (resources) => resources
         );
     }

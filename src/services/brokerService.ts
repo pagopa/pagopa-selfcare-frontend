@@ -13,7 +13,7 @@ export const getCIBrokerDelegation = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getCIBrokerDelegationMock();
     } else {
-        return BackofficeApi.getCIBrokerDelegation(brokerTaxCode, brokerId, ciName, limit, page);
+        return BackofficeApi.creditorInstitutionBroker.getCIBrokerDelegation(brokerTaxCode, brokerId, ciName, limit, page);
     }
 };
 
@@ -27,7 +27,7 @@ export const getCIBrokerStations = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getCIBrokerStationsMock();
     } else {
-        return BackofficeApi.getCIBrokerStations(brokerTaxCode, ciTaxCode, stationCode, limit, page);
+        return BackofficeApi.creditorInstitutionBroker.getCIBrokerStations(brokerTaxCode, ciTaxCode, stationCode, limit, page);
     }
 };
 
@@ -35,6 +35,6 @@ export const deleteCIBroker = (brokerTaxCode: string): Promise<void> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return new Promise((resolve) => resolve());
     } else {
-        return BackofficeApi.deleteCIBroker(brokerTaxCode);
+        return BackofficeApi.creditorInstitutionBroker.deleteCIBroker(brokerTaxCode);
     }
 };

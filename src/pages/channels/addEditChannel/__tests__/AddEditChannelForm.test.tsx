@@ -205,7 +205,7 @@ describe('<AddEditChannelForm />', (injectedHistory?: ReturnType<typeof createMe
             userIsPagopaOperator: true,
             userIsAdmin: true,
         });
-        BackofficeApi.getPaymentTypes = async (): Promise<any> => Promise.reject();
+        BackofficeApi.configurations.getPaymentTypes = async (): Promise<any> => Promise.reject();
         render(
             <Provider store={store}>
                 <Router history={history}>

@@ -154,14 +154,14 @@ describe('StationService test', () => {
 
   test('Test createStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'createStation')
+      .spyOn(BackofficeApi.stations, 'createStation')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStation)));
     expect(createStation(mockedCreatedStation)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getStations', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getStations')
+      .spyOn(BackofficeApi.stations, 'getStations')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStations)));
     expect(
       getStations({
@@ -176,35 +176,35 @@ describe('StationService test', () => {
   });
   test('Test getStationCode', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getStationCode')
+      .spyOn(BackofficeApi.stations, 'getStationCode')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStationCode)));
     expect(getStationCode('code')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getStationCodeV2', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getStationCodeV2')
+      .spyOn(BackofficeApi.stations, 'getStationCodeV2')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStationCode)));
     expect(getStationCodeV2('code')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getECListByStationCode', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getECListByStationCode')
+      .spyOn(BackofficeApi.stations, 'getECListByStationCode')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStationECs)));
     expect(getECListByStationCode('stationCode', 'ciName', 0)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test dissociateECfromStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'dissociateECfromStation')
+      .spyOn(BackofficeApi.creditorInstitutions, 'dissociateECfromStation')
       .mockReturnValue(new Promise((resolve) => resolve()));
     expect(dissociateECfromStation('ecCode', 'stationCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test associateEcToStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'associateEcToStation')
+      .spyOn(BackofficeApi.creditorInstitutions, 'associateEcToStation')
       .mockReturnValue(new Promise((resolve) => resolve({ stationCode: '123' })));
     expect(
       associateEcToStation('ecCode', mockedCreditorInstitutionStationDTO)
@@ -213,7 +213,7 @@ describe('StationService test', () => {
   });
   test('Test updateEcAssociationToStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateEcAssociationToStation')
+      .spyOn(BackofficeApi.creditorInstitutions, 'updateEcAssociationToStation')
       .mockReturnValue(new Promise((resolve) => resolve({ stationCode: '123' })));
     expect(
       updateEcAssociationToStation('ecCode', mockedCreditorInstitutionStationDTO)
@@ -222,14 +222,14 @@ describe('StationService test', () => {
   });
   test('Test getStationAvailableEC', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getStationAvailableEc')
+      .spyOn(BackofficeApi.paymentServiceProviders, 'getStationAvailableEc')
       .mockReturnValue(new Promise((resolve) => resolve(mockedStationAvailableEC)));
     expect(getStationAvailableEC()).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test createWrapperStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'createWrapperStation')
+      .spyOn(BackofficeApi.stations, 'createWrapperStation')
       .mockReturnValue(new Promise((resolve) => resolve(mockedWrapperStation)));
     expect(
       createWrapperStation({ station: mockedWrapperStation, validationUrl: 'url' })
@@ -238,7 +238,7 @@ describe('StationService test', () => {
   });
   test('Test updateWrapperStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperStationDetails')
+      .spyOn(BackofficeApi.stations, 'updateWrapperStationDetails')
       .mockReturnValue(new Promise((resolve) => resolve(mockedWrapperStation)));
     expect(
       updateWrapperStationDetails({
@@ -251,7 +251,7 @@ describe('StationService test', () => {
   });
   test('Test updateWrapperStationWithOperatorReview', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperStationWithOperatorReview')
+      .spyOn(BackofficeApi.stations, 'updateWrapperStationWithOperatorReview')
       .mockReturnValue(new Promise((resolve) => resolve(mockedFullStation)));
     expect(
       updateWrapperStationWithOperatorReview({
@@ -264,7 +264,7 @@ describe('StationService test', () => {
   });
   test('Test updateStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateStation')
+      .spyOn(BackofficeApi.stations, 'updateStation')
       .mockReturnValue(new Promise((resolve) => resolve(mockedFullStation)));
     expect(
       updateStation({ station: mockedStationDetailsDTO, stationCode: 'stationCode' })
@@ -273,7 +273,7 @@ describe('StationService test', () => {
   });
   test('Test getStationDetail', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getStationDetails')
+      .spyOn(BackofficeApi.stations, 'getStationDetails')
       .mockReturnValue(new Promise((resolve) => resolve(mockedFullStation)));
     expect(
       getStationDetail({ stationCode: 'stationId', status: ConfigurationStatus.ACTIVE })
@@ -282,14 +282,14 @@ describe('StationService test', () => {
   });
   test('Test getCreditorInstitutionSegregationcodes', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getCreditorInstitutionSegregationCodes')
+      .spyOn(BackofficeApi.creditorInstitutions, 'getCreditorInstitutionSegregationCodes')
       .mockReturnValue(new Promise((resolve) => resolve(mockedSegregationCodeList)));
     expect(getCreditorInstitutionSegregationCodes('ecCode', 'targetCICode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test testStation', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'testStation')
+      .spyOn(BackofficeApi.stations, 'testStation')
       .mockReturnValue(new Promise((resolve) => resolve(stationTestMocked)));
     expect(
       testStation('http', 'localhost', 8080, '/success', TestStationTypeEnum.PA_VERIFY)

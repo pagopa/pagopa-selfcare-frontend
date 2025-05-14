@@ -24,7 +24,7 @@ describe('CreditorInstitutionService test client', () => {
 
     test('Test getCreditorInstitutionContacts', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getCreditorInstitutionContacts')
+            .spyOn(BackofficeApi.creditorInstitutions, 'getCreditorInstitutionContacts')
             .mockReturnValue(new Promise((resolve) => resolve(mockedCIContacts)));
         expect(getCreditorInstitutionContacts('ciTaxCode', 'institutionId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -32,7 +32,7 @@ describe('CreditorInstitutionService test client', () => {
 
     test('Test getCreditorInstitutions', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getCreditorInstitutions')
+            .spyOn(BackofficeApi.creditorInstitutions, 'getCreditorInstitutions')
             .mockReturnValue(new Promise((resolve) => resolve(mockedCreditorInstitutionsResource)));
         expect(getCreditorInstitutions('taxCode', 'name', 0, 10)).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -40,7 +40,7 @@ describe('CreditorInstitutionService test client', () => {
 
     test('Test getAvailableCreditorInstitutionsForStation', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getAvailableCreditorInstitutionsForStation')
+            .spyOn(BackofficeApi.creditorInstitutions, 'getAvailableCreditorInstitutionsForStation')
             .mockReturnValue(new Promise((resolve) => resolve(mockedCreditorInstitutionInfoArray)));
         expect(
             getAvailableCreditorInstitutionsForStation('stationCode', 'brokerId')

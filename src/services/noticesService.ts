@@ -10,7 +10,7 @@ export const getInstitutionData = (taxCode: string): Promise<InstitutionUploadDa
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getInstitutionDataMock(taxCode);
     } else {
-        return BackofficeApi.getInstitutionData({'ciTaxCode': taxCode});
+        return BackofficeApi.notice.getInstitutionData({'ciTaxCode': taxCode});
     }
 };
 
@@ -18,6 +18,6 @@ export const uploadInstitutionData = (file: File | null, institutionsData: Insti
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return uploadInstitutionDataMock(file, institutionsData);
     } else {
-        return BackofficeApi.uploadInstitutionData({file, 'uploadInstitutionData': institutionsData});
+        return BackofficeApi.notice.uploadInstitutionData({file, 'uploadInstitutionData': institutionsData});
     }
 };

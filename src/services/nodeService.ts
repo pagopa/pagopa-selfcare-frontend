@@ -34,7 +34,7 @@ export const createPSPDirect = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createPSPDirectMocked(psp);
     } else {
-        return BackofficeApi.createPSPDirect(psp).then((resources) => resources);
+        return BackofficeApi.paymentServiceProviders.createPSPDirect(psp).then((resources) => resources);
     }
 };
 
@@ -42,7 +42,7 @@ export const createPspBroker = (broker: BrokerPspDetailsDto): Promise<BrokerPspD
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createPspBrokerMocked(broker);
     } else {
-        return BackofficeApi.createPspBroker(broker).then((resources) => resources);
+        return BackofficeApi.paymentServiceProviderBroker.createPspBroker(broker).then((resources) => resources);
     }
 };
 
@@ -53,7 +53,7 @@ export const updatePSPInfo = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return updatePSPInfoMocked(pspTaxCode, psp);
     } else {
-        return BackofficeApi.updatePaymentServiceProvider(pspTaxCode, psp);
+        return BackofficeApi.paymentServiceProviders.updatePaymentServiceProvider(pspTaxCode, psp);
     }
 };
 
@@ -63,7 +63,7 @@ export const createPSPIndirect = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createPSPIndirectMocked(psp);
     } else {
-        return BackofficeApi.createPSPIndirect(psp);
+        return BackofficeApi.paymentServiceProviders.createPSPIndirect(psp);
     }
 };
 
@@ -72,7 +72,7 @@ export const getBrokerAndPspDetails = (taxcode: string): Promise<BrokerOrPspDeta
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getBrokerAndPspDetailsMocked(taxcode);
     } else {
-        return BackofficeApi.getBrokerAndPspDetails(taxcode).then((resources) => resources);
+        return BackofficeApi.paymentServiceProviders.getBrokerAndPspDetails(taxcode).then((resources) => resources);
     }
 };
 
@@ -81,7 +81,7 @@ export const getPSPBrokerDetails = (pspBrokerCode: string): Promise<BrokerPspDet
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getPSPBrokerDetailsMocked(pspBrokerCode);
     } else {
-        return BackofficeApi.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
+        return BackofficeApi.paymentServiceProviderBroker.getPSPBrokerDetails(pspBrokerCode).then((resources) => resources);
     }
 };
 
@@ -95,7 +95,7 @@ export const getPaymentServiceProviders = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getPaymentServiceProvidersMocked(page, name, limit, pspCode, taxCode);
     } else {
-        return BackofficeApi.getPaymentServiceProviders(page, name, limit, pspCode, taxCode).then(
+        return BackofficeApi.paymentServiceProviders.getPaymentServiceProviders(page, name, limit, pspCode, taxCode).then(
             (resources) => resources
         );
     }
@@ -106,7 +106,7 @@ export const getBrokerAndEcDetails = (ecCode: string): Promise<BrokerAndEcDetail
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getBrokerAndEcDetailsMocked(ecCode);
     } else {
-        return BackofficeApi.getBrokerAndEcDetails(ecCode).then((resources) => resources);
+        return BackofficeApi.creditorInstitutions.getBrokerAndEcDetails(ecCode).then((resources) => resources);
     }
 };
 
@@ -116,7 +116,7 @@ export const createECAndBroker = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createECAndBrokerMocked(ec);
     } else {
-        return BackofficeApi.createECAndBroker(ec).then((resources) => resources);
+        return BackofficeApi.creditorInstitutions.createECAndBroker(ec).then((resources) => resources);
     }
 };
 
@@ -124,7 +124,7 @@ export const createEcBroker = (broker: BrokerDto): Promise<BrokerResource> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createEcBrokerMocked(broker);
     } else {
-        return BackofficeApi.createEcBroker(broker).then((resources) => resources);
+        return BackofficeApi.creditorInstitutionBroker.createEcBroker(broker).then((resources) => resources);
     }
 };
 
@@ -134,7 +134,7 @@ export const createECIndirect = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return createECIndirectMocked(ec);
     } else {
-        return BackofficeApi.createECIndirect(ec).then((resources) => resources);
+        return BackofficeApi.creditorInstitutions.createECIndirect(ec).then((resources) => resources);
     }
 };
 
@@ -145,6 +145,6 @@ export const updateCreditorInstitution = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return updateECDirect(ecCode, ec);
     } else {
-        return BackofficeApi.updateCreditorInstitution(ecCode, ec).then((resources) => resources);
+        return BackofficeApi.creditorInstitutions.updateCreditorInstitution(ecCode, ec).then((resources) => resources);
     }
 };

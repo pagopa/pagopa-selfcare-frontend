@@ -15,7 +15,7 @@ describe('ProductService test client', () => {
 
     test('Test fetchProducts', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getProducts')
+            .spyOn(BackofficeApi.institutions, 'getProducts')
             .mockReturnValue(new Promise((resolve) => resolve(mockedPartyProducts)));
         expect(fetchProducts('partyId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -23,7 +23,7 @@ describe('ProductService test client', () => {
 
     test('Test fetchProducts with empty response', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getProducts')
+            .spyOn(BackofficeApi.institutions, 'getProducts')
             .mockReturnValue(new Promise((resolve) => resolve({})));
         expect(fetchProducts('partyId')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

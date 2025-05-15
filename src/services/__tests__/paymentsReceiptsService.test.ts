@@ -17,12 +17,12 @@ describe('PaymentsReceiptsService test client', () => {
     });
 
     test('Test getPaymentsReceipts', async () => {
-        const spyOn = jest.spyOn(BackofficeApi, "getPaymentsReceipts").mockReturnValue(new Promise((resolve) => resolve([])));
+        const spyOn = jest.spyOn(BackofficeApi.paymentReceipts, "getPaymentsReceipts").mockReturnValue(new Promise((resolve) => resolve([])));
         expect(getPaymentsReceipts("orgTaxCode", 'debtorTaxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test createBundle', async () => {
-        const spyOn = jest.spyOn(BackofficeApi, "getPaymentReceiptDetail").mockReturnValue(new Promise((resolve) => resolve("")));
+        const spyOn = jest.spyOn(BackofficeApi.paymentReceipts, "getPaymentReceiptDetail").mockReturnValue(new Promise((resolve) => resolve("")));
         expect(getPaymentReceiptDetail("orgTaxCode", 'debtorTaxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });

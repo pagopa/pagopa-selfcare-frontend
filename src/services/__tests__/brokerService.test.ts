@@ -14,21 +14,21 @@ describe('BrokerService test client', () => {
 
     test('Test getCIBrokerDelegation', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getCIBrokerDelegation')
+            .spyOn(BackofficeApi.creditorInstitutionBroker, 'getCIBrokerDelegation')
             .mockReturnValue(new Promise((resolve) => resolve([])));
         expect(getCIBrokerDelegation('brokerTaxCode', 'brokerId', 'ciName', 10, 0)).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test getCIBrokerStations', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getCIBrokerStations')
+            .spyOn(BackofficeApi.creditorInstitutionBroker, 'getCIBrokerStations')
             .mockReturnValue(new Promise((resolve) => resolve('')));
         expect(getCIBrokerStations('brokerTaxCode', 'ciTaxCode', 'stationCode', 10, 0)).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
     test('Test deleteCIBroker', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'deleteCIBroker')
+            .spyOn(BackofficeApi.creditorInstitutionBroker, 'deleteCIBroker')
             .mockReturnValue(new Promise((resolve) => resolve()));
         expect(deleteCIBroker('brokerTaxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

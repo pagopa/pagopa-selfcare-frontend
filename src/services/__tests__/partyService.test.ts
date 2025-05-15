@@ -16,7 +16,7 @@ describe('PartyService test client', () => {
 
     test('Test fetchParties', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutions')
+            .spyOn(BackofficeApi.institutions, 'getInstitutions')
             .mockReturnValue(new Promise((resolve) => resolve(mockedInstitutionBaseResource)));
         expect(fetchParties()).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -24,7 +24,7 @@ describe('PartyService test client', () => {
 
     test('Test fetchParties with empty response', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutions')
+            .spyOn(BackofficeApi.institutions, 'getInstitutions')
             .mockReturnValue(new Promise((resolve) => resolve({})));
         expect(fetchParties()).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -32,7 +32,7 @@ describe('PartyService test client', () => {
 
     test('Test fetchPartyDetails', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutionFullDetail')
+            .spyOn(BackofficeApi.institutions, 'getInstitutionFullDetail')
             .mockReturnValue(new Promise((resolve) => resolve(mockedInstitutionDetailResource)));
         expect(fetchPartyDetails('partyId', [])).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

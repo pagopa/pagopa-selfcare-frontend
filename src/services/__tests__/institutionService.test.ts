@@ -35,7 +35,7 @@ describe('InstitutionService test client', () => {
 
     test('Test InstitutionService', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getBrokerDelegation')
+            .spyOn(BackofficeApi.institutions, 'getBrokerDelegation')
             .mockReturnValue(Promise.resolve(mockedDelegatedPSP));
         expect(getBrokerDelegation('institutionId', 'brokerId', ['roles'])).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -43,7 +43,7 @@ describe('InstitutionService test client', () => {
 
     test('Test InstitutionService', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutions')
+            .spyOn(BackofficeApi.institutions, 'getInstitutions')
             .mockReturnValue(Promise.resolve(mockedInstitutionDetailResource));
         expect(getInstitutions('taxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
@@ -51,7 +51,7 @@ describe('InstitutionService test client', () => {
 
     test('Test InstitutionService', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getInstitutionFullDetail')
+            .spyOn(BackofficeApi.institutions, 'getInstitutionFullDetail')
             .mockReturnValue(Promise.resolve(mockedInstitutionDetailResource));
         expect(getInstitutionFullDetail('taxCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

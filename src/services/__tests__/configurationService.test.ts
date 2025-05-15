@@ -22,7 +22,7 @@ describe('ConfigurationService test client', () => {
 
     test('Test getPaymentTypes', async () => {
         const spyOn = jest
-            .spyOn(BackofficeApi, 'getPaymentTypes')
+            .spyOn(BackofficeApi.configurations, 'getPaymentTypes')
             .mockReturnValue(Promise.resolve({payment_types: []}));
         expect(getPaymentTypes()).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);

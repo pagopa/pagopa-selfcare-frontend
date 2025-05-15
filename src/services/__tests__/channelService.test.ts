@@ -154,7 +154,7 @@ describe('ChannelService test client', () => {
 
   test('Test getChannels', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannels')
+      .spyOn(BackofficeApi.channels, 'getChannels')
       .mockReturnValue(Promise.resolve(mockedChannels));
     expect(
       getChannels({
@@ -169,7 +169,7 @@ describe('ChannelService test client', () => {
   });
   test('Test getChannelDetail', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannelDetail')
+      .spyOn(BackofficeApi.channels, 'getChannelDetail')
       .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
     expect(
       getChannelDetail({ channelCode: 'channelId', status: ConfigurationStatus.ACTIVE })
@@ -178,21 +178,21 @@ describe('ChannelService test client', () => {
   });
   test('Test getPSPChannels', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getPSPChannels')
+      .spyOn(BackofficeApi.paymentServiceProviders, 'getPSPChannels')
       .mockReturnValue(new Promise((resolve) => resolve(channelEnabled(mockedPSPChannels))));
     expect(getPSPChannels('pspTaxCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getWfespPlugins', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getWfespPlugins')
+      .spyOn(BackofficeApi.configurations, 'getWfespPlugins')
       .mockReturnValue(new Promise((resolve) => resolve(mockedWfespPlugIn)));
     expect(getWfespPlugins()).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test createChannel', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'createChannel')
+      .spyOn(BackofficeApi.channels, 'createChannel')
       .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
     expect(
       createChannel({
@@ -206,7 +206,7 @@ describe('ChannelService test client', () => {
   });
   test('Test updateChannel', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateChannel')
+      .spyOn(BackofficeApi.channels, 'updateChannel')
       .mockReturnValue(new Promise((resolve) => resolve(mockedChannelDetail('channelCode'))));
     expect(
       updateChannel('channelCode', {
@@ -220,21 +220,21 @@ describe('ChannelService test client', () => {
   });
   test('Test getChannelCode', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannelCode')
+      .spyOn(BackofficeApi.paymentServiceProviders, 'getChannelCode')
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getChannelCode('pspCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test getChannelPSPs', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'getChannelPSPs')
+      .spyOn(BackofficeApi.channels, 'getChannelPSPs')
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(getChannelPSPs('channelCode', 'pspName', 0)).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test associatePSPtoChannel', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'associatePSPtoChannel')
+      .spyOn(BackofficeApi.paymentServiceProviders, 'associatePSPtoChannel')
       .mockReturnValue(new Promise((resolve) => resolve(mockedPaymentTypesResource)));
     expect(
       associatePSPtoChannel('channelCode', 'taxCode', {
@@ -245,14 +245,14 @@ describe('ChannelService test client', () => {
   });
   test('Test dissociatePSPfromChannel', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'dissociatePSPfromChannel')
+      .spyOn(BackofficeApi.paymentServiceProviders, 'dissociatePSPfromChannel')
       .mockReturnValue(new Promise((resolve) => resolve()));
     expect(dissociatePSPfromChannel('channelCode', 'pspTaxCode')).resolves.not.toThrow();
     expect(spyOn).toBeCalledTimes(1);
   });
   test('Test createWrapperChannelDetails', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'createWrapperChannelDetails')
+      .spyOn(BackofficeApi.channels, 'createWrapperChannelDetails')
       .mockReturnValue(new Promise((resolve) => resolve({})));
     expect(
       createWrapperChannelDetails(
@@ -274,7 +274,7 @@ describe('ChannelService test client', () => {
   });
   test('Test updateWrapperChannelDetails', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperChannelDetails')
+      .spyOn(BackofficeApi.channels, 'updateWrapperChannelDetails')
       .mockReturnValue(Promise.resolve({}));
     expect(
       updateWrapperChannelDetails({
@@ -297,7 +297,7 @@ describe('ChannelService test client', () => {
   });
   test('Test updateWrapperChannelWithOperatorReview', async () => {
     const spyOn = jest
-      .spyOn(BackofficeApi, 'updateWrapperChannelWithOperatorReview')
+      .spyOn(BackofficeApi.channels, 'updateWrapperChannelWithOperatorReview')
       .mockReturnValue(
         new Promise((resolve) => resolve(mockedChannelDetailWithNote('channelCode', 'note')))
       );

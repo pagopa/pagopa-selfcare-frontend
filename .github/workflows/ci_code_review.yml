@@ -40,6 +40,7 @@ jobs:
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
           node-version: 16.14.0
+          cache: 'yarn'
 
       - name: Build
         run: |
@@ -73,39 +74,29 @@ jobs:
 
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
 
+          yarn cache clean
+          yarn install --verbose
 
-          yarn install
-
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
-                yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
-                yarn run generate:api-portal-next
-            else
-                yarn run generate:api-portal-pr
-            fi          
-          else
-            yarn run generate:api-portal-pr
-          fi      
+          yarn run generate:api-portal     
 
           yarn build
           mkdir ./out
           mv ./build ./out/ui
           mv ./public/redirect.html ./out/index.html
 
-      - name: Build And Deploy
-        id: build_deploy
-        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
-        if: github.event_name == 'pull_request' && github.event.action != 'closed'
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          deployment_environment: staging
-          app_location: "/out" # App source code path relative to repository root
-          skip_app_build: true
-          skip_api_build: true
-          skip_deploy_on_missing_secrets: true
+#      - name: Build And Deploy
+#        id: build_deploy
+#        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
+#        if: github.event_name == 'pull_request' && github.event.action != 'closed'
+#        with:
+#          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          action: "upload"
+#          deployment_environment: staging
+#          app_location: "/out" # App source code path relative to repository root
+#          skip_app_build: true
+#          skip_api_build: true
+#          skip_deploy_on_missing_secrets: true
 
   # smoke_test:
   #   name: Smoke Test
@@ -117,122 +108,123 @@ jobs:
   #     notify: false
   #   secrets: inherit
 
-  print_debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump Inputs
-        env:
-          JSON_INPUTS: ${{ toJson(inputs) }}
-        run: echo "$JSON_INPUTS"
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-
-  static_analysis:
-    name: Static Analysis
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
-        with:
-          fetch-depth: 0
-
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
-        with:
-          node-version: 16.14.0
-
-      - name: Lint
-        run: |
-          yarn install
-          yarn lint
-
-  test:
-    name: Unit Test & Sonar
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
-        with:
-          fetch-depth: 0
-
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
-        with:
-          node-version: 16.14.0
-
-      - name: Unit Tests
-        run: |
-          yarn install
-
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
-                yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
-                yarn run generate:api-portal-next
-            else
-                yarn run generate:api-portal-pr
-            fi          
-          else
-            yarn run generate:api-portal-pr
-          fi   
-
-          yarn test:coverage --watchAll=false
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/integration-test/**,**/openApi/**,**/model/**,**/hooks/**,**/MyHeaderProduct.tsx
-            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          action: "close"
-
-  delete-branch:
-    name: delete branch when closed
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
-
-      - name: Delete branch
-        run: |
-          echo "Deleting branch ${{github.head_ref}}"
-          git push origin --delete "${{github.head_ref}}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  print_debug:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Dump Inputs
+#        env:
+#          JSON_INPUTS: ${{ toJson(inputs) }}
+#        run: echo "$JSON_INPUTS"
+#
+#      - name: Dump GitHub context
+#        env:
+#          GITHUB_CONTEXT: ${{ toJson(github) }}
+#        run: echo "$GITHUB_CONTEXT"
+#      - name: Dump job context
+#        env:
+#          JOB_CONTEXT: ${{ toJson(job) }}
+#        run: echo "$JOB_CONTEXT"
+#      - name: Dump steps context
+#        env:
+#          STEPS_CONTEXT: ${{ toJson(steps) }}
+#        run: echo "$STEPS_CONTEXT"
+#      - name: Dump runner context
+#        env:
+#          RUNNER_CONTEXT: ${{ toJson(runner) }}
+#        run: echo "$RUNNER_CONTEXT"
+#      - name: Dump strategy context
+#        env:
+#          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+#        run: echo "$STRATEGY_CONTEXT"
+#      - name: Dump matrix context
+#        env:
+#          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+#        run: echo "$MATRIX_CONTEXT"
+#
+#  static_analysis:
+#    name: Static Analysis
+#    runs-on: ubuntu-latest
+#    needs: [build]
+#    steps:
+#      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Set Node.js 16
+#        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+#        with:
+#          node-version: 16.14.0
+#          cache: 'yarn'
+#
+#      - name: Lint
+#        run: |
+#          yarn install
+#          yarn lint
+#
+#  test:
+#    name: Unit Test & Sonar
+#    runs-on: ubuntu-latest
+#    needs: [build]
+#    steps:
+#      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Set Node.js 16
+#        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+#        with:
+#          node-version: 16.14.0
+#
+#      - name: Unit Tests
+#        run: |
+#          yarn install
+#
+#          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+#            if [ "${{ github.ref_name }}" = "main" ]; then
+#                yarn run generate:api-portal
+#            elif [ "${{ github.ref_name }}" = "next" ]; then
+#                yarn run generate:api-portal-next
+#            else
+#                yarn run generate:api-portal-pr
+#            fi
+#          else
+#            yarn run generate:api-portal-pr
+#          fi
+#
+#          yarn test:coverage --watchAll=false
+#
+#      - name: SonarCloud Scan
+#        uses: sonarsource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        with:
+#          args: >
+#            -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/integration-test/**,**/openApi/**,**/model/**,**/hooks/**,**/MyHeaderProduct.tsx
+#            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**
+#  close_pull_request_job:
+#    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+#    runs-on: ubuntu-latest
+#    name: Close Pull Request Job
+#    steps:
+#      - name: Close Pull Request
+#        id: closepullrequest
+#        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
+#        with:
+#          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+#          action: "close"
+#
+#  delete-branch:
+#    name: delete branch when closed
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+#
+#      - name: Delete branch
+#        run: |
+#          echo "Deleting branch ${{github.head_ref}}"
+#          git push origin --delete "${{github.head_ref}}"
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

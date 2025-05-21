@@ -39,8 +39,7 @@ jobs:
       - name: Set Node.js 16
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
-          node-version: 16.15.0
-          cache: 'false'
+          node-version: 16.14.0
 
       - name: Build
         run: |
@@ -74,10 +73,9 @@ jobs:
 
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
 
-          rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
-          df -h
-          apt-get update && sudo apt-get install -y build-essential python3 g++ make
-
+          npm install -g npm@8.3.1
+          npm --version 
+          
           yarn cache clean
           yarn install --network-timeout 300000
 

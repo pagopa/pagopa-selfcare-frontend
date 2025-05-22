@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Node.js 18
-        uses: actions/setup-node 
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3 
         with:
           node-version: 18.17.1
 
@@ -179,7 +179,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set Node.js 18
-        uses: actions/setup-node
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
           node-version: 18.17.1
 

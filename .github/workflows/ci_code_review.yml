@@ -104,8 +104,6 @@ jobs:
             yarn run generate:api-portal-pr
           fi      
           
-          npx update-browserslist-db@latest
-          
           yarn build
           mkdir ./out
           mv ./build ./out/ui

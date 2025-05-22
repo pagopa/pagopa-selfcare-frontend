@@ -54,6 +54,8 @@ jobs:
 
       - name: Build
         run: |
+          set -euo pipefail
+          
           export REACT_APP_ENV='dev'
           export INLINE_RUNTIME_CHUNK='false'
 
@@ -81,16 +83,20 @@ jobs:
 
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
+          
+          APP_JWT="${{ secrets.APP_JWT }}"
 
-          sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
-
+          sed -i "s/\$APP_JWT/${APP_JWT}/g" ./public/redirect.html
 
           yarn install --ignore-scripts --frozen-lockfile
+          
+          EVENT_NAME="${{ github.event_name }}"
+          REF_NAME="${{ github.ref_name }}"
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ "$REF_NAME" = "main" ]; then
                 yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
+            elif [ "$REF_NAME" = "next" ]; then
                 yarn run generate:api-portal-next
             else
                 yarn run generate:api-portal-pr
@@ -196,12 +202,17 @@ jobs:
 
       - name: Unit Tests
         run: |
+          set -euo pipefail
+          
           yarn install --ignore-scripts --frozen-lockfile
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
+          EVENT_NAME="${{ github.event_name }}"
+          REF_NAME="${{ github.ref_name }}"
+          
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ "$REF_NAME" = "main" ]; then
                 yarn run generate:api-portal
-            elif [ "${{ github.ref_name }}" = "next" ]; then
+            elif [ "$REF_NAME" = "next" ]; then
                 yarn run generate:api-portal-next
             else
                 yarn run generate:api-portal-pr
@@ -243,7 +254,9 @@ jobs:
 
       - name: Delete branch
         run: |
-          echo "Deleting branch ${{github.head_ref}}"
-          git push origin --delete "${{github.head_ref}}"
+          set -euo pipefail
+          BRANCH="${{ github.head_ref }}"
+          echo "Deleting branch $BRANCH"
+          git push origin --delete "$BRANCH"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

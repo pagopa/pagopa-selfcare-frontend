@@ -36,10 +36,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js 16.14.0
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 16.14.0
+          cache: 'yarn'
+
+      - name: Enable Yarn classic
+        run: corepack enable && corepack prepare yarn@1.22.21 --activate
+
+      - name: Cache Yarn
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/yarn
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+
 
       - name: Build
         run: |
@@ -74,7 +90,7 @@ jobs:
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
 
 
-          yarn install
+          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ github.ref_name }}" = "main" ]; then

@@ -36,10 +36,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js 18
+        uses: actions/setup-node 
         with:
-          node-version: 16.14.0
+          node-version: 18.17.1
 
       - name: Build
         run: |
@@ -159,10 +159,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
+      - name: Set Node.js 18
         uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
         with:
-          node-version: 16.14.0
+          node-version: 18.17.1
 
       - name: Lint
         run: |
@@ -178,10 +178,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js 18
+        uses: actions/setup-node
         with:
-          node-version: 16.14.0
+          node-version: 18.17.1
 
       - name: Unit Tests
         run: |

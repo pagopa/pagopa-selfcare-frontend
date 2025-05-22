@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted-job, "${{ inputs.environment }}" ]
     name: Deploy ${{ inputs.environment }}
     environment: ${{ inputs.environment }}
     steps:

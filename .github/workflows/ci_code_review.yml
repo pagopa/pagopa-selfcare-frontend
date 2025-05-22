@@ -45,9 +45,6 @@ jobs:
       - name: Enable Yarn classic
         run: corepack enable && corepack prepare yarn@1.22.21 --activate
 
-      - name: Update Browserslist DB
-        run: npx update-browserslist-db@latest
-
       - name: Cache Yarn
         uses: actions/cache@v3
         with:

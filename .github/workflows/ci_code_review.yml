@@ -103,7 +103,9 @@ jobs:
           else
             yarn run generate:api-portal-pr
           fi      
-
+          
+          npx update-browserslist-db@latest
+          
           yarn build
           mkdir ./out
           mv ./build ./out/ui
@@ -182,7 +184,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn install
+          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
           yarn lint
 
   test:
@@ -201,7 +203,7 @@ jobs:
 
       - name: Unit Tests
         run: |
-          yarn install
+          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ github.ref_name }}" = "main" ]; then

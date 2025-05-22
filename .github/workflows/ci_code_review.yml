@@ -88,7 +88,7 @@ jobs:
           sed -i 's/\$APP_JWT/${{ secrets.APP_JWT }}/g' ./public/redirect.html
 
 
-          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
+          yarn install --ignore-scripts --frozen-lockfile
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ github.ref_name }}" = "main" ]; then
@@ -180,7 +180,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
+          yarn install --ignore-scripts --frozen-lockfile
           yarn lint
 
   test:
@@ -199,7 +199,7 @@ jobs:
 
       - name: Unit Tests
         run: |
-          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
+          yarn install --ignore-scripts --frozen-lockfile
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ github.ref_name }}" = "main" ]; then

@@ -80,7 +80,7 @@ jobs:
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
 
-          yarn install --ignore-scripts --frozen-lockfile --prefer-offline --network-timeout 300000
+          yarn install --ignore-scripts --frozen-lockfile
           if [ "${{ inputs.environment }}" = "dev" ]; then
             yarn run generate:api-portal-next
           else

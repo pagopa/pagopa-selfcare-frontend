@@ -30,7 +30,7 @@ permissions:
 jobs:
   build:
     name: Build
-    runs-on: [ self-hosted-job, "${{ inputs.environment }}" ]
+    runs-on: [ self-hosted-job, "dev" ]
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:

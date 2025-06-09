@@ -7,22 +7,7 @@ import {
   showCustomHeader,
 } from '../../../components/Table/TableUtils';
 import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
-
-export const getAuxDigit = (station: any) => {
-  const hasSegregationCode = station.segregationCode !== undefined;
-  const hasApplicationCode = station.applicationCode !== undefined;
-  if (hasSegregationCode && !hasApplicationCode) {
-    return '3';
-  } else if (!hasSegregationCode && hasApplicationCode) {
-    return '0';
-  } else if (hasSegregationCode && hasApplicationCode) {
-    return '0/3';
-  } else if (station.auxDigit) {
-    return station.auxDigit;
-  } else {
-    return '-';
-  }
-};
+import { getAuxDigit } from '../../../utils/station-utils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -67,7 +52,11 @@ export function buildColumnDefs(
       renderHeader: showCustomHeader,
       renderCell: (params) =>
         renderCell({
-          value: getAuxDigit(params.row),
+          value: getAuxDigit({
+            segregationCode: params.row.segregationCode,
+            applicationCode: params.row.applicationCode,
+            auxDigit: params.row.auxDigit,
+          }),
           color: params.row.status === 'SUSPENDED' ? 'text.disabled' : undefined,
         }),
       sortable: false,
@@ -169,8 +158,7 @@ export function buildColumnDefs(
       editable: false,
       sortable: false,
       flex: 1,
-      getActions: (p: any) =>
-        gridLinkActionEdit({ t, ci: p.row, onRowClick, onLinkClick }),
+      getActions: (p: any) => gridLinkActionEdit({ t, ci: p.row, onRowClick, onLinkClick }),
     },
   ] as Array<GridColDef>;
 }

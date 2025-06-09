@@ -1228,7 +1228,7 @@
       },
       "addRecipientsPage": {
         "title": "Aggiungi destinatari",
-        "subtitle": "Cerca gli enti destinatari del pacchetto o carica una lista.",
+        "subtitle": "Cerca gli enti destinatari del pacchetto.",
         "modal": {
           "title": "Notifica enti destinatari",
           "message": "Notificheremo via mail tutti gli enti aggiunti.",
@@ -1236,7 +1236,7 @@
         },
         "paper": {
           "title": "Enti destinatari",
-          "subtitle": "Cerca il nome dell’ente utilizzando la barra di ricerca oppure carica una lista di enti.",
+          "subtitle": "Cerca il nome dell’ente utilizzando la barra di ricerca.",
           "dropFileText": "oppure lascia qui la lista dei destinatari",
           "dontKnowHow": "Non sai come preparare il file? ",
           "downloadExample": "Scarica l'esempio",

@@ -6,6 +6,6 @@ export const getMaintenanceMessage = (): Promise<MaintenanceMessage> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return Promise.resolve(mockMaintenanceMessage);
     } else {
-        return BackofficeApi.getMaintenanceMessage().then((data) => data);
+        return BackofficeApi.home.getMaintenanceMessage().then((data) => data);
     }
 };

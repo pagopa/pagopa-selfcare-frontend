@@ -13,7 +13,7 @@ export const getPaymentsReceipts = ({
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return Promise.resolve(mockedPaymentsReceiptsList);
     } else {
-        return BackofficeApi.getPaymentsReceipts({
+        return BackofficeApi.paymentReceipts.getPaymentsReceipts({
             organizationTaxCode,
             debtorTaxCodeOrIuv,
             filterYear,
@@ -30,6 +30,6 @@ export const getPaymentReceiptDetail = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return Promise.resolve('<note><body>example xml</body></note>');
     } else {
-        return BackofficeApi.getPaymentReceiptDetail(organizationTaxCode, iuv);
+        return BackofficeApi.paymentReceipts.getPaymentReceiptDetail(organizationTaxCode, iuv);
     }
 };

@@ -5,7 +5,7 @@ export const getFlags = (): Promise<FeatureFlags> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return mockFlag();
     } else {
-        return BackofficeApi.getFeatureFlags();
+        return BackofficeApi.home.getFeatureFlags();
     }
 };
 

@@ -15,7 +15,7 @@ export const getCreditorInstitutionContacts = (
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionContactsMock();
   } else {
-    return BackofficeApi.getCreditorInstitutionContacts(ciTaxCode, institutionId);
+    return BackofficeApi.creditorInstitutions.getCreditorInstitutionContacts(ciTaxCode, institutionId);
   }
 };
 
@@ -33,7 +33,7 @@ export const getCreditorInstitutions = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getCreditorInstitutionssMock();
   } else {
-    return BackofficeApi.getCreditorInstitutions({
+    return BackofficeApi.creditorInstitutions.getCreditorInstitutions({
       ciTaxCode,
       ciName,
       page,
@@ -54,7 +54,7 @@ export const getAvailableCreditorInstitutionsForStation = ({
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
     return getAvailableCreditorInstitutionsForStationMock();
   } else {
-    return BackofficeApi.getAvailableCreditorInstitutionsForStation({
+    return BackofficeApi.creditorInstitutions.getAvailableCreditorInstitutionsForStation({
       stationCode,
       brokerId,
       ciName,

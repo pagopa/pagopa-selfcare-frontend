@@ -9,7 +9,7 @@ export const getPaymentTypes = (): Promise<PaymentTypes> => {
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getPaymentTypesMocked();
     } else {
-        return BackofficeApi.getPaymentTypes().then((results: PaymentTypes) => {
+        return BackofficeApi.configurations.getPaymentTypes().then((results: PaymentTypes) => {
             if (results) {
                 return {
                     "payment_types": results.payment_types?.filter(

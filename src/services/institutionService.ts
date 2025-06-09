@@ -13,7 +13,7 @@ export const getBrokerDelegation = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getBrokerDelegationMock();
     } else {
-        return BackofficeApi.getBrokerDelegation(institutionId, brokerId, roles).then(
+        return BackofficeApi.institutions.getBrokerDelegation(institutionId, brokerId, roles).then(
             (resources) => resources
         );
     }
@@ -26,7 +26,7 @@ export const getInstitutions = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getInstitutionsMock();
     } else {
-        return BackofficeApi.getInstitutions(taxCode).then((resources) => resources);
+        return BackofficeApi.institutions.getInstitutions(taxCode).then((resources) => resources);
     }
 };
 
@@ -37,6 +37,6 @@ export const getInstitutionFullDetail = (
     if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
         return getInstitutionDetailMock();
     } else {
-        return BackofficeApi.getInstitutionFullDetail(institution_id).then((resources) => resources);
+        return BackofficeApi.institutions.getInstitutionFullDetail(institution_id).then((resources) => resources);
     }
 };

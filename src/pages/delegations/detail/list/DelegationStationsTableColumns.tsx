@@ -38,9 +38,9 @@ export function buildColumnDefs(
       renderCell: (params) =>
         renderCell({
           value: getAuxDigit({
-            segregationCode: params.row.segregationCode,
-            applicationCode: params.row.applicationCode,
-            auxDigit: params.row.auxDigit,
+            segregationCode: params.row.segregation_code,
+            applicationCode: params.row.application_code,
+            auxDigit: params.row.aux_digit,
           }),
         }),
       sortable: true,

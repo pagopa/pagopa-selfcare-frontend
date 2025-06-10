@@ -173,24 +173,25 @@ export const stationServicesConfiguration = (getFlagValue: (value: string) => bo
 };
 
 export const getAuxDigit = ({
-      segregationCode,
-      applicationCode,
-      auxDigit,
-    }: {
-      segregationCode?: string;
-      applicationCode?: string;
-      auxDigit?: string;
-    }) => {
+  segregationCode,
+  applicationCode,
+  auxDigit,
+}: {
+  segregationCode?: string | number;
+  applicationCode?: string | number;
+  auxDigit?: string | number;
+}): string => {
   const hasSegregationCode = segregationCode !== undefined;
   const hasApplicationCode = applicationCode !== undefined;
+
   if (hasSegregationCode && !hasApplicationCode) {
     return '3';
   } else if (!hasSegregationCode && hasApplicationCode) {
     return '0';
   } else if (hasSegregationCode && hasApplicationCode) {
     return '0/3';
-  } else if (auxDigit) {
-    return auxDigit;
+  } else if (auxDigit !== undefined) {
+    return auxDigit.toString(); // Ensures number values are converted to string
   } else {
     return '-';
   }

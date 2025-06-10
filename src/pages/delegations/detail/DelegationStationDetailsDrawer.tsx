@@ -8,7 +8,7 @@ import { generatePath, useHistory } from 'react-router-dom';
 import { CIBrokerStationResource } from '../../../api/generated/portal/CIBrokerStationResource';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';
 import ROUTES from '../../../routes';
-import { formatDateToDDMMYYYY } from '../../../utils/common-utils';
+import { formatCodeInDoubleDigit, formatDateToDDMMYYYY } from '../../../utils/common-utils';
 import { ConfigurationStatus } from '../../../model/Station';
 import { getAuxDigit } from '../../../utils/station-utils';
 
@@ -78,9 +78,9 @@ export const DelegationStationDetailsDrawer = ({
           </Typography>
           <Typography variant="body1" fontWeight={'fontWeightMedium'}>
             {getAuxDigit({
-              segregationCode: String(drawerValue?.segregation_code),
-              applicationCode: String(drawerValue?.application_code),
-              auxDigit: String(drawerValue?.aux_digit),
+              segregationCode: drawerValue?.segregation_code,
+              applicationCode: drawerValue?.application_code,
+              auxDigit: drawerValue?.aux_digit,
             })}
           </Typography>
         </Box>
@@ -90,7 +90,7 @@ export const DelegationStationDetailsDrawer = ({
             {t('delegationDetailPage.stationDetail.segregationCode')}
           </Typography>
           <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-            {drawerValue?.segregation_code ?? '-'}
+            {formatCodeInDoubleDigit(drawerValue?.segregation_code)}
           </Typography>
         </Box>
 
@@ -99,7 +99,7 @@ export const DelegationStationDetailsDrawer = ({
             {t('delegationDetailPage.stationDetail.applicationCode')}
           </Typography>
           <Typography variant="body1" fontWeight={'fontWeightMedium'}>
-            {drawerValue?.application_code ?? '-'}
+            {formatCodeInDoubleDigit(drawerValue?.application_code)}
           </Typography>
         </Box>
 

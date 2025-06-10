@@ -5,6 +5,7 @@ import { TFunction } from 'react-i18next';
 import { CIBrokerStationResource } from '../../../../api/generated/portal/CIBrokerStationResource';
 import { renderCell, showCustomHeader } from '../../../../components/Table/TableUtils';
 import { getAuxDigit } from '../../../../utils/station-utils';
+import { formatCodeInDoubleDigit } from '../../../../utils/common-utils';
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
@@ -56,7 +57,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell({ value: params.row.segregation_code }),
+      renderCell: (params) => renderCell({ value: formatCodeInDoubleDigit(params.row.segregation_code) }),
       sortable: true,
       flex: 4,
     },
@@ -70,7 +71,7 @@ export function buildColumnDefs(
       editable: false,
       disableColumnMenu: true,
       renderHeader: showCustomHeader,
-      renderCell: (params) => renderCell({ value: params.row.application_code }),
+      renderCell: (params) => renderCell({ value: formatCodeInDoubleDigit(params.row.application_code) }),
       sortable: false,
       flex: 4,
     },

@@ -32,16 +32,20 @@ export const downloadBlobAsCSV = (data: any, name: string): void => {
   tempLink.parentNode?.removeChild(tempLink);
 };
 
-export const formatCodeInDoubleDigit = (code: string | undefined): string => {
+export const formatCodeInDoubleDigit = (code: string | number | undefined): string => {
   if (code === undefined) {
     return '-';
   }
-  const castedCode: number = +code;
-  if (castedCode < 10) {
-    return '0' + code;
-  } else {
-    return code;
+  
+  // Convert to number if it's a string
+  const castedCode: number = typeof code === 'string' ? Number(code) : code;
+  
+  if (isNaN(castedCode)) {
+    return '-'; // Handle cases where input is an invalid string
   }
+
+  // Ensure it's formatted as a double-digit string
+  return castedCode < 10 ? '0' + castedCode.toString() : castedCode.toString();
 };
 
 export const formatCurrencyEur = (value: number | undefined): string => {

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.42.4",
+  "version": "1.42.4-1-PIDM-551-Ruolo-Utente",
   "homepage": "ui",
   "private": true,
   "scripts": {

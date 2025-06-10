@@ -1,12 +1,13 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { buildColumnDefs, getAuxDigit, gridLinkActionEdit } from '../StationECTableColumns';
+import { buildColumnDefs, gridLinkActionEdit } from '../StationECTableColumns';
 import { mockedCreditorInstitutionsResource } from '../../../../services/__mocks__/creditorInstitutionService';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createMemoryHistory } from 'history';
 import { store } from '../../../../redux/store';
 import { Router } from 'react-router-dom';
+import { getAuxDigit } from '../../../../utils/station-utils';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});

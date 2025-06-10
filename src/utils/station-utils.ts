@@ -177,9 +177,9 @@ export const getAuxDigit = ({
       applicationCode,
       auxDigit,
     }: {
-      segregationCode: string;
-      applicationCode: string;
-      auxDigit: string;
+      segregationCode?: string;
+      applicationCode?: string;
+      auxDigit?: string;
     }) => {
   const hasSegregationCode = segregationCode !== undefined;
   const hasApplicationCode = applicationCode !== undefined;

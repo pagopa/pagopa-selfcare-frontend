@@ -15,7 +15,7 @@ import { useFlagValue } from '../../hooks/useFeatureFlags';
 const componentPath = 'sideMenu.quicksightDashboard.modal';
 export default function QuicksightDashboardPage() {
   const { t } = useTranslation();
-  const { userIsPspAdmin, userIsPagopaOperator } = useUserRole();
+  const { userIsPspAdmin, userIsPagopaOperator, userIsPspOperator } = useUserRole();
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const [loading, setLoading] = useState<boolean>(true);
   const [embedUrl, setEmbedUrl] = useState<string | null | undefined>(null);
@@ -31,7 +31,7 @@ export default function QuicksightDashboardPage() {
         (el) => el.productId === 'prod-dashboard-psp' && el.status === 'ACTIVE'
       );
 
-    if (userIsPagopaOperator || (userIsPspAdmin && userIsSubscribed)) {
+    if (userIsPagopaOperator || ((userIsPspAdmin || userIsPspOperator) && userIsSubscribed)) {
       getEmbedUrlForAnonymousUser(
         userIsPagopaOperator ? { institutionId: selectedParty?.partyId } : {}
       )

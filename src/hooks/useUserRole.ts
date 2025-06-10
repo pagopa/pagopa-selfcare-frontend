@@ -17,6 +17,7 @@ export const useUserRole = () => {
     const userIsEcAdmin = userRole === ROLE.EC_ADMIN || userRole === ROLE.EC_DIRECT_ADMIN;
     const isPagopaOperator = userIsPagopaOperator();
     const userIsAdmin = userIsPspAdmin || userIsEcAdmin || isPagopaOperator;
+    const userIsPspOperator = userRole === ROLE.PSP_OPERATOR;
 
     return {
         userRole,
@@ -25,6 +26,7 @@ export const useUserRole = () => {
         userIsPspDirectAdmin,
         userIsAdmin,
         userIsPagopaOperator: isPagopaOperator,
+        userIsPspOperator,
     };
 };
 

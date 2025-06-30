@@ -742,7 +742,7 @@
       "ECSelectionInputPlaceholder": "Cerca EC",
       "segregationCode": "Codice segregazione",
       "auxDigit": "Aux digit",
-      "successMessageUpdate": "Associazione aggioranta con successo.",
+      "successMessageUpdate": "Associazione aggiornata con successo.",
       "successMessageAssociate": "EC associato con successo.",
       "errorMessageDesc": "Non è stato possibile associare il EC alla stazione",
       "errorMessageECNotValid": "L'EC selezionato non può essere associato alla stazione in quanto non è stato ancora censito sulla Piattaforma PagoPA",

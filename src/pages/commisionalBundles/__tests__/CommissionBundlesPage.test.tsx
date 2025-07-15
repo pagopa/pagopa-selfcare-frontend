@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import CommissionBundlesPage from '../CommissionBundlesPage';
 import * as useFeatureFlags from '../../../hooks/useFeatureFlags';
-import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesActions } from '../../../redux/slices/bundlesSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import {
   mockedCommissionBundlePspDetailGlobal,
@@ -32,6 +32,7 @@ beforeEach(() => {
     userIsPspDirectAdmin: false,
     userIsPagopaOperator: false,
     userIsAdmin: true,
+    userIsPspOperator: false
   });
   jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
     orgInfo: {
@@ -57,7 +58,7 @@ afterEach(cleanup);
 
 const ComponentRender = ({ bundle }: { bundle: BundleResource }) => {
   const dispatch = useAppDispatch();
-  dispatch(bundleDetailsActions.setBundleDetailsState(bundle));
+  dispatch(bundlesActions.setBundleDetailsState(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles`]}>

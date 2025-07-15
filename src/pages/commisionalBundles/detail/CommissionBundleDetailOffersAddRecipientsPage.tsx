@@ -9,7 +9,7 @@ import ECSelection from '../../../components/Form/ECSelection';
 import GenericModal from '../../../components/Form/GenericModal';
 import { BundleResource } from '../../../model/CommissionBundle';
 import { useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesSelectors } from '../../../redux/slices/bundlesSlice';
 import ROUTES from '../../../routes';
 import { getCreditorInstitutions } from '../../../services/creditorInstitutionService';
 import { CreditorInstitutionsResource } from '../../../api/generated/portal/CreditorInstitutionsResource';
@@ -39,7 +39,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
   const setLoadingAddRecipients = useLoading(LOADING_TASK_ADD_RECIPIENTS);
 
   const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
-    selector: bundleDetailsSelectors.selectBundleDetails,
+    selector: bundlesSelectors.selectBundles,
     routeToRedirect: ROUTES.COMMISSION_BUNDLES,
     conditionToRedirect: (el: BundleResource) => el.type !== TypeEnum.PRIVATE
   });

@@ -7,7 +7,7 @@ import { generatePath } from 'react-router-dom';
 import { Euro } from '@mui/icons-material';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
-import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesActions } from '../../../redux/slices/bundlesSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import {
   dateDifferenceInDays,
@@ -174,7 +174,7 @@ export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource
   return (
     <GridLinkAction
       label="Gestisci pacchetto"
-      onClick={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
+      onClick={() => dispatcher(bundlesActions.setBundleDetailsState(bundle))}
       to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
       icon={<ChevronRightIcon color="primary" />}
     />

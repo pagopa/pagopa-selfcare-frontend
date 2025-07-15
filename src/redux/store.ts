@@ -5,7 +5,7 @@ import {userReducer} from '@pagopa/selfcare-common-frontend/redux/slices/userSli
 import {LOG_REDUX_ACTIONS} from '../utils/constants';
 import {partiesReducer} from './slices/partiesSlice';
 import {featureFlagsReducer} from './slices/featureFlagsSlice';
-import {bundleDetailsReducer} from './slices/bundleDetailsSlice';
+import {bundlesReducer} from './slices/bundlesSlice';
 import {delegationDetailReducer} from './slices/delegationDetailSlice';
 import {institutionsDataDetailsReducer} from './slices/institutionsDataDetailsSlice';
 import { stationCIReducer } from './slices/stationCISlice';
@@ -20,7 +20,7 @@ export const createStore = () =>
             user: userReducer,
             appState: appStateReducer,
             featureFlags: featureFlagsReducer,
-            bundleDetails: bundleDetailsReducer,
+            bundleDetails: bundlesReducer,
             delegationDetail: delegationDetailReducer,
             institutionDataDetails: institutionsDataDetailsReducer,
             stationCI: stationCIReducer,

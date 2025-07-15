@@ -6,7 +6,7 @@ const initialState = {};
 
 /* eslint-disable functional/immutable-data */
 export const bundlesSlice = createSlice({
-    name: 'bundleDetails',
+    name: 'bundles',
     initialState,
     reducers: {
         setBundleDetailsState: (_, action: PayloadAction<BundleResource>) => action.payload,

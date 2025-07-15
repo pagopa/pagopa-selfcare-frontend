@@ -8,7 +8,7 @@ import React from 'react';
 import AddEditCommissionBundlePage from '../../addEditCommissionBundle/AddEditCommissionBundlePage';
 import {FormAction} from '../../../../model/CommissionBundle';
 import {useAppDispatch} from '../../../../redux/hooks';
-import {bundleDetailsActions} from '../../../../redux/slices/bundleDetailsSlice';
+import {bundlesActions} from '../../../../redux/slices/bundlesSlice';
 import {
     mockedCommissionBundlePspDetailGlobal,
     mockedCommissionBundlePspDetailPrivate,
@@ -48,7 +48,7 @@ const RenderComponent = ({
     bundle: PSPBundleResource;
 }) => {
     const dispatcher = useAppDispatch();
-    dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+    dispatcher(bundlesActions.setBundleDetailsState(bundle));
     return (
         <MemoryRouter initialEntries={[initialEntries]}>
             <Route path={path}>

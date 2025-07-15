@@ -24,7 +24,7 @@ import {
 } from '../../../model/CommissionBundle';
 import { Party } from '../../../model/Party';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesSelectors } from '../../../redux/slices/bundlesSlice';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import {
@@ -191,7 +191,7 @@ const CommissionBundleDetailPage = () => {
   const addError = useErrorDispatcher();
 
   const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
-    selector: bundleDetailsSelectors.selectBundleDetails,
+    selector: bundlesSelectors.selectBundles,
     routeToRedirect: ROUTES.COMMISSION_BUNDLES,
   });
   const bundleId = commissionBundleDetail.idBundle ?? '';

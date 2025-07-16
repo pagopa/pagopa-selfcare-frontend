@@ -52,8 +52,8 @@ import {
 import { CreateStationMaintenance } from '../../../api/generated/portal/CreateStationMaintenance';
 import {
   StationMaintenanceReduxState,
-  stationMaintenanceSelectors,
-} from '../../../redux/slices/stationMaintenancesSlice';
+  stationsSelectors,
+} from '../../../redux/slices/stationsSlice';
 import { extractProblemJson } from '../../../utils/client-utils';
 
 function mergeDateAndHours(date: string, hours: string) {
@@ -153,7 +153,7 @@ export default function StationMaintenanceAddEditDetail() {
   const isDetail = action === StationMaintenanceActionType.DETAILS;
   const selectedMaintenanceState: StationMaintenanceReduxState =
     useAppSelectorWithRedirect({
-      selector: stationMaintenanceSelectors.selectStationMaintenanceState,
+      selector: stationsSelectors.selectStationMaintenanceState,
       routeToRedirect: isEdit ? ROUTES.STATION_MAINTENANCES_LIST : undefined,
     }) ?? {};
 

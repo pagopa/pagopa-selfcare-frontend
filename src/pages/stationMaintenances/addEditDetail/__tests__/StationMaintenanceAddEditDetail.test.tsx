@@ -8,7 +8,7 @@ import * as StationService from '../../../../services/stationService';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { StationMaintenanceActionType } from '../../../../model/StationMaintenance';
 import { useAppDispatch } from '../../../../redux/hooks';
-import { stationMaintenanceActions } from '../../../../redux/slices/stationMaintenancesSlice';
+import { stationMaintenanceActions } from '../../../../redux/slices/stationsSlice';
 import { StationMaintenanceResource } from '../../../../api/generated/portal/StationMaintenanceResource';
 import { mockStationMaintenance } from '../../../../services/__mocks__/stationMaintenancesService';
 import { mockedStations } from '../../../../services/__mocks__/stationService';

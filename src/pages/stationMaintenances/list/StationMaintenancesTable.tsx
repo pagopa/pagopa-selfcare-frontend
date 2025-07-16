@@ -24,9 +24,9 @@ import { LOADING_TASK_STATION_MAINTENANCES } from '../../../utils/constants';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { fromHoursFormattedToNumbers } from '../../../utils/common-utils';
 import {
-  stationMaintenanceActions,
+  stationsActions,
   StationMaintenanceReduxState,
-} from '../../../redux/slices/stationMaintenancesSlice';
+} from '../../../redux/slices/stationsSlice';
 import {
   deleteStationMaintenance,
   getStationMaintenances,
@@ -160,7 +160,7 @@ export default function StationMaintenancesTable({
         stationMaintenance: maintenance,
         hoursRemaining: fromHoursFormattedToNumbers(hoursRemaining),
       };
-      dispatcher(stationMaintenanceActions.setStationMaintenanceState(state));
+      dispatcher(stationsActions.setStationMaintenanceState(state));
       history.push(
         generatePath(ROUTES.STATION_MAINTENANCES_ADD_EDIT_DETAIL, {
           maintenanceId: maintenance.maintenance_id,

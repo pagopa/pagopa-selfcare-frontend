@@ -3,7 +3,9 @@ import type { RootState } from '../store';
 import { CreditorInstitutionResource } from '../../api/generated/portal/CreditorInstitutionResource';
 
 interface InitialSelectedStationState {
-    creditInstitutions: CreditorInstitutionResource;
+    creditInstitutions: {
+        selected: CreditorInstitutionResource;
+    };
 };
 
 interface InitialStationsState {
@@ -12,7 +14,9 @@ interface InitialStationsState {
 
 const initialState: InitialStationsState = {
     selected: {
-        creditInstitutions: {} as CreditorInstitutionResource
+        creditInstitutions: {
+            selected: {} as CreditorInstitutionResource
+        }
     },
 };
 
@@ -27,7 +31,10 @@ export const stationsSlice = createSlice({
         ...state,
         selected: {
             ...state.selected,
-            creditInstitutions: action.payload 
+            creditInstitutions: {
+                ...state.selected.creditInstitutions,
+                selected: action.payload
+            } 
         }
     }),
   },
@@ -38,5 +45,5 @@ export const stationsReducer = stationsSlice.reducer;
 
 export const stationsSelectors = {
   selectSelectedStationCreditInstitution: (state: RootState): CreditorInstitutionResource | Record<any, any> =>
-    state.stations.selected.creditInstitutions,
+    state.stations.selected.creditInstitutions.selected,
 };

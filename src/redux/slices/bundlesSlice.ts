@@ -3,7 +3,6 @@ import type {RootState} from '../store';
 import {BundleResource} from '../../model/CommissionBundle';
 
 interface BundleState {
-    list?: Array<BundleResource> | Array<Record<any,any>>;
     selected?: BundleResource | Record<any,any>;
 }
 
@@ -22,6 +21,5 @@ export const bundlesActions = bundlesSlice.actions;
 export const bundlesReducer = bundlesSlice.reducer;
 
 export const bundlesSelectors = {
-    selectBundles: (state: RootState): Array<BundleResource> | Array<Record<any, any>> => state.bundles.list ?? [],
     selectBundle: (state: RootState): BundleResource | Record<any, any> => state.bundles.selected ?? {}
 };

@@ -29,14 +29,19 @@ Possible candidates
     - can have a search by code: highly specific, unlikely to be repeated
     - very complex cache key: `${status}_${stationCode}_${brokerCode}_${limit}_${page}` --> hard to maintain (small simplifications can be applied)
 
-- [YES] `GET /v1/creditor-institutions/99999000013/ibans`
+- [NO] `GET /v1/creditor-institutions/99999000013/ibans`
     
     **Section**: IBAN
 
-    Good candidate because:
+    NO because of privacy policies regarding info to be saved in the local browsers
+
+    Even if it's a good candidate because:
     - few items (good fit for memory)
     - not paginated
       - search could avoid API calls and search for in-memory results
+      - opening a single IBAN should not do perform again the request to fetch the ibans list
+
+    
 
 - [NO] `GET backoffice/v1/bundles/creditor-institutions`
 

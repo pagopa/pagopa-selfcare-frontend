@@ -48,7 +48,7 @@ const RenderComponent = ({
     bundle: PSPBundleResource;
 }) => {
     const dispatcher = useAppDispatch();
-    dispatcher(bundlesActions.setBundleSelected(bundle));
+    dispatcher(bundlesActions.setSelectedBundle(bundle));
     return (
         <MemoryRouter initialEntries={[initialEntries]}>
             <Route path={path}>

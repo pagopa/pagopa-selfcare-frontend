@@ -174,7 +174,7 @@ export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource
   return (
     <GridLinkAction
       label="Gestisci pacchetto"
-      onClick={() => dispatcher(bundlesActions.setBundleSelected(bundle))}
+      onClick={() => dispatcher(bundlesActions.setSelectedBundle(bundle))}
       to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
       icon={<ChevronRightIcon color="primary" />}
     />

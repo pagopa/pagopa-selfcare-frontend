@@ -14,7 +14,7 @@ export const bundlesSlice = createSlice({
     name: 'bundles',
     initialState,
     reducers: {
-        setBundleSelected: (state, action: PayloadAction<BundleResource>) => ({...state, selected: action.payload }),
+        setSelectedBundle: (state, action: PayloadAction<BundleResource>) => ({...state, selected: action.payload }),
     },
 });
 

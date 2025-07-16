@@ -6,9 +6,9 @@ import {LOG_REDUX_ACTIONS} from '../utils/constants';
 import {partiesReducer} from './slices/partiesSlice';
 import {featureFlagsReducer} from './slices/featureFlagsSlice';
 import {bundlesReducer} from './slices/bundlesSlice';
-import {delegationDetailReducer} from './slices/delegationDetailSlice';
 import {paymentsReducer} from './slices/paymentsSlice';
 import { stationsReducer } from './slices/stationsSlice';
+import { brokersReducer } from './slices/brokersSlide';
 
 const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
 
@@ -20,9 +20,9 @@ export const createStore = () =>
             appState: appStateReducer,
             featureFlags: featureFlagsReducer,
             bundles: bundlesReducer,
-            delegationDetail: delegationDetailReducer,
             payments: paymentsReducer,
             stations: stationsReducer,
+            brokers: brokersReducer,
         },
         middleware: (getDefaultMiddleware) =>
             additionalMiddlewares.reduce(

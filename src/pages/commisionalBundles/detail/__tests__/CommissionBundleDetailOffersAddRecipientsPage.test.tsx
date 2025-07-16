@@ -16,7 +16,7 @@ const spyOnGetAddRecipients = jest.spyOn(BundleService, 'createCIBundleOffers');
 
 const ComponentToRender = () => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundlesActions.setBundleSelected(mockedCommissionBundlePspDetailPrivate));
+  dispatcher(bundlesActions.setSelectedBundle(mockedCommissionBundlePspDetailPrivate));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/activate-bundle`]}>

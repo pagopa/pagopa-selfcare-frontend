@@ -7,7 +7,7 @@ import {CIBrokerDelegationResource} from '../../../api/generated/portal/CIBroker
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';
 import {useAppDispatch} from '../../../redux/hooks';
-import {delegationDetailActions} from '../../../redux/slices/delegationDetailSlice';
+import {brokersActions} from '../../../redux/slices/brokersSlide';
 import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
@@ -105,7 +105,7 @@ export const GridLinkActionDelegationDetails = ({
             {delegation.is_institution_signed_in ? (
                 <GridLinkAction
                     label="Gestisci intermediario"
-                    onClick={() => dispatcher(delegationDetailActions.setDelegationDetailState(delegation))}
+                    onClick={() => dispatcher(brokersActions.setSelectedDelegation(delegation))}
                     data-testid='column-go-to-delegation-detail'
                     to={ROUTES.DELEGATIONS_DETAIL}
                     icon={<ChevronRightIcon color="primary"/>}

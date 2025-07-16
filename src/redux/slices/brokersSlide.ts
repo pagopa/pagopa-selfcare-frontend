@@ -3,8 +3,6 @@ import { CIBrokerDelegationResource } from "../../api/generated/portal/CIBrokerD
 import { StationMaintenanceResource } from "../../api/generated/portal/StationMaintenanceResource";
 import { RootState } from "../store";
 
-const initialBrokerDelegationState: CIBrokerDelegationResource = {};
-
 export interface StationMaintenanceReduxState {
   stationMaintenance?: StationMaintenanceResource;
   hoursRemaining?: number;
@@ -42,7 +40,6 @@ export const brokersSlice = createSlice({
             selected: action.payload,
         }
     })
-            
   },
 });
 

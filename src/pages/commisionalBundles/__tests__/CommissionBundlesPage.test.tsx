@@ -58,7 +58,7 @@ afterEach(cleanup);
 
 const ComponentRender = ({ bundle }: { bundle: BundleResource }) => {
   const dispatch = useAppDispatch();
-  dispatch(bundlesActions.setBundleState(bundle));
+  dispatch(bundlesActions.setBundleSelected(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles`]}>

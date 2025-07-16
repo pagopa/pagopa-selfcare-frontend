@@ -41,7 +41,7 @@ const idBundle = 'idBundle';
 
 const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundlesActions.setBundleState(bundle));
+  dispatcher(bundlesActions.setBundleSelected(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>

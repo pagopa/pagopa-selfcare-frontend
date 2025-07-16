@@ -20,7 +20,7 @@ export const createStore = () =>
             user: userReducer,
             appState: appStateReducer,
             featureFlags: featureFlagsReducer,
-            bundleDetails: bundlesReducer,
+            bundles: bundlesReducer,
             delegationDetail: delegationDetailReducer,
             institutionDataDetails: institutionsDataDetailsReducer,
             stationCI: stationCIReducer,

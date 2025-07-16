@@ -158,7 +158,7 @@ const AddEditCommissionBundlePage = () => {
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect({
-      selector: bundlesSelectors.selectBundles,
+      selector: bundlesSelectors.selectBundle,
       routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
     }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';

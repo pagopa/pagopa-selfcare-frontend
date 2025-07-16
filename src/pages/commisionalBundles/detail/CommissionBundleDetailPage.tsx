@@ -191,7 +191,7 @@ const CommissionBundleDetailPage = () => {
   const addError = useErrorDispatcher();
 
   const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
-    selector: bundlesSelectors.selectBundles,
+    selector: bundlesSelectors.selectBundle,
     routeToRedirect: ROUTES.COMMISSION_BUNDLES,
   });
   const bundleId = commissionBundleDetail.idBundle ?? '';

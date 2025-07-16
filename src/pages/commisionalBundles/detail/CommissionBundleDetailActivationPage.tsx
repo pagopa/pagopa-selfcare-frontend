@@ -61,7 +61,7 @@ export default function CommissionBundleDetailActivationPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const bundleDetails: CIBundleResource =
     useAppSelectorWithRedirect({
-      selector: bundlesSelectors.selectBundles,
+      selector: bundlesSelectors.selectBundle,
       routeToRedirect: ROUTES.COMMISSION_BUNDLES,
       conditionToRedirect: (el: BundleResource) => el.type === TypeEnum.GLOBAL,
     }) ?? {};

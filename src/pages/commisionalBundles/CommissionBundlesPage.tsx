@@ -132,7 +132,7 @@ const CommissionBundlesPage = () => {
   const { orgInfo } = useOrganizationType();
 
   const commissionBundleDetail: BundleResource | Record<any, any> = useAppSelector(
-    bundlesSelectors.selectBundles
+    bundlesSelectors.selectBundle
   );
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [filtersValues, setFiltersValues] = useState(emptyFiltersValues);

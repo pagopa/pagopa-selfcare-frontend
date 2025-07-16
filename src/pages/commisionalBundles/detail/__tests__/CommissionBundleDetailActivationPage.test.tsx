@@ -20,7 +20,7 @@ const spyOnAcceptOffer = jest.spyOn(BundleService, 'acceptPrivateBundleOffer');
 
 const ComponentToRender = ({ bundle }: { bundle: CIBundleResource }) => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundlesActions.setBundleDetailsState(bundle));
+  dispatcher(bundlesActions.setBundleState(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/activate-bundle`]}>

@@ -39,7 +39,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
   const setLoadingAddRecipients = useLoading(LOADING_TASK_ADD_RECIPIENTS);
 
   const commissionBundleDetail: BundleResource = useAppSelectorWithRedirect({
-    selector: bundlesSelectors.selectBundles,
+    selector: bundlesSelectors.selectBundle,
     routeToRedirect: ROUTES.COMMISSION_BUNDLES,
     conditionToRedirect: (el: BundleResource) => el.type !== TypeEnum.PRIVATE
   });

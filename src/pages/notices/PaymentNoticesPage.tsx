@@ -37,7 +37,7 @@ const PaymentNoticesPage = () => {
         history.push(ROUTES.PAYMENT_NOTICES_ADDEDIT);
     };
 
-    const paymentNoticeTemplate = initialState.paymentNotice;
+    const { paymentNoticeTemplate } = initialState;
 
     useEffect(() => {
         if (selectedParty && selectedParty.fiscalCode &&

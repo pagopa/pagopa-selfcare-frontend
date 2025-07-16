@@ -40,7 +40,7 @@ const PaymentNoticesAddEditPage = () => {
     const [institutionUploadData, setInstitutionUploadData] = useState<InstitutionUploadData | null>(useAppSelector(paymentNoticeTemplateSelectors
         .selectPaymentNoticeTemplate));
 
-    const paymentNoticeTemplate = initialState.paymentNotice;
+    const { paymentNoticeTemplate } = initialState;
 
     useEffect(() => {
         if (institutionUploadData && institutionUploadData?.cbill !== null && (

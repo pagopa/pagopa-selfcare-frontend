@@ -18,11 +18,11 @@ export const paymentNoticeTemplate: InstitutionUploadData = {
 };
 
 interface PaymentsInitialState {
-    paymentNotice: InstitutionUploadData;
+    paymentNoticeTemplate: InstitutionUploadData;
 }
 
 export const initialState: PaymentsInitialState = {
-    paymentNotice: paymentNoticeTemplate
+    paymentNoticeTemplate: paymentNoticeTemplate
 };
 
 /* eslint-disable functional/immutable-data */
@@ -32,7 +32,7 @@ export const paymentsSlice = createSlice({
     reducers: {
         setPaymentsNoticeTemplate: (state, action: PayloadAction<InstitutionUploadData>) => ({
             ...state,
-            paymentNotice: action.payload
+            paymentNoticeTemplate: action.payload
         }),
     },
 });
@@ -41,5 +41,5 @@ export const paymentsActions = paymentsSlice.actions;
 export const paymentsReducer = paymentsSlice.reducer;
 
 export const paymentNoticeTemplateSelectors = {
-    selectPaymentNoticeTemplate: (state: RootState): InstitutionUploadData => state.payments.paymentNotice,
+    selectPaymentNoticeTemplate: (state: RootState): InstitutionUploadData => state.payments.paymentNoticeTemplate,
 };

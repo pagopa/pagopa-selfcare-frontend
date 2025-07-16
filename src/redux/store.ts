@@ -8,7 +8,7 @@ import {featureFlagsReducer} from './slices/featureFlagsSlice';
 import {bundlesReducer} from './slices/bundlesSlice';
 import {delegationDetailReducer} from './slices/delegationDetailSlice';
 import {paymentsReducer} from './slices/paymentsSlice';
-import { stationCIReducer } from './slices/stationCISlice';
+import { stationsReducer } from './slices/stationsSlice';
 import { stationMaintenanceReducer } from './slices/stationMaintenancesSlice';
 
 const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
@@ -23,7 +23,7 @@ export const createStore = () =>
             bundles: bundlesReducer,
             delegationDetail: delegationDetailReducer,
             payments: paymentsReducer,
-            stationCI: stationCIReducer,
+            stations: stationsReducer,
             stationMaintenance: stationMaintenanceReducer
         },
         middleware: (getDefaultMiddleware) =>

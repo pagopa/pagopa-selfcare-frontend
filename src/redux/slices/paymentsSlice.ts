@@ -22,7 +22,7 @@ interface PaymentsInitialState {
 }
 
 export const initialState: PaymentsInitialState = {
-    paymentNoticeTemplate: paymentNoticeTemplate
+    paymentNoticeTemplate
 };
 
 /* eslint-disable functional/immutable-data */

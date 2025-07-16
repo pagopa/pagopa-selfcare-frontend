@@ -7,7 +7,7 @@ import {partiesReducer} from './slices/partiesSlice';
 import {featureFlagsReducer} from './slices/featureFlagsSlice';
 import {bundlesReducer} from './slices/bundlesSlice';
 import {delegationDetailReducer} from './slices/delegationDetailSlice';
-import {institutionsDataDetailsReducer} from './slices/institutionsDataDetailsSlice';
+import {paymentsReducer} from './slices/paymentsSlice';
 import { stationCIReducer } from './slices/stationCISlice';
 import { stationMaintenanceReducer } from './slices/stationMaintenancesSlice';
 
@@ -22,7 +22,7 @@ export const createStore = () =>
             featureFlags: featureFlagsReducer,
             bundles: bundlesReducer,
             delegationDetail: delegationDetailReducer,
-            institutionDataDetails: institutionsDataDetailsReducer,
+            payments: paymentsReducer,
             stationCI: stationCIReducer,
             stationMaintenance: stationMaintenanceReducer
         },

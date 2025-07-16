@@ -14,7 +14,7 @@ import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
 import {getInstitutionData} from '../../services/noticesService';
 import {InstitutionUploadData} from '../../api/generated/portal/InstitutionUploadData';
-import { initialState, institutionsDataDetailsActions } from '../../redux/slices/institutionsDataDetailsSlice';
+import { initialState, paymentsActions } from '../../redux/slices/paymentsSlice';
 import {store} from '../../redux/store';
 import PaymentNoticesDetailPage from './detail/PaymentNoticesDetailPage';
 
@@ -37,18 +37,20 @@ const PaymentNoticesPage = () => {
         history.push(ROUTES.PAYMENT_NOTICES_ADDEDIT);
     };
 
+    const paymentNoticeTemplate = initialState.paymentNotice;
+
     useEffect(() => {
         if (selectedParty && selectedParty.fiscalCode &&
             (institutionUploadData === undefined || institutionUploadData === null ||
                 institutionUploadData?.taxCode !== selectedParty.fiscalCode)) {
             setLoadingStatus(true);
-            store.dispatch(institutionsDataDetailsActions
-                    .setInstitutionDataDetailsState(initialState));
+            store.dispatch(paymentsActions
+                    .setPaymentsNoticeTemplate(paymentNoticeTemplate));
             getInstitutionData(selectedParty.fiscalCode)
                 .then(async (r) => {
                     setInstitutionUploadData(r ? r : null);
-                    store.dispatch(institutionsDataDetailsActions
-                            .setInstitutionDataDetailsState(r ? r : initialState));
+                    store.dispatch(paymentsActions
+                            .setPaymentsNoticeTemplate(r ? r : paymentNoticeTemplate));
                 })
                 .catch((err) => {
                     const problemJson = extractProblemJson(err);

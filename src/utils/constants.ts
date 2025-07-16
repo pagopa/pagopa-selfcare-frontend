@@ -2,7 +2,7 @@ import * as env from "env-var";
 
 const IS_DEVELOP = process.env.NODE_ENV === 'development';
 
-export const testToken: string = env.get('REACT_APP_JWT').default('').asString();
+export const testToken: string = env.get('REACT_APP_JWT').default('testToken').asString();
 export const MOCK_USER = IS_DEVELOP;
 export const LOG_REDUX_ACTIONS = false;
 

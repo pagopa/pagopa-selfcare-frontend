@@ -8,7 +8,7 @@ import * as StationService from '../../../../services/stationService';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { StationMaintenanceActionType } from '../../../../model/StationMaintenance';
 import { useAppDispatch } from '../../../../redux/hooks';
-import { stationMaintenanceActions } from '../../../../redux/slices/stationsSlice';
+import { brokersActions } from '../../../../redux/slices/brokersSlide';
 import { StationMaintenanceResource } from '../../../../api/generated/portal/StationMaintenanceResource';
 import { mockStationMaintenance } from '../../../../services/__mocks__/stationMaintenancesService';
 import { mockedStations } from '../../../../services/__mocks__/stationService';
@@ -31,7 +31,7 @@ const ComponentRender = ({
 }) => {
   const dispatch = useAppDispatch();
   dispatch(
-    stationMaintenanceActions.setStationMaintenanceState({
+    brokersActions.setStationMaintenanceState({
       hoursRemaining: hoursRemaining ?? 36,
       stationMaintenance:
         action !== StationMaintenanceActionType.CREATE

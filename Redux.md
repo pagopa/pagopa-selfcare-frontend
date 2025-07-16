@@ -5,7 +5,7 @@
 | `GET /institutions/{id}/products` | `parties.selectedProducts` | Institution products |
 | `GET /creditor-institutions/{id}/full` | `parties.signinData` | Institution signin data |
 | `GET /flags` | `featureFlags` | Feature toggles configuration |
-| `GET /bundles/creditor-institutions` | `bundleDetails.list` | Commission bundles list |
+| `GET /bundles/creditor-institutions` | `bundles.selected` | Commission bundle selected from the list |
 | `GET /brokers/{id}/delegations` | `delegationDetail` | Delegation's detail (only after click on a delegation) |
 | `GET /notice/institutions/data/{id}` | `institutionDataDetails` | Institution data configuration |
 | `GET /stations/{id}/creditor-institutions` | `stationCI` | Station creditor institutions |

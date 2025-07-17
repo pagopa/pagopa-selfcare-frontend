@@ -18,7 +18,7 @@ import { generatePath, Link as RouterLink } from 'react-router-dom';
 import ROUTES from '../../routes';
 import { formatDateToYYYYMMDD } from '../../utils/common-utils';
 import GenericModal from '../../components/Form/GenericModal';
-import { bundleDetailsSelectors } from '../../redux/slices/bundleDetailsSlice';
+import { bundlesSelectors } from '../../redux/slices/bundlesSlice';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import { exportPSPBundleList } from '../../services/bundleService';
 import { useAppSelector } from '../../redux/hooks';
@@ -132,7 +132,7 @@ const CommissionBundlesPage = () => {
   const { orgInfo } = useOrganizationType();
 
   const commissionBundleDetail: BundleResource | Record<any, any> = useAppSelector(
-    bundleDetailsSelectors.selectBundleDetails
+    bundlesSelectors.selectBundle
   );
   const [tabValue, setTabValue] = useState(getTabValue(commissionBundleDetail));
   const [filtersValues, setFiltersValues] = useState(emptyFiltersValues);

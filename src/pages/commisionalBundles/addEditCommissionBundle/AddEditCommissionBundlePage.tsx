@@ -15,7 +15,7 @@ import ROUTES from '../../../routes';
 import {useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {FormAction} from '../../../model/CommissionBundle';
-import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
+import {bundlesSelectors} from '../../../redux/slices/bundlesSlice';
 import {createBundle, updatePSPBundle} from '../../../services/bundleService';
 import {isValidArray, removeDateZoneInfo} from '../../../utils/common-utils';
 import {extractProblemJson} from '../../../utils/client-utils';
@@ -158,7 +158,7 @@ const AddEditCommissionBundlePage = () => {
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect({
-      selector: bundleDetailsSelectors.selectBundleDetails,
+      selector: bundlesSelectors.selectBundle,
       routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
     }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';

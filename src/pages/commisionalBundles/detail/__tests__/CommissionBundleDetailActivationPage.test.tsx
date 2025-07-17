@@ -3,7 +3,7 @@ import CommissionBundleDetailActivationPage from '../CommissionBundleDetailActiv
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { useAppDispatch } from '../../../../redux/hooks.ts';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice.ts';
+import { bundlesActions } from '../../../../redux/slices/bundlesSlice.ts';
 import {
   mockedCommissionBundleCiDetailPrivate,
   mockedCommissionBundleCiDetailPublic,
@@ -20,7 +20,7 @@ const spyOnAcceptOffer = jest.spyOn(BundleService, 'acceptPrivateBundleOffer');
 
 const ComponentToRender = ({ bundle }: { bundle: CIBundleResource }) => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+  dispatcher(bundlesActions.setSelectedBundle(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/activate-bundle`]}>

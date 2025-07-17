@@ -11,7 +11,7 @@ import SideMenuLayout from '../../../components/SideMenu/SideMenuLayout';
 import TableSearchBar from '../../../components/Table/TableSearchBar';
 import { Party } from '../../../model/Party';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { delegationDetailSelectors } from '../../../redux/slices/delegationDetailSlice';
+import { brokersSelectors } from '../../../redux/slices/brokersSlide';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import ROUTES from '../../../routes';
 import { getCreditorInstitutionContacts } from '../../../services/creditorInstitutionService';
@@ -32,7 +32,7 @@ const DelegationDetailPage = () => {
 
   const delegationDetail: CIBrokerDelegationResource =
     useAppSelectorWithRedirect({
-      selector: delegationDetailSelectors.selectDelegationDetail,
+      selector: brokersSelectors.selectDelegationDetail,
       routeToRedirect: ROUTES.DELEGATIONS_LIST,
     }) ?? {};
 

@@ -13,7 +13,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { useAppDispatch } from '../../../../redux/hooks';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
+import { bundlesActions } from '../../../../redux/slices/bundlesSlice';
 import * as usePermissions from '../../../../hooks/usePermissions';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
@@ -41,7 +41,7 @@ const idBundle = 'idBundle';
 
 const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+  dispatcher(bundlesActions.setSelectedBundle(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -64,6 +64,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
       userIsPspDirectAdmin: true,
       userIsPagopaOperator: true,
       userIsAdmin: true,
+      userIsPspOperator: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
       orgInfo: {
@@ -240,6 +241,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     userIsPspDirectAdmin: false,
     userIsPagopaOperator: true,
     userIsAdmin: true,
+    userIsPspOperator: false,
   });
 
   describe('Bundle GLOBAL', () => {
@@ -252,6 +254,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
 
       render(
@@ -285,6 +288,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -315,6 +319,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -355,6 +360,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -395,6 +401,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -426,6 +433,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -460,6 +468,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -500,6 +509,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -540,6 +550,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -570,6 +581,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>

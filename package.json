@@ -100,7 +100,7 @@
     "react-test-renderer": "^17.0.2",
     "regex-replace": "^2.3.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.4.1"
   },
   "resolutions": {
     "static-eval": "^2.0.2",

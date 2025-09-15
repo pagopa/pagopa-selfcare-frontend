@@ -33,7 +33,7 @@ export const API_KEY_PRODUCTS = {
   ACA: { id: 'ACA', key: 'aca-' },
   QI_FDR_KPI: { id: 'QI_FDR_KPI', key: 'qifdrkpiservice-' },
   // PPANTT-223 https://pagopa.atlassian.net/browse/PPANTT-223
-  MBD: { id: 'MBD', key: 'mbd-ebollo-'}
+  MBD: { id: 'MBD', key: 'mbd-'}
 };
 
 /* eslint-disable functional/immutable-data */

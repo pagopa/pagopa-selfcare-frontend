@@ -20,9 +20,9 @@ describe('Test ApiKey model methods', () => {
       API_KEY_PRODUCTS.GPD_REP,
       API_KEY_PRODUCTS.BIZ,
       API_KEY_PRODUCTS.ACA,
+      API_KEY_PRODUCTS.MBD,
       API_KEY_PRODUCTS.PRINT_NOTICE,
-      API_KEY_PRODUCTS.FDR_ORG,
-      API_KEY_PRODUCTS.MBD
+      API_KEY_PRODUCTS.FDR_ORG
     ]);
   });
   test('Test getApiKeysProducts as PT PSP', () => {
@@ -44,9 +44,9 @@ describe('Test ApiKey model methods', () => {
       API_KEY_PRODUCTS.GPD_REP,
       API_KEY_PRODUCTS.BIZ,
       API_KEY_PRODUCTS.ACA,
+      API_KEY_PRODUCTS.MBD,
       API_KEY_PRODUCTS.PRINT_NOTICE,
-      API_KEY_PRODUCTS.FDR_ORG,
-      API_KEY_PRODUCTS.MBD
+      API_KEY_PRODUCTS.FDR_ORG
     ]);
   });
   test('Test getApiKeysProducts as PT EC/PSP', () => {
@@ -59,9 +59,9 @@ describe('Test ApiKey model methods', () => {
       API_KEY_PRODUCTS.GPD_REP,
       API_KEY_PRODUCTS.BIZ,
       API_KEY_PRODUCTS.ACA,
+      API_KEY_PRODUCTS.MBD,
       API_KEY_PRODUCTS.PRINT_NOTICE,
       API_KEY_PRODUCTS.FDR_ORG,
-      API_KEY_PRODUCTS.MBD,
       API_KEY_PRODUCTS.FDR_PSP,
       API_KEY_PRODUCTS.QI_FDR_KPI,
       API_KEY_PRODUCTS.BO_EXT_PSP,

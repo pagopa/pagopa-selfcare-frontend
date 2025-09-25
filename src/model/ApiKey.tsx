@@ -31,7 +31,6 @@ export const API_KEY_PRODUCTS = {
   BO_EXT_PSP: { id: 'BO_EXT_PSP', key: 'selfcareboexternalpsp-' },
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
   ACA: { id: 'ACA', key: 'aca-' },
-  // PPANTT-223 https://pagopa.atlassian.net/browse/PPANTT-223
   QI_FDR_KPI: { id: 'QI_FDR_KPI', key: 'qifdrkpiservice-' },
   MBD: { id: 'MBD', key: 'mbd-'}
 };

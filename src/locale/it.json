@@ -1377,7 +1377,7 @@
         "paymentOnlyDigitalStamp": "Pagamento solo marca da bollo",
         "from": "Da",
         "to": "A",
-        "all": "Tutti",
+        "all": "ANY",
         "cart": "Gestione carrello di pagamenti",
         "cartInfo": "La gestione del carrello è possibile soltanto per i canali configurati con le primitive in versione 2",
         "onUs": "onUs",

@@ -423,9 +423,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                    </MenuItem>
+                   
                     {touchpointList?.touchpoints?.map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}

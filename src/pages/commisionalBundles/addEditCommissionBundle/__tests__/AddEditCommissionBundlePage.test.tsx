@@ -369,8 +369,8 @@ describe('<AddEditCommissionBundlePage />', () => {
             ...mockedCommissionBundlePspDetailGlobal,
             abi: '',
             pspBusinessName: '',
-            touchpoint: undefined,
-            paymentType: undefined,
+            touchpoint: 'ANY',
+            paymentType: 'ANY',
             transferCategoryList: undefined,
         };
         delete requestBundle.idBundle;

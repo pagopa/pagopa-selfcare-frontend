@@ -3,6 +3,7 @@ import {Iban} from "../../api/generated/portal/Iban";
 import {IbanCreate} from "../../api/generated/portal/IbanCreate";
 import {BrokerECExportStatus} from "../../api/generated/portal/BrokerECExportStatus";
 import {add} from "date-fns";
+import { IbanDeletionRequests } from "../../api/generated/portal/IbanDeletionRequests";
 
 export const ibanList: Ibans = {
 // @ts-ignore
@@ -119,6 +120,18 @@ export const mockedIbansCSV: Buffer = Buffer.from("denominazioneEnte;codiceFisca
 
 export const mockedCreditorInstitutionsCSV: Buffer = Buffer.from("companyName;administrativeCode;taxCode;intermediated;brokerCompanyName;brokerTaxCode;model;auxDigit;segregationCode;applicationCode;cbillCode;stationId;stationState;activationDate;version;broadcast\nComune di X;XX;1928477588;NO;Fake broker;1245678901;3;3;01;;XXXXX;1245678901_01;ACTIVE;2024-01-17T10:45:02.523Z;2;INACTIVE");
 
+const ibanDeletionRequestListMocked: IbanDeletionRequests = {
+    "requests": [
+        {
+        "ibanValue": "IT60X1230000000000000000001",
+        "scheduledExecutionDate": "2026-06-30T00:00:00Z",
+        "ciCode": "777777777",
+        "id": "single-request-example",
+        "status": "PENDING"
+        }
+    ]
+}
+
 export const getCreditorInstitutionIbans = (
     _creditorInstitutionCode: string,
     _labelName?: string
@@ -159,3 +172,12 @@ export const exportCreditorInstitutionsToCsv = (_brokerCode: string): Promise<an
 
 export const getBrokerExportStatus = (_brokerCode: string): Promise<any> =>
     new Promise((resolve) => resolve(mockedBrokerExportStatus));
+
+export const createIbanDeletionRequest = (_creditorInstitutionCode: string, _scheduleDate: string, _ibanValue: string): Promise<void> =>
+    new Promise((resolve) => resolve());
+
+export const getIbanDeletionRequests = (_creditorInstitutionCode: string, _ibanValue: string, _status: string): Promise<IbanDeletionRequests> =>
+    new Promise((resolve) => resolve(ibanDeletionRequestListMocked));
+
+export const cancelIbanDeletionRequests = (_id: string): Promise<void> =>
+    new Promise((resolve) => resolve());

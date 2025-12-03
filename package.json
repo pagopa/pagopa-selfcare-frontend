@@ -26,7 +26,7 @@
     "prettify": "prettier --write \"./**/*.{ts,tsx}\"",
     "generate": "npm run generate:api-portal",
     "clean:api-portal": "rimraf src/api/generated/portal && rimraf openApi/generated",
-    "generate:api-portal": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/main/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
+    "generate:api-portal": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/CHK-4636-add-deletion-request/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
     "generate:api-portal-next": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/next/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
     "generate:api-portal-pr": "wget https://raw.githubusercontent.com/pagopa/pagopa-selfcare-ms-backoffice-backend/main/openapi/openapi.json -O ./openApi/portal-api-docs.json && npm run generate:client",
     "generate:api-portal-local": "npm run generate:client",

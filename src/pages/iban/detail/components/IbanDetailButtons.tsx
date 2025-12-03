@@ -9,35 +9,57 @@ import {IbanFormAction} from '../../../../model/Iban';
 type Props = {
     active: boolean | undefined;
     iban: string;
+    isExistPendingDeletionRequest: boolean;
     setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
+    handleCancelDeletionRequest: () => Promise<void>;
 };
 
-const IbanDetailButtons = ({active, iban, setShowDeleteModal}: Props) => {
+const IbanDetailButtons = ({active, iban, isExistPendingDeletionRequest, setShowDeleteModal, handleCancelDeletionRequest}: Props) => {
     const {t} = useTranslation();
 
     return (
         <Stack spacing={2} direction="row" flexWrap={'wrap'} justifyContent={'flex-end'}>
-            <Button
-                color="error"
-                variant="outlined"
-                onClick={() => setShowDeleteModal(true)}
-                data-testid="delete-button-test"
-            >
-                {t('ibanDetailPage.buttons.delete')}
-            </Button>
-            <Button
-                component={Link}
-                to={() =>
-                    generatePath(ROUTES.IBAN_EDIT, {
-                        ibanId: iban,
-                        actionId: IbanFormAction.Edit,
-                    })
-                }
-                variant="contained"
-                data-testid="button Edit"
-            >
-                {t('ibanDetailPage.buttons.edit')}
-            </Button>
+            {!isExistPendingDeletionRequest ? (
+                <>
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => setShowDeleteModal(true)}
+                    data-testid="delete-button-test"
+                  >
+                    {t('ibanDetailPage.buttons.delete')}
+                  </Button>
+                  <Button
+                    component={Link}
+                    to={() =>
+                        generatePath(ROUTES.IBAN_EDIT, {
+                            ibanId: iban,
+                            actionId: IbanFormAction.Edit,
+                        })
+                    }
+                    variant="contained"
+                    data-testid="button Edit"
+                  >
+                    {t('ibanDetailPage.buttons.edit')}
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  component={Link}
+                  to={() =>
+                      generatePath(ROUTES.IBAN, {
+                          ibanId: iban,
+                          actionId: IbanFormAction.Edit,
+                      })
+                  }
+                  onClick={handleCancelDeletionRequest }
+                  variant="contained"
+                  data-testid="button-edit-deletion"
+                >
+                  {t('ibanDetailPage.buttons.cancelDeletion')}
+                </Button>
+              )
+            }
             {/* TODO: fix when iban deactivation will be available
           <Button component={Link} to={''} variant="outlined" disabled={true}>
             {t('ibanDetailPage.buttons.deactivate')}

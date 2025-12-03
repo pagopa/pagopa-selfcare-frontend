@@ -1001,6 +1001,7 @@
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",
+      "cancelDeletion": "Annulla eliminazione",
       "deactivate": "Disattiva"
     }
   },
@@ -1051,10 +1052,12 @@
       "confirmButton": "Conferma"
     },
     "delete-modal": {
-      "title": "Elimina IBAN",
-      "subTitle": "Attenzione confermando l’operazione l’IBAN verrà dissociato dall’Ente",
+      "title": "Programma eliminazione IBAN",
+      "subTitle": "Imposta una data di eliminazione.",
       "backButton": "Torna indietro",
-      "confirmButton": "Elimina IBAN"
+      "confirmButton": "Programma eliminazione",
+      "deletionDateLabel": "Data eliminazione",
+      "alert": "Dopo l'eliminazion non sarà più possibile eseguire pagamenti verso questo IBAN.(TO REVIEW)"
     },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",

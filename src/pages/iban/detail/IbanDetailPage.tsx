@@ -1,19 +1,21 @@
 // import { useTranslation } from 'react-i18next';
 import {ArrowBack} from '@mui/icons-material';
-import {Box, Breadcrumbs, Divider, Grid, Paper, Stack, Typography} from '@mui/material';
+import {Alert, Box, Breadcrumbs, Divider, Grid, Paper, Stack, TextField, Typography} from '@mui/material';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory, useParams} from 'react-router';
 import {Trans, useTranslation} from 'react-i18next';
 import {useEffect, useState} from 'react';
 import {handleErrors} from '@pagopa/selfcare-common-frontend/services/errorService';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ROUTES from '../../../routes';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {LOADING_TASK_DELETE_IBAN, LOADING_TASK_GET_IBAN} from '../../../utils/constants';
 import {IbanOnCreation} from '../../../model/Iban';
 import {emptyIban} from '../IbanPage';
-import {deleteIban, getIbanList} from '../../../services/ibanService';
+import {cancelIbanDeletionRequests, createIbanDeletionRequest, getIbanDeletionRequests, getIbanList} from '../../../services/ibanService';
 import GenericModal from '../../../components/Form/GenericModal';
 import {isIbanValid} from '../../../utils/common-utils';
 import IbanDetailButtons from './components/IbanDetailButtons';
@@ -30,15 +32,21 @@ const IbanDetailPage = () => {
     const setLoadingDelete = useLoading(LOADING_TASK_DELETE_IBAN);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lastIban, setLastIban] = useState(false);
+    const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
+    const [idExistPendingDeletionRequest, setIdExistPendingDeletionRequest] = useState< string | null >();
 
     useEffect(() => {
         if (selectedParty && selectedParty.fiscalCode) {
             setLoading(true);
-            getIbanList(selectedParty.fiscalCode)
-                .then((response) => {
-                    const validIbans = response!.ibans_enhanced!.filter((e) => new Date(e.validity_date!) <= new Date() && new Date(e.due_date!) >= new Date());
+            Promise.all([
+                getIbanList(selectedParty.fiscalCode),
+                getIbanDeletionRequests(selectedParty.fiscalCode, ibanId, 'PENDING')
+                    .catch(() => null) 
+            ])
+                .then(([ibanResponse, deletionRequest]) => {
+                    const validIbans = ibanResponse!.ibans_enhanced!.filter((e) => new Date(e.validity_date!) <= new Date() && new Date(e.due_date!) >= new Date());
                     setLastIban(validIbans.length === 1 && validIbans[0].iban === ibanId);
-                    const filteredIban = response!.ibans_enhanced!.filter((e) => e.iban === ibanId);
+                    const filteredIban = ibanResponse!.ibans_enhanced!.filter((e) => e.iban === ibanId);
                     setIban({
                         iban: filteredIban[0].iban!,
                         description: filteredIban[0].description,
@@ -49,6 +57,8 @@ const IbanDetailPage = () => {
                         labels: filteredIban[0].labels,
                         is_active: filteredIban[0].is_active!,
                     });
+
+                    setIdExistPendingDeletionRequest(deletionRequest?.requests?.[0]?.id ?? null);
                 })
                 .catch((reason) => {
                     handleErrors([
@@ -76,10 +86,10 @@ const IbanDetailPage = () => {
         }
     }, [selectedParty, ibanId]);
 
-    const deleteIbanHandler = async () => {
-        setLoadingDelete(true);
+    const deleteIbanHandler = async (dateToDelete: Date) => {
+            setLoadingDelete(true);
         try {
-            await deleteIban(selectedParty?.fiscalCode ?? '', ibanId);
+            await createIbanDeletionRequest(selectedParty?.fiscalCode ?? '', ibanId, dateToDelete);
             history.push(ROUTES.IBAN);
         } catch (reason) {
             handleErrors([
@@ -96,6 +106,37 @@ const IbanDetailPage = () => {
                 blocking: false,
                 error: reason as Error,
                 techDescription: `An error occurred while deleting an iban`,
+                toNotify: true,
+                displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
+                displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
+                component: 'Toast',
+            });
+        } finally {
+            setLoadingDelete(false);
+        }
+    };
+
+    const cancelIbanDeletionRequestHandler = async (id: string) => {
+        console.log('cancelIbanDeletionRequestHandler called with id:', id);
+            setLoadingDelete(true);
+        try {
+            await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
+            history.push(ROUTES.IBAN);
+        } catch (reason) {
+            handleErrors([
+                {
+                    id: `CANCEL_IBAN_DELETION_REQUEST_IBAN_ERROR`,
+                    blocking: false,
+                    error: reason as Error,
+                    techDescription: `An error occurred while cancel iban deletion request iban`,
+                    toNotify: false,
+                },
+            ]);
+            addError({
+                id: 'CANCEL_IBAN_DELETION_REQUEST_IBAN_ERROR',
+                blocking: false,
+                error: reason as Error,
+                techDescription: `An error occurred while cancel iban deletion request iban`,
                 toNotify: true,
                 displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
                 displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
@@ -139,6 +180,8 @@ const IbanDetailPage = () => {
                         <IbanDetailButtons
                             active={isIbanValid(iban)}
                             iban={ibanId}
+                            isExistPendingDeletionRequest={idExistPendingDeletionRequest !== null}
+                            handleCancelDeletionRequest={() => cancelIbanDeletionRequestHandler(idExistPendingDeletionRequest!)}
                             setShowDeleteModal={(value) => {
                                 if (!lastIban) {
                                     return setShowDeleteModal(value);
@@ -269,17 +312,43 @@ const IbanDetailPage = () => {
                 <GenericModal
                     title={t('addEditIbanPage.delete-modal.title')}
                     message={
-                        <Trans i18nKey="addEditIbanPage.delete-modal.subTitle">
-                            Attenzione confermando l’operazione l’IBAN verrà dissociato dall’Ente
-                            <br/>
-                        </Trans>
+                        <Stack direction="column" spacing={3} sx={{ py: 2 }}>
+                            <Typography component="div">
+                                <Trans i18nKey="addEditIbanPage.delete-modal.subTitle">
+                                    Imposta una data di eliminazione.
+                                </Trans>
+                            </Typography>
+                            <Box maxWidth={'50%'}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DesktopDatePicker
+                                        label={t('addEditIbanPage.delete-modal.deletionDateLabel')} 
+                                        inputFormat="dd/MM/yyyy"
+                                        minDate={(() => {
+                                            const tomorrow = new Date(); 
+                                            tomorrow.setDate(tomorrow.getDate() + 1); 
+                                            return tomorrow;
+                                        })()}
+                                        value={ibanDeletionDate}
+                                        onChange={(newDate: Date|null) => setIbanDeletionDate(newDate||null)}
+                                        renderInput={(params) => <TextField {...params} fullWidth />}
+                                    />
+                                </LocalizationProvider>
+                            </Box>
+                            {ibanDeletionDate && (
+                                <Alert severity="info" variant="standard">
+                                    {t('addEditIbanPage.delete-modal.alert')}
+                                </Alert>             
+                            )}
+                        </Stack>
                     }
                     openModal={showDeleteModal}
                     onConfirmLabel={t('addEditIbanPage.delete-modal.confirmButton')}
                     onCloseLabel={t('addEditIbanPage.delete-modal.backButton')}
                     handleCloseModal={() => setShowDeleteModal(false)}
                     handleConfirm={async () => {
-                        await deleteIbanHandler();
+                        if (ibanDeletionDate) {
+                            await deleteIbanHandler(ibanDeletionDate); 
+                        }   
                         setShowDeleteModal(false);
                     }}
                 />

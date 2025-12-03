@@ -11,10 +11,10 @@ type Props = {
     iban: string;
     isExistPendingDeletionRequest: boolean;
     setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
-    handleCancelDeletionRequest: () => Promise<void>;
+    setShowCancelIbanDeletionRequestModal: Dispatch<SetStateAction<boolean>>;
 };
 
-const IbanDetailButtons = ({active, iban, isExistPendingDeletionRequest, setShowDeleteModal, handleCancelDeletionRequest}: Props) => {
+const IbanDetailButtons = ({active, iban, isExistPendingDeletionRequest, setShowDeleteModal, setShowCancelIbanDeletionRequestModal}: Props) => {
     const {t} = useTranslation();
 
     return (
@@ -45,14 +45,7 @@ const IbanDetailButtons = ({active, iban, isExistPendingDeletionRequest, setShow
                 </>
               ) : (
                 <Button
-                  component={Link}
-                  to={() =>
-                      generatePath(ROUTES.IBAN, {
-                          ibanId: iban,
-                          actionId: IbanFormAction.Edit,
-                      })
-                  }
-                  onClick={handleCancelDeletionRequest }
+                  onClick={() => setShowCancelIbanDeletionRequestModal(true)}
                   variant="contained"
                   data-testid="button-edit-deletion"
                 >

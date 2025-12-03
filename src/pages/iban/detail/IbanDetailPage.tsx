@@ -34,6 +34,7 @@ const IbanDetailPage = () => {
     const [lastIban, setLastIban] = useState(false);
     const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
     const [idExistPendingDeletionRequest, setIdExistPendingDeletionRequest] = useState< string | null >();
+    const [showCancelIbanDeletionRequestModal, setShowCancelIbanDeletionRequestModal] = useState(false);
 
     useEffect(() => {
         if (selectedParty && selectedParty.fiscalCode) {
@@ -181,7 +182,7 @@ const IbanDetailPage = () => {
                             active={isIbanValid(iban)}
                             iban={ibanId}
                             isExistPendingDeletionRequest={idExistPendingDeletionRequest !== null}
-                            handleCancelDeletionRequest={() => cancelIbanDeletionRequestHandler(idExistPendingDeletionRequest!)}
+                            setShowCancelIbanDeletionRequestModal={() => setShowCancelIbanDeletionRequestModal(true)}
                             setShowDeleteModal={(value) => {
                                 if (!lastIban) {
                                     return setShowDeleteModal(value);
@@ -350,6 +351,23 @@ const IbanDetailPage = () => {
                             await deleteIbanHandler(ibanDeletionDate); 
                         }   
                         setShowDeleteModal(false);
+                    }}
+                />
+                <GenericModal
+                    title={t('addEditIbanPage.cancel-iban-request-modal.title')}
+                    message={
+                        <Trans i18nKey="addEditIbanPage.cancel-iban-request-modal.subTitle">
+                            TO review
+                            <br/>
+                        </Trans>
+                    }
+                    openModal={showCancelIbanDeletionRequestModal}
+                    onConfirmLabel={t('addEditIbanPage.cancel-iban-request-modal.confirmButton')}
+                    onCloseLabel={t('addEditIbanPage.cancel-iban-request-modal.backButton')}
+                    handleCloseModal={() => setShowCancelIbanDeletionRequestModal(false)}
+                    handleConfirm={async () => {
+                        await cancelIbanDeletionRequestHandler(idExistPendingDeletionRequest!);
+                        setShowCancelIbanDeletionRequestModal(false);
                     }}
                 />
             </Grid>

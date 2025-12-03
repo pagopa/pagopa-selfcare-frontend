@@ -1059,6 +1059,12 @@
       "deletionDateLabel": "Data eliminazione",
       "alert": "Dopo l'eliminazion non sarà più possibile eseguire pagamenti verso questo IBAN.(TO REVIEW)"
     },
+    "cancel-iban-request-modal": {
+      "title": "Annulla eliminazione",
+      "subTitle": "L'iban tornerà ad essere nuovamente disponibile",
+      "backButton": "Torna indietro",
+      "confirmButton": "Conferma"
+    },
     "validationMessage": {
       "requiredField": "Campo obbligatorio",
       "ibanNotValid": "l’IBAN inserito non è valido",

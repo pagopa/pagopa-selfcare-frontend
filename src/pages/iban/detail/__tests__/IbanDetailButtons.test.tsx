@@ -23,7 +23,7 @@ const renderIbanDetailButtons = (active: boolean, iban: string) => {
         <Provider store={store}>
             <Router history={createMemoryHistory()}>
                 <ThemeProvider theme={theme}>
-                    <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()}/>
+                    <IbanDetailButtons active={active} iban={iban} setShowDeleteModal={jest.fn()} isExistPendingDeletionRequest={false} setShowCancelIbanDeletionRequestModal={jest.fn()}/>
                 </ThemeProvider>
             </Router>
         </Provider>

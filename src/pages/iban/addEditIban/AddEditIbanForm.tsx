@@ -1,6 +1,8 @@
+
 import {useTranslation} from 'react-i18next';
 import {theme} from '@pagopa/mui-italia';
 import {
+    Alert,
     Button,
     FormControl,
     FormControlLabel,
@@ -14,8 +16,10 @@ import {
     Typography,
 } from '@mui/material';
 import {Box} from '@mui/system';
+import {SingleFileInput} from '@pagopa/mui-italia';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {useEffect, useState} from 'react';
 import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
@@ -31,6 +35,7 @@ import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {extractProblemJson} from '../../../utils/client-utils';
 import {createIban, updateIban} from '../../../services/ibanService';
 import {isIbanValidityDateEditable, isValidIBANNumber} from '../../../utils/common-utils';
+import {validateIbanCsvData, ValidationResult} from '../../../utils/iban-csv-to-upload-parser';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -46,6 +51,9 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
     const {t} = useTranslation();
     const [subject, setSubject] = useState('me');
     const [uploadType, setUploadType] = useState('single');
+    const [file, setFile] = useState<File | null>(null);
+    const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
+    const [showValidation, setShowValidation] = useState(false);
     const history = useHistory();
     const addError = useErrorDispatcher();
     const setLoading = useLoading(LOADING_TASK_CREATE_IBAN);
@@ -64,6 +72,41 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
 
     const changeUploadType = (event: any) => {
         setUploadType(event.target.value);
+        if (event.target.value === 'single') {
+            setFile(null);
+            setValidationResult(null);
+            setShowValidation(false);
+        }
+    };
+
+    const handleFileSelect = async (selectedFile: File) => {
+        setFile(selectedFile);
+        setShowValidation(false);
+        setValidationResult(null);
+
+        try {
+            const text = await selectedFile.text();
+            const result = validateIbanCsvData(text);
+            setValidationResult(result);
+            setShowValidation(true);
+        } catch (error) {
+            addError({
+                id: 'CSV_PARSE_ERROR',
+                blocking: false,
+                error: error as Error,
+                techDescription: 'Error parsing CSV file',
+                toNotify: true,
+                displayableTitle: 'Errore lettura file',
+                displayableDescription: 'Impossibile leggere il file CSV',
+                component: 'Toast',
+            });
+        }
+    };
+
+    const handleFileRemove = () => {
+        setFile(null);
+        setValidationResult(null);
+        setShowValidation(false);
     };
 
     const initialFormData = (ibanBody?: IbanOnCreation) =>
@@ -123,30 +166,30 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
     };
 
     const enableSubmit = (values: IbanOnCreation) => {
-        const baseCondition =
-            values.iban !== '' &&
-            values.description !== '' &&
-            values.validity_date &&
-            values.validity_date.getTime() > 0 &&
-            values.due_date &&
-            values.due_date.getTime() > 0;
-
         if (uploadType === 'single') {
+            const baseCondition =
+                values.iban !== '' &&
+                values.description !== '' &&
+                values.validity_date &&
+                values.validity_date.getTime() > 0 &&
+                values.due_date &&
+                values.due_date.getTime() > 0;
+
             if (baseCondition && subject === 'me') {
                 return true;
             } else {
                 return baseCondition && subject === 'anotherOne' && values.creditor_institution_code !== '';
             }
         } else {
-            return true;
+            return file !== null && validationResult !== null && validationResult.valid;
         }
     };
 
     // eslint-disable-next-line sonarjs/cognitive-complexity
     const submit = async (values: IbanOnCreation) => {
-        if (uploadType === 'single') {
-            setLoading(true);
-            try {
+        setLoading(true);
+        try {
+            if (uploadType === 'single') {
                 if (formAction === IbanFormAction.Create) {
                     await createIban(ecCode, {
                         iban: values.iban.toUpperCase().trim(),
@@ -165,27 +208,32 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                         is_active: true,
                     });
                 }
-
-                history.push(ROUTES.IBAN);
-            } catch (reason: any) {
-                const problemJson = extractProblemJson(reason);
-                if (problemJson?.status === 409) {
-                    formik.setFieldError('iban', t('addEditIbanPage.validationMessage.bankIbanConflict'));
-                } else {
-                    addError({
-                        id: 'CREATE_UPDATE_IBAN',
-                        blocking: false,
-                        error: reason as Error,
-                        techDescription: `An error occurred while adding/editing iban`,
-                        toNotify: true,
-                        displayableTitle: t('addEditIbanPage.errors.createIbanTitle'),
-                        displayableDescription: t('addEditIbanPage.errors.createIbanMessage'),
-                        component: 'Toast',
-                    });
+            } else {
+                if (validationResult && validationResult.valid) {
+                    // await uploadBulkIban(ecCode, validationResult.data);
+                    console.log('TODO:', JSON.stringify(validationResult.data, null, 2));
                 }
-            } finally {
-                setLoading(false);
             }
+
+            history.push(ROUTES.IBAN);
+        } catch (reason: any) {
+            const problemJson = extractProblemJson(reason);
+            if (problemJson?.status === 409) {
+                formik.setFieldError('iban', t('addEditIbanPage.validationMessage.bankIbanConflict'));
+            } else {
+                addError({
+                    id: 'CREATE_UPDATE_IBAN',
+                    blocking: false,
+                    error: reason as Error,
+                    techDescription: `An error occurred while adding/editing iban`,
+                    toNotify: true,
+                    displayableTitle: t('addEditIbanPage.errors.createIbanTitle'),
+                    displayableDescription: t('addEditIbanPage.errors.createIbanMessage'),
+                    component: 'Toast',
+                });
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -229,140 +277,199 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                         checked={uploadType === 'multiple'}
                         value="multiple"
                         control={<Radio/>}
-                        disabled
                         label={t('addEditIbanPage.addForm.fields.ibanUploadTypes.multiple')}
                         data-testid="upload-multiple-test"
                     />
                 </RadioGroup>
             </FormControl>
-            <Paper
-                elevation={0}
-                sx={{
-                    borderRadius: 1,
-                    p: 3,
-                    minWidth: '100%',
-                    mb: 4,
-                }}
-            >
-                <Typography variant="h6" fontWeight="fontWeightMedium" mb={3}>
-                    {t('addEditIbanPage.title')}
-                </Typography>
 
-                <Typography variant="body2" mb={3}>
-                    {t('addEditIbanPage.subtitle')}
-                </Typography>
+            {uploadType === 'single' ? (
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            borderRadius: 1,
+                            p: 3,
+                            minWidth: '100%',
+                            mb: 4,
+                        }}
+                    >
+                    <Typography variant="h6" fontWeight="fontWeightMedium" mb={3}>
+                        {t('addEditIbanPage.title')}
+                    </Typography>
 
-                <Box>
-                    <Box sx={inputGroupStyle}>
-                        <AddEditIbanFormSectionTitle
-                            title={t('addEditIbanPage.addForm.sections.ibanDatas')}
-                            icon={<MonetizationOnIcon/>}
-                        />
-                        <Grid container spacing={2} mt={1}>
-                            <Grid container item xs={6}>
-                                <TextField
-                                    disabled={formAction === IbanFormAction.Edit}
-                                    fullWidth
-                                    id="iban"
-                                    name="iban"
-                                    label={t('addEditIbanPage.addForm.fields.iban.ibanCode')}
-                                    size="small"
-                                    value={formik.values.iban?.toUpperCase()}
-                                    onChange={(e) => formik.handleChange(e)}
-                                    error={formik.touched.iban && Boolean(formik.errors.iban)}
-                                    helperText={formik.touched.iban && formik.errors.iban}
+                    <Typography variant="body2" mb={3}>
+                        {t('addEditIbanPage.subtitle')}
+                    </Typography>
+
+                    <Box>
+                        <Box sx={inputGroupStyle}>
+                            <AddEditIbanFormSectionTitle
+                                title={t('addEditIbanPage.addForm.sections.ibanDatas')}
+                                icon={<MonetizationOnIcon/>}
+                            />
+                            <Grid container spacing={2} mt={1}>
+                                <Grid container item xs={6}>
+                                    <TextField
+                                        disabled={formAction === IbanFormAction.Edit}
+                                        fullWidth
+                                        id="iban"
+                                        name="iban"
+                                        label={t('addEditIbanPage.addForm.fields.iban.ibanCode')}
+                                        size="small"
+                                        value={formik.values.iban?.toUpperCase()}
+                                        onChange={(e) => formik.handleChange(e)}
+                                        error={formik.touched.iban && Boolean(formik.errors.iban)}
+                                        helperText={formik.touched.iban && formik.errors.iban}
                                     inputProps={{
                                         'data-testid': 'iban-test',
                                     }}
-                                />
-                            </Grid>
+                                    />
+                                </Grid>
 
-                            <Grid container item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    id="description"
-                                    name="description"
-                                    label={t('addEditIbanPage.addForm.fields.iban.description')}
-                                    placeholder={t('addEditIbanPage.addForm.fields.iban.descPlaceHolder')}
-                                    size="small"
-                                    value={formik.values.description}
-                                    onChange={(e) => formik.handleChange(e)}
-                                    error={formik.touched.description && Boolean(formik.errors.description)}
-                                    helperText={formik.touched.description && formik.errors.description}
+                                <Grid container item xs={6}>
+                                    <TextField
+                                        fullWidth
+                                        id="description"
+                                        name="description"
+                                        label={t('addEditIbanPage.addForm.fields.iban.description')}
+                                        placeholder={t('addEditIbanPage.addForm.fields.iban.descPlaceHolder')}
+                                        size="small"
+                                        value={formik.values.description}
+                                        onChange={(e) => formik.handleChange(e)}
+                                        error={formik.touched.description && Boolean(formik.errors.description)}
+                                        helperText={formik.touched.description && formik.errors.description}
                                     inputProps={{
                                         'data-testid': 'description-test',
                                     }}
-                                />
+                                    />
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Box>
-                    <Box sx={inputGroupStyle}>
-                        <AddEditIbanFormSectionTitle
-                            title={t('addEditIbanPage.addForm.sections.validityPeriod')}
-                            icon={<CalendarTodayIcon/>}
-                        />
-                        <Grid container spacing={2} mt={1}>
-                            <Grid container item xs={3}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DesktopDatePicker
+                        </Box>
+                        <Box sx={inputGroupStyle}>
+                            <AddEditIbanFormSectionTitle
+                                title={t('addEditIbanPage.addForm.sections.validityPeriod')}
+                                icon={<CalendarTodayIcon/>}
+                            />
+                            <Grid container spacing={2} mt={1}>
+                                <Grid container item xs={3}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DesktopDatePicker
                                         disabled={
                                             !isIbanValidityDateEditable(ibanBody) && formAction === IbanFormAction.Edit
                                         }
-                                        label={t('addEditIbanPage.addForm.fields.dates.start')}
-                                        inputFormat="dd/MM/yyyy"
-                                        value={formik.values.validity_date}
-                                        onChange={(e) => formik.setFieldValue('validity_date', e)}
-                                        renderInput={(params: TextFieldProps) => (
-                                            <TextField
-                                                {...params}
+                                            label={t('addEditIbanPage.addForm.fields.dates.start')}
+                                            inputFormat="dd/MM/yyyy"
+                                            value={formik.values.validity_date}
+                                            onChange={(e) => formik.setFieldValue('validity_date', e)}
+                                            renderInput={(params: TextFieldProps) => (
+                                                <TextField
+                                                    {...params}
                                                 inputProps={{
                                                     ...params.inputProps,
                                                     placeholder: 'dd/mm/aaaa',
                                                     'data-testid': 'start-date-test',
                                                 }}
-                                                id="validityDate"
-                                                name="validityDate"
-                                                type="date"
-                                                size="small"
-                                                error={formik.touched.validity_date && Boolean(formik.errors.validity_date)}
-                                                helperText={formik.touched.validity_date && formik.errors.validity_date}
-                                            />
-                                        )}
-                                        shouldDisableDate={(date: Date) => date < new Date()}
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid container item xs={3}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DesktopDatePicker
-                                        label={t('addEditIbanPage.addForm.fields.dates.end')}
-                                        inputFormat="dd/MM/yyyy"
-                                        value={formik.values.due_date}
-                                        onChange={(e) => formik.setFieldValue('due_date', e)}
-                                        renderInput={(params: TextFieldProps) => (
-                                            <TextField
-                                                {...params}
+                                                    id="validityDate"
+                                                    name="validityDate"
+                                                    type="date"
+                                                    size="small"
+                                                    error={formik.touched.validity_date && Boolean(formik.errors.validity_date)}
+                                                    helperText={formik.touched.validity_date && formik.errors.validity_date}
+                                                />
+                                            )}
+                                            shouldDisableDate={(date: Date) => date < new Date()}
+                                        />
+                                    </LocalizationProvider>
+                                </Grid>
+                                <Grid container item xs={3}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DesktopDatePicker
+                                            label={t('addEditIbanPage.addForm.fields.dates.end')}
+                                            inputFormat="dd/MM/yyyy"
+                                            value={formik.values.due_date}
+                                            onChange={(e) => formik.setFieldValue('due_date', e)}
+                                            renderInput={(params: TextFieldProps) => (
+                                                <TextField
+                                                    {...params}
                                                 inputProps={{
                                                     ...params.inputProps,
                                                     placeholder: 'dd/mm/aaaa',
                                                     'data-testid': 'end-date-test',
                                                 }}
-                                                id="dueDate"
-                                                name="dueDate"
-                                                type="date"
-                                                size="small"
-                                                error={formik.touched.due_date && Boolean(formik.errors.due_date)}
-                                                helperText={formik.touched.due_date && formik.errors.due_date}
-                                            />
-                                        )}
-                                        shouldDisableDate={(date: Date) => date < formik.values.validity_date}
-                                    />
-                                </LocalizationProvider>
+                                                    id="dueDate"
+                                                    name="dueDate"
+                                                    type="date"
+                                                    size="small"
+                                                    error={formik.touched.due_date && Boolean(formik.errors.due_date)}
+                                                    helperText={formik.touched.due_date && formik.errors.due_date}
+                                                />
+                                            )}
+                                            shouldDisableDate={(date: Date) => date < formik.values.validity_date}
+                                        />
+                                    </LocalizationProvider>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </Box>
                     </Box>
-                </Box>
-            </Paper>
+                </Paper>
+            ) : (
+                <Paper elevation={0} sx={{borderRadius: 1, p: 3, minWidth: '100%', mb: 4}}>
+                    <Typography variant="h6" fontWeight="fontWeightMedium" mb={3}>
+                        {t('addEditIbanPage.addForm.fields.ibanUploadTypes.multiple')}
+                    </Typography>
+
+                    <Typography variant="body2" mb={3}>
+                        Carica un file CSV con le colonne: CF, IBAN, Azione (censimento/variazione/cancellazione), Data attivazione IBAN
+                    </Typography>
+
+                    <Box sx={inputGroupStyle}>
+                        <AddEditIbanFormSectionTitle title="Carica file CSV" icon={<UploadFileIcon/>} />
+                        <Box mt={3}>
+                            <SingleFileInput
+                                label="File CSV (obbligatorio)"
+                                value={file}
+                                accept={['.csv', 'text/csv']}
+                                onFileSelected={handleFileSelect}
+                                onFileRemoved={handleFileRemove}
+                                dropzoneLabel="Trascina qui il file CSV oppure"
+                                // dropzoneButton="carica un file"
+                                rejectedLabel="Formato file non supportato. Usa solo file CSV."
+                            />
+                        </Box>
+
+                        {showValidation && validationResult && (
+                            <Box mt={3}>
+                                {validationResult.valid ? (
+                                    <Alert severity="success" sx={{mb: 2}}>
+                                        <Typography variant="body2" fontWeight="bold" mb={1}>
+                                            File validato con successo!
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Verranno aggiunti <strong>{validationResult.summary.toAdd}</strong> IBAN, 
+                                            modificati <strong>{validationResult.summary.toUpdate}</strong> e 
+                                            cancellati <strong>{validationResult.summary.toDelete}</strong>.
+                                        </Typography>
+                                    </Alert>
+                                ) : (
+                                    <Alert severity="error">
+                                        <Typography variant="body2" fontWeight="bold" mb={1}>
+                                            Errori di validazione trovati:
+                                        </Typography>
+                                        <Box component="ul" sx={{mt: 1, mb: 0, pl: 2}}>
+                                            {validationResult.errors.map((error, index) => (
+                                                <li key={index}>
+                                                    <Typography variant="body2">{error}</Typography>
+                                                </li>
+                                            ))}
+                                        </Box>
+                                    </Alert>
+                                )}
+                            </Box>
+                        )}
+                    </Box>
+                </Paper>
+            )}
+
             <Stack direction="row" justifyContent="space-between" mt={5}>
                 <Stack display="flex" justifyContent="flex-start" mr={2}>
                     <Button

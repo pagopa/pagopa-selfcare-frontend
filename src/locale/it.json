@@ -998,6 +998,7 @@
     "to": "Data fine",
     "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
+    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ due_date }}, non sarà più possibile accettare versamenti su questo IBAN.",
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",
@@ -1057,7 +1058,7 @@
       "backButton": "Torna indietro",
       "confirmButton": "Programma eliminazione",
       "deletionDateLabel": "Data eliminazione",
-      "alert": "Dopo l'eliminazion non sarà più possibile eseguire pagamenti verso questo IBAN.(TO REVIEW)"
+      "alert": "Dopo l'eliminazion non sarà più possibile accettare versamenti su questo IBAN."
     },
     "cancel-iban-request-modal": {
       "title": "Annulla eliminazione",

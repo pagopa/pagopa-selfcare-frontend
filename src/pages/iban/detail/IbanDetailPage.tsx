@@ -215,6 +215,14 @@ const IbanDetailPage = () => {
                     </Grid>
                 </Grid>
 
+                {idExistPendingDeletionRequest && iban.due_date && (
+                    <Alert severity="warning" sx={{ mb: 3 }}>
+                        {t('ibanDetailPage.deletionScheduled', { 
+                            due_date: iban.due_date.toLocaleDateString('en-GB') 
+                        })}
+                    </Alert>
+                )}
+
                 <Paper
                     elevation={8}
                     sx={{

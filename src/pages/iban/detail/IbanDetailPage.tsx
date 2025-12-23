@@ -33,7 +33,7 @@ const IbanDetailPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lastIban, setLastIban] = useState(false);
     const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
-    const [idExistPendingDeletionRequest, setIdExistPendingDeletionRequest] = useState< string | null >();
+    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState< string | null >();
     const [showCancelIbanDeletionRequestModal, setShowCancelIbanDeletionRequestModal] = useState(false);
 
     useEffect(() => {
@@ -59,7 +59,9 @@ const IbanDetailPage = () => {
                         is_active: filteredIban[0].is_active!,
                     });
 
-                    setIdExistPendingDeletionRequest(deletionRequest?.requests?.[0]?.id ?? null);
+                    setIsExistPendingDeletionRequest(deletionRequest?.requests?.[0]?.id ?? null);
+                    const scheduledExecutionDate = deletionRequest?.requests?.[0]?.scheduledExecutionDate;
+                    setIbanDeletionDate(scheduledExecutionDate ? new Date(scheduledExecutionDate) : null);                
                 })
                 .catch((reason) => {
                     handleErrors([
@@ -181,7 +183,7 @@ const IbanDetailPage = () => {
                         <IbanDetailButtons
                             active={isIbanValid(iban)}
                             iban={ibanId}
-                            isExistPendingDeletionRequest={idExistPendingDeletionRequest !== null}
+                            isExistPendingDeletionRequest={isExistPendingDeletionRequest !== null}
                             setShowCancelIbanDeletionRequestModal={() => setShowCancelIbanDeletionRequestModal(true)}
                             setShowDeleteModal={(value) => {
                                 if (!lastIban) {
@@ -215,10 +217,10 @@ const IbanDetailPage = () => {
                     </Grid>
                 </Grid>
 
-                {idExistPendingDeletionRequest && iban.due_date && (
+                {isExistPendingDeletionRequest && ibanDeletionDate && (
                     <Alert severity="warning" sx={{ mb: 3 }}>
                         {t('ibanDetailPage.deletionScheduled', { 
-                            due_date: iban.due_date.toLocaleDateString('en-GB') 
+                            ibanDeletionDate: ibanDeletionDate.toLocaleDateString('en-GB') 
                         })}
                     </Alert>
                 )}
@@ -374,7 +376,7 @@ const IbanDetailPage = () => {
                     onCloseLabel={t('addEditIbanPage.cancel-iban-request-modal.backButton')}
                     handleCloseModal={() => setShowCancelIbanDeletionRequestModal(false)}
                     handleConfirm={async () => {
-                        await cancelIbanDeletionRequestHandler(idExistPendingDeletionRequest!);
+                        await cancelIbanDeletionRequestHandler(isExistPendingDeletionRequest!);
                         setShowCancelIbanDeletionRequestModal(false);
                     }}
                 />

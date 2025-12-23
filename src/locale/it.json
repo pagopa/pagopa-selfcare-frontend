@@ -998,7 +998,7 @@
     "to": "Data fine",
     "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
-    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ due_date }}, non sarà più possibile accettare versamenti su questo IBAN.",
+    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",

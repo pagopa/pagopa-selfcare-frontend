@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.44.0-4-CHK-4639-iban-deletion-request",
+  "version": "1.44.0-5-CHK-4639-iban-deletion-request",
   "homepage": "ui",
   "private": true,
   "scripts": {

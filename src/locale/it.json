@@ -1016,7 +1016,7 @@
       "fields": {
         "ibanUploadTypes": {
           "single": "Caricamento singolo",
-          "multiple": "Caricamento massivo"
+          "multiple": "Gestione multipla"
         },
         "iban": {
           "ibanCode": "Codice IBAN",
@@ -1065,6 +1065,17 @@
       "ecOwnerNotValid": "Codice fiscale non valido",
       "bankIbanConflict": "Impossibile creare l’IBAN in quanto risulta essere già censito sul sistema"
     }
+  },
+   "handleMultiIbanEditIbanPage": {
+    "title": "Gestione multipla",
+    "subtitle": "Carica il file con la lista degli IBAN da aggiungere, aggiornare o rimuovere.",
+    "csvForm": {
+      "dropzoneLabel": "Trascina qui il file con la lista degli IBAN oppure carica il file.",
+      "rejectedLabel": "Formato file non supportato. Usa solo file CSV."
+    },
+    "helpText": "Non sai come preparare la lista?",
+    "helpLink": "Scarica il file di esempio",
+    "validationSummary": "Verranno aggiunti {{toAdd}}, aggiornati {{toUpdate}} e rimossi {{toDelete}}."
   },
   "commissionBundlesPage": {
     "title": "Pacchetti commissioni",

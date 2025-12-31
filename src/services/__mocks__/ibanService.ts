@@ -159,3 +159,6 @@ export const exportCreditorInstitutionsToCsv = (_brokerCode: string): Promise<an
 
 export const getBrokerExportStatus = (_brokerCode: string): Promise<any> =>
     new Promise((resolve) => resolve(mockedBrokerExportStatus));
+
+export const handleBulkIbanOperations = (_ciCode: string, _ibanBulkOperationRequest: any): Promise<void> =>
+    new Promise((resolve) => resolve());

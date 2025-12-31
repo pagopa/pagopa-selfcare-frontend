@@ -2,17 +2,17 @@ import {isValid, parse} from 'date-fns';
 import {isValidIBANNumber} from './common-utils';
 
 export interface IbanCsvRow {
-    cf: string;
+    descrizione: string;
     iban: string;
-    azione: string;
-    dataAttivazione: string;
+    dataattivazioneiban: string;
+    operazione: string;
 }
 
 export interface ParsedIbanData {
-    cf: string;
+    descrizione: string;
     iban: string;
-    azione: 'censimento' | 'variazione' | 'cancellazione';
-    dataAttivazione: Date;
+    dataattivazioneiban: Date;
+    operazione: 'CREATE' | 'UPDATE' | 'DELETE';
 }
 
 export interface ValidationResult {
@@ -74,27 +74,14 @@ export const parseIbanDate = (dateString: string): Date | null => {
  * Validate CSV headers
  */
 const validateHeaders = (headers: Array<string>): string | null => {
-    const expectedHeaders = ['cf', 'iban', 'azione', 'data attivazione iban'];
+    const expectedHeaders = ['descrizione', 'iban', 'dataattivazioneiban', 'operazione'];
     const hasAllHeaders = expectedHeaders.every(header => 
         headers.some(h => h.replace(/\s+/g, ' ').trim() === header)
     );
     
     return hasAllHeaders 
         ? null 
-        : 'Il file deve contenere le colonne: CF, IBAN, Azione, Data attivazione IBAN';
-};
-
-/**
- * Validate CF (Codice Fiscale)
- */
-const validateCF = (cf: string, lineNum: number): string | null => {
-    if (!cf || cf.trim() === '') {
-        return `Riga ${lineNum}: CF mancante`;
-    }
-    if (cf.length < 11 || cf.length > 16) {
-        return `Riga ${lineNum}: CF non valido (lunghezza non corretta)`;
-    }
-    return null;
+        : 'Il file deve contenere le colonne: descrizione, iban, dataattivazioneiban, operazione';
 };
 
 /**
@@ -111,15 +98,15 @@ const validateIBAN = (iban: string, lineNum: number): string | null => {
 };
 
 /**
- * Validate Azione
+ * Validate Operaione
  */
-const validateAzione = (azione: string, lineNum: number): { error: string | null; normalized: string } => {
-    const normalized = azione.toLowerCase().trim();
-    const validActions = ['censimento', 'variazione', 'cancellazione'];
+const validateAzione = (operazione: string, lineNum: number): { error: string | null; normalized: string } => {
+    const normalized = operazione.trim();
+    const validActions = ['CREATE', 'UPDATE', 'DELETE'];
     
     if (!validActions.includes(normalized)) {
         return {
-            error: `Riga ${lineNum}: Azione non valida (deve essere: censimento, variazione o cancellazione)`,
+            error: `Riga ${lineNum}: operazione non valida (deve essere: CREATE, UPDATE o DELETE)`,
             normalized
         };
     }
@@ -163,25 +150,20 @@ const validateRow = (
         };
     }
 
-    const [cf, iban, azione, dataAttivazione] = columns;
+    const [descrizione, iban, dataattivazioneIban, operazione] = columns;
     const errors: Array<string> = [];
-
-    const cfError = validateCF(cf, lineNum);
-    if (cfError) {
-        return { errors: [cfError], data: null };
-    }
 
     const ibanError = validateIBAN(iban, lineNum);
     if (ibanError) {
         return { errors: [ibanError], data: null };
     }
 
-    const azioneValidation = validateAzione(azione, lineNum);
+    const azioneValidation = validateAzione(operazione, lineNum);
     if (azioneValidation.error) {
         return { errors: [azioneValidation.error], data: null };
     }
 
-    const dateValidation = validateDataAttivazione(dataAttivazione, lineNum);
+    const dateValidation = validateDataAttivazione(dataattivazioneIban, lineNum);
     if (dateValidation.error || !dateValidation.date) {
         return { errors: [dateValidation.error!], data: null };
     }
@@ -189,10 +171,10 @@ const validateRow = (
     return {
         errors: [],
         data: {
-            cf: cf.trim().toUpperCase(),
+            descrizione: descrizione.trim(),
             iban: iban.trim().toUpperCase(),
-            azione: azioneValidation.normalized as 'censimento' | 'variazione' | 'cancellazione',
-            dataAttivazione: dateValidation.date
+            operazione: azioneValidation.normalized as 'CREATE' | 'UPDATE' | 'DELETE',
+            dataattivazioneiban: dateValidation.date
         }
     };
 };
@@ -202,13 +184,13 @@ const validateRow = (
  */
 const calculateSummary = (data: Array<ParsedIbanData>): { toAdd: number; toUpdate: number; toDelete: number } => data.reduce(
         (acc, item) => {
-            if (item.azione === 'censimento') {
+            if (item.operazione === 'CREATE') {
                 return { ...acc, toAdd: acc.toAdd + 1 };
             }
-            if (item.azione === 'variazione') {
+            if (item.operazione === 'UPDATE') {
                 return { ...acc, toUpdate: acc.toUpdate + 1 };
             }
-            if (item.azione === 'cancellazione') {
+            if (item.operazione === 'DELETE') {
                 return { ...acc, toDelete: acc.toDelete + 1 };
             }
             return acc;

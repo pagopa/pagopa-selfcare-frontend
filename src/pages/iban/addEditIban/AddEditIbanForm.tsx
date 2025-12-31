@@ -7,6 +7,7 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
+    Link,
     Paper,
     Radio,
     RadioGroup,
@@ -19,7 +20,6 @@ import {Box} from '@mui/system';
 import {SingleFileInput} from '@pagopa/mui-italia';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {useEffect, useState} from 'react';
 import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
@@ -33,9 +33,10 @@ import {IbanFormAction, IbanOnCreation} from '../../../model/Iban';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {extractProblemJson} from '../../../utils/client-utils';
-import {createIban, updateIban} from '../../../services/ibanService';
+import {createIban, handleBulkIbanOperations, updateIban} from '../../../services/ibanService';
 import {isIbanValidityDateEditable, isValidIBANNumber} from '../../../utils/common-utils';
 import {validateIbanCsvData, ValidationResult} from '../../../utils/iban-csv-to-upload-parser';
+import { OperationEnum } from '../../../api/generated/portal/IbanOperation';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -210,8 +211,15 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                 }
             } else {
                 if (validationResult && validationResult.valid) {
-                    // await uploadBulkIban(ecCode, validationResult.data);
-                    console.log('TODO:', JSON.stringify(validationResult.data, null, 2));
+                    await handleBulkIbanOperations(ecCode, { 
+                        operations: validationResult.data.map(item => ({
+                            creditorInstitutionCode: ecCode,
+                            ibanValue: item.iban.toUpperCase().trim(),
+                            operation: OperationEnum[item.operazione],
+                            validityDate: item.dataattivazioneiban.toISOString().split('T')[0],
+                            description: item.descrizione
+                        }))
+                    });                
                 }
             }
 
@@ -414,59 +422,57 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                 </Paper>
             ) : (
                 <Paper elevation={0} sx={{borderRadius: 1, p: 3, minWidth: '100%', mb: 4}}>
+          
                     <Typography variant="h6" fontWeight="fontWeightMedium" mb={3}>
-                        {t('addEditIbanPage.addForm.fields.ibanUploadTypes.multiple')}
+                        {t('handleMultiIbanEditIbanPage.title')}
                     </Typography>
 
                     <Typography variant="body2" mb={3}>
-                        Carica un file CSV con le colonne: CF, IBAN, Azione (censimento/variazione/cancellazione), Data attivazione IBAN
+                        {t('handleMultiIbanEditIbanPage.subtitle')}
                     </Typography>
 
-                    <Box sx={inputGroupStyle}>
-                        <AddEditIbanFormSectionTitle title="Carica file CSV" icon={<UploadFileIcon/>} />
-                        <Box mt={3}>
-                            <SingleFileInput
-                                label="File CSV (obbligatorio)"
-                                value={file}
-                                accept={['.csv', 'text/csv']}
-                                onFileSelected={handleFileSelect}
-                                onFileRemoved={handleFileRemove}
-                                dropzoneLabel="Trascina qui il file CSV oppure"
-                                // dropzoneButton="carica un file"
-                                rejectedLabel="Formato file non supportato. Usa solo file CSV."
-                            />
-                        </Box>
-
-                        {showValidation && validationResult && (
-                            <Box mt={3}>
-                                {validationResult.valid ? (
-                                    <Alert severity="success" sx={{mb: 2}}>
-                                        <Typography variant="body2" fontWeight="bold" mb={1}>
-                                            File validato con successo!
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            Verranno aggiunti <strong>{validationResult.summary.toAdd}</strong> IBAN, 
-                                            modificati <strong>{validationResult.summary.toUpdate}</strong> e 
-                                            cancellati <strong>{validationResult.summary.toDelete}</strong>.
-                                        </Typography>
-                                    </Alert>
-                                ) : (
-                                    <Alert severity="error">
-                                        <Typography variant="body2" fontWeight="bold" mb={1}>
-                                            Errori di validazione trovati:
-                                        </Typography>
-                                        <Box component="ul" sx={{mt: 1, mb: 0, pl: 2}}>
-                                            {validationResult.errors.map((error, index) => (
-                                                <li key={index}>
-                                                    <Typography variant="body2">{error}</Typography>
-                                                </li>
-                                            ))}
-                                        </Box>
-                                    </Alert>
-                                )}
-                            </Box>
-                        )}
+                    <Box mt={3}>
+                        <SingleFileInput
+                            value={file}
+                            accept={['.csv', 'text/csv']}
+                            onFileSelected={handleFileSelect}
+                            onFileRemoved={handleFileRemove}
+                            dropzoneLabel={t('handleMultiIbanEditIbanPage.csvForm.dropzoneLabel')}
+                            rejectedLabel={t('handleMultiIbanEditIbanPage.csvForm.rejectedLabel')}
+                        />
                     </Box>
+                    <Box sx={{ textAlign: 'left' }}>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                            {t('handleMultiIbanEditIbanPage.helpText')}{' '}
+                            <Link 
+                                    download="esempio_iban.csv"
+                                    href={process.env.PUBLIC_URL + '/file/multipleIbanExample.csv'} 
+                                                              >{t('handleMultiIbanEditIbanPage.helpLink')}</Link>
+                        </Typography>
+                    </Box>
+                    {showValidation && validationResult && (
+                        <Box mt={3}>
+                            {validationResult.valid ? (
+                                <Alert severity="success">
+                                    {t('handleMultiIbanEditIbanPage.validationSummary', {
+                                        toAdd: validationResult.summary.toAdd,
+                                        toUpdate: validationResult.summary.toUpdate,
+                                        toDelete: validationResult.summary.toDelete
+                                    })}
+                                </Alert>
+                            ) : (
+                                <Alert severity="error">
+                                    <Box component="ul" sx={{mt: 1, mb: 0, pl: 2}}>
+                                        {validationResult.errors.map((error, index) => (
+                                            <li key={index}>
+                                                <Typography variant="body2">{error}</Typography>
+                                            </li>
+                                        ))}
+                                    </Box>
+                                </Alert>
+                            )}
+                        </Box>
+                    )}
                 </Paper>
             )}
 

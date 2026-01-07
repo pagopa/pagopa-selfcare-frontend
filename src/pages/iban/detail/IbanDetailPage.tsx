@@ -63,26 +63,8 @@ const IbanDetailPage = () => {
                     const scheduledExecutionDate = deletionRequest?.requests?.[0]?.scheduledExecutionDate;
                     setIbanDeletionDate(scheduledExecutionDate ? new Date(scheduledExecutionDate) : null);                
                 })
-                .catch((reason) => {
-                    handleErrors([
-                        {
-                            id: `FETCH_IBAN_DETAIL_ERROR`,
-                            blocking: false,
-                            error: reason,
-                            techDescription: `An error occurred while fetching iban detail`,
-                            toNotify: false,
-                        },
-                    ]);
-                    addError({
-                        id: 'FETCH_IBAN_DETAIL_ERROR',
-                        blocking: false,
-                        error: reason,
-                        techDescription: `An error occurred while retrieving iban detail`,
-                        toNotify: true,
-                        displayableTitle: t('ibanPage.error.listErrorTitle'),
-                        displayableDescription: t('ibanPage.error.listErrorDesc'),
-                        component: 'Toast',
-                    });
+                .catch((error) => {
+                    handleError(`FETCH_IBAN_DETAIL_ERROR`, error as Error, `An error occurred while fetching iban detail`, t('ibanPage.error.listErrorTitle'), t('ibanPage.error.listErrorDesc'));
                     setIban(emptyIban);
                 })
                 .finally(() => setLoading(false));
@@ -94,26 +76,8 @@ const IbanDetailPage = () => {
         try {
             await createIbanDeletionRequest(selectedParty?.fiscalCode ?? '', ibanId, dateToDelete);
             history.push(ROUTES.IBAN);
-        } catch (reason) {
-            handleErrors([
-                {
-                    id: `DELETE_IBAN_ERROR`,
-                    blocking: false,
-                    error: reason as Error,
-                    techDescription: `An error occurred while deleting iban`,
-                    toNotify: false,
-                },
-            ]);
-            addError({
-                id: 'DELETE_IBAN',
-                blocking: false,
-                error: reason as Error,
-                techDescription: `An error occurred while deleting an iban`,
-                toNotify: true,
-                displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
-                displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
-                component: 'Toast',
-            });
+        } catch (error) {
+            handleError(`DELETE_IBAN_ERROR`, error as Error, `An error occurred while deleting iban`, t('ibanPage.error.deleteIbanErrorTitle'), t('ibanPage.error.deleteIbanErrorDesc'));
         } finally {
             setLoadingDelete(false);
         }
@@ -125,29 +89,33 @@ const IbanDetailPage = () => {
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
             history.push(ROUTES.IBAN);
-        } catch (reason) {
-            handleErrors([
-                {
-                    id: `CANCEL_IBAN_DELETION_REQUEST_IBAN_ERROR`,
-                    blocking: false,
-                    error: reason as Error,
-                    techDescription: `An error occurred while cancel iban deletion request iban`,
-                    toNotify: false,
-                },
-            ]);
-            addError({
-                id: 'CANCEL_IBAN_DELETION_REQUEST_IBAN_ERROR',
-                blocking: false,
-                error: reason as Error,
-                techDescription: `An error occurred while cancel iban deletion request iban`,
-                toNotify: true,
-                displayableTitle: t('ibanPage.error.deleteIbanErrorTitle'),
-                displayableDescription: t('ibanPage.error.deleteIbanErrorDesc'),
-                component: 'Toast',
-            });
+        } catch (error) {
+            handleError(`CANCEL_IBAN_DELETION_REQUEST_IBAN_ERROR`, error as Error, `An error occurred while cancel iban deletion request iban`, t('ibanPage.error.deleteIbanErrorTitle'), t('ibanPage.error.deleteIbanErrorDesc'));
         } finally {
             setLoadingDelete(false);
         }
+    };
+
+    const handleError = (id: string, error: Error, techDescription: string, displayableTitle: string, displayableDescription: string) => {
+        handleErrors([
+            {
+                id,
+                blocking: false,
+                error,
+                techDescription,
+                toNotify: false,
+            },
+        ]);
+        addError({
+            id,
+            blocking: false,
+            error,
+            techDescription,
+            toNotify: true,
+            displayableTitle,
+            displayableDescription,
+            component: 'Toast',
+        });
     };
 
     return (
@@ -189,25 +157,7 @@ const IbanDetailPage = () => {
                                 if (!lastIban) {
                                     return setShowDeleteModal(value);
                                 } else {
-                                    handleErrors([
-                                        {
-                                            id: `DELETE_IBAN_ERROR`,
-                                            blocking: false,
-                                            error: {} as any,
-                                            techDescription: `An error occurred while deleting iban`,
-                                            toNotify: false,
-                                        },
-                                    ]);
-                                    addError({
-                                        id: 'DELETE_IBAN',
-                                        blocking: false,
-                                        error: {} as any,
-                                        techDescription: `An error occurred while deleting an iban`,
-                                        toNotify: true,
-                                        displayableTitle: "Impossibile eliminare l'ultimo iban",
-                                        displayableDescription: 'Impossibile effettuare l’operazione, deve essere presente almeno un IBAN valido',
-                                        component: 'Toast',
-                                    });
+                                    handleError(`DELETE_IBAN_ERROR`, {} as any, `An error occurred while deleting iban`, "Impossibile eliminare l'ultimo iban", 'Impossibile effettuare l’operazione, deve essere presente almeno un IBAN valido');
                                     return () => {
                                     };
                                 }

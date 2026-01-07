@@ -71,7 +71,7 @@ describe('ibanService test client', () => {
     test('Test getIbanDeletionRequests', async () => {
         const spyOn = jest.
             spyOn(BackofficeApi.ibanDeletionRequest, 'getIbanDeletionRequest').
-            mockReturnValue(new Promise((resolve) => resolve([])));
+            mockReturnValue(new Promise((resolve) => resolve()));
         expect(getIbanDeletionRequests('ciCode', 'ibanValue', 'status')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
@@ -79,7 +79,7 @@ describe('ibanService test client', () => {
     test('Test cancelIbanDeletionRequests', async () => {
         const spyOn = jest.
             spyOn(BackofficeApi.ibanDeletionRequest, 'cancelIbanDeletionRequest').
-            mockReturnValue(new Promise((resolve) => resolve([])));
+            mockReturnValue(new Promise((resolve) => resolve()));
         expect(cancelIbanDeletionRequests('ecCode', 'id')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
@@ -87,7 +87,7 @@ describe('ibanService test client', () => {
     test('Test exportIbanToCSV', async () => {
         const spyOn = jest.
             spyOn(BackofficeApi.creditorInstitutionBroker, 'exportIbansToCsv').
-            mockReturnValue(new Promise((resolve) => resolve([])));
+            mockReturnValue(new Promise((resolve) => resolve(Buffer.from(''))));
         expect(exportIbanToCSV('brokerCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
@@ -95,7 +95,7 @@ describe('ibanService test client', () => {
     test('Test exportCreditorInstitutionToCSV', async () => {
         const spyOn = jest.
             spyOn(BackofficeApi.creditorInstitutionBroker, 'exportCreditorInstitutionsToCsv').
-            mockReturnValue(new Promise((resolve) => resolve([])));
+            mockReturnValue(new Promise((resolve) => resolve(Buffer.from(''))));
         expect(exportCreditorInstitutionToCSV('brokerCode')).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });

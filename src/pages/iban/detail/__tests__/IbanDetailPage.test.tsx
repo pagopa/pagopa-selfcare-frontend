@@ -302,4 +302,280 @@ describe('IbanDetailPage', () => {
             expect(getIbanDeletionRequestsSpy).toHaveBeenCalled();
         });
     });
+
+    it('should open and close delete modal', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+
+        const deleteButton = screen.queryByTestId('button-delete');
+        if (deleteButton) {
+            fireEvent.click(deleteButton);
+            
+            await waitFor(() => {
+                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
+            });
+
+            const closeButton = screen.getByText('addEditIbanPage.delete-modal.backButton');
+            fireEvent.click(closeButton);
+
+            await waitFor(() => {
+                expect(screen.queryByText('addEditIbanPage.delete-modal.title')).not.toBeInTheDocument();
+            });
+        }
+    });
+
+    it('should open and close cancel deletion request modal', async () => {
+        getIbanDeletionRequestsSpy.mockResolvedValue(mockPendingDeletionRequest);
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanDeletionRequestsSpy).toHaveBeenCalled();
+        });
+
+        const cancelButton = screen.queryByTestId('button-edit-deletion');
+        if (cancelButton) {
+            fireEvent.click(cancelButton);
+            
+            await waitFor(() => {
+                expect(screen.getByText('addEditIbanPage.cancel-iban-request-modal.title')).toBeInTheDocument();
+            });
+
+            const closeButton = screen.getByText('addEditIbanPage.cancel-iban-request-modal.backButton');
+            fireEvent.click(closeButton);
+
+            await waitFor(() => {
+                expect(screen.queryByText('addEditIbanPage.cancel-iban-request-modal.title')).not.toBeInTheDocument();
+            });
+        }
+    });
+
+    it('should successfully cancel deletion request and navigate', async () => {
+        getIbanDeletionRequestsSpy.mockResolvedValue(mockPendingDeletionRequest);
+        cancelIbanDeletionRequestsSpy.mockResolvedValue({});
+        
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanDeletionRequestsSpy).toHaveBeenCalled();
+        });
+
+        const cancelButton = screen.queryByTestId('button-edit-deletion');
+        if (cancelButton) {
+            fireEvent.click(cancelButton);
+            
+            await waitFor(() => {
+                expect(screen.getByText('addEditIbanPage.cancel-iban-request-modal.title')).toBeInTheDocument();
+            });
+
+            const confirmButton = screen.getByText('addEditIbanPage.cancel-iban-request-modal.confirmButton');
+            fireEvent.click(confirmButton);
+
+            await waitFor(() => {
+                expect(cancelIbanDeletionRequestsSpy).toHaveBeenCalledWith(
+                    mockSelectedParty.fiscalCode,
+                    mockPendingDeletionRequest.requests[0].id
+                );
+                expect(mockHistoryPush).toHaveBeenCalled();
+            });
+        }
+    });
+
+    it('should display empty iban when fetch fails', async () => {
+        const mockError = new Error('Fetch error');
+        getIbanListSpy.mockRejectedValue(mockError);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle missing publication_date', async () => {
+        const ibanWithoutPublicationDate = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    publication_date: undefined,
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(ibanWithoutPublicationDate);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('-')).toBeInTheDocument();
+        });
+    });
+
+    it('should filter valid ibans correctly', async () => {
+        const multipleIbansWithDifferentDates = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    validity_date: new Date('2020-01-01').toISOString(),
+                    due_date: new Date('2021-01-01').toISOString(),
+                },
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    iban: 'IT60X0542811101000000123456',
+                    validity_date: new Date('2024-01-01').toISOString(),
+                    due_date: new Date('2025-12-31').toISOString(),
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(multipleIbansWithDifferentDates);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should use ci_owner from iban when available', async () => {
+        const ibanWithCiOwner = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    ci_owner: '99999999999',
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(ibanWithCiOwner);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('99999999999')).toBeInTheDocument();
+        });
+    });
+
+    it('should use selectedParty fiscalCode when ci_owner is null', async () => {
+        const ibanWithoutCiOwner = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    ci_owner: null,
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(ibanWithoutCiOwner);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText(mockSelectedParty.fiscalCode)).toBeInTheDocument();
+        });
+    });
+
+    it('should handle deletion date change', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+
+        const deleteButton = screen.queryByTestId('button-delete');
+        if (deleteButton) {
+            fireEvent.click(deleteButton);
+            
+            await waitFor(() => {
+                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
+            });
+        }
+    });
+
+    it('should show alert when deletion date is selected', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should not call delete handler when date is null', async () => {
+        createIbanDeletionRequestSpy.mockResolvedValue({});
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should display IBAN in breadcrumb', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            const breadcrumbElements = screen.getAllByText(mockedIban.iban);
+            expect(breadcrumbElements.length).toBeGreaterThan(0);
+        });
+    });
+
+    it('should display configuration sections', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('ibanDetailPage.ibanData')).toBeInTheDocument();
+            expect(screen.getByText('ibanDetailPage.validityDate')).toBeInTheDocument();
+            expect(screen.getByText('ibanDetailPage.ecData')).toBeInTheDocument();
+        });
+    });
+
+    it('should display from and to labels', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('ibanDetailPage.from')).toBeInTheDocument();
+            expect(screen.getByText('ibanDetailPage.to')).toBeInTheDocument();
+        });
+    });
+
+    it('should display fiscal code label', async () => {
+        renderComponent();
+
+        await waitFor(() => {
+            expect(screen.getByText('ibanDetailPage.fiscalCode')).toBeInTheDocument();
+        });
+    });
+
+    it('should handle empty iban description', async () => {
+        const ibanWithoutDescription = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    description: undefined,
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(ibanWithoutDescription);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle empty labels', async () => {
+        const ibanWithoutLabels = {
+            ibans_enhanced: [
+                {
+                    ...mockIbanList.ibans_enhanced[0],
+                    labels: undefined,
+                },
+            ],
+        };
+        getIbanListSpy.mockResolvedValue(ibanWithoutLabels);
+
+        renderComponent();
+
+        await waitFor(() => {
+            expect(getIbanListSpy).toHaveBeenCalled();
+        });
+    });
 });

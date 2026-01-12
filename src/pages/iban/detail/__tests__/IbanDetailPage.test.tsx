@@ -235,9 +235,8 @@ describe('IbanDetailPage', () => {
         renderComponent();
 
         await waitFor(() => {
-            const dateElements = screen.getAllByText((content, _) => {
-                return /^\d{2}\/\d{2}\/\d{4}$/.test(content);
-            });
+            // NOSONAR: Regex with fixed quantifiers, no ReDoS risk
+            const dateElements = screen.getAllByText(/^\d{2}\/\d{2}\/\d{4}$/);
             expect(dateElements.length).toBeGreaterThan(0);
         });
     });

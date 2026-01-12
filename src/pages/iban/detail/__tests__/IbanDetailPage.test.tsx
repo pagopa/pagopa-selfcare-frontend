@@ -235,7 +235,7 @@ describe('IbanDetailPage', () => {
         renderComponent();
 
         await waitFor(() => {
-            const dateElements = screen.getAllByText(/\d{2}\/\d{2}\/\d{4}/);
+            const dateElements = screen.getAllByText(/^\d{2}\/\d{2}\/\d{4}$/);
             expect(dateElements.length).toBeGreaterThan(0);
         });
     });

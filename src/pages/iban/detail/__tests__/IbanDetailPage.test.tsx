@@ -9,6 +9,7 @@ import {MemoryRouter, Route} from 'react-router';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import * as ibanService from '../../../../services/ibanService';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
+import userEvent from '@testing-library/user-event';
 
 let getIbanListSpy: jest.SpyInstance;
 let deleteIbanSpy: jest.SpyInstance;
@@ -578,4 +579,40 @@ describe('IbanDetailPage', () => {
             expect(getIbanListSpy).toHaveBeenCalled();
         });
     });
+
+    it('should create an ibanDeletionRequest', async() => {
+        renderComponent();
+
+        const deleteButton = screen.queryByTestId('delete-button-test');
+        createIbanDeletionRequestSpy.mockResolvedValue({});
+
+        if (deleteButton) {
+            fireEvent.click(deleteButton);
+            
+            await waitFor(() => {
+                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
+            });
+
+            const inputDate = screen.queryByRole('tel')
+
+            if(inputDate){
+                const user = userEvent.setup();
+                const newDate = new Date();
+                newDate.setFullYear(newDate.getFullYear()+1);
+                await user.type(inputDate, newDate.toLocaleDateString("en-GB"));
+
+                const deleteScheduleButton = screen.getByTestId("confirm-button-test");
+
+                if(deleteScheduleButton)
+                    fireEvent.click(deleteButton);
+
+                await waitFor(() => {
+                    expect(createIbanDeletionRequestSpy).toHaveBeenCalled();
+                });
+            }
+        }
+    
+    })
+    
+
 });

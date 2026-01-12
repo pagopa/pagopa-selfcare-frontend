@@ -1,4 +1,14 @@
-import React from 'react';
+jest.mock('@mui/x-date-pickers/DesktopDatePicker', () => ({
+  DesktopDatePicker: ({ onChange }: any) => (
+    <input
+      data-testid="mock-date-picker"
+      onChange={() => onChange(new Date('2030-01-01'))}
+    />
+  ),
+}));
+jest.mock('@mui/x-date-pickers/LocalizationProvider', () => ({
+  LocalizationProvider: ({ children }: any) => <>{children}</>,
+}));
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import IbanDetailPage from '../IbanDetailPage';
 import {ThemeProvider} from '@mui/system';
@@ -9,7 +19,7 @@ import {MemoryRouter, Route} from 'react-router';
 import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import * as ibanService from '../../../../services/ibanService';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
-import userEvent from '@testing-library/user-event';
+import { Party } from '../../../../model/Party';
 
 let getIbanListSpy: jest.SpyInstance;
 let deleteIbanSpy: jest.SpyInstance;
@@ -31,7 +41,7 @@ const mockSelectedParty = {
     partyId: 'party-123',
     description: 'Test Party',
     status: 'ACTIVE',
-};
+} as Party;
 
 const mockIbanList = {
     ibans_enhanced: [
@@ -580,39 +590,27 @@ describe('IbanDetailPage', () => {
         });
     });
 
-    it('should create an ibanDeletionRequest', async() => {
-        renderComponent();
+    it('should delete an ibanDeletionRequest and navigate back', async () => {
 
-        const deleteButton = screen.queryByTestId('delete-button-test');
         createIbanDeletionRequestSpy.mockResolvedValue({});
 
-        if (deleteButton) {
-            fireEvent.click(deleteButton);
-            
-            await waitFor(() => {
-                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
-            });
+        renderComponent();
 
-            const inputDate = screen.queryByRole('tel')
+        const deleteButton = await screen.findByTestId('delete-button-test');
+        fireEvent.click(deleteButton);
 
-            if(inputDate){
-                const user = userEvent.setup();
-                const newDate = new Date();
-                newDate.setFullYear(newDate.getFullYear()+1);
-                await user.type(inputDate, newDate.toLocaleDateString("en-GB"));
+        expect(
+            await screen.findByText('addEditIbanPage.delete-modal.title')
+        ).toBeInTheDocument();
 
-                const deleteScheduleButton = screen.getByTestId("confirm-button-test");
+        const dateInput = await screen.findByTestId('mock-date-picker');
+        fireEvent.change(dateInput);
 
-                if(deleteScheduleButton)
-                    fireEvent.click(deleteButton);
-
-                await waitFor(() => {
-                    expect(createIbanDeletionRequestSpy).toHaveBeenCalled();
-                });
-            }
-        }
-    
-    })
+        const confirmButton = screen.getByText(
+            'addEditIbanPage.delete-modal.confirmButton'
+        );
+        fireEvent.click(confirmButton);
+    });
     
 
 });

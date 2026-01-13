@@ -1,14 +1,3 @@
-jest.mock('@mui/x-date-pickers/DesktopDatePicker', () => ({
-  DesktopDatePicker: ({ onChange }: any) => (
-    <input
-      data-testid="mock-date-picker"
-      onChange={() => onChange(new Date('2030-01-01'))}
-    />
-  ),
-}));
-jest.mock('@mui/x-date-pickers/LocalizationProvider', () => ({
-  LocalizationProvider: ({ children }: any) => <>{children}</>,
-}));
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import IbanDetailPage from '../IbanDetailPage';
 import {ThemeProvider} from '@mui/system';
@@ -20,6 +9,7 @@ import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import * as ibanService from '../../../../services/ibanService';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
 import { Party } from '../../../../model/Party';
+import userEvent from '@testing-library/user-event';
 
 let getIbanListSpy: jest.SpyInstance;
 let deleteIbanSpy: jest.SpyInstance;
@@ -565,6 +555,7 @@ describe('IbanDetailPage', () => {
     it('should delete an ibanDeletionRequest and navigate back', async () => {
 
         createIbanDeletionRequestSpy.mockResolvedValue({});
+        const user = userEvent.setup();
 
         renderComponent();
 
@@ -574,14 +565,21 @@ describe('IbanDetailPage', () => {
         expect(
             await screen.findByText('addEditIbanPage.delete-modal.title')
         ).toBeInTheDocument();
-
-        const dateInput = await screen.findByTestId('mock-date-picker');
-        fireEvent.change(dateInput);
+        
+        const dateInput = await screen.findByLabelText('addEditIbanPage.delete-modal.deletionDateLabel');
+        
+        await user.type(dateInput, '01/01/2099');
 
         const confirmButton = screen.getByText(
             'addEditIbanPage.delete-modal.confirmButton'
         );
+
+        expect(confirmButton).not.toBeDisabled();
+
         fireEvent.click(confirmButton);
+        await waitFor(() => {
+            expect(createIbanDeletionRequestSpy).toHaveBeenCalled();
+        }); 
     });
     
 

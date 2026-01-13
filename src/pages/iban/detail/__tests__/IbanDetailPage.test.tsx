@@ -105,17 +105,7 @@ const renderComponent = (ibanId = mockedIban.iban) => {
 
 describe('IbanDetailPage', () => {
     it('Test render IbanDetailPage', () => {
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}`]}>
-                    <Route path="/iban/:ibanId">
-                        <ThemeProvider theme={theme}>
-                            <IbanDetailPage/>
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
+        renderComponent();
 
         expect(screen.getByText('general.exit')).toBeInTheDocument();
         expect(screen.getByText('general.Iban')).toBeInTheDocument();
@@ -127,34 +117,14 @@ describe('IbanDetailPage', () => {
         const mockError = new Error('Fetch error');
         getIbanListSpy.mockRejectedValueOnce(mockError);
 
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}`]}>
-                    <Route path="/iban/:ibanId">
-                        <ThemeProvider theme={theme}>
-                            <IbanDetailPage/>
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
+        renderComponent();
     });
 
     it('Test render IbanDetailPage with deleteIban error', () => {
         const mockError = new Error('Fetch error');
         deleteIbanSpy.mockRejectedValueOnce(mockError);
 
-        render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={[`/iban/${mockedIban.iban}`]}>
-                    <Route path="/iban/:ibanId">
-                        <ThemeProvider theme={theme}>
-                            <IbanDetailPage/>
-                        </ThemeProvider>
-                    </Route>
-                </MemoryRouter>
-            </Provider>
-        );
+        renderComponent();
     });
 
     it('should display IBAN details correctly', async () => {
@@ -322,21 +292,21 @@ describe('IbanDetailPage', () => {
             expect(getIbanListSpy).toHaveBeenCalled();
         });
 
-        const deleteButton = screen.queryByTestId('button-delete');
-        if (deleteButton) {
-            fireEvent.click(deleteButton);
-            
-            await waitFor(() => {
-                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
-            });
+        const deleteButton = await screen.findByTestId('delete-button-test');
+        expect(deleteButton).toBeInTheDocument();
+        fireEvent.click(deleteButton);
+        
+        await waitFor(() => {
+            expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
+        });
 
-            const closeButton = screen.getByText('addEditIbanPage.delete-modal.backButton');
-            fireEvent.click(closeButton);
+        const closeButton = screen.getByText('addEditIbanPage.delete-modal.backButton');
+        expect(closeButton).toBeInTheDocument();
+        fireEvent.click(closeButton);
 
-            await waitFor(() => {
-                expect(screen.queryByText('addEditIbanPage.delete-modal.title')).not.toBeInTheDocument();
-            });
-        }
+        await waitFor(() => {
+            expect(screen.queryByText('addEditIbanPage.delete-modal.title')).not.toBeInTheDocument();
+        });
     });
 
     it('should open and close cancel deletion request modal', async () => {
@@ -348,6 +318,7 @@ describe('IbanDetailPage', () => {
         });
 
         const cancelButton = screen.queryByTestId('button-edit-deletion');
+        expect(cancelButton).toBeInTheDocument();
         if (cancelButton) {
             fireEvent.click(cancelButton);
             
@@ -375,6 +346,7 @@ describe('IbanDetailPage', () => {
         });
 
         const cancelButton = screen.queryByTestId('button-edit-deletion');
+        expect(cancelButton).toBeInTheDocument();
         if (cancelButton) {
             fireEvent.click(cancelButton);
             
@@ -492,14 +464,13 @@ describe('IbanDetailPage', () => {
             expect(getIbanListSpy).toHaveBeenCalled();
         });
 
-        const deleteButton = screen.queryByTestId('button-delete');
-        if (deleteButton) {
-            fireEvent.click(deleteButton);
-            
-            await waitFor(() => {
-                expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
-            });
-        }
+        const deleteButton = await screen.findByTestId('delete-button-test');
+        expect(deleteButton).toBeInTheDocument();
+        fireEvent.click(deleteButton);
+        
+        await waitFor(() => {
+            expect(screen.getByText('addEditIbanPage.delete-modal.title')).toBeInTheDocument();
+        });
     });
 
     it('should show alert when deletion date is selected', async () => {

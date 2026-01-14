@@ -78,11 +78,12 @@ jobs:
           export REACT_APP_ANALYTICS_MOCKED='false'
 
           yarn install --ignore-scripts --frozen-lockfile
-          if [ "${{ inputs.environment }}" = "dev" ]; then
-            yarn run generate:api-portal-next
-          else
-            yarn run generate:api-portal
-          fi
+          # if [ "${{ inputs.environment }}" = "dev" ]; then
+          #   yarn run generate:api-portal-next
+          # else
+          #   yarn run generate:api-portal
+          # fi
+          yarn run generate:api-portal
           yarn build
 
       - name: Login

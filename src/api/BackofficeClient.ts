@@ -2,6 +2,7 @@ import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
+import { format } from 'date-fns';
 import {
   BundleCISubscriptionsBodyRequest,
   BundleCISubscriptionsMethodParams,
@@ -105,6 +106,8 @@ import { InstitutionBaseResources } from './generated/portal/InstitutionBaseReso
 import { InstitutionDetail } from './generated/portal/InstitutionDetail';
 import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
 import { IbanBulkOperationRequest } from './generated/portal/IbanBulkOperationRequest';
+import { IbanDeletionRequest } from './generated/portal/IbanDeletionRequest';
+import { IbanDeletionRequests } from './generated/portal/IbanDeletionRequests';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -1097,6 +1100,51 @@ export const BackofficeApi = {
         body: ibanBulkOperationRequest,
       });
       return extractResponse(result, 201, onRedirectToLogin);
+    }
+  },
+  ibanDeletionRequest: {
+
+    createIbanDeletionRequest: async (creditorinstitutioncode: string, ibanValue: string, scheduledExecutionDate: Date): Promise<void> => {
+        
+        const formattedDate = format(scheduledExecutionDate, 'yyyy-MM-dd');
+
+        const maybeValidatedRequestBody = IbanDeletionRequest.decode({ 
+            ibanValue, 
+            scheduledExecutionDate: formattedDate 
+        });
+
+        // eslint-disable-next-line no-underscore-dangle
+        if (maybeValidatedRequestBody._tag === 'Left') {
+            throw new Error('Validation failed for IBAN deletion request.');
+        }
+        
+        const validatedRequestBody = maybeValidatedRequestBody.right;
+
+        const result = await backofficeClient.createIbanDeletionRequest({
+            'ci-code': creditorinstitutioncode,
+            body: validatedRequestBody,
+        });
+
+        return extractResponse(result, 201, onRedirectToLogin);
+    },
+    getIbanDeletionRequest: async (creditorinstitutioncode: string, ibanValue: string, status: string): Promise<IbanDeletionRequests> => {
+        
+        const result = await backofficeClient.getIbanDeletionRequest({
+            'ci-code': creditorinstitutioncode,
+            ibanValue,
+            status,
+        });
+
+        return extractResponse(result, 200, onRedirectToLogin);
+    },
+    cancelIbanDeletionRequest: async (creditorinstitutioncode: string, id: string): Promise<void> => {
+        
+        const result = await backofficeClient.cancelIbanDeletionRequest({
+            'ci-code': creditorinstitutioncode,
+            id
+        });
+
+        return extractResponse(result, 204, onRedirectToLogin);
     }
   },
   operativeTables: {

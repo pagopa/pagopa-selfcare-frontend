@@ -3,6 +3,7 @@ import {IbanLabel} from '../api/generated/portal/IbanLabel';
 export enum IbanFormAction {
     Create = 'create',
     Edit = 'edit',
+    CancelDeletion = 'cancelDeletion'
 }
 
 export type IbanOnCreation = {

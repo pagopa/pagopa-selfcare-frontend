@@ -3,7 +3,9 @@ import {Ibans} from "../api/generated/portal/Ibans";
 import {Iban} from "../api/generated/portal/Iban";
 import {IbanCreate} from "../api/generated/portal/IbanCreate";
 import {BrokerECExportStatus} from '../api/generated/portal/BrokerECExportStatus';
+import { IbanBulkOperationRequest } from '../api/generated/portal/IbanBulkOperationRequest';
 import { IbanDeletionRequests } from '../api/generated/portal/IbanDeletionRequests';
+
 import {
     createIban as createIbanMocked,
     deleteIban as deleteIbanMocked,
@@ -108,6 +110,17 @@ export const getBrokerExportStatus = (brokerCode: string): Promise<BrokerECExpor
         return getBrokerExportStatusMocked(brokerCode);
     } else {
         return BackofficeApi.creditorInstitutionBroker.getBrokerExportStatus(brokerCode).then(
+            (resources) => resources
+        );
+    }
+};
+
+export const handleBulkIbanOperations = (ciCode: string, ibanBulkOperationRequest: IbanBulkOperationRequest): Promise<void> => {
+    /* istanbul ignore if */
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+        return handleBulkIbanOperations(ciCode, ibanBulkOperationRequest);
+    } else {
+        return BackofficeApi.ibans.handleBulkIbanOperations(ciCode, ibanBulkOperationRequest).then(
             (resources) => resources
         );
     }

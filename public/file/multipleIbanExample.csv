@@ -1,0 +1,4 @@
+"descrizione","iban","dataattivazioneiban","operazione"
+"Conto Principale","IT60X0542811101000000123456","2030-10-01","CREATE"
+"Conto Secondario","IT49S0300203280447684177591","2030-05-15","UPDATE"
+"Vecchio Conto","IT60X0542811101000000123456","2030-01-20","DELETE"

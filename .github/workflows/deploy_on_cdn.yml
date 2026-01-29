@@ -76,6 +76,30 @@ jobs:
 
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
+          
+          # -----------------------------
+          # Decide OPENAPI_REF for client generation
+          # -----------------------------
+          FE_BRANCH="${GITHUB_REF_NAME}"
+          BACKEND_REPO="pagopa/pagopa-selfcare-ms-backoffice-backend"
+
+          if [ "${{ inputs.environment }}" = "dev" ]; then
+            # Try same branch as FE (if backend has it). Fallback to next.
+            CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+            if curl -sfL "$CANDIDATE_URL" > /dev/null; then
+              echo "Using backend OpenAPI from branch: ${FE_BRANCH}"
+              export OPENAPI_REF="${FE_BRANCH}"
+            else
+              echo "Backend OpenAPI not found on branch ${FE_BRANCH}. Falling back to 'next'."
+              export OPENAPI_REF="next"
+            fi
+          else
+            # Non-dev environments: keep stable reference
+            export OPENAPI_REF="main"
+          fi
+
+          echo "OPENAPI_REF=${OPENAPI_REF}"
+          
 
           yarn install --ignore-scripts --frozen-lockfile
           if [ "${{ inputs.environment }}" = "dev" ]; then
@@ -83,6 +107,11 @@ jobs:
           else
             yarn run generate:api-portal
           fi
+          
+          echo "Checking generated models..."
+          test -f src/api/generated/portal/IbanDeletionRequest.ts || (echo "ERROR: IbanDeletionRequest not generated. OpenAPI not aligned." && exit 1)
+          test -f src/api/generated/portal/IbanDeletionRequests.ts || (echo "ERROR: IbanDeletionRequests not generated. OpenAPI not aligned." && exit 1)
+          
           yarn build
 
       - name: Login

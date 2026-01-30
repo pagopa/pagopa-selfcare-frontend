@@ -178,20 +178,11 @@ jobs:
           inlineScript: |
             echo "Starting CDN purge..."
             date
-
-            if [ "${ENVIRONMENT}" = "dev" ]; then
-              az cdn endpoint purge \
-                -g ${{ vars.CDN_RESOURCE_GROUP }} \
-                -n ${{ vars.CDN_ENDPOINT }} \
-                --profile-name ${{ vars.CDN_PROFILE }} \
-                --content-paths "/ui/*"
-            else
-              az cdn endpoint purge \
-                -g ${{ vars.CDN_RESOURCE_GROUP }} \
-                -n ${{ vars.CDN_ENDPOINT }} \
-                --profile-name ${{ vars.CDN_PROFILE }} \
-                --content-paths "/ui" "/ui/*" "/"
-            fi
+           az cdn endpoint purge \
+           -g ${{ vars.CDN_RESOURCE_GROUP }} \
+           -n ${{ vars.CDN_ENDPOINT }} \
+           --profile-name ${{ vars.CDN_PROFILE }} \
+           --content-paths "/ui" "/ui/*" "/"
 
             echo "CDN purge submitted/completed."
             date

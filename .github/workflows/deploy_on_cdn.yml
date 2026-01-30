@@ -8,7 +8,6 @@ on:
         description: The name of the environment where to deploy
         type: string
 
-
 permissions:
   id-token: write
   contents: read
@@ -16,29 +15,34 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy ${{ inputs.environment }}
+    name: Deploy
     environment: ${{ inputs.environment }}
+
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      BACKEND_REPO: pagopa/pagopa-selfcare-ms-backoffice-backend
+
     steps:
       - name: Checkout
-        id: checkout
-        # from https://github.com/actions/checkout/commits/main
         uses: actions/checkout@1f9a0c22da41e6ebfa534300ef656657ea2c6707
         with:
           persist-credentials: true
 
-      - run: |
-          git pull
+      - name: Git info
+        shell: bash
+        run: |
+          set -euo pipefail
           git status
-          git --no-pager branch -vv 
+          git --no-pager branch -vv
 
       - name: Set Node.js 16.14.0
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         with:
           node-version: 16.14.0
-          cache: 'yarn'
+          cache: yarn
 
       - name: Cache Yarn
-        uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3
+        uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f
         with:
           path: |
             ~/.cache/yarn
@@ -47,9 +51,61 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Build
+      # --------------------------------------------------
+      # Decide OPENAPI_REF
+      # --------------------------------------------------
+      - name: Set OPENAPI_REF
+        shell: bash
         run: |
-          export REACT_APP_ENV='${{ inputs.environment }}'
+          set -euo pipefail
+
+          # Validate ENVIRONMENT (do not trust workflow input directly)
+          case "${ENVIRONMENT}" in
+            dev|uat|prod) ;;
+            *)
+              echo "Invalid ENVIRONMENT: ${ENVIRONMENT} (allowed: dev|uat|prod)"
+              exit 1
+              ;;
+          esac
+
+          # Stable environments always use main
+          if [ "${ENVIRONMENT}" = "uat" ] || [ "${ENVIRONMENT}" = "prod" ]; then
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "OPENAPI_REF set to main for ${ENVIRONMENT}"
+            exit 0
+          fi
+
+          # DEV: try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
+          FE_BRANCH_RAW="${GITHUB_REF_NAME}"
+          FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
+
+          # If branch name is unusable (sanitized empty), fallback to next (per requirement)
+          if [ -z "${FE_BRANCH}" ]; then
+            echo "Sanitized branch name is empty. Falling back to next."
+            echo "OPENAPI_REF=next" >> "${GITHUB_ENV}"
+            exit 0
+          fi
+
+          CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+          echo "Checking backend OpenAPI at: ${CANDIDATE_URL}"
+
+          if curl -sfL \
+            --proto '=https' \
+            --proto-redir '=https' \
+            "${CANDIDATE_URL}" > /dev/null; then
+            echo "OPENAPI_REF=${FE_BRANCH}" >> "${GITHUB_ENV}"
+            echo "OPENAPI_REF set to ${FE_BRANCH}"
+          else
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "Backend OpenAPI not found on ${FE_BRANCH}. Falling back to main."
+          fi
+
+      - name: Build
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          export REACT_APP_ENV="${ENVIRONMENT}"
           export INLINE_RUNTIME_CHUNK='false'
 
           export REACT_APP_URL_FE_LOGIN='${{ vars.SELFCARE_HOST_FE }}/auth/login'
@@ -77,37 +133,60 @@ jobs:
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
 
+          echo "Using OPENAPI_REF=${OPENAPI_REF}"
+
           yarn install --ignore-scripts --frozen-lockfile
-          if [ "${{ inputs.environment }}" = "dev" ]; then
+
+          if [ "${ENVIRONMENT}" = "dev" ]; then
             yarn run generate:api-portal-next
           else
             yarn run generate:api-portal
           fi
+
+          echo "Checking generated models..."
+          test -f src/api/generated/portal/IbanDeletionRequest.ts \
+            || (echo "ERROR: IbanDeletionRequest not generated (OPENAPI_REF=${OPENAPI_REF})." && exit 1)
+          test -f src/api/generated/portal/IbanDeletionRequests.ts \
+            || (echo "ERROR: IbanDeletionRequests not generated (OPENAPI_REF=${OPENAPI_REF})." && exit 1)
+
           yarn build
 
       - name: Login
-        id: login
-        # from https://github.com/Azure/login/commits/master
         uses: azure/login@92a5484dfaf04ca78a94597f4f19fea633851fa2
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-          
-      # https://github.com/Azure/azure-cli/issues/30635#issuecomment-2585039718 
-      # add tdnf install -y azcopy                
-      - name: Deploy ${{ inputs.environment }}
-        uses: azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd # v1
+
+      - name: Deploy
+        uses: azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd
         with:
           azcliversion: latest
           inlineScript: |
-            tdnf install -y azcopy;
-            az storage blob sync --container '$web' --account-name ${{ vars.STORAGE_ACCOUNT }} -s "./build" --destination 'ui/' --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
-
+            tdnf install -y azcopy
+            az storage blob sync \
+              --container '$web' \
+              --account-name ${{ vars.STORAGE_ACCOUNT }} \
+              -s "./build" \
+              --destination 'ui/' \
+              --connection-string '${{ secrets.BLOB_CONNECTION_STRING }}'
 
       - name: Purge
-        uses: azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd # v1
+        uses: azure/CLI@4db43908b9df2e7ac93c8275a8f9a448c59338dd
         with:
           azcliversion: latest
           inlineScript: |
-            az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n ${{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
+            set -euo pipefail
+            echo "Starting CDN purge..."
+            echo "ENVIRONMENT=${ENVIRONMENT}"
+            date
+
+            az cdn endpoint purge \
+              -g ${{ vars.CDN_RESOURCE_GROUP }} \
+              -n ${{ vars.CDN_ENDPOINT }} \
+              --profile-name ${{ vars.CDN_PROFILE }} \
+              --content-paths "/ui" "/ui/*" "/"
+
+            echo "CDN purge completed."
+            date
+

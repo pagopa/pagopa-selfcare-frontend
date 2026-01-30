@@ -75,12 +75,11 @@ jobs:
             exit 0
           fi
 
-          # DEV: try same FE branch, fallback to next
+          # DEV: try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
           FE_BRANCH_RAW="${GITHUB_REF_NAME}"
-
-          # Sanitize branch name (avoid injection / Sonar warning)
           FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
 
+          # If branch name is unusable (sanitized empty), fallback to next (per requirement)
           if [ -z "${FE_BRANCH}" ]; then
             echo "Sanitized branch name is empty. Falling back to next."
             echo "OPENAPI_REF=next" >> "${GITHUB_ENV}"
@@ -97,8 +96,8 @@ jobs:
             echo "OPENAPI_REF=${FE_BRANCH}" >> "${GITHUB_ENV}"
             echo "OPENAPI_REF set to ${FE_BRANCH}"
           else
-            echo "OPENAPI_REF=next" >> "${GITHUB_ENV}"
-            echo "Backend OpenAPI not found on ${FE_BRANCH}. Falling back to next."
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "Backend OpenAPI not found on ${FE_BRANCH}. Falling back to main."
           fi
 
       - name: Build

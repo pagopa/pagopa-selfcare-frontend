@@ -52,7 +52,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       # --------------------------------------------------
-      # Decide OPENAPI_REF (Sonar-safe)
+      # Decide OPENAPI_REF
       # --------------------------------------------------
       - name: Set OPENAPI_REF
         shell: bash

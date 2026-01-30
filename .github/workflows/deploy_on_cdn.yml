@@ -85,8 +85,8 @@ jobs:
 
           if [ "${{ inputs.environment }}" = "dev" ]; then
             # Try same branch as FE (if backend has it). Fallback to next.
-            CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
-            if curl -sfL "$CANDIDATE_URL" > /dev/null; then
+            CANDIDATE_URL="raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+            if curl -sfL "https://$CANDIDATE_URL" > /dev/null; then
               echo "Using backend OpenAPI from branch: ${FE_BRANCH}"
               export OPENAPI_REF="${FE_BRANCH}"
             else
@@ -139,4 +139,8 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
+            echo "Starting CDN purge..."
+            date
             az cdn endpoint purge -g ${{ vars.CDN_RESOURCE_GROUP }} -n ${{ vars.CDN_ENDPOINT }} --profile-name ${{ vars.CDN_PROFILE }} --content-paths "/ui" "/ui/*" "/"
+            echo "CDN purge completed."
+            date

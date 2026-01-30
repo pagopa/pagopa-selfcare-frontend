@@ -6,7 +6,11 @@ on:
       environment:
         required: true
         description: The name of the environment where to deploy
-        type: string
+        type: choice
+        options:
+          - dev
+          - uat
+          - prod
 
 
 permissions:

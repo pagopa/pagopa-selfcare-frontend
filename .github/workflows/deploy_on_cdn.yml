@@ -84,34 +84,34 @@ jobs:
           # Decide OPENAPI_REF for client generation
           # -----------------------------
           - name: Set OPENAPI_REF
-  shell: bash
-  run: |
-    set -euo pipefail
+             shell: bash
+             run: |
+              set -euo pipefail
 
-    case "$ENVIRONMENT" in
-      dev)
-        echo "Dev environment"
-        ;;
-      uat|prod)
-        echo "OPENAPI_REF=main" >> "$GITHUB_ENV"
-        exit 0
-        ;;
-      *)
-        echo "Invalid environment"
-        exit 1
-        ;;
-    esac
+              case "$ENVIRONMENT" in
+               dev)
+                echo "Dev environment"
+                ;;
+               uat|prod)
+                echo "OPENAPI_REF=main" >> "$GITHUB_ENV"
+                exit 0
+                ;;
+               *)
+               echo "Invalid environment"
+               exit 1
+               ;;
+              esac
 
-    CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
-
-    if curl -sfL \
-      --proto '=https' \
-      --proto-redir '=https' \
-      "$CANDIDATE_URL" > /dev/null; then
-      echo "OPENAPI_REF=$FE_BRANCH" >> "$GITHUB_ENV"
-    else
-      echo "OPENAPI_REF=next" >> "$GITHUB_ENV"
-    fi
+             CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+         
+             if curl -sfL \
+               --proto '=https' \
+               --proto-redir '=https' \
+               "$CANDIDATE_URL" > /dev/null; then
+               echo "OPENAPI_REF=$FE_BRANCH" >> "$GITHUB_ENV"
+             else
+               echo "OPENAPI_REF=next" >> "$GITHUB_ENV"
+             fi
           
 
           yarn install --ignore-scripts --frozen-lockfile

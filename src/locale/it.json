@@ -1859,6 +1859,11 @@
   "ANY": "Tutti",
   "settingsPage":{
     "title": "Impostazioni",
-    "subtitle": "Gestisci i tuoi consensi e preferenze"
+    "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "warningAlerts":{
+      "rtp":{
+        "taxonomyAlert": "<b>Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay</b>Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento."
+      }
+    }
   }
 }

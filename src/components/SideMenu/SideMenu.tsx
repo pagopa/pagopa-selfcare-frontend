@@ -225,7 +225,7 @@ export default function SideMenu({
           />
         )}
 
-      {!orgInfo.types.isEcIPA && (
+      {orgInfo.types.isEcIPA && (
         <SidenavItem
           collapsed={collapsed}
           title={t('sideMenu.settings.title')}

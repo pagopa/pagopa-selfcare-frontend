@@ -1,14 +1,26 @@
-import { Grid } from "@mui/material";
+import {Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { TitleBox } from "@pagopa/selfcare-common-frontend";
+import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
 
 const SettingsPage = () => {
-    console.log("loading settings");
+    const {t} = useTranslation();
     return (
         <SideMenuLayout>
-            <Grid container justifyContent={'center'}>
-                <h1>TEST</h1>
-            </Grid>
-        </SideMenuLayout>
+            <TitleBox
+                title={t('settingsPage.title')}
+                subTitle={t('settingsPage.subtitle')}
+                variantTitle="h4"
+                variantSubTitle="body1"
+                mbSubTitle={1}
+            />
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2} mb={4}>
+                <Box>
+                    <Typography variant="h6">{t('apiKeysPage.decription')}</Typography>
+                </Box>
+            </Box>
+            </SideMenuLayout>
     );
 };
 

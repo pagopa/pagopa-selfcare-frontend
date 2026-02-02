@@ -1856,5 +1856,9 @@
     "year": "Anno",
     "attention": "Attenzione"
   },
-  "ANY": "Tutti"
+  "ANY": "Tutti",
+  "settingsPage":{
+    "title": "Impostazioni",
+    "subtitle": "Gestisci i tuoi consensi e preferenze"
+  }
 }

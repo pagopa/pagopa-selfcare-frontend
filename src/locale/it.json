@@ -1862,7 +1862,10 @@
     "subtitle": "Gestisci i tuoi consensi e preferenze",
     "warningAlerts":{
       "rtp":{
-        "taxonomyAlert": "<0>Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay</0><1></1>Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento."
+        "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
+        "taxonomyAlertContent": "Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento.",
+        "taxonomyAlertDocLinkText": "Leggi la documentazione",
+        "taxonomyAlertDocLink": "https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay"
       }
     }
   }

@@ -1,9 +1,19 @@
-import {Alert, Typography } from "@mui/material";
+import {Alert, AlertTitle} from "@mui/material";
 import { Trans, useTranslation } from "react-i18next";
 import { TitleBox } from "@pagopa/selfcare-common-frontend";
 import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
-
+import ServiceSettingsComponent from "./components/ServiceSettingsComponent";
+const serviceList = [ {
+      "serviceId": "RTP",
+      "consent": "OPT-OUT",
+      "consentDate": "2026-02-01T15:59:49.176001817Z"
+    },
+{
+      "serviceId": "RTP2",
+      "consent": "OPT-IN",
+      "consentDate": "2026-02-01T15:59:49.176001817Z"
+    }];
 const SettingsPage = () => {
     const {t} = useTranslation();
     return (
@@ -16,15 +26,16 @@ const SettingsPage = () => {
                 mbSubTitle={1}
             />
             <Alert severity="warning">
-              <Trans i18nKey='settingsPage.warningAlerts.rtp.taxonomyAlert'>
-                <b>TaxonomyAlertTitle</b>
-                <br />
-              </Trans>
+                <AlertTitle>{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
+                {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
+                <Trans i18nKey="settingsPage.warningAlerts.rtp.axonomyAlertDocLinkText"><br/><br/><b><a href={t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLink')}>{t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText')}</a></b></Trans>
             </Alert>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2} mb={4}>
-                <Box>
-                    <Typography variant="h6">{t('apiKeysPage.decription')}</Typography>
-                </Box>
+
+            <Box mt={3}>
+            {serviceList.map((s) => (
+                <ServiceSettingsComponent key={s.serviceId} serviceId={s.serviceId} consent={s.consent} consentDate={s.consentDate}/>
+            ))
+            }
             </Box>
             </SideMenuLayout>
     );

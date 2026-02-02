@@ -1868,5 +1868,17 @@
         "taxonomyAlertDocLink": "https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay"
       }
     }
+  },
+  "serviceConsent":{
+    "RTP":{
+      "title": "SEPA Request to Pay (Avvisi pagoPA)",
+      "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
+      "moreInfo": "Vuoi saperne di più",
+      "moreInfoLink": "https://developer.pagopa.it/srtp/overview",
+      "disableButtonText": "Disattiva il servizio",
+      "enableButtonText": "Attiva il servizio",
+      "editContacts": "Modifica contatti"
+
+    }
   }
 }

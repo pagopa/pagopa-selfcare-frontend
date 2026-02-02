@@ -999,7 +999,7 @@
     "to": "Data fine",
     "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
-    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
+    "deletionScheduled": "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",
@@ -1769,6 +1769,9 @@
         "userNotSubscribedAdmin": "Servizio non attivo. Sottoscrivi il contratto per abilitare la dashboard. Per informazioni su attivazione e costi, scrivi a account@pagopa.it.",
         "errorGeneric": "E' stato riscontrato un errore durante il recupero della dashboard"
       }
+    },
+    "settings": {
+      "title": "Impostazioni"
     }
   },
   "header": {

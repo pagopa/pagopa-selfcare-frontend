@@ -16,6 +16,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import FilePresentOutlinedIcon from '@mui/icons-material/FilePresentOutlined';
 import { Assessment, Handyman, Menu } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { ENV } from '../../utils/env';
 import ROUTES from '../../routes';
 import { useAppSelector } from '../../redux/hooks';
@@ -25,6 +26,7 @@ import { userIsPagopaOperator } from '../../hooks/useUserRole';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import SidenavItem from './SidenavItem';
+
 
 /** The side menu of the application */
 export default function SideMenu({
@@ -209,19 +211,32 @@ export default function SideMenu({
 
       {useFlagValue('quicksight-dashboard') && userHasPermission('quicksight-dashboard') &&
         orgInfo.types.isPsp && (
+          <SidenavItem
+            collapsed={collapsed}
+            title={t('sideMenu.quicksightDashboard.title')}
+            handleClick={() => onExit(() => history.push(ROUTES.QUICKSIGHT_DASHBOARD))}
+            icon={Assessment}
+            isSelected={
+              pathname === ROUTES.QUICKSIGHT_DASHBOARD ||
+              pathname.startsWith(ROUTES.QUICKSIGHT_DASHBOARD)
+            }
+            disabled={isDisabled}
+            dataTestId={'quicksight-nav-test'}
+          />
+        )}
+
+      {orgInfo.types.isEcIPA && (
         <SidenavItem
           collapsed={collapsed}
-          title={t('sideMenu.quicksightDashboard.title')}
-          handleClick={() => onExit(() => history.push(ROUTES.QUICKSIGHT_DASHBOARD))}
-          icon={Assessment}
-          isSelected={
-            pathname === ROUTES.QUICKSIGHT_DASHBOARD ||
-            pathname.startsWith(ROUTES.QUICKSIGHT_DASHBOARD)
-          }
+          title={t('sideMenu.settings.title')}
+          handleClick={() => onExit(() => history.push(ROUTES.SETTINGS))}
+          isSelected={pathname === ROUTES.SETTINGS}
           disabled={isDisabled}
-          dataTestId={'quicksight-nav-test'}
+          icon={SettingsIcon}
+          dataTestId="settings-nav-test"
         />
       )}
+
 
       <React.Fragment>
         <Divider sx={{ marginY: 1 }} />

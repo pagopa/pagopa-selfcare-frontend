@@ -12,7 +12,7 @@ type ServiceInfo = {
     consentDate: string;
 };
 
-const getStatusChip = (serviceInfo: ServiceInfo) => {
+const GetStatusChip = (serviceInfo: ServiceInfo) => {
     if (serviceInfo.consent === "OPT-IN") {
         return (<Chip label="Attivo" size="small" color="success" />);
     } else {
@@ -20,7 +20,7 @@ const getStatusChip = (serviceInfo: ServiceInfo) => {
     }
 };
 
-const getServiceButton = (serviceInfo: ServiceInfo) => {
+const GetServiceButton = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     if (serviceInfo.consent === "OPT-IN") {
 
@@ -44,7 +44,7 @@ const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
     return (
         <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
             <Box>
-                {getStatusChip(serviceInfo)}
+                {GetStatusChip(serviceInfo)}
             </Box>
             <Box>
                 <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
@@ -62,7 +62,7 @@ const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
                 </Link>
             </Box>
             <Grid mt={4}>
-                {getServiceButton(serviceInfo)}
+                {GetServiceButton(serviceInfo)}
                 <Button sx={{ marginLeft: 3 }} variant="text" endIcon={<EditIcon />} onClick={() => console.log("click key 2")}>
                     {t(`serviceConsent.${serviceId}.editContacts`)}
                 </Button>

@@ -1,5 +1,5 @@
-import {Alert, AlertTitle} from "@mui/material";
-import { Trans, useTranslation } from "react-i18next";
+import {Alert, AlertTitle, Link} from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { TitleBox } from "@pagopa/selfcare-common-frontend";
 import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
@@ -28,7 +28,9 @@ const SettingsPage = () => {
             <Alert severity="warning">
                 <AlertTitle>{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
                 {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
-                <Trans i18nKey="settingsPage.warningAlerts.rtp.axonomyAlertDocLinkText"><br/><br/><b><a href={t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLink')}>{t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText')}</a></b></Trans>
+                <Link href={t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLink').toString()} underline="hover" my={1} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    {t("settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText")}
+                </Link>
             </Alert>
 
             <Box mt={3}>

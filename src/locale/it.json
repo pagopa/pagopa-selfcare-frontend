@@ -1857,28 +1857,39 @@
     "attention": "Attenzione"
   },
   "ANY": "Tutti",
-  "settingsPage":{
+  "settingsPage": {
     "title": "Impostazioni",
     "subtitle": "Gestisci i tuoi consensi e preferenze",
-    "warningAlerts":{
-      "rtp":{
+    "warningAlerts": {
+      "rtp": {
         "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
         "taxonomyAlertContent": "Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento.",
-        "taxonomyAlertDocLinkText": "Leggi la documentazione",
-        "taxonomyAlertDocLink": "https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay"
+        "taxonomyAlertDocLinkText": "<sanp_url>Leggi la documentazione</sanp_url>"
       }
     }
   },
-  "serviceConsent":{
-    "RTP":{
+  "serviceConsent": {
+    "RTP": {
       "title": "SEPA Request to Pay (Avvisi pagoPA)",
       "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
-      "moreInfo": "Vuoi saperne di più",
-      "moreInfoLink": "https://developer.pagopa.it/srtp/overview",
+      "moreInfo": "<sanp_url>Vuoi saperne di più<icon/></sanp_url>",
       "disableButtonText": "Disattiva il servizio",
       "enableButtonText": "Attiva il servizio",
-      "editContacts": "Modifica contatti"
-
+      "editContacts": "Modifica contatti",
+      "popups": {
+        "disableService": {
+          "title": "Vuoi davvero disattivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
+          "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
+          "cancelButton": "Torna indietro",
+          "disableButton": "Disattiva il servizio"
+        },
+        "enableService": {
+          "title": "Vuoi davvero attivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
+          "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
+          "cancelButton": "Torna indietro",
+          "disableButton": "Attiva il servizio"
+        }
+      }
     }
   }
 }

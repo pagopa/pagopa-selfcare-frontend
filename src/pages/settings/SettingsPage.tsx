@@ -1,8 +1,9 @@
 import {Alert, AlertTitle, Link} from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { TitleBox } from "@pagopa/selfcare-common-frontend";
 import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
+import { ENV } from "../../utils/env";
 import ServiceSettingsCard from "./components/ServiceSettingsCard";
 const serviceList = [ {
       "serviceId": "RTP",
@@ -28,9 +29,14 @@ const SettingsPage = () => {
             <Alert severity="warning">
                 <AlertTitle>{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
                 {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
-                <Link href={t('settingsPage.warningAlerts.rtp.taxonomyAlertDocLink').toString()} underline="hover" my={1} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    {t("settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText")}
-                </Link>
+                <Trans
+                        i18nKey="settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText"
+                        components={{
+                        sanp_url: (<Link href={(`${ENV.SETTINGS.SERVICES.SANP_URL}`)} underline="hover" my={1} fontWeight="bold"
+                         sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}> 
+                         </Link>),
+                        }}
+                    />
             </Alert>
 
             <Box mt={3}>

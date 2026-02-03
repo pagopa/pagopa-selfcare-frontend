@@ -355,6 +355,7 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.SETTINGS} exact={true}>
                   <ProtectedRoute
                     permission="settings"
+                    flagValue="settings-section"
                   >
                     <SettingsPage />
                   </ProtectedRoute>

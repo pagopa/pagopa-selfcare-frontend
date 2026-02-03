@@ -24,12 +24,12 @@ const getServiceButton = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     if (serviceInfo.consent === "OPT-IN") {
 
-         return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={() => console.log("click key 1")}>
+        return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={() => console.log("click key 1")}>
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
     } else {
-        
-       return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => console.log("click key 1")}>
+
+        return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => console.log("click key 1")}>
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
     }
@@ -39,7 +39,7 @@ const getServiceButton = (serviceInfo: ServiceInfo) => {
 const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
 
 
-    const { t } = useTranslation(); 
+    const { t } = useTranslation();
     const serviceId = serviceInfo.serviceId;
     return (
         <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
@@ -56,16 +56,7 @@ const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
             </Box>
             <Box>
                 <Link
-                    href={t(`serviceConsent.${serviceId}.moreInfoLink`).toString()}
-                    underline="hover"
-                    my={1}
-                    fontWeight="bold"
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 0.5
-                    }}
-                >
+                    href={t(`serviceConsent.${serviceId}.moreInfoLink`).toString()} underline="hover" my={1} fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     {t(`serviceConsent.${serviceId}.moreInfo`)}
                     <LaunchIcon fontSize="small" />
                 </Link>

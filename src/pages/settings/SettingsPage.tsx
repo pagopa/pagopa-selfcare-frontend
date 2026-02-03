@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { TitleBox } from "@pagopa/selfcare-common-frontend";
 import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
-import ServiceSettingsComponent from "./components/ServiceSettingsComponent";
+import ServiceSettingsCard from "./components/ServiceSettingsCard";
 const serviceList = [ {
       "serviceId": "RTP",
       "consent": "OPT-OUT",
@@ -35,7 +35,7 @@ const SettingsPage = () => {
 
             <Box mt={3}>
             {serviceList.map((s) => (
-                <ServiceSettingsComponent key={s.serviceId} serviceId={s.serviceId} consent={s.consent} consentDate={s.consentDate}/>
+                <ServiceSettingsCard key={s.serviceId} serviceId={s.serviceId} consent={s.consent} consentDate={s.consentDate}/>
             ))
             }
             </Box>

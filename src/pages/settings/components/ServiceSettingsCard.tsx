@@ -36,7 +36,7 @@ const GetServiceButton = (serviceInfo: ServiceInfo) => {
 
 };
 
-const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
+const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
 
     const { t } = useTranslation();
@@ -70,4 +70,4 @@ const ServiceSettingsComponent = (serviceInfo: ServiceInfo) => {
         </Card>);
 };
 
-export default ServiceSettingsComponent;
+export default ServiceSettingsCard;

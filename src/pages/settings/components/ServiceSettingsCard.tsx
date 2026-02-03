@@ -6,7 +6,6 @@ import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Dispatch, SetStateAction, useState } from "react";
-import { theme } from "@pagopa/mui-italia";
 import { ENV } from "../../../utils/env";
 
 type ServiceInfo = {
@@ -27,7 +26,7 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
     }
 };
 
-const GetServiceButton = (serviceInfo: ServiceInfo,showDisableModalStateAction: Dispatch<SetStateAction<boolean>>,showEnableModalStateAction: Dispatch<SetStateAction<boolean>>) => {
+const GetServiceButton = (serviceInfo: ServiceInfo, showDisableModalStateAction: Dispatch<SetStateAction<boolean>>, showEnableModalStateAction: Dispatch<SetStateAction<boolean>>) => {
     const { t } = useTranslation();
     if (serviceInfo.consent === "OPT-IN") {
 
@@ -43,52 +42,65 @@ const GetServiceButton = (serviceInfo: ServiceInfo,showDisableModalStateAction: 
 
 };
 
-const ServiceStatusChangeModal = (serviceId: string,modalOpenFlag:boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, isActivateService:boolean) =>{
+const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, showEnableService: boolean) => {
     const { t } = useTranslation();
-    const translationRootKey = `serviceConsent.${serviceId}.popups.${isActivateService?"enableService":"disableService"}`;
+    const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? "enableService" : "disableService"}`;
     console.log("translationRootKey ", translationRootKey);
     return (
-            <Dialog
-                open={modalOpenFlag}
-                onClose={() => setModalOpenFlag(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                data-testid="dialog-test"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {t(`${translationRootKey}.title`)}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        <Box>
-                            <Typography variant="sidenav">
-                                <Trans
-                                    i18nKey={`${translationRootKey}.message`}
-                                    components={{
-                                    sanp_url: <Link href={(`${URLS.SANP_URL}`)} />,
-                                    }}
-                                />
-                            </Typography>
-                        </Box>
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
+        <Dialog
+            open={modalOpenFlag}
+            onClose={() => setModalOpenFlag(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            data-testid="dialog-test"
+        >
+            <DialogTitle id="alert-dialog-title" fontWeight={'bold'}>
+                {t(`${translationRootKey}.title`)}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    <Typography>
+                        <Trans
+                            i18nKey={`${translationRootKey}.message`}
+                            components={{
+                                sanp_url: <Link href={(`${URLS.SANP_URL}`)} />,
+                            }}
+                        />
+                    </Typography>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{
+                marginRight: 3,
+                marginBottom: 2
+            }} >
+                <Button
+                    data-testid="dialog-button-cancel"
+                    variant="outlined"
+                    sx={{
+                        marginRight: 1
+                    }}
+                    onClick={() => setModalOpenFlag(false)}>
+                    {t(`${translationRootKey}.cancelButton`)}
+                </Button>
+                {showEnableService ?
                     <Button
-                        data-testid="dialog-button-confirm"
+                        data-testid="dialog-button-confirm-enabling"
                         variant="contained"
-                        sx={{
-                            border: `2px solid ${theme.palette.primary.main}`,
-                            borderRadius: theme.spacing(0.5),
-                            px: 2,
-                            py: 1.5,
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
                         onClick={() => setModalOpenFlag(false)}>
-                        {t(`${translationRootKey}.disableButton`)}
+                        {t(`${translationRootKey}.confirmButton`)}
                     </Button>
-                </DialogActions>
-            </Dialog>);
+                    :
+                    <Button
+                        data-testid="dialog-button-confirm-disabling"
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DoDisturbAltIcon />}
+                        onClick={() => setModalOpenFlag(false)}>
+                        {t(`${translationRootKey}.confirmButton`)}
+                    </Button>
+                }
+            </DialogActions>
+        </Dialog>);
 };
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
@@ -101,36 +113,36 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
     return (
         <Box>
-        <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-            <Box>
-                {GetStatusChip(serviceInfo)}
-            </Box>
-            <Box>
-                <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
-            </Box>
-            <Box>
-                <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
-                    {t(`${serviceTranslationRootKey}.description`)}
-                </Typography>
-            </Box>
-                    <Trans
-                        i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-                        components={{
+            <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+                <Box>
+                    {GetStatusChip(serviceInfo)}
+                </Box>
+                <Box>
+                    <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
+                </Box>
+                <Box>
+                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+                        {t(`${serviceTranslationRootKey}.description`)}
+                    </Typography>
+                </Box>
+                <Trans
+                    i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+                    components={{
                         sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                         sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}> 
-                         </Link>),
-                         icon: <LaunchIcon fontSize="small" /> 
-                        }}
-                    />
-            <Grid mt={4}>
-                {GetServiceButton(serviceInfo,setShowDisableServiceModal,setShowEnableServiceModal)}
-                <Button sx={{ marginLeft: 3 }} variant="text" endIcon={<EditIcon />} onClick={() => console.log("click key 2")}>
-                    {t(`${serviceTranslationRootKey}.editContacts`)}
-                </Button>
-            </Grid>
-        </Card>
-        {ServiceStatusChangeModal(serviceInfo.serviceId, showDisableServiceModal,setShowDisableServiceModal, false)}
-        {ServiceStatusChangeModal(serviceInfo.serviceId, showEnableServiceModal,setShowEnableServiceModal, true)}
+                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        </Link>),
+                        icon: <LaunchIcon fontSize="small" />
+                    }}
+                />
+                <Grid mt={4}>
+                    {GetServiceButton(serviceInfo, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    <Button sx={{ marginLeft: 3 }} variant="text" endIcon={<EditIcon />} onClick={() => console.log("click key 2")}>
+                        {t(`${serviceTranslationRootKey}.editContacts`)}
+                    </Button>
+                </Grid>
+            </Card>
+            {ServiceStatusChangeModal(serviceInfo.serviceId, showDisableServiceModal, setShowDisableServiceModal, false)}
+            {ServiceStatusChangeModal(serviceInfo.serviceId, showEnableServiceModal, setShowEnableServiceModal, true)}
         </Box>
     );
 };

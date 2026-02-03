@@ -1881,13 +1881,13 @@
           "title": "Vuoi davvero disattivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
           "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
           "cancelButton": "Torna indietro",
-          "disableButton": "Disattiva il servizio"
+          "confirmButton": "Disattiva il servizio"
         },
         "enableService": {
           "title": "Vuoi davvero attivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
           "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
           "cancelButton": "Torna indietro",
-          "disableButton": "Attiva il servizio"
+          "confirmButton": "Attiva il servizio"
         }
       }
     }

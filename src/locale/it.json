@@ -999,7 +999,7 @@
     "to": "Data fine",
     "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
-    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
+    "deletionScheduled": "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",
@@ -1769,6 +1769,9 @@
         "userNotSubscribedAdmin": "Servizio non attivo. Sottoscrivi il contratto per abilitare la dashboard. Per informazioni su attivazione e costi, scrivi a account@pagopa.it.",
         "errorGeneric": "E' stato riscontrato un errore durante il recupero della dashboard"
       }
+    },
+    "settings": {
+      "title": "Impostazioni"
     }
   },
   "header": {
@@ -1853,5 +1856,29 @@
     "year": "Anno",
     "attention": "Attenzione"
   },
-  "ANY": "Tutti"
+  "ANY": "Tutti",
+  "settingsPage":{
+    "title": "Impostazioni",
+    "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "warningAlerts":{
+      "rtp":{
+        "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
+        "taxonomyAlertContent": "Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento.",
+        "taxonomyAlertDocLinkText": "Leggi la documentazione",
+        "taxonomyAlertDocLink": "https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay"
+      }
+    }
+  },
+  "serviceConsent":{
+    "RTP":{
+      "title": "SEPA Request to Pay (Avvisi pagoPA)",
+      "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
+      "moreInfo": "Vuoi saperne di più",
+      "moreInfoLink": "https://developer.pagopa.it/srtp/overview",
+      "disableButtonText": "Disattiva il servizio",
+      "enableButtonText": "Attiva il servizio",
+      "editContacts": "Modifica contatti"
+
+    }
+  }
 }

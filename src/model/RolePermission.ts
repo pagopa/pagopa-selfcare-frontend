@@ -146,6 +146,17 @@ export const permissions = {
         ROLE.PSP_DIRECT_ADMIN,
         ROLE.PSP_DIRECT_OPERATOR,
         ROLE.PAGOPA_OPERATOR,
+    ],
+    "settings": [
+        ROLE.EC_ADMIN,
+        ROLE.EC_OPERATOR,
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.EC_DIRECT_OPERATOR,
+        ROLE.PT_UNSIGNED,
+        ROLE.PT_EC_OPERATOR,
+        ROLE.PT_PSP_OPERATOR,
+        ROLE.PT_PSPEC_OPERATOR,
+        ROLE.PAGOPA_OPERATOR,
     ]
 };
 

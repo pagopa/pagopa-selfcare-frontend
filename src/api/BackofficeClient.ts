@@ -107,6 +107,8 @@ import { InstitutionDetail } from './generated/portal/InstitutionDetail';
 import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
 import { IbanDeletionRequest } from './generated/portal/IbanDeletionRequest';
 import { IbanDeletionRequests } from './generated/portal/IbanDeletionRequests';
+import { ServiceConsentResponse } from './generated/portal/ServiceConsentResponse';
+import { ConsentEnum } from './generated/portal/ServiceConsentRequest';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -294,6 +296,19 @@ export const BackofficeApi = {
         'institution-id': institutionId,
         roles,
         brokerId,
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    saveServiceConsent: async (
+      institutionId: string,
+      serviceId: string,
+      consent: ConsentEnum,
+    ): Promise<ServiceConsentResponse> => {
+      const result = await backofficeClient.saveServiceConsent({
+        "institution-id": institutionId,
+        "service-id": serviceId,
+        "body": {consent: consent},
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

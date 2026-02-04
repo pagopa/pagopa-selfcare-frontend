@@ -1,11 +1,12 @@
-import {Alert, Box, Card, Grid, Typography} from '@mui/material';
+import {Alert, AlertTitle, Box, Card, Grid, Link, Typography} from '@mui/material';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {Trans, useTranslation} from 'react-i18next';
+import {  useHistory} from 'react-router-dom';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import {usePermissions} from '../../hooks/usePermissions';
 import {useAppSelector} from '../../redux/hooks';
 import {partiesSelectors} from '../../redux/slices/partiesSlice';
+import ROUTES from '../../routes';
 import DownloadSection from './components/DownloadSection';
 import ECRegistrationData from './components/ECRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -19,7 +20,6 @@ const DashboardPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const signinData = useAppSelector(partiesSelectors.selectSigninData);
     const {userHasPermission} = usePermissions();
-
     return (
         <SideMenuLayout>
             <TitleBox
@@ -34,6 +34,19 @@ const DashboardPage = () => {
                     {(history.location.state as any).alertSuccessMessage}
                 </Alert>
             )}
+
+            <Alert severity="info" sx={{mb: 4}}>
+                <AlertTitle>{t('dashboardPage.newServiceAlerts.RTP.title')}</AlertTitle>
+                {t('dashboardPage.newServiceAlerts.RTP.subtitle')}
+                <Trans
+                        i18nKey="dashboardPage.newServiceAlerts.RTP.message"
+                        components={{
+                        service_link: (<Link href={(`${ROUTES.SETTINGS}`)} underline="hover" fontWeight="bold"
+                         sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 1 }}> 
+                         </Link>),
+                        }}
+                    />
+            </Alert>
 
             <Grid container spacing={2}>
                 <Grid item xs={6}>

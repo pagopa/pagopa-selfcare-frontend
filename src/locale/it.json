@@ -133,6 +133,13 @@
       "title": "Sezione download",
       "downloadIbans": "Scarica lista IBAN",
       "downloadCI": "Scarica lista enti"
+    },
+    "newServiceAlerts":{
+      "RTP":{
+        "title": "Ora puoi raggiungere gratis i tuoi utenti ancora più facilmente!",
+        "subtitle": "Dal 01/03/2026 i tuoi avvisi pagoPA verranno inviati agli utenti anche direttamente sul loro home banking, grazie al servizio “SEPA Request to Pay - Avvisi pagoPA”.",
+        "message": "<service_link>Vai al servizio</service_link>"
+      }
     }
   },
   "nodeSignInPage": {

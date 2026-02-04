@@ -6,6 +6,7 @@ import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Dispatch, SetStateAction, useState } from "react";
+import { useLoading } from "@pagopa/selfcare-common-frontend";
 import { ENV } from "../../../utils/env";
 
 type ServiceInfo = {
@@ -45,7 +46,7 @@ const GetServiceButton = (serviceInfo: ServiceInfo, showDisableModalStateAction:
 const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, showEnableService: boolean) => {
     const { t } = useTranslation();
     const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? "enableService" : "disableService"}`;
-    console.log("translationRootKey ", translationRootKey);
+    const setLoading = useLoading('PUT_CONSENT');
     return (
         <Dialog
             open={modalOpenFlag}
@@ -86,7 +87,15 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                     <Button
                         data-testid="dialog-button-confirm-enabling"
                         variant="contained"
-                        onClick={() => setModalOpenFlag(false)}>
+                        onClick={
+                            // set timeout here just to mock b.e. interaction
+                            () => {
+                                setLoading(true);
+                                setTimeout(function () {
+                                setLoading(false);
+                                setModalOpenFlag(false);
+                            }, 2000);
+                        }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                     :
@@ -95,7 +104,15 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                         variant="outlined"
                         color="error"
                         startIcon={<DoDisturbAltIcon />}
-                        onClick={() => setModalOpenFlag(false)}>
+                        onClick={
+                            // set timeout here just to mock b.e. interaction
+                            () => {
+                                setLoading(true);
+                                setTimeout(function () {
+                                setLoading(false);
+                                setModalOpenFlag(false);
+                            }, 3000);
+                        }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                 }

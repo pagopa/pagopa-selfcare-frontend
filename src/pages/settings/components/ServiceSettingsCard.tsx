@@ -18,7 +18,6 @@ const URLS = {
     SANP_URL: ENV.SETTINGS.SERVICES.SANP_URL,
     RTP_OVERVIEW_URL: ENV.SETTINGS.SERVICES.RTP_OVERVIEW_URL
 };
-
 const GetStatusChip = (serviceInfo: ServiceInfo) => {
     if (serviceInfo.consent === "OPT-IN") {
         return (<Chip label="Attivo" size="small" color="success" />);
@@ -30,20 +29,17 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
 const GetServiceButton = (serviceInfo: ServiceInfo, showDisableModalStateAction: Dispatch<SetStateAction<boolean>>, showEnableModalStateAction: Dispatch<SetStateAction<boolean>>) => {
     const { t } = useTranslation();
     if (serviceInfo.consent === "OPT-IN") {
-
         return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={() => showDisableModalStateAction(true)}>
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
     } else {
-
         return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => showEnableModalStateAction(true)}>
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
     }
 
 };
-
-const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, showEnableService: boolean) => {
+const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, showEnableService: boolean, setServiceInfoState: Dispatch<SetStateAction<ServiceInfo>>) => {
     const { t } = useTranslation();
     const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? "enableService" : "disableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
@@ -92,10 +88,16 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                             () => {
                                 setLoading(true);
                                 setTimeout(function () {
-                                setLoading(false);
-                                setModalOpenFlag(false);
-                            }, 2000);
-                        }}>
+                                    setLoading(false);
+                                    // TODO mocked update state here
+                                    setServiceInfoState({
+                                        consent: "OPT-IN",
+                                        consentDate: "",
+                                        serviceId: "RTP"
+                                    });
+                                    setModalOpenFlag(false);
+                                }, 1000);
+                            }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                     :
@@ -109,10 +111,16 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                             () => {
                                 setLoading(true);
                                 setTimeout(function () {
-                                setLoading(false);
-                                setModalOpenFlag(false);
-                            }, 3000);
-                        }}>
+                                    setLoading(false);
+                                    // TODO mocked update state here
+                                    setServiceInfoState({
+                                        consent: "OPT-OUT",
+                                        consentDate: "",
+                                        serviceId: "RTP"
+                                    });
+                                    setModalOpenFlag(false);
+                                }, 1000);
+                            }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                 }
@@ -122,17 +130,18 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
-
     const { t } = useTranslation();
-    const serviceId = serviceInfo.serviceId;
+    const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
+    const serviceId = serviceInfoState.serviceId;
     const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
     const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
     const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
+
     return (
         <Box>
             <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
                 <Box>
-                    {GetStatusChip(serviceInfo)}
+                    {GetStatusChip(serviceInfoState)}
                 </Box>
                 <Box>
                     <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
@@ -152,14 +161,14 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                     }}
                 />
                 <Grid mt={4}>
-                    {GetServiceButton(serviceInfo, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
                     <Button sx={{ marginLeft: 3 }} variant="text" endIcon={<EditIcon />} onClick={() => console.log("click key 2")}>
                         {t(`${serviceTranslationRootKey}.editContacts`)}
                     </Button>
                 </Grid>
             </Card>
-            {ServiceStatusChangeModal(serviceInfo.serviceId, showDisableServiceModal, setShowDisableServiceModal, false)}
-            {ServiceStatusChangeModal(serviceInfo.serviceId, showEnableServiceModal, setShowEnableServiceModal, true)}
+            {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
+            {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
         </Box>
     );
 };

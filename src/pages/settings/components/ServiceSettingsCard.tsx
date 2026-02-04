@@ -88,7 +88,7 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                         data-testid="dialog-button-confirm-enabling"
                         variant="contained"
                         onClick={
-                            // set timeout here just to mock b.e. interaction
+                            // TODO: set timeout here just to mock b.e. interaction
                             () => {
                                 setLoading(true);
                                 setTimeout(function () {
@@ -105,7 +105,7 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                         color="error"
                         startIcon={<DoDisturbAltIcon />}
                         onClick={
-                            // set timeout here just to mock b.e. interaction
+                            // TODO: set timeout here just to mock b.e. interaction
                             () => {
                                 setLoading(true);
                                 setTimeout(function () {

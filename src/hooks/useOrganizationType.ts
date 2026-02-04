@@ -47,7 +47,6 @@ export const useOrganizationType = () => {
         // signed on pagopa
         isSigned: orgIsPspAndBroker || orgIsPsp || orgIsEcAndBroker || orgIsEc,
     };
-    console.log("organization types: "+ JSON.stringify(info));
     return {
         orgInfo: info,
 

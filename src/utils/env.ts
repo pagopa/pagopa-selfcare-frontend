@@ -55,6 +55,9 @@ export const ENV = {
     },
     SETTINGS: {
         SERVICES: {
+            RTP: {
+                SERVICE_STARTING_DATE: new Date(env.get('SETTINGS_SERVICES_SANP_URL').default("2026-02-01T00:00:00.000+01:00").asString())
+            },
             SANP_URL: env.get('SETTINGS_SERVICES_SANP_URL').default("https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay").asString(),
             RTP_OVERVIEW_URL: env.get('SETTINGS_SERVICES_RTP_OVERVIEW_URL').default("https://developer.pagopa.it/srtp/overview").asString()
         }

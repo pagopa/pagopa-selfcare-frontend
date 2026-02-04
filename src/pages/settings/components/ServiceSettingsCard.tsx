@@ -18,12 +18,43 @@ const URLS = {
     SANP_URL: ENV.SETTINGS.SERVICES.SANP_URL,
     RTP_OVERVIEW_URL: ENV.SETTINGS.SERVICES.RTP_OVERVIEW_URL
 };
+
+const ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
+
+const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
+
 const GetStatusChip = (serviceInfo: ServiceInfo) => {
-    if (serviceInfo.consent === "OPT-IN") {
-        return (<Chip label="Attivo" size="small" color="success" />);
+    const { t } = useTranslation();
+    const nowMillis = Date.now();
+    // consent is consolidated the day after it have been expressed at midnight
+    const consolidatedConsentDate = new Date(serviceInfo.consentDate);
+    consolidatedConsentDate.setHours(0);
+    consolidatedConsentDate.setMinutes(0);
+    consolidatedConsentDate.setSeconds(0);
+    consolidatedConsentDate.setMilliseconds(0);
+    consolidatedConsentDate.setTime(consolidatedConsentDate.getTime() + ONE_DAY_MILLIS);
+    const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
+    const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
+    // consent will be taken into account as definitive the next day after it has been registered
+    const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
+    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    let chipLabel: string;
+    let chipColor: "error" | "success" | "warning" | "primary";
+    let hidden: boolean;
+    if (isServiceEnabled) {
+        if (isConsentConsolidated) {
+            chipLabel = isAfterServiceStartDate ? t("serviceConsent.RTP.statuses.enabled") : t("serviceConsent.RTP.statuses.enabledFrom");
+        } else {
+            chipLabel = t("serviceConsent.RTP.statuses.enabling");
+        }
+        chipColor = isConsentConsolidated ? "success" : "primary";
+        hidden = false;
     } else {
-        return (<Chip label="Disattivo" size="small" color="error" />);
+        chipLabel = t("serviceConsent.RTP.statuses.disabling");
+        chipColor = "warning";
+        hidden = isConsentConsolidated;
     }
+    return hidden ? (<Box />) : (<Chip label={chipLabel} size="small" color={chipColor} hidden={hidden} />);
 };
 
 const GetServiceButton = (serviceInfo: ServiceInfo, showDisableModalStateAction: Dispatch<SetStateAction<boolean>>, showEnableModalStateAction: Dispatch<SetStateAction<boolean>>) => {
@@ -92,7 +123,7 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                                     // TODO mocked update state here
                                     setServiceInfoState({
                                         consent: "OPT-IN",
-                                        consentDate: "",
+                                        consentDate: new Date().toString(),
                                         serviceId: "RTP"
                                     });
                                     setModalOpenFlag(false);
@@ -115,7 +146,7 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                                     // TODO mocked update state here
                                     setServiceInfoState({
                                         consent: "OPT-OUT",
-                                        consentDate: "",
+                                        consentDate: new Date().toString(),
                                         serviceId: "RTP"
                                     });
                                     setModalOpenFlag(false);

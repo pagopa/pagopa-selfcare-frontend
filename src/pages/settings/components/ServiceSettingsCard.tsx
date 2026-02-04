@@ -27,18 +27,18 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     const nowMillis = Date.now();
     const consolidatedConsentDate = new Date(serviceInfo.consentDate);
-    consolidatedConsentDate.setHours(0);
-    consolidatedConsentDate.setMinutes(0);
-    consolidatedConsentDate.setSeconds(0);
-    consolidatedConsentDate.setMilliseconds(0);
+    consolidatedConsentDate.setHours(24,0,0,0);
     consolidatedConsentDate.setTime(consolidatedConsentDate.getTime() + ONE_DAY_MILLIS);
     const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
     const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
     // consent is considered consolidated after midnight of the day after it was given
     const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
     const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    // eslint-disable-next-line functional/no-let
     let chipLabel: string;
-    let chipColor: "success" | "warning" | "primary";
+    // eslint-disable-next-line functional/no-let
+    let chipColor: "success" | "warning" | "secondary";
+    // eslint-disable-next-line functional/no-let
     let hidden: boolean;
     if (isServiceEnabled) {
         if (isConsentConsolidated) {
@@ -46,7 +46,7 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
         } else {
             chipLabel = t("serviceConsent.RTP.statuses.enabling");
         }
-        chipColor = isConsentConsolidated ? "success" : "primary";
+        chipColor = isConsentConsolidated ? "success" : "secondary";
         hidden = false;
     } else {
         chipLabel = t("serviceConsent.RTP.statuses.disabling");

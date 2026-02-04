@@ -26,7 +26,6 @@ const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DAT
 const GetStatusChip = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     const nowMillis = Date.now();
-    // consent is consolidated the day after it have been expressed at midnight
     const consolidatedConsentDate = new Date(serviceInfo.consentDate);
     consolidatedConsentDate.setHours(0);
     consolidatedConsentDate.setMinutes(0);
@@ -35,11 +34,11 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
     consolidatedConsentDate.setTime(consolidatedConsentDate.getTime() + ONE_DAY_MILLIS);
     const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
     const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
-    // consent will be taken into account as definitive the next day after it has been registered
+    // consent is considered consolidated after midnight of the day after it was given
     const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
     const isServiceEnabled = serviceInfo.consent === "OPT-IN";
     let chipLabel: string;
-    let chipColor: "error" | "success" | "warning" | "primary";
+    let chipColor: "success" | "warning" | "primary";
     let hidden: boolean;
     if (isServiceEnabled) {
         if (isConsentConsolidated) {

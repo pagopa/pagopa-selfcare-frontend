@@ -3,7 +3,6 @@ import { Box } from "@mui/system";
 import { Trans, useTranslation } from "react-i18next";
 import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
-import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Dispatch, SetStateAction, useState } from "react";
 import { useLoading } from "@pagopa/selfcare-common-frontend";
@@ -27,8 +26,7 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     const nowMillis = Date.now();
     const consolidatedConsentDate = new Date(serviceInfo.consentDate);
-    consolidatedConsentDate.setHours(24,0,0,0);
-    consolidatedConsentDate.setTime(consolidatedConsentDate.getTime() + ONE_DAY_MILLIS);
+    consolidatedConsentDate.setHours(24,0,0,0); 
     const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
     const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
     // consent is considered consolidated after midnight of the day after it was given

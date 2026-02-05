@@ -27,6 +27,7 @@ import {useFormik} from 'formik';
 import {useHistory} from 'react-router-dom';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {add, differenceInCalendarDays} from 'date-fns';
+import { format } from 'date-fns';
 import ROUTES from '../../../routes';
 import {LOADING_TASK_CREATE_IBAN} from '../../../utils/constants';
 import {IbanFormAction, IbanOnCreation} from '../../../model/Iban';
@@ -216,7 +217,7 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                             creditorInstitutionCode: ecCode,
                             ibanValue: item.iban.toUpperCase().trim(),
                             operation: OperationEnum[item.operazione],
-                            validityDate: item.dataattivazioneiban.toISOString().split('T')[0],
+                            validityDate: format(item.dataattivazioneiban, 'yyyy-MM-dd'),
                             description: item.descrizione
                         }))
                     });                

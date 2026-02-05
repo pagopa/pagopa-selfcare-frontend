@@ -10,12 +10,8 @@ const serviceList = [ {
       "serviceId": "RTP",
       "consent": "OPT_OUT",
       "consentDate": "2026-02-01T15:59:49.176001817Z"
-    },
-{
-      "serviceId": "RTP",
-      "consent": "OPT_IN",
-      "consentDate": "2026-02-01T15:59:49.176001817Z"
-    }];
+    }
+    ];
 const SettingsPage = () => {
     const {t} = useTranslation();
     return (

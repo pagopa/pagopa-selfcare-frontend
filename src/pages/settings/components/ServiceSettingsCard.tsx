@@ -86,6 +86,7 @@ const GetServiceButton = (
   if (serviceInfo.consent === ConsentEnum.OPT_IN) {
     return (
       <Button
+        data-testid={`settingCard-${serviceInfo.serviceId}-disableButton`}
         variant="outlined"
         startIcon={<DoDisturbAltIcon />}
         color="error"
@@ -97,6 +98,7 @@ const GetServiceButton = (
   } else {
     return (
       <Button
+        data-testid={`settingCard-${serviceInfo.serviceId}-enableButton`}
         variant="contained"
         endIcon={<ArrowForwardIcon />}
         onClick={() => showEnableModalStateAction(true)}
@@ -117,19 +119,20 @@ const ServiceStatusChangeModal = (
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? 'enableService' : 'disableService'}`;
   const setLoading = useLoading('PUT_CONSENT');
+  const addError = useErrorDispatcher();
   return (
     <Dialog
       open={modalOpenFlag}
       onClose={() => setModalOpenFlag(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      data-testid="dialog-test"
+      data-testid={`settingCard-${serviceId}-dialog`}
     >
-      <DialogTitle id="alert-dialog-title" fontWeight={'bold'}>
+      <DialogTitle fontWeight={'bold'}>
         {t(`${translationRootKey}.title`)}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText>
           <Typography>
             <Trans
               i18nKey={`${translationRootKey}.message`}
@@ -147,7 +150,7 @@ const ServiceStatusChangeModal = (
         }}
       >
         <Button
-          data-testid="dialog-button-cancel"
+          data-testid={`settingCard-${serviceId}-dialog-cancelButton`}
           variant="outlined"
           sx={{
             marginRight: 1,
@@ -158,7 +161,7 @@ const ServiceStatusChangeModal = (
         </Button>
         {showEnableService ? (
           <Button
-            data-testid="dialog-button-confirm-enabling"
+            data-testid={`settingCard-${serviceId}-dialog-enableButton`}
             variant="contained"
             onClick={() => {
               setLoading(true);
@@ -167,7 +170,16 @@ const ServiceStatusChangeModal = (
                   SetServiceInfoState(setServiceInfoState, data, serviceId);
                   setModalOpenFlag(false);
                 })
-                .catch((error) => HandleError(error))
+                .catch((error) => addError({
+                  id: 'SAVE_SERVICE_CONSENT_OPT_IN',
+                  blocking: false,
+                  error,
+                  techDescription: `An error occurred while saving service consent`,
+                  toNotify: true,
+                  displayableTitle: t('serviceConsent.errorTitle'),
+                  displayableDescription: t('serviceConsent.errorDescription'),
+                  component: 'Toast',
+                }))
                 .finally(() => setLoading(false));
             }}
           >
@@ -175,7 +187,7 @@ const ServiceStatusChangeModal = (
           </Button>
         ) : (
           <Button
-            data-testid="dialog-button-confirm-disabling"
+            data-testid={`settingCard-${serviceId}-dialog-disableButton`}
             variant="outlined"
             color="error"
             startIcon={<DoDisturbAltIcon />}
@@ -186,7 +198,16 @@ const ServiceStatusChangeModal = (
                   SetServiceInfoState(setServiceInfoState, data, serviceId);
                   setModalOpenFlag(false);
                 })
-                .catch((error) => HandleError(error))
+                .catch((error) => addError({
+                  id: 'SAVE_SERVICE_CONSENT_OPT_OUT',
+                  blocking: false,
+                  error,
+                  techDescription: `An error occurred while saving service consent`,
+                  toNotify: true,
+                  displayableTitle: t('serviceConsent.errorTitle'),
+                  displayableDescription: t('serviceConsent.errorDescription'),
+                  component: 'Toast',
+                }))
                 .finally(() => setLoading(false));
             }}
           >
@@ -210,62 +231,47 @@ const SetServiceInfoState = (
   });
 };
 
-const HandleError = (error: Error) => {
-  const addError = useErrorDispatcher();
-  const { t } = useTranslation();
-  addError({
-    id: 'SAVE_SERVICE_CONSENT',
-    blocking: false,
-    error,
-    techDescription: `An error occurred while saving service consent`,
-    toNotify: true,
-    displayableTitle: t('serviceConsent.errorTitle'),
-    displayableDescription: t('serviceConsent.errorDescription'),
-    component: 'Toast',
-  });
-};
-
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
-    const { t } = useTranslation();
-    const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
-    const serviceId = serviceInfoState.serviceId;
-    const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
-    const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
-    const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
+  const { t } = useTranslation();
+  const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
+  const serviceId = serviceInfoState.serviceId;
+  const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
+  const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
+  const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
 
-    return (
-        <Box>
-            <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-                <Box>
-                    {GetStatusChip(serviceInfoState)}
-                </Box>
-                <Box>
-                    <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
-                </Box>
-                <Box>
-                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
-                        {t(`${serviceTranslationRootKey}.description`)}
-                    </Typography>
-                </Box>
-
-                <Grid container direction={"row"} mt={4} spacing={0}>
-                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
-                    <Trans
-                    i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-                    components={{
-                        sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
-                        </Link>),
-                        icon: <LaunchIcon fontSize="small" />
-                    }}
-                />
-                </Grid>
-            </Card>
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
+  return (
+    <Box>
+      <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+        <Box data-testid={`settingCard-${serviceId}-statusChip`} >
+          {GetStatusChip(serviceInfoState)}
         </Box>
-    );
+        <Box>
+          <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
+        </Box>
+        <Box>
+          <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+            {t(`${serviceTranslationRootKey}.description`)}
+          </Typography>
+        </Box>
+
+        <Grid container direction={"row"} mt={4} spacing={0}>
+          {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+          <Trans
+            i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+            components={{
+              sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+              </Link>),
+              icon: <LaunchIcon fontSize="small" />
+            }}
+          />
+        </Grid>
+      </Card>
+      {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
+      {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
+    </Box>
+  );
 };
 
 export default ServiceSettingsCard;

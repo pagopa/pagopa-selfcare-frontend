@@ -1867,6 +1867,8 @@
   "settingsPage": {
     "title": "Impostazioni",
     "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile recuperare l'elenco dei servizi",
     "emptyListError": "Nessun servizio disponibile",
     "warningAlerts": {
       "rtp": {

@@ -94,8 +94,8 @@ const HandleError = (error: Error) => {
     error,
     techDescription: `An error occurred while getting services consents`,
     toNotify: true,
-    displayableTitle: t('general.errorTitle'),
-    displayableDescription: t('general.errorDescription'),
+    displayableTitle: t('settingsPage.errorTitle'),
+    displayableDescription: t('settingsPage.errorDescription'),
     component: 'Toast',
   });
 };

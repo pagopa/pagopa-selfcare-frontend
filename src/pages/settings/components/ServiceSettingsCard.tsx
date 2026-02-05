@@ -15,7 +15,6 @@ import { Box } from '@mui/system';
 import { Trans, useTranslation } from 'react-i18next';
 import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
-import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
@@ -45,7 +44,6 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
   const nowMillis = Date.now();
   const consolidatedConsentDate = new Date(serviceInfo.consentDate);
   consolidatedConsentDate.setHours(24, 0, 0, 0);
-  consolidatedConsentDate.setTime(consolidatedConsentDate.getTime() + ONE_DAY_MILLIS);
   const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
   const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
   // consent is considered consolidated after midnight of the day after it was given
@@ -228,74 +226,46 @@ const HandleError = (error: Error) => {
 };
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
-  const { t } = useTranslation();
-  const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
-  const serviceId = serviceInfoState.serviceId;
-  const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
-  const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
-  const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
 
-  return (
-    <Box>
-      <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-        <Box>{GetStatusChip(serviceInfoState)}</Box>
+    const { t } = useTranslation();
+    const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
+    const serviceId = serviceInfoState.serviceId;
+    const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
+    const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
+    const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
+
+    return (
         <Box>
-          <Typography variant="h4" mt={2}>
-            {t(`serviceConsent.${serviceId}.title`)}
-          </Typography>
+            <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+                <Box>
+                    {GetStatusChip(serviceInfoState)}
+                </Box>
+                <Box>
+                    <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
+                </Box>
+                <Box>
+                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+                        {t(`${serviceTranslationRootKey}.description`)}
+                    </Typography>
+                </Box>
+
+                <Grid container direction={"row"} mt={4} spacing={0}>
+                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    <Trans
+                    i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+                    components={{
+                        sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                        </Link>),
+                        icon: <LaunchIcon fontSize="small" />
+                    }}
+                />
+                </Grid>
+            </Card>
+            {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
+            {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
         </Box>
-        <Box>
-          <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
-            {t(`${serviceTranslationRootKey}.description`)}
-          </Typography>
-        </Box>
-        <Trans
-          i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-          components={{
-            sanp_url: (
-              <Link
-                href={`${URLS.RTP_OVERVIEW_URL}`}
-                underline="hover"
-                my={1}
-                fontWeight="bold"
-                sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-              ></Link>
-            ),
-            icon: <LaunchIcon fontSize="small" />,
-          }}
-        />
-        <Grid mt={4}>
-          {GetServiceButton(
-            serviceInfoState,
-            setShowDisableServiceModal,
-            setShowEnableServiceModal
-          )}
-          <Button
-            sx={{ marginLeft: 3 }}
-            variant="text"
-            endIcon={<EditIcon />}
-            onClick={() => console.log('click key 2')}
-          >
-            {t(`${serviceTranslationRootKey}.editContacts`)}
-          </Button>
-        </Grid>
-      </Card>
-      {ServiceStatusChangeModal(
-        serviceInfoState.serviceId,
-        showDisableServiceModal,
-        setShowDisableServiceModal,
-        false,
-        setServiceInfoState
-      )}
-      {ServiceStatusChangeModal(
-        serviceInfoState.serviceId,
-        showEnableServiceModal,
-        setShowEnableServiceModal,
-        true,
-        setServiceInfoState
-      )}
-    </Box>
-  );
+    );
 };
 
 export default ServiceSettingsCard;

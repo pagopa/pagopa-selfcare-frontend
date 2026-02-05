@@ -219,8 +219,8 @@ const HandleError = (error: Error) => {
     error,
     techDescription: `An error occurred while saving service consent`,
     toNotify: true,
-    displayableTitle: t('general.errorTitle'),
-    displayableDescription: t('general.errorDescription'),
+    displayableTitle: t('serviceConsent.errorTitle'),
+    displayableDescription: t('serviceConsent.errorDescription'),
     component: 'Toast',
   });
 };

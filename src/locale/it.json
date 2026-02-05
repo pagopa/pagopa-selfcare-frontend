@@ -1867,6 +1867,7 @@
   "settingsPage": {
     "title": "Impostazioni",
     "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "emptyListError": "Nessun servizio disponibile",
     "warningAlerts": {
       "rtp": {
         "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",

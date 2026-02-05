@@ -1,22 +1,40 @@
-import {Alert, AlertTitle, Link} from "@mui/material";
+import { Alert, AlertTitle, CircularProgress, Link, Typography } from '@mui/material';
 import { Trans, useTranslation } from "react-i18next";
-import { TitleBox } from "@pagopa/selfcare-common-frontend";
+import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { Box } from "@mui/system";
+import { useCallback, useEffect, useState } from 'react';
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
 import { ENV } from "../../utils/env";
+import { ServiceConsentsResponse } from '../../api/generated/portal/ServiceConsentsResponse';
+import { useAppSelector } from '../../redux/hooks';
+import { partiesSelectors } from '../../redux/slices/partiesSlice';
+import { getServiceConsents } from '../../services/institutionService';
 import ServiceSettingsCard from "./components/ServiceSettingsCard";
-const serviceList = [ {
-      "serviceId": "RTP",
-      "consent": "OPT-OUT",
-      "consentDate": "2026-02-01T15:59:49.176001817Z"
-    },
-{
-      "serviceId": "RTP",
-      "consent": "OPT-IN",
-      "consentDate": "2026-02-01T15:59:49.176001817Z"
-    }];
+
+
+
 const SettingsPage = () => {
+    const [serviceList, setServiceList] = useState<ServiceConsentsResponse>();
+    const [isLoadingList, setIsLoadingList] = useState(false);
     const {t} = useTranslation();
+    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+
+    const fetchServices = useCallback(async () => {
+      setIsLoadingList(true);
+      getServiceConsents(selectedParty?.partyId || '')
+        .then((response) => {
+          setServiceList(response);
+        })
+        .catch((error) => HandleError(error))
+        .finally(() => {
+          setIsLoadingList(false);
+        });
+    }, [selectedParty?.partyId]);
+
+    useEffect(() => {
+      fetchServices().catch((error) => HandleError(error));
+    }, [fetchServices]);
+
     return (
         <SideMenuLayout>
             <TitleBox
@@ -40,13 +58,46 @@ const SettingsPage = () => {
             </Alert>
 
             <Box mt={3}>
-            {serviceList.map((s) => (
-                <ServiceSettingsCard key={s.serviceId} serviceId={s.serviceId} consent={s.consent} consentDate={s.consentDate}/>
-            ))
-            }
+            {isLoadingList ? (
+              <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <>
+                {serviceList?.services && serviceList.services.length > 0 ? (
+                  serviceList.services.map((s) => (
+                    <ServiceSettingsCard
+                      key={s.serviceId}
+                      serviceId={s.serviceId}
+                      consent={s.consent}
+                      consentDate={s.consentDate}
+                    />
+                  ))
+                ) : (
+                  <Typography variant="body1" color="textSecondary">
+                    {t('settingsPage.emptyListError')}
+                  </Typography>
+                )}
+              </>
+            )}
             </Box>
             </SideMenuLayout>
     );
+};
+
+const HandleError = (error: Error) => {
+  const addError = useErrorDispatcher();
+  const { t } = useTranslation();
+  addError({
+    id: 'GET_SERVICE_CONSENTS',
+    blocking: false,
+    error,
+    techDescription: `An error occurred while getting services consents`,
+    toNotify: true,
+    displayableTitle: t('general.errorTitle'),
+    displayableDescription: t('general.errorDescription'),
+    component: 'Toast',
+  });
 };
 
 export default SettingsPage;

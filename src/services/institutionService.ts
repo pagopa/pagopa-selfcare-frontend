@@ -4,7 +4,14 @@ import { InstitutionBaseResources } from '../api/generated/portal/InstitutionBas
 import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
 import { ServiceConsentResponse } from '../api/generated/portal/ServiceConsentResponse';
 import { ConsentEnum } from '../api/generated/portal/ServiceConsentRequest';
-import {getBrokerDelegationMock, getInstitutionDetailMock, getInstitutionsMock, getSaveConsentResponseMock } from './__mocks__/institutionsService';
+import { ServiceConsentsResponse } from '../api/generated/portal/ServiceConsentsResponse';
+import {
+  getBrokerDelegationMock,
+  getInstitutionDetailMock,
+  getInstitutionsMock,
+  getSaveConsentResponseMock,
+  getServicesConsentsResponseMock,
+} from './__mocks__/institutionsService';
 
 export const getBrokerDelegation = (
     institutionId?: string | undefined,
@@ -54,3 +61,13 @@ export const saveServiceConsent = (
       return BackofficeApi.institutions.saveServiceConsent(institutionId, serviceId, consent).then((resources) => resources);
     }
   };
+
+export const getServiceConsents = (
+  institutionId: string,
+): Promise<ServiceConsentsResponse> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getServicesConsentsResponseMock();
+  } else {
+    return BackofficeApi.institutions.getServiceConsents(institutionId).then((resources) => resources);
+  }
+};

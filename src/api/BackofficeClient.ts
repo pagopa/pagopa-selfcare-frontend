@@ -269,10 +269,7 @@ export const BackofficeApi = {
       return extractResponse(result, 201, onRedirectToLogin);
     },
 
-    regeneratePrimaryKey: async (
-      institutionId: string,
-      subscriptionid: string
-    ): Promise<string> => {
+    regeneratePrimaryKey: async (institutionId: string, subscriptionid: string): Promise<string> => {
       const result = await backofficeClient.regeneratePrimaryKey({
         'institution-id': institutionId,
         'subscription-id': subscriptionid,
@@ -310,9 +307,9 @@ export const BackofficeApi = {
       consent: ConsentEnum
     ): Promise<ServiceConsentResponse> => {
       const result = await backofficeClient.saveServiceConsent({
-        'institution-id': institutionId,
-        'service-id': serviceId,
-        body: { consent: consent },
+        "institution-id": institutionId,
+        "service-id": serviceId,
+        "body": {consent},
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

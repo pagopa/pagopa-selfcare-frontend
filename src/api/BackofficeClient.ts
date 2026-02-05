@@ -308,7 +308,7 @@ export const BackofficeApi = {
       const result = await backofficeClient.saveServiceConsent({
         "institution-id": institutionId,
         "service-id": serviceId,
-        "body": {consent: consent},
+        "body": {consent},
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },

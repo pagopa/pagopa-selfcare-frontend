@@ -181,20 +181,18 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                         {t(`${serviceTranslationRootKey}.description`)}
                     </Typography>
                 </Box>
-                <Trans
+                
+                <Grid container direction={"row"} mt={4} spacing={0}>
+                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    <Trans
                     i18nKey={`${serviceTranslationRootKey}.moreInfo`}
                     components={{
                         sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
                         </Link>),
                         icon: <LaunchIcon fontSize="small" />
                     }}
                 />
-                <Grid mt={4}>
-                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
-                    <Button sx={{ marginLeft: 3 }} variant="text" endIcon={<EditIcon />} onClick={() => console.log("click key 2")}>
-                        {t(`${serviceTranslationRootKey}.editContacts`)}
-                    </Button>
                 </Grid>
             </Card>
             {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}

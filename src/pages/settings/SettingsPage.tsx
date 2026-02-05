@@ -7,13 +7,8 @@ import { ENV } from "../../utils/env";
 import ServiceSettingsCard from "./components/ServiceSettingsCard";
 const serviceList = [ {
       "serviceId": "RTP",
-      "consent": "OPT-OUT",
-      "consentDate": "2026-02-01T15:59:49.176001817Z"
-    },
-{
-      "serviceId": "RTP",
       "consent": "OPT-IN",
-      "consentDate": "2026-02-01T15:59:49.176001817Z"
+      "consentDate": "2026-02-04T15:59:49.176001817Z"
     }];
 const SettingsPage = () => {
     const {t} = useTranslation();

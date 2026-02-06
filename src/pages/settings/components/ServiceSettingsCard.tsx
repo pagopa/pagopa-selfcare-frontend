@@ -119,7 +119,6 @@ const ServiceStatusChangeModal = (
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? 'enableService' : 'disableService'}`;
   const setLoading = useLoading('PUT_CONSENT');
-  const addError = useErrorDispatcher();
   return (
     <Dialog
       open={modalOpenFlag}
@@ -170,16 +169,7 @@ const ServiceStatusChangeModal = (
                   SetServiceInfoState(setServiceInfoState, data, serviceId);
                   setModalOpenFlag(false);
                 })
-                .catch((error) => addError({
-                  id: 'SAVE_SERVICE_CONSENT_OPT_IN',
-                  blocking: false,
-                  error,
-                  techDescription: `An error occurred while saving service consent`,
-                  toNotify: true,
-                  displayableTitle: t('serviceConsent.errorTitle'),
-                  displayableDescription: t('serviceConsent.errorDescription'),
-                  component: 'Toast',
-                }))
+                .catch((error) => HandleError(error))
                 .finally(() => setLoading(false));
             }}
           >
@@ -198,16 +188,7 @@ const ServiceStatusChangeModal = (
                   SetServiceInfoState(setServiceInfoState, data, serviceId);
                   setModalOpenFlag(false);
                 })
-                .catch((error) => addError({
-                  id: 'SAVE_SERVICE_CONSENT_OPT_OUT',
-                  blocking: false,
-                  error,
-                  techDescription: `An error occurred while saving service consent`,
-                  toNotify: true,
-                  displayableTitle: t('serviceConsent.errorTitle'),
-                  displayableDescription: t('serviceConsent.errorDescription'),
-                  component: 'Toast',
-                }))
+                .catch((error) => HandleError(error))
                 .finally(() => setLoading(false));
             }}
           >
@@ -228,6 +209,21 @@ const SetServiceInfoState = (
     consent: data.consent,
     consentDate: data.date,
     serviceId,
+  });
+};
+
+const HandleError = (error: Error) => {
+  const addError = useErrorDispatcher();
+  const { t } = useTranslation();
+  addError({
+    id: 'SAVE_SERVICE_CONSENT',
+    blocking: false,
+    error,
+    techDescription: `An error occurred while saving service consent`,
+    toNotify: true,
+    displayableTitle: t('serviceConsent.errorTitle'),
+    displayableDescription: t('serviceConsent.errorDescription'),
+    component: 'Toast',
   });
 };
 

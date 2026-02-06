@@ -18,27 +18,22 @@ const SettingsPage = () => {
     const [isLoadingList, setIsLoadingList] = useState(false);
     const { t } = useTranslation();
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const addError = useErrorDispatcher();
-    useEffect(() => {
+
+    const fetchServices = useCallback(async () => {
         setIsLoadingList(true);
         getServiceConsents(selectedParty?.partyId || '')
             .then((response) => {
                 setServiceList(response);
             })
-            .catch((error) => addError({
-                id: `GET_SERVICE_CONSENTS_FOR_${selectedParty?.partyId}`,
-                blocking: false,
-                error,
-                techDescription: `An error occurred while getting services consents for ${selectedParty?.partyId}`,
-                toNotify: true,
-                displayableTitle: t('settingsPage.errorTitle'),
-                displayableDescription: t('settingsPage.errorDescription'),
-                component: 'Toast',
-            }))
+        .catch((error) => HandleError(error))
             .finally(() => {
                 setIsLoadingList(false);
             });
     }, [selectedParty?.partyId]);
+
+    useEffect(() => {
+      fetchServices().catch((error) => HandleError(error));
+    }, [fetchServices]);
 
     return (
         <SideMenuLayout>
@@ -89,6 +84,21 @@ const SettingsPage = () => {
             </Box>
         </SideMenuLayout>
     );
+};
+
+const HandleError = (error: Error) => {
+  const addError = useErrorDispatcher();
+  const { t } = useTranslation();
+  addError({
+    id: 'GET_SERVICE_CONSENTS',
+    blocking: false,
+    error,
+    techDescription: `An error occurred while getting services consents`,
+    toNotify: true,
+    displayableTitle: t('settingsPage.errorTitle'),
+    displayableDescription: t('settingsPage.errorDescription'),
+    component: 'Toast',
+  });
 };
 
 export default SettingsPage;

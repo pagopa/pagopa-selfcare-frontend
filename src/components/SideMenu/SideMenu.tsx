@@ -25,6 +25,7 @@ import { usePermissions } from '../../hooks/usePermissions';
 import { userIsPagopaOperator } from '../../hooks/useUserRole';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
+import { showSettingsSection } from '../../pages/settings/utils';
 import SidenavItem from './SidenavItem';
 
 
@@ -225,7 +226,7 @@ export default function SideMenu({
           />
         )}
 
-      { useFlagValue('settings-section') && orgInfo.types.isEcIPA &&(
+      {showSettingsSection(useFlagValue, userHasPermission, orgInfo) && (
         <SidenavItem
           collapsed={collapsed}
           title={t('sideMenu.settings.title')}

@@ -24,7 +24,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ServiceConsentResponse } from '../../../api/generated/portal/ServiceConsentResponse';
 import { ServiceIdEnum } from '../../../api/generated/portal/ServiceConsentInfo';
-import { rtpServiceStartingTimestamp, URLS } from './utils';
+import { rtpServiceStartingTimestamp, URLS } from '../utils';
 
 export type ServiceInfo = {
   serviceId: ServiceIdEnum;

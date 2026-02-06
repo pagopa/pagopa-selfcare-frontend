@@ -86,6 +86,7 @@ const GetServiceButton = (
   if (serviceInfo.consent === ConsentEnum.OPT_IN) {
     return (
       <Button
+        data-testid={`${serviceInfo.serviceId}-button-disabling`}
         variant="outlined"
         startIcon={<DoDisturbAltIcon />}
         color="error"
@@ -97,6 +98,7 @@ const GetServiceButton = (
   } else {
     return (
       <Button
+        data-testid={`${serviceInfo.serviceId}-button-enabling`}
         variant="contained"
         endIcon={<ArrowForwardIcon />}
         onClick={() => showEnableModalStateAction(true)}

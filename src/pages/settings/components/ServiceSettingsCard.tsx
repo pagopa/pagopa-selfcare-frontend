@@ -279,5 +279,4 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     </Box>
   );
 };
-// TODO refactoring per usarle come componenti react (vedili come tag) 
 export default ServiceSettingsCard;

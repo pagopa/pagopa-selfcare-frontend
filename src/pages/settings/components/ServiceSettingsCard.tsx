@@ -24,9 +24,10 @@ import { ConsentEnum } from '../../../api/generated/portal/ServiceConsentRequest
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ServiceConsentResponse } from '../../../api/generated/portal/ServiceConsentResponse';
+import { ServiceIdEnum } from '../../../api/generated/portal/ServiceConsentInfo';
 
-type ServiceInfo = {
-  serviceId: string;
+export type ServiceInfo = {
+  serviceId: ServiceIdEnum;
   consent: ConsentEnum;
   consentDate: Date;
 };
@@ -35,9 +36,8 @@ const URLS = {
   RTP_OVERVIEW_URL: ENV.SETTINGS.SERVICES.RTP_OVERVIEW_URL,
 };
 
-const ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
+export const rtpServiceStartingTimestamp = (): number =>  ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
 
-const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
 
 const GetStatusChip = (serviceInfo: ServiceInfo) => {
   const { t } = useTranslation();
@@ -45,7 +45,7 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
   const consolidatedConsentDate = new Date(serviceInfo.consentDate);
   consolidatedConsentDate.setHours(24, 0, 0, 0);
   const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
-  const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
+  const isAfterServiceStartDate = nowMillis > rtpServiceStartingTimestamp();
   // consent is considered consolidated after midnight of the day after it was given
   const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
   const isServiceEnabled = serviceInfo.consent === ConsentEnum.OPT_IN;
@@ -109,7 +109,7 @@ const GetServiceButton = (
   }
 };
 const ServiceStatusChangeModal = (
-  serviceId: string,
+  serviceId: ServiceIdEnum,
   modalOpenFlag: boolean,
   setModalOpenFlag: Dispatch<SetStateAction<boolean>>,
   showEnableService: boolean,
@@ -127,12 +127,12 @@ const ServiceStatusChangeModal = (
       aria-describedby="alert-dialog-description"
       data-testid={`settingCard-${serviceId}-dialog`}
     >
-      <DialogTitle fontWeight={'bold'}>
+      <DialogTitle fontWeight={'bold'} data-testid={`settingCard-${serviceId}-dialog-title`} >
         {t(`${translationRootKey}.title`)}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <Typography>
+          <Typography data-testid={`settingCard-${serviceId}-dialog-message`}>
             <Trans
               i18nKey={`${translationRootKey}.message`}
               components={{
@@ -203,7 +203,7 @@ const ServiceStatusChangeModal = (
 const SetServiceInfoState = (
   setServiceInfoState: Dispatch<SetStateAction<ServiceInfo>>,
   data: ServiceConsentResponse,
-  serviceId: string
+  serviceId: ServiceIdEnum
 ) => {
   setServiceInfoState({
     consent: data.consent,
@@ -238,21 +238,22 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
   return (
     <Box>
-      <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+      <Card data-testid={`settingCard-${serviceId}-card`} variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
         <Box data-testid={`settingCard-${serviceId}-statusChip`} >
           {GetStatusChip(serviceInfoState)}
         </Box>
         <Box>
-          <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
+          <Typography data-testid={`settingCard-${serviceId}-card-title`} variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
         </Box>
-        <Box>
-          <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+        <Box >
+          <Typography data-testid={`settingCard-${serviceId}-card-subtitle`} variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
             {t(`${serviceTranslationRootKey}.description`)}
           </Typography>
         </Box>
 
         <Grid container direction={"row"} mt={4} spacing={0}>
           {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+          <Box data-testid={`settingCard-${serviceId}-more-info-link`}>
           <Trans
             i18nKey={`${serviceTranslationRootKey}.moreInfo`}
             components={{
@@ -262,6 +263,7 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
               icon: <LaunchIcon fontSize="small" />
             }}
           />
+          </Box>
         </Grid>
       </Card>
       {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
@@ -269,5 +271,5 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     </Box>
   );
 };
-
+// TODO refactoring per usarle come componenti react (vedili come tag) 
 export default ServiceSettingsCard;

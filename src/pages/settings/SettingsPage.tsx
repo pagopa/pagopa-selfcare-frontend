@@ -41,16 +41,17 @@ const SettingsPage = () => {
 
     return (
         <SideMenuLayout>
+            <Box data-testid="settingsPage.title">
             <TitleBox
                 title={t('settingsPage.title')}
                 subTitle={t('settingsPage.subtitle')}
                 variantTitle="h4"
                 variantSubTitle="body1"
                 mbSubTitle={1}
-
             />
+            </Box>
             <Alert severity="warning">
-                <AlertTitle data-testid="settingsPage.taxonomyAlert">{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
+                <AlertTitle data-testid="settingsPage.taxonomyAlertTitle">{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
                 {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
                 <Trans
                     i18nKey="settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText"

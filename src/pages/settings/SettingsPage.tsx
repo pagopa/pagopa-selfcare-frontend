@@ -20,7 +20,10 @@ const SettingsPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
     const fetchServices = useCallback(async () => {
-        if (!selectedParty?.partyId) return;
+        if (!selectedParty?.partyId){
+            console.error("Cannot retrieve service consent for selectedParty.partyId:", selectedParty?.partyId);
+            return;
+        } 
         setIsLoadingList(true);
         getServiceConsents(selectedParty.partyId)
             .then((response) => {

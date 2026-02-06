@@ -2,7 +2,7 @@ import { Alert, AlertTitle, CircularProgress, Link, Typography } from '@mui/mate
 import { Trans, useTranslation } from "react-i18next";
 import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { Box } from "@mui/system";
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
 import { ENV } from "../../utils/env";
 import { ServiceConsentsResponse } from '../../api/generated/portal/ServiceConsentsResponse';
@@ -20,8 +20,9 @@ const SettingsPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
     const fetchServices = useCallback(async () => {
+        if (!selectedParty?.partyId) return;
         setIsLoadingList(true);
-        getServiceConsents(selectedParty?.partyId || '')
+        getServiceConsents(selectedParty.partyId)
             .then((response) => {
                 setServiceList(response);
             })

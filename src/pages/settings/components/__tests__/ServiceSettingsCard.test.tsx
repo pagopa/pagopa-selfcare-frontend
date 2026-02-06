@@ -243,15 +243,16 @@ describe('Service setting page card rendering', () => {
                 </Provider>
             )
             // assertions
+            const chipStatus = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-statusChip`);
             if (testData.expectedChipStatus === ChipStatus.DISABLED) {
-                expect(screen.queryByTestId(`settingCard-${serviceInfo.serviceId}-statusChip`)).not.toBeInTheDocument();
+                expect(chipStatus).toBeVisible();
+                expect(chipStatus.textContent).toBe(""); // div with empty text
             } else {
-                const chipStatus = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-statusChip`);
                 expect(chipStatus).toBeVisible();
                 expect(chipStatus.textContent).toBe(rtpServiceChipStatusConf[testData.expectedChipStatus]?.label);
             }
         } finally {
             jest.useRealTimers();
-        }
+        } 
     });
 });  

@@ -79,9 +79,9 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
   }
   const chipConf = rtpServiceChipStatusConf[chipStatus];
   return chipConf ? (
-        <Chip data-testid={`settingCard-${serviceInfo.serviceId}-statusChip`} label={t(chipConf.label)} size="small" color={chipConf.color} />
+        <Chip label={t(chipConf.label)} size="small" color={chipConf.color} />
   ) : (
-    <Box/>
+    <Box />
   );
 };
 
@@ -247,7 +247,7 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
   return (
     <Box>
       <Card data-testid={`settingCard-${serviceId}-card`} variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-        <Box>
+        <Box data-testid={`settingCard-${serviceId}-statusChip`} >
           {GetStatusChip(serviceInfoState)}
         </Box>
         <Box>

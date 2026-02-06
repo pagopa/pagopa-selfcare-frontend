@@ -18,26 +18,41 @@ import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
-import { ENV } from '../../../utils/env';
 import { saveServiceConsent } from '../../../services/institutionService';
 import { ConsentEnum } from '../../../api/generated/portal/ServiceConsentRequest';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ServiceConsentResponse } from '../../../api/generated/portal/ServiceConsentResponse';
 import { ServiceIdEnum } from '../../../api/generated/portal/ServiceConsentInfo';
+import { rtpServiceStartingTimestamp, URLS } from './utils';
 
 export type ServiceInfo = {
   serviceId: ServiceIdEnum;
   consent: ConsentEnum;
   consentDate: Date;
 };
-const URLS = {
-  SANP_URL: ENV.SETTINGS.SERVICES.SANP_URL,
-  RTP_OVERVIEW_URL: ENV.SETTINGS.SERVICES.RTP_OVERVIEW_URL,
+
+// enumeration of all possible chip statuses
+export const enum ChipStatus {
+  DISABLING = "DISABLING",
+  DISABLED = "DISABLED",
+  ENABLING = "ENABLING",
+  ENABLED = "ENABLED",
+  ENABLED_FROM = "ENABLED_FROM"
 };
 
-export const rtpServiceStartingTimestamp = (): number =>  ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
-
+export type ChipConfDataType = {
+  label: string; 
+  color: 'success' | 'warning' | 'secondary';
+  hidden: boolean;
+};
+export const rtpServiceChipStatusConf: Record<ChipStatus, ChipConfDataType | undefined> = {
+  [ChipStatus.DISABLING]: { label: "serviceConsent.RTP.statuses.disabling", color: "warning", hidden: false },
+  [ChipStatus.DISABLED]: undefined,
+  [ChipStatus.ENABLING]: { label: "serviceConsent.RTP.statuses.enabling", color: "secondary", hidden: false },
+  [ChipStatus.ENABLED]: { label: "serviceConsent.RTP.statuses.enabled", color: "success", hidden: false },
+  [ChipStatus.ENABLED_FROM]: { label: "serviceConsent.RTP.statuses.enabledFrom", color: "success", hidden: false }
+};
 
 const GetStatusChip = (serviceInfo: ServiceInfo) => {
   const { t } = useTranslation();
@@ -50,30 +65,23 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
   const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
   const isServiceEnabled = serviceInfo.consent === ConsentEnum.OPT_IN;
   // eslint-disable-next-line functional/no-let
-  let chipLabel: string;
-  // eslint-disable-next-line functional/no-let
-  let chipColor: 'success' | 'warning' | 'secondary';
-  // eslint-disable-next-line functional/no-let
-  let hidden: boolean;
+  let chipStatus: ChipStatus;
   if (isServiceEnabled) {
     if (isConsentConsolidated) {
-      chipLabel = isAfterServiceStartDate
-        ? t('serviceConsent.RTP.statuses.enabled')
-        : t('serviceConsent.RTP.statuses.enabledFrom');
+      chipStatus = isAfterServiceStartDate
+        ? ChipStatus.ENABLED
+        : ChipStatus.ENABLED_FROM;
     } else {
-      chipLabel = t('serviceConsent.RTP.statuses.enabling');
+      chipStatus = ChipStatus.ENABLING;
     }
-    chipColor = isConsentConsolidated ? 'success' : 'secondary';
-    hidden = false;
   } else {
-    chipLabel = t('serviceConsent.RTP.statuses.disabling');
-    chipColor = 'warning';
-    hidden = isConsentConsolidated;
+    chipStatus = isConsentConsolidated ? ChipStatus.DISABLED : ChipStatus.DISABLING;
   }
-  return hidden ? (
-    <Box />
+  const chipConf = rtpServiceChipStatusConf[chipStatus];
+  return chipConf ? (
+        <Chip data-testid={`settingCard-${serviceInfo.serviceId}-statusChip`} label={t(chipConf.label)} size="small" color={chipConf.color} />
   ) : (
-    <Chip label={chipLabel} size="small" color={chipColor} hidden={hidden} />
+    <Box/>
   );
 };
 
@@ -131,16 +139,16 @@ const ServiceStatusChangeModal = (
         {t(`${translationRootKey}.title`)}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Typography data-testid={`settingCard-${serviceId}-dialog-message`}>
+        <Box data-testid={`settingCard-${serviceId}-dialog-message`}>
+          <DialogContentText>
             <Trans
               i18nKey={`${translationRootKey}.message`}
               components={{
                 sanp_url: <Link href={`${URLS.SANP_URL}`} />,
               }}
             />
-          </Typography>
-        </DialogContentText>
+          </DialogContentText>
+        </Box>
       </DialogContent>
       <DialogActions
         sx={{
@@ -239,7 +247,7 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
   return (
     <Box>
       <Card data-testid={`settingCard-${serviceId}-card`} variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-        <Box data-testid={`settingCard-${serviceId}-statusChip`} >
+        <Box>
           {GetStatusChip(serviceInfoState)}
         </Box>
         <Box>
@@ -254,15 +262,15 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
         <Grid container direction={"row"} mt={4} spacing={0}>
           {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
           <Box data-testid={`settingCard-${serviceId}-more-info-link`}>
-          <Trans
-            i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-            components={{
-              sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
-              </Link>),
-              icon: <LaunchIcon fontSize="small" />
-            }}
-          />
+            <Trans
+              i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+              components={{
+                sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                </Link>),
+                icon: <LaunchIcon fontSize="small" />
+              }}
+            />
           </Box>
         </Grid>
       </Card>

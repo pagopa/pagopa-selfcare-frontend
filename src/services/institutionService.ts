@@ -10,8 +10,8 @@ import {
   getInstitutionDetailMock,
   getInstitutionsMock,
   getSaveConsentResponseMock,
-  getServicesConsentsResponseMock,
-} from './__mocks__/institutionsService';
+  getServicesConsentsOptOutResponseMock,
+  } from './__mocks__/institutionsService';
 
 export const getBrokerDelegation = (
     institutionId?: string | undefined,
@@ -66,7 +66,7 @@ export const getServiceConsents = (
   institutionId: string,
 ): Promise<ServiceConsentsResponse> => {
   if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
-    return getServicesConsentsResponseMock();
+    return getServicesConsentsOptOutResponseMock();
   } else {
     return BackofficeApi.institutions.getServiceConsents(institutionId).then((resources) => resources);
   }

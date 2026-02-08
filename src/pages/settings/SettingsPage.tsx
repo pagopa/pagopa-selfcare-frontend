@@ -16,19 +16,23 @@ import ServiceSettingsCard from "./components/ServiceSettingsCard";
 const SettingsPage = () => {
     const [serviceList, setServiceList] = useState<ServiceConsentsResponse>();
     const [isLoadingList, setIsLoadingList] = useState(false);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
     const fetchServices = useCallback(async () => {
-      setIsLoadingList(true);
-      getServiceConsents(selectedParty?.partyId || '')
-        .then((response) => {
-          setServiceList(response);
-        })
+        if (!selectedParty?.partyId){
+            console.error("Cannot retrieve service consent for selectedParty.partyId:", selectedParty?.partyId);
+            return;
+        } 
+        setIsLoadingList(true);
+        getServiceConsents(selectedParty.partyId)
+            .then((response) => {
+                setServiceList(response);
+            })
         .catch((error) => HandleError(error))
-        .finally(() => {
-          setIsLoadingList(false);
-        });
+            .finally(() => {
+                setIsLoadingList(false);
+            });
     }, [selectedParty?.partyId]);
 
     useEffect(() => {
@@ -37,6 +41,7 @@ const SettingsPage = () => {
 
     return (
         <SideMenuLayout>
+            <Box data-testid="settingsPage.title">
             <TitleBox
                 title={t('settingsPage.title')}
                 subTitle={t('settingsPage.subtitle')}
@@ -44,44 +49,45 @@ const SettingsPage = () => {
                 variantSubTitle="body1"
                 mbSubTitle={1}
             />
+            </Box>
             <Alert severity="warning">
-                <AlertTitle>{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
+                <AlertTitle data-testid="settingsPage.taxonomyAlertTitle">{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
                 {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
                 <Trans
-                        i18nKey="settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText"
-                        components={{
+                    i18nKey="settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText"
+                    components={{
                         sanp_url: (<Link href={(`${ENV.SETTINGS.SERVICES.SANP_URL}`)} underline="hover" my={1} fontWeight="bold"
-                         sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}> 
-                         </Link>),
-                        }}
-                    />
+                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        </Link>),
+                    }}
+                />
             </Alert>
 
             <Box mt={3}>
-            {isLoadingList ? (
-              <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-                <CircularProgress />
-              </Box>
-            ) : (
-              <>
-                {serviceList?.services && serviceList.services.length > 0 ? (
-                  serviceList.services.map((s) => (
-                    <ServiceSettingsCard
-                      key={s.serviceId}
-                      serviceId={s.serviceId}
-                      consent={s.consent}
-                      consentDate={s.consentDate}
-                    />
-                  ))
+                {isLoadingList ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+                        <CircularProgress />
+                    </Box>
                 ) : (
-                  <Typography variant="body1" color="textSecondary">
-                    {t('settingsPage.emptyListError')}
-                  </Typography>
+                    <>
+                        {serviceList?.services && serviceList.services.length > 0 ? (
+                            serviceList.services.map((s) => (
+                                <ServiceSettingsCard
+                                    key={s.serviceId}
+                                    serviceId={s.serviceId}
+                                    consent={s.consent}
+                                    consentDate={s.consentDate}
+                                />
+                            ))
+                        ) : (
+                            <Typography variant="body1" color="textSecondary">
+                                {t('settingsPage.emptyListError')}
+                            </Typography>
+                        )}
+                    </>
                 )}
-              </>
-            )}
             </Box>
-            </SideMenuLayout>
+        </SideMenuLayout>
     );
 };
 

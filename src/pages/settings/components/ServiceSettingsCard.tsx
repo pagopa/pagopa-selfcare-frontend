@@ -156,7 +156,9 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                 {isServiceEnabled ?
                     <Button
                         data-testid={`settingCard-${serviceId}-dialog-disableButton`}
-                        variant="contained"
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DoDisturbAltIcon />}
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
@@ -172,9 +174,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                     :
                     <Button
                         data-testid={`settingCard-${serviceId}-dialog-enableButton`}
-                        variant="outlined"
-                        color="error"
-                        startIcon={<DoDisturbAltIcon />}
+                        variant="contained"
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)

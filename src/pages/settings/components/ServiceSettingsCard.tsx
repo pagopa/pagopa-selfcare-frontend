@@ -77,152 +77,98 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
   );
 };
 
-const GetServiceButton = (
-  serviceInfo: ServiceInfo,
-  showDisableModalStateAction: Dispatch<SetStateAction<boolean>>,
-  showEnableModalStateAction: Dispatch<SetStateAction<boolean>>
-) => {
-  const { t } = useTranslation();
-  if (serviceInfo.consent === ConsentEnum.OPT_IN) {
-    return (
-      <Button
-        variant="outlined"
-        startIcon={<DoDisturbAltIcon />}
-        color="error"
-        onClick={() => showDisableModalStateAction(true)}
-      >
-        {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
-      </Button>
-    );
-  } else {
-    return (
-      <Button
-        variant="contained"
-        endIcon={<ArrowForwardIcon />}
-        onClick={() => showEnableModalStateAction(true)}
-      >
-        {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
-      </Button>
-    );
-  }
+const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; onClick: () => void })) => {
+    const { t } = useTranslation();
+    if (serviceInfo.consent === ConsentEnum.OPT_IN) {
+        return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={onClick}>
+            {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
+        </Button>);
+    } else {
+        return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={onClick}>
+            {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
+        </Button>);
+    }
+
 };
-const ServiceStatusChangeModal = (
-  serviceId: string,
-  modalOpenFlag: boolean,
-  setModalOpenFlag: Dispatch<SetStateAction<boolean>>,
-  showEnableService: boolean,
-  setServiceInfoState: Dispatch<SetStateAction<ServiceInfo>>
-) => {
-  const { t } = useTranslation();
-  const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-  const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? 'enableService' : 'disableService'}`;
-  const setLoading = useLoading('PUT_CONSENT');
-  return (
-    <Dialog
-      open={modalOpenFlag}
-      onClose={() => setModalOpenFlag(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      data-testid="dialog-test"
-    >
-      <DialogTitle id="alert-dialog-title" fontWeight={'bold'}>
-        {t(`${translationRootKey}.title`)}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <Typography>
-            <Trans
-              i18nKey={`${translationRootKey}.message`}
-              components={{
-                sanp_url: <Link href={`${URLS.SANP_URL}`} />,
-              }}
-            />
-          </Typography>
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          marginRight: 3,
-          marginBottom: 2,
-        }}
-      >
-        <Button
-          data-testid="dialog-button-cancel"
-          variant="outlined"
-          sx={{
-            marginRight: 1,
-          }}
-          onClick={() => setModalOpenFlag(false)}
+const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onServiceInfoUpdate }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag:boolean) => void; onServiceInfoUpdate: (serviceInfo:ServiceInfo) => void })) => {
+    const { t } = useTranslation();
+    const serviceId = serviceInfo.serviceId;
+    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
+    const setLoading = useLoading('PUT_CONSENT');
+    return (
+        <Dialog
+            open={modalOpenFlag}
+            onClose={() => onModalStateChange(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            data-testid="dialog-test"
         >
-          {t(`${translationRootKey}.cancelButton`)}
-        </Button>
-        {showEnableService ? (
-          <Button
-            data-testid="dialog-button-confirm-enabling"
-            variant="contained"
-            onClick={() => {
-              setLoading(true);
-              saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
-                .then((data) => {
-                  SetServiceInfoState(setServiceInfoState, data, serviceId);
-                  setModalOpenFlag(false);
-                })
-                .catch((error) => HandleError(error))
-                .finally(() => setLoading(false));
-            }}
-          >
-            {t(`${translationRootKey}.confirmButton`)}
-          </Button>
-        ) : (
-          <Button
-            data-testid="dialog-button-confirm-disabling"
-            variant="outlined"
-            color="error"
-            startIcon={<DoDisturbAltIcon />}
-            onClick={() => {
-              setLoading(true);
-              saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
-                .then((data) => {
-                  SetServiceInfoState(setServiceInfoState, data, serviceId);
-                  setModalOpenFlag(false);
-                })
-                .catch((error) => HandleError(error))
-                .finally(() => setLoading(false));
-            }}
-          >
-            {t(`${translationRootKey}.confirmButton`)}
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-const SetServiceInfoState = (
-  setServiceInfoState: Dispatch<SetStateAction<ServiceInfo>>,
-  data: ServiceConsentResponse,
-  serviceId: string
-) => {
-  setServiceInfoState({
-    consent: data.consent,
-    consentDate: data.date,
-    serviceId,
-  });
-};
-
-const HandleError = (error: Error) => {
-  const addError = useErrorDispatcher();
-  const { t } = useTranslation();
-  addError({
-    id: 'SAVE_SERVICE_CONSENT',
-    blocking: false,
-    error,
-    techDescription: `An error occurred while saving service consent`,
-    toNotify: true,
-    displayableTitle: t('serviceConsent.errorTitle'),
-    displayableDescription: t('serviceConsent.errorDescription'),
-    component: 'Toast',
-  });
+            <DialogTitle id="alert-dialog-title" fontWeight={'bold'}>
+                {t(`${translationRootKey}.title`)}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    <Typography>
+                        <Trans
+                            i18nKey={`${translationRootKey}.message`}
+                            components={{
+                                sanp_url: <Link href={(`${URLS.SANP_URL}`)} />,
+                            }}
+                        />
+                    </Typography>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{
+                marginRight: 3,
+                marginBottom: 2
+            }} >
+                <Button
+                    data-testid="dialog-button-cancel"
+                    variant="outlined"
+                    sx={{
+                        marginRight: 1
+                    }}
+                    onClick={() => onModalStateChange(false)}>
+                    {t(`${translationRootKey}.cancelButton`)}
+                </Button>
+                {isServiceEnabled ?
+                    <Button
+                        data-testid="dialog-button-confirm-disabling"
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DoDisturbAltIcon />}
+                        onClick={() => {
+                                      setLoading(true);
+                                      saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
+                                        .then((data) => {
+                                          SetServiceInfoState(setServiceInfoState, data, serviceId);
+                                          setModalOpenFlag(false);
+                                        })
+                                        .catch((error) => HandleError(error))
+                                        .finally(() => setLoading(false));
+                                    }}>
+                        {t(`${translationRootKey}.confirmButton`)}
+                    </Button>
+                    :
+                    <Button
+                        data-testid="dialog-button-confirm-enabling"
+                        variant="contained"
+                        onClick={() => {
+                                      setLoading(true);
+                                      saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
+                                        .then((data) => {
+                                          SetServiceInfoState(setServiceInfoState, data, serviceId);
+                                          setModalOpenFlag(false);
+                                        })
+                                        .catch((error) => HandleError(error))
+                                        .finally(() => setLoading(false));
+                                    }}>
+                        {t(`${translationRootKey}.confirmButton`)}
+                    </Button>
+                }
+            </DialogActions>
+        </Dialog>);
 };
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
@@ -230,15 +176,14 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
     const serviceId = serviceInfoState.serviceId;
-    const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
-    const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
     const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
 
     return (
         <Box>
             <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
                 <Box>
-                    {GetStatusChip(serviceInfoState)}
+                    <StatusChip serviceInfo={serviceInfoState} />
                 </Box>
                 <Box>
                     <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
@@ -250,20 +195,22 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                 </Box>
 
                 <Grid container direction={"row"} mt={4} spacing={0}>
-                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    <ServiceButton serviceInfo={serviceInfoState} onClick={() => {
+                        setShowConfirmationModal(true);
+                    }
+                    } />
                     <Trans
-                    i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-                    components={{
-                        sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
-                        </Link>),
-                        icon: <LaunchIcon fontSize="small" />
-                    }}
-                />
+                        i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+                        components={{
+                            sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                            </Link>),
+                            icon: <LaunchIcon fontSize="small" />
+                        }}
+                    />
                 </Grid>
             </Card>
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
+            <ServiceStatusChangeModal serviceInfo={serviceInfoState} modalOpenFlag={showConfirmationModal} onModalStateChange={setShowConfirmationModal} onServiceInfoUpdate={setServiceInfoState} />
         </Box>
     );
 };

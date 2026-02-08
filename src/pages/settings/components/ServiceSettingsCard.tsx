@@ -39,7 +39,7 @@ const ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
 
 const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
 
-const GetStatusChip = (serviceInfo: ServiceInfo) => {
+const StatusChip = ({serviceInfo}: ({serviceInfo: ServiceInfo})) => {
   const { t } = useTranslation();
   const nowMillis = Date.now();
   const consolidatedConsentDate = new Date(serviceInfo.consentDate);
@@ -90,12 +90,14 @@ const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; on
     }
 
 };
-const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onServiceInfoUpdate }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag:boolean) => void; onServiceInfoUpdate: (serviceInfo:ServiceInfo) => void })) => {
+
+const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onSaveServiceConsentResponse }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag:boolean) => void; onSaveServiceConsentResponse: (s:ServiceConsentResponse) => void })) => {
     const { t } = useTranslation();
     const serviceId = serviceInfo.serviceId;
-    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    const isServiceEnabled = serviceInfo.consent === ConsentEnum.OPT_IN;
     const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
+    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     return (
         <Dialog
             open={modalOpenFlag}
@@ -142,8 +144,8 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                                       setLoading(true);
                                       saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
                                         .then((data) => {
-                                          SetServiceInfoState(setServiceInfoState, data, serviceId);
-                                          setModalOpenFlag(false);
+                                          onSaveServiceConsentResponse(data);
+                                          onModalStateChange(false);
                                         })
                                         .catch((error) => HandleError(error))
                                         .finally(() => setLoading(false));
@@ -158,8 +160,8 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                                       setLoading(true);
                                       saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
                                         .then((data) => {
-                                          SetServiceInfoState(setServiceInfoState, data, serviceId);
-                                          setModalOpenFlag(false);
+                                          onSaveServiceConsentResponse(data);
+                                          onModalStateChange(false);
                                         })
                                         .catch((error) => HandleError(error))
                                         .finally(() => setLoading(false));
@@ -169,6 +171,21 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                 }
             </DialogActions>
         </Dialog>);
+};
+
+const HandleError = (error: Error) => {
+  const addError = useErrorDispatcher();
+  const { t } = useTranslation();
+  addError({
+    id: 'SAVE_SERVICE_CONSENT',
+    blocking: false,
+    error,
+    techDescription: `An error occurred while saving service consent`,
+    toNotify: true,
+    displayableTitle: t('serviceConsent.errorTitle'),
+    displayableDescription: t('serviceConsent.errorDescription'),
+    component: 'Toast',
+  });
 };
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
@@ -210,7 +227,18 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                     />
                 </Grid>
             </Card>
-            <ServiceStatusChangeModal serviceInfo={serviceInfoState} modalOpenFlag={showConfirmationModal} onModalStateChange={setShowConfirmationModal} onServiceInfoUpdate={setServiceInfoState} />
+            <ServiceStatusChangeModal 
+            serviceInfo={serviceInfoState} 
+            modalOpenFlag={showConfirmationModal}
+            onModalStateChange={setShowConfirmationModal} 
+            onSaveServiceConsentResponse={(serviceConsentResponse =>{
+                setServiceInfoState({
+                    serviceId: serviceInfoState.serviceId,
+                    consent: serviceConsentResponse.consent,
+                    consentDate: serviceConsentResponse.date
+
+                });
+            })} />
         </Box>
     );
 };

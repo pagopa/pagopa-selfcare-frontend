@@ -4,12 +4,14 @@ import { TitleBox } from "@pagopa/selfcare-common-frontend";
 import { Box } from "@mui/system";
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
 import { ENV } from "../../utils/env";
+import { ConsentEnum } from '../../api/generated/portal/ServiceConsentRequest';
 import ServiceSettingsCard from "./components/ServiceSettingsCard";
 const serviceList = [ {
       "serviceId": "RTP",
-      "consent": "OPT-IN",
-      "consentDate": "2026-02-04T15:59:49.176001817Z"
-    }];
+      "consent": "OPT_OUT",
+      "consentDate": "2026-02-01T15:59:49.176001817Z"
+    }
+    ];
 const SettingsPage = () => {
     const {t} = useTranslation();
     return (
@@ -36,7 +38,7 @@ const SettingsPage = () => {
 
             <Box mt={3}>
             {serviceList.map((s) => (
-                <ServiceSettingsCard key={s.serviceId} serviceId={s.serviceId} consent={s.consent} consentDate={s.consentDate}/>
+                <ServiceSettingsCard key={s.serviceId} serviceId={s.serviceId} consent={s.consent as ConsentEnum} consentDate={new Date(s.consentDate)}/>
             ))
             }
             </Box>

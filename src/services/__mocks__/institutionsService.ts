@@ -4,6 +4,8 @@ import {InstitutionDetail, Institution_typeEnum} from '../../api/generated/porta
 import {StatusEnum} from '../../api/generated/portal/WrapperChannelDetailsDto';
 import {TypeEnum, WrapperEntities} from '../../api/generated/portal/WrapperEntities';
 import {mockedPaymentTypes} from './configurationService';
+import { ServiceConsentResponse } from '../../api/generated/portal/ServiceConsentResponse';
+import { ConsentEnum } from '../../api/generated/portal/ServiceConsentInfo';
 
 export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
     brokerCode: 'string',
@@ -143,9 +145,20 @@ export const mockedInstitutionDetailResource: InstitutionDetail =
             
         };
 
+export const mockedServiceConsentResponse =
+  (
+    consent: ConsentEnum,
+    dateString: Date
+  ) =>({
+      consent: consent,
+      date: dateString,
+    });
+
 export const getBrokerDelegationMock = (): Promise<DelegationResource> =>
     Promise.resolve(mockedDelegatedPSP);
 export const getInstitutionsMock = (): Promise<InstitutionBaseResources> =>
     Promise.resolve(mockedInstitutionDetailResource);
 export const getInstitutionDetailMock = (): Promise<InstitutionDetail> =>
     Promise.resolve(mockedInstitutionDetailResource);
+export const getSaveConsentResponseMock = (consent: ConsentEnum): Promise<ServiceConsentResponse> =>
+    Promise.resolve(mockedServiceConsentResponse(consent, new Date()));

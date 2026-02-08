@@ -1876,6 +1876,8 @@
     }
   },
   "serviceConsent": {
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile processare correttamente la richiesta",
     "RTP": {
       "title": "SEPA Request to Pay (Avvisi pagoPA)",
       "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",

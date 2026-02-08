@@ -22,11 +22,11 @@ const ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
 
 const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
 
-const GetStatusChip = (serviceInfo: ServiceInfo) => {
+const StatusChip = ({ serviceInfo }: ({ serviceInfo: ServiceInfo })) => {
     const { t } = useTranslation();
     const nowMillis = Date.now();
     const consolidatedConsentDate = new Date(serviceInfo.consentDate);
-    consolidatedConsentDate.setHours(24,0,0,0); 
+    consolidatedConsentDate.setHours(24, 0, 0, 0);
     const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
     const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
     // consent is considered consolidated after midnight of the day after it was given
@@ -54,27 +54,29 @@ const GetStatusChip = (serviceInfo: ServiceInfo) => {
     return hidden ? (<Box />) : (<Chip label={chipLabel} size="small" color={chipColor} hidden={hidden} />);
 };
 
-const GetServiceButton = (serviceInfo: ServiceInfo, showDisableModalStateAction: Dispatch<SetStateAction<boolean>>, showEnableModalStateAction: Dispatch<SetStateAction<boolean>>) => {
+const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; onClick: () => void })) => {
     const { t } = useTranslation();
     if (serviceInfo.consent === "OPT-IN") {
-        return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={() => showDisableModalStateAction(true)}>
+        return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={onClick}>
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
     } else {
-        return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={() => showEnableModalStateAction(true)}>
+        return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={onClick}>
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
     }
 
 };
-const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, setModalOpenFlag: Dispatch<SetStateAction<boolean>>, showEnableService: boolean, setServiceInfoState: Dispatch<SetStateAction<ServiceInfo>>) => {
+const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onServiceInfoUpdate }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag:boolean) => void; onServiceInfoUpdate: (serviceInfo:ServiceInfo) => void })) => {
     const { t } = useTranslation();
-    const translationRootKey = `serviceConsent.${serviceId}.popups.${showEnableService ? "enableService" : "disableService"}`;
+    const serviceId = serviceInfo.serviceId;
+    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
     return (
         <Dialog
             open={modalOpenFlag}
-            onClose={() => setModalOpenFlag(false)}
+            onClose={() => onModalStateChange(false)}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             data-testid="dialog-test"
@@ -104,31 +106,10 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                     sx={{
                         marginRight: 1
                     }}
-                    onClick={() => setModalOpenFlag(false)}>
+                    onClick={() => onModalStateChange(false)}>
                     {t(`${translationRootKey}.cancelButton`)}
                 </Button>
-                {showEnableService ?
-                    <Button
-                        data-testid="dialog-button-confirm-enabling"
-                        variant="contained"
-                        onClick={
-                            // TODO: set timeout here just to mock b.e. interaction
-                            () => {
-                                setLoading(true);
-                                setTimeout(function () {
-                                    setLoading(false);
-                                    // TODO mocked update state here
-                                    setServiceInfoState({
-                                        consent: "OPT-IN",
-                                        consentDate: new Date().toString(),
-                                        serviceId: "RTP"
-                                    });
-                                    setModalOpenFlag(false);
-                                }, 1000);
-                            }}>
-                        {t(`${translationRootKey}.confirmButton`)}
-                    </Button>
-                    :
+                {isServiceEnabled ?
                     <Button
                         data-testid="dialog-button-confirm-disabling"
                         variant="outlined"
@@ -137,16 +118,39 @@ const ServiceStatusChangeModal = (serviceId: string, modalOpenFlag: boolean, set
                         onClick={
                             // TODO: set timeout here just to mock b.e. interaction
                             () => {
+                                console.log("On click - update status confirm disabling");
                                 setLoading(true);
                                 setTimeout(function () {
                                     setLoading(false);
                                     // TODO mocked update state here
-                                    setServiceInfoState({
+                                    onServiceInfoUpdate({
                                         consent: "OPT-OUT",
                                         consentDate: new Date().toString(),
                                         serviceId: "RTP"
                                     });
-                                    setModalOpenFlag(false);
+                                    onModalStateChange(false);
+                                }, 1000);
+                            }}>
+                        {t(`${translationRootKey}.confirmButton`)}
+                    </Button>
+                    :
+                    <Button
+                        data-testid="dialog-button-confirm-enabling"
+                        variant="contained"
+                        onClick={
+                            // TODO: set timeout here just to mock b.e. interaction
+                            () => {
+                                console.log("On click - update status confirm enabling");
+                                setLoading(true);
+                                setTimeout(function () {
+                                    setLoading(false);
+                                    // TODO mocked update state here
+                                    onServiceInfoUpdate({
+                                        consent: "OPT-IN",
+                                        consentDate: new Date().toString(),
+                                        serviceId: "RTP"
+                                    });
+                                    onModalStateChange(false);
                                 }, 1000);
                             }}>
                         {t(`${translationRootKey}.confirmButton`)}
@@ -161,15 +165,14 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     const { t } = useTranslation();
     const [serviceInfoState, setServiceInfoState] = useState<ServiceInfo>(serviceInfo);
     const serviceId = serviceInfoState.serviceId;
-    const [showEnableServiceModal, setShowEnableServiceModal] = useState<boolean>(false);
-    const [showDisableServiceModal, setShowDisableServiceModal] = useState<boolean>(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
     const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
 
     return (
         <Box>
             <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
                 <Box>
-                    {GetStatusChip(serviceInfoState)}
+                    <StatusChip serviceInfo={serviceInfoState} />
                 </Box>
                 <Box>
                     <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
@@ -179,22 +182,24 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                         {t(`${serviceTranslationRootKey}.description`)}
                     </Typography>
                 </Box>
-                
+
                 <Grid container direction={"row"} mt={4} spacing={0}>
-                    {GetServiceButton(serviceInfoState, setShowDisableServiceModal, setShowEnableServiceModal)}
+                    <ServiceButton serviceInfo={serviceInfoState} onClick={() => {
+                        setShowConfirmationModal(true);
+                    }
+                    } />
                     <Trans
-                    i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-                    components={{
-                        sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
-                        </Link>),
-                        icon: <LaunchIcon fontSize="small" />
-                    }}
-                />
+                        i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+                        components={{
+                            sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                            </Link>),
+                            icon: <LaunchIcon fontSize="small" />
+                        }}
+                    />
                 </Grid>
             </Card>
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showDisableServiceModal, setShowDisableServiceModal, false, setServiceInfoState)}
-            {ServiceStatusChangeModal(serviceInfoState.serviceId, showEnableServiceModal, setShowEnableServiceModal, true, setServiceInfoState)}
+            <ServiceStatusChangeModal serviceInfo={serviceInfoState} modalOpenFlag={showConfirmationModal} onModalStateChange={setShowConfirmationModal} onServiceInfoUpdate={setServiceInfoState} />
         </Box>
     );
 };

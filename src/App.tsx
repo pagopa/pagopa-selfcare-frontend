@@ -356,6 +356,7 @@ const SecuredRoutes = withLogin(
                   <ProtectedRoute
                     permission="settings"
                     flagValue="settings-section"
+                    orgCheckCondition={(orgInfo) => orgInfo.types.isEcIPA}
                   >
                     <SettingsPage />
                   </ProtectedRoute>

@@ -2,7 +2,6 @@ import { BackofficeApi } from '../../api/BackofficeClient';
 import { ConsentEnum } from '../../api/generated/portal/ServiceConsentInfo';
 import {
     getServicesConsentsOptOutResponseMock,
-    getServicesConsentsResponseMock,
     mockedDelegatedPSP,
     mockedInstitutionDetailResource,
     mockedServiceConsentResponse,

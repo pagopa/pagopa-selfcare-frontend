@@ -1,6 +1,7 @@
 import { BackofficeApi } from '../../api/BackofficeClient';
 import { ConsentEnum } from '../../api/generated/portal/ServiceConsentInfo';
 import {
+    getSaveConsentResponseMock,
     getServicesConsentsOptOutResponseMock,
     mockedDelegatedPSP,
     mockedInstitutionDetailResource,
@@ -22,6 +23,19 @@ describe('InstitutionService test mocked', () => {
     test('Test getInstitutionFullDetail', async () => {
         const response = await getInstitutionFullDetail('taxCode');
         expect(response).toMatchObject(mockedInstitutionDetailResource);
+    });
+
+    test('Test saveServiceConsent', async () => {
+        const consent = ConsentEnum.OPT_IN;
+        const response = await saveServiceConsent("institutionId", "serviceId",consent);
+        const mockedResponse = await getSaveConsentResponseMock(consent)
+        expect(response).toMatchObject(mockedResponse);
+    });
+
+     test('Test getServiceConsents', async () => {
+        const response = await getServiceConsents("institutionId");
+        const mockedResponse = await getServicesConsentsOptOutResponseMock()
+        expect(response).toMatchObject(mockedResponse);
     });
 });
 

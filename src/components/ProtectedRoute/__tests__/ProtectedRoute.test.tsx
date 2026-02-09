@@ -75,4 +75,24 @@ describe('ProtectedRoute component', () => {
         const childComponent = screen.queryByText('Child Component');
         expect(childComponent).toBeNull();
     });
+    
+    test("should not render children when org check fails", () => {
+        jest.spyOn(usePermissions, 'usePermissions').mockReturnValue({
+            userHasPermission: (_) => true,
+        });
+        jest.spyOn(useFlagValue, 'useFlagValue').mockReturnValue(true);
+
+        render(
+            <Provider store={store}>
+            <MemoryRouter initialEntries={['/some-route']}>
+                <ProtectedRoute permission="node-signin" flagValue={"node-signin"} orgCheckCondition={(_)=>false}>
+                    <div>Child Component</div>
+                </ProtectedRoute>
+            </MemoryRouter>
+            </Provider>
+        );
+
+        const childComponent = screen.queryByText('Child Component');
+        expect(childComponent).toBeNull();
+    });
 });

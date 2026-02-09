@@ -80,7 +80,7 @@ const SettingsPage = () => {
                                 />
                             ))
                         ) : (
-                            <Typography variant="body1" color="textSecondary">
+                            <Typography data-testid="settings-page-empty-message" variant="body1" color="textSecondary">
                                 {t('settingsPage.emptyListError')}
                             </Typography>
                         )}

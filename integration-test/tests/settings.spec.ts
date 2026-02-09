@@ -1,7 +1,7 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToEcUser } from './utils/e2eUtils';
+import { changeToEcIPAUser, ORG } from './utils/e2eUtils';
 
-const INSTITUTION_ID = '89a94a69-7a2d-4fa8-ac16-1f828926c6b2';
+const INSTITUTION_ID = ORG.EC_IPA.id;
 const GET_SERVICES_URL = `**/institutions/${INSTITUTION_ID}/services/consents`;
 
 test.describe('Settings Page - Service Consents', () => {
@@ -14,7 +14,7 @@ test.describe('Settings Page - Service Consents', () => {
   });
 
   test('should render the list of services correctly', async () => {
-    await changeToEcUser(page);
+    await changeToEcIPAUser(page);
     await acceptCookieBanner(page);
 
     console.log('🚀 STARTING TEST: Render the list of services');
@@ -24,58 +24,41 @@ test.describe('Settings Page - Service Consents', () => {
     await expect(page.getByRole('heading', { name: /SEPA Request to Pay/})).toBeVisible();
   });
 
-  test('should open dialog and enable service (Opt-In)', async ({ page }) => {
-    await changeToEcUser(page);
+  test('should open dialog, enable service (Opt-In) and disable service (Opt-in) or vice versa', async ({ page }) => {
+    await changeToEcIPAUser(page);
     await acceptCookieBanner(page);
     
     await page.getByTestId('settings-nav-test').click();
 
-    const btnEnable = page.getByTestId('RTP-button-enabling');
-    const btnDisable = page.getByTestId('RTP-button-disabling');
+    const btnEnable = page.getByTestId('settingCard-RTP-enableButton');
+    const btnDisable = page.getByTestId('settingCard-RTP-disableButton');
     const eitherButton = btnEnable.or(btnDisable);
     await eitherButton.waitFor({ state: 'visible', timeout: 5000 });
 
     if (await btnEnable.isVisible()) {
       console.log('🚀 STATE DETECTED: Service is OFF. Testing ENABLE flow.');
-      await btnEnable.click();
-      await page.getByTestId('dialog-button-confirm-enabling').click();
-
-      await expect(page.getByText('In attivazione')).toBeVisible();
-      await expect(btnDisable).toBeVisible();
+      await enableServiceFlow(page, "RTP");
 
       console.log('🚀 Testing DISABLE flow.');
-
-      await btnDisable.click();
-      await page.getByTestId('dialog-button-confirm-disabling').click();
-
-      await expect(page.getByText('In disattivazione')).toBeVisible();
-      await expect(btnEnable).toBeVisible();
+      await disableServiceFlow(page, "RTP");
     } else {
       console.log('🚀 STATE DETECTED: Service is ON. Testing DISABLE flow.');
-      await btnDisable.click();
-      await page.getByTestId('dialog-button-confirm-disabling').click();
-
-      await expect(page.getByText('In disattivazione')).toBeVisible();
-      await expect(btnEnable).toBeVisible();
+      await disableServiceFlow(page, "RTP");
 
       console.log('🚀 Testing ENABLE flow.');
-      await btnEnable.click();
-      await page.getByTestId('dialog-button-confirm-enabling').click();
-
-      await expect(page.getByText('In attivazione')).toBeVisible();
-      await expect(btnDisable).toBeVisible();
+      await enableServiceFlow(page, "RTP");
     }
   });
 
   test('should close dialog when clicking cancel', async ({ page }) => {
     console.log('🚀 STARTING TEST: Should close dialog when clicking cancel.');
-    await changeToEcUser(page);
+    await changeToEcIPAUser(page);
     await acceptCookieBanner(page);
 
     await page.getByTestId('settings-nav-test').click();
 
-    const btnEnable = page.getByTestId('RTP-button-enabling');
-    const btnDisable = page.getByTestId('RTP-button-disabling');
+    const btnEnable = page.getByTestId('settingCard-RTP-enableButton');
+    const btnDisable = page.getByTestId('settingCard-RTP-disableButton');
     const eitherButton = btnEnable.or(btnDisable);
     await eitherButton.waitFor({ state: 'visible', timeout: 5000 });
 
@@ -85,18 +68,18 @@ test.describe('Settings Page - Service Consents', () => {
       await btnDisable.click();
     }
 
-    const dialog = page.getByTestId('dialog-test');
+    const dialog = page.getByTestId('settingCard-RTP-dialog-message');
     await expect(dialog).toBeVisible();
 
     // Click Cancel
-    await page.getByTestId('dialog-button-cancel').click();
+    await page.getByTestId('settingCard-RTP-dialog-cancelButton').click();
 
     await expect(dialog).toBeHidden();
   });
 
   test('should show empty state if list is empty', async ({ page }) => {
     console.log('🚀 STARTING TEST: Should close dialog when clicking cancel.');
-    await changeToEcUser(page);
+    await changeToEcIPAUser(page);
     await acceptCookieBanner(page);
 
     await page.route(GET_SERVICES_URL, async (route) => {
@@ -122,4 +105,40 @@ export const acceptCookieBanner = async (page: Page) => {
   } catch (error) {
     console.log('🍪 Cookie banner not found or already accepted (Continuing test...)');
   }
+};
+
+/**
+ * Utility method that performs the "Enable Service" flow.
+ * It handles the modal confirmation and asserts that the disabling button becomes visible afterwards.
+ * @param page - The Playwright Page object
+ * @param serviceId - The service id under test
+ */
+export const enableServiceFlow = async (page: Page, serviceId: string) => {
+  const btnEnable = page.getByTestId(`settingCard-${serviceId}-enableButton`);
+  const btnDisable = page.getByTestId(`settingCard-${serviceId}-disableButton`);
+  const dialogBtnEnable = page.getByTestId(`settingCard-${serviceId}-dialog-enableButton`);
+
+  await btnEnable.click();
+  await dialogBtnEnable.click();
+
+  await expect(page.getByText('In attivazione')).toBeVisible();
+  await expect(btnDisable).toBeVisible();
+};
+
+/**
+ * Utility method that performs the "Disable Service" flow.
+ * It handles the modal confirmation and asserts that the enabling button becomes visible afterwards.
+ * @param page - The Playwright Page object
+ * @param serviceId - The service id under test
+ */
+export const disableServiceFlow = async (page: Page, serviceId: string) => {
+  const btnEnable = page.getByTestId(`settingCard-${serviceId}-enableButton`);
+  const btnDisable = page.getByTestId(`settingCard-${serviceId}-disableButton`);
+  const dialogBtnDisable = page.getByTestId(`settingCard-${serviceId}-dialog-disableButton`);
+
+  await btnDisable.click();
+  await dialogBtnDisable.click();
+
+  await expect(page.getByText('In disattivazione')).toBeVisible();
+  await expect(btnEnable).toBeVisible();
 };

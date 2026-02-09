@@ -30,16 +30,16 @@ describe('Services settings page rendering', () => {
         const consent = ConsentEnum.OPT_IN;
         const consentDate = new Date();
         const mockedServicesResponse = {
-                services: [{
-                    consent: consent,
-                    consentDate: consentDate,
-                    serviceId: ServiceIdEnum.RTP,
-                },
-                {
-                    consent: consent,
-                    consentDate: consentDate,
-                    serviceId: "service2" as ServiceIdEnum,
-                }],
+            services: [{
+                consent: consent,
+                consentDate: consentDate,
+                serviceId: ServiceIdEnum.RTP,
+            },
+            {
+                consent: consent,
+                consentDate: consentDate,
+                serviceId: "service2" as ServiceIdEnum,
+            }],
         };
         const mockedServiceConsentList = Promise.resolve(mockedServicesResponse);
         getServiceConsentMock.mockResolvedValue(mockedServiceConsentList);
@@ -71,5 +71,60 @@ describe('Services settings page rendering', () => {
         expect(getServiceConsentMock).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId);
     });
 
+    it('should handle undefined party selected', async () => {
+        // pre-conditions
+        store.dispatch(partiesActions.setPartySelected(undefined));
+        // render page
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={["/ui/settings"]}>
+                    <ThemeProvider theme={theme}>
+                        <SettingsPage />
+                    </ThemeProvider>
+                </MemoryRouter>
+            </Provider>
+        )
+        // assertions
+        // check for title box and alert to be rendered on the page
+        const titleBox = await screen.findByTestId("settingsPage.title");
+        expect(titleBox).toBeVisible();
+        expect(titleBox.textContent).toBe("settingsPage.titlesettingsPage.subtitle");
+        const taxonomyAlert = await screen.findByTestId("settingsPage.taxonomyAlertTitle");
+        expect(taxonomyAlert).toBeVisible();
+        expect(taxonomyAlert.textContent).toBe("settingsPage.warningAlerts.rtp.taxonomyAlertTitle");
+        // expect get services consent to have not being called
+        expect(getServiceConsentMock).toHaveBeenCalledTimes(0);
+        const emptyListErrorMessage = await screen.findByTestId("settingsPage.emptyListError");
+        expect(emptyListErrorMessage).toBeVisible();
+    });
+
+    it('should handle error retrieving services consents list', async () => {
+        // pre-conditions
+        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+        const error = new Error("test error");
+        const mockedServiceConsentList = Promise.reject(error);
+        getServiceConsentMock.mockResolvedValue(mockedServiceConsentList);
+        // render page
+        render(
+            <Provider store={store}> 
+                <MemoryRouter initialEntries={["/ui/settings"]}>
+                    <ThemeProvider theme={theme}>
+                        <SettingsPage />
+                    </ThemeProvider>
+                </MemoryRouter>
+            </Provider>
+        )
+        // assertions
+        // check for title box and alert to be rendered on the page
+        const titleBox = await screen.findByTestId("settingsPage.title");
+        expect(titleBox).toBeVisible();
+        expect(titleBox.textContent).toBe("settingsPage.titlesettingsPage.subtitle");
+        const taxonomyAlert = await screen.findByTestId("settingsPage.taxonomyAlertTitle");
+        expect(taxonomyAlert).toBeVisible();
+        expect(taxonomyAlert.textContent).toBe("settingsPage.warningAlerts.rtp.taxonomyAlertTitle");
+        // expect get services consent to have been called 1 time with correct institution id
+        expect(getServiceConsentMock).toHaveBeenCalledTimes(1);
+        expect(getServiceConsentMock).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId);
+    });
 
 });

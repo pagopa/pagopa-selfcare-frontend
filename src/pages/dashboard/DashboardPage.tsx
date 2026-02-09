@@ -7,7 +7,7 @@ import { usePermissions } from '../../hooks/usePermissions';
 import { useAppSelector } from '../../redux/hooks';
 import { partiesSelectors } from '../../redux/slices/partiesSlice';
 import ROUTES from '../../routes';
-import { showSettingsSection } from '../settings/utils';
+import { ShowSettingsSection } from '../settings/utils';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import DownloadSection from './components/DownloadSection';
@@ -38,7 +38,7 @@ const DashboardPage = () => {
                     {(history.location.state as any).alertSuccessMessage}
                 </Alert>
             )}
-            {showSettingsSection(useFlagValue, userHasPermission, orgInfo) && (
+            {ShowSettingsSection(useFlagValue, userHasPermission, orgInfo) && (
                 <Alert severity="info" sx={{ mb: 4 }}>
                     <AlertTitle>{t('dashboardPage.newServiceAlerts.RTP.title')}</AlertTitle>
                     {t('dashboardPage.newServiceAlerts.RTP.subtitle')}

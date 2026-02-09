@@ -1,8 +1,9 @@
 import { Alert, AlertTitle, CircularProgress, Link, Typography } from '@mui/material';
-import { Trans, useTranslation } from "react-i18next";
+import { TFunction, Trans, useTranslation } from "react-i18next";
 import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from 'react';
+import { AppError } from '@pagopa/selfcare-common-frontend/model/AppError';
 import SideMenuLayout from "../../components/SideMenu/SideMenuLayout";
 import { ENV } from "../../utils/env";
 import { ServiceConsentsResponse } from '../../api/generated/portal/ServiceConsentsResponse';
@@ -18,7 +19,7 @@ const SettingsPage = () => {
     const [isLoadingList, setIsLoadingList] = useState(false);
     const { t } = useTranslation();
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-
+    const addError = useErrorDispatcher();
     const fetchServices = useCallback(async () => {
         if (!selectedParty?.partyId){
             console.error("Cannot retrieve service consent for selectedParty.partyId:", selectedParty?.partyId);
@@ -29,14 +30,14 @@ const SettingsPage = () => {
             .then((response) => {
                 setServiceList(response);
             })
-        .catch((error) => HandleError(error))
+        .catch((error) => onError(error, addError, t))
             .finally(() => {
                 setIsLoadingList(false);
             });
     }, [selectedParty?.partyId]);
 
     useEffect(() => {
-      fetchServices().catch((error) => HandleError(error));
+      fetchServices().catch((error) => onError(error, addError, t));
     }, [fetchServices]);
 
     return (
@@ -80,7 +81,7 @@ const SettingsPage = () => {
                                 />
                             ))
                         ) : (
-                            <Typography variant="body1" color="textSecondary">
+                            <Typography data-testid="settingsPage.emptyListError" variant="body1" color="textSecondary">
                                 {t('settingsPage.emptyListError')}
                             </Typography>
                         )}
@@ -91,9 +92,7 @@ const SettingsPage = () => {
     );
 };
 
-const HandleError = (error: Error) => {
-  const addError = useErrorDispatcher();
-  const { t } = useTranslation();
+const onError = (error:Error, addError:(error: AppError) => void, t: TFunction<"translation", undefined>) => {
   addError({
     id: 'GET_SERVICE_CONSENTS',
     blocking: false,
@@ -103,7 +102,8 @@ const HandleError = (error: Error) => {
     displayableTitle: t('settingsPage.errorTitle'),
     displayableDescription: t('settingsPage.errorDescription'),
     component: 'Toast',
+    autocloseMilliseconds: 4000
   });
 };
 
-export default SettingsPage;
+export default SettingsPage; 

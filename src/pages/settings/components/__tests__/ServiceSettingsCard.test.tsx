@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 const saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
-const rtpServiceStartingDate = jest.spyOn(require('../utils'), 'rtpServiceStartingTimestamp');
+const rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
 
 const checkElementToBeVisibleWithText = async (dataTestId: string, elementContent: string) => {
     const element = await screen.findByTestId(dataTestId);

@@ -94,7 +94,7 @@ test.describe('Settings Page - Service Consents', () => {
     await expect(dialog).toBeHidden();
   });
 
-  test.only('should show empty state if list is empty', async ({ page }) => {
+  test('should show empty state if list is empty', async ({ page }) => {
     console.log('🚀 STARTING TEST: Should close dialog when clicking cancel.');
     await changeToEcUser(page);
     await acceptCookieBanner(page);

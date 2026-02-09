@@ -91,7 +91,7 @@ test.describe('Settings Page - Service Consents', () => {
 
     await page.getByTestId('settings-nav-test').click();
 
-    await expect(page.getByTestId("settings-page-empty-message")).toBeVisible();
+    await expect(page.getByTestId("settingsPage.emptyListError")).toBeVisible();
   });
 });
 

@@ -32,6 +32,7 @@ export const API_KEY_PRODUCTS = {
   PRINT_NOTICE: { id: 'PRINT_NOTICE', key: 'printnotice-' },
   ACA: { id: 'ACA', key: 'aca-' },
   QI_FDR_KPI: { id: 'QI_FDR_KPI', key: 'qifdrkpiservice-' },
+  MBD: { id: 'MBD', key: 'mbd-'}
 };
 
 /* eslint-disable functional/immutable-data */
@@ -51,7 +52,8 @@ export const getApiKeyProducts = (
       API_KEY_PRODUCTS.GPD_PAY,
       API_KEY_PRODUCTS.GPD_REP,
       API_KEY_PRODUCTS.BIZ,
-      API_KEY_PRODUCTS.ACA
+      API_KEY_PRODUCTS.ACA,
+      API_KEY_PRODUCTS.MBD
     );
     
     if (flagPrintNotice) {

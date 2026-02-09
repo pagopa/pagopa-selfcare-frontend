@@ -12,12 +12,13 @@ import {
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { Trans, useTranslation } from 'react-i18next';
+import { TFunction, Trans, useTranslation } from 'react-i18next';
 import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { AppError } from '@pagopa/selfcare-common-frontend/model/AppError';
 import { saveServiceConsent } from '../../../services/institutionService';
 import { ConsentEnum } from '../../../api/generated/portal/ServiceConsentRequest';
 import { useAppSelector } from '../../../redux/hooks';
@@ -117,6 +118,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
     const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const addError = useErrorDispatcher();
     return (
         <Dialog
             open={modalOpenFlag}
@@ -164,10 +166,12 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
                                 .then((data) => {
                                     onSaveServiceConsentResponse(data);
-                                    onModalStateChange(false);
                                 })
-                                .catch((error) => HandleError(error))
-                                .finally(() => setLoading(false));
+                                .catch((error) => onError(error, addError, t))
+                                .finally(() => {
+                                    setLoading(false);
+                                    onModalStateChange(false);
+                                });
                         }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
@@ -180,10 +184,12 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
                                 .then((data) => {
                                     onSaveServiceConsentResponse(data);
-                                    onModalStateChange(false);
                                 })
-                                .catch((error) => HandleError(error))
-                                .finally(() => setLoading(false));
+                                .catch((error) => onError(error, addError, t))
+                                .finally(() => {
+                                    setLoading(false);
+                                    onModalStateChange(false);
+                                });
                         }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
@@ -192,9 +198,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
         </Dialog>);
 };
 
-const HandleError = (error: Error) => {
-    const addError = useErrorDispatcher();
-    const { t } = useTranslation();
+const onError = (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
     addError({
         id: 'SAVE_SERVICE_CONSENT',
         blocking: false,
@@ -204,6 +208,7 @@ const HandleError = (error: Error) => {
         displayableTitle: t('serviceConsent.errorTitle'),
         displayableDescription: t('serviceConsent.errorDescription'),
         component: 'Toast',
+        autocloseMilliseconds: 4000
     });
 };
 

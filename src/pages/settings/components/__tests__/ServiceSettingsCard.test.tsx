@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/system";
 import { theme } from "@pagopa/mui-italia";
 import { ConsentEnum, ServiceIdEnum } from "../../../../api/generated/portal/ServiceConsentInfo";
 import { partiesActions } from "../../../../redux/slices/partiesSlice";
-import { ecAdminSignedDirect } from "../../../../services/__mocks__/partyService";
+import { ecAdminSignedDirect, ecOperatorSignedDirect } from "../../../../services/__mocks__/partyService";
 import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
 import ita from '../../../../locale/it.json';
 import ServiceSettingsCard, { ChipStatus, rtpServiceChipStatusConf, ServiceInfo } from "../ServiceSettingsCard";
@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 const saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
-const rtpServiceStartingDate = jest.spyOn(require('../utils'), 'rtpServiceStartingTimestamp');
+const rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
 
 const checkElementToBeVisibleWithText = async (dataTestId: string, elementContent: string) => {
     const element = await screen.findByTestId(dataTestId);
@@ -254,5 +254,52 @@ describe('Service setting page card rendering', () => {
         } finally {
             jest.useRealTimers();
         } 
+    });
+
+
+    it.each([
+        [ConsentEnum.OPT_IN, true],
+        [ConsentEnum.OPT_OUT, false]
+    ])('should disable action button for not admin user with consent %s', async (consent: ConsentEnum, serviceEnabled: boolean) => {
+        // pre-conditions
+        const consentDate = new Date();
+        // set consent date to yesterday so that it's evalued as consolidated
+        consentDate.setHours(-24, 0, 0, 0);
+        store.dispatch(partiesActions.setPartySelected(ecOperatorSignedDirect));
+        const serviceInfo: ServiceInfo = {
+            serviceId: ServiceIdEnum.RTP,
+            consent: consent,
+            consentDate: consentDate
+        }
+        rtpServiceStartingDate.mockReturnValue(0);
+        saveServiceConsentSpy.mockReturnValue(getSaveConsentResponseMock(consent));
+        // render page
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={["/ui/settings"]}>
+                    <ThemeProvider theme={theme}>
+                        <ServiceSettingsCard
+                            serviceId={serviceInfo.serviceId}
+                            consent={serviceInfo.consent}
+                            consentDate={serviceInfo.consentDate}
+                        />
+                    </ThemeProvider>
+                </MemoryRouter>
+            </Provider>
+        )
+        // assertions
+
+        await act(async () => {
+            let serviceActionButton;
+            // search for service enable/disable button
+            if (serviceEnabled) {
+                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+            } else {
+                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+            }
+            // check that service enable/disable button is visible but disabled
+            expect(serviceActionButton).toBeVisible();
+            expect(serviceActionButton).toBeDisabled();
+        });
     });
 });  

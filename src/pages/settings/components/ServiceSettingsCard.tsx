@@ -25,7 +25,8 @@ import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { ServiceConsentResponse } from '../../../api/generated/portal/ServiceConsentResponse';
 import { ServiceIdEnum } from '../../../api/generated/portal/ServiceConsentInfo';
-import { rtpServiceStartingTimestamp, URLS } from './utils';
+import { rtpServiceStartingTimestamp, URLS } from '../utils';
+import { useUserRole } from '../../../hooks/useUserRole';
 
 export type ServiceInfo = {
     serviceId: ServiceIdEnum;
@@ -88,6 +89,7 @@ const StatusChip = ({ serviceInfo }: ({ serviceInfo: ServiceInfo })) => {
 
 const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; onClick: () => void })) => {
     const { t } = useTranslation();
+    const userRole = useUserRole();
     if (serviceInfo.consent === ConsentEnum.OPT_IN) {
         return (<Button
             data-testid={`settingCard-${serviceInfo.serviceId}-disableButton`}
@@ -95,6 +97,7 @@ const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; on
             startIcon={<DoDisturbAltIcon />}
             color="error"
             onClick={onClick}
+            disabled={!userRole.userIsAdmin}
         >
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
@@ -104,6 +107,7 @@ const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; on
             variant="contained"
             endIcon={<ArrowForwardIcon />}
             onClick={onClick}
+            disabled={!userRole.userIsAdmin}
         >
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
@@ -118,6 +122,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
     const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const userRole = useUserRole();
     const addError = useErrorDispatcher();
     return (
         <Dialog
@@ -161,6 +166,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                         variant="outlined"
                         color="error"
                         startIcon={<DoDisturbAltIcon />}
+                        disabled={!userRole.userIsAdmin}
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
@@ -179,6 +185,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                     <Button
                         data-testid={`settingCard-${serviceId}-dialog-enableButton`}
                         variant="contained"
+                        disabled={!userRole.userIsAdmin}
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)

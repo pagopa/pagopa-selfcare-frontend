@@ -34,7 +34,7 @@ export const useOrganizationType = () => {
     const orgIsEc: boolean =
         (signInData?.creditorInstitutionDetailsResource && Object.keys(signInData?.creditorInstitutionDetailsResource).length > 0) ?? false;
     const isEc = INSTITUTIONS_EC_TYPES.includes(selectedParty?.institutionType ?? '') || orgIsEc;
-    const orgIsEcIPA: boolean = (isEc || orgIsEcAndBroker) && selectedParty?.origin === "IPA";
+    const orgIsEcIPA: boolean = (isEc || orgIsEc || orgIsEcAndBroker) && selectedParty?.origin === "IPA";
     const info: OrgInfo = {
         // pagopa types
         types: {

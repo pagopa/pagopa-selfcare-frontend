@@ -134,8 +134,8 @@
       "downloadIbans": "Scarica lista IBAN",
       "downloadCI": "Scarica lista enti"
     },
-    "newServiceAlerts":{
-      "RTP":{
+    "newServiceAlerts": {
+      "RTP": {
         "title": "Ora puoi raggiungere gratis i tuoi utenti ancora più facilmente!",
         "subtitle": "Dal 01/03/2026 i tuoi avvisi pagoPA verranno inviati agli utenti anche direttamente sul loro home banking, grazie al servizio “SEPA Request to Pay - Avvisi pagoPA”.",
         "message": "<service_link>Vai al servizio</service_link>"
@@ -1867,6 +1867,9 @@
   "settingsPage": {
     "title": "Impostazioni",
     "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile recuperare l'elenco dei servizi",
+    "emptyListError": "Nessun servizio disponibile",
     "warningAlerts": {
       "rtp": {
         "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
@@ -1876,6 +1879,8 @@
     }
   },
   "serviceConsent": {
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile processare correttamente la richiesta",
     "RTP": {
       "title": "SEPA Request to Pay (Avvisi pagoPA)",
       "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
@@ -1896,6 +1901,12 @@
           "cancelButton": "Torna indietro",
           "confirmButton": "Attiva il servizio"
         }
+      },
+      "statuses": {
+        "enabled": "Attivo",
+        "enabling": "In attivazione",
+        "disabling": "In disattivazione",
+        "enabledFrom": "Attivo dal 01/03/2026"
       }
     }
   }

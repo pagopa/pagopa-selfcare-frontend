@@ -24,6 +24,7 @@ export type ORG_TYPE = {
 export const ORG = {
   EC_DEMO_DIRECT: { id: '21079fe3-b5eb-4978-bef0-5588d11ab53f', taxCode: '99999000013' },
   PSP_DEMO_DIRECT: { id: '5b7130fb-dbe1-4e3b-b02b-2a9cfaf54602', taxCode: '99999000011' },
+  EC_IPA: { id: '6b920f99-fc0d-4eb4-9f91-719a98ba48db', taxCode: '00067060947' },
 };
 
 export async function login(
@@ -71,6 +72,10 @@ export async function changeToEcUser(page: Page, isOperator?: boolean) {
 
 export async function changeToPspUser(page: Page, isOperator?: boolean) {
   await login(page, ORG.PSP_DEMO_DIRECT, isOperator);
+}
+
+export async function changeToEcIPAUser(page: Page, isOperator?: boolean) {
+  await login(page, ORG.EC_IPA, isOperator);
 }
 
 export function getTodayDate() {

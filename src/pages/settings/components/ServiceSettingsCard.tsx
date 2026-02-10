@@ -1,26 +1,60 @@
-import { Button, Card, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Link, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { Trans, useTranslation } from "react-i18next";
+import {
+    Button,
+    Card,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    Link,
+    Typography,
+} from '@mui/material';
+import { Box } from '@mui/system';
+import { TFunction, Trans, useTranslation } from 'react-i18next';
 import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Dispatch, SetStateAction, useState } from "react";
-import { useLoading } from "@pagopa/selfcare-common-frontend";
-import { ENV } from "../../../utils/env";
+import { useState } from 'react';
+import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { AppError } from '@pagopa/selfcare-common-frontend/model/AppError';
+import { saveServiceConsent } from '../../../services/institutionService';
+import { ConsentEnum } from '../../../api/generated/portal/ServiceConsentRequest';
+import { useAppSelector } from '../../../redux/hooks';
+import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { ServiceConsentResponse } from '../../../api/generated/portal/ServiceConsentResponse';
+import { ServiceIdEnum } from '../../../api/generated/portal/ServiceConsentInfo';
+import { rtpServiceStartingTimestamp, URLS } from '../utils';
+import { useUserRole } from '../../../hooks/useUserRole';
 
-type ServiceInfo = {
-    serviceId: string;
-    consent: string;
-    consentDate: string;
+export type ServiceInfo = {
+    serviceId: ServiceIdEnum;
+    consent: ConsentEnum;
+    consentDate: Date;
 };
-const URLS = {
-    SANP_URL: ENV.SETTINGS.SERVICES.SANP_URL,
-    RTP_OVERVIEW_URL: ENV.SETTINGS.SERVICES.RTP_OVERVIEW_URL
+
+// enumeration of all possible chip statuses
+export const enum ChipStatus {
+    DISABLING = "DISABLING",
+    DISABLED = "DISABLED",
+    ENABLING = "ENABLING",
+    ENABLED = "ENABLED",
+    ENABLED_FROM = "ENABLED_FROM"
 };
 
-const ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
-
-const RTP_SERVICE_STARTING_DATE = ENV.SETTINGS.SERVICES.RTP.SERVICE_STARTING_DATE.getTime();
+export type ChipConfDataType = {
+    label: string;
+    color: 'success' | 'warning' | 'secondary';
+    hidden: boolean;
+};
+export const rtpServiceChipStatusConf: Record<ChipStatus, ChipConfDataType | undefined> = {
+    [ChipStatus.DISABLING]: { label: "serviceConsent.RTP.statuses.disabling", color: "warning", hidden: false },
+    [ChipStatus.DISABLED]: undefined,
+    [ChipStatus.ENABLING]: { label: "serviceConsent.RTP.statuses.enabling", color: "secondary", hidden: false },
+    [ChipStatus.ENABLED]: { label: "serviceConsent.RTP.statuses.enabled", color: "success", hidden: false },
+    [ChipStatus.ENABLED_FROM]: { label: "serviceConsent.RTP.statuses.enabledFrom", color: "success", hidden: false }
+};
 
 const StatusChip = ({ serviceInfo }: ({ serviceInfo: ServiceInfo })) => {
     const { t } = useTranslation();
@@ -28,80 +62,97 @@ const StatusChip = ({ serviceInfo }: ({ serviceInfo: ServiceInfo })) => {
     const consolidatedConsentDate = new Date(serviceInfo.consentDate);
     consolidatedConsentDate.setHours(24, 0, 0, 0);
     const consolidatedConsentDateMillis = consolidatedConsentDate.getTime();
-    const isAfterServiceStartDate = nowMillis > RTP_SERVICE_STARTING_DATE;
+    const isAfterServiceStartDate = nowMillis > rtpServiceStartingTimestamp();
     // consent is considered consolidated after midnight of the day after it was given
     const isConsentConsolidated = nowMillis >= consolidatedConsentDateMillis;
-    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    const isServiceEnabled = serviceInfo.consent === ConsentEnum.OPT_IN;
     // eslint-disable-next-line functional/no-let
-    let chipLabel: string;
-    // eslint-disable-next-line functional/no-let
-    let chipColor: "success" | "warning" | "secondary";
-    // eslint-disable-next-line functional/no-let
-    let hidden: boolean;
+    let chipStatus: ChipStatus;
     if (isServiceEnabled) {
         if (isConsentConsolidated) {
-            chipLabel = isAfterServiceStartDate ? t("serviceConsent.RTP.statuses.enabled") : t("serviceConsent.RTP.statuses.enabledFrom");
+            chipStatus = isAfterServiceStartDate
+                ? ChipStatus.ENABLED
+                : ChipStatus.ENABLED_FROM;
         } else {
-            chipLabel = t("serviceConsent.RTP.statuses.enabling");
+            chipStatus = ChipStatus.ENABLING;
         }
-        chipColor = isConsentConsolidated ? "success" : "secondary";
-        hidden = false;
     } else {
-        chipLabel = t("serviceConsent.RTP.statuses.disabling");
-        chipColor = "warning";
-        hidden = isConsentConsolidated;
+        chipStatus = isConsentConsolidated ? ChipStatus.DISABLED : ChipStatus.DISABLING;
     }
-    return hidden ? (<Box />) : (<Chip label={chipLabel} size="small" color={chipColor} hidden={hidden} />);
+    const chipConf = rtpServiceChipStatusConf[chipStatus];
+    return chipConf ? (
+        <Chip label={t(chipConf.label)} size="small" color={chipConf.color} />
+    ) : (
+        <Box />
+    );
 };
 
 const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; onClick: () => void })) => {
     const { t } = useTranslation();
-    if (serviceInfo.consent === "OPT-IN") {
-        return (<Button variant="outlined" startIcon={<DoDisturbAltIcon />} color="error" onClick={onClick}>
+    const userRole = useUserRole();
+    if (serviceInfo.consent === ConsentEnum.OPT_IN) {
+        return (<Button
+            data-testid={`settingCard-${serviceInfo.serviceId}-disableButton`}
+            variant="outlined"
+            startIcon={<DoDisturbAltIcon />}
+            color="error"
+            onClick={onClick}
+            disabled={!userRole.userIsAdmin}
+        >
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
     } else {
-        return (<Button variant="contained" endIcon={<ArrowForwardIcon />} onClick={onClick}>
+        return (<Button
+            data-testid={`settingCard-${serviceInfo.serviceId}-enableButton`}
+            variant="contained"
+            endIcon={<ArrowForwardIcon />}
+            onClick={onClick}
+            disabled={!userRole.userIsAdmin}
+        >
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
     }
 
 };
-const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onServiceInfoUpdate }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag:boolean) => void; onServiceInfoUpdate: (serviceInfo:ServiceInfo) => void })) => {
+
+const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChange, onSaveServiceConsentResponse }: ({ serviceInfo: ServiceInfo; modalOpenFlag: boolean; onModalStateChange: (flag: boolean) => void; onSaveServiceConsentResponse: (s: ServiceConsentResponse) => void })) => {
     const { t } = useTranslation();
     const serviceId = serviceInfo.serviceId;
-    const isServiceEnabled = serviceInfo.consent === "OPT-IN";
+    const isServiceEnabled = serviceInfo.consent === ConsentEnum.OPT_IN;
     const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
+    const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const userRole = useUserRole();
+    const addError = useErrorDispatcher();
     return (
         <Dialog
             open={modalOpenFlag}
             onClose={() => onModalStateChange(false)}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-            data-testid="dialog-test"
+            data-testid={`settingCard-${serviceId}-dialog`}
         >
-            <DialogTitle id="alert-dialog-title" fontWeight={'bold'}>
+            <DialogTitle fontWeight={'bold'} data-testid={`settingCard-${serviceId}-dialog-title`} >
                 {t(`${translationRootKey}.title`)}
             </DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    <Typography>
+                <Box data-testid={`settingCard-${serviceId}-dialog-message`}>
+                    <DialogContentText>
                         <Trans
                             i18nKey={`${translationRootKey}.message`}
                             components={{
                                 sanp_url: <Link href={(`${URLS.SANP_URL}`)} />,
                             }}
                         />
-                    </Typography>
-                </DialogContentText>
+                    </DialogContentText>
+                </Box>
             </DialogContent>
             <DialogActions sx={{
                 marginRight: 3,
                 marginBottom: 2
             }} >
                 <Button
-                    data-testid="dialog-button-cancel"
+                    data-testid={`settingCard-${serviceId}-dialog-cancelButton`}
                     variant="outlined"
                     sx={{
                         marginRight: 1
@@ -111,53 +162,61 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                 </Button>
                 {isServiceEnabled ?
                     <Button
-                        data-testid="dialog-button-confirm-disabling"
+                        data-testid={`settingCard-${serviceId}-dialog-disableButton`}
                         variant="outlined"
                         color="error"
                         startIcon={<DoDisturbAltIcon />}
-                        onClick={
-                            // TODO: set timeout here just to mock b.e. interaction
-                            () => {
-                                console.log("On click - update status confirm disabling");
-                                setLoading(true);
-                                setTimeout(function () {
+                        disabled={!userRole.userIsAdmin}
+                        onClick={() => {
+                            setLoading(true);
+                            saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
+                                .then((data) => {
+                                    onSaveServiceConsentResponse(data);
+                                })
+                                .catch((error) => onError(error, addError, t))
+                                .finally(() => {
                                     setLoading(false);
-                                    // TODO mocked update state here
-                                    onServiceInfoUpdate({
-                                        consent: "OPT-OUT",
-                                        consentDate: new Date().toString(),
-                                        serviceId: "RTP"
-                                    });
                                     onModalStateChange(false);
-                                }, 1000);
-                            }}>
+                                });
+                        }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                     :
                     <Button
-                        data-testid="dialog-button-confirm-enabling"
+                        data-testid={`settingCard-${serviceId}-dialog-enableButton`}
                         variant="contained"
-                        onClick={
-                            // TODO: set timeout here just to mock b.e. interaction
-                            () => {
-                                console.log("On click - update status confirm enabling");
-                                setLoading(true);
-                                setTimeout(function () {
+                        disabled={!userRole.userIsAdmin}
+                        onClick={() => {
+                            setLoading(true);
+                            saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
+                                .then((data) => {
+                                    onSaveServiceConsentResponse(data);
+                                })
+                                .catch((error) => onError(error, addError, t))
+                                .finally(() => {
                                     setLoading(false);
-                                    // TODO mocked update state here
-                                    onServiceInfoUpdate({
-                                        consent: "OPT-IN",
-                                        consentDate: new Date().toString(),
-                                        serviceId: "RTP"
-                                    });
                                     onModalStateChange(false);
-                                }, 1000);
-                            }}>
+                                });
+                        }}>
                         {t(`${translationRootKey}.confirmButton`)}
                     </Button>
                 }
             </DialogActions>
         </Dialog>);
+};
+
+const onError = (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
+    addError({
+        id: 'SAVE_SERVICE_CONSENT',
+        blocking: false,
+        error,
+        techDescription: `An error occurred while saving service consent`,
+        toNotify: true,
+        displayableTitle: t('serviceConsent.errorTitle'),
+        displayableDescription: t('serviceConsent.errorDescription'),
+        component: 'Toast',
+        autocloseMilliseconds: 4000
+    });
 };
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
@@ -170,15 +229,15 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
     return (
         <Box>
-            <Card variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
-                <Box>
+            <Card data-testid={`settingCard-${serviceId}-card`} variant="outlined" sx={{ border: 0, borderRadius: 0, p: 3, mb: 3 }}>
+                <Box data-testid={`settingCard-${serviceId}-statusChip`} >
                     <StatusChip serviceInfo={serviceInfoState} />
                 </Box>
                 <Box>
-                    <Typography variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
+                    <Typography data-testid={`settingCard-${serviceId}-card-title`} variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
                 </Box>
-                <Box>
-                    <Typography variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+                <Box >
+                    <Typography data-testid={`settingCard-${serviceId}-card-subtitle`} variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
                         {t(`${serviceTranslationRootKey}.description`)}
                     </Typography>
                 </Box>
@@ -188,20 +247,32 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                         setShowConfirmationModal(true);
                     }
                     } />
-                    <Trans
-                        i18nKey={`${serviceTranslationRootKey}.moreInfo`}
-                        components={{
-                            sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
-                            </Link>),
-                            icon: <LaunchIcon fontSize="small" />
-                        }}
-                    />
+                    <Box data-testid={`settingCard-${serviceId}-more-info-link`}>
+                        <Trans
+                            i18nKey={`${serviceTranslationRootKey}.moreInfo`}
+                            components={{
+                                sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                                </Link>),
+                                icon: <LaunchIcon fontSize="small" />
+                            }}
+                        />
+                    </Box>
                 </Grid>
             </Card>
-            <ServiceStatusChangeModal serviceInfo={serviceInfoState} modalOpenFlag={showConfirmationModal} onModalStateChange={setShowConfirmationModal} onServiceInfoUpdate={setServiceInfoState} />
+            <ServiceStatusChangeModal
+                serviceInfo={serviceInfoState}
+                modalOpenFlag={showConfirmationModal}
+                onModalStateChange={setShowConfirmationModal}
+                onSaveServiceConsentResponse={(serviceConsentResponse => {
+                    setServiceInfoState({
+                        serviceId: serviceInfoState.serviceId,
+                        consent: serviceConsentResponse.consent,
+                        consentDate: serviceConsentResponse.date
+
+                    });
+                })} />
         </Box>
     );
 };
-
 export default ServiceSettingsCard;

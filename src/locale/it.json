@@ -1867,6 +1867,9 @@
   "settingsPage": {
     "title": "Impostazioni",
     "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile recuperare l'elenco dei servizi",
+    "emptyListError": "Nessun servizio disponibile",
     "warningAlerts": {
       "rtp": {
         "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
@@ -1876,6 +1879,8 @@
     }
   },
   "serviceConsent": {
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile processare correttamente la richiesta",
     "RTP": {
       "title": "SEPA Request to Pay (Avvisi pagoPA)",
       "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.46.0",
+  "version": "1.46.0-1-CHK-4708-service-settings-section",
   "homepage": "ui",
   "private": true,
   "scripts": {

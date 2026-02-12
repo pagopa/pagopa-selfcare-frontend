@@ -133,6 +133,13 @@
       "title": "Sezione download",
       "downloadIbans": "Scarica lista IBAN",
       "downloadCI": "Scarica lista enti"
+    },
+    "newServiceAlerts": {
+      "RTP": {
+        "title": "Ora puoi raggiungere gratis i tuoi utenti ancora più facilmente!",
+        "subtitle": "Dal 01/03/2026 i tuoi avvisi pagoPA verranno inviati agli utenti anche direttamente sul loro home banking, grazie al servizio “SEPA Request to Pay - Avvisi pagoPA”.",
+        "message": "<service_link>Vai al servizio</service_link>"
+      }
     }
   },
   "nodeSignInPage": {
@@ -999,7 +1006,7 @@
     "to": "Data fine",
     "ecData": "Dati ente creditore",
     "fiscalCode": "Codice Fiscale",
-    "deletionScheduled" : "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
+    "deletionScheduled": "Dopo l'eliminazione, prevista per il {{ ibanDeletionDate }}, non sarà più possibile accettare versamenti su questo IBAN.",
     "buttons": {
       "edit": "Modifica",
       "delete": "Elimina",
@@ -1768,6 +1775,9 @@
         "userNotSubscribedAdmin": "Servizio non attivo. Sottoscrivi il contratto per abilitare la dashboard. Per informazioni su attivazione e costi, scrivi a account@pagopa.it.",
         "errorGeneric": "E' stato riscontrato un errore durante il recupero della dashboard"
       }
+    },
+    "settings": {
+      "title": "Impostazioni"
     }
   },
   "header": {
@@ -1852,5 +1862,51 @@
     "year": "Anno",
     "attention": "Attenzione"
   },
-  "ANY": "Tutti"
+  "ANY": "Tutti",
+  "settingsPage": {
+    "title": "Impostazioni",
+    "subtitle": "Gestisci i tuoi consensi e preferenze",
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile recuperare l'elenco dei servizi",
+    "emptyListError": "Nessun servizio disponibile",
+    "warningAlerts": {
+      "rtp": {
+        "taxonomyAlertTitle": "Scegli quali richieste di pagamento inviare tramite SEPA Request to Pay",
+        "taxonomyAlertContent": "Per farlo, configura le posizioni debitorie usando la tassonomia corretta: in questo modo puoi scartare tutti i dovuti legati a ravvedimenti operosi e/o già gestiti da altri servizi di richieste di pagamento.",
+        "taxonomyAlertDocLinkText": "<sanp_url>Leggi la documentazione</sanp_url>"
+      }
+    }
+  },
+  "serviceConsent": {
+    "errorTitle": "Errore durante l'elaborazione della richiesta",
+    "errorDescription": "Non è stato possibile processare correttamente la richiesta",
+    "RTP": {
+      "title": "SEPA Request to Pay (Avvisi pagoPA)",
+      "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
+      "moreInfo": "<sanp_url>Vuoi saperne di più<icon/></sanp_url>",
+      "disableButtonText": "Disattiva il servizio",
+      "enableButtonText": "Attiva il servizio",
+      "editContacts": "Modifica contatti",
+      "popups": {
+        "disableService": {
+          "title": "Vuoi davvero disattivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
+          "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
+          "cancelButton": "Torna indietro",
+          "confirmButton": "Disattiva il servizio"
+        },
+        "enableService": {
+          "title": "Vuoi davvero attivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
+          "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
+          "cancelButton": "Torna indietro",
+          "confirmButton": "Attiva il servizio"
+        }
+      },
+      "statuses": {
+        "enabled": "Attivo",
+        "enabling": "In attivazione",
+        "disabling": "In disattivazione",
+        "enabledFrom": "Attivo dal 01/03/2026"
+      }
+    }
+  }
 }

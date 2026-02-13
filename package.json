@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.47.1-1-PIDM-1527-fix-add-taxonomies",
+  "version": "1.47.1-2-PIDM-1527-fix-add-taxonomies",
   "homepage": "ui",
   "private": true,
   "scripts": {

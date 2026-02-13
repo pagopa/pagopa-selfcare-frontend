@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.47.0-1-PIDM-1487-fix-empty-cbill",
+  "version": "1.47.1",
   "homepage": "ui",
   "private": true,
   "scripts": {

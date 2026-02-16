@@ -1895,7 +1895,8 @@
       "moreInfo": "<sanp_url>Vuoi saperne di più?<icon/></sanp_url>",
       "disableButtonText": "Disattiva il servizio",
       "enableButtonText": "Attiva il servizio",
-      "editContacts": "Modifica contatti",
+      "disablingServiceMessage": "Disattivazione programmata: {{consolidation_date}}",
+      "enablingServiceMessage": "Attivazione programmata: {{consolidation_date}}",
       "popups": {
         "disableService": {
           "title": "Vuoi davvero disattivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",

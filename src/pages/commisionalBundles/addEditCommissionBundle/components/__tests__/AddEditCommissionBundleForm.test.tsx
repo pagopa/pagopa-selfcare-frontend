@@ -682,4 +682,34 @@ describe('<AddEditCommissionBundleForm />', () => {
     );
   });
 });
+
+test('should render payment types correctly even when description is missing', async () => {
+  const injectStore = createStore();
+  
+  const mixedPaymentTypes = {
+    payment_types: [
+      { payment_type: 'AD', description: '' }, 
+      { payment_type: 'CP', description: 'Carta di Pagamento' },
+    ],
+  };
+
+  spyOnGetPaymentTypes.mockResolvedValueOnce(mixedPaymentTypes);
+
+  componentRender(FormAction.Create, undefined, injectStore);
+
+  await waitFor(() => expect(spyOnGetPaymentTypes).toHaveBeenCalled());
+
+  const selectContainer = screen.getByTestId('payment-type-test');
+  const selectButton = selectContainer.querySelector('.MuiSelect-select') || screen.getByRole('button', { name: /payment type/i });
+
+  if (!selectButton) {
+     screen.debug(selectContainer);
+  }
+
+  fireEvent.mouseDown(selectButton);
+  await waitFor(() => {
+    expect(screen.getByText('AD')).toBeInTheDocument();
+    expect(screen.getByText('Carta di Pagamento - CP')).toBeInTheDocument();
+  });
+});
 });

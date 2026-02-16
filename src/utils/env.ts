@@ -1,9 +1,9 @@
 import * as env from 'env-var';
-import {getConfig, Type} from "./config";
+import { getConfig, Type } from "./config";
 
 export const ENV = {
     ENV: env.get('REACT_APP_ENV').required().default('dev').asString(),
-    PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', {default: 'ui'}),
+    PUBLIC_URL: getConfig('REACT_APP_PUBLIC_URL', { default: 'ui' }),
 
     ASSISTANCE: {
         EMAIL: env.get('REACT_APP_PAGOPA_HELP_EMAIL').required().asString(),
@@ -20,14 +20,14 @@ export const ENV = {
 
     URL_API: {
         TOKEN: env.get('REACT_APP_URL_API_TOKEN').required().asString(),
-        BACKOFFICE: getConfig('REACT_APP_URL_BACKOFFICE', {required: true}),
-        REACT_APP_URL_BETA: getConfig('REACT_APP_URL_BETA', {default: false, type: Type.boolean}),
+        BACKOFFICE: getConfig('REACT_APP_URL_BACKOFFICE', { required: true }),
+        REACT_APP_URL_BETA: getConfig('REACT_APP_URL_BETA', { default: false, type: Type.boolean }),
     },
 
     MOCK: {
-        TOKEN: getConfig('REACT_APP_API_MOCK_TOKEN', {required: true, type: Type.boolean}),
-        BACKOFFICE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type: Type.boolean}),
-        SELFCARE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', {required: true, type: Type.boolean}),
+        TOKEN: getConfig('REACT_APP_API_MOCK_TOKEN', { required: true, type: Type.boolean }),
+        BACKOFFICE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', { required: true, type: Type.boolean }),
+        SELFCARE: getConfig('REACT_APP_API_MOCK_BACKOFFICE', { required: true, type: Type.boolean }),
     },
 
     API_TIMEOUT_MS: {
@@ -53,5 +53,14 @@ export const ENV = {
             PRODUCTURL: '/dashboard',
         },
     },
+    SETTINGS: {
+        SERVICES: {
+            RTP: {
+                SERVICE_STARTING_DATE: new Date(env.get('SETTINGS_SERVICES_RTP_START_DATE').default("2026-03-01T00:00:00.000+01:00").asString())
+            },
+            SANP_URL: env.get('SETTINGS_SERVICES_SANP_URL').default("https://developer.pagopa.it/pago-pa/guides/sanp/3.10.0/ente-creditore/sepa-rtp-request-to-pay").asString(),
+            RTP_OVERVIEW_URL: env.get('SETTINGS_SERVICES_RTP_OVERVIEW_URL').default("https://developer.pagopa.it/srtp/overview").asString()
+        }
+    }
 };
 

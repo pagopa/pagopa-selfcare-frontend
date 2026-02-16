@@ -108,6 +108,9 @@ import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUr
 import { IbanBulkOperationRequest } from './generated/portal/IbanBulkOperationRequest';
 import { IbanDeletionRequest } from './generated/portal/IbanDeletionRequest';
 import { IbanDeletionRequests } from './generated/portal/IbanDeletionRequests';
+import { ServiceConsentResponse } from './generated/portal/ServiceConsentResponse';
+import { ConsentEnum } from './generated/portal/ServiceConsentRequest';
+import { ServiceConsentsResponse } from './generated/portal/ServiceConsentsResponse';
 
 // eslint-disable-next-line functional/immutable-data, @typescript-eslint/no-var-requires
 window.Buffer = window.Buffer || require('buffer').Buffer;
@@ -298,6 +301,24 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    saveServiceConsent: async (
+      institutionId: string,
+      serviceId: string,
+      consent: ConsentEnum
+    ): Promise<ServiceConsentResponse> => {
+      const result = await backofficeClient.saveServiceConsent({
+        "institution-id": institutionId,
+        "service-id": serviceId,
+        "body": {consent},
+      });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
+
+    getServiceConsents: async (institutionId: string): Promise<ServiceConsentsResponse> => {
+      const result = await backofficeClient.getServiceConsents({ 'institution-id': institutionId });
+      return extractResponse(result, 200, onRedirectToLogin);
+    },
   },
   paymentServiceProviders: {
     getBrokerAndPspDetails: async (code: string): Promise<BrokerOrPspDetailsResource> => {
@@ -380,12 +401,10 @@ export const BackofficeApi = {
       return extractResponse(result, 200, onRedirectToLogin);
     },
 
-
     getPSPChannels: async (taxcode: string): Promise<PspChannelsResource> => {
       const result = await backofficeClient.getPspChannels({ 'tax-code': taxcode });
       return extractResponse(result, 200, onRedirectToLogin);
     },
-
 
     getChannelCode: async (taxcode: string): Promise<ChannelCodeResource> => {
       const result = await backofficeClient.getFirstValidChannelCode({
@@ -530,8 +549,6 @@ export const BackofficeApi = {
       return extractResponse(result, 201, onRedirectToLogin);
     },
 
-
-
     createECIndirect: async (
       ec: CreditorInstitutionDto
     ): Promise<CreditorInstitutionDetailsResource> => {
@@ -550,7 +567,6 @@ export const BackofficeApi = {
       return extractResponse(result, 201, onRedirectToLogin);
     },
 
-
     updateCreditorInstitution: async (
       ecCode: string,
       ec: UpdateCreditorInstitutionDto
@@ -560,6 +576,7 @@ export const BackofficeApi = {
         body: {
           address: ec.address,
           businessName: ec.businessName,
+          cbillCode: ec.cbillCode,
           creditorInstitutionCode: ec.creditorInstitutionCode,
           enabled: ec.enabled,
           pspPayment: ec.pspPayment,
@@ -591,9 +608,6 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
-
-
-
 
     getCreditorInstitutions: async ({
       ciTaxCode,
@@ -649,7 +663,6 @@ export const BackofficeApi = {
       return extractResponse(result, 201, onRedirectToLogin);
     },
 
-
     exportIbansToCsv: async (brokerCode: string): Promise<Buffer> => {
       const result = await backofficeClient.exportIbansToCsv({ 'broker-tax-code': brokerCode });
       return extractResponse(result, 200, onRedirectToLogin);
@@ -662,12 +675,12 @@ export const BackofficeApi = {
       return extractResponse(result, 200, onRedirectToLogin);
     },
 
-
     getBrokerExportStatus: async (brokerCode: string): Promise<BrokerECExportStatus> => {
-      const result = await backofficeClient.getBrokerExportStatus({ 'broker-tax-code': brokerCode });
+      const result = await backofficeClient.getBrokerExportStatus({
+        'broker-tax-code': brokerCode,
+      });
       return extractResponse(result, 200, onRedirectToLogin);
     },
-
 
     getCIBrokerDelegation: async (
       brokerTaxCode: string,
@@ -685,7 +698,6 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
-
 
     getCIBrokerStations: async (
       brokerTaxCode: string,
@@ -717,10 +729,8 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
-
   },
   channels: {
-
     getChannels: async ({
       status,
       channelCode,
@@ -774,7 +784,6 @@ export const BackofficeApi = {
       return extractResponse(result, 200, onRedirectToLogin);
     },
 
-
     createChannel: async (channel: ChannelDetailsDto): Promise<ChannelDetailsResource> => {
       const channelBody2Send = channelBody(channel);
       const result = await backofficeClient.createChannel({
@@ -782,7 +791,6 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 201, onRedirectToLogin);
     },
-
 
     createWrapperChannelDetails: async (
       channel: WrapperChannelDetailsDto,
@@ -871,7 +879,6 @@ export const BackofficeApi = {
     },
   },
   stations: {
-
     createStation: async (station: StationOnCreation): Promise<StationDetailResource> => {
       const result = await backofficeClient.createStation({
         body: { ...station } as any,
@@ -1021,7 +1028,6 @@ export const BackofficeApi = {
       return extractResponse(result, 200, onRedirectToLogin);
     },
 
-
     testStation: async (
       hostProtocol: string,
       hostUrl: string,
@@ -1103,52 +1109,58 @@ export const BackofficeApi = {
     }
   },
   ibanDeletionRequest: {
+    createIbanDeletionRequest: async (
+      creditorinstitutioncode: string,
+      ibanValue: string,
+      scheduledExecutionDate: Date
+    ): Promise<void> => {
+      const formattedDate = format(scheduledExecutionDate, 'yyyy-MM-dd');
 
-    createIbanDeletionRequest: async (creditorinstitutioncode: string, ibanValue: string, scheduledExecutionDate: Date): Promise<void> => {
-        
-        const formattedDate = format(scheduledExecutionDate, 'yyyy-MM-dd');
+      const maybeValidatedRequestBody = IbanDeletionRequest.decode({
+        ibanValue,
+        scheduledExecutionDate: formattedDate,
+      });
 
-        const maybeValidatedRequestBody = IbanDeletionRequest.decode({ 
-            ibanValue, 
-            scheduledExecutionDate: formattedDate 
-        });
+      // eslint-disable-next-line no-underscore-dangle
+      if (maybeValidatedRequestBody._tag === 'Left') {
+        throw new Error('Validation failed for IBAN deletion request.');
+      }
 
-        // eslint-disable-next-line no-underscore-dangle
-        if (maybeValidatedRequestBody._tag === 'Left') {
-            throw new Error('Validation failed for IBAN deletion request.');
-        }
-        
-        const validatedRequestBody = maybeValidatedRequestBody.right;
+      const validatedRequestBody = maybeValidatedRequestBody.right;
 
-        const result = await backofficeClient.createIbanDeletionRequest({
-            'ci-code': creditorinstitutioncode,
-            body: validatedRequestBody,
-        });
+      const result = await backofficeClient.createIbanDeletionRequest({
+        'ci-code': creditorinstitutioncode,
+        body: validatedRequestBody,
+      });
 
-        return extractResponse(result, 201, onRedirectToLogin);
+      return extractResponse(result, 201, onRedirectToLogin);
     },
-    getIbanDeletionRequest: async (creditorinstitutioncode: string, ibanValue: string, status: string): Promise<IbanDeletionRequests> => {
-        
-        const result = await backofficeClient.getIbanDeletionRequest({
-            'ci-code': creditorinstitutioncode,
-            ibanValue,
-            status,
-        });
+    getIbanDeletionRequest: async (
+      creditorinstitutioncode: string,
+      ibanValue: string,
+      status: string
+    ): Promise<IbanDeletionRequests> => {
+      const result = await backofficeClient.getIbanDeletionRequest({
+        'ci-code': creditorinstitutioncode,
+        ibanValue,
+        status,
+      });
 
-        return extractResponse(result, 200, onRedirectToLogin);
+      return extractResponse(result, 200, onRedirectToLogin);
     },
-    cancelIbanDeletionRequest: async (creditorinstitutioncode: string, id: string): Promise<void> => {
-        
-        const result = await backofficeClient.cancelIbanDeletionRequest({
-            'ci-code': creditorinstitutioncode,
-            id
-        });
+    cancelIbanDeletionRequest: async (
+      creditorinstitutioncode: string,
+      id: string
+    ): Promise<void> => {
+      const result = await backofficeClient.cancelIbanDeletionRequest({
+        'ci-code': creditorinstitutioncode,
+        id,
+      });
 
-        return extractResponse(result, 204, onRedirectToLogin);
-    }
+      return extractResponse(result, 204, onRedirectToLogin);
+    },
   },
   operativeTables: {
-
     getOperationTableList: async (): Promise<TavoloOpResourceList> => {
       const result = await backofficeClient.getOperativeTables({});
       return extractResponse(result, 200, onRedirectToLogin);
@@ -1545,14 +1557,12 @@ export const BackofficeApi = {
       return extractResponse(result, 200, onRedirectToLogin);
     },
 
-
     getMaintenanceMessage: async (): Promise<MaintenanceMessage> => {
       const result = await backofficeClient.getMaintenanceMessage({});
       return extractResponse(result, 200, onRedirectToLogin);
     },
   },
   paymentReceipts: {
-
     getPaymentsReceipts: async ({
       organizationTaxCode,
       debtorTaxCodeOrIuv,
@@ -1591,7 +1601,6 @@ export const BackofficeApi = {
     },
   },
   notice: {
-
     getInstitutionData: async ({
       ciTaxCode,
     }: {

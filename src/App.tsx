@@ -61,6 +61,7 @@ import routes from './routes';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { rewriteLinks } from './utils/onetrust-utils';
 import QuicksightDashboardPage from './pages/quicksight/QuicksightDashboardPage';
+import SettingsPage from './pages/settings/SettingsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -350,6 +351,17 @@ const SecuredRoutes = withLogin(
                     <QuicksightDashboardPage />
                   </ProtectedRoute>
                 </Route>
+                
+              <Route path={routes.SETTINGS} exact={true}>
+                  <ProtectedRoute
+                    permission="settings"
+                    flagValue="settings-section"
+                    orgCheckCondition={(orgInfo) => orgInfo.types.isEcIPA}
+                  >
+                    <SettingsPage />
+                  </ProtectedRoute>
+                </Route>
+
 
                 <Route path="*">
                   <Redirect to={routes.HOME} />

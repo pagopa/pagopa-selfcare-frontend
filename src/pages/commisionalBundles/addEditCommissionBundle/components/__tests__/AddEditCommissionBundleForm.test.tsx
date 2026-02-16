@@ -644,21 +644,42 @@ describe('<AddEditCommissionBundleForm />', () => {
 
   test('should call addError when broker delegation list is empty', async () => {
     const injectStore = createStore();
+    const mockAddError = jest.fn();
 
-    spyOnGetInstitutionService.mockResolvedValue({
-      delegation_list: [],
-    });
+    spyOnErrorHook.mockReturnValue(mockAddError);
 
-    spyOnUseFlagValue.mockReturnValue(true);
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+    orgInfo: {
+      types: { isPsp: true, isPspBroker: false, isEc: false, isEcBroker: false },
+      isSigned: true,
+    },
+    orgIsPspDirect: false,
+    orgIsEcDirect: false,
+    orgIsBrokerSigned: true,
+    orgIsPspSigned: true,
+    orgIsPspBrokerSigned: false,
+    orgIsEcSigned: false,
+    orgIsEcBrokerSigned: false,
+  });
 
-    await waitFor(() =>
-      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+ 
+  spyOnGetInstitutionService.mockResolvedValue({
+    delegation_list: [],
+  });
+
+  await waitFor(() =>
+    injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+  );
+
+  componentRender(FormAction.Create, undefined, injectStore);
+
+  await waitFor(() => {
+    expect(mockAddError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'GET_BROKER_DATA',
+        displayableDescription: 'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBroker',
+      })
     );
-
-    componentRender(FormAction.Create, undefined, injectStore);
-
-    await waitFor(() => {
-      expect(spyOnErrorHook).toHaveBeenCalled();      
-    });
+  });
 });
 });

@@ -168,7 +168,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                                 .then((data) => {
                                     onSaveServiceConsentResponse(data);
                                 })
-                                .catch((error) => onError(error, addError, t))
+                                .catch((error) => UserFeedback.onError(error, addError, t))
                                 .finally(() => {
                                     setLoading(false);
                                     onModalStateChange(false);
@@ -186,7 +186,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                                 .then((data) => {
                                     onSaveServiceConsentResponse(data);
                                 })
-                                .catch((error) => onError(error, addError, t))
+                                .catch((error) => UserFeedback.onError(error, addError, t))
                                 .finally(() => {
                                     setLoading(false);
                                     onModalStateChange(false);
@@ -223,7 +223,7 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                     <Typography data-testid={`settingCard-${serviceId}-card-subtitle`} variant="subtitle1" fontWeight="regular" fontSize={16}>
                         {t(`${serviceTranslationRootKey}.description`)}
                     </Typography>
-                    <Box sx={{ marginTop: 1 }}>
+                    <Box sx={{ marginTop: 1 }} data-testid={`settingCard-${serviceId}-more-info-link`}>
                         <Trans
                             i18nKey={`${serviceTranslationRootKey}.moreInfo`}
                             components={{
@@ -239,7 +239,8 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                     if (userRole.userIsAdmin) {
                         setShowConfirmationModal(true);
                     } else {
-                        onAdminPermissionNeeded(serviceId, userNotify, t);
+                        console.log("calling onAdminPermissionNeeded");
+                        UserFeedback.onAdminPermissionNeeded(serviceId, userNotify, t);
                     }
                 }
                 } />
@@ -254,44 +255,46 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                         consent: serviceConsentResponse.consent,
                         consentDate: serviceConsentResponse.date
                     });
-                    onSuccess(userNotify, t);
+                    UserFeedback.onSuccess(userNotify, t);
                 })} />
         </Box>
     );
 };
 
-const onSuccess = (addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
-    addNotification({
-        id: "ACTION_ON_ENABLE_DISABLE_SERVICE",
-        title: t('serviceConsent.toast.success.title'),
-        message: t('serviceConsent.toast.success.description'),
-        component: "Toast",
-        autocloseMilliseconds: 5000
-    });
+export const UserFeedback = {
+    onSuccess: (addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
+        addNotification({
+            id: "ACTION_ON_ENABLE_DISABLE_SERVICE",
+            title: t('serviceConsent.toast.success.title'),
+            message: t('serviceConsent.toast.success.description'),
+            component: "Toast",
+            autocloseMilliseconds: 5000
+        });
+    },
+    onAdminPermissionNeeded: (serviceId: ServiceIdEnum, addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
+        addNotification({
+            id: "ACTION_ON_ADMIN_PERMISSION_NEEDED",
+            title: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.title`),
+            message: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.description`),
+            component: "SessionModal",
+            autoclosable: "none",
+            closeLabel: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.cancelButton`),
+        });
+    },
+
+    onError: (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
+        addError({
+            id: 'SAVE_SERVICE_CONSENT',
+            blocking: false,
+            error,
+            techDescription: `An error occurred while saving service consent`,
+            toNotify: true,
+            displayableTitle: t('serviceConsent.toast.error.title'),
+            displayableDescription: t('serviceConsent.toast.error.description'),
+            component: 'Toast',
+            autocloseMilliseconds: 5000
+        });
+    }
 };
 
-const onAdminPermissionNeeded = (serviceId: ServiceIdEnum, addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
-    addNotification({
-        id: "ACTION_ON_ADMIN_PERMISSION_NEEDED",
-        title: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.title`),
-        message: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.description`),
-        component: "SessionModal",
-        autoclosable: "none",
-        closeLabel: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.cancelButton`),
-    });
-};
-
-const onError = (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
-    addError({
-        id: 'SAVE_SERVICE_CONSENT',
-        blocking: false,
-        error,
-        techDescription: `An error occurred while saving service consent`,
-        toNotify: true,
-        displayableTitle: t('serviceConsent.toast.error.title'),
-        displayableDescription: t('serviceConsent.toast.error.description'),
-        component: 'Toast',
-        autocloseMilliseconds: 5000
-    });
-};
 export default ServiceSettingsCard;

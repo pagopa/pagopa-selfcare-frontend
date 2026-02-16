@@ -9,7 +9,7 @@ import { partiesActions } from "../../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect, ecOperatorSignedDirect } from "../../../../services/__mocks__/partyService";
 import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
 import ita from '../../../../locale/it.json';
-import ServiceSettingsCard, { ChipStatus, rtpServiceChipStatusConf, ServiceInfo } from "../ServiceSettingsCard";
+import ServiceSettingsCard, { ChipStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
 import { getSaveConsentResponseMock } from "../../../../services/__mocks__/institutionsService";
 import { act } from 'react-dom/test-utils';
 
@@ -24,6 +24,7 @@ afterEach(() => {
 
 const saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
 const rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
+const onAdminPermissionNeededUserFeedbackSpy = jest.spyOn(UserFeedback, "onAdminPermissionNeeded"); 
 
 const checkElementToBeVisibleWithText = async (dataTestId: string, elementContent: string) => {
     const element = await screen.findByTestId(dataTestId);
@@ -260,7 +261,7 @@ describe('Service setting page card rendering', () => {
     it.each([
         [ConsentEnum.OPT_IN, true],
         [ConsentEnum.OPT_OUT, false]
-    ])('should disable action button for not admin user with consent %s', async (consent: ConsentEnum, serviceEnabled: boolean) => {
+    ])('should show admin user needed to perform operation for non admin user with consent %s', async (consent: ConsentEnum, serviceEnabled: boolean) => {
         // pre-conditions
         const consentDate = new Date();
         // set consent date to yesterday so that it's evalued as consolidated
@@ -297,9 +298,12 @@ describe('Service setting page card rendering', () => {
             } else {
                 serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
             }
-            // check that service enable/disable button is visible but disabled
+            // check that service enable/disable button is visible and enabled
             expect(serviceActionButton).toBeVisible();
-            expect(serviceActionButton).toBeDisabled();
+            expect(serviceActionButton).toBeEnabled();
+            // click on service action button and perform checks on opened modal
+            fireEvent.click(serviceActionButton);
+            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(1);
         });
     });
 });  

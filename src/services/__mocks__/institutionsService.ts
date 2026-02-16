@@ -1,9 +1,12 @@
-import {DelegationResource} from '../../api/generated/portal/DelegationResource';
+import { DelegationResource } from '../../api/generated/portal/DelegationResource';
 import { InstitutionBaseResources } from '../../api/generated/portal/InstitutionBaseResources';
-import {InstitutionDetail, Institution_typeEnum} from '../../api/generated/portal/InstitutionDetail';
-import {StatusEnum} from '../../api/generated/portal/WrapperChannelDetailsDto';
-import {TypeEnum, WrapperEntities} from '../../api/generated/portal/WrapperEntities';
-import {mockedPaymentTypes} from './configurationService';
+import { InstitutionDetail, Institution_typeEnum } from '../../api/generated/portal/InstitutionDetail';
+import { StatusEnum } from '../../api/generated/portal/WrapperChannelDetailsDto';
+import { TypeEnum, WrapperEntities } from '../../api/generated/portal/WrapperEntities';
+import { mockedPaymentTypes } from './configurationService';
+import { ServiceConsentResponse } from '../../api/generated/portal/ServiceConsentResponse';
+import { ConsentEnum, ServiceIdEnum } from '../../api/generated/portal/ServiceConsentInfo';
+import { ServiceConsentsResponse } from '../../api/generated/portal/ServiceConsentsResponse';
 
 export const channelWrapperMockedGet = (code: string): WrapperEntities => ({
     brokerCode: 'string',
@@ -106,42 +109,51 @@ export const mockedInstitutionBaseResource: InstitutionBaseResources = {
         {
             id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
             name: 'Azienda Pubblica di Servizi alla Persona Test 2',
-            user_product_roles: [{product_role:'admin'}]
+            user_product_roles: [{ product_role: 'admin' }]
         },
     ],
 };
 
 
-export const mockedInstitutionDetailResource: InstitutionDetail = 
-        {
-            id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
-            name: 'Azienda Pubblica di Servizi alla Persona Test 2',
-            origin: '',
-            origin_id: 'dccdade9-4ce4-444b-8b4d-ef50be064842',
-            status: '',
-            address : '',
-            external_id: '',
-            tax_code: '800011104872',
-            user_product_roles: [{product_role:'admin'}],
-            assistance_contacts: {},
-            company_informations: {},
-            dpo_data: {
-                address: '',
-                email: '',
-                pec: '',
-            },
-            institution_type: Institution_typeEnum.PA,
-            mail_address: '',
-            psp_data: {
-                abi_code: '',
-                business_register_number: '',
-                legal_register_name: '',
-                legal_register_number: '',
-                vat_number_group: false,
-            },
-            recipient_code: '',
-            
-        };
+export const mockedInstitutionDetailResource: InstitutionDetail =
+{
+    id: 'fce5332f-56a4-45b8-8fdc-7667ccdfca5e2',
+    name: 'Azienda Pubblica di Servizi alla Persona Test 2',
+    origin: '',
+    origin_id: 'dccdade9-4ce4-444b-8b4d-ef50be064842',
+    status: '',
+    address: '',
+    external_id: '',
+    tax_code: '800011104872',
+    user_product_roles: [{ product_role: 'admin' }],
+    assistance_contacts: {},
+    company_informations: {},
+    dpo_data: {
+        address: '',
+        email: '',
+        pec: '',
+    },
+    institution_type: Institution_typeEnum.PA,
+    mail_address: '',
+    psp_data: {
+        abi_code: '',
+        business_register_number: '',
+        legal_register_name: '',
+        legal_register_number: '',
+        vat_number_group: false,
+    },
+    recipient_code: '',
+
+};
+
+export const mockedServiceConsentResponse =
+    (
+        consent: ConsentEnum,
+        dateString: Date
+    ) => ({
+        consent: consent,
+        date: dateString,
+    });
 
 export const getBrokerDelegationMock = (): Promise<DelegationResource> =>
     Promise.resolve(mockedDelegatedPSP);
@@ -149,3 +161,16 @@ export const getInstitutionsMock = (): Promise<InstitutionBaseResources> =>
     Promise.resolve(mockedInstitutionDetailResource);
 export const getInstitutionDetailMock = (): Promise<InstitutionDetail> =>
     Promise.resolve(mockedInstitutionDetailResource);
+export const getSaveConsentResponseMock = (consent: ConsentEnum): Promise<ServiceConsentResponse> =>
+    Promise.resolve(mockedServiceConsentResponse(consent, new Date()));
+export const getServicesConsentsOptOutResponseMock = (): Promise<ServiceConsentsResponse> =>
+    getServicesConsentsResponseMock(ConsentEnum.OPT_OUT, new Date("2026-01-01T00:00:00.000000000Z"));
+
+export const getServicesConsentsResponseMock = (consent: ConsentEnum, consentDate: Date): Promise<ServiceConsentsResponse> =>
+    Promise.resolve({
+        services: [{
+            consent: consent,
+            consentDate: consentDate,
+            serviceId: ServiceIdEnum.RTP,
+        }],
+});

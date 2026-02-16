@@ -7,7 +7,6 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid,
     Link,
     Typography,
 } from '@mui/material';
@@ -17,8 +16,9 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
-import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher, useLoading, useUserNotify } from '@pagopa/selfcare-common-frontend';
 import { AppError } from '@pagopa/selfcare-common-frontend/model/AppError';
+import { UserNotify } from '@pagopa/selfcare-common-frontend/model/UserNotify';
 import { saveServiceConsent } from '../../../services/institutionService';
 import { ConsentEnum } from '../../../api/generated/portal/ServiceConsentRequest';
 import { useAppSelector } from '../../../redux/hooks';
@@ -89,7 +89,6 @@ const StatusChip = ({ serviceInfo }: ({ serviceInfo: ServiceInfo })) => {
 
 const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; onClick: () => void })) => {
     const { t } = useTranslation();
-    const userRole = useUserRole();
     if (serviceInfo.consent === ConsentEnum.OPT_IN) {
         return (<Button
             data-testid={`settingCard-${serviceInfo.serviceId}-disableButton`}
@@ -97,7 +96,6 @@ const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; on
             startIcon={<DoDisturbAltIcon />}
             color="error"
             onClick={onClick}
-            disabled={!userRole.userIsAdmin}
         >
             {t(`serviceConsent.${serviceInfo.serviceId}.disableButtonText`)}
         </Button>);
@@ -107,7 +105,6 @@ const ServiceButton = ({ serviceInfo, onClick }: ({ serviceInfo: ServiceInfo; on
             variant="contained"
             endIcon={<ArrowForwardIcon />}
             onClick={onClick}
-            disabled={!userRole.userIsAdmin}
         >
             {t(`serviceConsent.${serviceInfo.serviceId}.enableButtonText`)}
         </Button>);
@@ -122,7 +119,6 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
     const translationRootKey = `serviceConsent.${serviceId}.popups.${isServiceEnabled ? "disableService" : "enableService"}`;
     const setLoading = useLoading('PUT_CONSENT');
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const userRole = useUserRole();
     const addError = useErrorDispatcher();
     return (
         <Dialog
@@ -166,7 +162,6 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                         variant="outlined"
                         color="error"
                         startIcon={<DoDisturbAltIcon />}
-                        disabled={!userRole.userIsAdmin}
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_OUT)
@@ -185,7 +180,6 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
                     <Button
                         data-testid={`settingCard-${serviceId}-dialog-enableButton`}
                         variant="contained"
-                        disabled={!userRole.userIsAdmin}
                         onClick={() => {
                             setLoading(true);
                             saveServiceConsent(selectedParty?.partyId || '', serviceId, ConsentEnum.OPT_IN)
@@ -205,19 +199,6 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
         </Dialog>);
 };
 
-const onError = (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
-    addError({
-        id: 'SAVE_SERVICE_CONSENT',
-        blocking: false,
-        error,
-        techDescription: `An error occurred while saving service consent`,
-        toNotify: true,
-        displayableTitle: t('serviceConsent.errorTitle'),
-        displayableDescription: t('serviceConsent.errorDescription'),
-        component: 'Toast',
-        autocloseMilliseconds: 4000
-    });
-};
 
 const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
 
@@ -226,6 +207,8 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
     const serviceId = serviceInfoState.serviceId;
     const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
     const serviceTranslationRootKey = `serviceConsent.${serviceId}`;
+    const userNotify = useUserNotify();
+    const userRole = useUserRole();
 
     return (
         <Box>
@@ -236,29 +219,30 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                 <Box>
                     <Typography data-testid={`settingCard-${serviceId}-card-title`} variant="h4" mt={2}>{t(`serviceConsent.${serviceId}.title`)}</Typography>
                 </Box>
-                <Box >
-                    <Typography data-testid={`settingCard-${serviceId}-card-subtitle`} variant="subtitle1" fontWeight="regular" fontSize={16} my={1}>
+                <Box sx={{ marginBottom: 3, marginTop: 3 }}>
+                    <Typography data-testid={`settingCard-${serviceId}-card-subtitle`} variant="subtitle1" fontWeight="regular" fontSize={16}>
                         {t(`${serviceTranslationRootKey}.description`)}
                     </Typography>
-                </Box>
-
-                <Grid container direction={"row"} mt={4} spacing={0}>
-                    <ServiceButton serviceInfo={serviceInfoState} onClick={() => {
-                        setShowConfirmationModal(true);
-                    }
-                    } />
-                    <Box data-testid={`settingCard-${serviceId}-more-info-link`}>
+                    <Box sx={{ marginTop: 1 }}>
                         <Trans
                             i18nKey={`${serviceTranslationRootKey}.moreInfo`}
                             components={{
-                                sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="hover" my={1} fontWeight="bold"
-                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5, marginLeft: 5 }}>
+                                sanp_url: (<Link href={(`${URLS.RTP_OVERVIEW_URL}`)} underline="none" fontWeight="bold" fontSize={16}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 </Link>),
                                 icon: <LaunchIcon fontSize="small" />
                             }}
                         />
                     </Box>
-                </Grid>
+                </Box>
+                <ServiceButton serviceInfo={serviceInfoState} onClick={() => {
+                    if (userRole.userIsAdmin) {
+                        setShowConfirmationModal(true);
+                    } else {
+                        onAdminPermissionNeeded(serviceId, userNotify, t);
+                    }
+                }
+                } />
             </Card>
             <ServiceStatusChangeModal
                 serviceInfo={serviceInfoState}
@@ -269,10 +253,45 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                         serviceId: serviceInfoState.serviceId,
                         consent: serviceConsentResponse.consent,
                         consentDate: serviceConsentResponse.date
-
                     });
+                    onSuccess(userNotify, t);
                 })} />
         </Box>
     );
+};
+
+const onSuccess = (addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
+    addNotification({
+        id: "ACTION_ON_ENABLE_DISABLE_SERVICE",
+        title: t('serviceConsent.toast.success.title'),
+        message: t('serviceConsent.toast.success.description'),
+        component: "Toast",
+        autocloseMilliseconds: 5000
+    });
+};
+
+const onAdminPermissionNeeded = (serviceId: ServiceIdEnum, addNotification: ((userNotify: UserNotify) => void), t: TFunction<"translation", undefined>) => {
+    addNotification({
+        id: "ACTION_ON_ADMIN_PERMISSION_NEEDED",
+        title: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.title`),
+        message: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.description`),
+        component: "SessionModal",
+        autoclosable: "none",
+        closeLabel: t(`serviceConsent.${serviceId}.popups.adminPermissionNeeded.cancelButton`),
+    });
+};
+
+const onError = (error: Error, addError: (error: AppError) => void, t: TFunction<"translation", undefined>) => {
+    addError({
+        id: 'SAVE_SERVICE_CONSENT',
+        blocking: false,
+        error,
+        techDescription: `An error occurred while saving service consent`,
+        toNotify: true,
+        displayableTitle: t('serviceConsent.toast.error.title'),
+        displayableDescription: t('serviceConsent.toast.error.description'),
+        component: 'Toast',
+        autocloseMilliseconds: 5000
+    });
 };
 export default ServiceSettingsCard;

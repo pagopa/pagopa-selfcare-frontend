@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.47.2",
+  "version": "1.47.2-1-CHK-4719-ux-ui-fixes",
   "homepage": "ui",
   "private": true,
   "scripts": {

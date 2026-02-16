@@ -24,7 +24,9 @@ afterEach(() => {
 
 const saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
 const rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
-const onAdminPermissionNeededUserFeedbackSpy = jest.spyOn(UserFeedback, "onAdminPermissionNeeded"); 
+const onAdminPermissionNeededUserFeedbackSpy = jest.spyOn(UserFeedback, "onAdminPermissionNeeded");
+const onErrorUserFeedbackSpy = jest.spyOn(UserFeedback, "onError");
+const onSuccessUserFeedback = jest.spyOn(UserFeedback, "onSuccess");
 
 const checkElementToBeVisibleWithText = async (dataTestId: string, elementContent: string) => {
     const element = await screen.findByTestId(dataTestId);
@@ -131,7 +133,12 @@ describe('Service setting page card rendering', () => {
             </Provider>
         )
         // assertions
-
+        let expectedConsentSentInSaveAction;
+        if (serviceEnabled) {
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_OUT;
+        } else {
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
+        }
         await act(async () => {
             let serviceActionButton;
             // search for service enable/disable button
@@ -151,7 +158,7 @@ describe('Service setting page card rendering', () => {
             fireEvent.click(serviceActionButton);
 
             let serviceModalActionButton;
-            let expectedConsentSentInSaveAction;
+
             // search for modal service enable/disable button
             if (serviceEnabled) {
                 serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
@@ -162,11 +169,91 @@ describe('Service setting page card rendering', () => {
             }
             // click on action button
             fireEvent.click(serviceModalActionButton);
-            // and check that this time api call is performed with expected request body
-            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
-            expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
         });
+        // and check that this time api call is performed with expected request body
+        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(1);
+        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
     });
+
+    it.each([
+        [ConsentEnum.OPT_IN, true],
+        [ConsentEnum.OPT_OUT, false]
+    ])('should handle error saving consent for service with consent %s', async (consent: ConsentEnum, serviceEnabled: boolean) => {
+        // pre-conditions
+        const consentDate = new Date();
+        // set consent date to yesterday so that it's evalued as consolidated
+        consentDate.setHours(-24, 0, 0, 0);
+        store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
+        const serviceInfo: ServiceInfo = {
+            serviceId: ServiceIdEnum.RTP,
+            consent: consent,
+            consentDate: consentDate
+        }
+        rtpServiceStartingDate.mockReturnValue(0);
+        saveServiceConsentSpy.mockReturnValue(Promise.reject(new Error("communication error")));
+        // render page
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={["/ui/settings"]}>
+                    <ThemeProvider theme={theme}>
+                        <ServiceSettingsCard
+                            serviceId={serviceInfo.serviceId}
+                            consent={serviceInfo.consent}
+                            consentDate={serviceInfo.consentDate}
+                        />
+                    </ThemeProvider>
+                </MemoryRouter>
+            </Provider>
+        );
+        let expectedConsentSentInSaveAction;
+        // assertions
+        if (serviceEnabled) {
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_OUT;
+        } else {
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
+        }
+        await act(async () => {
+            let serviceActionButton;
+            // search for service enable/disable button
+            if (serviceEnabled) {
+                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+            } else {
+                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+            }
+            // click on service action button and perform checks on opened modal
+            fireEvent.click(serviceActionButton);
+            const cancelModalButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`);
+            // click on cancel button
+            fireEvent.click(cancelModalButton);
+
+            // and check that no api call is performed 
+            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(0);
+            // re-open modal
+            fireEvent.click(serviceActionButton);
+
+            let serviceModalActionButton;
+
+            // search for modal service enable/disable button
+            if (serviceEnabled) {
+                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
+            } else {
+                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`);
+            }
+            // click on action button
+            fireEvent.click(serviceModalActionButton);
+
+        });
+        // and check that this time api call is performed with expected request body
+        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
+        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(1);
+        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+    });
+
 
     type StatusChipTestData = {
         serviceActivationDate: Date,
@@ -254,7 +341,7 @@ describe('Service setting page card rendering', () => {
             }
         } finally {
             jest.useRealTimers();
-        } 
+        }
     });
 
 
@@ -303,7 +390,9 @@ describe('Service setting page card rendering', () => {
             expect(serviceActionButton).toBeEnabled();
             // click on service action button and perform checks on opened modal
             fireEvent.click(serviceActionButton);
-            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(1);
         });
+        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
+        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(1);
     });
 });  

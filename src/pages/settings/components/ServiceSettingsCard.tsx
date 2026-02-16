@@ -239,7 +239,6 @@ const ServiceSettingsCard = (serviceInfo: ServiceInfo) => {
                     if (userRole.userIsAdmin) {
                         setShowConfirmationModal(true);
                     } else {
-                        console.log("calling onAdminPermissionNeeded");
                         UserFeedback.onAdminPermissionNeeded(serviceId, userNotify, t);
                     }
                 }

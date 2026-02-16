@@ -641,4 +641,24 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(spyOnGetChannelService).toHaveBeenCalled();
     });
   });
+
+  test('should call addError when broker delegation list is empty', async () => {
+    const injectStore = createStore();
+
+    spyOnGetInstitutionService.mockResolvedValue({
+      delegation_list: [],
+    });
+
+    spyOnUseFlagValue.mockReturnValue(true);
+
+    await waitFor(() =>
+      injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+    );
+
+    componentRender(FormAction.Create, undefined, injectStore);
+
+    await waitFor(() => {
+      expect(spyOnErrorHook).toHaveBeenCalled();      
+    });
+});
 });

@@ -9,7 +9,7 @@ import { partiesActions } from "../../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect, ecOperatorSignedDirect } from "../../../../services/__mocks__/partyService";
 import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
 import ita from '../../../../locale/it.json';
-import ServiceSettingsCard, { ChipStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
+import ServiceSettingsCard, { ServiceStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
 import { getSaveConsentResponseMock } from "../../../../services/__mocks__/institutionsService";
 import { act } from 'react-dom/test-utils';
 
@@ -261,7 +261,7 @@ describe('Service setting page card rendering', () => {
         consentDate: Date,
         serviceId: ServiceIdEnum,
         currentSystemTime: Date,
-        expectedChipStatus: ChipStatus
+        expectedChipStatus: ServiceStatus
 
     };
 
@@ -272,7 +272,7 @@ describe('Service setting page card rendering', () => {
             consentDate: new Date("2026-02-02"),
             serviceId: ServiceIdEnum.RTP,
             currentSystemTime: new Date("2026-02-02"),
-            expectedChipStatus: ChipStatus.ENABLING
+            expectedChipStatus: ServiceStatus.ENABLING
         },
         {
             serviceActivationDate: new Date("2026-03-01"),
@@ -280,7 +280,7 @@ describe('Service setting page card rendering', () => {
             consentDate: new Date("2026-02-01"),
             serviceId: ServiceIdEnum.RTP,
             currentSystemTime: new Date("2026-02-02"),
-            expectedChipStatus: ChipStatus.ENABLED_FROM
+            expectedChipStatus: ServiceStatus.ENABLED_FROM
         },
         {
             serviceActivationDate: new Date("2026-02-01"),
@@ -288,7 +288,7 @@ describe('Service setting page card rendering', () => {
             consentDate: new Date("2026-02-01"),
             serviceId: ServiceIdEnum.RTP,
             currentSystemTime: new Date("2026-02-02"),
-            expectedChipStatus: ChipStatus.ENABLED
+            expectedChipStatus: ServiceStatus.ENABLED
         },
         {
             serviceActivationDate: new Date("2026-03-01"),
@@ -296,7 +296,7 @@ describe('Service setting page card rendering', () => {
             consentDate: new Date("2026-02-02"),
             serviceId: ServiceIdEnum.RTP,
             currentSystemTime: new Date("2026-02-02"),
-            expectedChipStatus: ChipStatus.DISABLING
+            expectedChipStatus: ServiceStatus.DISABLING
         },
         {
             serviceActivationDate: new Date("2026-03-01"),
@@ -304,7 +304,7 @@ describe('Service setting page card rendering', () => {
             consentDate: new Date("2026-02-01"),
             serviceId: ServiceIdEnum.RTP,
             currentSystemTime: new Date("2026-02-02"),
-            expectedChipStatus: ChipStatus.DISABLED
+            expectedChipStatus: ServiceStatus.DISABLED
         }
     ])('should calculate status chip correctly based on service consent status - %s', async (testData: StatusChipTestData) => {
         // pre-conditions
@@ -332,7 +332,7 @@ describe('Service setting page card rendering', () => {
             )
             // assertions
             const chipStatus = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-statusChip`);
-            if (testData.expectedChipStatus === ChipStatus.DISABLED) {
+            if (testData.expectedChipStatus === ServiceStatus.DISABLED) {
                 expect(chipStatus).toBeVisible();
                 expect(chipStatus.textContent).toBe(""); // div with empty text
             } else {

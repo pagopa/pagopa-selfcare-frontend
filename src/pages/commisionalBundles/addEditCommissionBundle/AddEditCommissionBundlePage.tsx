@@ -181,8 +181,8 @@ const AddEditCommissionBundlePage = () => {
       ...body,
       validityDateFrom: removeDateZoneInfo(body.validityDateFrom),
       validityDateTo: removeDateZoneInfo(body.validityDateTo),
-      touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
-      paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+      touchpoint: body.touchpoint,
+      paymentType: body.paymentType,
       transferCategoryList: isValidArray(body.transferCategoryList)
         ? body.transferCategoryList
         : undefined,

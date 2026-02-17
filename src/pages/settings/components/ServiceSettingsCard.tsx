@@ -133,7 +133,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
             aria-describedby="alert-dialog-description"
             data-testid={`settingCard-${serviceId}-dialog`}
         >
-            <DialogTitle marginTop="32px" fontWeight="700" fontSize="24px" lineHeight="32px" letterSpacing="0px" data-testid={`settingCard-${serviceId}-dialog-title`}>
+            <DialogTitle marginTop="16px" fontWeight="700" fontSize="24px" lineHeight="32px" letterSpacing="0px" data-testid={`settingCard-${serviceId}-dialog-title`}>
                 {t(`${translationRootKey}.title`)}
             </DialogTitle>
             <DialogContent>
@@ -150,7 +150,7 @@ const ServiceStatusChangeModal = ({ serviceInfo, modalOpenFlag, onModalStateChan
             </DialogContent>
             <DialogActions sx={{
                 marginRight: 3,
-                marginBottom: "32px"
+                marginBottom: "24px"
             }} >
                 <Button
                     data-testid={`settingCard-${serviceId}-dialog-cancelButton`}

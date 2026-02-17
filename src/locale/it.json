@@ -1879,15 +1879,24 @@
     }
   },
   "serviceConsent": {
-    "errorTitle": "Errore durante l'elaborazione della richiesta",
-    "errorDescription": "Non è stato possibile processare correttamente la richiesta",
+    "toast": {
+      "error": {
+        "title": "Errore durante l'elaborazione della richiesta",
+        "description": "Non è stato possibile processare correttamente la richiesta"
+      },
+      "success": {
+        "title": "",
+        "description": "La tua richiesta è stata presa in carico"
+      }
+    },
     "RTP": {
       "title": "SEPA Request to Pay (Avvisi pagoPA)",
-      "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali della propria banca.",
-      "moreInfo": "<sanp_url>Vuoi saperne di più<icon/></sanp_url>",
+      "description": "Con questo servizio, cittadini e imprese possono ricevere gli avvisi di pagamento PagoPA direttamente sulla loro applicazione di home banking o tramite altri canali.",
+      "moreInfo": "<sanp_url>Vuoi saperne di più?<icon/></sanp_url>",
       "disableButtonText": "Disattiva il servizio",
       "enableButtonText": "Attiva il servizio",
-      "editContacts": "Modifica contatti",
+      "disablingServiceMessage": "Disattivazione programmata: {{consolidation_date}}",
+      "enablingServiceMessage": "Attivazione programmata: {{consolidation_date}}",
       "popups": {
         "disableService": {
           "title": "Vuoi davvero disattivare il servizio SEPA Request to Pay (Avvisi pagoPA)?",
@@ -1900,6 +1909,11 @@
           "message": "La richiesta verrà presa in carico e gestita entro 3 giorni lavorativi, secondo quanto disciplinato nelle <sanp_url>Specifiche Attuative del Nodo dei Pagamenti (SANP).</sanp_url>",
           "cancelButton": "Torna indietro",
           "confirmButton": "Attiva il servizio"
+        },
+        "adminPermissionNeeded": {
+          "title": "Per gestire il servizio, contatta il Referente dei Pagamenti",
+          "description": "La gestione del servizio \"SEPA Request to Pay\" è riservata al Referente dei Pagamenti. Contattalo per attivare o disattivare il servizio.",
+          "cancelButton": "Torna indietro"
         }
       },
       "statuses": {

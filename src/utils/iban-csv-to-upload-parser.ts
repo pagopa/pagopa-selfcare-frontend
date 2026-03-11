@@ -1,6 +1,10 @@
 import { isValid, parse, startOfDay } from 'date-fns';
 import { isValidIBANNumber } from './common-utils';
 
+/**
+ * TODO: handle translations related to the CSV errors validation
+ * in the future initiative dedicated to the aggregati&intermediari
+ */
 export interface IbanCsvRow {
     descrizione: string;
     iban: string;

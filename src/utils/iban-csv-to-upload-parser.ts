@@ -1,5 +1,5 @@
-import {isValid, parse} from 'date-fns';
-import {isValidIBANNumber} from './common-utils';
+import { isValid, parse, startOfDay } from 'date-fns';
+import { isValidIBANNumber } from './common-utils';
 
 export interface IbanCsvRow {
     descrizione: string;
@@ -11,7 +11,7 @@ export interface IbanCsvRow {
 export interface ParsedIbanData {
     descrizione: string;
     iban: string;
-    dataattivazioneiban: Date;
+    dataattivazioneiban: Date | "";
     operazione: 'CREATE' | 'UPDATE' | 'DELETE';
 }
 
@@ -30,44 +30,44 @@ export interface ValidationResult {
  * Parse a CSV line handling commas inside quotes
  */
 export const parseCsvLine = (line: string): Array<string> => line.split('').reduce(
-        (acc, char) => {
-            if (char === '"') {
-                return { ...acc, inQuotes: !acc.inQuotes };
-            }
-            if (char === ',' && !acc.inQuotes) {
-                return {
-                    ...acc,
-                    result: [...acc.result, acc.current.trim()],
-                    current: '',
-                };
-            }
-            return { ...acc, current: acc.current + char };
-        },
-        { result: [] as Array<string>, current: '', inQuotes: false }
-    ).result.concat([line.split('').reduce(
-        (acc, char) => {
-            if (char === '"') {
-                return { ...acc, inQuotes: !acc.inQuotes };
-            }
-            if (char === ',' && !acc.inQuotes) {
-                return { ...acc, current: '' };
-            }
-            return { ...acc, current: acc.current + char };
-        },
-        { current: '', inQuotes: false }
-    ).current.trim()]);
+    (acc, char) => {
+        if (char === '"') {
+            return { ...acc, inQuotes: !acc.inQuotes };
+        }
+        if (char === ',' && !acc.inQuotes) {
+            return {
+                ...acc,
+                result: [...acc.result, acc.current.trim()],
+                current: '',
+            };
+        }
+        return { ...acc, current: acc.current + char };
+    },
+    { result: [] as Array<string>, current: '', inQuotes: false }
+).result.concat([line.split('').reduce(
+    (acc, char) => {
+        if (char === '"') {
+            return { ...acc, inQuotes: !acc.inQuotes };
+        }
+        if (char === ',' && !acc.inQuotes) {
+            return { ...acc, current: '' };
+        }
+        return { ...acc, current: acc.current + char };
+    },
+    { current: '', inQuotes: false }
+).current.trim()]);
 
 /**
  * Parse date from string supporting multiple formats
  */
 export const parseIbanDate = (dateString: string): Date | null => {
+    if (!dateString?.trim()) { return null; }
+
     const formats = ['dd/MM/yyyy', 'dd-MM-yyyy', 'yyyy-MM-dd'];
-    
-    const parsed = formats
-        .map(format => parse(dateString, format, new Date()))
-        .find(date => isValid(date));
-    
-    return parsed ?? null;
+
+    return formats
+        .map(format => parse(dateString.trim(), format, new Date()))
+        .find(date => isValid(date)) ?? null;
 };
 
 /**
@@ -75,12 +75,12 @@ export const parseIbanDate = (dateString: string): Date | null => {
  */
 const validateHeaders = (headers: Array<string>): string | null => {
     const expectedHeaders = ['descrizione', 'iban', 'dataattivazioneiban', 'operazione'];
-    const hasAllHeaders = expectedHeaders.every(header => 
+    const hasAllHeaders = expectedHeaders.every(header =>
         headers.some(h => h.replace(/\s+/g, ' ').trim() === header)
     );
-    
-    return hasAllHeaders 
-        ? null 
+
+    return hasAllHeaders
+        ? null
         : 'Il file deve contenere le colonne: descrizione, iban, dataattivazioneiban, operazione';
 };
 
@@ -103,7 +103,7 @@ const validateIBAN = (iban: string, lineNum: number): string | null => {
 const validateAzione = (operazione: string, lineNum: number): { error: string | null; normalized: string } => {
     const normalized = operazione.trim();
     const validActions = ['CREATE', 'UPDATE', 'DELETE'];
-    
+
     if (!validActions.includes(normalized)) {
         return {
             error: `Riga ${lineNum}: operazione non valida (deve essere: CREATE, UPDATE o DELETE)`,
@@ -116,23 +116,40 @@ const validateAzione = (operazione: string, lineNum: number): { error: string | 
 /**
  * Validate Data Attivazione
  */
-const validateDataAttivazione = (dataAttivazione: string, lineNum: number): { error: string | null; date: Date | null } => {
-    const parsedDate = parseIbanDate(dataAttivazione.trim());
-    
+const validateDataAttivazione = (
+    dataAttivazione: string,
+    lineNum: number,
+    operazione: string
+): { error: string | null; date: Date | "" } => {
+    const trimmedDate = dataAttivazione.trim();
+
+    if (operazione !== 'CREATE') {
+        if (trimmedDate !== '') {
+            return {
+                error: `Riga ${lineNum}: La data attivazione non può essere valorizzata per l'operazione ${operazione}`,
+                date: ""
+            };
+        }
+        return { error: null, date: "" };
+    }
+
+    const parsedDate = parseIbanDate(trimmedDate);
+
     if (!parsedDate) {
         return {
             error: `Riga ${lineNum}: Data attivazione non valida (formato atteso: dd/MM/yyyy)`,
-            date: null
+            date: ""
         };
     }
-    
-    if (parsedDate < new Date()) {
+
+    const today = startOfDay(new Date());
+    if (parsedDate < today) {
         return {
             error: `Riga ${lineNum}: Data attivazione non può essere nel passato`,
-            date: null
+            date: ""
         };
     }
-    
+
     return { error: null, date: parsedDate };
 };
 
@@ -140,7 +157,7 @@ const validateDataAttivazione = (dataAttivazione: string, lineNum: number): { er
  * Validate a single CSV row
  */
 const validateRow = (
-    columns: Array<string>, 
+    columns: Array<string>,
     lineNum: number
 ): { errors: Array<string>; data: ParsedIbanData | null } => {
     if (columns.length !== 4) {
@@ -163,9 +180,9 @@ const validateRow = (
         return { errors: [azioneValidation.error], data: null };
     }
 
-    const dateValidation = validateDataAttivazione(dataattivazioneIban, lineNum);
-    if (dateValidation.error || !dateValidation.date) {
-        return { errors: [dateValidation.error!], data: null };
+    const dateValidation = validateDataAttivazione(dataattivazioneIban, lineNum, azioneValidation.normalized);
+    if (dateValidation.error) {
+        return { errors: [dateValidation.error], data: null };
     }
 
     return {
@@ -183,20 +200,20 @@ const validateRow = (
  * Calculate summary from parsed data
  */
 const calculateSummary = (data: Array<ParsedIbanData>): { toAdd: number; toUpdate: number; toDelete: number } => data.reduce(
-        (acc, item) => {
-            if (item.operazione === 'CREATE') {
-                return { ...acc, toAdd: acc.toAdd + 1 };
-            }
-            if (item.operazione === 'UPDATE') {
-                return { ...acc, toUpdate: acc.toUpdate + 1 };
-            }
-            if (item.operazione === 'DELETE') {
-                return { ...acc, toDelete: acc.toDelete + 1 };
-            }
-            return acc;
-        },
-        { toAdd: 0, toUpdate: 0, toDelete: 0 }
-    );
+    (acc, item) => {
+        if (item.operazione === 'CREATE') {
+            return { ...acc, toAdd: acc.toAdd + 1 };
+        }
+        if (item.operazione === 'UPDATE') {
+            return { ...acc, toUpdate: acc.toUpdate + 1 };
+        }
+        if (item.operazione === 'DELETE') {
+            return { ...acc, toDelete: acc.toDelete + 1 };
+        }
+        return acc;
+    },
+    { toAdd: 0, toUpdate: 0, toDelete: 0 }
+);
 
 /**
  * Validate CSV data and return structured result
@@ -216,7 +233,7 @@ export const validateIbanCsvData = (csvText: string): ValidationResult => {
     // Validate headers
     const headers = parseCsvLine(lines[0].toLowerCase());
     const headerError = validateHeaders(headers);
-    
+
     if (headerError) {
         return {
             valid: false,

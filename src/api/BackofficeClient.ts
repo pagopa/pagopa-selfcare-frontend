@@ -105,6 +105,7 @@ import { CreateStationMaintenance } from './generated/portal/CreateStationMainte
 import { InstitutionBaseResources } from './generated/portal/InstitutionBaseResources';
 import { InstitutionDetail } from './generated/portal/InstitutionDetail';
 import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
+import { IbanBulkOperationRequest } from './generated/portal/IbanBulkOperationRequest';
 import { IbanDeletionRequest } from './generated/portal/IbanDeletionRequest';
 import { IbanDeletionRequests } from './generated/portal/IbanDeletionRequests';
 import { ServiceConsentResponse } from './generated/portal/ServiceConsentResponse';
@@ -1095,6 +1096,17 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    handleBulkIbanOperations: async (
+      creditorinstitutioncode: string,
+      ibanBulkOperationRequest: IbanBulkOperationRequest
+    ): Promise<void> => {
+      const result = await backofficeClient.bulkIbanOperations({
+        'ci-code': creditorinstitutioncode,
+        body: ibanBulkOperationRequest,
+      });
+      return extractResponse(result, 201, onRedirectToLogin);
+    }
   },
   ibanDeletionRequest: {
     createIbanDeletionRequest: async (

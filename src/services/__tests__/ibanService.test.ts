@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { BackofficeApi } from "../../api/BackofficeClient";
-import { getIbanList, createIban, updateIban, deleteIban, createIbanDeletionRequest, getIbanDeletionRequests, cancelIbanDeletionRequests, exportIbanToCSV, exportCreditorInstitutionToCSV, getBrokerExportStatus } from "../ibanService";
+import { getIbanList, createIban, updateIban, deleteIban, createIbanDeletionRequest, getIbanDeletionRequests, cancelIbanDeletionRequests, exportIbanToCSV, exportCreditorInstitutionToCSV, getBrokerExportStatus, handleBulkIbanOperations } from "../ibanService";
 import { IbanCreate } from "../../api/generated/portal/IbanCreate";
 
 describe('ibanService test client', () => {
@@ -105,6 +105,14 @@ describe('ibanService test client', () => {
             spyOn(BackofficeApi.creditorInstitutionBroker, 'getBrokerExportStatus').
             mockReturnValue(new Promise((resolve) => resolve([])));
         expect(getBrokerExportStatus('brokerCode')).resolves.not.toThrow();
+        expect(spyOn).toBeCalledTimes(1);
+    });
+
+    test('Test handleBulkIbanOperations', async () => {
+        const spyOn = jest.
+            spyOn(BackofficeApi.ibans, 'handleBulkIbanOperations').
+            mockReturnValue(new Promise((resolve) => resolve()));
+        expect(handleBulkIbanOperations('ciCode', { operations: [] })).resolves.not.toThrow();
         expect(spyOn).toBeCalledTimes(1);
     });
 

@@ -11,7 +11,7 @@ export interface IbanCsvRow {
 export interface ParsedIbanData {
     descrizione: string;
     iban: string;
-    dataattivazioneiban: Date | "";
+    dataattivazioneiban: Date | null;
     operazione: 'CREATE' | 'UPDATE' | 'DELETE';
 }
 
@@ -120,17 +120,17 @@ const validateDataAttivazione = (
     dataAttivazione: string,
     lineNum: number,
     operazione: string
-): { error: string | null; date: Date | "" } => {
+): { error: string | null; date: Date | null } => {
     const trimmedDate = dataAttivazione.trim();
 
     if (operazione !== 'CREATE') {
         if (trimmedDate !== '') {
             return {
                 error: `Riga ${lineNum}: La data attivazione non può essere valorizzata per l'operazione ${operazione}`,
-                date: ""
+                date: null
             };
         }
-        return { error: null, date: "" };
+        return { error: null, date: null };
     }
 
     const parsedDate = parseIbanDate(trimmedDate);
@@ -138,7 +138,7 @@ const validateDataAttivazione = (
     if (!parsedDate) {
         return {
             error: `Riga ${lineNum}: Data attivazione non valida (formato atteso: dd/MM/yyyy)`,
-            date: ""
+            date: null
         };
     }
 
@@ -146,7 +146,7 @@ const validateDataAttivazione = (
     if (parsedDate < today) {
         return {
             error: `Riga ${lineNum}: Data attivazione non può essere nel passato`,
-            date: ""
+            date: null
         };
     }
 

@@ -34,7 +34,7 @@ describe('iban-csv-to-upload-parser', () => {
         const result = validateIbanCsvData(csv);
         expect(result.valid).toBe(true);
         expect(result.data[0].operazione).toBe('UPDATE');
-        expect(result.data[0].dataattivazioneiban).toBe('');
+        expect(result.data[0].dataattivazioneiban).toBeNull();
     });
 
     it('should fail UPDATE operation if date is present', () => {
@@ -49,7 +49,7 @@ describe('iban-csv-to-upload-parser', () => {
         const result = validateIbanCsvData(csv);
         expect(result.valid).toBe(true);
         expect(result.data[0].operazione).toBe('DELETE');
-        expect(result.data[0].dataattivazioneiban).toBe('');
+        expect(result.data[0].dataattivazioneiban).toBeNull();
     });
 
     it('should fail DELETE operation if date is present', () => {

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.47.3",
+  "version": "1.47.3-1-PIDM-1659-remove-limit-due-date-iban-cup-standin",
   "homepage": "ui",
   "private": true,
   "scripts": {

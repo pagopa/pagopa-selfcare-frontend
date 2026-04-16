@@ -6,9 +6,10 @@ type Props = {
     title: string | undefined;
     subTitle: string | undefined;
     image: string | undefined;
+    disabled?: boolean;
     action?: React.Dispatch<React.MouseEvent<HTMLDivElement, MouseEvent>>;
 };
-const PSPItemContainer = ({title, subTitle, image, action}: Props) => (
+const PSPItemContainer = ({title, subTitle, image, disabled = false, action}: Props) => (
     <Grid
         className={'selectedMoreThen3'}
         container
@@ -16,8 +17,9 @@ const PSPItemContainer = ({title, subTitle, image, action}: Props) => (
         direction={'row'}
         role={'Institution'}
         data-testid={`PartyItemContainer: ${title}`}
+        sx={disabled ? {opacity: 0.5, pointerEvents: 'none'} : {}}
         onKeyDownCapture={(e) => {
-            if (action && (e.key === 'Enter' || e.key === ' ')) {
+            if (!disabled && action && (e.key === 'Enter' || e.key === ' ')) {
                 action(e as any);
             }
         }}
@@ -27,8 +29,8 @@ const PSPItemContainer = ({title, subTitle, image, action}: Props) => (
             partyRole={subTitle as string}
             image={image}
             selectedItem={false}
-            action={action}
-            disabled={false}
+            action={disabled ? undefined : action}
+            disabled={disabled}
             maxCharactersNumberMultiLine={20}
         />
     </Grid>

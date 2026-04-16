@@ -21,6 +21,7 @@ import ROUTES from '../../../routes';
 import {
     associatePSPtoChannel,
     getChannelDetail,
+    getChannelPSPs,
 } from '../../../services/channelService';
 import { getBrokerDelegation } from '../../../services/institutionService';
 import { addCurrentPSP } from '../../../utils/channel-utils';
@@ -37,6 +38,7 @@ function ChannelAssociatePSPPage() {
 
     const [selectedPSP, setSelectedPSP] = useState<Delegation | undefined>();
     const [availablePSP, setAvailablePSP] = useState<Array<Delegation>>([]);
+    const [associatedPSPTaxCodes, setAssociatedPSPTaxCodes] = useState<Set<string>>(new Set());
     const [channelDetail, setChannelDetail] = useState<ChannelDetailsResource>();
 
     const formik = useFormik({
@@ -97,6 +99,19 @@ function ChannelAssociatePSPPage() {
             getChannelDetail({channelCode: channelId, status: ConfigurationStatus.ACTIVE})
                 .then((channel) => setChannelDetail(channel))
                 .catch((reason) => console.error(reason));
+
+            // Fetch already associated PSPs to disable them in the selection list
+            getChannelPSPs(channelId, '', 0, 1000)
+                .then((data) => {
+                    const taxCodes = new Set(
+                        (data?.payment_service_providers ?? [])
+                            .map((psp) => psp.tax_code)
+                            .filter((tc): tc is string => !!tc)
+                    );
+                    setAssociatedPSPTaxCodes(taxCodes);
+                })
+                .catch((reason) => console.error(reason));
+
             getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])
                 .then((data) => {
                     if (data?.delegation_list && selectedParty) {
@@ -165,6 +180,7 @@ function ChannelAssociatePSPPage() {
                                     label={t('channelAssociatePSPPage.associationForm.PSPSelectionInputPlaceholder')}
                                     availablePSP={availablePSP}
                                     selectedPSP={selectedPSP}
+                                    associatedPSPTaxCodes={associatedPSPTaxCodes}
                                     onPSPSelectionChange={(selectedPSP: Delegation | undefined) => {
                                         setSelectedPSP(selectedPSP);
                                     }}

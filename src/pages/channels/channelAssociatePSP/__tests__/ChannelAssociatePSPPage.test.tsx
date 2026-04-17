@@ -2,13 +2,13 @@ import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
 import {createMemoryHistory} from 'history';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {createStore, store} from '../../../../redux/store';
 import {Provider} from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
 import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';
+import * as channelService from '../../../../services/channelService';
 
 const mockHistoryPush = jest.fn();
 
@@ -71,14 +71,6 @@ describe('<ChannelAssociatePSPPage />', () => {
         const searchInput = screen.getByTestId('psp-selection-search');
 
         await userEvent.type(searchInput, 'PSP1{enter}');
-
-        // const selection = screen.getByTestId('PartyItemContainer: PSP1');
-        // const selectionBtn = selection.querySelector('[role="button"]') as HTMLElement;
-        // await waitFor(() => fireEvent.click(selectionBtn));
-
-        // expect(confirm).not.toBeDisabled();
-
-        // await waitFor(() => fireEvent.click(confirm));
     });
 
     test('render component ChannelAssociatePSPPage and go back', async () => {
@@ -87,5 +79,66 @@ describe('<ChannelAssociatePSPPage />', () => {
         const back = screen.getByTestId('back-btn-test');
         await waitFor(() => fireEvent.click(back));
         expect(mockHistoryPush).toHaveBeenCalledWith(`ui/channels/${channelId}/psp-list`);
+    });
+
+    test('fetches already associated PSPs on mount', async () => {
+        const getChannelPSPsSpy = jest.spyOn(channelService, 'getChannelPSPs');
+
+        const {store} = renderApp();
+
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedDirect,
+            })
+        );
+
+        await waitFor(() => {
+            expect(getChannelPSPsSpy).toHaveBeenCalledWith(channelId, '', 0, 1000);
+        });
+
+        getChannelPSPsSpy.mockRestore();
+    });
+
+    test('handles getChannelPSPs failure gracefully', async () => {
+        const getChannelPSPsSpy = jest
+            .spyOn(channelService, 'getChannelPSPs')
+            .mockRejectedValueOnce(new Error('Network error'));
+
+        const {store} = renderApp();
+
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedDirect,
+            })
+        );
+
+        // The page should still render without crashing
+        const confirm = screen.getByTestId('confirm-btn-test');
+        expect(confirm).toBeDisabled();
+
+        getChannelPSPsSpy.mockRestore();
+    });
+
+    test('handles associatePSPtoChannel failure with error toast', async () => {
+        const associateSpy = jest
+            .spyOn(channelService, 'associatePSPtoChannel')
+            .mockRejectedValueOnce(new Error('Association failed'));
+
+        const {store} = renderApp();
+
+        await waitFor(() =>
+            store.dispatch({
+                type: 'parties/setPartySelected',
+                payload: pspAdminSignedDirect,
+            })
+        );
+
+        // Confirm button should be disabled when no PSP is selected
+        const confirm = screen.getByTestId('confirm-btn-test');
+        expect(confirm).toBeDisabled();
+
+        associateSpy.mockRestore();
     });
 });

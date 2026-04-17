@@ -11,7 +11,7 @@ import PSPAccountItemSelection from './PSPAccountItemSelection';
 type Props = {
     availablePSP: Array<Delegation>;
     selectedPSP: Delegation | undefined;
-    associatedPSPTaxCodes?: Set<string>;
+    associatedPSPTaxCodes?: Array<string>;
     onPSPSelectionChange: (selectedPSP: Delegation | undefined) => void;
     label?: string;
     iconColor?: string;
@@ -42,7 +42,7 @@ const CustomBox = styled(Box)({
 export default function PSPSelectionSearch({
                                                availablePSP,
                                                selectedPSP,
-                                               associatedPSPTaxCodes = new Set(),
+                                               associatedPSPTaxCodes = [],
                                                onPSPSelectionChange,
                                                label,
                                                iconColor,
@@ -105,7 +105,7 @@ export default function PSPSelectionSearch({
                         <CustomBox>
                             {filteredParties &&
                                 filteredParties.map((PSP) => {
-                                    const isAlreadyAssociated = !!(PSP.tax_code && associatedPSPTaxCodes.has(PSP.tax_code));
+                                    const isAlreadyAssociated = !!(PSP.tax_code && associatedPSPTaxCodes.includes(PSP.tax_code));
                                     return (
                                         <PSPItemContainer
                                             key={PSP.institution_id}

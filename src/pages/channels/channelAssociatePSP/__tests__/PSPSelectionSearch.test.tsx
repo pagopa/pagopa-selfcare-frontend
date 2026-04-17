@@ -72,7 +72,7 @@ describe('<PSPSelectionSearch />', () => {
     });
 
     test('render already associated PSPs as disabled', async () => {
-        const associatedTaxCodes = new Set([availablePSP[0].tax_code!]);
+        const associatedTaxCodes = [availablePSP[0].tax_code!];
 
         render(
             <Provider store={store}>
@@ -105,7 +105,7 @@ describe('<PSPSelectionSearch />', () => {
 
     test('clicking an already associated PSP does not trigger selection', async () => {
         const mockSelectionChange = jest.fn();
-        const associatedTaxCodes = new Set([availablePSP[0].tax_code!]);
+        const associatedTaxCodes = [availablePSP[0].tax_code!];
 
         render(
             <Provider store={store}>
@@ -136,7 +136,7 @@ describe('<PSPSelectionSearch />', () => {
 
     test('non-associated PSPs are rendered without disabled styles', async () => {
         // Pass an empty set so no PSP is associated
-        const associatedTaxCodes = new Set<string>();
+        const associatedTaxCodes: string[] = [];
 
         render(
             <Provider store={store}>

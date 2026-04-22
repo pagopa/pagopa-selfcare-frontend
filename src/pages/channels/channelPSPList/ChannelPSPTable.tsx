@@ -77,13 +77,16 @@ export default function ChannelPSPTable({setAlertMessage, pspNameFilter, onAssoc
                 ? pspListPage.page_info?.total_pages * pspListPage.page_info?.items_found
                 : prevRowCountState
         );
+    }, [pspListPage.page_info?.total_pages, setRowCountState]);
+
+    useEffect(() => {
         if (onAssociatedPSPTaxCodesChange) {
             const taxCodes = (pspListPage.payment_service_providers ?? [])
                 .map((psp) => psp.tax_code)
                 .filter((tc): tc is string => !!tc);
             onAssociatedPSPTaxCodesChange(taxCodes);
         }
-    }, [pspListPage.page_info?.total_pages, setRowCountState]);
+    }, [pspListPage.payment_service_providers]);
 
     const dissociatePSP = async () => {
         setShowConfirmModal(false);

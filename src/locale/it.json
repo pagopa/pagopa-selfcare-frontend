@@ -503,7 +503,8 @@
       "successMessage": "PSP associato con successo.",
       "errorMessageDesc": "Non è stato possibile associare il PSP al canale",
       "backButton": "Annulla",
-      "confirmButton": "Conferma"
+      "confirmButton": "Conferma",
+      "alreadyAssociated": "Già associato"
     }
   },
   "addEditStationPage": {

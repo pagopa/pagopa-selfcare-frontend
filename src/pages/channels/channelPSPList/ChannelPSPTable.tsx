@@ -28,9 +28,10 @@ const emptyPSPList: ChannelPspListResource = {
 type ChannelPSPTableProps = {
     setAlertMessage: any;
     pspNameFilter: string;
+    onAssociatedPSPTaxCodesChange?: (taxCodes: Array<string>) => void;
 };
 
-export default function ChannelPSPTable({setAlertMessage, pspNameFilter}: ChannelPSPTableProps) {
+export default function ChannelPSPTable({setAlertMessage, pspNameFilter, onAssociatedPSPTaxCodesChange}: ChannelPSPTableProps) {
     const {t} = useTranslation();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [error, setError] = useState(false);
@@ -77,6 +78,15 @@ export default function ChannelPSPTable({setAlertMessage, pspNameFilter}: Channe
                 : prevRowCountState
         );
     }, [pspListPage.page_info?.total_pages, setRowCountState]);
+
+    useEffect(() => {
+        if (onAssociatedPSPTaxCodesChange) {
+            const taxCodes = (pspListPage.payment_service_providers ?? [])
+                .map((psp) => psp.tax_code)
+                .filter((tc): tc is string => !!tc);
+            onAssociatedPSPTaxCodesChange(taxCodes);
+        }
+    }, [pspListPage.payment_service_providers]);
 
     const dissociatePSP = async () => {
         setShowConfirmModal(false);

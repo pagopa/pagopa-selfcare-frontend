@@ -23,7 +23,6 @@ import {
     getChannelDetail,
 } from '../../../services/channelService';
 import { getBrokerDelegation } from '../../../services/institutionService';
-import { getBrokerAndPspDetails } from '../../../services/nodeService';
 import { addCurrentPSP } from '../../../utils/channel-utils';
 import { LOADING_TASK_PSP_AVAILABLE } from '../../../utils/constants';
 import PSPSelectionSearch from './PSPSelectionSearch';
@@ -49,6 +48,8 @@ function ChannelAssociatePSPPage() {
     });
 
     const history = useHistory();
+    const associatedPSPTaxCodes: Array<string> =
+        (history.location.state as any)?.associatedPSPTaxCodes ?? [];
 
     const goBack = () => {
         history.push(
@@ -61,40 +62,33 @@ function ChannelAssociatePSPPage() {
     const handleSubmit = async () => {
         if (selectedPSP && selectedPSP.institution_id) {
             setLoading(true);
-
-            const pspToBeAssociatedDetails = selectedPSP.tax_code ? await getBrokerAndPspDetails(selectedPSP.tax_code) : null;
-
-            if (pspToBeAssociatedDetails?.paymentServiceProviderDetailsResource?.psp_code) {
+            try {
                 await associatePSPtoChannel(
                     channelId,
                     selectedPSP!.tax_code as string,
                     (channelDetail?.payment_types ?? []) as any
-                )
-                    .then((_data) => {
-                        history.push(
-                            generatePath(ROUTES.CHANNEL_PSP_LIST, {
-                                channelId,
-                            }),
-                            {
-                                alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
-                            }
-                        );
-                    })
-                    .catch((reason) =>
-                        addError({
-                            id: 'ASSOCIATE_PSP',
-                            blocking: false,
-                            error: reason,
-                            techDescription: `An error occurred while psp association`,
-                            toNotify: true,
-                            displayableTitle: t('general.errorTitle'),
-                            displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
-                            component: 'Toast',
-                        })
-                    )
-                    .finally(() => {
-                        setLoading(false);
-                    });
+                );
+                history.push(
+                    generatePath(ROUTES.CHANNEL_PSP_LIST, {
+                        channelId,
+                    }),
+                    {
+                        alertSuccessMessage: t('channelAssociatePSPPage.associationForm.successMessage'),
+                    }
+                );
+            } catch (reason) {
+                addError({
+                    id: 'ASSOCIATE_PSP',
+                    blocking: false,
+                    error: reason as Error,
+                    techDescription: `An error occurred while psp association`,
+                    toNotify: true,
+                    displayableTitle: t('general.errorTitle'),
+                    displayableDescription: t('channelAssociatePSPPage.associationForm.errorMessageDesc'),
+                    component: 'Toast',
+                });
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -105,6 +99,7 @@ function ChannelAssociatePSPPage() {
             getChannelDetail({channelCode: channelId, status: ConfigurationStatus.ACTIVE})
                 .then((channel) => setChannelDetail(channel))
                 .catch((reason) => console.error(reason));
+
             getBrokerDelegation(undefined, selectedParty?.partyId, ["PSP"])
                 .then((data) => {
                     if (data?.delegation_list && selectedParty) {
@@ -173,6 +168,7 @@ function ChannelAssociatePSPPage() {
                                     label={t('channelAssociatePSPPage.associationForm.PSPSelectionInputPlaceholder')}
                                     availablePSP={availablePSP}
                                     selectedPSP={selectedPSP}
+                                    associatedPSPTaxCodes={associatedPSPTaxCodes}
                                     onPSPSelectionChange={(selectedPSP: Delegation | undefined) => {
                                         setSelectedPSP(selectedPSP);
                                     }}

@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {Box, Grid} from '@mui/material';
 import {styled} from '@mui/material/styles';
+import {useTranslation} from 'react-i18next';
 import {PSP} from '../../../model/PSP';
 import {Delegation} from '../../../api/generated/portal/Delegation';
 import PSPSelectionSearchInput from './PSPSelectionSearchInput';
@@ -10,6 +11,7 @@ import PSPAccountItemSelection from './PSPAccountItemSelection';
 type Props = {
     availablePSP: Array<Delegation>;
     selectedPSP: Delegation | undefined;
+    associatedPSPTaxCodes?: Array<string>;
     onPSPSelectionChange: (selectedPSP: Delegation | undefined) => void;
     label?: string;
     iconColor?: string;
@@ -40,11 +42,13 @@ const CustomBox = styled(Box)({
 export default function PSPSelectionSearch({
                                                availablePSP,
                                                selectedPSP,
+                                               associatedPSPTaxCodes = [],
                                                onPSPSelectionChange,
                                                label,
                                                iconColor,
                                                iconMarginRight,
                                            }: Props) {
+    const {t} = useTranslation();
     const [input, setInput] = useState<string>('');
     const [filteredParties, setFilteredParties] = useState<Array<Delegation>>([]);
 
@@ -100,17 +104,21 @@ export default function PSPSelectionSearch({
                     ) : (
                         <CustomBox>
                             {filteredParties &&
-                                filteredParties.map((PSP) => (
-                                    <PSPItemContainer
-                                        key={PSP.institution_id}
-                                        title={PSP.institution_name}
-                                        subTitle={/* t(roleLabels[PSP.userRole].longLabelKey) */ ''}
-                                        image={/* PSP.urlLogo */ ''}
-                                        action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-                                            handleListItemClick(event, PSP)
-                                        }
-                                    />
-                                ))}
+                                filteredParties.map((PSP) => {
+                                    const isAlreadyAssociated = !!(PSP.tax_code && associatedPSPTaxCodes.includes(PSP.tax_code));
+                                    return (
+                                        <PSPItemContainer
+                                            key={PSP.institution_id}
+                                            title={PSP.institution_name}
+                                            subTitle={isAlreadyAssociated ? t('channelAssociatePSPPage.associationForm.alreadyAssociated') : ''}
+                                            image={''}
+                                            disabled={isAlreadyAssociated}
+                                            action={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+                                                !isAlreadyAssociated && handleListItemClick(event, PSP)
+                                            }
+                                        />
+                                    );
+                                })}
                         </CustomBox>
                     )}
                 </Grid>

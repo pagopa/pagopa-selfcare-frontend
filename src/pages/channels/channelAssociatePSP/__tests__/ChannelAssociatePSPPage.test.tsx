@@ -10,20 +10,19 @@ import {Provider} from 'react-redux';
 import ChannelAssociatePSPPage from '../ChannelAssociatePSPPage';
 import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';
 import * as channelService from '../../../../services/channelService';
+import {channelsActions} from '../../../../redux/slices/channelsSlice';
 
 const mockHistoryPush = jest.fn();
-let mockLocationState: any = {};
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useHistory: () => ({
         push: mockHistoryPush,
-        location: {state: mockLocationState},
+        location: {state: {}},
     }),
 }));
 
 beforeEach(() => {
-    mockLocationState = {};
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
@@ -85,10 +84,11 @@ describe('<ChannelAssociatePSPPage />', () => {
         expect(mockHistoryPush).toHaveBeenCalledWith(`ui/channels/${channelId}/psp-list`);
     });
 
-    test('reads associated PSP tax codes from navigation state', async () => {
-        mockLocationState = {associatedPSPTaxCodes: ['TAX001', 'TAX002']};
+    test('reads associated PSP tax codes from Redux store', async () => {
+        const store = createStore();
+        store.dispatch(channelsActions.setAssociatedPSPTaxCodes(['TAX001', 'TAX002']));
 
-        const {store} = renderApp();
+        renderApp(store);
 
         await waitFor(() =>
             store.dispatch({
@@ -97,14 +97,11 @@ describe('<ChannelAssociatePSPPage />', () => {
             })
         );
 
-        // Page should render without errors when state is provided
         const confirm = screen.getByTestId('confirm-btn-test');
         expect(confirm).toBeDisabled();
     });
 
-    test('handles missing navigation state gracefully', async () => {
-        mockLocationState = null;
-
+    test('handles empty Redux store gracefully', async () => {
         const {store} = renderApp();
 
         await waitFor(() =>
@@ -114,7 +111,6 @@ describe('<ChannelAssociatePSPPage />', () => {
             })
         );
 
-        // Page should render without crashing when no state is provided
         const confirm = screen.getByTestId('confirm-btn-test');
         expect(confirm).toBeDisabled();
     });

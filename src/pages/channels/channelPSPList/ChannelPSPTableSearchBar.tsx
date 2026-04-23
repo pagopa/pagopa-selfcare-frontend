@@ -9,10 +9,9 @@ type Props = {
     channelId: string;
     pspNameInput: string;
     setPspNameInput: (pspName: string) => void;
-    associatedPSPTaxCodes?: Array<string>;
 };
 
-export default function ChannelPSPTableSearchBar({channelId, pspNameInput, setPspNameInput, associatedPSPTaxCodes = []}: Props) {
+export default function ChannelPSPTableSearchBar({channelId, pspNameInput, setPspNameInput}: Props) {
     const {t} = useTranslation();
     return (
         <Box width="100%" display="flex">
@@ -33,12 +32,9 @@ export default function ChannelPSPTableSearchBar({channelId, pspNameInput, setPs
             />
             <Button
                 component={Link}
-                to={{
-                    pathname: generatePath(ROUTES.CHANNEL_ASSOCIATE_PSP, {
-                        channelId,
-                    }),
-                    state: {associatedPSPTaxCodes},
-                }}
+                to={generatePath(ROUTES.CHANNEL_ASSOCIATE_PSP, {
+                    channelId,
+                })}
                 variant="contained"
                 sx={{ml: 1, whiteSpace: 'nowrap', minWidth: 'auto'}}
                 startIcon={<Add/>}

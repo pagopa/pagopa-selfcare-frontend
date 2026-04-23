@@ -9,6 +9,8 @@ import {LOADING_TASK_CHANNEL_PSP_TABLE} from '../../../utils/constants';
 import {dissociatePSPfromChannel, getChannelPSPs} from '../../../services/channelService';
 import {ChannelPspListResource} from '../../../api/generated/portal/ChannelPspListResource';
 import {CustomDataGrid} from '../../../components/Table/TableDataGrid';
+import {useAppDispatch} from '../../../redux/hooks';
+import {channelsActions} from '../../../redux/slices/channelsSlice';
 import {buildColumnDefs} from './ChannelPSPTableColumns';
 import ChannelPSPTableEmpty from './ChannelPSPTableEmpty';
 
@@ -28,11 +30,11 @@ const emptyPSPList: ChannelPspListResource = {
 type ChannelPSPTableProps = {
     setAlertMessage: any;
     pspNameFilter: string;
-    onAssociatedPSPTaxCodesChange?: (taxCodes: Array<string>) => void;
 };
 
-export default function ChannelPSPTable({setAlertMessage, pspNameFilter, onAssociatedPSPTaxCodesChange}: ChannelPSPTableProps) {
+export default function ChannelPSPTable({setAlertMessage, pspNameFilter}: ChannelPSPTableProps) {
     const {t} = useTranslation();
+    const dispatch = useAppDispatch();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [error, setError] = useState(false);
 
@@ -80,12 +82,10 @@ export default function ChannelPSPTable({setAlertMessage, pspNameFilter, onAssoc
     }, [pspListPage.page_info?.total_pages, setRowCountState]);
 
     useEffect(() => {
-        if (onAssociatedPSPTaxCodesChange) {
-            const taxCodes = (pspListPage.payment_service_providers ?? [])
-                .map((psp) => psp.tax_code)
-                .filter((tc): tc is string => !!tc);
-            onAssociatedPSPTaxCodesChange(taxCodes);
-        }
+        const taxCodes = (pspListPage.payment_service_providers ?? [])
+            .map((psp) => psp.tax_code)
+            .filter((tc): tc is string => !!tc);
+        dispatch(channelsActions.setAssociatedPSPTaxCodes(taxCodes));
     }, [pspListPage.payment_service_providers]);
 
     const dissociatePSP = async () => {

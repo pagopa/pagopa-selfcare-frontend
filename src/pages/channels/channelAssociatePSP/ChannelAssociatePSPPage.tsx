@@ -17,6 +17,7 @@ import { Delegation } from '../../../api/generated/portal/Delegation';
 import { ConfigurationStatus } from '../../../model/Station';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
+import { channelsSelectors } from '../../../redux/slices/channelsSlice';
 import ROUTES from '../../../routes';
 import {
     associatePSPtoChannel,
@@ -32,6 +33,7 @@ function ChannelAssociatePSPPage() {
     const setLoading = useLoading(LOADING_TASK_PSP_AVAILABLE);
     const addError = useErrorDispatcher();
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
+    const associatedPSPTaxCodes = useAppSelector(channelsSelectors.selectAssociatedPSPTaxCodes);
 
     const {channelId} = useParams<{ channelId: string }>();
 
@@ -48,8 +50,6 @@ function ChannelAssociatePSPPage() {
     });
 
     const history = useHistory();
-    const associatedPSPTaxCodes: Array<string> =
-        (history.location.state as any)?.associatedPSPTaxCodes ?? [];
 
     const goBack = () => {
         history.push(

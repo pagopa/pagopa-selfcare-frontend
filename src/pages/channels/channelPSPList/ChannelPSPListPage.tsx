@@ -20,7 +20,6 @@ const ChannelPSPListPage = () => {
 
     const [pspNameInput, setPspNameInput] = useState<string>('');
     const [pspNameFilter, setPspNameFilter] = useState<string>('');
-    const [associatedPSPTaxCodes, setAssociatedPSPTaxCodes] = useState<Array<string>>([]);
 
     useEffect(() => {
         const setSearchValue = setTimeout(() => {
@@ -105,10 +104,9 @@ const ChannelPSPListPage = () => {
                 channelId={channelId}
                 pspNameInput={pspNameInput}
                 setPspNameInput={setPspNameInput}
-                associatedPSPTaxCodes={associatedPSPTaxCodes}
             />
 
-            <ChannelPSPTable pspNameFilter={pspNameFilter} setAlertMessage={setAlertMessage} onAssociatedPSPTaxCodesChange={setAssociatedPSPTaxCodes}/>
+            <ChannelPSPTable pspNameFilter={pspNameFilter} setAlertMessage={setAlertMessage}/>
         </SideMenuLayout>
     );
 };

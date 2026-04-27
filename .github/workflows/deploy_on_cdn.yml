@@ -127,7 +127,13 @@ jobs:
 
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
-          export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
+
+          if [ "${ENVIRONMENT}" = "prod" ]; then
+            export REACT_APP_ONE_TRUST_BASE_URL="${{ vars.SELFCARE_HOST_FE }}/ot"
+          else
+            export REACT_APP_ONE_TRUST_BASE_URL="${{ vars.SELFCARE_HOST_FE }}/ot/test"
+          fi
+
           export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
 
           export REACT_APP_ANALYTICS_ENABLE='false'

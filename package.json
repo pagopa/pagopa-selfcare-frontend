@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.47.7-2-PIDM-1818-fix-path-REACT_APP_ONE_TRUST_BASE_URL",
+  "version": "1.47.7-3-PIDM-1818-fix-path-react-app",
   "homepage": "ui",
   "private": true,
   "scripts": {

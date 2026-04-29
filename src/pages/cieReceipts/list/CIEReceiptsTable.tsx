@@ -32,8 +32,8 @@ export default function CIEReceiptsTable({
   searchTrigger,
 }: {
   filterDebtorOrIuv: string;
-  fromDate: number | null;
-  toDate: number | null;
+  fromDate: Date | null;
+  toDate: Date | null;
   searchTrigger: boolean;
 }) {
   const { t } = useTranslation();

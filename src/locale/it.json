@@ -1621,7 +1621,8 @@
     "search": {
       "placeholder": "Cerca per codice fiscale del debitore o IUV",
       "fromDate": "Da",
-      "toDate": "A"
+      "toDate": "A",
+      "dateError": "Data invalida"
     },
     "table": {
       "emptyState": "Non sono ancora presenti ricevute",

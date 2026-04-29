@@ -31,7 +31,7 @@ describe('<CIEReceiptsTable />', () => {
                 <MemoryRouter initialEntries={[`/cie-receipts`]}>
                     <Route path="/cie-receipts">
                         <ThemeProvider theme={theme}>
-                            <CIEReceiptsTable filterDebtorOrIuv={''} filterYear={null} searchTrigger={false}/>
+                            <CIEReceiptsTable filterDebtorOrIuv={''} fromDate={null} toDate={null} searchTrigger={false}/>
                         </ThemeProvider>
                     </Route>
                 </MemoryRouter>
@@ -60,7 +60,7 @@ describe('<CIEReceiptsTable />', () => {
                 <MemoryRouter initialEntries={[`/cie-receipts`]}>
                     <Route path="/cie-receipts">
                         <ThemeProvider theme={theme}>
-                            <CIEReceiptsTable filterDebtorOrIuv={''} filterYear={null} searchTrigger={false}/>
+                            <CIEReceiptsTable filterDebtorOrIuv={''} fromDate={null} toDate={null} searchTrigger={false}/>
                         </ThemeProvider>
                     </Route>
                 </MemoryRouter>
@@ -82,7 +82,7 @@ describe('<CIEReceiptsTable />', () => {
                 <MemoryRouter initialEntries={[`/cie-receipts`]}>
                     <Route path="/cie-receipts">
                         <ThemeProvider theme={theme}>
-                            <CIEReceiptsTable filterDebtorOrIuv={''} filterYear={null} searchTrigger={false}/>
+                            <CIEReceiptsTable filterDebtorOrIuv={''} fromDate={null} toDate={null} searchTrigger={false}/>
                         </ThemeProvider>
                     </Route>
                 </MemoryRouter>
@@ -105,7 +105,7 @@ describe('<CIEReceiptsTable />', () => {
                 <MemoryRouter initialEntries={[`/cie-receipts`]}>
                     <Route path="/cie-receipts">
                         <ThemeProvider theme={theme}>
-                            <CIEReceiptsTable filterDebtorOrIuv={''} filterYear={null} searchTrigger={false}/>
+                            <CIEReceiptsTable filterDebtorOrIuv={''} fromDate={null} toDate={null} searchTrigger={false}/>
                         </ThemeProvider>
                     </Route>
                 </MemoryRouter>

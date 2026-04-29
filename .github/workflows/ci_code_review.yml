@@ -66,7 +66,9 @@ jobs:
 
           # try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
           FE_BRANCH_RAW="${GITHUB_REF_NAME}"
+          echo "Raw FE branch name: ${FE_BRANCH_RAW}"
           FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
+          echo "Sanitized FE branch name: ${FE_BRANCH}"
 
           # If branch name is unusable (sanitized empty), fallback to next (per requirement)
           if [ -z "${FE_BRANCH}" ]; then

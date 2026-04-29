@@ -17,9 +17,6 @@ import {
 import { PaymentsResult } from '../../../api/generated/portal/PaymentsResult';
 import { buildColumnDefs } from './CIEReceiptsTableColumns';
 
-const rowHeight = 64;
-const headerHeight = 56;
-
 const emptyList: PaymentsResult = {
   results: [],
   totalPages: 0,

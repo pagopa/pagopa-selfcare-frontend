@@ -119,7 +119,7 @@ export default function PaymentsReceiptsTable({
         >
             <TableDataGrid
                 componentPath={"paymentsReceiptsPage"}
-                rows={receiptsList.results ?? []}
+                rows={receiptsList.results ? [...receiptsList.results] : []}
                 columns={columns}
                 totalPages={receiptsList?.totalPages}
                 page={page}

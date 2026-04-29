@@ -123,7 +123,7 @@ export default function CIEReceiptsTable({
     >
       <TableDataGrid
         componentPath={"cieReceiptsPage"}
-        rows={receiptsList.results ?? []}
+        rows={receiptsList.results ? [...receiptsList.results] : []}
         columns={columns}
         totalPages={receiptsList?.totalPages}
         page={page}

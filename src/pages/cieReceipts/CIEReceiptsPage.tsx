@@ -5,6 +5,7 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { TextField, TextFieldProps } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { it } from 'date-fns/locale';
+import { dateDifferenceInDays } from '../../utils/common-utils';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import TableSearchBar from '../../components/Table/TableSearchBar';
 import CIEReceiptsTable from './list/CIEReceiptsTable';
@@ -52,7 +53,7 @@ export default function CIEReceiptsPage() {
   const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
 
   const validateDates = (from: Date, to: Date) => {
-    if (from > to) {
+    if (dateDifferenceInDays(to, from) >= 1 ) {
       setDateError(t('cieReceiptsPage.search.dateError'));
     } else {
       setDateError('');

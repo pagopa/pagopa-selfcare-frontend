@@ -1776,6 +1776,9 @@
     "paymentsReceipts": {
       "title": "Pagamenti CUP"
     },
+    "cieReceipts": {
+      "title": "Pagamenti CIE"
+    },
     "users": {
       "title": "Utenti"
     },

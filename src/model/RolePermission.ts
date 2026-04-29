@@ -117,6 +117,11 @@ export const permissions = {
         ROLE.EC_DIRECT_ADMIN,
         ROLE.PAGOPA_OPERATOR,
     ],
+    "cie-receipts": [
+        ROLE.EC_ADMIN,
+        ROLE.EC_DIRECT_ADMIN,
+        ROLE.PAGOPA_OPERATOR,
+    ],
     "payment-notices": [
         ROLE.EC_ADMIN,
         ROLE.EC_DIRECT_ADMIN,

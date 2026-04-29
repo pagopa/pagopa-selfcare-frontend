@@ -12,6 +12,7 @@ import {
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
 import {
+  CIEReceiptsListMethodParams,
   PaymentsReceiptsListMethodParams,
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
@@ -1586,6 +1587,31 @@ export const BackofficeApi = {
           },
         }
       ).then((data) => Promise.resolve(data.text()));
+    },
+
+    getCIEPaymentsReceipts: async ({
+      organizationTaxCode,
+      debtorTaxCodeOrIuv,
+      fromDate,
+      toDate,
+      page,
+      pageLimit,
+    }: CIEReceiptsListMethodParams): Promise<PaymentsResult> => {
+      const todayDate = new Date();
+      // eslint-disable-next-line functional/no-let, prefer-const
+      let filterBody: PaymentsReceiptsListRequestBody = {
+        'organization-tax-code': organizationTaxCode,
+        limit: pageLimit ?? 50,
+        page,
+        fromDate: fromDate ? new Date(fromDate).toDateString() : new Date(todayDate.setMonth(todayDate.getMonth() - 1)).toDateString(),
+        toDate: toDate ? new Date(toDate).toDateString() : todayDate.toDateString(),
+      };
+      if (debtorTaxCodeOrIuv) {
+        filterBody = { ...filterBody, debtorOrIuv: debtorTaxCodeOrIuv };
+      }
+
+      const result = await backofficeClient.getCIEPaymentsReceipts(filterBody);
+      return extractResponse(result, 200, onRedirectToLogin);
     },
   },
   notice: {

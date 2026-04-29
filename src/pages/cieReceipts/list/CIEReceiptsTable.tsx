@@ -5,7 +5,7 @@ import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Pagination } from '@mui/material';
-import { CustomDataGrid } from '../../../components/Table/TableDataGrid';
+import TableDataGrid, { CustomDataGrid } from '../../../components/Table/TableDataGrid';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_PAYMENTS_RECEIPTS } from '../../../utils/constants';
@@ -110,7 +110,7 @@ export default function CIEReceiptsTable({
   }, [searchTrigger]);
 
   const columns: Array<GridColDef> = buildColumnDefs(t, downloadReceiptXML);
-  // TODO generalize table box
+
   return (
     <Box
       id="cieReceiptsTable"
@@ -121,43 +121,15 @@ export default function CIEReceiptsTable({
       }}
       justifyContent="start"
     >
-      {!receiptsList?.results || receiptsList.results.length === 0 ? (
-        <TableEmptyState componentName="cieReceiptsPage" />
-      ) : (
-        <div data-testid="data-grid">
-          <CustomDataGrid
-            disableColumnFilter
-            disableColumnSelector
-            disableDensitySelector
-            disableSelectionOnClick
-            onPageChange={(newPage) => getReceipts(newPage - 1)}
-            autoHeight={true}
-            className="CustomDataGrid"
-            components={{
-              Pagination: () => (
-                <>
-                  <Pagination
-                    color="primary"
-                    count={receiptsList?.totalPages ?? 1}
-                    page={page + 1}
-                    onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                      getReceipts(value - 1)
-                    }
-                  />
-                </>
-              ),
-            }}
-            columnBuffer={5}
-            columns={columns}
-            headerHeight={headerHeight}
-            hideFooterSelectedRowCount={true}
-            rowCount={receiptsList?.results?.length}
-            getRowId={(el) => el.iuv}
-            rowHeight={rowHeight}
-            rows={receiptsList.results ?? []}
-          />
-        </div>
-      )}
+      <TableDataGrid
+        componentPath={"cieReceiptsPage"}
+        rows={receiptsList.results ?? []}
+        columns={columns}
+        totalPages={receiptsList?.totalPages}
+        page={page}
+        handleChangePage={(newPage: number) => getReceipts(newPage)}
+        getRowId={(el) => el.iuv}
+      />
     </Box>
   );
 }

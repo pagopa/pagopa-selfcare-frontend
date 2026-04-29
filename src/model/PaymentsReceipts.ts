@@ -19,8 +19,8 @@ export type PaymentsReceiptsListRequestBody = {
 export type CIEReceiptsListMethodParams = {
   organizationTaxCode: string;
   debtorTaxCodeOrIuv?: string;
-  fromDate?: number | null;
-  toDate?: number | null;
+  fromDate?: Date | null;
+  toDate?: Date | null;
   page?: number;
   pageLimit?: number;
 };

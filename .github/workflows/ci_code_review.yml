@@ -52,6 +52,55 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      # --------------------------------------------------
+      # Decide OPENAPI_REF
+      # --------------------------------------------------
+      - name: Set OPENAPI_REF
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Validate ENVIRONMENT (do not trust workflow input directly)
+          case "${ENVIRONMENT}" in
+            dev|uat|prod) ;;
+            *)
+              echo "Invalid ENVIRONMENT: ${ENVIRONMENT} (allowed: dev|uat|prod)"
+              exit 1
+              ;;
+          esac
+
+          # Stable environments always use main
+          if [ "${ENVIRONMENT}" = "uat" ] || [ "${ENVIRONMENT}" = "prod" ]; then
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "OPENAPI_REF set to main for ${ENVIRONMENT}"
+            exit 0
+          fi
+
+          # DEV: try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
+          FE_BRANCH_RAW="${GITHUB_REF_NAME}"
+          FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
+
+          # If branch name is unusable (sanitized empty), fallback to next (per requirement)
+          if [ -z "${FE_BRANCH}" ]; then
+            echo "Sanitized branch name is empty. Falling back to next."
+            echo "OPENAPI_REF=next" >> "${GITHUB_ENV}"
+            exit 0
+          fi
+
+          CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+          echo "Checking backend OpenAPI at: ${CANDIDATE_URL}"
+
+          if curl -sfL \
+            --proto '=https' \
+            --proto-redir '=https' \
+            "${CANDIDATE_URL}" > /dev/null; then
+            echo "OPENAPI_REF=${FE_BRANCH}" >> "${GITHUB_ENV}"
+            echo "OPENAPI_REF set to ${FE_BRANCH}"
+          else
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "Backend OpenAPI not found on ${FE_BRANCH}. Falling back to main."
+          fi
+
       - name: Build
         run: |
           set -euo pipefail
@@ -83,6 +132,8 @@ jobs:
 
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
+
+          echo "Using OPENAPI_REF=${OPENAPI_REF}"
           
           APP_JWT="${{ secrets.APP_JWT }}"
 

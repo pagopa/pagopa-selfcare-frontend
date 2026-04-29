@@ -3,6 +3,7 @@ import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/a
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
 import { format } from 'date-fns';
+import { formatDateToYYYYMMDD } from '../utils/common-utils';
 import {
   BundleCISubscriptionsBodyRequest,
   BundleCISubscriptionsMethodParams,
@@ -1603,8 +1604,8 @@ export const BackofficeApi = {
         'organization-tax-code': organizationTaxCode,
         limit: pageLimit ?? 50,
         page,
-        fromDate: fromDate ? new Date(fromDate).toDateString() : new Date(todayDate.setMonth(todayDate.getMonth() - 1)).toDateString(),
-        toDate: toDate ? new Date(toDate).toDateString() : todayDate.toDateString(),
+        fromDate: fromDate ? formatDateToYYYYMMDD(fromDate) : formatDateToYYYYMMDD(new Date(todayDate.setMonth(todayDate.getMonth() - 1))),
+        toDate: toDate ? formatDateToYYYYMMDD(toDate) : formatDateToYYYYMMDD(todayDate),
       };
       if (debtorTaxCodeOrIuv) {
         filterBody = { ...filterBody, debtorOrIuv: debtorTaxCodeOrIuv };

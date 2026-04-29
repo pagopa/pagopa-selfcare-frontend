@@ -3,22 +3,17 @@ import {Box} from '@mui/system';
 import {GridColDef} from '@mui/x-data-grid';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useTranslation} from 'react-i18next';
-import {useState, useEffect, ChangeEvent} from 'react';
-import {Pagination} from '@mui/material';
+import {useState, useEffect } from 'react';
 import TableDataGrid from '../../../components/Table/TableDataGrid';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {LOADING_TASK_PAYMENTS_RECEIPTS} from '../../../utils/constants';
-import TableEmptyState from '../../../components/Table/TableEmptyState';
 import {
     getPaymentReceiptDetail,
     getPaymentsReceipts,
 } from '../../../services/paymentsReceiptsService';
 import {PaymentsResult} from '../../../api/generated/portal/PaymentsResult';
 import {buildColumnDefs} from './PaymentsReceiptsTableColumns';
-
-const rowHeight = 64;
-const headerHeight = 56;
 
 const emptyList: PaymentsResult = {
     results: [],

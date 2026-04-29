@@ -3,13 +3,11 @@ import { Box } from '@mui/system';
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect, ChangeEvent } from 'react';
-import { Pagination } from '@mui/material';
-import TableDataGrid, { CustomDataGrid } from '../../../components/Table/TableDataGrid';
+import { useState, useEffect } from 'react';
+import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { LOADING_TASK_PAYMENTS_RECEIPTS } from '../../../utils/constants';
-import TableEmptyState from '../../../components/Table/TableEmptyState';
 import {
   getCIEPaymentsReceipts,
   getPaymentReceiptDetail,

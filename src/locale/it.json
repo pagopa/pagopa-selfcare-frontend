@@ -1617,7 +1617,7 @@
     }
   },
   "cieReceiptsPage": {
-    "title": "Ricerca CIE",
+    "title": "Ricevute CIE",
     "search": {
       "placeholder": "Cerca per codice fiscale del debitore o IUV",
       "fromDate": "Da",
@@ -1778,7 +1778,7 @@
       "title": "Pagamenti CUP"
     },
     "cieReceipts": {
-      "title": "Pagamenti CIE"
+      "title": "Ricevute CIE"
     },
     "users": {
       "title": "Utenti"

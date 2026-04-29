@@ -60,23 +60,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Validate ENVIRONMENT (do not trust workflow input directly)
-          case "${ENVIRONMENT}" in
-            dev|uat|prod) ;;
-            *)
-              echo "Invalid ENVIRONMENT: ${ENVIRONMENT} (allowed: dev|uat|prod)"
-              exit 1
-              ;;
-          esac
-
-          # Stable environments always use main
-          if [ "${ENVIRONMENT}" = "uat" ] || [ "${ENVIRONMENT}" = "prod" ]; then
-            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
-            echo "OPENAPI_REF set to main for ${ENVIRONMENT}"
-            exit 0
-          fi
-
-          # DEV: try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
+          # try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
           FE_BRANCH_RAW="${GITHUB_REF_NAME}"
           FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
 

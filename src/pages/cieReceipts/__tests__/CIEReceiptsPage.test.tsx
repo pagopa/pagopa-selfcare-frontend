@@ -30,9 +30,9 @@ describe('<CIEReceiptsPage />', () => {
 
     const fromDate = screen.getByTestId('select-from-date') as HTMLInputElement;
 
-    fireEvent.change(fromDate, { target: { value: '2023' } });
+    fireEvent.change(fromDate, { target: { value: '01/01/2023' } });
     await waitFor(() => {
-      expect(fromDate.value).toBe('2023');
+      expect(fromDate.value).toBe('01/01/2023');
     });
 
     fireEvent.change(fromDate, { target: { value: null } });
@@ -42,9 +42,9 @@ describe('<CIEReceiptsPage />', () => {
 
     const toDate = screen.getByTestId('select-to-date') as HTMLInputElement;
 
-    fireEvent.change(toDate, { target: { value: '2023' } });
+    fireEvent.change(toDate, { target: { value: '01/01/2023' } });
     await waitFor(() => {
-      expect(toDate.value).toBe('2023');
+      expect(toDate.value).toBe('01/01/2023');
     });
 
     fireEvent.change(toDate, { target: { value: null } });

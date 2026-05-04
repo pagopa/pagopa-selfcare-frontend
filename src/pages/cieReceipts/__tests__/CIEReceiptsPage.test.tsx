@@ -6,6 +6,7 @@ import { store } from '../../../redux/store';
 import { Provider } from 'react-redux';
 import React from 'react';
 import CIEReceiptsPage from '../CIEReceiptsPage';
+import { formatDateToDDMMYYYY } from '../../../utils/common-utils';
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -28,28 +29,28 @@ describe('<CIEReceiptsPage />', () => {
       </Provider>
     );
 
+    const todayDate = formatDateToDDMMYYYY(new Date());
+
     const fromDate = screen.getByTestId('select-from-date') as HTMLInputElement;
+
+    await waitFor(() => {
+      expect(fromDate.value).toBe(todayDate);
+    });
 
     fireEvent.change(fromDate, { target: { value: '01/01/2023' } });
     await waitFor(() => {
       expect(fromDate.value).toBe('01/01/2023');
     });
 
-    fireEvent.change(fromDate, { target: { value: null } });
-    await waitFor(() => {
-      expect(fromDate.value).toBe('');
-    });
-
     const toDate = screen.getByTestId('select-to-date') as HTMLInputElement;
+
+    await waitFor(() => {
+      expect(toDate.value).toBe(todayDate);
+    });
 
     fireEvent.change(toDate, { target: { value: '01/01/2023' } });
     await waitFor(() => {
       expect(toDate.value).toBe('01/01/2023');
-    });
-
-    fireEvent.change(toDate, { target: { value: null } });
-    await waitFor(() => {
-      expect(toDate.value).toBe('');
     });
 
     const searchTrigger = screen.getByTestId('button-search');

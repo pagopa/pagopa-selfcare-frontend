@@ -264,6 +264,7 @@ jobs:
 
           yarn test:coverage --watchAll=false
 
+      # Columns files are excluded from duplication check as they are similar by nature
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
@@ -272,7 +273,7 @@ jobs:
         with:
           args: >
             -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/integration-test/**,**/openApi/**,**/model/**,**/hooks/**,**/MyHeaderProduct.tsx
-            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**,**/*Columns.tsx. ## Exclude columns files from duplication check as they are often similar by nature
+            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**,**/*Columns.tsx
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest

@@ -46,7 +46,6 @@ const ROUTES = {
   DELEGATIONS_DETAIL: `${BASE_ROUTE}/delegation-list/detail`,
 
   PAYMENTS_RECEIPTS: `${BASE_ROUTE}/payments-receipts`,
-  CIE_RECEIPTS: `${BASE_ROUTE}/cie-receipts`,
 
   PAYMENT_NOTICES: `${BASE_ROUTE}/payments-notices`,
   PAYMENT_NOTICES_ADDEDIT: `${BASE_ROUTE}/payments-notices/addedit`,

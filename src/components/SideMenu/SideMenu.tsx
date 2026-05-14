@@ -193,21 +193,6 @@ export default function SideMenu({
             dataTestId="payments-receipts-test"
           />
         )}
-      {useFlagValue('cie-receipts') &&
-        userHasPermission('cie-receipts') &&
-        orgInfo.types.isEc && (
-          <SidenavItem
-            collapsed={collapsed}
-            title={t('sideMenu.cieReceipts.title')}
-            handleClick={() => onExit(() => history.push(ROUTES.CIE_RECEIPTS))}
-            isSelected={
-              pathname === ROUTES.CIE_RECEIPTS || pathname.startsWith(ROUTES.CIE_RECEIPTS)
-            }
-            icon={ReceiptIcon}
-            disabled={isDisabled}
-            dataTestId="cie-receipts-test"
-          />
-        )}
       {useFlagValue('station-maintenances') &&
         userHasPermission('station-maintenances') &&
         orgInfo.types.isEcBroker && (

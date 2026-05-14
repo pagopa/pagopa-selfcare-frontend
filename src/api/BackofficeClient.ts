@@ -3,7 +3,6 @@ import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/a
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
 import { format } from 'date-fns';
-import { formatDateToYYYYMMDD } from '../utils/common-utils';
 import {
   BundleCISubscriptionsBodyRequest,
   BundleCISubscriptionsMethodParams,
@@ -13,7 +12,6 @@ import {
 import { NodeOnSignInPSP } from '../model/Node';
 import { PSPDirectDTO } from '../model/PSP';
 import {
-  CIEReceiptsListMethodParams,
   PaymentsReceiptsListMethodParams,
   PaymentsReceiptsListRequestBody,
 } from '../model/PaymentsReceipts';
@@ -1588,31 +1586,6 @@ export const BackofficeApi = {
           },
         }
       ).then((data) => Promise.resolve(data.text()));
-    },
-
-    getCIEPaymentsReceipts: async ({
-      organizationTaxCode,
-      debtorTaxCodeOrIuv,
-      fromDate,
-      toDate,
-      page,
-      pageLimit,
-    }: CIEReceiptsListMethodParams): Promise<PaymentsResult> => {
-      const todayDate = new Date();
-      // eslint-disable-next-line functional/no-let, prefer-const
-      let filterBody: PaymentsReceiptsListRequestBody = {
-        'organization-tax-code': organizationTaxCode,
-        limit: pageLimit ?? 50,
-        page,
-        fromDate: fromDate ? formatDateToYYYYMMDD(fromDate) : formatDateToYYYYMMDD(new Date(todayDate.setMonth(todayDate.getMonth() - 1))),
-        toDate: toDate ? formatDateToYYYYMMDD(toDate) : formatDateToYYYYMMDD(todayDate),
-      };
-      if (debtorTaxCodeOrIuv) {
-        filterBody = { ...filterBody, debtorOrIuv: debtorTaxCodeOrIuv };
-      }
-
-      const result = await backofficeClient.getCIEPaymentsReceipts(filterBody);
-      return extractResponse(result, 200, onRedirectToLogin);
     },
   },
   notice: {

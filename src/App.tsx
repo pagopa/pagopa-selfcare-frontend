@@ -62,7 +62,6 @@ import { getMaintenanceMessage } from './services/maintenanceService';
 import { rewriteLinks } from './utils/onetrust-utils';
 import QuicksightDashboardPage from './pages/quicksight/QuicksightDashboardPage';
 import SettingsPage from './pages/settings/SettingsPage';
-import CIEReceiptsPage from './pages/cieReceipts/CIEReceiptsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -311,12 +310,6 @@ const SecuredRoutes = withLogin(
                 <Route path={routes.PAYMENTS_RECEIPTS} exact={true}>
                   <ProtectedRoute permission="payments-receipts" flagValue="payments-receipts">
                     <PaymentsReceiptsPage />
-                  </ProtectedRoute>
-                </Route>
-
-                <Route path={routes.CIE_RECEIPTS} exact={true}>
-                  <ProtectedRoute permission="cie-receipts" flagValue="cie-receipts">
-                    <CIEReceiptsPage />
                   </ProtectedRoute>
                 </Route>
 

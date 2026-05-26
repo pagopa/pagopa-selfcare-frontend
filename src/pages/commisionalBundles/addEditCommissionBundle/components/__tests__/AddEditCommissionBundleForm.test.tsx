@@ -641,4 +641,75 @@ describe('<AddEditCommissionBundleForm />', () => {
       expect(spyOnGetChannelService).toHaveBeenCalled();
     });
   });
+
+  test('should call addError when broker delegation list is empty', async () => {
+    const injectStore = createStore();
+    const mockAddError = jest.fn();
+
+    spyOnErrorHook.mockReturnValue(mockAddError);
+
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+    orgInfo: {
+      types: { isPsp: true, isPspBroker: false, isEc: false, isEcBroker: false },
+      isSigned: true,
+    },
+    orgIsPspDirect: false,
+    orgIsEcDirect: false,
+    orgIsBrokerSigned: true,
+    orgIsPspSigned: true,
+    orgIsPspBrokerSigned: false,
+    orgIsEcSigned: false,
+    orgIsEcBrokerSigned: false,
+  });
+
+ 
+  spyOnGetInstitutionService.mockResolvedValue({
+    delegation_list: [],
+  });
+
+  await waitFor(() =>
+    injectStore.dispatch(partiesActions.setPartySelected(pspOperatorSignedDirect))
+  );
+
+  componentRender(FormAction.Create, undefined, injectStore);
+
+  await waitFor(() => {
+    expect(mockAddError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'GET_BROKER_DATA',
+        displayableDescription: 'commissionBundlesPage.addEditCommissionBundle.error.errorMessageNoBroker',
+      })
+    );
+  });
+});
+
+test('should render payment types correctly even when description is missing', async () => {
+  const injectStore = createStore();
+  
+  const mixedPaymentTypes = {
+    payment_types: [
+      { payment_type: 'AD', description: '' }, 
+      { payment_type: 'CP', description: 'Carta di Pagamento' },
+    ],
+  };
+
+  spyOnGetPaymentTypes.mockResolvedValueOnce(mixedPaymentTypes);
+
+  componentRender(FormAction.Create, undefined, injectStore);
+
+  await waitFor(() => expect(spyOnGetPaymentTypes).toHaveBeenCalled());
+
+  const selectContainer = screen.getByTestId('payment-type-test');
+  const selectButton = selectContainer.querySelector('.MuiSelect-select') || screen.getByRole('button', { name: /payment type/i });
+
+  if (!selectButton) {
+     screen.debug(selectContainer);
+  }
+
+  fireEvent.mouseDown(selectButton);
+  await waitFor(() => {
+    expect(screen.getByText('AD')).toBeInTheDocument();
+    expect(screen.getByText('Carta di Pagamento - CP')).toBeInTheDocument();
+  });
+});
 });

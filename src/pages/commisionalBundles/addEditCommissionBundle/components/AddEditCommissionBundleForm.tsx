@@ -391,13 +391,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
-                    <MenuItem key={`payment_types$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                    </MenuItem>
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
-                          {`${option.description} - ${option.payment_type}`}
+                          {option.description
+                            ? `${option.description} - ${option.payment_type}`
+                            : option.payment_type}
                         </MenuItem>
                       ))}
                   </Select>
@@ -423,9 +422,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                    </MenuItem>
+                   
                     {touchpointList?.touchpoints?.map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}

@@ -117,7 +117,6 @@ jobs:
 
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_MIXPANEL_TOKEN='DUMMY'
-          export REACT_APP_ONE_TRUST_BASE_URL='https://dev.selfcare.pagopa.it/ot/test'
           export REACT_APP_ONETRUST_DOMAIN_ID='a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test'
 
           export REACT_APP_ANALYTICS_ENABLE='false'

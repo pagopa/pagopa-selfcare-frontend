@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.48.3",
+  "version": "1.48.3-5-PIDM-1818-fix-path-react-app-one-trust",
   "homepage": "ui",
   "private": true,
   "scripts": {

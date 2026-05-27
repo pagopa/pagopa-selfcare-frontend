@@ -181,7 +181,7 @@ jobs:
             echo "ENVIRONMENT=${ENVIRONMENT}"
             date
 
-            az cdn endpoint purge \
+            az afd endpoint purge \
               -g ${{ vars.CDN_RESOURCE_GROUP }} \
               -n ${{ vars.CDN_ENDPOINT }} \
               --profile-name ${{ vars.CDN_PROFILE }} \

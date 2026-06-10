@@ -5,7 +5,7 @@ import { Iban } from '../api/generated/portal/Iban';
 import { IbanOnCreation } from '../model/Iban';
 
 export const isIbanValid = (iban?: Iban | IbanOnCreation): boolean =>
-  iban !== undefined && iban.due_date !== undefined && new Date(iban.due_date) > new Date();
+  iban !== undefined && iban.due_date !== undefined; // Deprecated filter PIDM-1659 && new Date(iban.due_date) > new Date();
 
 export const isIbanValidityDateEditable = (iban?: Iban | IbanOnCreation): boolean =>
   iban !== undefined &&

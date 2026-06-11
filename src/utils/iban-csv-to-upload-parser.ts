@@ -158,6 +158,27 @@ const validateDataAttivazione = (
 };
 
 /**
+ * Validate Descrizione
+ */
+const validateDescrizione = (
+    descrizione: string,
+    lineNum: number,
+    operazione: string
+): string | null => {
+    const trimmedDescrizione = descrizione.trim();
+
+    if ((operazione === 'CREATE' || operazione === 'UPDATE') && trimmedDescrizione === '') {
+        return `Riga ${lineNum}: La descrizione deve essere valorizzata per l'operazione ${operazione}`;
+    }
+
+    if (operazione === 'DELETE' && trimmedDescrizione !== '') {
+        return `Riga ${lineNum}: La descrizione non può essere valorizzata per l'operazione ${operazione}`;
+    }
+
+    return null;
+};
+
+/**
  * Validate a single CSV row
  */
 const validateRow = (
@@ -182,6 +203,11 @@ const validateRow = (
     const azioneValidation = validateAzione(operazione, lineNum);
     if (azioneValidation.error) {
         return { errors: [azioneValidation.error], data: null };
+    }
+
+    const descrizioneError = validateDescrizione(descrizione, lineNum, azioneValidation.normalized);
+    if (descrizioneError) {
+        return { errors: [descrizioneError], data: null };
     }
 
     const dateValidation = validateDataAttivazione(dataattivazioneIban, lineNum, azioneValidation.normalized);

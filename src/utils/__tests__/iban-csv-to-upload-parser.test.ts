@@ -15,6 +15,13 @@ describe('iban-csv-to-upload-parser', () => {
         expect(result.data[0].dataattivazioneiban).not.toBeNull();
     });
 
+    it('should fail CREATE operation if description is empty', () => {
+        const csv = `descrizione,iban,dataattivazioneiban,operazione\n,IT60X0542811101000000123456,${validFutureDate},CREATE`;
+        const result = validateIbanCsvData(csv);
+        expect(result.valid).toBe(false);
+        expect(result.errors[0]).toContain('Riga 2: La descrizione deve essere valorizzata per l\'operazione CREATE');
+    });
+
     it('should fail CREATE operation with past date', () => {
         const csv = `descrizione,iban,dataattivazioneiban,operazione\nTest Past,IT60X0542811101000000123456,${pastDate},CREATE`;
         const result = validateIbanCsvData(csv);
@@ -45,11 +52,18 @@ describe('iban-csv-to-upload-parser', () => {
     });
 
     it('should validate a valid DELETE operation with empty date', () => {
-        const csv = `descrizione,iban,dataattivazioneiban,operazione\nTest Delete,IT60X0542811101000000123456,,DELETE`;
+        const csv = `descrizione,iban,dataattivazioneiban,operazione\n,IT60X0542811101000000123456,,DELETE`;
         const result = validateIbanCsvData(csv);
         expect(result.valid).toBe(true);
         expect(result.data[0].operazione).toBe('DELETE');
         expect(result.data[0].dataattivazioneiban).toBeNull();
+    });
+
+    it('should fail DELETE operation if description is present', () => {
+        const csv = `descrizione,iban,dataattivazioneiban,operazione\nTest Delete,IT60X0542811101000000123456,,DELETE`;
+        const result = validateIbanCsvData(csv);
+        expect(result.valid).toBe(false);
+        expect(result.errors[0]).toContain('Riga 2: La descrizione non può essere valorizzata per l\'operazione DELETE');
     });
 
     it('should fail DELETE operation if date is present', () => {

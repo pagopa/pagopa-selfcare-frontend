@@ -49,16 +49,18 @@ const SettingsPage = () => {
                 variantTitle="h4"
                 variantSubTitle="body1"
                 mbSubTitle={1}
+                titleFontSize='32px'
+                subTitleFontSize='16px'
             />
             </Box>
-            <Alert severity="warning">
-                <AlertTitle data-testid="settingsPage.taxonomyAlertTitle">{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
+            <Alert severity="warning" sx={{fontSize: 16, letterSpacing: "0px", lineHeight: "21px"}}>
+                <AlertTitle sx={{fontSize: 16, letterSpacing: "0px", lineHeight: "21px"}} data-testid="settingsPage.taxonomyAlertTitle">{t('settingsPage.warningAlerts.rtp.taxonomyAlertTitle')}</AlertTitle>
                 {t('settingsPage.warningAlerts.rtp.taxonomyAlertContent')}
                 <Trans
                     i18nKey="settingsPage.warningAlerts.rtp.taxonomyAlertDocLinkText"
                     components={{
                         sanp_url: (<Link href={(`${ENV.SETTINGS.SERVICES.SANP_URL}`)} underline="hover" my={1} fontWeight="bold"
-                            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            sx={{ display: 'flex', alignItems: 'center', fontSize: 16, letterSpacing: "0.3px", lineHeight: "21px", verticalAlign: "middle" }}>
                         </Link>),
                     }}
                 />

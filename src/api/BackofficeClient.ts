@@ -575,6 +575,7 @@ export const BackofficeApi = {
         body: {
           address: ec.address,
           businessName: ec.businessName,
+          cbillCode: ec.cbillCode,
           creditorInstitutionCode: ec.creditorInstitutionCode,
           enabled: ec.enabled,
           pspPayment: ec.pspPayment,

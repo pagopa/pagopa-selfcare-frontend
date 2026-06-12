@@ -131,6 +131,7 @@ const NodeSignInCIForm = ({ goBack, signInData }: Props) => {
     const commonPayload = {
       address: { ...formik.values },
       businessName: selectedParty?.description ?? '',
+      cbillCode: signInData?.creditorInstitutionDetailsResource?.cbillCode ?? '',
       creditorInstitutionCode: selectedParty?.fiscalCode ?? '',
       enabled: true,
       pspPayment: false,

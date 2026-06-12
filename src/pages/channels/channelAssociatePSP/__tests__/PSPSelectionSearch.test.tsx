@@ -19,12 +19,6 @@ afterEach(cleanup);
 
 const channelId = 'XPAY_03_ONUS';
 const availablePSP = [...mockedDelegatedPSP.delegation_list!];
-const psp = {
-    broker_psp_code: 'string',
-    description: 'string',
-    enabled: true,
-    extended_fault_bean: true,
-};
 
 const onPSPSelectionChange = jest.fn();
 
@@ -57,17 +51,6 @@ describe('<PSPSelectionSearch />', () => {
         expect(filteredPSP).toBeInTheDocument();
 
         fireEvent.click(filteredPSP);
-        // expect(onPSPSelectionChange).toHaveBeenCalledWith({
-        //     brokerId: '12345',
-        //     institutionId: '0000001',
-        //     institutionName: 'PSP1',
-        // });
-
-        // const filteredPSPContainer = screen.getByTestId('PartyItemContainer: PSP1');
-        // fireEvent.click(filteredPSPContainer);
-
-        // const clearButton = screen.getByTestId('clear-field-test');
-        // fireEvent.click(clearButton);
     });
 
     test('render component PSPSelectionSearch without available PSP and PSP selected', async () => {
@@ -86,5 +69,98 @@ describe('<PSPSelectionSearch />', () => {
                 </MemoryRouter>
             </Provider>
         );
+    });
+
+    test('render already associated PSPs as disabled', async () => {
+        const associatedTaxCodes = [availablePSP[0].tax_code!];
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${channelId}/associate-psp`]}>
+                    <Route path="/channels/:channelId/associate-psp">
+                        <ThemeProvider theme={theme}>
+                            <PSPSelectionSearch
+                                availablePSP={availablePSP}
+                                selectedPSP={undefined}
+                                associatedPSPTaxCodes={associatedTaxCodes}
+                                onPSPSelectionChange={onPSPSelectionChange}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const pspSelectionSearch = screen.getByTestId('psp-selection-search');
+        // Type enough to trigger filter (min 3 chars)
+        fireEvent.change(pspSelectionSearch, {target: {value: 'Azienda'}});
+
+        // The first PSP should be rendered but disabled
+        const associatedItem = screen.getByTestId(
+            `PartyItemContainer: ${availablePSP[0].institution_name}`
+        );
+        expect(associatedItem).toBeInTheDocument();
+        expect(associatedItem).toHaveStyle({opacity: '0.5', pointerEvents: 'none'});
+    });
+
+    test('clicking an already associated PSP does not trigger selection', async () => {
+        const mockSelectionChange = jest.fn();
+        const associatedTaxCodes = [availablePSP[0].tax_code!];
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${channelId}/associate-psp`]}>
+                    <Route path="/channels/:channelId/associate-psp">
+                        <ThemeProvider theme={theme}>
+                            <PSPSelectionSearch
+                                availablePSP={availablePSP}
+                                selectedPSP={undefined}
+                                associatedPSPTaxCodes={associatedTaxCodes}
+                                onPSPSelectionChange={mockSelectionChange}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const pspSelectionSearch = screen.getByTestId('psp-selection-search');
+        fireEvent.change(pspSelectionSearch, {target: {value: 'Azienda'}});
+
+        const associatedItem = screen.getByTestId(
+            `PartyItemContainer: ${availablePSP[0].institution_name}`
+        );
+        fireEvent.click(associatedItem);
+        expect(mockSelectionChange).not.toHaveBeenCalled();
+    });
+
+    test('non-associated PSPs are rendered without disabled styles', async () => {
+        // Pass an empty set so no PSP is associated
+        const associatedTaxCodes: string[] = [];
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/channels/${channelId}/associate-psp`]}>
+                    <Route path="/channels/:channelId/associate-psp">
+                        <ThemeProvider theme={theme}>
+                            <PSPSelectionSearch
+                                availablePSP={availablePSP}
+                                selectedPSP={undefined}
+                                associatedPSPTaxCodes={associatedTaxCodes}
+                                onPSPSelectionChange={onPSPSelectionChange}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const pspSelectionSearch = screen.getByTestId('psp-selection-search');
+        fireEvent.change(pspSelectionSearch, {target: {value: 'Azienda'}});
+
+        const pspItem = screen.getByTestId(
+            `PartyItemContainer: ${availablePSP[0].institution_name}`
+        );
+        expect(pspItem).not.toHaveStyle({opacity: '0.5', pointerEvents: 'none'});
     });
 });

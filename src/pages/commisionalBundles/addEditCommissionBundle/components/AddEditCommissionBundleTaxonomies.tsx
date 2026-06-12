@@ -146,20 +146,12 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
         ];
         setTaxonomies(newTaxonomyList);
         updateTableData(newTaxonomyList);
-        addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specificBuiltInData ?? ''));
+        formik.setFieldValue('transferCategoryList', newTaxonomyList.map((taxonomy) => taxonomy.specificBuiltInData ?? ''));
     };
 
     const updateTableData = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) => {
         setTaxonomyTableData(reduceTaxonomies(taxonomies));
     };
-
-    const addTransferCategoryItem = (transferCategoryList: Array<string>) => {
-        if (formik.values.transferCategoryList && transferCategoryList) {
-            const newArr = [...formik.values.transferCategoryList, ...transferCategoryList];
-            formik.setFieldValue('transferCategoryList', newArr);
-        }
-    };
-
     const deleteTransferCategoryItem = (elementsToFilter: Array<string | undefined>) => {
         if (formik.values.transferCategoryList && elementsToFilter) {
             const newArr = formik.values.transferCategoryList.filter(

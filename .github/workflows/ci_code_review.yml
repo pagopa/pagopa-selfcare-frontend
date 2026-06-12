@@ -31,6 +31,10 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+
+    env:
+      BACKEND_REPO: pagopa/pagopa-selfcare-ms-backoffice-backend
+
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
@@ -51,6 +55,41 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
+      # --------------------------------------------------
+      # Decide OPENAPI_REF
+      # --------------------------------------------------
+      - name: Set OPENAPI_REF
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # try same FE branch on backend; if not found -> main; otherwise -> next (only if branch name is unusable)
+          FE_BRANCH_RAW="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          echo "Raw FE branch name: ${FE_BRANCH_RAW}"
+          FE_BRANCH="$(printf '%s' "${FE_BRANCH_RAW}" | tr -cd 'A-Za-z0-9._/-')"
+          echo "Sanitized FE branch name: ${FE_BRANCH}"
+
+          # If branch name is unusable (sanitized empty), fallback to main (per requirement)
+          if [ -z "${FE_BRANCH}" ]; then
+            echo "Sanitized branch name is empty. Falling back to main."
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            exit 0
+          fi
+
+          CANDIDATE_URL="https://raw.githubusercontent.com/${BACKEND_REPO}/${FE_BRANCH}/openapi/openapi.json"
+          echo "Checking backend OpenAPI at: ${CANDIDATE_URL}"
+
+          if curl -sfL \
+            --proto '=https' \
+            --proto-redir '=https' \
+            "${CANDIDATE_URL}" > /dev/null; then
+            echo "OPENAPI_REF=${FE_BRANCH}" >> "${GITHUB_ENV}"
+            echo "OPENAPI_REF set to ${FE_BRANCH}"
+          else
+            echo "OPENAPI_REF=main" >> "${GITHUB_ENV}"
+            echo "Backend OpenAPI not found on ${FE_BRANCH}. Falling back to main."
+          fi
 
       - name: Build
         run: |
@@ -78,11 +117,12 @@ jobs:
 
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_MIXPANEL_TOKEN='DUMMY'
-          export REACT_APP_ONE_TRUST_BASE_URL='https://dev.selfcare.pagopa.it/ot/test'
           export REACT_APP_ONETRUST_DOMAIN_ID='a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test'
 
           export REACT_APP_ANALYTICS_ENABLE='false'
           export REACT_APP_ANALYTICS_MOCKED='false'
+
+          echo "Using OPENAPI_REF=${OPENAPI_REF}"
           
           APP_JWT="${{ secrets.APP_JWT }}"
 
@@ -223,6 +263,7 @@ jobs:
 
           yarn test:coverage --watchAll=false
 
+      # Columns files are excluded from duplication check as they are similar by nature
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
@@ -231,7 +272,7 @@ jobs:
         with:
           args: >
             -Dsonar.coverage.exclusions=**/utils/**,**/__mocks__/**,**/__tests__/**,**/api/**,**/integration-test/**,**/openApi/**,**/model/**,**/hooks/**,**/MyHeaderProduct.tsx
-            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**
+            -Dsonar.cpd.exclusions=**/__mocks__/**,**/__tests__/**,**/integration-test/**,**/openApi/**,**/*Columns.tsx
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest

@@ -283,7 +283,7 @@ const IbanDetailPage = () => {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
                                         label={t('addEditIbanPage.delete-modal.deletionDateLabel')} 
-                                        inputFormat="dd/MM/yyyy"
+                                        format="dd/MM/yyyy"
                                         minDate={(() => {
                                             const tomorrow = new Date(); 
                                             tomorrow.setDate(tomorrow.getDate() + 1); 
@@ -291,7 +291,11 @@ const IbanDetailPage = () => {
                                         })()}
                                         value={ibanDeletionDate}
                                         onChange={(newDate: Date|null) => setIbanDeletionDate(newDate||null)}
-                                        renderInput={(params) => <TextField {...params} fullWidth />}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                            },
+                                        }}
                                     />
                                 </LocalizationProvider>
                             </Box>

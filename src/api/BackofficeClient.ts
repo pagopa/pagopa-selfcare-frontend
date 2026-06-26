@@ -1,4 +1,4 @@
-import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
+import i18next from 'i18next';
 import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
@@ -180,8 +180,10 @@ const onRedirectToLogin = () =>
       techDescription: 'token expired or not valid',
       toNotify: false,
       blocking: false,
-      displayableTitle: i18n.t('session.expired.title'),
-      displayableDescription: i18n.t('session.expired.message') as ReactNode,
+      displayableTitle: (i18next.t as unknown as (key: string) => string)('session.expired.title'),
+      displayableDescription: (i18next.t as unknown as (key: string) => string)(
+        'session.expired.message'
+      ) as ReactNode,
     })
   );
 

@@ -182,7 +182,7 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
         translationArgs={{
           bundleType: t(bundleType).toLowerCase(),
           status: privateBundleStatus
-            ? ' ' + t(`commissionBundlesPage.list.table.state.${privateBundleStatus}`).toLowerCase()
+            ? ` ${String(t(`commissionBundlesPage.list.table.state.${privateBundleStatus}`)).toLowerCase()}`
             : null,
         }}
         linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}

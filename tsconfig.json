@@ -25,7 +25,13 @@
     "strictFunctionTypes": true,
     "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@pagopa/selfcare-common-frontend/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/*"
+      ]
+    }
   },
   "include": [
     "src/**/*"

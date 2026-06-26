@@ -27,6 +27,7 @@ generated
 build
 local
 dist
+.cache
 
 # Local python packages
 .python_packages/

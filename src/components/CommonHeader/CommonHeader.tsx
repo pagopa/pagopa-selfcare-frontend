@@ -1,6 +1,6 @@
 import {Fragment} from 'react';
-import {HeaderAccount} from '@pagopa/mui-italia/dist/components/HeaderAccount/HeaderAccount';
 import {
+    HeaderAccount,
     HeaderProduct,
     JwtUser,
     ProductEntity,
@@ -9,7 +9,7 @@ import {
     theme,
     UserAction,
 } from '@pagopa/mui-italia';
-import {PartySwitchItem} from '@pagopa/mui-italia/dist/components/PartySwitch';
+import {PartySwitchItem} from '@pagopa/mui-italia/components/PartySwitch';
 import {buildAssistanceURI} from '@pagopa/selfcare-common-frontend/services/assistanceService';
 import {useTranslation} from 'react-i18next';
 import {storageTokenOps, storageUserOps} from '@pagopa/selfcare-common-frontend/utils/storage';
@@ -135,7 +135,11 @@ const CommonHeader = ({
                     rootLink={rootLink}
                     loggedUser={loggedUser}
                     onAssistanceClick={() =>
-                        onExit(() => window.location.assign(buildAssistanceURI(assistanceEmail) + `?productId=${selectedProductId}`))
+                        onExit(() =>
+                            window.location.assign(
+                                `${String(buildAssistanceURI(assistanceEmail))}?productId=${selectedProductId}`
+                            )
+                        )
                     }
                     onLogin={() => onExit(() => window.location.assign(ENV.URL_FE.LOGIN))}
                     onLogout={() =>

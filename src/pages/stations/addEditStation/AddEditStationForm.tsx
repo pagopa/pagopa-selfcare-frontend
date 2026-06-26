@@ -843,7 +843,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                 disabled
                 onChange={(e) => formik.handleChange(e)}
                 error={formik.touched.stationCode && Boolean(formik.errors.stationCode)}
-                helperText={formik.touched.stationCode && formik.errors.stationCode}
+                helperText={
+                  formik.touched.stationCode ? String(formik.errors.stationCode ?? '') : undefined
+                }
                 inputProps={{
                   'data-testid': 'station-code-test',
                 }}
@@ -863,7 +865,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                   disabled
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.brokerCode && Boolean(formik.errors.brokerCode)}
-                  helperText={formik.touched.brokerCode && formik.errors.brokerCode}
+                  helperText={
+                    formik.touched.brokerCode ? String(formik.errors.brokerCode ?? '') : undefined
+                  }
                   inputProps={{
                     'data-testid': 'broker-code-test',
                   }}
@@ -898,7 +902,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.targetConcat)
                     }
                     helperText={
-                      (formik.touched.targetConcat || testRtResult) && formik.errors.targetConcat
+                      formik.touched.targetConcat || testRtResult
+                        ? String(formik.errors.targetConcat ?? '')
+                        : undefined
                     }
                     inputProps={{
                       'data-testid': 'targetConcat-test',
@@ -960,8 +966,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.redirectConcat)
                     }
                     helperText={
-                      (formik.touched.redirectConcat || testRedirectResult) &&
-                      formik.errors.redirectConcat
+                      formik.touched.redirectConcat || testRedirectResult
+                        ? String(formik.errors.redirectConcat ?? '')
+                        : undefined
                     }
                     inputProps={{
                       'data-testid': 'redirectConcat-test',
@@ -1031,8 +1038,9 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.targetPofConcat)
                     }
                     helperText={
-                      (formik.touched.targetPofConcat || testPofResult) &&
-                      formik.errors.targetPofConcat
+                      formik.touched.targetPofConcat || testPofResult
+                        ? String(formik.errors.targetPofConcat ?? '')
+                        : undefined
                     }
                     inputProps={{
                       'data-testid': 'targetPofConcat-test',
@@ -1138,7 +1146,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={Boolean(formik.errors.restEndpoint)}
-                      helperText={formik.errors.restEndpoint}
+                      helperText={String(formik.errors.restEndpoint ?? '')}
                       inputProps={{
                         'data-testid': 'restEndpoint-test',
                       }}

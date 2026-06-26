@@ -19,6 +19,35 @@ const selfcareCommonAliases = [
   }
 );
 
+const selfcareCommonModuleNameMapper = {
+  '^@pagopa/selfcare-common-frontend/lib/(.*)$':
+    '<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1',
+  '^@pagopa/selfcare-common-frontend/(.*)$':
+    '<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1',
+};
+
+const esModulesToTransform = [
+  '@pagopa[\\\\/]mui-italia',
+  '@pagopa[\\\\/]selfcare-common-frontend',
+  '@mui[\\\\/]icons-material[\\\\/]esm',
+  '@mui[\\\\/]material[\\\\/]esm',
+  '@mui[\\\\/]system[\\\\/]esm',
+  'italia-ts-commons',
+].join('|');
+
+const transformIgnorePattern = `[\\\\/]node_modules[\\\\/](?!(${esModulesToTransform})([\\\\/]|$))`;
+
+const babelJestTransform = require.resolve('./jest.babelTransform.js');
+
+const updateJestTransform = (transform = {}) =>
+  Object.entries(transform).reduce(
+    (updatedTransform, [pattern, transformer]) => ({
+      ...updatedTransform,
+      [pattern]: pattern.includes('js|jsx|mjs') ? babelJestTransform : transformer,
+    }),
+    {}
+  );
+
 module.exports = {
   webpack: {
     alias: selfcareCommonAliases,
@@ -35,5 +64,22 @@ module.exports = {
       },
       ignoreWarnings: [/Failed to parse source map/],
     },
+  },
+  jest: {
+    configure: (jestConfig) => ({
+      ...jestConfig,
+      moduleNameMapper: {
+        ...jestConfig.moduleNameMapper,
+        ...selfcareCommonModuleNameMapper,
+      },
+      transform: updateJestTransform(jestConfig.transform),
+      transformIgnorePatterns: (jestConfig.transformIgnorePatterns ?? []).some((pattern) =>
+        pattern.includes('node_modules')
+      )
+        ? jestConfig.transformIgnorePatterns.map((pattern) =>
+            pattern.includes('node_modules') ? transformIgnorePattern : pattern
+          )
+        : [transformIgnorePattern],
+    }),
   },
 };

@@ -1,3 +1,12 @@
+const esModulesToTransform = [
+    '@pagopa[\\\\/]mui-italia',
+    '@pagopa[\\\\/]selfcare-common-frontend',
+    '@mui[\\\\/]icons-material[\\\\/]esm',
+    '@mui[\\\\/]material[\\\\/]esm',
+    '@mui[\\\\/]system[\\\\/]esm',
+    'italia-ts-commons',
+].join('|');
+
 /*
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
@@ -95,6 +104,8 @@ module.exports = {
     "moduleNameMapper": {
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
         "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+        "^@pagopa/selfcare-common-frontend/lib/(.*)$": "<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1",
+        "^@pagopa/selfcare-common-frontend/(.*)$": "<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1",
         "react-markdown": "<rootDir>/__mocks__/react-markdown.tsx",
     },
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -111,7 +122,7 @@ module.exports = {
     preset: 'ts-jest',
     transform: {
         '^.+\\.(ts|tsx)?$': 'ts-jest',
-        "^.+\\.(js|jsx)$": "babel-jest",
+        "^.+\\.(js|jsx|mjs|cjs)$": "<rootDir>/jest.babelTransform.js",
     },
 
     // Run tests from one or more projects
@@ -204,8 +215,7 @@ module.exports = {
     //   "\\.pnp\\.[^\\/]+$"
     // ],
     transformIgnorePatterns: [
-        "<rootDir />/node_modules/?!(react-icons)",
-        "<rootDir />/node_modules/?!(italia-ts-commons)",
+        `[\\\\/]node_modules[\\\\/](?!(${esModulesToTransform})([\\\\/]|$))`,
     ],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

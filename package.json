@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.48.4",
+  "version": "1.48.4-1-PIDM-2163-update-react18-mui",
   "homepage": "ui",
   "private": true,
   "scripts": {

@@ -119,10 +119,8 @@ module.exports = {
 
     // A preset that is used as a base for Jest's configuration
     // preset: undefined,
-    preset: 'ts-jest',
     transform: {
-        '^.+\\.(ts|tsx)?$': 'ts-jest',
-        "^.+\\.(js|jsx|mjs|cjs)$": "<rootDir>/jest.babelTransform.js",
+        "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/jest.babelTransform.js",
     },
 
     // Run tests from one or more projects

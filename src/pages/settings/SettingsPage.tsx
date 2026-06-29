@@ -22,7 +22,6 @@ const SettingsPage = () => {
     const addError = useErrorDispatcher();
     const fetchServices = useCallback(async () => {
         if (!selectedParty?.partyId){
-            console.error("Cannot retrieve service consent for selectedParty.partyId:", selectedParty?.partyId);
             return;
         } 
         setIsLoadingList(true);
@@ -108,4 +107,4 @@ const onError = (error:Error, addError:(error: AppError) => void, t: TFunction<"
   });
 };
 
-export default SettingsPage; 
+export default SettingsPage;

@@ -23,6 +23,10 @@ jest.mock('../decorators/withLogin');
 jest.mock('../decorators/withParties');
 jest.mock('../decorators/withSelectedParty');
 jest.mock('../decorators/withSelectedPartyProducts');
+jest.mock('../decorators/withFeatureFlags', () => ({
+    __esModule: true,
+    default: (WrappedComponent: React.ComponentType<any>) => WrappedComponent,
+}));
 
 jest.setTimeout(10000);
 

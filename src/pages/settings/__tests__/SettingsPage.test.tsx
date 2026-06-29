@@ -8,15 +8,8 @@ import SettingsPage from '../SettingsPage';
 import { ConsentEnum, ServiceIdEnum } from "../../../api/generated/portal/ServiceConsentInfo";
 import { partiesActions } from "../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect } from "../../../services/__mocks__/partyService";
-import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
-import ita from '../../../locale/it.json';
 
 const getServiceConsentMock = jest.spyOn(require('../../../services/institutionService'), 'getServiceConsents');
-
-beforeAll(() => {
-    configureI18n({ i18n, ita });
-
-});
 
 afterEach(() => {
     cleanup();

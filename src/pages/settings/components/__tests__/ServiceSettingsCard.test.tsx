@@ -7,15 +7,8 @@ import { theme } from "@pagopa/mui-italia";
 import { ConsentEnum, ServiceIdEnum } from "../../../../api/generated/portal/ServiceConsentInfo";
 import { partiesActions } from "../../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect, ecOperatorSignedDirect } from "../../../../services/__mocks__/partyService";
-import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
-import ita from '../../../../locale/it.json';
 import ServiceSettingsCard, { ServiceStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
 import { getSaveConsentResponseMock } from "../../../../services/__mocks__/institutionsService";
-
-beforeAll(() => {
-    configureI18n({ i18n, ita });
-
-});
 
 afterEach(() => {
     cleanup();

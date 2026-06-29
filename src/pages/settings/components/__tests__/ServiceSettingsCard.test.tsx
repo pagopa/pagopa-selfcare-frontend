@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { store } from "../../../../redux/store";
 import { MemoryRouter } from "react-router-dom";
@@ -11,7 +11,6 @@ import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/loc
 import ita from '../../../../locale/it.json';
 import ServiceSettingsCard, { ServiceStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
 import { getSaveConsentResponseMock } from "../../../../services/__mocks__/institutionsService";
-import { act } from 'react-dom/test-utils';
 
 beforeAll(() => {
     configureI18n({ i18n, ita });
@@ -68,38 +67,36 @@ describe('Service setting page card rendering', () => {
         )
         // assertions
 
-        await act(async () => {
-            // check for status chip, title and subtitle, buttons... to be rendered (common components for both enabled and disabled service)
-            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-card-title`, `serviceConsent.${serviceInfo.serviceId}.title`);
-            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-card-subtitle`, `serviceConsent.${serviceInfo.serviceId}.description`);
-            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-more-info-link`, `serviceConsent.${serviceInfo.serviceId}.moreInfo`);
-            let serviceActionButton;
-            // check for buttons to be rendered (specific for both enabled/disabled service)
-            if (serviceEnabled) {
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-disableButton`, `serviceConsent.${serviceInfo.serviceId}.disableButtonText`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-statusChip`, `serviceConsent.${serviceInfo.serviceId}.statuses.enabled`);
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
-            } else {
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-enableButton`, `serviceConsent.${serviceInfo.serviceId}.enableButtonText`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-statusChip`, "");
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
-            }
-            // click on service action button and perform checks on opened modal
-            fireEvent.click(serviceActionButton);
+        // check for status chip, title and subtitle, buttons... to be rendered (common components for both enabled and disabled service)
+        await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-card-title`, `serviceConsent.${serviceInfo.serviceId}.title`);
+        await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-card-subtitle`, `serviceConsent.${serviceInfo.serviceId}.description`);
+        await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-more-info-link`, `serviceConsent.${serviceInfo.serviceId}.moreInfo`);
+        let serviceActionButton;
+        // check for buttons to be rendered (specific for both enabled/disabled service)
+        if (serviceEnabled) {
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-disableButton`, `serviceConsent.${serviceInfo.serviceId}.disableButtonText`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-statusChip`, `serviceConsent.${serviceInfo.serviceId}.statuses.enabled`);
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+        } else {
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-enableButton`, `serviceConsent.${serviceInfo.serviceId}.enableButtonText`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-statusChip`, "");
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+        }
+        // click on service action button and perform checks on opened modal
+        fireEvent.click(serviceActionButton);
 
-            // checks for specific for enabled/disabled service
-            if (serviceEnabled) {
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-title`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.title`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-message`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.message`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.confirmButton`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.cancelButton`);
-            } else {
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-title`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.title`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-message`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.message`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.confirmButton`);
-                await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.cancelButton`);
-            }
-        });
+        // checks for specific for enabled/disabled service
+        if (serviceEnabled) {
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-title`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.title`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-message`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.message`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.confirmButton`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`, `serviceConsent.${serviceInfo.serviceId}.popups.disableService.cancelButton`);
+        } else {
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-title`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.title`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-message`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.message`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.confirmButton`);
+            await checkElementToBeVisibleWithText(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`, `serviceConsent.${serviceInfo.serviceId}.popups.enableService.cancelButton`);
+        }
     });
 
     it.each([
@@ -139,43 +136,43 @@ describe('Service setting page card rendering', () => {
         } else {
             expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
         }
-        await act(async () => {
-            let serviceActionButton;
-            // search for service enable/disable button
-            if (serviceEnabled) {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
-            } else {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
-            }
-            // click on service action button and perform checks on opened modal
-            fireEvent.click(serviceActionButton);
-            const cancelModalButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`);
-            // click on cancel button
-            fireEvent.click(cancelModalButton);
-            // and check that no api call is performed 
-            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(0);
-            // re-open modal
-            fireEvent.click(serviceActionButton);
+        let serviceActionButton;
+        // search for service enable/disable button
+        if (serviceEnabled) {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+        } else {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+        }
+        // click on service action button and perform checks on opened modal
+        fireEvent.click(serviceActionButton);
+        const cancelModalButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`);
+        // click on cancel button
+        fireEvent.click(cancelModalButton);
+        // and check that no api call is performed
+        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(0);
+        // re-open modal
+        fireEvent.click(serviceActionButton);
 
-            let serviceModalActionButton;
+        let serviceModalActionButton;
 
-            // search for modal service enable/disable button
-            if (serviceEnabled) {
-                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
-                expectedConsentSentInSaveAction = ConsentEnum.OPT_OUT;
-            } else {
-                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`);
-                expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
-            }
-            // click on action button
-            fireEvent.click(serviceModalActionButton);
-        });
+        // search for modal service enable/disable button
+        if (serviceEnabled) {
+            serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_OUT;
+        } else {
+            serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`);
+            expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
+        }
+        // click on action button
+        fireEvent.click(serviceModalActionButton);
         // and check that this time api call is performed with expected request body
-        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(1);
-        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
-        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
-        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
-        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+        await waitFor(() => {
+            expect(onSuccessUserFeedback).toHaveBeenCalledTimes(1);
+            expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
+            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+            expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+        });
     });
 
     it.each([
@@ -215,43 +212,42 @@ describe('Service setting page card rendering', () => {
         } else {
             expectedConsentSentInSaveAction = ConsentEnum.OPT_IN;
         }
-        await act(async () => {
-            let serviceActionButton;
-            // search for service enable/disable button
-            if (serviceEnabled) {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
-            } else {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
-            }
-            // click on service action button and perform checks on opened modal
-            fireEvent.click(serviceActionButton);
-            const cancelModalButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`);
-            // click on cancel button
-            fireEvent.click(cancelModalButton);
+        let serviceActionButton;
+        // search for service enable/disable button
+        if (serviceEnabled) {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+        } else {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+        }
+        // click on service action button and perform checks on opened modal
+        fireEvent.click(serviceActionButton);
+        const cancelModalButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-cancelButton`);
+        // click on cancel button
+        fireEvent.click(cancelModalButton);
 
-            // and check that no api call is performed 
-            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(0);
-            // re-open modal
-            fireEvent.click(serviceActionButton);
+        // and check that no api call is performed
+        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(0);
+        // re-open modal
+        fireEvent.click(serviceActionButton);
 
-            let serviceModalActionButton;
+        let serviceModalActionButton;
 
-            // search for modal service enable/disable button
-            if (serviceEnabled) {
-                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
-            } else {
-                serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`);
-            }
-            // click on action button
-            fireEvent.click(serviceModalActionButton);
-
-        });
+        // search for modal service enable/disable button
+        if (serviceEnabled) {
+            serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-disableButton`);
+        } else {
+            serviceModalActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-dialog-enableButton`);
+        }
+        // click on action button
+        fireEvent.click(serviceModalActionButton);
         // and check that this time api call is performed with expected request body
-        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
-        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
-        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
-        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(1);
-        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        await waitFor(() => {
+            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+            expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+            expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
+            expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(1);
+            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        });
     });
 
 
@@ -377,22 +373,20 @@ describe('Service setting page card rendering', () => {
         )
         // assertions
 
-        await act(async () => {
-            let serviceActionButton;
-            // search for service enable/disable button
-            if (serviceEnabled) {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
-            } else {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
-            }
-            // check that service enable/disable button is visible and enabled
-            expect(serviceActionButton).toBeVisible();
-            expect(serviceActionButton).toBeEnabled();
-            // click on service action button and perform checks on opened modal
-            fireEvent.click(serviceActionButton);
-        });
+        let serviceActionButton;
+        // search for service enable/disable button
+        if (serviceEnabled) {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+        } else {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+        }
+        // check that service enable/disable button is visible and enabled
+        expect(serviceActionButton).toBeVisible();
+        expect(serviceActionButton).toBeEnabled();
+        // click on service action button and perform checks on opened modal
+        fireEvent.click(serviceActionButton);
         expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
         expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
         expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(1);
     });
-});  
+});

@@ -19,7 +19,8 @@ const selfcareCommonAliases = [
   }
 );
 
-const selfcareCommonModuleNameMapper = {
+const customModuleNameMapper = {
+  '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
   '^@pagopa/selfcare-common-frontend/lib/(.*)$':
     '<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1',
   '^@pagopa/selfcare-common-frontend/(.*)$':
@@ -70,7 +71,7 @@ module.exports = {
       ...jestConfig,
       moduleNameMapper: {
         ...jestConfig.moduleNameMapper,
-        ...selfcareCommonModuleNameMapper,
+        ...customModuleNameMapper,
       },
       transform: updateJestTransform(jestConfig.transform),
       transformIgnorePatterns: (jestConfig.transformIgnorePatterns ?? []).some((pattern) =>

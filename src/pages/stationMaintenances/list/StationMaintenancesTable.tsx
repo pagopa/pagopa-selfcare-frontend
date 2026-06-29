@@ -296,7 +296,6 @@ export default function StationMaintenancesTable({
                 },
                 id: 'year',
                 name: 'year',
-                type: 'date',
                 size: 'small',
                 sx: baseInputStyle,
               },

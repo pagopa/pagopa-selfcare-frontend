@@ -43,7 +43,7 @@ describe('<PaymentsReceiptsTable />', () => {
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         });
 
-        const downloadReceipt = screen.queryAllByTestId("download-receipt")?.[0];
+        const downloadReceipt = (await screen.findAllByTestId("download-receipt"))[0];
         expect(downloadReceipt).toBeInTheDocument();
 
         fireEvent.click(downloadReceipt);
@@ -117,7 +117,7 @@ describe('<PaymentsReceiptsTable />', () => {
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         });
 
-        const downloadReceipt = screen.queryAllByTestId("download-receipt")?.[0];
+        const downloadReceipt = (await screen.findAllByTestId("download-receipt"))[0];
         expect(downloadReceipt).toBeInTheDocument();
 
         fireEvent.click(downloadReceipt);

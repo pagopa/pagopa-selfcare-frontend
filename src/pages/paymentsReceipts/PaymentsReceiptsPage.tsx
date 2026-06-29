@@ -59,7 +59,6 @@ export default function PaymentsReceiptsPage() {
                                 },
                                 id: 'year',
                                 name: 'year',
-                                type: 'date',
                                 size: 'small',
                                 sx: {
                                     backgroundColor: '#FFFFFF',

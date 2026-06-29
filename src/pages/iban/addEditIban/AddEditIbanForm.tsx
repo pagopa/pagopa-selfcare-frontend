@@ -319,7 +319,6 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                                                 },
                                                 id: 'validityDate',
                                                 name: 'validityDate',
-                                                type: 'date',
                                                 size: 'small',
                                                 error: formik.touched.validity_date && Boolean(formik.errors.validity_date),
                                                 helperText: formik.touched.validity_date
@@ -346,7 +345,6 @@ const AddEditIbanForm = ({goBack, ibanBody, formAction}: Props) => {
                                                 },
                                                 id: 'dueDate',
                                                 name: 'dueDate',
-                                                type: 'date',
                                                 size: 'small',
                                                 error: formik.touched.due_date && Boolean(formik.errors.due_date),
                                                 helperText: formik.touched.due_date

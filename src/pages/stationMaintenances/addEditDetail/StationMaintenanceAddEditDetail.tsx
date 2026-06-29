@@ -726,7 +726,6 @@ const DatePicker = ({
             sx: { width: '100%' },
             id: 'date',
             name: 'date',
-            type: 'date',
             size: 'small',
             error: disabled ? false : Boolean(error),
             helperText: error,

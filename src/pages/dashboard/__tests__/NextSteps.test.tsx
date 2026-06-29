@@ -157,10 +157,10 @@ test('Test - EC direct signed - admin', async () => {
     );
 
     expect(
-        screen.queryByRole('link', {
+        await screen.findByRole('link', {
             name: /Genera API Key/i,
         })
-    ).toBeNull();
+    ).toBeVisible();
 });
 
 test('Test - PSP direct signed - operator', async () => {
@@ -207,10 +207,10 @@ test('Test - PSP direct signed - operator', async () => {
     );
 
     expect(
-        screen.queryByRole('link', {
+        await screen.findByRole('link', {
             name: /Genera API Key/i,
         })
-    ).toBeNull();
+    ).toBeVisible();
 });
 
 test('Test - PSP unsigned - operator', async () => {

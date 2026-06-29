@@ -33,7 +33,9 @@ const IbanDetailPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lastIban, setLastIban] = useState(false);
     const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
-    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState< string | null >();
+    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState<string | null>(
+        null
+    );
     const [showCancelIbanDeletionRequestModal, setShowCancelIbanDeletionRequestModal] = useState(false);
 
     useEffect(() => {
@@ -84,8 +86,7 @@ const IbanDetailPage = () => {
     };
 
     const cancelIbanDeletionRequestHandler = async (id: string) => {
-        console.log('cancelIbanDeletionRequestHandler called with id:', id);
-            setLoadingDelete(true);
+        setLoadingDelete(true);
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
             history.push(ROUTES.IBAN);

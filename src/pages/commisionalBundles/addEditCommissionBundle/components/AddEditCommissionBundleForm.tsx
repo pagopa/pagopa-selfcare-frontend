@@ -773,7 +773,6 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         },
                         id: 'validityDateFrom',
                         name: 'validityDateFrom',
-                        type: 'date',
                         size: 'small',
                         error:
                           formik.touched.validityDateFrom && Boolean(formik.errors.validityDateFrom)
@@ -805,7 +804,6 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         },
                         id: 'validityDateTo',
                         name: 'validityDateTo',
-                        type: 'date',
                         size: 'small',
                         error: formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo),
                         helperText: formik.touched.validityDateTo && formik.errors.validityDateTo,

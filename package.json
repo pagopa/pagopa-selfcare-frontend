@@ -11,7 +11,7 @@
     "start:local": "export $(grep -v '^#' .env.development.local) && ./env.sh && ./version.sh && craco start",
     "start:local-https": "export $(grep -v '^#' .env.development.local) && ./env.sh && ./version.sh && HTTPS=true craco start",
     "prebuild": "npm-run-all envconfig",
-    "build": "NODE_OPTIONS=--max-old-space-size=6096 craco build",
+    "build": "craco build",
     "clean:build": "rimraf build",
     "test": "craco test -i",
     "test:jest": "yarn run generate && dotenv -e .env.test.local jest --coverage --ci --testResultsProcessor jest-sonar-reporter",

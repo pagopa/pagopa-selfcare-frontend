@@ -190,7 +190,7 @@ describe('Service setting page card rendering', () => {
             consentDate: consentDate
         }
         rtpServiceStartingDate.mockReturnValue(0);
-        saveServiceConsentSpy.mockReturnValue(Promise.reject(new Error("communication error")));
+        saveServiceConsentSpy.mockRejectedValue(new Error("communication error"));
         // render page
         render(
             <Provider store={store}>

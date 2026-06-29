@@ -24,8 +24,10 @@ import {createStore} from "../../../redux/store";
 import {ROLE} from "../../../model/RolePermission";
 import * as useUserRole from "../../../hooks/useUserRole";
 import * as useOrganizationType from "../../../hooks/useOrganizationType";
+import * as rbacUtils from "../../../utils/rbac-utils";
 
 beforeEach(() => {
+    (rbacUtils.hasGeneratedApiKey as jest.Mock).mockResolvedValue(false);
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
@@ -35,6 +37,9 @@ beforeEach(() => {
 jest.mock('../../components/commonFunctions');
 jest.mock("../../../hooks/useUserRole");
 jest.mock("../../../hooks/useOrganizationType");
+jest.mock('../../../utils/rbac-utils', () => ({
+    hasGeneratedApiKey: jest.fn(),
+}));
 
 const renderApp = (
     signinData?: SigninData,

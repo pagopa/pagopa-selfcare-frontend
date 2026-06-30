@@ -44,7 +44,7 @@
     "@mui/x-data-grid-generator": "^6.18.4",
     "@mui/x-date-pickers": "^6.17.0",
     "@pagopa/mui-italia": "2.5.0",
-    "@pagopa/selfcare-common-frontend": "^1.37.0",
+    "@pagopa/selfcare-common-frontend": "^1.11.8",
     "@types/node": "^20.14.10",
     "@types/papaparse": "^5.3.14",
     "@types/react-router-dom": "^5.1.8",

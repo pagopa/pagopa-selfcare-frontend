@@ -16,7 +16,6 @@ export const ENV = {
         ASSISTANCE: env.get('REACT_APP_URL_FE_ASSISTANCE').required().asString(),
         SELFCARE: env.get('REACT_APP_URL_FE_SELFCARE').required().asString(),
         TOKEN_EXCHANGE: env.get('REACT_APP_URL_FE_TOKEN_EXCHANGE').required().asString(),
-        LOGIN_ADMIN_GOOGLE: '',
     },
 
     URL_API: {

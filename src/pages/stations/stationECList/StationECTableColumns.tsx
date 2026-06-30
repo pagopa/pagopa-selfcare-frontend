@@ -1,5 +1,5 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
 import { ComponentType } from 'react';
 import { formatBooleanValueToYesOrNo, formatCodeInDoubleDigit } from '../../../utils/common-utils';
 import {

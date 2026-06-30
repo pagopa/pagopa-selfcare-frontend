@@ -32,7 +32,7 @@ module.exports = {
     // collectCoverageFrom: undefined,
     collectCoverageFrom: [
         "src/**/*.{js,jsx,ts,tsx}",
-        "!src/index.js"
+        "!src/main.ts"
     ],
 
     // The directory where Jest should output its coverage files
@@ -40,7 +40,7 @@ module.exports = {
 
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [
-        "src/index.js",
+        "src/main.ts",
         "src/bootstrap.tsx",
         "src/consentAndAnalyticsConfiguration.ts",
         "src/reportWebVitals.ts",
@@ -102,6 +102,7 @@ module.exports = {
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     // moduleNameMapper: {},
     "moduleNameMapper": {
+        "^@mui/base/ButtonUnstyled$": "<rootDir>/node_modules/@mui/base/useButton",
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
         "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
         "^@pagopa/selfcare-common-frontend/lib/(.*)$": "<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1",
@@ -137,9 +138,6 @@ module.exports = {
 
     // A path to a custom resolver
     // resolver: undefined,
-
-    // Automatically restore mock state between every test
-    restoreMocks: true,
 
     // The root directory that Jest should scan for tests and modules within
     // rootDir: undefined,

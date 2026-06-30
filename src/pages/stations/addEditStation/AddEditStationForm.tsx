@@ -476,7 +476,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.targetConcat
       );
-      testStation(
+      void testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : 443,
@@ -504,7 +504,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.redirectConcat
       );
-      testStation(
+      void testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : protocolSplit.includes('https') ? 443 : 80,
@@ -532,7 +532,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.targetPofConcat
       );
-      testStation(
+      void testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : 443,

@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
 import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
 import { ComponentType } from 'react';
 import {

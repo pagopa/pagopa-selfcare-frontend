@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, CircularProgress, Link, Typography } from '@mui/material';
-import { TFunction, Trans, useTranslation } from "react-i18next";
+import {TFunction} from 'i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from 'react';

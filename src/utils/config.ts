@@ -18,9 +18,12 @@ export function getConfig(param: string, options?: ConfigOptions): string;
 export function getConfig(param: string, options?: ConfigOptions) {
   // eslint-disable-next-line no-underscore-dangle
   const runtimeValue = typeof window !== 'undefined' ? window._env_?.[param] : undefined;
+  const viteValue = import.meta.env[param];
+  const configuredValue =
+    runtimeValue !== undefined && runtimeValue !== '' ? runtimeValue : viteValue;
 
-  return runtimeValue !== undefined && runtimeValue !== ''
-    ? getVarFromRuntime(param, runtimeValue, options)
+  return configuredValue !== undefined && configuredValue !== ''
+    ? getVarFromRuntime(param, configuredValue, options)
     : getVarFromEnvironment(param, options);
 }
 

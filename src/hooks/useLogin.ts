@@ -74,19 +74,10 @@ export const useLogin = () => {
       }
 
       const token = storageTokenOps.read();
+      const isExpired = token && JSON.parse(atob(token.split('.')[1])).exp * 1000 < Date.now();
 
-      // If there are no credentials, it is impossible to get the user, so
-      if (!token) {
-        // Remove any partial data that might have remained, just for safety
-        storageUserOps.delete();
-        // Go to the login view
-        window.location.assign(CONFIG.URL_FE.LOGIN);
-        // This return is necessary
-        return;
-      }
-
-      const jwt = JSON.parse(atob(token.split('.')[1]));
-      if (jwt.exp * 1000 < Date.now()) {
+      // If there are no credentials or the token is expired, it is impossible to get the user
+      if (!token || isExpired) {
         // Remove any partial data that might have remained, just for safety
         storageUserOps.delete();
         // Go to the login view

@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.48.4-5-PIDM-2163-update-react18-mui",
+  "version": "1.48.4-6-PIDM-2163-update-react18-mui",
   "private": true,
   "scripts": {
     "envconfig": "chmod +x env.sh && ./env.sh && chmod +x version.sh && ./version.sh",

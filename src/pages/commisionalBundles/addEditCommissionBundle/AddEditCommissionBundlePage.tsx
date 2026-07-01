@@ -215,6 +215,14 @@ const AddEditCommissionBundlePage = () => {
       });
   };
 
+  const openConfirmModal = () => {
+    if (formik.isValid) {
+      setShowConfirmModal(true);
+    } else {
+      setActiveStep(0);
+    }
+  };
+
   return (
     <Grid container justifyContent={'center'}>
       <Grid item p={3} xs={8}>
@@ -300,10 +308,9 @@ const AddEditCommissionBundlePage = () => {
               onClick={() => {
                 if (activeStep === 0) {
                   setActiveStep((prev) => prev + 1);
-                } else if (formik.isValid) {
-                  formik.handleSubmit();
                 } else {
-                  setActiveStep(0);
+                  formik.handleSubmit();
+                  openConfirmModal();
                 }
               }}
               disabled={!enableSubmit(formik.values)}

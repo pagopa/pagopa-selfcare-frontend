@@ -10,14 +10,11 @@ import {parseJwt} from '../utils/jwt-utils';
 import {ENV} from '../utils/env';
 import {JWTUser} from '../model/JwtUser';
 import {pspAdminSignedDirect} from "../services/__mocks__/partyService";
+import {applyTokenRolesToParty} from '../utils/profile-utils';
 import {useSigninData} from './useSigninData';
 
 export type PartyJwtConfig = {
     partyId: string;
-    /* roles: Array<{
-      partyRole: PartyRole;
-      roleKey: string;
-    }>; */
 };
 
 export const retrieveSelectedPartyIdConfig = (): PartyJwtConfig | null => {
@@ -25,10 +22,6 @@ export const retrieveSelectedPartyIdConfig = (): PartyJwtConfig | null => {
     if (organizationId) {
         return {
             partyId: organizationId,
-            /* roles: organization.roles.map((r) => ({
-              partyRole: r.partyRole,
-              roleKey: r.role,
-            })), */
         };
     } else {
         return null;
@@ -49,17 +42,10 @@ export const useSelectedParty = (): (() => Promise<Party>) => {
                 if (party.status !== 'ACTIVE') {
                     throw new Error(`INVALID_PARTY_STATE_${party.status}`);
                 }
-                const partyToSave = {
-                    ...party,
-                    /* roles:
-                      partyJwtConfig?.roles.map((r) => ({
-                        partyRole: r.partyRole,
-                        roleKey: r.roleKey,
-                      })) ?? [], */
-                };
+                const partyToSave = applyTokenRolesToParty(party);
                 setParty(partyToSave);
 
-                void updateSigninData(party);
+                void updateSigninData(partyToSave);
                 return partyToSave;
             } else {
                 throw new Error(`Cannot find partyId ${partyId}`);

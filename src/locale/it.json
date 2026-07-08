@@ -68,7 +68,23 @@
     "pspOperator": "Responsabile Tecnico",
     "ecAdmin": "Referente dei Pagamenti",
     "ecOperator": "Referente Tecnico",
-    "pagopaOperator": "Operatore PagoPA"
+    "pagopaOperator": "Operatore PagoPA",
+    "ptOperator": "Intermediario Tecnologico"
+  },
+  "profileItem": {
+    "caption": "Stai operando come",
+    "switchLabel": "Cambia profilo",
+    "modal": {
+      "title": "Vuoi cambiare profilo?",
+      "subtitle": "Scegli come vuoi operare sul portale.",
+      "closeAriaLabel": "Chiudi",
+      "confirm": "Conferma",
+      "activeCaption": "In uso ora"
+    },
+    "errors": {
+      "missingToken": "Non è stato possibile recuperare il token di sessione.",
+      "switchFailed": "Non è stato possibile cambiare profilo. Riprova."
+    }
   },
   "dashboardPage": {
     "title": "Panoramica",

@@ -41,7 +41,7 @@
     "@mui/x-data-grid": "5.17.8",
     "@mui/x-data-grid-generator": "^6.18.4",
     "@mui/x-date-pickers": "^6.17.0",
-    "@pagopa/mui-italia": "2.5.0",
+    "@pagopa/mui-italia": "2.6.0-RC.0",
     "@pagopa/selfcare-common-frontend": "^1.34.108",
     "@reduxjs/toolkit": "1.9.7",
     "@types/node": "^20.14.10",

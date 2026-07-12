@@ -20,8 +20,7 @@ import {
 import ProfileItemDialog from './ProfileItemDialog';
 
 const getTokenForRoleSwitch = (): string | undefined => {
-  const sessionToken = storageTokenOps.read();
-  return identityTokenStorageOps.read() ?? sessionToken;
+  return identityTokenStorageOps.read();
 };
 
 const ProfileItem = () => {

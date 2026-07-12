@@ -1,4 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import {
   Alert,
   Box,
@@ -41,25 +43,36 @@ const ProfileItemDialog = ({
       onClose={loading ? undefined : onClose}
       aria-labelledby="profile-item-title"
       aria-describedby="profile-item-subtitle"
+      maxWidth={false}
+      BackdropProps={{
+        sx: { backgroundColor: 'rgba(14, 15, 19, 0.2)' },
+      }}
       PaperProps={{
         sx: {
-          width: '100%',
-          maxWidth: 720,
-          borderRadius: 2,
+          width: { xs: 'calc(100vw - 32px)', sm: 600 },
+          maxWidth: 'calc(100vw - 32px)',
+          m: 0,
+          borderRadius: '16px',
+          boxShadow: '0 4px 32px rgba(14, 15, 19, 0.1)',
+          overflow: 'visible',
         },
       }}
     >
-      <DialogContent sx={{ p: 3 }}>
+      <DialogContent sx={{ p: 3, overflow: 'visible', '&:last-child': { pb: 3 } }}>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" gap={2}>
           <Box>
-            <Typography id="profile-item-title" variant="h6" fontWeight={700}>
+            <Typography
+              id="profile-item-title"
+              component="h2"
+              sx={{ color: 'text.primary', fontSize: 24, fontWeight: 700, lineHeight: '28px' }}
+            >
               {t('profileItem.modal.title')}
             </Typography>
             <Typography
               id="profile-item-subtitle"
-              variant="body2"
+              variant="body1"
               color="text.secondary"
-              mt={0.5}
+              sx={{ mt: 1, lineHeight: '24px' }}
             >
               {t('profileItem.modal.subtitle')}
             </Typography>
@@ -69,9 +82,9 @@ const ProfileItemDialog = ({
             onClick={onClose}
             disabled={loading}
             size="small"
-            sx={{ color: 'text.primary' }}
+            sx={{ width: 24, height: 24, p: 0, color: 'text.primary' }}
           >
-            <CloseIcon fontSize="small" />
+            <CloseIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>
 
@@ -81,13 +94,11 @@ const ProfileItemDialog = ({
           </Alert>
         )}
 
-        <Box component="fieldset" sx={{ border: 0, p: 0, m: 0, mt: 2 }}>
-          <Box
-            component="legend"
-            sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden' }}
-          >
-            {t('profileItem.modal.subtitle')}
-          </Box>
+        <Box
+          role="radiogroup"
+          aria-describedby="profile-item-subtitle"
+          sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 4 }}
+        >
           {options.map((option) => (
             <Box
               key={option.roleKey}
@@ -98,27 +109,38 @@ const ProfileItemDialog = ({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: 2,
-                py: 1.5,
+                minHeight: 56,
                 cursor: loading ? 'default' : 'pointer',
               }}
             >
               <Box minWidth={0}>
-                <Typography variant="subtitle2" fontWeight={700}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: 'text.primary', fontWeight: 700, lineHeight: '24px' }}
+                >
                   {option.label}
                 </Typography>
                 {option.selected && (
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ display: 'block', mt: 0.5, lineHeight: '20px' }}
+                  >
                     {t('profileItem.modal.activeCaption')}
                   </Typography>
                 )}
               </Box>
               <Radio
                 id={`profile-item-${option.roleKey}`}
+                name="profile-item-role"
                 checked={selectedRole === option.roleKey}
                 onChange={() => onSelectedRoleChange(option.roleKey)}
                 value={option.roleKey}
                 disabled={loading}
                 inputProps={{ 'aria-label': option.label }}
+                icon={<RadioButtonUncheckedIcon sx={{ fontSize: 24, color: 'text.primary' }} />}
+                checkedIcon={<CheckCircleIcon sx={{ fontSize: 24 }} />}
+                sx={{ p: 0 }}
               />
             </Box>
           ))}
@@ -129,7 +151,7 @@ const ProfileItemDialog = ({
           variant="contained"
           disabled={loading || !selectedRole}
           onClick={onConfirm}
-          sx={{ mt: 2, borderRadius: 1 }}
+          sx={{ mt: 4, minHeight: 48, borderRadius: '8px', fontWeight: 700 }}
         >
           {t('profileItem.modal.confirm')}
         </Button>

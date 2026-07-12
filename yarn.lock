@@ -2609,7 +2609,18 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.41.1.tgz#b04e7151c5913a7a006d4f465479da75efb98a7a"
   integrity sha512-/UhIkaZgPutTFmQ7RnIJGgDXZmtEJ7Dvi86xNTFWcnRxVRNk/aotsqDJYeEvDP+FSMB2SdW+pQzNMcWP0rwuNA==
 
-"@pagopa/mui-italia@2.5.0", "@pagopa/mui-italia@^2.4.1":
+"@pagopa/mui-italia@2.6.0-RC.0":
+  version "2.6.0-RC.0"
+  resolved "https://registry.yarnpkg.com/@pagopa/mui-italia/-/mui-italia-2.6.0-RC.0.tgz#a9758103482c26e6304ed3801ee2080352568ee2"
+  integrity sha512-GKR0HUoat6E/YRHlCG5cNflQWV3cnDIkkrc9w52juJDTPxEWww20BNH3BqD0AmzoqLdn/u73oon38QI3gAGnpw==
+  dependencies:
+    "@fontsource/dm-mono" "^4.5.10"
+    "@fontsource/titillium-web" "^4.5.9"
+    clsx "^1.2.1"
+    fp-ts "^2.12.3"
+    io-ts "^2.2.18"
+
+"@pagopa/mui-italia@^2.4.1":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@pagopa/mui-italia/-/mui-italia-2.5.0.tgz#b869f758ff21fab5aad5735321333632709aee0d"
   integrity sha512-wVhv0K3uhptV5m9FgQaAXR1dBg9y2nVcCeASgBs/lIX+QfuRAcybKH9Jhx9sLnLTdsJShumc6+X+HvavdFrSMQ==

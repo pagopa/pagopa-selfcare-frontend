@@ -91,11 +91,19 @@ export const getProfileContext = (
   roleKey?: string,
   institutionType?: string
 ): ProfileContext => {
-  if (roleKey === PT_ROLE_KEY || institutionType === 'PT') {
+  if (roleKey === PT_ROLE_KEY) {
     return 'PT';
   }
 
-  if (PSP_ROLE_KEYS.includes(roleKey ?? '') || institutionType === 'PSP') {
+  if (institutionType === 'PT') {
+    return 'PT';
+  }
+
+  if (PSP_ROLE_KEYS.includes(roleKey ?? '')) {
+    return 'PSP';
+  }
+
+  if (institutionType === 'PSP') {
     return 'PSP';
   }
 

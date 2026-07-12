@@ -82,7 +82,7 @@
       "activeCaption": "In uso ora"
     },
     "errors": {
-      "missingToken": "Non è stato possibile recuperare il token di sessione.",
+      "missingToken": "Non è stato possibile recuperare il token di accesso.",
       "switchFailed": "Non è stato possibile cambiare profilo. Riprova."
     }
   },

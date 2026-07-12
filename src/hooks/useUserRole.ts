@@ -2,9 +2,9 @@ import {ROLE} from '../model/RolePermission';
 import {useAppSelector} from '../redux/hooks';
 import {partiesSelectors} from '../redux/slices/partiesSlice';
 import {Party} from "../model/Party";
+import {getPartyProfileContext} from '../utils/profile-utils';
 import {useOrganizationType} from "./useOrganizationType";
 import {useFlagValue} from "./useFeatureFlags";
-import {getPartyProfileContext} from '../utils/profile-utils';
 
 export type UserRoleInfo = {
     userRole: ROLE;

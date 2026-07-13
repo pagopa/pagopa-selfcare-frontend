@@ -10,6 +10,6 @@ Object.assign(process.env, import.meta.env, {
 });
 /* eslint-enable functional/immutable-data */
 
-void import(/* @vite-ignore */ `${import.meta.env.BASE_URL}env-config.js`).then(() =>
-  import('./bootstrap')
-);
+void import(/* @vite-ignore */ `${import.meta.env.BASE_URL}env-config.js`)
+  .catch((e) => console.error('Failed to load env-config.js', e))
+  .then(() => import('./bootstrap'));

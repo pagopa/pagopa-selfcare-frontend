@@ -9,7 +9,11 @@ import { ConsentEnum, ServiceIdEnum } from "../../../api/generated/portal/Servic
 import { partiesActions } from "../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect } from "../../../services/__mocks__/partyService";
 
-const getServiceConsentMock = jest.spyOn(require('../../../services/institutionService'), 'getServiceConsents');
+let getServiceConsentMock: jest.SpyInstance;
+
+beforeEach(() => {
+    getServiceConsentMock = jest.spyOn(require('../../../services/institutionService'), 'getServiceConsents');
+});
 
 afterEach(() => {
     cleanup();

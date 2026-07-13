@@ -13,24 +13,33 @@ import {
 import * as bundleService from '../../../../../../services/bundleService';
 import {SubscriptionStateType} from '../../../../../../model/CommissionBundle';
 
-const spyOnGetBundleCISubscriptions = jest.spyOn(
-    bundleService,
-    'getBundleCISubscriptions'
-);
-const spyOnGetBundleCISubscriptionsDetail = jest.spyOn(
-    bundleService,
-    'getBundleCISubscriptionsDetail'
-);
-const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
-const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
-const spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
-const spyOnDeleteOffer = jest.spyOn(bundleService, "deletePrivateBundleOffer");
+let spyOnGetBundleCISubscriptions: jest.SpyInstance;
+let spyOnGetBundleCISubscriptionsDetail: jest.SpyInstance;
+let spyOnRejectSubcriptionRequest: jest.SpyInstance;
+let spyOnAcceptSubcriptionRequest: jest.SpyInstance;
+let spyOnDeleteSubscription: jest.SpyInstance;
+let spyOnDeleteOffer: jest.SpyInstance;
 
 const generalPath = "commissionBundlesPage.commissionBundleDetail.subscriptionsTable"
 const componentPath = `${generalPath}.requestsTable`;
 
 const idBundle = 'idBundle';
 describe('<CommissionBundleDetailSubscriptionsTable />', () => {
+    beforeEach(() => {
+        spyOnGetBundleCISubscriptions = jest.spyOn(
+            bundleService,
+            'getBundleCISubscriptions'
+        );
+        spyOnGetBundleCISubscriptionsDetail = jest.spyOn(
+            bundleService,
+            'getBundleCISubscriptionsDetail'
+        );
+        spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
+        spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
+        spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
+        spyOnDeleteOffer = jest.spyOn(bundleService, "deletePrivateBundleOffer");
+    });
+
     afterEach(() => {
         jest.clearAllMocks();
     });

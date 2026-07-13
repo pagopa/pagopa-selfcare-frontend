@@ -14,11 +14,19 @@ afterEach(() => {
     cleanup();
 });
 
-const saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
-const rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
-const onAdminPermissionNeededUserFeedbackSpy = jest.spyOn(UserFeedback, "onAdminPermissionNeeded");
-const onErrorUserFeedbackSpy = jest.spyOn(UserFeedback, "onError");
-const onSuccessUserFeedback = jest.spyOn(UserFeedback, "onSuccess");
+let saveServiceConsentSpy: jest.SpyInstance;
+let rtpServiceStartingDate: jest.SpyInstance;
+let onAdminPermissionNeededUserFeedbackSpy: jest.SpyInstance;
+let onErrorUserFeedbackSpy: jest.SpyInstance;
+let onSuccessUserFeedback: jest.SpyInstance;
+
+beforeEach(() => {
+    saveServiceConsentSpy = jest.spyOn(require('../../../../services/institutionService'), 'saveServiceConsent');
+    rtpServiceStartingDate = jest.spyOn(require('../../utils'), 'rtpServiceStartingTimestamp');
+    onAdminPermissionNeededUserFeedbackSpy = jest.spyOn(UserFeedback, "onAdminPermissionNeeded");
+    onErrorUserFeedbackSpy = jest.spyOn(UserFeedback, "onError");
+    onSuccessUserFeedback = jest.spyOn(UserFeedback, "onSuccess");
+});
 
 const checkElementToBeVisibleWithText = async (dataTestId: string, elementContent: string) => {
     const element = await screen.findByTestId(dataTestId);

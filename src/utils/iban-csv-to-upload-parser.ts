@@ -59,7 +59,7 @@ export const parseCsvLine = (line: string): Array<string> => line.split('').redu
         return { ...acc, current: acc.current + char };
     },
     { current: '', inQuotes: false }
-).current.trim()]);
+).current.trim()]).map((field) => field.trim().replace(/^"(.*)"$/, '$1').replace(/""/g, '"'));
 
 /**
  * Parse date from string supporting multiple formats

@@ -11,19 +11,74 @@ import {store} from '../../../../redux/store';
 import {emptyIban} from '../../IbanPage';
 import {add} from 'date-fns';
 import * as pagopaFe from '@pagopa/selfcare-common-frontend';
+import { partiesActions } from '../../../../redux/slices/partiesSlice';
+import { Party } from '../../../../model/Party';
+import { validateIbanCsvData } from '../../../../utils/iban-csv-to-upload-parser';
 
 let createIbanSpy: jest.SpyInstance;
 let updateIbanSpy: jest.SpyInstance;
+let handleBulkIbanOperationsSpy: jest.SpyInstance;
 let addError: jest.SpyInstance;
+
+
+/**
+ * Mock conf for iban bulk upload - start
+ */
+
+Object.defineProperty(global.self, 'crypto', {
+    value: {
+        getRandomValues: function (buffer: any) {
+            const nodeCrypto = require('crypto');
+            return nodeCrypto.randomFillSync(buffer);
+        },
+    },
+});
+
+if (!File.prototype.text) {
+    File.prototype.text = jest.fn().mockResolvedValue('mock csv content');
+}
+
+class MockFileReader {
+    result: string | null = null;
+    onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null = null;
+
+    readAsText(_file: Blob) {
+        this.result = 'mock csv content';
+
+        setTimeout(() => {
+            if (this.onload) {
+                const event = {
+                    target: { result: this.result },
+                } as ProgressEvent<FileReader>;
+                this.onload.call(this as unknown as FileReader, event);
+            }
+        }, 0);
+    }
+}
+
+(global as any).FileReader = MockFileReader;
+
+jest.mock('../../../../utils/iban-csv-to-upload-parser');
+
+/**
+ * Mock conf for iban bulk upload - end
+ */
 
 beforeEach(() => {
     createIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'createIban');
     updateIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'updateIban');
+    handleBulkIbanOperationsSpy = jest.spyOn(require('../../../../services/ibanService'), 'handleBulkIbanOperations');
     addError = jest.spyOn(pagopaFe, "useErrorDispatcher");
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+
+    store.dispatch(partiesActions.setPartySelected({
+        fiscalCode: '1234567890',
+        description: 'Mock Party',
+    } as Party));
+    (validateIbanCsvData as jest.Mock).mockReset();
 });
 
 const validIban = 'IT60X0542811101000000123456';
@@ -36,6 +91,15 @@ const validIbanBody = {
     creditor_institution_code: '1234567890',
     labels: [],
 };
+
+const createFileList = (file: File): FileList => {
+    return {
+        0: file,
+        length: 1,
+        item: (index: number) => (index === 0 ? file : null),
+    } as unknown as FileList;
+}
+
 describe('AddEditIbanForm', () => {
     it('should call goBack when the "Back" button is clicked', () => {
         render(
@@ -266,4 +330,168 @@ describe('AddEditIbanForm', () => {
         const ibanErrorText = document.getElementById('iban-helper-text');
         expect(ibanErrorText).not.toBeInTheDocument();
     });
+
+    it('should handle bulk upload - valid file', async () => {
+
+        (validateIbanCsvData as jest.Mock).mockReturnValue({
+            valid: true,
+            data: [
+                {
+                    descrizione: 'Test Iban',
+                    iban: validIban,
+                    dataattivazioneiban: new Date('2099-01-01'),
+                    operazione: 'CREATE',
+                },
+            ],
+            summary: {
+                toAdd: 1,
+                toUpdate: 0,
+                toDelete: 0,
+            },
+            errors: [],
+        });
+
+        handleBulkIbanOperationsSpy.mockResolvedValue(undefined);
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/iban/create`]}>
+                    <Route path="/iban/create">
+                        <ThemeProvider theme={theme}>
+                            <AddEditIbanForm
+                                goBack={jest.fn()}
+                                ibanBody={emptyIban}
+                                formAction={IbanFormAction.Create}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const radioMultiple = screen.getByTestId('upload-multiple-test').querySelector('input')!;
+        fireEvent.click(radioMultiple);
+        const file = new File(['mock'], 'test.csv', { type: 'text/csv' });
+
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+        const fileList = createFileList(file);
+
+        fireEvent.change(input, { target: { files: fileList } });
+
+        await waitFor(() => {
+            expect(
+                screen.getByText(/handleMultiIbanEditIbanPage.validationSummary/i)
+            ).toBeInTheDocument();
+        });
+
+        const submitBtn = screen.getByTestId('submit-button-test');
+        expect(submitBtn).not.toBeDisabled();
+
+        fireEvent.click(submitBtn);
+
+        await waitFor(() => {
+            expect(handleBulkIbanOperationsSpy).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle bulk upload - invalid file', async () => {
+       (validateIbanCsvData as jest.Mock).mockReturnValue({
+            valid: false,
+            errors: ["IBAN non valido"],
+        });
+
+        handleBulkIbanOperationsSpy.mockResolvedValue(undefined);
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/iban/create`]}>
+                    <Route path="/iban/create">
+                        <ThemeProvider theme={theme}>
+                            <AddEditIbanForm
+                                goBack={jest.fn()}
+                                ibanBody={emptyIban}
+                                formAction={IbanFormAction.Create}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const radioMultiple = screen.getByTestId('upload-multiple-test').querySelector('input')!;
+        fireEvent.click(radioMultiple);
+        const file = new File(['mock'], 'test.csv', { type: 'text/csv' });
+
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+        const fileList = createFileList(file);
+
+        fireEvent.change(input, { target: { files: fileList } });
+        
+        await waitFor(() => {
+            expect(screen.getByText(/IBAN non valido/i)).toBeInTheDocument();
+        });
+
+        const submitBtn = screen.getByTestId('submit-button-test');
+        expect(submitBtn).toBeDisabled();
+    });
+
+    it('should handle file removal', async () => {
+      
+        (validateIbanCsvData as jest.Mock).mockReturnValue({
+            valid: true,
+            data: [
+                {
+                    descrizione: 'Test Iban',
+                    iban: validIban,
+                    dataattivazioneiban: new Date('2099-01-01'),
+                    operazione: 'CREATE',
+                },
+            ],
+            summary: {
+                toAdd: 1,
+                toUpdate: 0,
+                toDelete: 0,
+            },
+            errors: [],
+        });
+
+        handleBulkIbanOperationsSpy.mockResolvedValue(undefined);
+
+        render(
+            <Provider store={store}>
+                <MemoryRouter initialEntries={[`/iban/create`]}>
+                    <Route path="/iban/create">
+                        <ThemeProvider theme={theme}>
+                            <AddEditIbanForm
+                                goBack={jest.fn()}
+                                ibanBody={emptyIban}
+                                formAction={IbanFormAction.Create}
+                            />
+                        </ThemeProvider>
+                    </Route>
+                </MemoryRouter>
+            </Provider>
+        );
+
+        const radioMultiple = screen.getByTestId('upload-multiple-test').querySelector('input')!;
+        fireEvent.click(radioMultiple);
+        const file = new File(['mock'], 'test.csv', { type: 'text/csv' });
+
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+        const fileList = createFileList(file);
+
+        fireEvent.change(input, { target: { files: fileList } });
+
+        await waitFor(() => {
+            expect(screen.getByText(/handleMultiIbanEditIbanPage.validationSummary/i)).toBeInTheDocument();
+        });
+
+        const removeButton = screen
+            .getAllByRole('button')
+            .find(btn => btn.querySelector('[data-testid="CloseIcon"]'))!; 
+        fireEvent.click(removeButton);
+
+        expect(screen.queryByText(/handleMultiIbanEditIbanPage.validationSummary/i)).not.toBeInTheDocument();
+        expect(screen.getByText(/handleMultiIbanEditIbanPage.csvForm.dropzoneLabel/i)).toBeInTheDocument();
+    }); 
 });

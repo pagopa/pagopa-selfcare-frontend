@@ -102,7 +102,7 @@ const validateIBAN = (iban: string, lineNum: number): string | null => {
 };
 
 /**
- * Validate Operaione
+ * Validate Operazione
  */
 const validateAzione = (operazione: string, lineNum: number): { error: string | null; normalized: string } => {
     const normalized = operazione.trim();

@@ -48,6 +48,9 @@ type Props = {
 const defaultValidityDate = add(new Date(), { days: 1 });
 const defaultDueDate = add(new Date(), { years: 1 });
 
+const getDateFieldHelperText = (touched: boolean | undefined, error: string | undefined) =>
+    touched ? String(error ?? '') : undefined;
+
 const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     const { t } = useTranslation();
     const [subject, setSubject] = useState('me');
@@ -379,9 +382,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                     name: 'validityDate',
                                                     size: 'small',
                                                     error: formik.touched.validity_date && Boolean(formik.errors.validity_date),
-                                                    helperText: formik.touched.validity_date
-                                                        ? String(formik.errors.validity_date ?? '')
-                                                        : undefined,
+                                                    helperText: getDateFieldHelperText(formik.touched.validity_date, formik.errors.validity_date),
                                                 },
                                             }}
                                             shouldDisableDate={(date: Date) => date < new Date()}
@@ -405,9 +406,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                     name: 'dueDate',
                                                     size: 'small',
                                                     error: formik.touched.due_date && Boolean(formik.errors.due_date),
-                                                    helperText: formik.touched.due_date
-                                                        ? String(formik.errors.due_date ?? '')
-                                                        : undefined,
+                                                    helperText: getDateFieldHelperText(formik.touched.due_date, formik.errors.due_date),
                                                 },
                                             }}
                                             shouldDisableDate={(date: Date) => date < formik.values.validity_date}

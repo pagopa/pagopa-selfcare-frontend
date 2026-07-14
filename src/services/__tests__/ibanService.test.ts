@@ -109,10 +109,10 @@ describe('ibanService test client', () => {
     });
 
     test('Test handleBulkIbanOperations', async () => {
-        const spyOn = jest.
-            spyOn(BackofficeApi.ibans, 'handleBulkIbanOperations').
-            mockReturnValue(new Promise((resolve) => resolve()));
-        expect(handleBulkIbanOperations('ciCode', { operations: [] })).resolves.not.toThrow();
+        const spyOn = jest
+            .spyOn(BackofficeApi.ibans, 'handleBulkIbanOperations')
+            .mockResolvedValue(undefined);
+        await expect(handleBulkIbanOperations('ciCode', { operations: [] })).resolves.toBeUndefined();
         expect(spyOn).toBeCalledTimes(1);
     });
 

@@ -67,7 +67,7 @@ describe('iban-csv-to-upload-parser', () => {
     });
 
     it('should fail DELETE operation if date is present', () => {
-        const csv = `descrizione,iban,dataattivazioneiban,operazione\nTest Delete,IT60X0542811101000000123456,${validFutureDate},DELETE`;
+        const csv = `descrizione,iban,dataattivazioneiban,operazione\n,IT60X0542811101000000123456,${validFutureDate},DELETE`;
         const result = validateIbanCsvData(csv);
         expect(result.valid).toBe(false);
         expect(result.errors[0]).toContain('Riga 2: La data attivazione non può essere valorizzata per l\'operazione DELETE');

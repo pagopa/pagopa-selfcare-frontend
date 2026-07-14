@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.48.4-2-CHK-4675-multi-iban-handler",
+  "version": "1.49.0",
   "homepage": "ui",
   "private": true,
   "scripts": {

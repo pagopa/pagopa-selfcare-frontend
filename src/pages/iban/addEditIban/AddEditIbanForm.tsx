@@ -48,7 +48,7 @@ type Props = {
 const defaultValidityDate = add(new Date(), { days: 1 });
 const defaultDueDate = add(new Date(), { years: 1 });
 
-const getDateFieldHelperText = (touched: boolean | undefined, error: string | undefined) =>
+const getDateFieldHelperText = (touched: unknown, error: unknown) =>
     touched ? String(error ?? '') : undefined;
 
 const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {

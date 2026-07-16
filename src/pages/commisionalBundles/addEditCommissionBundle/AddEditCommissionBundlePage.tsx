@@ -48,7 +48,7 @@ const toNewFormData = (
   minPaymentAmount: data?.minPaymentAmount ?? 0,
   name: data?.name ?? '',
   paymentAmount: data?.paymentAmount ?? 0,
-  paymentType: data?.paymentType ?? 'ANY',
+  paymentType: data?.paymentType ?? '',
   touchpoint: data?.touchpoint ?? 'ANY',
   transferCategoryList: data?.bundleTaxonomies
     ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? '')
@@ -130,6 +130,7 @@ const validate = (
 const enableSubmit = (values: BundleRequest) =>
   values.type !== undefined &&
   values.name !== '' &&
+  Boolean(values.paymentType) &&  
   (values.minPaymentAmount ?? 0) >= 0 &&
   !Number.isNaN(values.minPaymentAmount) &&
   values.maxPaymentAmount !== 0 &&
@@ -182,7 +183,7 @@ const AddEditCommissionBundlePage = () => {
       validityDateFrom: removeDateZoneInfo(body.validityDateFrom),
       validityDateTo: removeDateZoneInfo(body.validityDateTo),
       touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
-      paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+      paymentType: body.paymentType ? body.paymentType : undefined,
       transferCategoryList: isValidArray(body.transferCategoryList)
         ? body.transferCategoryList
         : undefined,

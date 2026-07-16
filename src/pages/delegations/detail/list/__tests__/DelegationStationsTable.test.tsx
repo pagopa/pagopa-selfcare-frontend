@@ -10,15 +10,17 @@ import * as BrokerService from '../../../../../services/brokerService';
 import * as StationService from '../../../../../services/stationService';
 import DelegationStationsTable from '../DelegationStationsTable';
 
+let mock: jest.SpyInstance;
+let dissociateStationMock: jest.SpyInstance;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    mock = jest.spyOn(BrokerService, 'getCIBrokerStations');
+    dissociateStationMock = jest.spyOn(StationService, 'dissociateECfromStation');
 });
-
-const mock = jest.spyOn(BrokerService, 'getCIBrokerStations');
-const dissociateStationMock = jest.spyOn(StationService, 'dissociateECfromStation');
 
 afterEach(cleanup);
 

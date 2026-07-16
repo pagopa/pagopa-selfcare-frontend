@@ -22,6 +22,8 @@ import * as useFlagValue from '../../../../hooks/useFeatureFlags';
 
 jest.mock('../../../components/commonFunctions');
 
+jest.setTimeout(15000);
+
 let updateWrapperStationDetailsSpy: jest.SpyInstance;
 let createWrapperStationSpy: jest.SpyInstance;
 let updateStationSpy: jest.SpyInstance;

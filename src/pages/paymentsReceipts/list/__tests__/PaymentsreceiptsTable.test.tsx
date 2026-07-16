@@ -9,15 +9,17 @@ import * as PaymentsReceiptsService from '../../../../services/paymentsReceiptsS
 import PaymentsReceiptsTable from '../PaymentsReceiptsTable';
 import {mockedPaymentsReceiptsList} from '../../../../services/__mocks__/paymentsReceiptsService';
 
+let mock: jest.SpyInstance;
+let mockDetails: jest.SpyInstance;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    mock = jest.spyOn(PaymentsReceiptsService, 'getPaymentsReceipts');
+    mockDetails = jest.spyOn(PaymentsReceiptsService, 'getPaymentReceiptDetail');
 });
-
-const mock = jest.spyOn(PaymentsReceiptsService, 'getPaymentsReceipts');
-const mockDetails = jest.spyOn(PaymentsReceiptsService, 'getPaymentReceiptDetail');
 
 afterEach(cleanup);
 

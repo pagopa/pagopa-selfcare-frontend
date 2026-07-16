@@ -173,6 +173,9 @@ export const exportCreditorInstitutionsToCsv = (_brokerCode: string): Promise<an
 export const getBrokerExportStatus = (_brokerCode: string): Promise<any> =>
     new Promise((resolve) => resolve(mockedBrokerExportStatus));
 
+export const handleBulkIbanOperations = (_ciCode: string, _ibanBulkOperationRequest: any): Promise<void> =>
+    new Promise((resolve) => resolve());
+
 export const createIbanDeletionRequest = (_creditorInstitutionCode: string, _scheduleDate: string, _ibanValue: string): Promise<void> =>
     new Promise((resolve) => resolve());
 
@@ -181,3 +184,4 @@ export const getIbanDeletionRequests = (_creditorInstitutionCode: string, _ibanV
 
 export const cancelIbanDeletionRequests = (_id: string): Promise<void> =>
     new Promise((resolve) => resolve());
+

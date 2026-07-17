@@ -20,7 +20,6 @@ import {
   Select,
   Switch,
   TextField,
-  TextFieldProps,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -750,7 +749,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.from')}
-                    inputFormat="dd/MM/yyyy"
+                    format="dd/MM/yyyy"
                     value={formik.values.validityDateFrom}
                     onChange={(value) => {
                       formik.setFieldValue('validityDateFrom', value);
@@ -762,26 +761,21 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         formik.setFieldValue('validityDateTo', null);
                       }
                     }}
-                    renderInput={(params: TextFieldProps) => (
-                      <TextField
-                        {...params}
-                        inputProps={{
-                          ...params.inputProps,
+                    slotProps={{
+                      textField: {
+                        inputProps: {
                           placeholder: 'dd/MM/aaaa',
                           'data-testid': 'from-date-test',
-                        }}
-                        id="validityDateFrom"
-                        name="validityDateFrom"
-                        type="date"
-                        size="small"
-                        error={
+                        },
+                        id: 'validityDateFrom',
+                        name: 'validityDateFrom',
+                        size: 'small',
+                        error:
                           formik.touched.validityDateFrom && Boolean(formik.errors.validityDateFrom)
-                        }
-                        helperText={
-                          formik.touched.validityDateFrom && formik.errors.validityDateFrom
-                        }
-                      />
-                    )}
+                        ,
+                        helperText: formik.touched.validityDateFrom && formik.errors.validityDateFrom,
+                      },
+                    }}
                     shouldDisableDate={(date: Date) => {
                       let limit = new Date();
                       limit = add(limit, { days: 2 });
@@ -795,27 +789,22 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.to')}
-                    inputFormat="dd/MM/yyyy"
+                    format="dd/MM/yyyy"
                     value={formik.values.validityDateTo}
                     onChange={(value) => formik.setFieldValue('validityDateTo', value)}
-                    renderInput={(params: TextFieldProps) => (
-                      <TextField
-                        {...params}
-                        inputProps={{
-                          ...params.inputProps,
+                    slotProps={{
+                      textField: {
+                        inputProps: {
                           placeholder: 'dd/MM/aaaa',
                           'data-testid': 'to-date-test',
-                        }}
-                        id="validityDateTo"
-                        name="validityDateTo"
-                        type="date"
-                        size="small"
-                        error={
-                          formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo)
-                        }
-                        helperText={formik.touched.validityDateTo && formik.errors.validityDateTo}
-                      />
-                    )}
+                        },
+                        id: 'validityDateTo',
+                        name: 'validityDateTo',
+                        size: 'small',
+                        error: formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo),
+                        helperText: formik.touched.validityDateTo && formik.errors.validityDateTo,
+                      },
+                    }}
                     shouldDisableDate={(date: Date) =>
                       isBefore(date, formik.values.validityDateFrom ?? new Date())
                     }

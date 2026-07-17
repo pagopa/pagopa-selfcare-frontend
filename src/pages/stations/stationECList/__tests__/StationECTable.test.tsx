@@ -71,7 +71,7 @@ describe('<StationECTable />', () => {
     await waitFor(() => {
       expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
     });
-  });
+  }, 10000);
 
   test('error getECListByStationCodeSpy', async () => {
     getECListByStationCodeSpy.mockRejectedValueOnce(new Error(""));

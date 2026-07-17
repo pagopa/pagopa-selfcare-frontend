@@ -19,9 +19,7 @@ import {
 } from '../../utils/profile-utils';
 import ProfileItemDialog from './ProfileItemDialog';
 
-const getTokenForRoleSwitch = (): string | undefined => {
-  return identityTokenStorageOps.read();
-};
+const getTokenForRoleSwitch = (): string | undefined => identityTokenStorageOps.read();
 
 const ProfileItem = () => {
   const { t } = useTranslation();

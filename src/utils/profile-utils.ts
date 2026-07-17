@@ -121,7 +121,7 @@ export const getProfileLabel = (roleKey?: string, institutionType?: string): str
   const context = getProfileContext(roleKey, institutionType);
 
   if (context === 'PT') {
-    return 'Intermediario Tecnologico';
+    return 'Partner Tecnologico';
   }
 
   if (context === 'PSP') {

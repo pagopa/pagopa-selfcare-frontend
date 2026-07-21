@@ -39,6 +39,7 @@ const singleRoleToken = buildToken({
   name: 'Mario',
   family_name: 'Rossi',
   email: 'mario.rossi@test.it',
+  fiscal_number: 'fiscal-code-1',
   org_id: 'party-1',
   org_role: 'admin',
   org_party_role: 'MANAGER',
@@ -50,6 +51,7 @@ const twoRoleToken = buildToken({
   name: 'Mario',
   family_name: 'Rossi',
   email: 'mario.rossi@test.it',
+  fiscal_number: 'fiscal-code-1',
   org_id: 'party-1',
   org_role: 'admin',
   org_party_role: 'MANAGER',
@@ -64,6 +66,7 @@ const newSessionToken = buildToken({
   name: 'Mario',
   family_name: 'Rossi',
   email: 'mario.rossi@test.it',
+  fiscal_number: 'fiscal-code-1',
   org_id: 'party-1',
   org_role: 'admin-psp',
   org_party_role: 'MANAGER',
@@ -195,7 +198,7 @@ describe('<ProfileItem />', () => {
     expect(storageTokenOps.read()).toBe(newSessionToken);
     expect(storageUserOps.read()).toEqual({
       uid: 'uid-1',
-      taxCode: '',
+      taxCode: 'fiscal-code-1',
       name: 'Mario',
       surname: 'Rossi',
       email: 'mario.rossi@test.it',
